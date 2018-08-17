@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/form//label[@for='discount']" position="attributes">
+                <attribute name="string">Discount</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form//div[@name='discount']" position="replace">
+                <div name="discount" groups="sale.group_discount_per_so_line">
+                    <field name="discount" class="oe_inline"/>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='discount']" position="after">
+                <field name="discount_amt"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='discount']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form//field[@name='discount']" position="after">
+                <field name="discount_amt"/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/form//field[@name='discount']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
