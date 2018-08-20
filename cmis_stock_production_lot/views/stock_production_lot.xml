@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Form view for Stock Production Lot -->
+    <record id="stock_production_lot_cmis_form" model="ir.ui.view">
+        <field name="name">CMIS Folder on Lot/SN</field>
+        <field name="model">stock.production.lot</field>
+        <field name="inherit_id" ref="stock.view_production_lot_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Documents"
+                      groups="cmis.cmis_document_manager">
+                    <field name="cmis_folder"/>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+</odoo>

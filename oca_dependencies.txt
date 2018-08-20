@@ -1,0 +1,2 @@
+connector-cmis
+alfodoo https://github.com/acsone/alfodoo 10.0
