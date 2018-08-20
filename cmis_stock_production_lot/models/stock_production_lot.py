@@ -1,7 +1,7 @@
 # Copyright (C) 2018 - TODAY, Open Source Integrators
 
 
-from odoo import models
+from odoo import api, models
 from odoo.addons.cmis_field import fields
 
 
