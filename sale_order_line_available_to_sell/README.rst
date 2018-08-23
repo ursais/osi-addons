@@ -14,4 +14,4 @@ Credits
 Contributors
 ------------
 
-* Bhavesh Odedra <bodedra@ursainfosystems.com>
+* Bhavesh Odedra <bodedra@opensourceintegrators.com>

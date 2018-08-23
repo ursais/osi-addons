@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <odoo>
+<!-- Copyright 2018 Open Source Integrators
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 
     <record id="view_invoice_sale_line_form" model="ir.ui.view">
         <field name="name">account.invoice.sale.form</field>

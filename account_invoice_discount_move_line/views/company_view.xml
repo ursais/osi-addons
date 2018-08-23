@@ -1,5 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <odoo>
+<!-- Copyright 2018 Open Source Integrators
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
     <record model="ir.ui.view" id="view_company_form">
         <field name="name">res.company.form.discount</field>
         <field name="inherit_id" ref="base.view_company_form"/>
@@ -10,4 +13,5 @@
             </xpath>
         </field>
     </record>
+
 </odoo>

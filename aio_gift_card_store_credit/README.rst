@@ -6,7 +6,8 @@
 Product Store credit and Gift card
 ==================================
 
-This module updates the Unit price of the store credit/gift card on the invoice lines to use as much of it on the first invoice.
+This module updates the Unit price of the store credit/gift card on the
+invoice lines to use as much of it on the first invoice.
 
 Restrict to Invoice amount negative and make it zero.
 
@@ -16,5 +17,5 @@ Credits
 Contributors
 ------------
 
-* Sandip Mangukiya <smangukiya@ursainfosystems.com>
-* Bhavesh Odedra <bodedra@ursainfosystems.com>
+* Bhavesh Odedra <bodedra@opensourceintegrators.com>
+* Sandip Mangukiya <smangukiya@opensourceintegrators.com>

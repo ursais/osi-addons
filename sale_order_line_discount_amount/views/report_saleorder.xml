@@ -1,5 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <odoo>
+<!-- Copyright 2018 Open Source Integrators
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
     <template id="report_sale_discount" inherit_id="sale.report_saleorder_document">
         <xpath expr="//table[hasclass('table table-condensed')]//thead//tr//th[4]" position="replace">
             <th class="text-right" groups="sale.group_discount_per_so_line">Disc.</th>
@@ -10,4 +13,5 @@
             </td>
         </xpath>
     </template>
+
 </odoo>

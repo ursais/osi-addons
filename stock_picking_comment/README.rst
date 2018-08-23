@@ -8,16 +8,6 @@ Delivery Order comment
 
 This module will add text field in Delivery order.
 
-Installation
-============
-
-* No specific installation step required.
-
-Configuration
-=============
-
-* No specific configuration step required.
-
 Usage
 =====
 
@@ -28,9 +18,7 @@ To use this module
 Credits
 =======
 
-* Bhavesh Odedra <bodedra@ursainfosystems.com>
-
 Contributors
 ------------
 
-* Ursa Information Systems <contact@ursainfosystems.com>
+* Bhavesh Odedra <bodedra@opensourceintegrators.com>

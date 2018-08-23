@@ -14,6 +14,6 @@ Credits
 Contributors
 ------------
 
-* Balaji Kannan <bkannan@ursainfosystems.com>
-* Sandip Mangukiya <smangukiya@ursainfosystems.com>
-* Bhavesh Odedra <bodedra@ursainfosystems.com>
+* Balaji Kannan <bkannan@opensourceintegrators.com>
+* Sandip Mangukiya <smangukiya@opensourceintegrators.com>
+* Bhavesh Odedra <bodedra@opensourceintegrators.com>

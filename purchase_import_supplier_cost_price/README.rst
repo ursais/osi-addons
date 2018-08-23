@@ -17,8 +17,7 @@ It will work on following conditions:
 Usage
 =====
 
-#. Download the file provided here: https://github.com/BAVauto/odoo/issues/46#issuecomment-279526517
-#. Rename the columns accordingly to have:
+#. Create CSV file with following two columns:
 
    * Internal Reference
    * Cost Price
@@ -34,4 +33,4 @@ Credits
 Contributors
 ------------
 
-* Bhavesh Odedra <bodedra@ursainfosystems.com>
+* Bhavesh Odedra <bodedra@opensourceintegrators.com>

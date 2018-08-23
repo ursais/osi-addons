@@ -1,5 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <odoo>
+<!-- Copyright 2018 Open Source Integrators
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
     <record id="view_invoice_discount_amt_tree" model="ir.ui.view">
         <field name="name">account.invoice.line.tree</field>
         <field name="model">account.invoice</field>
@@ -27,4 +30,5 @@
             </xpath>
         </field>
     </record>
+
 </odoo>
