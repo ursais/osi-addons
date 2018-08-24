@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<odoo>
+<!-- Copyright 2018 Open Source Integrators
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+    <record id="view_order_form_sc_amount_inherit" model="ir.ui.view">
+        <field name="name">sale.order.sc.amount.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree//field[@name='discount']" position="after">
+                <field name="remaining_sc_amount" invisible="1"/>
+                <field name="remaining_gift_amount" invisible="1"/>
+                <field name="sc_flag" invisible="1"/>
+                <field name="gift_flag" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

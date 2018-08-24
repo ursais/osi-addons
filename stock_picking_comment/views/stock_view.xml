@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<odoo>
+<!-- Copyright 2018 Open Source Integrators
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+    <record id="view_picking_comment_form" model="ir.ui.view">
+        <field name="name">view.picking.comment.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <field name="entire_package_ids" position="after">
+                <field name="comment" attrs="{'invisible': [('picking_type_code','!=', 'outgoing')]}" placeholder="Additional comments..." class="oe_inline"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<odoo>
+<!-- Copyright 2018 Open Source Integrators
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+    <record id="supplier_cost_price_wizard_view" model="ir.ui.view">
+        <field name="name">Supplier Cost Price Wizard View</field>
+        <field name="model">supplier.cost.price.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Supplier Cost Price Wizard">
+                <group>
+                    <group>
+                        <field name="partner_id" domain="[('supplier', '=', True)]"/>
+                        <field name="csv_file"/>
+                        <field name="product_uom" invisible="1"/>
+                    </group>
+                    <group></group>
+                </group>
+                <footer>
+                    <button name="action_update_supplier_cost_price" string="_Update" type="object" class="oe_highlight"/>
+                    <button string="_Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_supplier_cost_price_wizard_view" model="ir.actions.act_window">
+        <field name="name">Update Supplier Cost Prices</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">supplier.cost.price.wizard</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="supplier_cost_price_wizard_view"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        name="Update Supplier Cost Prices"
+        parent="purchase.menu_procurement_management"
+        action="action_supplier_cost_price_wizard_view"
+        id="menu_supplier_cost_price_wizard_view"
+        sequence="42"
+    />
+
+</odoo>

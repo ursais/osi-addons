@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<odoo>
+<!-- Copyright 2018 Open Source Integrators
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+    <record id="view_invoice_sale_line_form" model="ir.ui.view">
+        <field name="name">account.invoice.sale.form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='company_id']" position="after">
+                <field name="sale_line_id" invisible="1"/>
+                <field name="sc_flag" invisible="1"/>
+                <field name="gift_flag" invisible="1"/>
+            </xpath>
+            <field name="date_invoice" position="after">
+                <field name="sale_id" invisible="1"/>
+                <field name="inv_sc_lines" invisible="1"/>
+                <field name="inv_gift_lines" invisible="1"/>
+                <field name="sale_sc_lines" invisible="1"/>
+                <field name="sale_gift_lines" invisible="1"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
