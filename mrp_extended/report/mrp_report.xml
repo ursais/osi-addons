@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <report string="BOM Report"
+                id="action_report_bom_structure_ext"
+                model="mrp.bom"
+                name="mrp_extended.report_mrpbomstructure_ext"
+                file="mrp_extended.report_mrpbomstructure_ext"
+                report_type="qweb-pdf"
+        />
+    </data>
+</openerp>
