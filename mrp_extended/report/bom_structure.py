@@ -1,6 +1,6 @@
-## -*- coding: utf-8 -*-
-#  Copyright (C) 2012 - TODAY, Ursa Information Systems (<http://ursainfosystems.com>)
-#  Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>)
+# -*- coding: utf-8 -*-
+# Copyright (C) 2012 - TODAY Ursa Information Systems
+# Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>)
 
 from openerp.osv import osv
 from openerp.report import report_sxw
@@ -28,13 +28,13 @@ class bom_structure(report_sxw.rml_parse):
                 res['code'] = l.bom_id.code
                 result.append(res)
                 if l.child_line_ids:
-                    if level<6:
+                    if level < 6:
                         level += 1
-                    _get_rec(l.child_line_ids,level)
-                    if level>0 and level<6:
+                    _get_rec(l.child_line_ids, level)
+                    if level > 0 and level < 6:
                         level -= 1
             return result
-        children = _get_rec(object,level)
+        children = _get_rec(object, level)
         return children
 
 
