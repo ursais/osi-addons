@@ -6,9 +6,10 @@ from openerp.osv import osv
 from openerp.report import report_sxw
 
 
-class bom_structure(report_sxw.rml_parse):
+class BomStructure(report_sxw.rml_parse):
+
     def __init__(self, cr, uid, name, context):
-        super(bom_structure, self).__init__(cr, uid, name, context=context)
+        super(BomStructure, self).__init__(cr, uid, name, context=context)
         self.localcontext.update({
             'get_children': self.get_children,
         })
@@ -38,10 +39,8 @@ class bom_structure(report_sxw.rml_parse):
         return children
 
 
-class report_mrpbomstructure(osv.AbstractModel):
+class ReportMrpbomstructure(osv.AbstractModel):
     _name = 'report.mrp_extended.report_mrpbomstructure_ext'
     _inherit = 'report.abstract_report'
     _template = 'mrp_extended.report_mrpbomstructure_ext'
-    _wrapped_report_class = bom_structure
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    _wrapped_report_class = BomStructure

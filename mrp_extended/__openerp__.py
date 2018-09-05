@@ -17,11 +17,6 @@
         'resource',
         'report'
     ],
-    'description': """
-Key Features
-------------
-* Adds Quantity On Hand in BOM report.
-    """,
     'data': [
         'report/mrp_report.xml',
         'views/report_mrpbomstructure_ext.xml',
@@ -30,4 +25,3 @@ Key Features
     'application': True,
     'auto_install': False,
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
