@@ -1,0 +1,13 @@
+<?xml version="1.0"?> 
+<odoo noupdate="1">
+<!-- Copyright 2018 Open Source Integrators
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+    <record id="product_template_generic_product" model="product.template">
+        <field name="name">Generic Product</field>
+        <field name="description_purchase">Type your description</field>
+        <field name="generic_flag">1</field>
+        <field eval="1" name="purchase_ok"/>
+        <field eval="0" name="sale_ok"/>
+    </record>
+</odoo>

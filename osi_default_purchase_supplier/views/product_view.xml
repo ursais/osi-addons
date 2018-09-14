@@ -1,0 +1,32 @@
+<?xml version="1.0"?> 
+<odoo>
+<!-- Copyright 2018 Open Source Integrators
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+    <!-- Product variant form view -->
+    <record id="view_generic_product_product" model="ir.ui.view">
+        <field name="name">view.generic.product.variant</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <field name="lst_price" position="before">
+                <field name="generic_flag"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Product template form view -->
+    <record id="view_generic_product_template" model="ir.ui.view">
+        <field name="name">view.generic.product.template</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <div name="options" position="inside">
+            <div>
+                <field name="generic_flag"/>
+                <label for="generic_flag"/>
+            </div>
+            </div>
+        </field>
+    </record>
+</odoo>
