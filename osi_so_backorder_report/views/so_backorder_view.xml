@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <odoo>
-<!-- Copyright 2018 Open Source Integrators
-     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+    <!-- Copyright 2018 Open Source Integrators
+         License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 
     <record id="so_backorder_tree_view" model="ir.ui.view">
         <field name="name">so.backorder.report.tree</field>
@@ -9,7 +9,7 @@
         <field name="arch" type="xml">
             <tree string="SO Backorders">
                 <field name="order_id"/>
-				<field name="name"/>
+                <field name="name"/>
                 <field name="bo_qty"/>
                 <field name="bo_value"/>
                 <field name="uigd_qty"/>
@@ -29,7 +29,7 @@
         <field name="view_type">form</field>
     </record>
 
-	<menuitem
+    <menuitem
             id="menu_so_backorder"
             action="action_so_backorder"
             parent="sale.sale_order_menu"
