@@ -1,0 +1,13 @@
+<?xml version="1.0"?> 
+<odoo noupdate="1">
+<!-- Copyright 2018 Open Source Integrators
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+    <record id="res_partner_unknown_supplier" model="res.partner">
+        <field name="name">Generic Supplier</field>
+        <field name="supplier">1</field>
+        <field name="generic_flag">1</field>
+        <field name="is_company">1</field>
+        <field eval="0" name="customer"/>
+    </record>
+</odoo>
