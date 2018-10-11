@@ -17,9 +17,8 @@ class AccountInvoice(models.Model):
     @api.model
     def line_get_convert(self, line, part):
         res = super(AccountInvoice, self).line_get_convert(line, part)
-
         # make sure the account move line gets the invoice line id
-        res.update({'invl_id': line.get('invl_id', False)})
+        res.update({'invoice_line_id': line.get('invoice_line_id', False)})
         return res
 
     @api.multi
@@ -36,7 +35,7 @@ class AccountInvoice(models.Model):
                 for move_line in move_lines:
 
                     # identify the moveline related to the invoice line
-                    if move_line[2].get('invl_id', False) == line.id:
+                    if move_line[2].get('invoice_line_id', False) == line.id:
 
                         # adjust value in the existing move_line by
                         # the discount amount
