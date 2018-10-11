@@ -43,4 +43,3 @@ class HelpdeskTicketTask(models.Model):
         string='Actual Hours',
         related='task_id.effective_hours',
     )
-
