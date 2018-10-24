@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<odoo>
+<!-- Copyright 2018 Open Source Integrators
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+
+    <!-- Helpdesk Ticket Form View -->
+    <record id="helpdesk_ticket_view_service_request_form" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.service.request.form</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet"/>
+        <field name="arch" type="xml">
+            <page position="after">
+                <page string="Service Requests">
+                    <field name="helpdesk_service_request_line">
+                        <tree editable="bottom">
+                            <field name="fsm_order_id"/>
+                            <field name="fsm_stage_id" readonly="1"/>
+                            <field name="fsm_order" readonly="1"/>
+                            <field name="fsm_order_name" readonly="1"/>
+                            <field name="fsm_customer_id" readonly="1"/>
+                            <field name="fsm_location_id" readonly="1"/>
+                        </tree>
+                    </field>
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>
