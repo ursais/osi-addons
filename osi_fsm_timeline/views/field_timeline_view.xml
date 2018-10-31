@@ -1,0 +1,11 @@
+<?xml version="1.0"?> 
+<odoo>
+<!-- Copyright 2018 Open Source Integrators
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+    <template id="assets_backend" name="web_timeline_custom assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/osi_fsm_timeline/static/src/js/osi_fsm_timeline.js"/>
+        </xpath>
+    </template>
+</odoo>
