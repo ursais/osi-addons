@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_picking" inherit_id="stock.report_picking" >
+            <xpath expr="//div[hasclass('col-xs-6')]" position="before">
+                <div class="col-xs-4 pull-right">
+                    <t t-if="o.pack_barcode">
+                        <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.pack_barcode, 600, 100)"
+                             style="width:300px;height:50px"/>
+                    </t>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

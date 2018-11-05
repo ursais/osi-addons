@@ -7,6 +7,7 @@
         <field name="name">sale.order.form</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="priority">100</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='order_line']/form//label[@for='discount']" position="attributes">
                 <attribute name="string">Discount</attribute>
