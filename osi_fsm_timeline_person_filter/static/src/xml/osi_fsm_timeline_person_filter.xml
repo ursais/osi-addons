@@ -1,11 +1,13 @@
 <template>
 
-     <t t-extend="TimelineView">
+    <t t-extend="TimelineView">
         <t t-jquery=".btn-group" t-operation="after">
             Person Filter
             <ul id="user_filer" style="display: inline-block;"></ul>
-            <button class="btn btn-default oe_timeline_button_apply">apply</button>
-            <button class="btn btn-default oe_timeline_button_clear">Clear</button>
+            <button class="btn btn-default oe_timeline_button_apply">Apply
+            </button>
+            <button class="btn btn-default oe_timeline_button_clear">Clear
+            </button>
         </t>
     </t>
 
@@ -14,7 +16,8 @@
             <t t-if="widget.__parentedParent and widget.__parentedParent.user_filter">
                 <option></option>
                 <t t-foreach="widget.attrs.fields" t-as="field">
-                    <option t-att="{'selected': field.name == 'category_id' ? 'selected' : null}" t-att-value="field.name">
+                    <option t-att="{'selected': field.name == 'category_id' ? 'selected' : null}"
+                            t-att-value="field.name">
                         <t t-esc="field.string"/>
                     </option>
                 </t>
