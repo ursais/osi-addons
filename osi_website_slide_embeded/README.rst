@@ -2,9 +2,9 @@
    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
    :alt: License: AGPL-3
 
-=========================
-Default Purchase Supplier
-=========================
+==========================
+Website Slides improvement
+==========================
 
 This module will remove is_embedded condition from Download button visibility
 
