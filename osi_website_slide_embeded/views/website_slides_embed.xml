@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+
+        <!--
+            Inherit to show Download button for authenticate user
+        -->
+        <template id="embed_slide_download" inherit_id="website_slides.embed_slide" name="Embedded Slide Page Download">
+            <xpath expr="//a[@id='download']" position="attributes">
+                <attribute name="t-if">slide.download_security</attribute>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>
