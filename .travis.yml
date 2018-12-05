@@ -17,8 +17,8 @@ env:
 
   matrix:
   - LINT_CHECK="1"
-  - TESTS="1" ODOO_REPO="odoo/odoo" EXCLUDE="mrp_barcode,stock_picking_no_over_scan,helpdesk_ticket_to_task,helpdesk_service_request"
-  - TESTS="1" ODOO_REPO="OCA/OCB" EXCLUDE="mrp_barcode,stock_picking_no_over_scan,helpdesk_ticket_to_task,helpdesk_service_request"
+  - TESTS="1" ODOO_REPO="odoo/odoo" EXCLUDE="mrp_barcode,stock_picking_no_over_scan,helpdesk_ticket_to_task,helpdesk_service_request,agreement_helpdesk"
+  - TESTS="1" ODOO_REPO="OCA/OCB" EXCLUDE="mrp_barcode,stock_picking_no_over_scan,helpdesk_ticket_to_task,helpdesk_service_request,agreement_helpdesk"
 
 install:
   - git clone https://github.com/ursais/maintainer-quality-tools.git $HOME/maintainer-quality-tools
