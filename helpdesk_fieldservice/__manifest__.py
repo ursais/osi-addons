@@ -2,16 +2,15 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 {
-    "name": "Helpdesk Service Request",
-    "summary": "Helpdesk Service Request",
+    "name": "Helpdesk Fieldservice",
+    "summary": "Create service requests from a ticket",
     "version": "11.0.1.0.0",
     "license": "LGPL-3",
-    "author": "Open Source Integrators, Odoo Community Association (OCA)",
+    "author": "Open Source Integrators",
     "category": "Helpdesk",
-    "website": "http://www.opensourceintegrators.com",
+    "website": "https://github.com/ursais/osi-addons",
     "depends": [
         "helpdesk",
-        "helpdesk_timesheet",
         "fieldservice",
     ],
     "data": [

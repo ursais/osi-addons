@@ -9,20 +9,18 @@
         <field name="model">helpdesk.ticket</field>
         <field name="inherit_id" ref="helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet"/>
         <field name="arch" type="xml">
-            <page position="after">
+            <notebook position="inside">
                 <page string="Service Requests">
-                    <field name="helpdesk_service_request_line">
+                    <field name="fsm_order_ids">
                         <tree editable="bottom">
-                            <field name="fsm_order_id"/>
-                            <field name="fsm_stage_id" readonly="1"/>
-                            <field name="fsm_order" readonly="1"/>
-                            <field name="fsm_order_name" readonly="1"/>
-                            <field name="fsm_customer_id" readonly="1"/>
-                            <field name="fsm_location_id" readonly="1"/>
+                            <field name="stage_id" readonly="1"/>
+                            <field name="name" readonly="1"/>
+                            <field name="customer_id" readonly="1"/>
+                            <field name="location_id" readonly="1"/>
                         </tree>
                     </field>
                 </page>
-            </page>
+            </notebook>
         </field>
     </record>
 </odoo>

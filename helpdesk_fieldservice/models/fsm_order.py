@@ -7,7 +7,4 @@ from odoo import fields, models
 class FSMOrder(models.Model):
     _inherit = 'fsm.order'
 
-    ticket_id = fields.Many2one(
-        'helpdesk.ticket',
-        string='Ticket',
-    )
+    ticket_id = fields.Many2one('helpdesk.ticket', string='Ticket')
