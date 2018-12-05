@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<odoo>
+<!-- Copyright 2018 Open Source Integrators
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+
+    <!-- Helpdesk Ticket Form View -->
+	<record id="helpdesk_ticket_view_agreement_form" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.agreement.form</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="agreement_id"/>
+            </field>
+        </field>
+    </record>
+</odoo>
