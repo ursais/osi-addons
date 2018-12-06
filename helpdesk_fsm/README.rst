@@ -3,16 +3,20 @@
    :alt: License: LGPL-3
 
 ========================
-Helpdesk Service Request
+Helpdesk - Field Service
 ========================
 
-This module will improve Helpdesk functionality.
+This module allows the helpdesk user to track the status of related service
+requests.
 
 Usage
 =====
 
-* Users allow to add multiple service requests for one Ticket.
-* Users allow to add/select one ticket for one Service request.
+* Go to Helpdesk
+* Create or select a ticket
+* In the "Service Requests" tab, you can create service requests for the FSM team
+
+To close a ticket, all the related service orders must be closed.
 
 Credits
 =======
