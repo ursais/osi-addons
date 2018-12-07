@@ -13,9 +13,10 @@ class Picking(models.Model):
     def _create_backorder(self, backorder_moves=None):
         res = super(Picking, self)._create_backorder(backorder_moves)
 
-        for picking in res:
-            to_update = self.env['stock.picking'].search(
-                [('pack_barcode', '=', picking.backorder_id.name),
-                 ('state', '!=', 'done')])
-            for pick in to_update:
-                pick.pack_barcode = picking.name
+        if res:
+            for picking in res:
+                to_update = self.env['stock.picking'].search(
+                    [('pack_barcode', '=', picking.backorder_id.name),
+                     ('state', '!=', 'done')])
+                for pick in to_update:
+                    pick.pack_barcode = picking.name
