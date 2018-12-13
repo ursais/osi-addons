@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Field Service Location Form View-->
+    <record id="fsm_location_form_view_autocomplete" model="ir.ui.view">
+        <field name="name">fsm.location.form.autocomplete</field>
+        <field name="model">fsm.location</field>
+        <field name='inherit_id' ref='fieldservice.fsm_location_form_view'/>
+        <field name="arch" type="xml">
+            <field name='street' position='attributes'>
+                <attribute name='widget'>gplaces_address_autocomplete</attribute>
+                <attribute name='options'>{'lat':'partner_latitude','lng':'partner_longitude'}</attribute>
+            </field>
+            <field name='partner_latitude' position='attributes'>
+                <attribute name='invisible'>1</attribute>
+            </field>
+            <field name='partner_longitude' position='attributes'>
+                <attribute name='invisible'>1</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>
