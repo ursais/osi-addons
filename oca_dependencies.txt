@@ -1,2 +1,3 @@
-field-service
 contract
+field-service
+odoo-addons https://github.com/ursais/odoo-addons.git 11.0
