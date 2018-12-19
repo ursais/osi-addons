@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Stock Location Route -->
+    <record id="stock_location_route_view_helpdesk" model="ir.ui.view">
+        <field name="name">stock.location.route.form</field>
+        <field name="model">stock.location.route</field>
+        <field name="inherit_id" ref="stock.stock_location_route_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='warehouse_ids']" position="after">
+                <field name="helpdesk_selectable" string="Helpdesk Ticket Lines"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inventory / Operations / Helpdesk Tickets -->
+    <record id="stock_helpdesk_ticket_form" model="ir.ui.view">
+        <field name="name">stock.helpdesk.ticket.form</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="arch" type="xml">
+            <form string="Helpdesk Ticket" create="false">
+                <header>
+                    <field name="team_id" invisible="1"/>
+                    <button id="action_confirm"
+                            name="action_confirm" string="Confirm"
+                            class="oe_highlight"
+                            groups='stock.group_stock_user'
+                            type="object"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="inventory_location"
+                                   groups="stock.group_stock_multi_warehouses"/>
+                        </group>
+                        <group>
+                            <field name="priority" widget="priority"/>
+                            <field name="warehouse_id"
+                                   groups="stock.group_stock_multi_warehouses"/>
+                        </group>
+                    </group>
+                    <field name="line_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="product_id"
+                                   context="{
+                                    'quantity': qty_ordered,
+                                    'uom': product_uom_id,
+                                }"
+                            />
+                            <field name="name"/>
+                            <field name="route_id"/>
+                            <field name="qty_ordered"
+                                   string="Ordered Qty"
+                                   context="{
+                                    'quantity': qty_ordered,
+                                    'uom': product_uom_id,
+                                }"
+                            />
+                            <field name="qty_delivered"/>
+                            <field name="product_uom_id"
+                                   attrs="{'readonly': [('state', 'in', ('sale', 'done', 'cancel'))]}"
+                                   options='{"no_open": True, "no_create": True}'
+                                   groups="product.group_uom"/>
+                            <field name="state" invisible="0"/>
+                        </tree>
+                    </field>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="stock_helpdesk_ticket_tree" model="ir.ui.view">
+        <field name="name">stock.helpdesk.ticket.tree</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="arch" type="xml">
+            <tree string="Helpdesk Tickets"
+                  create="false">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="inventory_location"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_stock_helpdesk_ticket" model="ir.actions.act_window">
+        <field name="name">Helpdesk Tickets</field>
+        <field name="res_model">helpdesk.ticket</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids"
+               eval="[(5, 0, 0),
+                      (0, 0, {'view_mode': 'tree', 'view_id': ref('helpdesk_stock.stock_helpdesk_ticket_tree')}),
+                      (0, 0, {'view_mode': 'form', 'view_id': ref('helpdesk_stock.stock_helpdesk_ticket_form')})]"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                No Field Service Orders to confirm.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_stock_fsm_order"
+              name="Helpdesk Tickets"
+              action="action_stock_helpdesk_ticket"
+              parent="stock.menu_stock_warehouse_mgmt"
+              sequence="60"/>
+
+</odoo>
