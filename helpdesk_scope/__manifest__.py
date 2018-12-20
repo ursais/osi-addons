@@ -5,8 +5,8 @@
     'summary': 'Improve Helpdesk by assigneing scope',
     'version': '11.0.0.0.1',
     'category': 'Helpdesk',
-    'author': "Open Source Integrators, Odoo Community Association (OCA), ",
-    'website': 'https://github.com/OCA/field-service',
+    'author': "Open Source Integrators",
+    'website': 'https://github.com/ursais/osi-addons',
     'depends': [
         'helpdesk',
     ],
