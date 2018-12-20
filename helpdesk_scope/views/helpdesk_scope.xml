@@ -6,31 +6,12 @@
         <field name="name">Ticket Scopes</field>
         <field name="model">helpdesk.scope</field>
         <field name="arch" type="xml">
-            <tree editable="top" string="templates">
-                <field name="helpdesk_scope"/>
+            <tree editable="top" string="Helpdesk Scopes">
+                <field name="name"/>
                 <field name="description"/>
             </tree>
         </field>
     </record>
-
-    <!--record id="helpdesk_scope_form_view" model="ir.ui.view">
-        <field name="name">Helpdesk Scope</field>
-        <field name="model">helpdesk.scope</field>
-        <field name="arch" type="xml">
-            <form string="Scopes">
-                <sheet>
-                    <group>
-                        <group>
-                            <field name="helpdesk_scope"/>
-                        </group>
-                        <group>
-                            <field name="description"/>
-                        </group>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record-->
 
     <record id="action_helpdesk_scope" model="ir.actions.act_window">
         <field name="name">Helpdesk Scopes</field>
@@ -48,8 +29,8 @@
         </field>
     </record>
 
-    <menuitem id="menu_ticket_type"
-              name="Ticket Scope"
+    <menuitem id="menu_ticket_scope"
+              name="Ticket Scopes"
               action="action_helpdesk_scope"
               parent="helpdesk.helpdesk_menu_config"
               sequence="1"/>
