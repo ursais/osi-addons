@@ -8,7 +8,7 @@
         <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
         <field name="arch" type="xml">
             <field name="priority" position="before">
-                <field name="scope"/>                      
+                <field name="scope_id"/>                      
             </field>
         </field>
     </record>

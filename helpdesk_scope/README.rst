@@ -15,17 +15,18 @@ impacts a street (larger scope). The SLA differs based on the scope.
 
 This module allows you to manage scopes and their types and SLA, as well as define the scope on the ticket. 
 
+=======================
 Usage
-=====
+=======================
+
 
 * Create a ticket
-
 * Select the helpdesk team. The scope list will be filtered based on the team.
-
 * Select the scope. The type will be filtered based on the scope.
 
+=======================
 Credits
-=======
+=======================
 
 * Steven Campbell <scampbell@opensourceintegrators.com>
 
