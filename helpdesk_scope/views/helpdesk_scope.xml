@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Helpdesk Scope -->
+    <record id="helpdesk_scope_tree_view" model="ir.ui.view">
+        <field name="name">Ticket Scopes</field>
+        <field name="model">helpdesk.scope</field>
+        <field name="arch" type="xml">
+            <tree editable="top" string="Helpdesk Scopes">
+                <field name="name"/>
+                <field name="description"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_helpdesk_scope" model="ir.actions.act_window">
+        <field name="name">Helpdesk Scopes</field>
+        <field name="res_model">helpdesk.scope</field>
+        <field name="view_id" ref="helpdesk_scope_tree_view"/>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Create a helpdesk scope.
+            </p>
+            <p>
+                Module not yet enabled.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_ticket_scope"
+              name="Ticket Scopes"
+              action="action_helpdesk_scope"
+              parent="helpdesk.helpdesk_menu_config"
+              sequence="1"/>
+
+</odoo>
