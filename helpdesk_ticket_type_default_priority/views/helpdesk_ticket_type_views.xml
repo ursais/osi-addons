@@ -13,7 +13,7 @@
         </field>
     </record>
 
-    <menuitem id="helpdesk_ticket_type_menu"
+    <menuitem id="helpdesk.helpdesk_ticket_type_menu"
               name="Ticket Types"
               action="helpdesk.helpdesk_ticket_type_action"
               sequence="1"
