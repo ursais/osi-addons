@@ -8,7 +8,7 @@
         <field name="inherit_id" ref="helpdesk.helpdesk_ticket_type_view_tree"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="scope_id" widget="many2many_tags"/>                      
+                <field name="scope_ids" widget="many2many_tags"/>                      
             </field>
         </field>
     </record>

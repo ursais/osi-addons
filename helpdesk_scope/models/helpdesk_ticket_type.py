@@ -7,4 +7,4 @@ from odoo import fields, models
 class HelpdeskTicketType(models.Model):
     _inherit = 'helpdesk.ticket.type'
 
-    scope_id = fields.Many2many('helpdesk.scope', string="Scopes")
+    scope_ids = fields.Many2many('helpdesk.scope', string="Scopes")
