@@ -16,7 +16,7 @@
         "views/helpdesk_ticket_type.xml",
     ],
     'installable': True,
-    'license': 'AGPL-3',
+    'license': 'LGPL-3',
     'development_status': 'Beta',
     'maintainers': [
         'wolfhall',
