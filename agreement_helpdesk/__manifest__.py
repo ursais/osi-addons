@@ -8,14 +8,14 @@
     "license": "LGPL-3",
     "author": "Open Source Integrators",
     "category": "Helpdesk",
-    "website": "http://www.opensourceintegrators.com",
+    "website": "https://github.com/ursais/osi-addons",
     "depends": [
         "helpdesk",
         "agreement",
     ],
     "data": [
-        "views/helpdesk_ticket_views.xml",
-        "views/agreement_views.xml",
+        "views/helpdesk_ticket_view.xml",
+        "views/agreement_view.xml",
     ],
     "installable": True,
 }

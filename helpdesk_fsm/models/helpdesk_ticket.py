@@ -21,10 +21,10 @@ class HelpdeskTicket(models.Model):
                     if ticket.fsm_order_ids:
                         open_orders =\
                             ticket.fsm_order_ids.filtered(
-                                lambda x: x.fsm_stage_id.is_close)
+                                lambda x: x.stage_id.is_close)
                         if (open_orders and len(open_orders.ids) != len(
                                 ticket.fsm_order_ids)):
                             raise ValidationError(
-                                _('Please complete all service requests related'
-                                  ' to this ticket to close it.'))
+                                _('Please complete all service requests '
+                                  'related to this ticket to close it.'))
         return super(HelpdeskTicket, self).write(vals)
