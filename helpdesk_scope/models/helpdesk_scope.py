@@ -10,3 +10,5 @@ class HelpdeskScope(models.Model):
 
     name = fields.Char(string="Name")
     description = fields.Text(string="Description")
+
+    team_ids = fields.Many2many('helpdesk.team', string="Teams")
