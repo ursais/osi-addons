@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Helpdesk Ticket Team Extension-->
+    <record id="helpdesk_ticket_team_extension_scope" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.team.scope</field>
+        <field name="model">helpdesk.team</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_team_view_form"/>
+        <field name="arch" type="xml">                
+            <xpath expr="//div[7]/div[1]/div[2]/div[2]" position="after">
+                <div>
+                    <label for="scope_ids"/>
+                    <field name="scope_ids" widget="many2many_tags"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

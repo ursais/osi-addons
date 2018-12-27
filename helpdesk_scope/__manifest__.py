@@ -14,6 +14,7 @@
         "views/helpdesk_scope.xml",
         "views/helpdesk_ticket.xml",
         "views/helpdesk_ticket_type.xml",
+        "views/helpdesk_team.xml"
     ],
     'installable': True,
     'license': 'LGPL-3',

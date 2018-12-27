@@ -4,5 +4,6 @@
 from . import (
     helpdesk_scope,
     helpdesk_ticket,
-    helpdesk_ticket_type
+    helpdesk_ticket_type,
+    helpdesk_team,
 )
