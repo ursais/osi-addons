@@ -2,3 +2,4 @@ contract
 field-service
 geospatial https://github.com/ursais/geospatial.git pvm
 odoo-addons https://github.com/ursais/odoo-addons.git 11.0
+stock-rma https://github.com/Eficent/stock-rma.git 11.0
