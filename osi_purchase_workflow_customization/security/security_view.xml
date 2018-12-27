@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<odoo noupdate="1">
+
+    <!-- Copyright 2018 Open Source Integrators
+         License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+    <record id="group_purchase_approve_request" model="res.groups">
+        <field name="name">Approve Purchase Requests</field>
+    </record>
+</odoo>
