@@ -16,8 +16,8 @@
         </field>
     </record>
 
-    <record id="partner_agreement_form_view_repair" model="ir.ui.view">
-        <field name="name">agreement.form.repair</field>
+    <record id="partner_agreement_form_view_rma" model="ir.ui.view">
+        <field name="name">agreement.form.rma</field>
         <field name="model">agreement</field>
         <field name="inherit_id" ref="agreement.partner_agreement_form_view"/>
         <field name="arch" type="xml">
