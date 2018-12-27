@@ -20,13 +20,13 @@ Usage
 * Select or create a helpdesk ticket and set the agreement
 * Go to Agreement > Agreements
 * Open the previous agreement
-* Click on the smart button "Tickets" to see the list of related helpdesk
-  tickets
+* Click on the smart button "Tickets" to see the list of related helpdesk tickets
 
 Credits
 =======
 
 * Bhavesh Odedra <bodedra@opensourceintegrators.com>
+* Sandip Mangukiya <smangukiya@opensourceintegrators.com>
 
 Contributors
 ------------
