@@ -5,16 +5,17 @@
     'summary': 'Improve Helpdesk by assigneing scope',
     'version': '11.0.0.0.1',
     'category': 'Helpdesk',
-    'author': "Open Source Integrators",
+    'author': 'Open Source Integrators',
     'website': 'https://github.com/ursais/osi-addons',
     'depends': [
         'helpdesk',
     ],
     'data': [
-        "views/helpdesk_scope.xml",
-        "views/helpdesk_ticket.xml",
-        "views/helpdesk_ticket_type.xml",
-        "views/helpdesk_team.xml"
+        'security/ir.model.access.csv',
+        'views/helpdesk_scope.xml',
+        'views/helpdesk_ticket.xml',
+        'views/helpdesk_ticket_type.xml',
+        'views/helpdesk_team.xml'
     ],
     'installable': True,
     'license': 'LGPL-3',
