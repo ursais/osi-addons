@@ -12,7 +12,7 @@ class Agreement(models.Model):
 
     @api.multi
     def _compute_rma_count(self):
-        data = self.env['mrp.repair'].read_group(
+        data = self.env['rma.order.line'].read_group(
             [('agreement_id', 'in', self.ids)],
             ['agreement_id'], ['agreement_id'])
         count_data = dict((item['agreement_id'][0],
