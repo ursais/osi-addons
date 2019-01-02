@@ -58,3 +58,20 @@ class StockLocationRoute(models.Model):
     _inherit = 'stock.location.route'
 
     helpdesk_selectable = fields.Boolean(string="Helpdesk Ticket Lines")
+
+
+class StockPickingType(models.Model):
+    _inherit = 'stock.picking.type'
+
+    count_hdesk_requests = fields.Integer(compute='_compute_hdesk_request')
+
+    def _compute_hdesk_request(self):
+        for ptype in self:
+            if ptype.code == 'outgoing':
+                res = self.env['helpdesk.ticket'].search(
+                    [('inventory_stage', '=', 'requested'),
+                     ('warehouse_id', '=', ptype.warehouse_id.id)])
+                ptype.count_hdesk_requests = len(res)
+
+    def get_action_helpdesk_requests(self):
+        return self._get_action('helpdesk_stock.action_stock_helpdesk_ticket')
