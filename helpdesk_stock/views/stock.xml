@@ -22,10 +22,19 @@
                 <header>
                     <field name="team_id" invisible="1"/>
                     <button id="action_confirm"
-                            name="action_confirm" string="Confirm"
+                            name="action_inventory_confirm" string="Confirm"
                             class="oe_highlight"
                             groups='stock.group_stock_user'
                             type="object"/>
+                    <button id="action_cancel"
+                            name="action_inventory_cancel" string="Cancel"
+                            type="object" groups="stock.group_stock_user"
+                            attrs="{'invisible': [('inventory_stage', '!=', 'requested')]}"/>
+                    <button id="action_reset_draft"
+                            name="action_inventory_reset" string="Reset to Draft"
+                            type="object" groups="stock.group_stock_user"
+                            attrs="{'invisible': [('inventory_stage', '!=', 'cancelled')]}"/>
+                    <field name="inventory_stage" widget="statusbar"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -34,7 +43,7 @@
                     <group>
                         <group>
                             <field name="partner_id"/>
-                            <field name="inventory_location"
+                            <field name="inventory_location_id"
                                    groups="stock.group_stock_multi_warehouses"/>
                         </group>
                         <group>
@@ -47,26 +56,25 @@
                         <tree editable="bottom">
                             <field name="sequence" widget="handle"/>
                             <field name="product_id"
-                                   context="{
-                                    'quantity': qty_ordered,
-                                    'uom': product_uom_id,
-                                }"
-                            />
+                                   context="{'quantity': qty_ordered,
+                                             'uom': product_uom_id}"/>
                             <field name="name"/>
                             <field name="route_id"/>
+                            <field name="qty_requested"
+                                   string="Requested Qty"
+                                   context="{'quantity': qty_requested,
+                                             'uom': product_uom_id}"/>
                             <field name="qty_ordered"
                                    string="Ordered Qty"
                                    context="{
                                     'quantity': qty_ordered,
-                                    'uom': product_uom_id,
-                                }"
-                            />
+                                    'uom': product_uom_id}"/>
                             <field name="qty_delivered"/>
                             <field name="product_uom_id"
                                    attrs="{'readonly': [('state', 'in', ('sale', 'done', 'cancel'))]}"
                                    options='{"no_open": True, "no_create": True}'
                                    groups="product.group_uom"/>
-                            <field name="state" invisible="0"/>
+                            <field name="state"/>
                         </tree>
                     </field>
                 </sheet>
@@ -79,6 +87,29 @@
         </field>
     </record>
 
+    <record id="stock_picking_type_kanban_helpdesk" model="ir.ui.view">
+        <field name="name">stock.picking.type.kanban.helpdesk</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
+        <field name="arch" type="xml">
+            <field name='count_picking_backorders' position='after'>
+                <field name='count_hdesk_requests'/>
+            </field>
+            <xpath expr="//div[@class='col-xs-6 o_kanban_primary_right']/div[4]" position='after'>
+                <div t-if="record.count_hdesk_requests.raw_value > 0" class="row">
+                    <div class="col-xs-9">
+                        <a name="get_action_helpdesk_requests" type="object">
+                            Helpdesk
+                        </a>
+                    </div>
+                    <div class="col-xs-3">
+                        <field name="count_hdesk_requests"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
     <record id="stock_helpdesk_ticket_tree" model="ir.ui.view">
         <field name="name">stock.helpdesk.ticket.tree</field>
         <field name="model">helpdesk.ticket</field>
@@ -87,7 +118,7 @@
                   create="false">
                 <field name="name"/>
                 <field name="partner_id"/>
-                <field name="inventory_location"/>
+                <field name="inventory_location_id"/>
             </tree>
         </field>
     </record>
@@ -97,13 +128,14 @@
         <field name="res_model">helpdesk.ticket</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="domain" eval="[('inventory_stage', '=', 'requested')]"/>
         <field name="view_ids"
                eval="[(5, 0, 0),
                       (0, 0, {'view_mode': 'tree', 'view_id': ref('helpdesk_stock.stock_helpdesk_ticket_tree')}),
                       (0, 0, {'view_mode': 'form', 'view_id': ref('helpdesk_stock.stock_helpdesk_ticket_form')})]"/>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
-                No Field Service Orders to confirm.
+                No Helpdesk Tickets to confirm.
             </p>
         </field>
     </record>
