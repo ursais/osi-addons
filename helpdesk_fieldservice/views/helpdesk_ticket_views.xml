@@ -21,6 +21,9 @@
                     </field>
                 </page>
             </notebook>
+            <field name="user_id" position="after">
+                <field name="fsm_location_id"/>
+            </field>
         </field>
     </record>
 </odoo>
