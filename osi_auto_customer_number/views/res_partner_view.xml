@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<odoo>
+
+        <record id="res_partner_view_customer_number" model="ir.ui.view">
+            <field name="name">res.partner.view.cust.number</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="priority" eval="20"/>
+            <field name="arch" type="xml">
+                <field name="function" position="before">
+                    <field name="customer_number"
+                        attrs="{'invisible': [('customer','!=', True)]}"/>
+                </field>
+            </field>
+        </record>
+
+</odoo>
