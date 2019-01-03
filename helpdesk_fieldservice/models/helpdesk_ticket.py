@@ -10,6 +10,7 @@ class HelpdeskTicket(models.Model):
 
     fsm_order_ids = fields.One2many('fsm.order', 'ticket_id',
                                     string='Service Requests')
+    fsm_location_id = fields.Many2one('fsm.location', string='FSM Location')
 
     @api.multi
     def write(self, vals):
