@@ -7,14 +7,23 @@
         <field name="model">helpdesk.ticket</field>
         <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
         <field name="arch" type="xml">
-            <field name="user_id" position="after">
-                <field name="agreement_id"/>
-                <field name="serviceprofile_id"
-                       domain="[('agreement_id', '=', agreement_id)]"/>
-            </field>
+            <notebook position="inside">
+                <page string="Agreement">
+                    <group>
+                        <group id="agreement-left">
+                            <field name="agreement_id"
+                                   domain="[('partner_id', '=', partner_id)]"/>
+                            <field name="serviceprofile_id"
+                                   domain="[('agreement_id', '=', agreement_id)]"/>
+
+                        </group>
+                        <group id="agreement-right"/>
+                    </group>
+                </page>
+            </notebook>
         </field>
     </record>
-    
+
     <!-- Inherit helpdesk.ticket search view-->
     <record id="helpdesk_tickets_view_search_agreement" model="ir.ui.view">
         <field name="name">helpdesk.ticket.select.agreement</field>
