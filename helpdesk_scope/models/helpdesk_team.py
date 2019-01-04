@@ -8,4 +8,5 @@ class HelpdeskTeam(models.Model):
     _inherit = 'helpdesk.team'
     _description = 'Helpdesk Team'
 
+    use_scope = fields.Boolean('Scopes')
     scope_ids = fields.Many2many('helpdesk.scope', string="Scopes")
