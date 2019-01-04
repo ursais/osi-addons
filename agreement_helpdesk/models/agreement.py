@@ -34,6 +34,4 @@ class Agreement(models.Model):
                     self.env.ref('helpdesk.helpdesk_ticket_view_form').id,
                     'form')]
                 action['res_id'] = ticket_ids.ids[0]
-            else:
-                action = {'type': 'ir.actions.act_window_close'}
             return action

@@ -13,13 +13,11 @@ class FSMLocation(geo_model.GeoModel):
     @api.model
     def create(self, vals):
         res = super(FSMLocation, self).create(vals)
-        lat = vals['partner_latitude']
-        lng = vals['partner_longitude']
-        if lat and lng:
-            pnt = geo_fields.GeoPoint.from_latlon(cr=self.env.cr,
-                                                  latitude=lat,
-                                                  longitude=lng)
-            res.shape = pnt
+        if ('partner_latitude' in vals) and ('partner_longitude' in vals):
+            res.shape = geo_fields.GeoPoint.from_latlon(
+                cr=self.env.cr,
+                latitude=vals['partner_latitude'],
+                longitude=vals['partner_longitutde'])
         return res
 
     def _update_order_geometries(self):
@@ -33,11 +31,9 @@ class FSMLocation(geo_model.GeoModel):
     def write(self, vals):
         res = super(FSMLocation, self).write(vals)
         if ('partner_latitude' in vals) and ('partner_longitude' in vals):
-            lat = vals['partner_latitude']
-            lng = vals['partner_longitude']
-            pnt = geo_fields.GeoPoint.from_latlon(cr=self.env.cr,
-                                                  latitude=lat,
-                                                  longitude=lng)
-            self.shape = pnt
+            self.shape = geo_fields.GeoPoint.from_latlon(
+                cr=self.env.cr,
+                latitude=vals['partner_latitude'],
+                longitude=vals['partner_longitutde'])
             self._update_order_geometries()
         return res
