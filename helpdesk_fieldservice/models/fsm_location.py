@@ -26,7 +26,7 @@ class FSMLocation(geo_model.GeoModel):
             ticket_ids = self.env['helpdesk.ticket'].search(
                 [('fsm_location_id', '=', location.id)])
             action = self.env.ref(
-                'helpdesk.helpdesk_ticket_action_main').read()[0]
+                'helpdesk_fieldservice.action_fsm_location_ticket').read()[0]
             action['context'] = {}
             if len(ticket_ids) > 1:
                 action['domain'] = [('id', 'in', ticket_ids.ids)]
@@ -35,6 +35,4 @@ class FSMLocation(geo_model.GeoModel):
                     self.env.ref('helpdesk.helpdesk_ticket_view_form').id,
                     'form')]
                 action['res_id'] = ticket_ids.ids[0]
-            else:
-                action = {'type': 'ir.actions.act_window_close'}
             return action
