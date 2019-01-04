@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- Copyright 2019 Open Source Integrators
+         License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+
+    <!-- Fields Service Orders Form View -->
+	<record id="view_fsm_order_form_helpdesk_ticket_inherit_stock" model="ir.ui.view">
+        <field name="name">fsm.order.form.helpdesk.ticket.stock</field>
+        <field name="model">fsm.order</field>
+        <field name="inherit_id" ref="fieldservice_stock.view_fsm_order_form_inherit_stock"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='line_ids']/tree/field[@name='product_id']" position="before">
+                <field name="helpdesk_ticket_line_id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
