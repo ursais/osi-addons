@@ -12,7 +12,6 @@ class FSMLocation(geo_model.GeoModel):
 
     @api.model
     def create(self, vals):
-        import pdb;pdb.set_trace()
         res = super(FSMLocation, self).create(vals)
         if ('partner_latitude' in vals) and ('partner_longitude' in vals):
             res.shape = geo_fields.GeoPoint.from_latlon(
