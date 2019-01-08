@@ -11,13 +11,12 @@
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
             <button name="button_approve" position="replace"/>
-			<button name="button_cancel" position="replace"/>
-			
+            <button name="button_cancel" position="replace"/>
             <button id="draft_confirm" position="after">
                 <button name="button_draft_po" class="oe_highlight" type="object" states="purchase rfq" string="Validate Request" id="draft_po" groups="osi_purchase_workflow_customization.group_purchase_approve_request"/>
                 <button name="button_to_approve" class="oe_highlight" type="object" states="to approve" string="Approve Order" id="to_approve"/>
                 <button name="button_co_approve" class="oe_highlight" type="object" states="co approve" string="Co-approve Order" id="co_approve"/>
-				<button name="button_cancel" class="oe_highlight" type="object" states="purchase rfq,draft,to approve,sent,purchase" string="Cancel"/>
+                <button name="button_cancel" class="oe_highlight" type="object" states="purchase rfq,draft,to approve,sent,purchase" string="Cancel"/>
             </button>
             <field name="date_order" position="after">
                 <field name="po_type" attrs="{'readonly': [('state', 'in', ('co approve', 'purchase', 'done', 'cancel'))]}"/>
@@ -43,4 +42,5 @@
             </field>
         </field>
     </record>
+
 </odoo>

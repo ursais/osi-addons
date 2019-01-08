@@ -20,19 +20,12 @@
             </div>
             <xpath expr="//notebook/page[1]" position="after">
                 <page string="Inventory">
-
                     <field name="team_id" invisible="1"/>
-                    <button id="action_confirm"
-                            name="action_confirm" string="Confirm"
-                            class="oe_highlight"
-                            groups="stock.group_stock_user"
-                            type="object"/>
-
                     <group groups="stock.group_stock_user">
                         <group id="stock-left">
                             <field name="warehouse_id"
                                    groups="stock.group_stock_multi_warehouses"/>
-                            <field name="inventory_location"
+                            <field name="inventory_location_id"
                                    domain="[('usage', 'in', ['internal', 'supplier', 'customer'])]"/>
                         </group>
                         <group id="stock-right"></group>
@@ -41,21 +34,21 @@
                         <tree editable="bottom">
                             <field name="sequence" widget="handle"/>
                             <field name="product_id"
-                                   context="{
-                                    'quantity': qty_ordered,
-                                    'uom': product_uom_id,
-                                }"
-                            />
+                                   context="{'quantity': qty_ordered,
+                                             'uom': product_uom_id}"/>
                             <field name="name"/>
                             <field name="route_id" groups="stock.group_stock_adv_location"/>
+                            <field name="qty_requested"
+                                   string="Requested Qty"
+                                   context="{'quantity': qty_requested,
+                                             'uom': product_uom_id}"/>
                             <field name="qty_ordered"
                                    string="Ordered Qty"
-                                   context="{
-                                    'quantity': qty_ordered,
-                                    'uom': product_uom_id,
-                                }"
-                            />
-                            <field name="qty_delivered"/>
+                                   context="{'quantity': qty_ordered,
+                                             'uom': product_uom_id}"
+                                   attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                            <field name="qty_delivered"
+                                   attrs="{'invisible': [('state', '=', 'draft')]}"/>
                             <field name="product_uom_id"
                                    attrs="{'readonly': [('state', 'in', ('sale', 'done', 'cancel'))]}"
                                    options="{'no_open': True, 'no_create': True}"
@@ -63,6 +56,20 @@
                             <field name="state" readonly="1"/>
                         </tree>
                     </field>
+                    <field name='inventory_stage' invisible='1'/>
+                    <button id="action_request"
+                            name="action_inventory_request" string="Request"
+                            class="oe_highlight"
+                            attrs="{'invisible': [('inventory_stage', '!=', 'draft')]}"
+                            type="object"/>
+                    <button id="action_cancel"
+                            name="action_inventory_cancel" string="Cancel"
+                            type="object"
+                            attrs="{'invisible': [('inventory_stage', '!=', 'requested')]}"/>
+                    <button id="action_reset_draft"
+                            name="action_inventory_reset" string="Reset to Draft"
+                            type="object"
+                            attrs="{'invisible': [('inventory_stage', '!=', 'cancelled')]}"/>
                 </page>
             </xpath>
         </field>
