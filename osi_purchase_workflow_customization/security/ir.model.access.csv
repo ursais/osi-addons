@@ -1,4 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_purchase_approval_manager,purchase.approval.manager,model_purchase_approval,hr.group_hr_manager,1,1,1,1
-access_purchase_approval_user,purchase.approval.puruser,model_purchase_approval,purchase.group_purchase_user,1,,,
-access_purchase_approval_manager,purchase.approval.purmanager,model_purchase_approval,purchase.group_purchase_manager,1,1,1,
+access_purchase_approval_hr_manager,purchase.approval.manager,model_purchase_approval,hr.group_hr_manager,1,1,1,1
+access_purchase_approval_user,purchase.approval.puruser,model_purchase_approval,purchase.group_purchase_user,1,0,0,0
+access_purchase_approval_manager,purchase.approval.purmanager,model_purchase_approval,purchase.group_purchase_manager,1,1,1,0
