@@ -7,7 +7,10 @@ from odoo import api, fields, models
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    agreement_template_id = fields.Many2one('agreement', string="Agreement Template", domain="[('is_template','=','True')]")
+    agreement_template_id = fields.Many2one('agreement',
+                                            string="Agreement Template",
+                                            domain="[('is_template',"
+                                            "'=','True')]")
     agreement_id = fields.Many2one('agreement', string="Agreement")
 
     @api.multi
