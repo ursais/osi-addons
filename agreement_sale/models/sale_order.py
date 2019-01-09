@@ -1,7 +1,7 @@
 # Copyright (C) 2018 - TODAY, Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from odoo import fields, models, api
+from odoo import api, fields, models
 
 
 class SaleOrder(models.Model):
@@ -22,4 +22,13 @@ class SaleOrder(models.Model):
                     'partner_id': order.partner_id.id,
                     'analytic_account_id': order.analytic_account_id,
                 })
+                for line in self.order_line:
+                    self.env['agreement.line'].create({
+                        'product_id': line.product_id.id,
+                        'name': line.name,
+                        'agreement_id': order.agreement_id.id,
+                        'qty': line.product_uom_qty,
+                        'sale_line_id': line.id,
+                        'uom_id': line.product_uom.id
+                    })
         return res

@@ -1,7 +1,7 @@
 # Copyright (C) 2018 - TODAY, Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from odoo import fields, models, api
+from odoo import fields, models
 
 
 class Agreement(models.Model):
