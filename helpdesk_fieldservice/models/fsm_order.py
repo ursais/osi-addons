@@ -16,4 +16,5 @@ except ImportError:
 class FSMOrder(geo_model.GeoModel):
     _inherit = 'fsm.order'
 
-    ticket_id = fields.Many2one('helpdesk.ticket', string='Ticket')
+    ticket_id = fields.Many2one('helpdesk.ticket', string='Ticket',
+                                track_visibility='onchange')
