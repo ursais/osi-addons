@@ -93,10 +93,10 @@ class HelpdeskTicketLine(models.Model):
         if (not self.product_uom_id
                 or (self.product_id.uom_id.id != self.product_uom_id.id)):
             vals['product_uom_id'] = self.product_id.uom_id
-            vals['qty_ordered'] = 1.0
+            vals['qty_requested'] = 1.0
 
         product = self.product_id.with_context(
-            quantity=vals.get('qty_ordered') or self.qty_ordered,
+            quantity=vals.get('qty_requested') or self.qty_requested,
             uom=self.product_uom_id.id,
         )
 
@@ -196,3 +196,9 @@ class HelpdeskTicketLine(models.Model):
                 qty -= move.product_uom._compute_quantity(
                     move.product_uom_qty, self.product_uom_id)
         return qty
+
+    def create(self, vals):
+        res = super(HelpdeskTicketLine, self).create(vals)
+        if 'ticket_id' in vals:
+            res.ticket_id.inventory_stage = 'draft'
+        return res
