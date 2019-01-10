@@ -18,4 +18,9 @@
         "views/sale_order.xml"
     ],
     "installable": True,
+    'maintainers': [
+        'wolfhall',
+        'max3903',
+        'osi-scampbell'
+    ]
 }
