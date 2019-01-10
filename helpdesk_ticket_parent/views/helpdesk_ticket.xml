@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Helpdesk Ticket Form Extension-->
+    <record id="helpdesk_ticket_form_parent" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form.parent</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" postition="inside" sequence="20">
+                <page string="Children">
+                    <field name="child_ids">
+                        <tree>
+                            <field name="name"/>
+                            <field name="partner_id"/>
+                            <field name="user_id"/>
+                            <field name="priority"/>
+                            <field name="stage_id"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+            <field name="tag_ids" position="after">
+                <field name="parent_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="helpdesk_tickets_view_search_parent" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.select.parent</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter string="Parents" domain="[('parent_id', '=', False)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="helpdesk_tickets_view_search_child" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.select.child</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter string="Children" domain="[('parent_id', '!=', False)]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
