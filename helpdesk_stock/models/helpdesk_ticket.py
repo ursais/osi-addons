@@ -46,11 +46,14 @@ class HelpdeskTicket(models.Model):
             ticket.delivery_count = len(ticket.picking_ids)
 
     def action_inventory_request(self):
-        for line in self.line_ids:
-            if line.state == 'draft':
-                line.state = 'requested'
-                line.qty_ordered = line.qty_requested
-        self.inventory_stage = 'requested'
+        if self.fsm_location_id and self.line_ids:
+            for line in self.line_ids:
+                if line.state == 'draft':
+                    line.state = 'requested'
+                    line.qty_ordered = line.qty_requested
+            self.inventory_stage = 'requested'
+        else:
+            raise UserError(_('Please select a location and a product.'))
 
     def action_inventory_confirm(self):
         if self.line_ids and self.warehouse_id and self.inventory_location_id:
