@@ -7,6 +7,6 @@ from odoo import fields, models
 class HelpdeskTicket(models.Model):
     _inherit = 'helpdesk.ticket'
 
-    parent_id = fields.Many2one('helpdesk.ticket', string="Parents")
+    parent_id = fields.Many2one('helpdesk.ticket', string="Parent")
     child_ids = fields.One2many('helpdesk.ticket',
                                 'parent_id', string="Children")
