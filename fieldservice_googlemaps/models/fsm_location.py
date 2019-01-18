@@ -34,6 +34,6 @@ class FSMLocation(geo_model.GeoModel):
             self.shape = geo_fields.GeoPoint.from_latlon(
                 cr=self.env.cr,
                 latitude=vals['partner_latitude'],
-                longitude=vals['partner_longitutde'])
+                longitude=vals['partner_longitude'])
             self._update_order_geometries()
         return res
