@@ -16,6 +16,7 @@
     'data': [
         'views/fsm_location.xml',
         'views/fsm_order.xml',
+        'views/res_partner.xml',
     ],
     'development_status': 'Beta',
     'maintainers': [
