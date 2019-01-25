@@ -10,7 +10,7 @@
     'category': 'Helpdesk',
     'website': 'https://github.com/ursais/osi-addons',
     'depends': [
-        'helpdesk_timesheet',
+        'agreement_helpdesk',
         'fieldservice',
     ],
     'data': [
