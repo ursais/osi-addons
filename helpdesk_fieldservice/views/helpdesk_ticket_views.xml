@@ -10,7 +10,7 @@
         <field name="inherit_id" ref="helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet"/>
         <field name="arch" type="xml">
             <notebook position="inside">
-                <page string="Service Requests">
+                <page string="Service Orders">
                     <field name="fsm_order_ids">
                         <tree>
                             <field name="name"/>
