@@ -5,7 +5,7 @@
          License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
 
     <!-- Helpdesk Ticket Form View -->
-	<record id="view_helpdesk_ticket_form_fsm_order_inherit_stock" model="ir.ui.view">
+    <record id="view_helpdesk_ticket_form_fsm_order_inherit_stock" model="ir.ui.view">
         <field name="name">helpdesk.ticket.form.fsm.order.stock</field>
         <field name="model">helpdesk.ticket</field>
         <field name="inherit_id" ref="helpdesk_stock.view_helpdesk_ticket_form_inherit_stock"/>
