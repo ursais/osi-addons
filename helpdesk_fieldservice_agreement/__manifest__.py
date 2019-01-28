@@ -3,7 +3,7 @@
 
 {
     'name': 'Helpdesk - Field Service - Agreement',
-    'summary': 'Carry over agreement values when creating service requests from a ticket',
+    'summary': 'Carry over agreement values when creating service requests',
     'version': '11.0.1.0.0',
     'license': 'LGPL-3',
     'author': 'Open Source Integrators',
