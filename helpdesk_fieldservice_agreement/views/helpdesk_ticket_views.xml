@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Helpdesk Ticket Form View -->
+    <record id="helpdesk_ticket_view_service_request_form" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.service.request.form</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="agreement_helpdesk.helpdesk_ticket_view_agreement_form"/>
+        <field name="arch" type="xml">
+            <field name="fsm_order_ids" position="attributes">
+                <attribute name="context">{'default_customer_id':partner_id,'default_location_id':fsm_location_id,'default_agreement_id':agreement_id,'default_serviceprofile_id':serviceprofile_id}</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>
