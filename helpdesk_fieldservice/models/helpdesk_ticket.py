@@ -9,7 +9,7 @@ class HelpdeskTicket(models.Model):
     _inherit = 'helpdesk.ticket'
 
     fsm_order_ids = fields.One2many('fsm.order', 'ticket_id',
-                                    string='Service Requests')
+                                    string='Service Orders')
     fsm_location_id = fields.Many2one('fsm.location', string='FSM Location')
 
     @api.multi
@@ -26,6 +26,6 @@ class HelpdeskTicket(models.Model):
                         if (open_orders and len(open_orders.ids) != len(
                                 ticket.fsm_order_ids)):
                             raise ValidationError(
-                                _('Please complete all service requests '
+                                _('Please complete all service orders '
                                   'related to this ticket to close it.'))
         return super(HelpdeskTicket, self).write(vals)

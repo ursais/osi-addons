@@ -10,7 +10,7 @@
         <field name="inherit_id" ref="helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet"/>
         <field name="arch" type="xml">
             <notebook position="inside">
-                <page string="Service Requests">
+                <page string="Service Order">
                     <field name="fsm_order_ids" context="{'default_customer_id':partner_id,'default_location_id':fsm_location_id}">
                         <tree>
                             <field name="name"/>
