@@ -8,7 +8,7 @@
     'website': 'https://github.com/ursais/osi-addons',
     'category': 'Field Service',
     'license': 'LGPL-3',
-    'version': '11.0.1.0.0',
+    'version': '11.0.1.0.1',
     'depends': [
         'fieldservice_stock',
         'helpdesk_fieldservice',
