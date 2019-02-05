@@ -21,7 +21,7 @@
                     </field>
                 </page>
             </notebook>
-            <field name="user_id" position="after">
+            <field name="partner_id" position="before">
                 <field name="fsm_location_id"/>
             </field>
         </field>
