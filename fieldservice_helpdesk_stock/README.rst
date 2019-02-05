@@ -23,7 +23,7 @@ location to solve a ticket.
 
 This module allows to integrate material request between a helpdesk ticket and
 field service order to be shipped to the customer location or serviced location
- and follow up with the Inventory team.
+and follow up with the Inventory team.
 
 **Table of contents**
 
