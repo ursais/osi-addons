@@ -12,7 +12,7 @@ addons:
       - expect-dev  # provides unbuffer utility
       - python-lxml # because pip installation is slow
       - postgresql-9.6-postgis-2.3
-      - postgis
+      - postgis-2.3
 
 before_script:
   - createdb openerp_test
