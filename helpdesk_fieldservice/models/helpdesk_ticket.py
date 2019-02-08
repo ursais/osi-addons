@@ -22,7 +22,7 @@ class HelpdeskTicket(models.Model):
                     if ticket.fsm_order_ids:
                         open_orders =\
                             ticket.fsm_order_ids.filtered(
-                                lambda x: x.stage_id.is_close)
+                                lambda x: x.stage_id.is_closed)
                         if (open_orders and len(open_orders.ids) != len(
                                 ticket.fsm_order_ids)):
                             raise ValidationError(
