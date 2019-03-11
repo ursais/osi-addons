@@ -29,3 +29,31 @@ class HelpdeskTicket(models.Model):
                                 _('Please complete all service orders '
                                   'related to this ticket to close it.'))
         return super(HelpdeskTicket, self).write(vals)
+
+    @api.onchange('fsm_location_id')
+    def _onchange_fsm_location_id_partner(self):
+        if self.fsm_location_id:
+            return {'domain':{'partner_id':[('service_location_id','=',
+                                              self.fsm_location_id.name)]}}
+        else:
+            return {'domain':{'partner_id':[('id', '!=', None)]}}
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id_location(self):
+        if self.partner_id:
+            self.fsm_location_id = self.partner_id.service_location_id
+
+    @api.model
+    def default_get(self, fields):
+        res = super(HelpdeskTicket, self).default_get(fields)
+        context = dict(self._context or {})
+        import pdb; pdb.set_trace()
+        try:
+            flag = True
+            context['active_id']
+        except KeyError:
+            flag = False
+        finally:
+            if flag:
+                res.update({'fsm_location_id': context['active_id']})
+        return res
