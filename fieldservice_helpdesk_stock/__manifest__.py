@@ -16,7 +16,8 @@
     ],
     'data': [
         'views/fsm_order_view.xml',
-        'views/helpdesk_ticket_view.xml'
+        'views/helpdesk_ticket_view.xml',
+        'views/helpdesk_views.xml'
     ],
     'development_status': 'Beta',
     'maintainers': [
