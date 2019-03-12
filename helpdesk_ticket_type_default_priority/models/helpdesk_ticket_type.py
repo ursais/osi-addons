@@ -1,4 +1,4 @@
-# Copyright (C) 2018 - TODAY, Open Source Integrators
+# Copyright (C) 2019 - TODAY, Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo import fields, models
@@ -11,4 +11,5 @@ class HelpdeskTicketType(models.Model):
                                          ('1', 'Low Priority'),
                                          ('2', 'High Priority'),
                                          ('3', 'Urgent')],
-                                        string="Default Priority")
+                                        string="Default Priority",
+                                        default='0')
