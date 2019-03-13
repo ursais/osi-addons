@@ -47,7 +47,6 @@ class HelpdeskTicket(models.Model):
     def default_get(self, fields):
         res = super(HelpdeskTicket, self).default_get(fields)
         context = dict(self._context or {})
-        import pdb; pdb.set_trace()
         try:
             flag = True
             context['active_id']
