@@ -1,10 +1,10 @@
-# Copyright (C) 2018 - TODAY, Open Source Integrators
+# Copyright (C) 2019 - TODAY, Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 {
     "name": "Tickets to multiple tasks relationships",
     "summary": "Tickets to multiple tasks relationships",
-    "version": "11.0.1.0.0",
+    "version": "12.0.1.0.0",
     "license": "LGPL-3",
     "author": "Open Source Integrators, Odoo Community Association (OCA)",
     "category": "Helpdesk",
