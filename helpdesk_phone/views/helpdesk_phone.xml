@@ -8,7 +8,7 @@
         <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
         <field name="arch" type="xml">
             <field name="partner_email" position="after">
-                <field name="partner_phone" widget="phone" readonly="1"/>
+                <field name="partner_phone" widget="phone" readonly="1" attrs="{'invisible': [('partner_id','=',False)]}"/>
             </field>
         </field>
     </record>
