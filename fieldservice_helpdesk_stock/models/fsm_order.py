@@ -10,7 +10,7 @@ class FSMOrder(geo_model.GeoModel):
     def action_inventory_confirm(self):
         res = super(FSMOrder, self).action_inventory_confirm()
         for order in self:
-            order.procurement_group_id.helpdesk_ticket_id = order.ticket_id.id
+            order.procurement_group_id.helpdesk_ticket_id = order.ticket_id
         return res
 
     def write(self, vals):
