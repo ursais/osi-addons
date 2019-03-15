@@ -42,17 +42,3 @@ class HelpdeskTicket(models.Model):
     def _onchange_partner_id_location(self):
         if self.partner_id:
             self.fsm_location_id = self.partner_id.service_location_id
-
-    @api.model
-    def default_get(self, fields):
-        res = super(HelpdeskTicket, self).default_get(fields)
-        context = dict(self._context or {})
-        try:
-            flag = True
-            context['active_id']
-        except KeyError:
-            flag = False
-        finally:
-            if flag:
-                res.update({'fsm_location_id': context['active_id']})
-        return res
