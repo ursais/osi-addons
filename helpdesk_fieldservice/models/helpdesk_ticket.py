@@ -33,10 +33,10 @@ class HelpdeskTicket(models.Model):
     @api.onchange('fsm_location_id')
     def _onchange_fsm_location_id_partner(self):
         if self.fsm_location_id:
-            return {'domain':{'partner_id':[('service_location_id','=',
-                                              self.fsm_location_id.name)]}}
+            return {'domain': {'partner_id': [('service_location_id', '=',
+                                               self.fsm_location_id.name)]}}
         else:
-            return {'domain':{'partner_id':[('id', '!=', None)]}}
+            return {'domain': {'partner_id': [('id', '!=', None)]}}
 
     @api.onchange('partner_id')
     def _onchange_partner_id_location(self):
