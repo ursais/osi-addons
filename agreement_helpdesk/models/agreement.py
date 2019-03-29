@@ -1,4 +1,4 @@
-# Copyright (C) 2018 - TODAY, Open Source Integrators
+# Copyright (C) 2019 - TODAY, Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo import api, fields, models
@@ -15,9 +15,8 @@ class Agreement(models.Model):
     @api.multi
     def _compute_ticket_count(self):
         for agreement in self:
-            res = self.env['helpdesk.ticket'].search_count(
+            agreement.ticket_count = self.env['helpdesk.ticket'].search_count(
                 [('agreement_id', '=', agreement.id)])
-            agreement.ticket_count = res or 0
 
     @api.multi
     def action_view_ticket(self):
@@ -27,11 +26,11 @@ class Agreement(models.Model):
             action = self.env.ref(
                 'helpdesk.helpdesk_ticket_action_main').read()[0]
             action['context'] = {}
-            if len(ticket_ids) > 1:
-                action['domain'] = [('id', 'in', ticket_ids.ids)]
-            elif len(ticket_ids) == 1:
+            if len(ticket_ids) == 1:
                 action['views'] = [(
                     self.env.ref('helpdesk.helpdesk_ticket_view_form').id,
                     'form')]
                 action['res_id'] = ticket_ids.ids[0]
+            else:
+                action['domain'] = [('id', 'in', ticket_ids.ids)]
             return action

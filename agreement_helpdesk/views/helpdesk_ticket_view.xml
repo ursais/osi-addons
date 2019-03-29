@@ -7,7 +7,7 @@
         <field name="model">helpdesk.ticket</field>
         <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
         <field name="arch" type="xml">
-            <field name="partner_id" position="before">
+            <field name="partner_id" position="after">
                 <field name="agreement_id"
                        domain="[('partner_id', '=', partner_id)]"
                        widget="selection"/>
@@ -25,7 +25,8 @@
         <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_search"/>
         <field name="arch" type="xml">
             <xpath expr="//group" position="inside">
-                <filter string="Service Profile" domain="[]"
+                <filter string="Service Profile" name="serviceprofile_id"
+                        domain="[]"
                         context="{'group_by':'serviceprofile_id'}"/>
             </xpath>
         </field>
