@@ -27,7 +27,7 @@ To use this module, you need to:
 * Select or create a RMA and set the agreement
 * Go to Agreement > Agreements
 * Open the previous agreement
-* Click on the smart button "RMAs" to see the list of related RMAs
+* Click on the smart button "RMA Orders" to see the list of related RMA Orders
 
 Credits
 =======
@@ -38,3 +38,4 @@ Contributors
 ------------
 
 * Open Source Integrators <contact@opensourceintegrators.com>
+* Serpent Consulting Services Pvt. Ltd. <support@serpentcs.com>
