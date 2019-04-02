@@ -11,7 +11,7 @@
     "website": "https://github.com/ursais/osi-addons",
     "depends": [
         "helpdesk",
-        "agreement_legal",
+        "agreement_serviceprofile",
     ],
     "data": [
         "views/helpdesk_ticket_view.xml",
