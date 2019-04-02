@@ -1,0 +1,6 @@
+contract
+field-service
+geospatial
+odoo-addons https://github.com/ursais/odoo-addons.git 12.0
+stock-rma https://github.com/Eficent/stock-rma.git 12.0
+
