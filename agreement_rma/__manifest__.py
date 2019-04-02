@@ -10,7 +10,7 @@
               'Odoo Community Association (OCA)',
     'website': 'https://github.com/ursais/osi-addons',
     'depends': [
-        'agreement_legal',
+        'agreement_serviceprofile',
         'rma',
     ],
     'data': [
