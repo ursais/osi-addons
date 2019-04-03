@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="helpdesk_ticket_type_view_tree" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.type.tree</field>
+        <field name="model">helpdesk.ticket.type</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_type_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="default_priority"
+                       widget="priority"/>
+            </field>
+        </field>
+    </record>
+
+    <menuitem id="helpdesk.helpdesk_ticket_type_menu"
+              name="Ticket Types"
+              action="helpdesk.helpdesk_ticket_type_action"
+              sequence="1"
+              parent="helpdesk.helpdesk_menu_config"
+              groups="base.group_no_one"/>
+
+</odoo>
