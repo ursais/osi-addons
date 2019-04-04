@@ -1,4 +1,4 @@
-# Copyright (C) 2018 - TODAY, Open Source Integrators
+# Copyright (C) 2019 - TODAY, Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo import api, fields, models, _
@@ -20,7 +20,7 @@ class HelpdeskTicket(models.Model):
             if ticket_stage.is_close:
                 for ticket in self:
                     if ticket.fsm_order_ids:
-                        open_orders =\
+                        open_orders = \
                             ticket.fsm_order_ids.filtered(
                                 lambda x: x.stage_id.is_closed)
                         if (open_orders and len(open_orders.ids) != len(
@@ -33,6 +33,7 @@ class HelpdeskTicket(models.Model):
     @api.onchange('fsm_location_id')
     def _onchange_fsm_location_id_partner(self):
         if self.fsm_location_id:
+            self.partner_id = False
             return {'domain': {'partner_id': [('service_location_id', '=',
                                                self.fsm_location_id.name)]}}
         else:
