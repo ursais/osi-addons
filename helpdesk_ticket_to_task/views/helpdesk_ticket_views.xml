@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<odoo>
+<!-- Copyright 2019 Open Source Integrators
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+
+    <!-- Helpdesk Ticket Form View -->
+    <record id="helpdesk_ticket_view_project_tasks_form" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.project.tasks.form</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet"/>
+        <field name="arch" type="xml">
+            <page position="after">
+                <page string="Tasks">
+                    <field name="helpdesk_ticket_task_line">
+                        <tree editable="bottom">
+                            <field name="task_id" context="{'default_project_id': parent.project_id}"/>
+                            <field name="user_id" readonly="1"/>
+                            <field name="planned_hours" widget="float_time" readonly="1"/>
+                            <field name="effective_hours" widget="float_time" readonly="1"/>
+                        </tree>
+                    </field>
+                </page>
+            </page>
+            <field name="task_id" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

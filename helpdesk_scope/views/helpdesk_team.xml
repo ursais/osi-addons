@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Helpdesk Ticket Team Extension-->
+    <record id="helpdesk_ticket_team_extension_scope" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.team.scope</field>
+        <field name="model">helpdesk.team</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_team_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='sla']" position="after">
+                <div class="col-md-6 o_setting_box" id="scope">
+                    <div class="o_setting_left_pane">
+                        <field name="use_scope"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="use_scope"/>
+                        <div class="text-muted">
+                            Set up your Scopes
+                        </div>
+                        <div attrs="{'invisible': [('use_scope', '=', False)]}" class="mt16">
+                            <label for="scope_ids"/>
+                            <field name="scope_ids" widget="many2many_tags"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
