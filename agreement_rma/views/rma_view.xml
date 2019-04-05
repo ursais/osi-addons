@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_rma_line_form_agreement" model="ir.ui.view">
+        <field name="name">rma.order.line.agreement</field>
+        <field name="model">rma.order.line</field>
+        <field name="inherit_id" ref="rma.view_rma_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="agreement_id"
+                       domain="[('partner_id', '=', partner_id)]"
+                       options="{'no_create': True, 'no_open': True}"/>
+                <field name="serviceprofile_id"
+                       domain="[('agreement_id', '=', agreement_id)]"
+                       options="{'no_create': True, 'no_open': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit mrp repair search view-->
+    <record id="view_rma_rma_line_filter_agreement" model="ir.ui.view">
+        <field name="name">rma.order.line.select.agreement</field>
+        <field name="model">rma.order.line</field>
+        <field name="inherit_id" ref="rma.view_rma_rma_line_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter string="Service Profile" name="serviceprofile_id"
+                        domain="[]"
+                        context="{'group_by':'serviceprofile_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
