@@ -21,55 +21,40 @@
             <xpath expr="//notebook/page[1]" position="after">
                 <page string="Inventory">
                     <header>
-                        <button id="action_request"
-                                name="action_inventory_request" string="Request"
-                                class="oe_highlight"
-                                attrs="{'invisible': [('inventory_stage', '!=', 'draft')]}"
-                                type="object"/>
-                        <button id="action_cancel"
-                                name="action_inventory_cancel" string="Cancel"
-                                type="object"
-                                attrs="{'invisible': [('inventory_stage', '!=', 'requested')]}"/>
-                        <button id="action_reset_draft"
-                                name="action_inventory_reset" string="Reset to Draft"
-                                type="object"
-                                attrs="{'invisible': [('inventory_stage', '!=', 'cancelled')]}"/>
-                        <field name='inventory_stage' widget="statusbar"/>
+                        <button name="action_cancel"
+                                attrs="{'invisible': [('request_stage', 'not in', ['draft','open'])]}"
+                                type="object" string="Cancel"/>
+                        <button name="action_draft" type="object"
+                                attrs="{'invisible': [('request_stage', 'not in', ['cancel'])]}"
+                                string="Set to Draft"/>
+                        <button name="action_done"
+                            string="Done" type="object"
+                            attrs="{'invisible': [('request_stage', 'not in', ['open'])]}"/>
+                        <field name='request_stage' widget="statusbar"/>
                     </header>
-                    <field name="team_id" invisible="1"/>
-                    <group groups="stock.group_stock_user">
-                        <group id="stock-left">
-                            <field name="warehouse_id"
-                                   groups="stock.group_stock_multi_warehouses"/>
-                            <field name="inventory_location_id"
-                                   domain="[('usage', 'in', ['internal', 'supplier', 'customer'])]"/>
-                        </group>
-                        <group id="stock-right"></group>
-                    </group>
-                    <field name="line_ids" nolabel="1">
+                    <field name="stock_request_ids" nolabel="1">
                         <tree editable="bottom">
-                            <field name="sequence" widget="handle"/>
-                            <field name="product_id"
-                                   context="{'quantity': qty_ordered,
-                                             'uom': product_uom_id}"/>
-                            <field name="name"/>
-                            <field name="route_id" groups="stock.group_stock_adv_location"/>
-                            <field name="qty_requested"
-                                   string="Requested Qty"
-                                   context="{'quantity': qty_requested,
-                                             'uom': product_uom_id}"/>
-                            <field name="qty_ordered"
-                                   string="Ordered Qty"
-                                   context="{'quantity': qty_ordered,
-                                             'uom': product_uom_id}"
-                                   attrs="{'invisible': [('state', '=', 'draft')]}"/>
-                            <field name="qty_delivered"
-                                   attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                            <field name="name" readonly="1"/>
+                            <field name="product_id"/>
                             <field name="product_uom_id"
-                                   attrs="{'readonly': [('state', 'in', ('sale', 'done', 'cancel'))]}"
                                    options="{'no_open': True, 'no_create': True}"
-                                   groups="product.group_uom"/>
-                            <field name="state" readonly="1"/>
+                                   groups="uom.group_uom"/>
+                            <field name="route_id" domain="[('helpdesk_selectable', '=', True)]"
+                                   options="{'no_create': True}"
+                                   groups="stock.group_stock_multi_locations"/>
+                            <field name="route_ids" invisible="1"/>
+                            <field name="product_uom_qty"/>
+                            <field name="qty_in_progress"/>
+                            <field name="qty_done"/>
+                            <field name="expected_date" invisible="1"/>
+                            <field name="picking_policy"
+                                   invisible="1"/>
+                            <field name="warehouse_id" invisible="1"/>
+                            <field name="location_id" invisible="1"/>
+                            <field name="procurement_group_id"
+                                   invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="state"/>
                         </tree>
                     </field>
                 </page>

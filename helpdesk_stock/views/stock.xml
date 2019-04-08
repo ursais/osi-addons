@@ -13,28 +13,49 @@
         </field>
     </record>
 
+    <record id="stock_picking_type_kanban_helpdesk" model="ir.ui.view">
+        <field name="name">stock.picking.type.kanban.helpdesk</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
+        <field name="arch" type="xml">
+            <field name='count_picking_backorders' position='after'>
+                <field name='count_hdesk_requests'/>
+            </field>
+            <xpath expr="//div[hasclass('o_kanban_primary_right')]" position="inside">
+                <div t-if="record.count_hdesk_requests.raw_value > 0" class="row">
+                    <div class="col-9">
+                        <a name="get_action_helpdesk_requests" type="object">
+                            Helpdesk
+                        </a>
+                    </div>
+                    <div class="col-3">
+                        <field name="count_hdesk_requests"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
     <!-- Inventory / Operations / Helpdesk Tickets -->
-    <record id="stock_helpdesk_ticket_form" model="ir.ui.view">
-        <field name="name">stock.helpdesk.ticket.form</field>
+    <record id="stock_helpdesk_ticket_form_request" model="ir.ui.view">
+        <field name="name">stock.helpdesk.ticket.form.request</field>
         <field name="model">helpdesk.ticket</field>
         <field name="arch" type="xml">
             <form string="Helpdesk Ticket" create="false">
                 <header>
-                    <field name="team_id" invisible="1"/>
-                    <button id="action_confirm"
-                            name="action_inventory_confirm" string="Confirm"
-                            class="oe_highlight"
-                            groups='stock.group_stock_user'
-                            type="object"/>
-                    <button id="action_cancel"
-                            name="action_inventory_cancel" string="Cancel"
-                            type="object" groups="stock.group_stock_user"
-                            attrs="{'invisible': [('inventory_stage', '!=', 'requested')]}"/>
-                    <button id="action_reset_draft"
-                            name="action_inventory_reset" string="Reset to Draft"
-                            type="object" groups="stock.group_stock_user"
-                            attrs="{'invisible': [('inventory_stage', '!=', 'cancelled')]}"/>
-                    <field name="inventory_stage" widget="statusbar"/>
+                    <button name="action_confirm"
+                        string="Confirm" type="object"
+                        attrs="{'invisible': [('request_stage', 'not in', ['draft'])]}"/>
+                    <button name="action_cancel"
+                            attrs="{'invisible': [('request_stage', 'not in', ['draft','open'])]}"
+                            type="object" string="Cancel"/>
+                    <button name="action_draft" type="object"
+                            attrs="{'invisible': [('request_stage', 'not in', ['cancel'])]}"
+                            string="Set to Draft"/>
+                    <button name="action_done"
+                        string="Done" type="object"
+                        attrs="{'invisible': [('request_stage', 'not in', ['open'])]}"/>
+                    <field name='request_stage' widget="statusbar"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -43,37 +64,33 @@
                     <group>
                         <group>
                             <field name="partner_id"/>
-                            <field name="inventory_location_id"
-                                   groups="stock.group_stock_multi_warehouses"/>
                         </group>
                         <group>
                             <field name="priority" widget="priority"/>
-                            <field name="warehouse_id"
-                                   groups="stock.group_stock_multi_warehouses"/>
                         </group>
                     </group>
-                    <field name="line_ids" nolabel="1">
+                    <field name="stock_request_ids" nolabel="1">
                         <tree editable="bottom">
-                            <field name="sequence" widget="handle"/>
-                            <field name="product_id"
-                                   context="{'quantity': qty_ordered,
-                                             'uom': product_uom_id}"/>
-                            <field name="name"/>
-                            <field name="route_id"/>
-                            <field name="qty_requested"
-                                   string="Requested Qty"
-                                   context="{'quantity': qty_requested,
-                                             'uom': product_uom_id}"/>
-                            <field name="qty_ordered"
-                                   string="Ordered Qty"
-                                   context="{
-                                    'quantity': qty_ordered,
-                                    'uom': product_uom_id}"/>
-                            <field name="qty_delivered"/>
+                            <field name="name" readonly="1"/>
+                            <field name="product_id"/>
                             <field name="product_uom_id"
-                                   attrs="{'readonly': [('state', 'in', ('sale', 'done', 'cancel'))]}"
-                                   options='{"no_open": True, "no_create": True}'
-                                   groups="product.group_uom"/>
+                                   options="{'no_open': True, 'no_create': True}"
+                                   groups="uom.group_uom"/>
+                            <field name="route_id" domain="[('helpdesk_selectable', '=', True)]"
+                                   options="{'no_create': True}"
+                                   groups="stock.group_stock_multi_locations"/>
+                            <field name="route_ids" invisible="1"/>
+                            <field name="product_uom_qty"/>
+                            <field name="qty_in_progress"/>
+                            <field name="qty_done"/>
+                            <field name="expected_date" invisible="1"/>
+                            <field name="picking_policy"
+                                   invisible="1"/>
+                            <field name="warehouse_id" invisible="1"/>
+                            <field name="location_id" invisible="1"/>
+                            <field name="procurement_group_id"
+                                   invisible="1"/>
+                            <field name="company_id" invisible="1"/>
                             <field name="state"/>
                         </tree>
                     </field>
@@ -87,30 +104,7 @@
         </field>
     </record>
 
-    <record id="stock_picking_type_kanban_helpdesk" model="ir.ui.view">
-        <field name="name">stock.picking.type.kanban.helpdesk</field>
-        <field name="model">stock.picking.type</field>
-        <field name="inherit_id" ref="stock.stock_picking_type_kanban"/>
-        <field name="arch" type="xml">
-            <field name='count_picking_backorders' position='after'>
-                <field name='count_hdesk_requests'/>
-            </field>
-            <xpath expr="//div[@class='col-xs-6 o_kanban_primary_right']/div[4]" position='after'>
-                <div t-if="record.count_hdesk_requests.raw_value > 0" class="row">
-                    <div class="col-xs-9">
-                        <a name="get_action_helpdesk_requests" type="object">
-                            Helpdesk
-                        </a>
-                    </div>
-                    <div class="col-xs-3">
-                        <field name="count_hdesk_requests"/>
-                    </div>
-                </div>
-            </xpath>
-        </field>
-    </record>
-
-    <record id="stock_helpdesk_ticket_tree" model="ir.ui.view">
+    <record id="stock_helpdesk_ticket_tree_request" model="ir.ui.view">
         <field name="name">stock.helpdesk.ticket.tree</field>
         <field name="model">helpdesk.ticket</field>
         <field name="arch" type="xml">
@@ -118,21 +112,21 @@
                   create="false">
                 <field name="name"/>
                 <field name="partner_id"/>
-                <field name="inventory_location_id"/>
+                <field name="request_stage"/>
             </tree>
         </field>
     </record>
 
-    <record id="action_stock_helpdesk_ticket" model="ir.actions.act_window">
+    <record id="action_stock_helpdesk_ticket_request" model="ir.actions.act_window">
         <field name="name">Helpdesk Tickets</field>
         <field name="res_model">helpdesk.ticket</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain" eval="[('inventory_stage', '=', 'requested')]"/>
+        <field name="domain" eval="[('request_stage', '=', 'draft'), ('stock_request_ids', '!=', False)]"/>
         <field name="view_ids"
                eval="[(5, 0, 0),
-                      (0, 0, {'view_mode': 'tree', 'view_id': ref('helpdesk_stock.stock_helpdesk_ticket_tree')}),
-                      (0, 0, {'view_mode': 'form', 'view_id': ref('helpdesk_stock.stock_helpdesk_ticket_form')})]"/>
+                      (0, 0, {'view_mode': 'tree', 'view_id': ref('helpdesk_stock.stock_helpdesk_ticket_tree_request')}),
+                      (0, 0, {'view_mode': 'form', 'view_id': ref('helpdesk_stock.stock_helpdesk_ticket_form_request')})]"/>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 No Helpdesk Tickets to confirm.
@@ -140,9 +134,9 @@
         </field>
     </record>
 
-    <menuitem id="menu_stock_fsm_order"
+    <menuitem id="menu_stock_helpdesk_tickets"
               name="Helpdesk Tickets"
-              action="action_stock_helpdesk_ticket"
+              action="action_stock_helpdesk_ticket_request"
               parent="stock.menu_stock_warehouse_mgmt"
               sequence="60"/>
 

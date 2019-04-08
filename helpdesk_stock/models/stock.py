@@ -1,29 +1,27 @@
-# Copyright (C) 2018 - TODAY, Open Source Integrators
+# Copyright (C) 2019 - TODAY, Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
-class StockMove(models.Model):
-    _inherit = "stock.move"
+class StockRequest(models.Model):
+    _inherit = "stock.request"
 
-    helpdesk_ticket_line_id = fields.Many2one('helpdesk.ticket.line',
-                                              'Helpdesk Ticket Line')
+    ticket_id = fields.Many2one(
+        'helpdesk.ticket', string="Helpdesk Ticket",
+        ondelete='cascade', index=True, copy=False)
+
+
+class StockMoveLine(models.Model):
+    _inherit = "stock.move.line"
 
     def _action_done(self):
-        res = super(StockMove, self)._action_done()
-        for line in res.mapped('helpdesk_ticket_line_id').sudo():
-            line.qty_delivered = line._get_delivered_qty()
-        return res
-
-    @api.multi
-    def write(self, vals):
-        res = super(StockMove, self).write(vals)
-        if 'product_uom_qty' in vals:
-            for move in self:
-                if move.state == 'done':
-                    for line in res.mapped('helpdesk_ticket_line_id').sudo():
-                        line.qty_delivered = line._get_delivered_qty()
+        res = super(StockMoveLine, self)._action_done()
+        for rec in self:
+            for rec in rec.move_id.allocation_ids:
+                request = rec.stock_request_id
+                if request.state == 'done' and request.ticket_id:
+                    request.ticket_id.request_stage = 'done'
         return res
 
 
@@ -31,19 +29,6 @@ class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
 
     helpdesk_ticket_id = fields.Many2one('helpdesk.ticket', 'Helpdesk Ticket')
-
-
-class ProcurementRule(models.Model):
-    _inherit = 'procurement.rule'
-
-    def _get_stock_move_values(self, product_id, product_qty, product_uom,
-                               location_id, name, origin, values, group_id):
-        res = super(ProcurementRule, self)._get_stock_move_values(
-            product_id, product_qty, product_uom,
-            location_id, name, origin, values, group_id)
-        if values.get('helpdesk_ticket_line_id', False):
-            res['helpdesk_ticket_line_id'] = values['helpdesk_ticket_line_id']
-        return res
 
 
 class StockPicking(models.Model):
@@ -69,9 +54,10 @@ class StockPickingType(models.Model):
         for ptype in self:
             if ptype.code == 'outgoing':
                 res = self.env['helpdesk.ticket'].search(
-                    [('inventory_stage', '=', 'requested'),
+                    [('request_stage', '=', 'draft'),
                      ('warehouse_id', '=', ptype.warehouse_id.id)])
                 ptype.count_hdesk_requests = len(res)
 
     def get_action_helpdesk_requests(self):
-        return self._get_action('helpdesk_stock.action_stock_helpdesk_ticket')
+        return self._get_action('helpdesk_stock.'
+                                'action_stock_helpdesk_ticket_request')

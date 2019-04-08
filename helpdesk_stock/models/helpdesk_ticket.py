@@ -1,15 +1,15 @@
-# Copyright (C) 2018 - TODAY, Open Source Integrators
+# Copyright (C) 2019 - TODAY, Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
-STOCK_STAGES = [('draft', 'Draft'),
-                ('requested', 'Requested'),
-                ('confirmed', 'Confirmed'),
-                ('partial', 'Partially Shipped'),
-                ('done', 'Done'),
-                ('cancelled', 'Cancelled')]
+
+REQUEST_STATES = [
+    ('draft', 'Draft'),
+    ('open', 'In progress'),
+    ('done', 'Done'),
+    ('cancel', 'Cancelled')]
 
 
 class HelpdeskTicket(models.Model):
@@ -22,10 +22,8 @@ class HelpdeskTicket(models.Model):
             [('company_id', '=', company)], limit=1)
         return warehouse_ids
 
-    inventory_location_id = fields.Many2one('stock.location',
-                                            'Destination Location')
-    line_ids = fields.One2many(
-        'helpdesk.ticket.line', 'ticket_id', string="Materials",)
+    stock_request_ids = fields.One2many('stock.request', 'ticket_id',
+                                        string="Materials")
     picking_ids = fields.One2many('stock.picking', 'helpdesk_ticket_id',
                                   string='Transfers')
     delivery_count = fields.Integer(string='Delivery Orders',
@@ -36,45 +34,59 @@ class HelpdeskTicket(models.Model):
                                    required=True, readonly=True,
                                    default=_default_warehouse_id,
                                    help="Warehouse used to ship the materials")
-    inventory_stage = fields.Selection(STOCK_STAGES, string='State',
-                                       default='draft', required=True,
-                                       readonly=True, store=True)
+    request_stage = fields.Selection(REQUEST_STATES, string='Request State',
+                                     default='draft', required=True,
+                                     readonly=True, store=True)
 
     @api.depends('picking_ids')
     def _compute_picking_ids(self):
         for ticket in self:
             ticket.delivery_count = len(ticket.picking_ids)
 
-    def action_inventory_request(self):
-        if self.fsm_location_id and self.line_ids:
-            for line in self.line_ids:
-                if line.state == 'draft':
-                    line.state = 'requested'
-                    line.qty_ordered = line.qty_requested
-            self.inventory_stage = 'requested'
-        else:
-            raise UserError(_('Please select a location and a product.'))
+    @api.multi
+    def action_confirm(self):
+        for rec in self:
+            if not rec.stock_request_ids:
+                raise UserError(_('Please select a Materials.'))
+            group_id = rec.procurement_group_id or False
+            if not group_id:
+                group_id = self.env['procurement.group'].create({
+                    'name': rec.name,
+                    'move_type': 'direct',
+                    'helpdesk_ticket_id': rec.id,
+                    'partner_id': rec.partner_id.id,
+                })
+                rec.procurement_group_id = group_id.id
+            for line in rec.stock_request_ids:
+                line.procurement_group_id = group_id.id
+                line.action_confirm()
+            rec.request_stage = 'open'
 
-    def action_inventory_confirm(self):
-        if self.line_ids and self.warehouse_id and self.inventory_location_id:
-            self.line_ids._confirm_picking()
-            self.inventory_stage = 'confirmed'
-            return True
-        else:
-            raise UserError(_('Please select the location, a warehouse and a'
-                              ' product.'))
+    def action_cancel(self):
+        for rec in self:
+            if not rec.stock_request_ids:
+                raise UserError(_('Please select a Materials.'))
+            for line in rec.stock_request_ids:
+                line.action_cancel()
+            rec.request_stage = 'cancel'
 
-    def action_inventory_cancel(self):
-        for line in self.line_ids:
-            if line.state == 'requested':
-                line.state = 'cancelled'
-            self.inventory_stage = 'cancelled'
+    @api.multi
+    def action_draft(self):
+        for rec in self:
+            if not rec.stock_request_ids:
+                raise UserError(_('Please select a Materials.'))
+            for line in rec.stock_request_ids:
+                line.action_draft()
+            rec.request_stage = 'draft'
 
-    def action_inventory_reset(self):
-        for line in self.line_ids:
-            if line.state == 'cancelled':
-                line.state = 'draft'
-        self.inventory_stage = 'draft'
+    @api.multi
+    def action_done(self):
+        for rec in self:
+            if not rec.stock_request_ids:
+                raise UserError(_('Please select a Materials.'))
+            for line in rec.stock_request_ids:
+                line.action_done()
+            rec.request_stage = 'done'
 
     @api.multi
     def action_view_delivery(self):
