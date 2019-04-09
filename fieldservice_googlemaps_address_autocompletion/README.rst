@@ -2,9 +2,9 @@
    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
    :alt: License: AGPL-3
 
-===========================
-Field Service - Google Maps
-===========================
+===================================================
+Field Service - Google Maps Address Auto-completion
+===================================================
 
 This module adds address auto-completition to Field Service Locations.
 It also adds logic to create and sync PostGIS geometries between 
@@ -16,7 +16,7 @@ Installation
 To install Field Service and have the mapping features, you need to install GeoEngine.
 
 Please refer to the installation instructions available at:
-https://github.com/OCA/geospatial/tree/11.0/base_geoengine
+https://github.com/OCA/geospatial/tree/12.0/base_geoengine
 
 Usage
 =====
@@ -38,3 +38,4 @@ Contributors
 ------------
 
 * Open Source Integrators <http://www.opensourceintegrators.com>
+* Serpent Consulting Services Pvt. Ltd. <support@serpentcs.com>
