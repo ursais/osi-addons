@@ -8,15 +8,13 @@
     'website': 'https://github.com/ursais/osi-addons',
     'category': 'Field Service',
     'license': 'LGPL-3',
-    'version': '11.0.1.0.1',
+    'version': '12.0.1.0.0',
     'depends': [
         'fieldservice_stock',
         'helpdesk_fieldservice',
         'helpdesk_stock',
     ],
     'data': [
-        'views/fsm_order_view.xml',
-        'views/helpdesk_ticket_view.xml',
         'views/helpdesk_views.xml'
     ],
     'development_status': 'Beta',
@@ -24,5 +22,6 @@
         'max3903',
         'bodedra'
     ],
+    'installable': True,
     'auto_install': True,
 }
