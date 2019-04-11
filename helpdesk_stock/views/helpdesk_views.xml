@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_helpdesk_ticket_form_inherit_stock" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form.stock</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id"
+               ref="helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet"/>
+        <field name="arch" type="xml">
+            <div class="oe_button_box" position="inside">
+                <field name="picking_ids" invisible="1"/>
+                <button type="object"
+                        name="action_view_delivery"
+                        class="oe_stat_button"
+                        icon="fa-truck"
+                        attrs="{'invisible': [('delivery_count', '=', 0)]}"
+                        groups="base.group_user">
+                    <field name="delivery_count" widget="statinfo" string="Delivery"/>
+                </button>
+            </div>
+            <xpath expr="//notebook/page[1]" position="after">
+                <page string="Inventory">
+                    <header>
+                        <button name="action_cancel"
+                                attrs="{'invisible': [('request_stage', 'not in', ['draft','open'])]}"
+                                type="object" string="Cancel"/>
+                        <button name="action_draft" type="object"
+                                attrs="{'invisible': [('request_stage', 'not in', ['cancel'])]}"
+                                string="Set to Draft"/>
+                        <button name="action_done"
+                            string="Done" type="object"
+                            attrs="{'invisible': [('request_stage', 'not in', ['open'])]}"/>
+                        <field name='request_stage' widget="statusbar"/>
+                    </header>
+                    <field name="stock_request_ids" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="name" readonly="1"/>
+                            <field name="product_id"/>
+                            <field name="product_uom_id"
+                                   options="{'no_open': True, 'no_create': True}"
+                                   groups="uom.group_uom"/>
+                            <field name="route_id" domain="[('helpdesk_selectable', '=', True)]"
+                                   options="{'no_create': True}"
+                                   groups="stock.group_stock_multi_locations"/>
+                            <field name="route_ids" invisible="1"/>
+                            <field name="product_uom_qty"/>
+                            <field name="qty_in_progress"/>
+                            <field name="qty_done"/>
+                            <field name="expected_date" invisible="1"/>
+                            <field name="picking_policy"
+                                   invisible="1"/>
+                            <field name="warehouse_id" invisible="1"/>
+                            <field name="location_id" invisible="1"/>
+                            <field name="procurement_group_id"
+                                   invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="state"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem id="menu_helpdesk_data"
+              name="Master Data"
+              parent="helpdesk.menu_helpdesk_root"
+              sequence="15"/>
+
+    <menuitem id="menu_helpdesk_product"
+              name="Products"
+              action="stock.product_template_action_product"
+              parent="menu_helpdesk_data"
+              sequence="50"/>
+
+    <menuitem id="menu_helpdesk_reporting_inventory"
+              name="Inventory"
+              action="stock.quantsact"
+              parent="helpdesk.helpdesk_ticket_report_menu_main"
+              sequence="50"/>
+
+</odoo>
