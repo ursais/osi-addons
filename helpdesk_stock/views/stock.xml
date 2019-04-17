@@ -64,9 +64,13 @@
                     <group>
                         <group>
                             <field name="partner_id"/>
+                            <field name="inventory_location_id"
+                                   groups="stock.group_stock_multi_warehouses"/>
                         </group>
                         <group>
                             <field name="priority" widget="priority"/>
+                            <field name="warehouse_id"
+                                   groups="stock.group_stock_multi_warehouses"/>
                         </group>
                     </group>
                     <field name="stock_request_ids" nolabel="1">
