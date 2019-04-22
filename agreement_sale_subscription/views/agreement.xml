@@ -10,7 +10,7 @@
         <field name="inherit_id"
                ref="agreement_legal_sale.agreement_sale_form_view"/>
         <field name="arch" type="xml">
-            <group id="sale-right" position="inside">
+            <group id="sale_right" position="inside">
                 <field name="subscription_id" readonly="1"/>
             </group>
         </field>
