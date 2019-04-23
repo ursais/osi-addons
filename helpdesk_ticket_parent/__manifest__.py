@@ -3,12 +3,11 @@
 {
     'name': 'Helpdesk Ticket Parent',
     'summary': 'Add Parent/Child relationship to Helpdesk Ticket',
-    'version': '11.0.0.0.1',
+    'version': '12.0.1.0.0',
     'category': 'Helpdesk',
     'author': "Open Source Integrators",
     'website': 'https://github.com/ursais/osi-addons',
     'depends': [
-        'helpdesk',
         'helpdesk_timesheet'
     ],
     'data': [

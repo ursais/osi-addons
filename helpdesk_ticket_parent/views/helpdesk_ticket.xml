@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
     <!-- Helpdesk Ticket Form Extension-->
@@ -26,24 +26,14 @@
         </field>
     </record>
 
-    <record id="helpdesk_tickets_view_search_parent" model="ir.ui.view">
-        <field name="name">helpdesk.ticket.select.parent</field>
+    <record id="helpdesk_tickets_view_search_parent_child" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.select.parent.child</field>
         <field name="model">helpdesk.ticket</field>
         <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_search"/>
         <field name="arch" type="xml">
-            <xpath expr="//group" position="inside">
-                <filter string="Parents" domain="[('parent_id', '=', False)]"/>
-            </xpath>
-        </field>
-    </record>
-
-    <record id="helpdesk_tickets_view_search_child" model="ir.ui.view">
-        <field name="name">helpdesk.ticket.select.child</field>
-        <field name="model">helpdesk.ticket</field>
-        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_search"/>
-        <field name="arch" type="xml">
-            <xpath expr="//group" position="inside">
-                <filter string="Children" domain="[('parent_id', '!=', False)]"/>
+            <xpath expr="//group/filter[@name='stage']" position="after">
+                <filter string="Parents" name='parents' domain="[('parent_id', '=', False)]"/>
+                <filter string="Children" name='children' domain="[('parent_id', '!=', False)]"/>
             </xpath>
         </field>
     </record>
