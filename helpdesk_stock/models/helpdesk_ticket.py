@@ -22,6 +22,8 @@ class HelpdeskTicket(models.Model):
             [('company_id', '=', company)], limit=1)
         return warehouse_ids
 
+    inventory_location_id = fields.Many2one(
+        'stock.location', 'Destination Location')
     stock_request_ids = fields.One2many('stock.request', 'ticket_id',
                                         string="Materials")
     picking_ids = fields.One2many('stock.picking', 'helpdesk_ticket_id',
@@ -48,6 +50,8 @@ class HelpdeskTicket(models.Model):
         for rec in self:
             if not rec.stock_request_ids:
                 raise UserError(_('Please select a Materials.'))
+            if not self.warehouse_id and not self.inventory_location_id:
+                raise UserError(_('Please select the location and warehouse.'))
             group_id = rec.procurement_group_id or False
             if not group_id:
                 group_id = self.env['procurement.group'].create({
@@ -58,7 +62,8 @@ class HelpdeskTicket(models.Model):
                 })
                 rec.procurement_group_id = group_id.id
             for line in rec.stock_request_ids:
-                line.procurement_group_id = group_id.id
+                line.write({'procurement_group_id': group_id.id,
+                            'location_id': rec.inventory_location_id.id})
                 line.action_confirm()
             rec.request_stage = 'open'
 

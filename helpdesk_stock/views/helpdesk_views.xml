@@ -32,6 +32,15 @@
                             attrs="{'invisible': [('request_stage', 'not in', ['open'])]}"/>
                         <field name='request_stage' widget="statusbar"/>
                     </header>
+                    <group groups="stock.group_stock_user">
+                        <group id="stock-left">
+                            <field name="warehouse_id"
+                                   groups="stock.group_stock_multi_warehouses"/>
+                            <field name="inventory_location_id"
+                                   domain="[('usage', 'in', ['internal', 'supplier', 'customer'])]"/>
+                        </group>
+                        <group id="stock-right"></group>
+                    </group>
                     <field name="stock_request_ids" nolabel="1">
                         <tree editable="bottom">
                             <field name="name" readonly="1"/>

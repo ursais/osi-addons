@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_helpdesk_location"
+              name="Locations"
+              action="fieldservice.action_fsm_location"
+              parent="helpdesk_stock.menu_helpdesk_data"
+              sequence="60"/>
+
+    <menuitem id="menu_helpdesk_equipment"
+              name="Equipment"
+              action="fieldservice.action_fsm_equipment"
+              parent="helpdesk_stock.menu_helpdesk_data"
+              sequence="70"/>
+
+    <menuitem id="menu_helpdesk_contacts"
+              name="Contacts"
+              action="contacts.action_contacts"
+              parent="helpdesk_stock.menu_helpdesk_data"
+              sequence="80"/>
+
+</odoo>
