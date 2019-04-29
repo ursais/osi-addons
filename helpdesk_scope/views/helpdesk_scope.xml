@@ -7,6 +7,7 @@
         <field name="model">helpdesk.scope</field>
         <field name="arch" type="xml">
             <tree editable="top" string="Helpdesk Scopes">
+                <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="description"/>
                 <field name="team_ids" widget="many2many_tags"/>
