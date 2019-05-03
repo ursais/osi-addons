@@ -10,6 +10,9 @@
             <field name="template_id" position="after">
                 <field name="ticket_id" context="{'default_ticket_id': active_id}"/>
             </field>
+            <field name="priority" position="attributes">
+                <attribute name="context">{'default_priority': priority}</attribute>
+            </field>
         </field>
     </record>
 
