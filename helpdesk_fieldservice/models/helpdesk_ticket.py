@@ -30,16 +30,29 @@ class HelpdeskTicket(models.Model):
                                   'related to this ticket to close it.'))
         return super(HelpdeskTicket, self).write(vals)
 
+    """loc is a boolean that lets us know if this is 
+    coming from the partner onchange or the location
+    onchange"""
+    def _location_contact_fill(self, loc):
+        if loc:
+            if self.fsm_location_id and self.partner_id:
+                if self.partner_id.service_location_id != self.fsm_location_id:
+                    self.partner_id = False               
+        else:
+            if self.partner_id:
+                if not self.fsm_location_id:
+                    self.fsm_location_id = self.partner_id.service_location_id
+
     @api.onchange('fsm_location_id')
     def _onchange_fsm_location_id_partner(self):
         if self.fsm_location_id:
-            self.partner_id = False
-            return {'domain': {'partner_id': [('service_location_id', '=',
-                                               self.fsm_location_id.name)]}}
+            self._location_contact_fill(True)
+            if self.fsm_location_id and not self.partner_id:
+                return {'domain': {'partner_id': [('service_location_id', '=', self.fsm_location_id.name)]}}
         else:
             return {'domain': {'partner_id': [('id', '!=', None)]}}
 
     @api.onchange('partner_id')
     def _onchange_partner_id_location(self):
         if self.partner_id:
-            self.fsm_location_id = self.partner_id.service_location_id
+            self._location_contact_fill(False)
