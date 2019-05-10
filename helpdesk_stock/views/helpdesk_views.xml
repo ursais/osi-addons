@@ -42,7 +42,7 @@
                             <field name="product_uom_id"
                                    options="{'no_open': True, 'no_create': True}"
                                    groups="uom.group_uom"/>
-                            <field name="route_id" domain="[('helpdesk_selectable', '=', True)]"
+                            <field name="route_id"
                                    options="{'no_create': True}"
                                    groups="stock.group_stock_multi_locations"/>
                             <field name="route_ids" invisible="1"/>
