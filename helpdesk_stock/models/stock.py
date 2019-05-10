@@ -37,20 +37,3 @@ class StockPicking(models.Model):
     helpdesk_ticket_id = fields.Many2one(
         related="group_id.helpdesk_ticket_id", string="Helpdesk Ticket",
         store=True)
-
-class StockPickingType(models.Model):
-    _inherit = 'stock.picking.type'
-
-    count_hdesk_requests = fields.Integer(compute='_compute_hdesk_request')
-
-    def _compute_hdesk_request(self):
-        for ptype in self:
-            if ptype.code == 'outgoing':
-                res = self.env['helpdesk.ticket'].search(
-                    [('request_stage', '=', 'draft'),
-                     ('warehouse_id', '=', ptype.warehouse_id.id)])
-                ptype.count_hdesk_requests = len(res)
-
-    def get_action_helpdesk_requests(self):
-        return self._get_action('helpdesk_stock.'
-                                'action_stock_helpdesk_ticket_request')

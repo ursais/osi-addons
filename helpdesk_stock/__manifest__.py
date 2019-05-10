@@ -10,12 +10,11 @@
     'website': 'https://github.com/ursais/osi-addons',
     'depends': [
         'helpdesk_timesheet',
-        'stock_request',
+        'stock_request_picking_type',
     ],
     'data': [
         'security/ir.model.access.csv',
         'views/helpdesk_views.xml',
-        'views/stock.xml',
     ],
     'installable': True,
     'license': 'LGPL-3',
