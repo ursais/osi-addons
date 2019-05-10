@@ -21,15 +21,18 @@
             <xpath expr="//notebook/page[1]" position="after">
                 <page string="Inventory">
                     <header>
-                        <button name="action_cancel"
-                                attrs="{'invisible': [('request_stage', 'not in', ['draft','open'])]}"
-                                type="object" string="Cancel"/>
+                        <button name="action_confirm"
+                                attrs="{'invisible': [('request_stage', 'not in', ['draft'])]}"
+                                type="object" string="Submit"/>
                         <button name="action_draft" type="object"
                                 attrs="{'invisible': [('request_stage', 'not in', ['cancel'])]}"
                                 string="Set to Draft"/>
                         <button name="action_done"
                             string="Done" type="object"
                             attrs="{'invisible': [('request_stage', 'not in', ['open'])]}"/>
+                        <button name="action_cancel"
+                                attrs="{'invisible': [('request_stage', 'not in', ['draft','open'])]}"
+                                type="object" string="Cancel"/>
                         <field name='request_stage' widget="statusbar"/>
                     </header>
                     <group groups="stock.group_stock_user">
@@ -48,7 +51,7 @@
                             <field name="product_uom_id"
                                    options="{'no_open': True, 'no_create': True}"
                                    groups="uom.group_uom"/>
-                            <field name="route_id" domain="[('helpdesk_selectable', '=', True)]"
+                            <field name="route_id"
                                    options="{'no_create': True}"
                                    groups="stock.group_stock_multi_locations"/>
                             <field name="route_ids" invisible="1"/>

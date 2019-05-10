@@ -38,13 +38,6 @@ class StockPicking(models.Model):
         related="group_id.helpdesk_ticket_id", string="Helpdesk Ticket",
         store=True)
 
-
-class StockLocationRoute(models.Model):
-    _inherit = 'stock.location.route'
-
-    helpdesk_selectable = fields.Boolean(string="Helpdesk Ticket Lines")
-
-
 class StockPickingType(models.Model):
     _inherit = 'stock.picking.type'
 

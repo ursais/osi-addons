@@ -1,18 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-    <!-- Stock Location Route -->
-    <record id="stock_location_route_view_helpdesk" model="ir.ui.view">
-        <field name="name">stock.location.route.form</field>
-        <field name="model">stock.location.route</field>
-        <field name="inherit_id" ref="stock.stock_location_route_form_view"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='warehouse_ids']" position="after">
-                <field name="helpdesk_selectable" string="Helpdesk Ticket Lines"/>
-            </xpath>
-        </field>
-    </record>
-
     <record id="stock_picking_type_kanban_helpdesk" model="ir.ui.view">
         <field name="name">stock.picking.type.kanban.helpdesk</field>
         <field name="model">stock.picking.type</field>
@@ -80,7 +67,7 @@
                             <field name="product_uom_id"
                                    options="{'no_open': True, 'no_create': True}"
                                    groups="uom.group_uom"/>
-                            <field name="route_id" domain="[('helpdesk_selectable', '=', True)]"
+                            <field name="route_id"
                                    options="{'no_create': True}"
                                    groups="stock.group_stock_multi_locations"/>
                             <field name="route_ids" invisible="1"/>
