@@ -11,9 +11,12 @@
                ref="helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet"/>
         <field name="arch" type="xml">
             <notebook position="inside">
-                <page string="Service Order">
+                <page string="Service Orders">
                     <field name="fsm_order_ids"
-                           context="{'default_customer_id':partner_id,'default_location_id':fsm_location_id, 'default_ticket_id': active_id, 'default_priority':priority}">
+                           context="{'default_customer_id': partner_id,
+                                     'default_location_id': fsm_location_id,
+                                     'default_ticket_id': active_id,
+                                     'default_priority': priority}">
                         <tree>
                             <field name="name"/>
                             <field name="customer_id"/>
