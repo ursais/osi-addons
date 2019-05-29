@@ -8,4 +8,3 @@ class HelpdeskStage(models.Model):
     _inherit = 'helpdesk.stage'
 
     action_id = fields.Many2one('ir.actions.server', string="Action Id")
-
