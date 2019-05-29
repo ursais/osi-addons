@@ -18,6 +18,7 @@
         "views/helpdesk_ticket.xml"
     ],
     "installable": True,
+    "auto_install": True,
     'license': 'LGPL-3',
     'development_status': 'Beta'
 }
