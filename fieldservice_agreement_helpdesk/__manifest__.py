@@ -15,8 +15,7 @@
         "fieldservice_agreement"
     ],
     "data": [
-        "views/helpdesk_ticket.xml",
-        "views/fsm_order.xml",
+        "views/helpdesk_ticket.xml"
     ],
     "installable": True,
     "auto_install": True,
