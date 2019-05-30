@@ -11,14 +11,15 @@
         'helpdesk',
     ],
     'data': [
-        'views/helpdesk_stage.xml',
-        'views/helpdesk_ticket.xml'
+        'data/ir_servers_action.xml',
+        'views/helpdesk_stage.xml'
     ],
     'installable': True,
     'license': 'LGPL-3',
     'development_status': 'Beta',
     'maintainers': [
         'wolfhall',
+        'osi-scampbell',
         'max3903',
     ],
 }
