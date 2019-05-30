@@ -11,5 +11,5 @@ class HelpdeskTicket(models.Model):
 
     @api.onchange('team_id')
     def onchange_team_id(self):
-        if self.team_id:
+        if self.team_id not in self.scope_id.team_ids:
             self.scope_id = False
