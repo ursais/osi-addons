@@ -19,6 +19,6 @@
     ],
     "installable": True,
     "auto_install": True,
-    'license': 'LGPL-3',
-    'development_status': 'Beta'
+    "development_status": "Beta",
+    "maintainers": ["osi-scampbell"],
 }
