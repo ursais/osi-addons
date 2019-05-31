@@ -6,20 +6,21 @@ from odoo import fields
 
 
 class TestHelpdeskAssign(HelpdeskTransactionCase):
-    """ Test used to check that the base functionalities of Helpdesk Team 
+    """ Test used to check that the base functionalities of Helpdesk Team
     Assigned Tickets function as expected.
-    - test_number_assign: tests that the assigned_tickets field computes properly.
+    - test_number_assign: tests that the assigned_tickets field
+    computes properly.
     """
 
-
     def test_number_assign(self):
-        # helpdesk manager creates a helpdesk team 
-        # (the .sudo() at the end is to avoid potential uid problems)d
+        # helpdesk manager creates a helpdesk team
+        # (the .sudo() at the end is to avoid potential uid problems)
         self.test_team = self.env['helpdesk.team'].\
             sudo(self.helpdesk_manager.id).create({'name': 'Test Team'}).sudo()
 
         # get possible tickets from previous installs that are not assigned
-        prev = self.env['helpdesk.ticket'].search_count([('user_id', '=', False)])
+        prev = self.env['helpdesk.ticket'].\
+            search_count([('user_id', '=', False)])
 
         # we create 10 tickets
         # make half assigned and half unassigned
@@ -37,10 +38,11 @@ class TestHelpdeskAssign(HelpdeskTransactionCase):
                 })
 
         # ensure we have an equal number of assigned and unassigned tickets
-        self.assertEqual(self.env['helpdesk.ticket'].\
-            search_count([('user_id', '=', False)])-prev, 5)
-        self.assertEqual(self.env['helpdesk.ticket'].\
-            search_count([('user_id', '=', self.helpdesk_user.id)]), 5)
+        self.assertEqual(self.env['helpdesk.ticket'].
+                         search_count([('user_id', '=', False)])-prev, 5)
+        self.assertEqual(self.env['helpdesk.ticket'].
+                         search_count([('user_id', '=',
+                                        self.helpdesk_user.id)]), 5)
 
         # ensure fields assigned_tickets and unassigned_tickets are equal
         u_count = self.env['helpdesk.team'].\
@@ -48,8 +50,9 @@ class TestHelpdeskAssign(HelpdeskTransactionCase):
         a_count = self.env['helpdesk.team'].\
             browse(self.test_team.id).assigned_tickets
 
-        self.assertEqual(self.env['helpdesk.ticket'].\
-            search_count([('user_id', '=', False)])-prev, u_count)
-        self.assertEqual(self.env['helpdesk.ticket'].\
-            search_count([('user_id', '=', self.helpdesk_user.id)]), a_count)
-
+        self.assertEqual(self.env['helpdesk.ticket'].
+                         search_count([('user_id', '=',
+                                        False)])-prev, u_count)
+        self.assertEqual(self.env['helpdesk.ticket'].
+                         search_count([('user_id', '=',
+                                        self.helpdesk_user.id)]), a_count)
