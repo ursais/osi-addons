@@ -51,14 +51,16 @@
               parent="helpdesk.menu_helpdesk_root"
               sequence="10"/>
 
-    <menuitem id="menu_helpdesk_fsm_order"
+    <menuitem id="menu_helpdesk_product"
               name="Service Orders"
               action="fieldservice.action_fsm_dash_order"
               parent="menu_helpdesk_op"
               sequence="20"/>
 
-    <menuitem id="helpdesk.helpdesk_ticket_menu_main" 
-        name="All Tickets"
-        parent="menu_helpdesk_op"/>
+    <data noupdate="1"><delete model="ir.ui.menu" id="helpdesk.helpdesk_ticket_menu_main"/></data>
 
+    <menuitem id="helpdesk_ticket_menu_main" 
+        action="helpdesk.helpdesk_ticket_action_main_tree"
+        sequence="10"
+        parent="menu_helpdesk_op"/>
 </odoo>
