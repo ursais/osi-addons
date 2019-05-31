@@ -45,4 +45,20 @@
             </field>
         </field>
     </record>
+
+    <menuitem id="menu_helpdesk_op"
+              name="Operations"
+              parent="helpdesk.menu_helpdesk_root"
+              sequence="10"/>
+
+    <menuitem id="menu_helpdesk_fsm_order"
+              name="Service Orders"
+              action="fieldservice.action_fsm_dash_order"
+              parent="menu_helpdesk_op"
+              sequence="20"/>
+
+    <menuitem id="helpdesk.helpdesk_ticket_menu_main" 
+        name="All Tickets"
+        parent="menu_helpdesk_op"/>
+
 </odoo>
