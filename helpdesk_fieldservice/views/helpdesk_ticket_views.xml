@@ -57,10 +57,8 @@
               parent="menu_helpdesk_op"
               sequence="20"/>
 
-    <data noupdate="1"><delete model="ir.ui.menu" id="helpdesk.helpdesk_ticket_menu_main"/></data>
-
-    <menuitem id="helpdesk_ticket_menu_main" 
-        action="helpdesk.helpdesk_ticket_action_main_tree"
-        sequence="10"
+    <menuitem id="helpdesk.helpdesk_ticket_menu_main" 
+        name="All Tickets"
         parent="menu_helpdesk_op"/>
+
 </odoo>
