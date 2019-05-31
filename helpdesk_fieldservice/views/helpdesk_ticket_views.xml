@@ -51,7 +51,7 @@
               parent="helpdesk.menu_helpdesk_root"
               sequence="10"/>
 
-    <menuitem id="menu_helpdesk_product"
+    <menuitem id="menu_helpdesk_fsm_order"
               name="Service Orders"
               action="fieldservice.action_fsm_dash_order"
               parent="menu_helpdesk_op"
