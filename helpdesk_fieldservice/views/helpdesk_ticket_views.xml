@@ -12,6 +12,7 @@
         <field name="arch" type="xml">
             <notebook position="inside">
                 <page string="Service Orders">
+                    <button name="action_create_order" string="Create FSM Order" type="object" class="oe_highlight"/>
                     <field name="fsm_order_ids"
                            context="{'create_order':True}">
                         <tree>
@@ -26,9 +27,6 @@
             <field name="partner_id" position="before">
                 <field name="fsm_location_id"/>
             </field>
-            <button name="assign_ticket_to_self" position="after">
-                <button name="action_create_order" string="Create FSM Order" type="object"/>
-            </button>
         </field>
     </record>
 
