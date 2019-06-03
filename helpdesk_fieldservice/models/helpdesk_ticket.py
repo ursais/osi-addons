@@ -58,3 +58,23 @@ class HelpdeskTicket(models.Model):
     def _onchange_partner_id_location(self):
         if self.partner_id:
             self._location_contact_fill(False)
+
+    @api.multi
+    def action_create_order(self):
+        '''
+        This function returns an action that displays a full FSM Order
+        form when creating an FSM Order from a ticket.
+        '''
+        action = self.env.ref('fieldservice.action_fsm_operation_order')
+        result = action.read()[0]
+        # override the context to get rid of the default filtering
+        result['context'] = {
+            'default_ticket_id': self.id,
+            'default_priority': self.priority,
+            'default_location_id': self.fsm_location_id.id,
+            'default_customer_id': self.partner_id.id
+        }
+        res = self.env.ref('fieldservice.fsm_order_form', False)
+        result['views'] = [(res and res.id or False, 'form')]
+        result['context']['default_origin'] = self.name
+        return result
