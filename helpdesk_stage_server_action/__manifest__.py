@@ -9,8 +9,10 @@
     'website': 'https://github.com/ursais/osi-addons',
     'depends': [
         'helpdesk',
+        'base_automation'
     ],
     'data': [
+        'data/base_automation.xml',
         'data/ir_servers_action.xml',
         'views/helpdesk_stage.xml'
     ],
