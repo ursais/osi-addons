@@ -44,6 +44,28 @@
         </field>
     </record>
 
+    <record id="helpdesk_ticket_tree_view_location" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.tree.location</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="fsm_location_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_search_view_location" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.search.location</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="fsm_location_id"/>
+            </field>
+        </field>
+    </record>
+
     <menuitem id="menu_helpdesk_op"
               name="Operations"
               parent="helpdesk.menu_helpdesk_root"
