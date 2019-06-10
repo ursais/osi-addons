@@ -12,10 +12,8 @@
         <field name="arch" type="xml">
             <notebook position="inside">
                 <page string="Service Orders">
-                    <field name="fsm_order_ids"
-                           context="{'default_customer_id': partner_id,
-                                     'default_location_id': fsm_location_id,
-                                     'default_priority': priority}">
+                    <button name="action_create_order" string="Create FSM Order" type="object" class="oe_highlight"/>
+                    <field name="fsm_order_ids">
                         <tree>
                             <field name="name"/>
                             <field name="customer_id"/>
@@ -45,4 +43,42 @@
             </field>
         </field>
     </record>
+
+    <record id="helpdesk_ticket_tree_view_location" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.tree.location</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="fsm_location_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_search_view_location" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.search.location</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="fsm_location_id"/>
+            </field>
+        </field>
+    </record>
+
+    <menuitem id="menu_helpdesk_op"
+              name="Operations"
+              parent="helpdesk.menu_helpdesk_root"
+              sequence="10"/>
+
+    <menuitem id="menu_helpdesk_fsm_order"
+              name="Service Orders"
+              action="fieldservice.action_fsm_dash_order"
+              parent="menu_helpdesk_op"
+              sequence="20"/>
+
+    <menuitem id="helpdesk.helpdesk_ticket_menu_main" 
+        name="All Tickets"
+        parent="menu_helpdesk_op"/>
+
 </odoo>
