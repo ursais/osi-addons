@@ -12,8 +12,9 @@
         'base_automation'
     ],
     'data': [
-        'data/base_automation.xml',
         'data/ir_servers_action.xml',
+        'data/base_automation.xml',
+        'data/helpdesk_stage.xml',
         'views/helpdesk_stage.xml'
     ],
     'installable': True,
