@@ -2,6 +2,11 @@
 <odoo>
     <!-- Copyright 2019 Open Source Integrators
          License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+    <template id="shrink_tree_column" name="helpdesk assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="helpdesk_fieldservice/static/src/scss/helpdesk_column.scss"/>
+        </xpath>
+    </template>
 
     <!-- Helpdesk Ticket Form View -->
     <record id="helpdesk_ticket_view_service_request_form" model="ir.ui.view">
@@ -15,10 +20,13 @@
                     <button name="action_create_order" string="Create FSM Order" type="object" class="oe_highlight"/>
                     <field name="fsm_order_ids">
                         <tree>
-                            <field name="name"/>
-                            <field name="customer_id"/>
-                            <field name="location_id"/>
-                            <field name="stage_id"/>
+                            <field name="name" style="pointer-events:none;"/>
+                            <field name="customer_id" style="pointer-events:none;"/>
+                            <field name="location_id" style="pointer-events:none;"/>
+                            <button name="action_view_order" string="View FSM Order" type="object" class="helpdesk_column"/>
+                            <field name="stage_id" style="pointer-events:none;"/>
+                            <field name="person_id" style="pointer-events:none;"/>
+                            <field name="scheduled_date_start" style="pointer-events:none;"/>
                         </tree>
                     </field>
                 </page>
