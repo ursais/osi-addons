@@ -25,6 +25,8 @@
                             <field name="location_id" style="pointer-events:none;"/>
                             <button name="action_view_order" string="View FSM Order" type="object" class="helpdesk_column"/>
                             <field name="stage_id" style="pointer-events:none;"/>
+                            <field name="person_id" style="pointer-events:none;"/>
+                            <field name="scheduled_date_start" style="pointer-events:none;"/>
                         </tree>
                     </field>
                 </page>
