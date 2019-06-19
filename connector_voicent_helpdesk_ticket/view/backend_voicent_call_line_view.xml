@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
     <record id="backend_voicent_form_view_inherit" model="ir.ui.view">
@@ -9,6 +8,7 @@
         <field name="arch" type="xml">
             <field name="applies_on" position="after">
                 <field name="helpdesk_ticket_stage_id"/>
+                <field name="has_parent"/>
             </field>
         </field>
     </record>
