@@ -1,6 +1,6 @@
-.. image:: https://img.shields.io/badge/licence-AGPL--3-blue.svg
-   :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
-   :alt: License: AGPL-3
+.. image:: https://img.shields.io/badge/licence-LGPL--3-blue.svg
+   :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
+   :alt: License: LGPL-3
 
 =================================
 Voicent Helpdesk Ticket Connector
@@ -15,21 +15,36 @@ This module aims to automate calls to customer or impacted third parties when a 
 Configuration
 =============
 
-* Go to Connectors > Backends > Voicent Backends.
-* Create a Voicent Backend with the host and port, time lines and call lines Go to Contacts.
-* Review customers to set the "Can Call" box or not.
+* Go to Connectors > Backends > Voicent Backends
+* Create a Voicent Backend with the host, port, caller ID, number of lines
+* Create Time lines to determine at which time of the day the calls are made
+* Create Call lines to determine at which stage in the process the calls are made.
+
++------------+-----+----------------+--------------+
+|            |     | Ticket has a parent           |
++------------+-----+----------------+--------------+
+|            |     | Yes            | No           |
++------------+-----+----------------+--------------+
+| Must Have  | Yes | Call           | No Call      |
++            +-----+----------------+--------------+
+| a Parent   | No  | Call                          |
++------------+-----+----------------+--------------+
+
+* Go to Contacts
+* Review customers to set the "Accepts Calls" box or not
 
 Usage
 =====
 
 To use this module, you need to:
 
-* Go to Helpdesk.
-* Create a ticket and assign it to a customer who accepts phone calls.
-* Move the ticket to the stage specified in the call lines of the backend Check the chatter for the call status.
+* Go to Helpdesk
+* Create a ticket and assign it to a customer who accepts phone calls
+* Move the ticket to the stage specified in the call lines of the backend
+* Check the chatter for the call status
 
 Contributors
 ------------
 
 * Maxime Chambreuil <mchambreuil@opensourceintegrators.com>
-* Serpent Consulting Services Pvt. Ltd. <support@serpentcs.com>
+* Murtuza Saleh <murtuza.saleh@serpentcs.com>
