@@ -11,6 +11,25 @@ class StockRequest(models.Model):
         'helpdesk.ticket', string="Helpdesk Ticket",
         ondelete='cascade', index=True, copy=False)
 
+    @api.onchange('direction', 'ticket_id')
+    def _onchange_fsm_location_id(self):
+        if self.direction == 'outbound':
+            # Inventory location of the FSM location of the order
+            self.location_id = \
+                self.ticket_id.fsm_location_id.inventory_location_id.id
+        else:
+            # Otherwise the stock location of the warehouse
+            self.location_id = \
+                self.ticket_id.warehouse_id.lot_stock_id.id
+
+    @api.model
+    def create(self, vals):
+        res = super().create(vals)
+        if 'ticket_id' in vals:
+            ticket_id = self.env['helpdesk.ticket'].browse(vals['ticket_id'])
+            ticket_id.write({'request_stage': 'draft'})
+        return res
+
 
 class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
