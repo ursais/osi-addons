@@ -42,7 +42,8 @@ class TestHelpdeskTicket(TransactionCase):
                                        'applies_on': False,
                                        'helpdesk_ticket_stage_id':
                                        self.helpdesk_stage_in_progress_id.id,
-                                       'voicent_app': 'App'
+                                       'msgtype': 'tts',
+                                       'msginfo': 'Hello World'
                                        })],
              'time_line_ids': [(0, 0, {'name': 'Call Time 1',
                                        'time': 10.0}),
