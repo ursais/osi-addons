@@ -2,5 +2,6 @@
 
 from . import (
     helpdesk_ticket,
-    stock
+    stock,
+    stock_request
 )
