@@ -1,0 +1,16 @@
+<odoo>
+
+    <record id="backend_voicent_call_line_form_view_inherit" model="ir.ui.view">
+        <field name="name">backend.voicent.call.line.form.view.inherit</field>
+        <field name="model">backend.voicent.call.line</field>
+        <field name="inherit_id"
+               ref="connector_voicent.backend_voicent_call_line_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@id='main-right']" position="inside">
+                <field name="helpdesk_ticket_stage_id"/>
+                <field name="has_parent"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
