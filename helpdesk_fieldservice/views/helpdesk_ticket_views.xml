@@ -27,6 +27,8 @@
                             <field name="stage_id" style="pointer-events:none;"/>
                             <field name="person_id" style="pointer-events:none;"/>
                             <field name="scheduled_date_start" style="pointer-events:none;"/>
+                            <field name="scheduled_date_end" style="pointer-events:none;"/>
+                            <field name="scheduled_duration" style="pointer-events:none;"/>
                         </tree>
                     </field>
                 </page>
