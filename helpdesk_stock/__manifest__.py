@@ -15,6 +15,7 @@
     'data': [
         'security/ir.model.access.csv',
         'views/helpdesk_views.xml',
+        'views/stock_request.xml'
     ],
     'installable': True,
     'license': 'LGPL-3',
