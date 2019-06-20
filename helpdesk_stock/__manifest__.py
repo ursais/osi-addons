@@ -11,7 +11,6 @@
     'depends': [
         'helpdesk_timesheet',
         'stock_request_picking_type',
-        'stock_request'
     ],
     'data': [
         'security/ir.model.access.csv',
