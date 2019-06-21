@@ -67,7 +67,7 @@ class HelpdeskTicket(models.Model):
                     'res_model': 'helpdesk.ticket',
                     'res_id': rec.id})
                 # Delete the file on the filesystem
-                shutil.rmtree(dir)
+                shutil.rmtree(directory)
                 if res.get('camp_id'):
                     message = _("""Call has been sent to <b>%s</b>.
                     The campaign ID is <b>%s</b> and the status is: %s""" %
