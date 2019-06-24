@@ -1,4 +1,4 @@
-<odoo noupdate="1">
+<odoo>
 
     <record id="helpdesk.stage_new" model="helpdesk.stage">
         <field name="action_id" ref="helpdesk_ticket_parent_new"/>
