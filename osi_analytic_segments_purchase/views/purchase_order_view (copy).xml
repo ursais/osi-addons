@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- Copyright 2019 Open Source Integrators
+         License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+    <!-- new field added to purchase order form -->
+    <record id="analytic_purchase_order_form" model="ir.ui.view">
+        <field name="name">analytic.purchase.order.form</field>
+        <field name="model">purchase.order</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree/field[@name='account_analytic_id']" position="after">
+                <field name="analytic_segment_one"/>
+                <field name="analytic_segment_two"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_line_tree_segments" model="ir.ui.view">
+        <field name="name">purchase.order.line.tree.segments</field>
+        <field name="model">purchase.order.line</field>
+        <field name="inherit_id" ref="purchase.purchase_order_line_tree"/>
+        <field name="arch" type="xml">
+            <field name='order_id' position="after">
+                <field name="state"/>
+            </field>
+            <field name='product_id' position="after">
+                <field name="analytic_segment_one"/>
+                <field name="analytic_segment_two"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="purchase_order_line_form_segments" model="ir.ui.view">
+        <field name="name">purchase.order.line.form.segments</field>
+        <field name="model">purchase.order.line</field>
+        <field name="inherit_id" ref="purchase.purchase_order_line_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='date_order']" position="before">
+                <field name="analytic_segment_one"/>
+                <field name="analytic_segment_two"/> 
+                <field name="state"/>      
+            </xpath>
+        </field>
+    </record>
+
+    <record id="purchase_order_line_search_segments" model="ir.ui.view">
+        <field name="name">purchase.order.line.search.segments</field>
+        <field name="model">purchase.order.line</field>
+        <field name="inherit_id" ref="purchase.purchase_order_line_search"/>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <xpath expr="//group/filter[4]" position="after">
+                <filter name="groupby_analytic_account"  string="Analytic Account" domain="[]" context="{'group_by' : 'analytic_account_id'}" />
+                <filter name="groupby_analytic_seg_1" string="Analytic Segment One" domain="[]" context="{'group_by' : 'analytic_segment_one'}" />
+                <filter name="groupby_analytic_seg_2" string="Analytic Segment Two" domain="[]" context="{'group_by' : 'analytic_segment_two'}" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
