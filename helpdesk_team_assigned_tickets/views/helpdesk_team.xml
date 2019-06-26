@@ -43,4 +43,15 @@
         </field>
     </record>
 
+    <record id="helpdesk_ticket_active_id" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.active.id</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+            <field name="stage_id" position="attributes">
+                <attribute name="context">{'active_id': id, 'active_ids': [id], 'active_model': 'helpdesk.ticket'}</attribute>
+            </field>
+        </field>
+    </record>
+
 </odoo>
