@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- Copyright 2019 Open Source Integrators
+         License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+        
+    <!-- new field added to account Invoice  Customer Invoice form -->
+    <record id="analytic_view_invoice_line_form_ext" model="ir.ui.view">
+        <field name="name">analytic.account.invoice.line.form.ext</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_analytic_id']" position="after">
+                <field name="analytic_segment_one" groups="analytic.group_analytic_accounting"/>
+                <field name="analytic_segment_two" groups="analytic.group_analytic_accounting" />
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- new field added to account Invoice Vendor Bills form -->
+    <record id="analytic_view_invoice_line_supplier_form_ext" model="ir.ui.view">
+        <field name="name">analytic.account.invoice.line.supplier.form.ext</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_analytic_id']" position="after">
+                <field name="analytic_segment_one" groups="analytic.group_analytic_accounting"/>
+                <field name="analytic_segment_two" groups="analytic.group_analytic_accounting" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

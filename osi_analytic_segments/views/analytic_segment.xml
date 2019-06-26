@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- Copyright 2019 Open Source Integrators
+         License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+	<!-- Segments menu in settings -->
+    <menuitem
+        name='Segments'
+        id='root_segment_menu'
+        parent='account.menu_finance_configuration'
+        groups="analytic.group_analytic_accounting"/>
+
+    <!-- Tree View for Analytic Segment One-->
+    <record id="analytic_segment_one_tree_view" model="ir.ui.view">
+        <field name="name">analytic.segment.one.tree</field>
+        <field name="model">analytic.segment.one</field>
+        <field name="arch" type="xml">
+            <tree string="Analytic Segment One">
+                <field name="code"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View for Analytic Segment One-->
+    <record id="analytic_segment_one_view_form" model="ir.ui.view">
+        <field name="name">analytic.segment.one.form</field>
+        <field name="model">analytic.segment.one</field>
+        <field name="arch" type="xml">
+            <form string="Analytic Segment One">
+                <sheet>
+                    <group name="segment_one">
+                        <field name="code"/>
+                        <field name="name" required="1"/>
+                        <field name="description" placeholder="Description..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View for Analytic Segment One-->
+    <record id="analytic_segment_one_view_search" model="ir.ui.view">
+        <field name="name">analytic.segment.one.search</field>
+        <field name="model">analytic.segment.one</field>
+        <field name="arch" type="xml">
+            <search string="Search Analytic Segment One">
+                <field name="code" string="Code"/>
+                <field name="name" string="Name"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action View for Analytic Segment One-->
+    <record id="action_analytic_segment_one" model="ir.actions.act_window">
+        <field name="name">Analytic Segment One</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">analytic.segment.one</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_type">form</field>
+    </record>
+
+	<!-- Menu for Analytic Segment One-->
+    <menuitem
+        id="menu_analytic_segment_one"
+        action="action_analytic_segment_one"
+        parent="root_segment_menu"
+        groups="analytic.group_analytic_accounting"
+        sequence="1"/>
+
+    <!-- Tree View for Analytic Segment Two-->
+    <record id="analytic_segment_two_tree_view" model="ir.ui.view">
+        <field name="name">analytic.segment.two.tree</field>
+        <field name="model">analytic.segment.two</field>
+        <field name="arch" type="xml">
+            <tree string="Analytic Segment Two">
+                <field name="code"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View for Analytic Segment Two-->
+    <record id="analytic_segment_two_view_form" model="ir.ui.view">
+        <field name="name">analytic.segment.two.form</field>
+        <field name="model">analytic.segment.two</field>
+        <field name="arch" type="xml">
+            <form string="Analytic Segment Two">
+                <sheet>
+                    <group name="segment_two">
+                        <field name="code"/>
+                        <field name="name" required="1"/>
+                        <field name="description" placeholder="Description..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View for Analytic Segment Two-->
+    <record id="analytic_segment_two_view_search" model="ir.ui.view">
+        <field name="name">analytic.segment.two.search</field>
+        <field name="model">analytic.segment.two</field>
+        <field name="arch" type="xml">
+            <search string="Search Analytic Segment Two">
+                <field name="code" string="Code"/>
+                <field name="name" string="Name"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action View for Analytic Segment Two-->
+    <record id="action_analytic_segment_two" model="ir.actions.act_window">
+        <field name="name">Analytic Segment Two</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">analytic.segment.two</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_type">form</field>
+    </record>
+
+	<!-- Menu for Analytic Segment Two-->
+	<menuitem
+        id="menu_analytic_segment_two"
+        action="action_analytic_segment_two"
+        parent="root_segment_menu"
+        groups="analytic.group_analytic_accounting"
+        sequence="2"/>
+
+</odoo>

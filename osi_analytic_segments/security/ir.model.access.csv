@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_analytic_segment_two_manager,analytic.segment.two.manager,model_analytic_segment_two,account.group_account_manager,1,1,1,1
+access_analytic_segment_two_user,analytic.segment.two.user,model_analytic_segment_two,account.group_account_user,1,0,0,0
+access_analytic_segment_one_manager,analytic.segment.one.manager,model_analytic_segment_one,account.group_account_manager,1,1,1,1
+access_analytic_segment_one_user,analytic.segment.one.user,model_analytic_segment_one,account.group_account_user,1,0,0,0
+access_analytic_segment_one_analytic,analytic.segment.one.analytic,model_analytic_segment_one,analytic.group_analytic_accounting,1,1,1,1
+access_analytic_segment_two_analytic,analytic.segment.two.analytic,model_analytic_segment_two,analytic.group_analytic_accounting,1,1,1,1
