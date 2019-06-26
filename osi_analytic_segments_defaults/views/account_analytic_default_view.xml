@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- Copyright 2019 Open Source Integrators
+         License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+    <record id="view_account_analytic_default_tree_segments" model="ir.ui.view">
+        <field name="name">account.analytic.default.tree.segments</field>
+        <field name="model">account.analytic.default</field>
+        <field name="inherit_id" ref="account_analytic_default.view_account_analytic_default_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='analytic_id']" position="after">
+                <field name="analytic_segment_one" groups="analytic.group_analytic_accounting"/>
+                <field name="analytic_segment_two" groups="analytic.group_analytic_accounting"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_analytic_default_form_segments" model="ir.ui.view">
+        <field name="name">account.analytic.default.form.segments</field>
+        <field name="model">account.analytic.default</field>
+        <field name="inherit_id" ref="account_analytic_default.view_account_analytic_default_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='analytic_id']" position="attributes">
+                <attribute name='required'>0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='analytic_id']" position="after">
+                <field name="analytic_segment_one" groups="analytic.group_analytic_accounting"/>
+                <field name="analytic_segment_two" groups="analytic.group_analytic_accounting"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>            
