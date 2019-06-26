@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- Copyright 2019 Open Source Integrators
+         License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+    <record id="view_expenses_tree_segments" model="ir.ui.view">
+        <field name="name">hr.expense.tree.segments</field>
+        <field name="model">hr.expense</field>
+        <field name="type">tree</field>
+        <field name="inherit_id" ref="hr_expense.view_expenses_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='analytic_account_id']" position='after'>
+                <field name="analytic_segment_one"/>
+                <field name="analytic_segment_two"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_expenses_form_segments" model="ir.ui.view">
+        <field name="name">hr.expense.form.segments</field>
+        <field name="model">hr.expense</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='analytic_account_id']" position='after'>
+                <field name="analytic_segment_one"/>
+                <field name="analytic_segment_two"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hr_expense_sheet_form_segments" model="ir.ui.view">
+        <field name="name">hr.expense.sheet.form</field>
+        <field name="model">hr.expense.sheet</field>
+        <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='analytic_account_id']" position='after'>
+                <field name="analytic_segment_one"/>
+                <field name="analytic_segment_two"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
