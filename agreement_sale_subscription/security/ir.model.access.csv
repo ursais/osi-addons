@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_so_agree_readonly,so.agree.readonly,model_sale_order,agreement_legal.group_agreement_readonly,1,0,0,0
+access_subscription_agree_readonly,subscription.agree.readonly,model_sale_subscription,agreement_legal.group_agreement_readonly,1,0,0,0

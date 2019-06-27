@@ -14,6 +14,7 @@
         'sale_subscription'
     ],
     'data': [
+        'security/ir.model.access.csv',
         'views/agreement.xml',
         'views/subscription.xml'
     ],

@@ -14,6 +14,7 @@
         "agreement_serviceprofile",
     ],
     "data": [
+        "security/ir.model.access.csv",
         "views/helpdesk_ticket_view.xml",
         "views/agreement_view.xml",
     ],

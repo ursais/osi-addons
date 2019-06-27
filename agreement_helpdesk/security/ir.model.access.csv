@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_helpdesk_ticket_agree_readonly,helpdesk.ticket.agree.readonly,model_helpdesk_ticket,agreement_legal.group_agreement_readonly,1,0,0,0

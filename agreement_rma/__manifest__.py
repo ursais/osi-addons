@@ -14,6 +14,7 @@
         'rma',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'views/agreement_view.xml',
         'views/rma_view.xml',
     ],
