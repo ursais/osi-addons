@@ -40,8 +40,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='date_order']" position="before">
                 <field name="analytic_segment_one"/>
-                <field name="analytic_segment_two"/> 
-                <field name="state"/>      
+                <field name="analytic_segment_two"/>
+                <field name="state"/>
             </xpath>
         </field>
     </record>
@@ -59,4 +59,26 @@
             </xpath>
         </field>
     </record>
+
+    <record id="action_purchase_order_lines" model="ir.actions.act_window">
+        <field name="name">Purchase Order Lines</field>
+        <field name="res_model">purchase.order.line</field>
+        <field name="view_id" ref="purchase.purchase_order_line_tree" />
+        <field name='view_type'>form</field>
+        <field name='view_mode'>tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a Purchase Order Line
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+            action='action_purchase_order_lines'
+            id='purchase_order_lines_menu'
+            parent='purchase.menu_procurement_management'
+            sequence='10'
+            groups='purchase.group_purchase_user'/>
+
+
 </odoo>
