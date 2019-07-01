@@ -18,7 +18,7 @@ Configuration
 * Go to Connectors > Backends > Voicent Backends
 * Create a Voicent Backend with the host, port, caller ID, number of lines
 * Create Time lines to determine at which time of the day the calls are made
-* Create Call lines to determine at which stage in the process the calls are made.
+* Create Call lines to determine at which stage in the process the calls are made
 
 +------------+-----+----------------+--------------+
 |            |     | Ticket has a parent           |
@@ -31,7 +31,7 @@ Configuration
 +------------+-----+----------------+--------------+
 
 * Go to Contacts
-* Review customers to set the "Accepts Calls" box or not
+* Review customers to set the "Accepts Voicent Calls" checkbox or not
 
 Usage
 =====
@@ -42,6 +42,25 @@ To use this module, you need to:
 * Create a ticket and assign it to a customer who accepts phone calls
 * Move the ticket to the stage specified in the call lines of the backend
 * Check the chatter for the call status
+
+ROADMAP
+=======
+
+* This module does not support all the message type provided by Voicent yet:
+
++-----------------------+-----------------+
+| Voicent Message Type  | Supported       |
++=======================+=================+
+| Audio                 | No              |
++-----------------------+-----------------+
+| IVR                   | No              |
++-----------------------+-----------------+
+| Survey                | No              |
++-----------------------+-----------------+
+| Template              | Yes             |
++-----------------------+-----------------+
+| Text-To-Speech        | Yes             |
++-----------------------+-----------------+
 
 Contributors
 ------------
