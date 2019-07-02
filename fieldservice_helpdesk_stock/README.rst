@@ -1,27 +1,27 @@
-======================
-FSM - Helpdesk - Stock
-======================
+=================================
+Field Service - Help Desk - Stock
+=================================
 
 .. |badge1| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
     :alt: Beta
-.. |badge2| image:: https://img.shields.io/badge/licence-AGPL--3-blue.png
-    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
-    :alt: License: AGPL-3
+.. |badge2| image:: https://img.shields.io/badge/licence-LGPL--3-blue.png
+    :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
+    :alt: License: LGPL-3
 
 |badge1| |badge2| 
 
 Odoo Field Service App allows to manage service requests and orders. The app
 does not support the logistic side of those activities: Sometimes, the
-dispatcher need to ship materials to the field service worker or to the
+dispatcher needs to ship materials to the field service worker or to the
 serviced location.
 
-Odoo Helpdesk App allows to manage support tickets or customer service requests.
+Odoo Help Desk App allows to manage support tickets or customer service requests.
 The app does not support the logistic side of those activities: Sometimes,
 helpdesk users need to ship materials to the customer or to the serviced
 location to solve a ticket.
 
-This module allows to integrate material request between a helpdesk ticket and
+This module allows to integrate material requests between a helpdesk ticket and
 field service order to be shipped to the customer location or serviced location
 and follow up with the Inventory team.
 
@@ -37,18 +37,18 @@ Usage
 * In Inventory, add products with quantity
 * Click on Confirm
 
-    * The delivery order is created
-    * The transfer is set on the ticket
-    * The state is updated to Confirmed
-    * The product, description and quantity requested cannot be changed
+  * The delivery order is created
+  * The transfer is set on the ticket
+  * The state is updated to Confirmed
+  * The product, description and quantity requested cannot be changed
 
 * Transfer partially the delivery order
 
-    * The state is updated to Partially Shipped
+  * The state is updated to Partially Shipped
 
 * Transfer completely the delivery order
 
-    * The state is updated to Done
+  * The state is updated to Done
 
 Bug Tracker
 ===========
@@ -72,6 +72,7 @@ Contributors
 ~~~~~~~~~~~~
 
 * Bhavesh Odedra <bodedra@opensourceintegrators.com>
+* Maxime Chambreuil <mchambreuil@opensourceintegrators.com>
 
 Other credits
 ~~~~~~~~~~~~~
