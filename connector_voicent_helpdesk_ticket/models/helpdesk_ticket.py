@@ -81,8 +81,9 @@ class HelpdeskTicket(models.Model):
                 writer.writerow(vals)
                 directory = tempfile.mkdtemp(suffix='-helpdesk.ticket')
                 file_name = \
-                    directory + "/" + rec.name + '-' + rec.stage_id.name + '-'\
-                    + fields.Datetime.now().strftime('%Y-%m-%d-%H-%M-%S') +\
+                    directory + "/" + str(rec.id) + '-' + \
+                    str(rec.stage_id.id) + '-' + \
+                    fields.Datetime.now().strftime('%Y-%m-%d-%H-%M-%S') + \
                     '.csv'
                 write_file = open(file_name, 'wb')
                 write_file.write(fp.getvalue())
