@@ -24,7 +24,7 @@ class HelpdeskTicket(models.Model):
 
     inventory_location_id = fields.Many2one(
         'stock.location', 'Destination Location')
-    stock_request_ids = fields.One2many('stock.request', 'ticket_id',
+    stock_request_ids = fields.One2many('stock.request', 'helpdesk_ticket_id',
                                         string="Materials")
     picking_ids = fields.One2many('stock.picking', 'helpdesk_ticket_id',
                                   string='Transfers')
