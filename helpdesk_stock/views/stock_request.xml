@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
     <record id="stock_request_helpdesk_ticket" model="ir.ui.view">
@@ -6,7 +5,7 @@
         <field name="inherit_id" ref="stock_request.view_stock_request_form"/>
         <field name="arch" type="xml">
             <field name="picking_policy" position="after">
-                <field name="ticket_id"/>
+                <field name="helpdesk_ticket_id"/>
             </field>
         </field>
     </record>

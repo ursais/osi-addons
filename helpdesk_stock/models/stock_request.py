@@ -15,10 +15,11 @@ class StockRequest(models.Model):
     def _onchange_location_id(self):
         if self.direction == 'outbound':
             # Inventory location of the ticket
-            self.location_id = self.ticket_id.inventory_location_id.id
+            self.location_id = self.helpdesk_ticket_id.inventory_location_id.id
         else:
             # Otherwise the stock location of the warehouse
-            self.location_id = self.ticket_id.warehouse_id.lot_stock_id.id
+            self.location_id = \
+                self.helpdesk_ticket_id.warehouse_id.lot_stock_id.id
 
     @api.model
     def create(self, vals):
