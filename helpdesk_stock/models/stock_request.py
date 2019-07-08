@@ -13,29 +13,45 @@ class StockRequest(models.Model):
 
     @api.onchange('direction', 'helpdesk_ticket_id')
     def _onchange_location_id(self):
-        if self.direction == 'outbound':
-            # Inventory location of the ticket
-            self.location_id = self.helpdesk_ticket_id.inventory_location_id.id
-        else:
-            # Otherwise the stock location of the warehouse
-            self.location_id = \
-                self.helpdesk_ticket_id.warehouse_id.lot_stock_id.id
+        super()._onchange_location_id()
+        if self.helpdesk_ticket_id:
+            if self.direction == 'outbound':
+                # Inventory location of the ticket
+                self.location_id = \
+                    self.helpdesk_ticket_id.inventory_location_id.id
+            else:
+                # Otherwise the stock location of the warehouse
+                self.location_id = \
+                    self.helpdesk_ticket_id.warehouse_id.lot_stock_id.id
 
     @api.model
     def create(self, vals):
+        res = super().create(vals)
         if 'helpdesk_ticket_id' in vals and vals['helpdesk_ticket_id']:
             ticket = self.env['helpdesk.ticket'].browse(
                 vals['helpdesk_ticket_id'])
+            ticket.request_stage = 'draft'
+        return res
+
+    def _prepare_procurement_group_values(self):
+        if self.helpdesk_ticket_id:
+            ticket = self.env['helpdesk.ticket'].browse(
+                self.helpdesk_ticket_id.id)
+            return {'name': ticket.name,
+                    'fsm_order_id': ticket.id,
+                    'move_type': 'direct'}
+        else:
+            return {}
+
+    @api.multi
+    def _action_confirm(self):
+        if self.helpdesk_ticket_id:
+            ticket = self.env['helpdesk.ticket'].browse(
+                self.helpdesk_ticket_id.id)
             group = self.env['procurement.group'].search([
                 ('helpdesk_ticket_id', '=', ticket.id)])
             if not group:
-                group = self.env['procurement.group'].create({
-                    'name': ticket.name,
-                    'helpdesk_ticket_id': ticket.id,
-                    'move_type': 'direct'})
-            vals.update({'procurement_group_id': group.id})
-            res = super().create(vals)
-            ticket.write({'request_stage': 'draft'})
-        else:
-            res = super().create(vals)
-        return res
+                values = self._prepare_procurement_group_values()
+                group = self.env['procurement.group'].create(values)
+            self.procurement_group_id = group.id
+        return super()._action_confirm()
