@@ -35,7 +35,7 @@ class HelpdeskTicket(models.Model):
                 for reply in call_line.reply_ids:
                     if reply.reply_field == 'notes':
                         filename = \
-                            rec.id + '-' + rec.stage_id.name + '-' + \
+                            str(rec.id) + '-' + str(rec.stage_id.id) + '-' + \
                             fields.Datetime.now().strftime(
                                 '%Y-%m-%d-%H-%M-%S') + '.csv'
                         res2 = voicent_obj.exportResult(campaign, filename)
