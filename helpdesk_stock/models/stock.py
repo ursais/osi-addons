@@ -13,7 +13,7 @@ class StockMoveLine(models.Model):
             for all_rec in rec.move_id.allocation_ids:
                 request = all_rec.stock_request_id
                 if request.state == 'done' and request.ticket_id:
-                    request.ticket_id.request_stage = 'done'
+                    request.helpdesk_ticket_id.request_stage = 'done'
         return res
 
 
