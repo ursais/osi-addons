@@ -22,14 +22,18 @@
                 <page string="Inventory">
                     <header>
                         <button name="action_request_submit"
-                                attrs="{'invisible': [('request_stage', 'not in', ['draft'])]}"
-                                type="object" string="Submit"/>
-                        <button name="action_request_draft" type="object"
-                                attrs="{'invisible': [('request_stage', 'not in', ['cancel'])]}"
-                                string="Set to Draft"/>
+                                string="Submit"
+                                type="object"
+                                class="oe_highlight"
+                                attrs="{'invisible': [('request_stage', 'not in', ['draft'])]}"/>
+                        <button name="action_request_draft"
+                                string="Set to Draft"
+                                type="object"
+                                attrs="{'invisible': [('request_stage', 'not in', ['cancel'])]}"/>
                         <button name="action_request_cancel"
-                                attrs="{'invisible': [('request_stage', 'not in', ['draft','open'])]}"
-                                type="object" string="Cancel"/>
+                                string="Cancel"
+                                type="object"
+                                attrs="{'invisible': [('request_stage', 'not in', ['draft', 'submitted'])]}"/>
                         <field name='request_stage' widget="statusbar"/>
                     </header>
                     <group groups="stock.group_stock_user">
