@@ -7,10 +7,12 @@ from odoo import api, models
 class FSMOrder(models.Model):
     _inherit = 'fsm.order'
 
-    def action_inventory_confirm(self):
-        res = super(FSMOrder, self).action_inventory_confirm()
+    @api.multi
+    def action_request_confirm(self):
+        res = super(FSMOrder, self).action_request_confirm()
         for order in self:
-            order.procurement_group_id.helpdesk_ticket_id = order.ticket_id
+            if order.ticket_id:
+                order.ticket_id.request_stage = order.request_stage
         return res
 
     @api.multi
