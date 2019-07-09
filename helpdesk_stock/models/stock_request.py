@@ -46,7 +46,7 @@ class StockRequest(models.Model):
             order = self.env['stock.request.order'].search([
                 ('helpdesk_ticket_id', '=', vals['helpdesk_ticket_id']),
                 ('direction', '=', vals['direction']),
-                ('date_expected', '=', vals['date_expected']),
+                ('expected_date', '=', vals['expected_date']),
                 ('state', '=', 'draft')
             ])
             if order:
