@@ -49,11 +49,18 @@ class StockRequest(models.Model):
 
     def _prepare_procurement_values(self, group_id=False):
         res = super()._prepare_procurement_values(group_id=group_id)
-        res.update({
-            'fsm_order_id': self.fsm_order_id.id,
-            'helpdesk_ticket_id': self.fsm_order_id.ticket_id.id or False,
-            'partner_id': self.fsm_order_id.location_id.partner_id.id,
-        })
+        if self.helpdesk_ticket_id:
+            res.update({
+                'helpdesk_ticket_id': self.helpdesk_ticket_id.id,
+                'partner_id':
+                    self.helpdesk_ticket_id.fsm_location_id.partner_id.id,
+            })
+        if self.fsm_order_id:
+            res.update({
+                'fsm_order_id': self.fsm_order_id.id,
+                'helpdesk_ticket_id': self.fsm_order_id.ticket_id.id or False,
+                'partner_id': self.fsm_order_id.location_id.partner_id.id,
+            })
         return res
 
     def _prepare_procurement_group_values(self):
