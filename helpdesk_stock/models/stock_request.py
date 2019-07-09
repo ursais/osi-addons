@@ -25,14 +25,16 @@ class StockRequest(models.Model):
                     self.helpdesk_ticket_id.warehouse_id.lot_stock_id.id
 
     def prepare_order_values(self, vals):
-        return {
+        res = {
             'expected_date': vals['expected_date'],
             'picking_policy': vals['picking_policy'],
             'warehouse_id': vals['warehouse_id'],
             'direction': vals['direction'],
             'location_id': vals['location_id'],
-            'helpdesk_ticket_id': vals['helpdesk_ticket_id'],
         }
+        if 'helpdesk_ticket_id' in vals and vals['helpdesk_ticket_id']:
+            res.update({'helpdesk_ticket_id': vals['helpdesk_ticket_id']})
+        return res
 
     @api.model
     def create(self, vals):
