@@ -3,6 +3,17 @@
     <!-- Copyright (C) 2019 - TODAY, Open Source Integrators
     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
 
+    <record id="helpdesk_ticket_form" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk_stock.view_helpdesk_ticket_form_inherit_stock"/>
+        <field name="arch" type="xml">
+            <field name="inventory_location_id" position="attributes">
+                <attribute name="readonly">True</attribute>
+            </field>
+        </field>
+    </record>
+
     <menuitem id="menu_helpdesk_location"
               name="Locations"
               action="fieldservice.action_fsm_location"

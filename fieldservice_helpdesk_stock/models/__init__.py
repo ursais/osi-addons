@@ -3,5 +3,7 @@
 
 from . import (
     fsm_order,
+    helpdesk_ticket,
     stock_request,
+    stock_request_order,
 )
