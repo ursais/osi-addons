@@ -1,8 +1,8 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
     <!-- Copyright 2019 Open Source Integrators
-         License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+         License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
 
     <!-- new field added to purchase order form -->
     <record id="analytic_purchase_order_form" model="ir.ui.view">
@@ -11,9 +11,10 @@
         <field name="type">form</field>
         <field name="inherit_id" ref="purchase.purchase_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='order_line']/tree/field[@name='account_analytic_id']" position="after">
-                <field name="analytic_segment_one"/>
-                <field name="analytic_segment_two"/>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='account_analytic_id']"
+                   position="after">
+                <field name="analytic_segment_one_id"/>
+                <field name="analytic_segment_two_id"/>
             </xpath>
         </field>
     </record>
@@ -27,8 +28,8 @@
                 <field name="state"/>
             </field>
             <field name='product_id' position="after">
-                <field name="analytic_segment_one"/>
-                <field name="analytic_segment_two"/>
+                <field name="analytic_segment_one_id"/>
+                <field name="analytic_segment_two_id"/>
             </field>
         </field>
     </record>
@@ -39,8 +40,8 @@
         <field name="inherit_id" ref="purchase.purchase_order_line_form2"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='date_order']" position="before">
-                <field name="analytic_segment_one"/>
-                <field name="analytic_segment_two"/>
+                <field name="analytic_segment_one_id"/>
+                <field name="analytic_segment_two_id"/>
                 <field name="state"/>
             </xpath>
         </field>
@@ -53,9 +54,15 @@
         <field name="type">search</field>
         <field name="arch" type="xml">
             <xpath expr="//group/filter[4]" position="after">
-                <filter name="groupby_analytic_account"  string="Analytic Account" domain="[]" context="{'group_by' : 'account_analytic_id'}" />
-                <filter name="groupby_analytic_seg_1" string="Analytic Segment One" domain="[]" context="{'group_by' : 'analytic_segment_one'}" />
-                <filter name="groupby_analytic_seg_2" string="Analytic Segment Two" domain="[]" context="{'group_by' : 'analytic_segment_two'}" />
+                <filter name="groupby_analytic_account"
+                        string="Analytic Account" domain="[]"
+                        context="{'group_by' : 'account_analytic_id'}"/>
+                <filter name="groupby_analytic_seg_1"
+                        string="Analytic Segment One" domain="[]"
+                        context="{'group_by' : 'analytic_segment_one_id'}"/>
+                <filter name="groupby_analytic_seg_2"
+                        string="Analytic Segment Two" domain="[]"
+                        context="{'group_by' : 'analytic_segment_two_id'}"/>
             </xpath>
         </field>
     </record>
@@ -63,7 +70,7 @@
     <record id="action_purchase_order_lines" model="ir.actions.act_window">
         <field name="name">Purchase Order Lines</field>
         <field name="res_model">purchase.order.line</field>
-        <field name="view_id" ref="purchase.purchase_order_line_tree" />
+        <field name="view_id" ref="purchase.purchase_order_line_tree"/>
         <field name='view_type'>form</field>
         <field name='view_mode'>tree,form</field>
         <field name="help" type="html">
@@ -73,12 +80,10 @@
         </field>
     </record>
 
-    <menuitem
-            action='action_purchase_order_lines'
-            id='purchase_order_lines_menu'
-            parent='purchase.menu_procurement_management'
-            sequence='10'
-            groups='purchase.group_purchase_user'/>
-
+    <menuitem id='purchase_order_lines_menu'
+              action='action_purchase_order_lines'
+              parent='purchase.menu_procurement_management'
+              sequence='10'
+              groups='purchase.group_purchase_user'/>
 
 </odoo>

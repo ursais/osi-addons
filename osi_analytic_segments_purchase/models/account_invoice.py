@@ -1,5 +1,5 @@
 # Copyright (C) 2019 - TODAY, Open Source Integrators
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo import models
 
@@ -11,6 +11,7 @@ class AccountInvoice(models.Model):
         data = super(AccountInvoice, self)._prepare_invoice_line_from_po_line(
             line)
         # Update Segments while Preparing PO Line
-        data.update({'analytic_segment_one': line.analytic_segment_one.id,
-                     'analytic_segment_two': line.analytic_segment_two.id})
+        data.update(
+            {'analytic_segment_one_id': line.analytic_segment_one_id.id,
+             'analytic_segment_two_id': line.analytic_segment_two_id.id})
         return data
