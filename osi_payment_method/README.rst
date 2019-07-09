@@ -1,5 +1,11 @@
-Overview
-========
+.. image:: https://img.shields.io/badge/licence-LGPL--3-blue.svg
+   :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
+   :alt: License: LGPL-3
+
+==================
+OSI Payment Method
+==================
+
 This module adds a Payment Method field on to Sales Orders, Purchase Orders, Invoices, Vendor Bills, Partners 
 and modifies the associated views for proper permissions
 
@@ -12,10 +18,11 @@ be editable depending on your user groups.
 
 Credits
 =======
-Michael Allen <mallen@opensourceintegrators.com>
 
+* Open Source Integrators <http://www.opensourceintegrators.com>
 
 Contributors
 ------------
 
-* Open Source Integrators <http://www.opensourceintegrators.com>
+* Michael Allen <mallen@opensourceintegrators.com>
+* Serpent Consulting Services Pvt. Ltd. <support@serpentcs.com>

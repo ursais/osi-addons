@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
     <record id="action_payment_methods" model="ir.actions.act_window">
@@ -13,10 +13,9 @@
         </field>
     </record>
 
-    <menuitem
-        action='action_payment_methods'
-        id='payment_method_menu'
-        parent='payment.root_payment_menu'
-        sequence='10' />
+    <menuitem id='payment_method_menu'
+              action='action_payment_methods'
+              parent='payment.root_payment_menu'
+              sequence='10'/>
 
 </odoo>

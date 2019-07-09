@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
     <record id="view_order_form_payment_method" model="ir.ui.view">
@@ -7,8 +7,9 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="//field[@name ='payment_term_id']" position="after">
-                    <field name="payment_method" widget="selection" attrs="{'readonly':True}"/>
+                <xpath expr="//field[@name ='payment_term_id']"
+                       position="after">
+                    <field name="payment_method" widget="selection"/>
                 </xpath>
             </data>
         </field>
@@ -17,11 +18,14 @@
     <record id="view_order_form_payment_method_editable" model="ir.ui.view">
         <field name="name">order.form.payment.method.editable</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="osi_payment_method.view_order_form_payment_method"/>
-        <field name="groups_id" eval="[(6, 0, [ref('sales_team.group_sale_manager')])]"/>
+        <field name="inherit_id"
+               ref="osi_payment_method.view_order_form_payment_method"/>
+        <field name="groups_id"
+               eval="[(6, 0, [ref('sales_team.group_sale_manager')])]"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="//field[@name ='payment_method']" position="attributes">
+                <xpath expr="//field[@name ='payment_method']"
+                       position="attributes">
                     <attribute name="readonly">False</attribute>
                 </xpath>
             </data>
