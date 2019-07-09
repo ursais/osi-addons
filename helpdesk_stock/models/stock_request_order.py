@@ -4,8 +4,8 @@
 from odoo import api, fields, models
 
 
-class StockRequest(models.Model):
-    _inherit = 'stock.request'
+class StockRequestOrder(models.Model):
+    _inherit = 'stock.request.order'
 
     helpdesk_ticket_id = fields.Many2one('helpdesk.ticket', string="Ticket",
                                          ondelete='cascade', index=True,
@@ -23,34 +23,13 @@ class StockRequest(models.Model):
                 # Otherwise the stock location of the warehouse
                 self.location_id = \
                     self.helpdesk_ticket_id.warehouse_id.lot_stock_id.id
+        self.change_childs()
 
-    def prepare_order_values(self, vals):
-        return {
-            'expected_date': vals['expected_date'],
-            'picking_policy': vals['picking_policy'],
-            'warehouse_id': vals['warehouse_id'],
-            'direction': vals['direction'],
-            'location_id': vals['location_id'],
-            'helpdesk_ticket_id': vals['helpdesk_ticket_id'],
-        }
-
-    @api.model
-    def create(self, vals):
-        res = super().create(vals)
-        if 'helpdesk_ticket_id' in vals and vals['helpdesk_ticket_id']:
-            ticket = self.env['helpdesk.ticket'].browse(
-                vals['helpdesk_ticket_id'])
-            ticket.request_stage = 'draft'
-            order = self.env['stock.request.order'].search([
-                ('helpdesk_ticket_id', '=', vals['helpdesk_ticket_id']),
-                ('state', '=', 'draft')
-            ])
-            if order:
-                res.order_id = order.id
-            else:
-                values = self.prepare_order_values(vals)
-                res.order_id = self.env['stock.request.order'].create(values)
-        return res
+    def change_childs(self):
+        super().change_childs()
+        if not self._context.get('no_change_childs', False):
+            for line in self.stock_request_ids:
+                line.helpdesk_ticket_id = self.helpdesk_ticket_id.id
 
     def _prepare_procurement_group_values(self):
         if self.helpdesk_ticket_id:
@@ -62,14 +41,6 @@ class StockRequest(models.Model):
         else:
             return {}
 
-    def _prepare_procurement_values(self, group_id=False):
-        res = super()._prepare_procurement_values(group_id=group_id)
-        res.update({
-            'helpdesk_ticket_id': self.helpdesk_ticket_id.id,
-            'partner_id': self.helpdesk_ticket_id.partner_id.id,
-        })
-        return res
-
     @api.multi
     def _action_confirm(self):
         if self.helpdesk_ticket_id:
@@ -80,11 +51,6 @@ class StockRequest(models.Model):
             if not group:
                 values = self._prepare_procurement_group_values()
                 group = self.env['procurement.group'].create(values)
-            if self.order_id:
-                self.order_id.procurement_group_id = group.id
             self.procurement_group_id = group.id
-            res = super()._action_confirm()
-            ticket.request_stage = 'open'
-        else:
-            res = super()._action_confirm()
-        return res
+            self.change_childs()
+        return super()._action_confirm()
