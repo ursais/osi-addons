@@ -45,6 +45,7 @@ class StockRequest(models.Model):
             ticket.request_stage = 'draft'
             order = self.env['stock.request.order'].search([
                 ('helpdesk_ticket_id', '=', vals['helpdesk_ticket_id']),
+                ('direction', '=', vals['direction']),
                 ('state', '=', 'draft')
             ])
             if order:
