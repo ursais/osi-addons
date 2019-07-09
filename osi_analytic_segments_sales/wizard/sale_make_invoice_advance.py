@@ -1,7 +1,7 @@
 # Copyright (C) 2019 - TODAY, Open Source Integrators
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from odoo import api, fields, models, _
+from odoo import api, models, _
 from odoo.exceptions import UserError
 
 
@@ -12,7 +12,6 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _create_invoice(self, order, so_line, amount):
         inv_obj = self.env['account.invoice']
         ir_property_obj = self.env['ir.property']
-
         account_id = False
         if self.product_id.id:
             account_id = self.product_id.property_account_income_id.id
@@ -23,12 +22,10 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 inc_acc).id if inc_acc else False
         if not account_id:
             raise UserError(
-                _(
-                    'There is no income account defined for this product: '
-                    '"%s". You may have to install a chart of account from '
-                    'Accounting app, settings menu.') %
+                _('There is no income account defined for this product: '
+                  '"%s". You may have to install a chart of account from '
+                  'Accounting app, settings menu.') %
                 (self.product_id.name,))
-
         if self.amount <= 0.00:
             raise UserError(
                 _('The value of the down payment amount must be positive.'))
@@ -46,9 +43,9 @@ class SaleAdvancePaymentInv(models.TransientModel):
             tax_ids = taxes.ids
 
         # Update Analytic account and Analytic Segments in Sale Order Line
-        so_line.analytic_account_id = order.analytic_account_id.id or False
-        so_line.analytic_segment_one = order.analytic_segment_one.id or False
-        so_line.analytic_segment_two = order.analytic_segment_two.id or False
+        so_line.analytic_account_id = order.analytic_account_id.id
+        so_line.analytic_segment_one_id = order.analytic_segment_one_id.id
+        so_line.analytic_segment_two_id = order.analytic_segment_two_id.id
 
         # Update Analytic account and Analytic Segments in Account Invoice Line
         invoice = inv_obj.create({
@@ -70,22 +67,22 @@ class SaleAdvancePaymentInv(models.TransientModel):
                 'product_id': self.product_id.id,
                 'sale_line_ids': [(6, 0, [so_line.id])],
                 'invoice_line_tax_ids': [(6, 0, tax_ids)],
-#               'account_analytic_id': so_line.analytic_account_id.id or False
-                'account_analytic_id': order.analytic_account_id.id or False,
-                'analytic_segment_one': order.analytic_segment_one.id or False,
-                'analytic_segment_two': order.analytic_segment_two.id or False,
+                'account_analytic_id': order.analytic_account_id.id,
+                'analytic_segment_one_id': order.analytic_segment_one_id.id,
+                'analytic_segment_two_id': order.analytic_segment_two_id.id,
             })],
             'currency_id': order.pricelist_id.currency_id.id,
             'payment_term_id': order.payment_term_id.id,
             'fiscal_position_id': order.fiscal_position_id.id or
-                                  order.partner_id
-                                      .property_account_position_id.id,
+            order.partner_id.property_account_position_id.id,
             'team_id': order.team_id.id,
             'user_id': order.user_id.id,
             'comment': order.note,
         })
         invoice.compute_taxes()
         invoice.message_post_with_view('mail.message_origin_link',
-                    values={'self': invoice, 'origin': order},
-                    subtype_id=self.env.ref('mail.mt_note').id)
+                                       values={'self': invoice,
+                                               'origin': order},
+                                       subtype_id=self.env.ref(
+                                           'mail.mt_note').id)
         return invoice
