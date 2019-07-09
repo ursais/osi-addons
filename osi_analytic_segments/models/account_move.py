@@ -7,20 +7,17 @@ from odoo import api, fields, models
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
 
-    analytic_segment_one = fields.Many2one(
+    analytic_segment_one_id = fields.Many2one(
         'analytic.segment.one',
-        string='Analytic Segment One'
-    )
-    analytic_segment_two = fields.Many2one(
+        string='Analytic Segment One')
+    analytic_segment_two_id = fields.Many2one(
         'analytic.segment.two',
-        string='Analytic Segment Two'
-    )
+        string='Analytic Segment Two')
 
     @api.one
     def _prepare_analytic_line(self):
         res = super(AccountMoveLine, self)._prepare_analytic_line()
-
-        res[0]['analytic_segment_one'] = self.analytic_segment_one.id
-        res[0]['analytic_segment_two'] = self.analytic_segment_two.id
-
+        res[0].update(
+            {'analytic_segment_one_id': self.analytic_segment_one_id.id,
+             'analytic_segment_two_id': self.analytic_segment_two_id.id})
         return res[0]

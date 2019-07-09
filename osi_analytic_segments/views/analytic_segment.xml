@@ -1,15 +1,15 @@
-<?xml version="1.0"?>
+<?xml version='1.0' encoding='UTF-8' ?>
 <odoo>
 
     <!-- Copyright 2019 Open Source Integrators
-         License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+         License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
 
-	<!-- Segments menu in settings -->
+    <!-- Segments menu in settings -->
     <menuitem
-        name='Segments'
-        id='root_segment_menu'
-        parent='account.menu_finance_configuration'
-        groups="analytic.group_analytic_accounting"/>
+            name='Segments'
+            id='root_segment_menu'
+            parent='account.menu_finance_configuration'
+            groups="analytic.group_analytic_accounting"/>
 
     <!-- Tree View for Analytic Segment One-->
     <record id="analytic_segment_one_tree_view" model="ir.ui.view">
@@ -33,7 +33,8 @@
                     <group name="segment_one">
                         <field name="code"/>
                         <field name="name" required="1"/>
-                        <field name="description" placeholder="Description..."/>
+                        <field name="description"
+                               placeholder="Description..."/>
                     </group>
                 </sheet>
             </form>
@@ -61,13 +62,12 @@
         <field name="view_type">form</field>
     </record>
 
-	<!-- Menu for Analytic Segment One-->
-    <menuitem
-        id="menu_analytic_segment_one"
-        action="action_analytic_segment_one"
-        parent="root_segment_menu"
-        groups="analytic.group_analytic_accounting"
-        sequence="1"/>
+    <!-- Menu for Analytic Segment One-->
+    <menuitem id="menu_analytic_segment_one"
+              action="action_analytic_segment_one"
+              parent="root_segment_menu"
+              groups="analytic.group_analytic_accounting"
+              sequence="1"/>
 
     <!-- Tree View for Analytic Segment Two-->
     <record id="analytic_segment_two_tree_view" model="ir.ui.view">
@@ -91,7 +91,8 @@
                     <group name="segment_two">
                         <field name="code"/>
                         <field name="name" required="1"/>
-                        <field name="description" placeholder="Description..."/>
+                        <field name="description"
+                               placeholder="Description..."/>
                     </group>
                 </sheet>
             </form>
@@ -119,12 +120,12 @@
         <field name="view_type">form</field>
     </record>
 
-	<!-- Menu for Analytic Segment Two-->
-	<menuitem
-        id="menu_analytic_segment_two"
-        action="action_analytic_segment_two"
-        parent="root_segment_menu"
-        groups="analytic.group_analytic_accounting"
-        sequence="2"/>
+    <!-- Menu for Analytic Segment Two-->
+    <menuitem
+            id="menu_analytic_segment_two"
+            action="action_analytic_segment_two"
+            parent="root_segment_menu"
+            groups="analytic.group_analytic_accounting"
+            sequence="2"/>
 
 </odoo>

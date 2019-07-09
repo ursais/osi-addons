@@ -1,5 +1,5 @@
 # Copyright (C) 2019 - TODAY, Open Source Integrators
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo import api, fields, models
 from odoo.osv import expression
@@ -7,6 +7,7 @@ from odoo.osv import expression
 
 class AnalyticSegmentOne(models.Model):
     _name = "analytic.segment.one"
+    _description = "Analytic Segment One"
     _order = 'name,code'
 
     code = fields.Char('Code')
@@ -14,11 +15,10 @@ class AnalyticSegmentOne(models.Model):
     description = fields.Text('Description')
 
     @api.multi
-    @api.depends('name', 'code')
     def name_get(self):
         result = []
         for segment in self:
-            name = '[%s] %s' %(segment.code,segment.name)
+            name = '[%s] %s' % (segment.code, segment.name)
             result.append((segment.id, name))
         return result
 
@@ -38,6 +38,7 @@ class AnalyticSegmentOne(models.Model):
 
 class AnalyticSegmentTwo(models.Model):
     _name = "analytic.segment.two"
+    _description = "Analytic Segment Two"
     _order = 'name,code'
 
     code = fields.Char('Code')
@@ -45,11 +46,10 @@ class AnalyticSegmentTwo(models.Model):
     description = fields.Text('Description')
 
     @api.multi
-    @api.depends('name', 'code')
     def name_get(self):
         result = []
         for segment in self:
-            name = '[%s] %s' %(segment.code,segment.name)
+            name = '[%s] %s' % (segment.code, segment.name)
             result.append((segment.id, name))
         return result
 
