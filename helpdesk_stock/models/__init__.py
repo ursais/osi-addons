@@ -3,5 +3,6 @@
 from . import (
     helpdesk_ticket,
     stock,
-    stock_request
+    stock_request,
+    stock_request_order,
 )

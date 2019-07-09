@@ -7,6 +7,7 @@ from odoo.exceptions import UserError
 
 REQUEST_STATES = [
     ('draft', 'Draft'),
+    ('submitted', 'Submitted'),
     ('open', 'In progress'),
     ('done', 'Done'),
     ('cancel', 'Cancelled')]
@@ -46,52 +47,42 @@ class HelpdeskTicket(models.Model):
             ticket.delivery_count = len(ticket.picking_ids)
 
     @api.multi
-    def action_confirm(self):
+    def action_request_submit(self):
         for rec in self:
             if not rec.stock_request_ids:
-                raise UserError(_('Please select a Materials.'))
-            if not self.warehouse_id and not self.inventory_location_id:
-                raise UserError(_('Please select the location and warehouse.'))
-            group_id = rec.procurement_group_id or False
-            if not group_id:
-                group_id = self.env['procurement.group'].create({
-                    'name': rec.name,
-                    'move_type': 'direct',
-                    'helpdesk_ticket_id': rec.id,
-                    'partner_id': rec.partner_id.id,
-                })
-                rec.procurement_group_id = group_id.id
+                raise UserError(_('Please create a stock request.'))
             for line in rec.stock_request_ids:
-                line.write({'procurement_group_id': group_id.id,
-                            'location_id': rec.inventory_location_id.id})
-                line.action_confirm()
-            rec.request_stage = 'open'
+                if line.state == 'draft':
+                    if line.order_id:
+                        line.order_id.action_confirm()
+                    else:
+                        line.action_confirm()
+            rec.request_stage = 'submitted'
 
-    def action_cancel(self):
+    def action_request_cancel(self):
         for rec in self:
             if not rec.stock_request_ids:
                 raise UserError(_('Please select a Materials.'))
             for line in rec.stock_request_ids:
-                line.action_cancel()
+                if line.state in ('draft', 'submitted'):
+                    if line.order_id:
+                        line.order_id.action_cancel()
+                    else:
+                        line.action_cancel()
             rec.request_stage = 'cancel'
 
     @api.multi
-    def action_draft(self):
+    def action_request_draft(self):
         for rec in self:
             if not rec.stock_request_ids:
                 raise UserError(_('Please select a Materials.'))
             for line in rec.stock_request_ids:
-                line.action_draft()
+                if line.state == 'cancel':
+                    if line.order_id:
+                        line.order_id.action_draft()
+                    else:
+                        line.action_draft()
             rec.request_stage = 'draft'
-
-    @api.multi
-    def action_done(self):
-        for rec in self:
-            if not rec.stock_request_ids:
-                raise UserError(_('Please select a Materials.'))
-            for line in rec.stock_request_ids:
-                line.action_done()
-            rec.request_stage = 'done'
 
     @api.multi
     def action_view_delivery(self):
