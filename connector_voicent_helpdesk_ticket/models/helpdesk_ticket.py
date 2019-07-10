@@ -15,6 +15,8 @@ from ...connector_voicent.examples import voicent
 class HelpdeskTicket(models.Model):
     _inherit = 'helpdesk.ticket'
 
+    call_count = fields.Integer(string='Call count', default=0)
+
     @job
     @api.multi
     def check_status_job(self, campaign, call_line):
@@ -41,7 +43,7 @@ class HelpdeskTicket(models.Model):
                         field = res2['Notes']
                     else:
                         field = res.get(reply.reply_field)
-                    if reply.reply_value in field:
+                    if reply.reply_value in str(field):
                         ctx = dict(self.env.context or {})
                         ctx.update(
                             {'active_id': rec.id,
@@ -124,8 +126,7 @@ class HelpdeskTicket(models.Model):
             if vals.get('stage_id') and rec.partner_id.company_type and \
                     rec.partner_id.can_call:
                 call_lines = self.env['backend.voicent.call.line'].search(
-                    [('helpdesk_ticket_stage_id', '=',
-                      vals.get('stage_id')),
+                    [('helpdesk_ticket_stage_id', '=', vals.get('stage_id')),
                      ('backend_id.active', '=', True)])
                 for line_rec in call_lines:
                     if not (line_rec.has_parent is True and
@@ -133,4 +134,5 @@ class HelpdeskTicket(models.Model):
                         rec.with_delay(
                             eta=line_rec.backend_id.next_call). \
                             voicent_import_and_runcampaign(line_rec)
+                        vals.update({'call_count': 0})
         return super().write(vals)
