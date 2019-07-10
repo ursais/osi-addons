@@ -15,10 +15,11 @@ from ...connector_voicent.examples import voicent
 class HelpdeskTicket(models.Model):
     _inherit = 'helpdesk.ticket'
 
+    call_count = fields.Integer(string='Call count', default=0)
+
     @job
     @api.multi
-    def check_status_job(self, campaign, helpdesk_ticket,
-                         call_line):
+    def voicent_check_status(self, campaign, call_line):
         for rec in self:
             voicent_obj = voicent.Voicent(
                 call_line.backend_id.host,
@@ -30,7 +31,7 @@ class HelpdeskTicket(models.Model):
              <b>%s</b>""" % (campaign,
                              call_line.backend_id.name,
                              res.get('status')))
-            helpdesk_ticket.message_post(body=message)
+            rec.message_post(body=message)
             if res.get('status') == 'FINISHED':
                 for reply in call_line.reply_ids:
                     if reply.reply_field == 'notes':
@@ -38,11 +39,14 @@ class HelpdeskTicket(models.Model):
                             str(rec.id) + '-' + str(rec.stage_id.id) + '-' + \
                             fields.Datetime.now().strftime(
                                 '%Y-%m-%d-%H-%M-%S') + '.csv'
-                        res2 = voicent_obj.exportResult(campaign, filename)
-                        field = res2['Notes']
+                        try:
+                            res2 = voicent_obj.exportResult(campaign, filename)
+                            field = res2['Notes']
+                        except TypeError:
+                            raise RetryableJobError(res2)
                     else:
                         field = res.get(reply.reply_field)
-                    if reply.reply_value in field:
+                    if reply.reply_value in str(field):
                         ctx = dict(self.env.context or {})
                         ctx.update(
                             {'active_id': rec.id,
@@ -53,10 +57,9 @@ class HelpdeskTicket(models.Model):
 
     @job
     @api.multi
-    def voicent_import_and_runcampaign(self, helpdesk_ticket, call_line):
+    def voicent_start_campaign(self, call_line):
         for rec in self:
-            if call_line.helpdesk_ticket_stage_id.id \
-                    == helpdesk_ticket.stage_id.id:
+            if call_line.helpdesk_ticket_stage_id.id == rec.stage_id.id:
                 # Generate the CSV file
                 fp = io.BytesIO()
                 writer = pycompat.csv_writer(fp, quoting=1)
@@ -89,15 +92,13 @@ class HelpdeskTicket(models.Model):
                 write_file.write(fp.getvalue())
                 write_file.close()
                 # Connect to Voicent
-                voicent_obj = voicent.Voicent(
-                    call_line.backend_id.host,
-                    str(call_line.backend_id.port),
-                    call_line.backend_id.callerid,
-                    str(call_line.backend_id.line))
-                res = voicent_obj.importAndRunCampaign(
-                    file_name,
-                    call_line.msgtype,
-                    call_line.msginfo)
+                voicent_obj = voicent.Voicent(call_line.backend_id.host,
+                                              str(call_line.backend_id.port),
+                                              call_line.backend_id.callerid,
+                                              str(call_line.backend_id.line))
+                res = voicent_obj.importAndRunCampaign(file_name,
+                                                       call_line.msgtype,
+                                                       call_line.msginfo)
                 # Delete the file on the filesystem
                 shutil.rmtree(directory)
                 if res.get('camp_id'):
@@ -106,19 +107,19 @@ class HelpdeskTicket(models.Model):
                     <b>%s</b>""" % (call_line.backend_id.name,
                                     res.get('camp_id'),
                                     res.get('status')))
-                    rec.with_delay().check_status_job(
-                        res.get('camp_id'),
-                        helpdesk_ticket,
-                        call_line)
+                    rec.message_post(body=message)
+                    rec.with_delay().voicent_check_status(res.get('camp_id'),
+                                                          call_line)
                 else:
                     message = _("""Call has been sent to <b>%s</b> but failed
-                     with the following message: <b>%s</b>""" %
-                                (call_line.backend_id.name,
-                                 res))
+                    with the following message: <b>%s</b>""" %
+                                (call_line.backend_id.name, res))
+                    rec.message_post(body=message)
+                    raise RetryableJobError(res)
             else:
                 message = _("Call has been cancelled because the stage has "
                             "changed.")
-            helpdesk_ticket.message_post(body=message)
+                rec.message_post(body=message)
 
     @api.multi
     def write(self, vals):
@@ -126,13 +127,13 @@ class HelpdeskTicket(models.Model):
             if vals.get('stage_id') and rec.partner_id.company_type and \
                     rec.partner_id.can_call:
                 call_lines = self.env['backend.voicent.call.line'].search(
-                    [('helpdesk_ticket_stage_id', '=',
-                      vals.get('stage_id')),
+                    [('helpdesk_ticket_stage_id', '=', vals.get('stage_id')),
                      ('backend_id.active', '=', True)])
                 for line_rec in call_lines:
                     if not (line_rec.has_parent is True and
                             rec.parent_id is False):
                         rec.with_delay(
                             eta=line_rec.backend_id.next_call). \
-                            voicent_import_and_runcampaign(rec, line_rec)
-        return super(HelpdeskTicket, self).write(vals)
+                            voicent_start_campaign(line_rec)
+                        vals.update({'call_count': 0})
+        return super().write(vals)
