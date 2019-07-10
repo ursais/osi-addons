@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Copyright 2019 Open Source Integrators
+         License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+
+    <!-- Inherit sale order form -->
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='analytic_account_id']"
+                   position="after">
+                <field name="analytic_segment_one_id"/>
+                <field name="analytic_segment_two_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
