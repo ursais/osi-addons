@@ -17,8 +17,7 @@ class HelpdeskTicket(models.Model):
 
     @job
     @api.multi
-    def check_status_job(self, campaign, helpdesk_ticket,
-                         call_line):
+    def check_status_job(self, campaign, call_line):
         for rec in self:
             voicent_obj = voicent.Voicent(
                 call_line.backend_id.host,
@@ -30,7 +29,7 @@ class HelpdeskTicket(models.Model):
              <b>%s</b>""" % (campaign,
                              call_line.backend_id.name,
                              res.get('status')))
-            helpdesk_ticket.message_post(body=message)
+            rec.message_post(body=message)
             if res.get('status') == 'FINISHED':
                 for reply in call_line.reply_ids:
                     if reply.reply_field == 'notes':
@@ -53,10 +52,10 @@ class HelpdeskTicket(models.Model):
 
     @job
     @api.multi
-    def voicent_import_and_runcampaign(self, helpdesk_ticket, call_line):
+    def voicent_import_and_runcampaign(self, call_line):
         for rec in self:
             if call_line.helpdesk_ticket_stage_id.id \
-                    == helpdesk_ticket.stage_id.id:
+                    == rec.stage_id.id:
                 # Generate the CSV file
                 fp = io.BytesIO()
                 writer = pycompat.csv_writer(fp, quoting=1)
@@ -108,7 +107,6 @@ class HelpdeskTicket(models.Model):
                                     res.get('status')))
                     rec.with_delay().check_status_job(
                         res.get('camp_id'),
-                        helpdesk_ticket,
                         call_line)
                 else:
                     message = _("""Call has been sent to <b>%s</b> but failed
@@ -118,7 +116,7 @@ class HelpdeskTicket(models.Model):
             else:
                 message = _("Call has been cancelled because the stage has "
                             "changed.")
-            helpdesk_ticket.message_post(body=message)
+            rec.message_post(body=message)
 
     @api.multi
     def write(self, vals):
@@ -134,5 +132,5 @@ class HelpdeskTicket(models.Model):
                             rec.parent_id is False):
                         rec.with_delay(
                             eta=line_rec.backend_id.next_call). \
-                            voicent_import_and_runcampaign(rec, line_rec)
-        return super(HelpdeskTicket, self).write(vals)
+                            voicent_import_and_runcampaign(line_rec)
+        return super().write(vals)
