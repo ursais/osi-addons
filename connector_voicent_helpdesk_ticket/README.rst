@@ -30,8 +30,32 @@ Configuration
 | a Parent   | No  | Call                          |
 +------------+-----+----------------+--------------+
 
+* Create Contact Info to create the structure of the CSV file to send to Voicent
+* Create Replies to determine what to do based on the replies (See example below)
 * Go to Contacts
 * Review customers to set the "Accepts Voicent Calls" checkbox or not
+
+Example
+-------
+
+Here is a server action to retry a call up to 3 times:
+
+.. code-block:: python
+
+    count = record.call_count + 1
+    if count < 3:
+      lines = env['backend.voicent.call.line'].search([
+        ('helpdesk_ticket_stage_id', '=', record.stage_id.id),
+        ('backend_id.active', '=', True)])
+      for line in lines:
+        if not (line.has_parent is True and record.parent_id is False):
+          DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+          eta = datetime.strptime(line.backend_id.next_call, DATETIME_FORMAT)
+          eta = eta + timedelta(days=1)
+          record.with_delay(eta=eta).voicent_start_campaign(line)
+    else:
+      count = 0
+    record.write({'call_count': count})
 
 Usage
 =====
@@ -46,7 +70,7 @@ To use this module, you need to:
 ROADMAP
 =======
 
-* This module does not support all the message type provided by Voicent yet:
+* This module does not support all the message types provided by Voicent yet:
 
 +-----------------------+-----------------+
 | Voicent Message Type  | Supported       |
