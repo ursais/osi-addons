@@ -5,11 +5,12 @@
 import io
 import shutil
 import tempfile
+import time
+from voicent import voicent
 from odoo import api, fields, models, _
+from odoo.tools import pycompat
 from ...queue_job.job import job
 from ...queue_job.exception import RetryableJobError
-from odoo.tools import pycompat
-from ...connector_voicent.examples import voicent
 
 
 class HelpdeskTicket(models.Model):
@@ -17,7 +18,6 @@ class HelpdeskTicket(models.Model):
 
     call_count = fields.Integer(string='Call count', default=0)
 
-    @job
     @api.multi
     def voicent_check_status(self, campaign, call_line):
         for rec in self:
@@ -27,33 +27,42 @@ class HelpdeskTicket(models.Model):
                 call_line.backend_id.callerid,
                 str(call_line.backend_id.line))
             res = voicent_obj.checkStatus(campaign)
+            i = 0
+            # Wait 20s for the campaign to finish
+            while res.get('status') != 'FINISHED':
+                time.sleep(i)
+                i += 20
+                res = voicent_obj.checkStatus(campaign)
+            filename = \
+                str(rec.id) + '-' + str(rec.stage_id.id) + '-' + \
+                fields.Datetime.now().strftime(
+                    '%Y-%m-%d-%H-%M-%S') + '.csv'
+            res2 = voicent_obj.exportResult(campaign, filename)
+            i = 0
+            # Wait 5s to get the results
+            while not (res2 and 'Notes' in res2):
+                time.sleep(i)
+                i += 5
+                res2 = voicent_obj.exportResult(campaign, filename)
+            # Post the response on the ticket
             message = _("""Status of campaign <b>%s</b> on <b>%s</b>:
              <b>%s</b>""" % (campaign,
                              call_line.backend_id.name,
                              res.get('status')))
             rec.message_post(body=message)
-            if res.get('status') == 'FINISHED':
-                for reply in call_line.reply_ids:
-                    if reply.reply_field == 'notes':
-                        filename = \
-                            str(rec.id) + '-' + str(rec.stage_id.id) + '-' + \
-                            fields.Datetime.now().strftime(
-                                '%Y-%m-%d-%H-%M-%S') + '.csv'
-                        try:
-                            res2 = voicent_obj.exportResult(campaign, filename)
-                            field = res2['Notes']
-                        except TypeError:
-                            raise RetryableJobError(res2)
-                    else:
-                        field = res.get(reply.reply_field)
-                    if reply.reply_value in str(field):
-                        ctx = dict(self.env.context or {})
-                        ctx.update(
-                            {'active_id': rec.id,
-                             'active_model': 'helpdesk.ticket'})
-                        reply.action_id.with_context(ctx).run()
-            else:
-                raise RetryableJobError(res)
+            # Execute the actions
+            for reply in call_line.reply_ids:
+                if reply.reply_field == 'notes':
+                    field = res2['Notes']
+                else:
+                    field = res.get(reply.reply_field)
+                if reply.reply_value in str(field):
+                    ctx = dict(self.env.context or {})
+                    ctx.update(
+                        {'active_id': rec.id,
+                         'active_model': 'helpdesk.ticket',
+                         'call_line_id': call_line.id})
+                    reply.action_id.with_context(ctx).run()
 
     @job
     @api.multi
@@ -101,15 +110,8 @@ class HelpdeskTicket(models.Model):
                                                        call_line.msginfo)
                 # Delete the file on the filesystem
                 shutil.rmtree(directory)
-                if res.get('camp_id'):
-                    message = _("""Call has been sent to <b>%s</b>.
-                    The campaign ID is <b>%s</b> and the status is:
-                    <b>%s</b>""" % (call_line.backend_id.name,
-                                    res.get('camp_id'),
-                                    res.get('status')))
-                    rec.message_post(body=message)
-                    rec.with_delay().voicent_check_status(res.get('camp_id'),
-                                                          call_line)
+                if res.get('camp_id') and res.get('status') == 'OK':
+                    rec.voicent_check_status(res.get('camp_id'), call_line)
                 else:
                     message = _("""Call has been sent to <b>%s</b> but failed
                     with the following message: <b>%s</b>""" %

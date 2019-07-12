@@ -44,15 +44,12 @@ Here is a server action to retry a call up to 3 times:
 
     count = record.call_count + 1
     if count < 3:
-      lines = env['backend.voicent.call.line'].search([
-        ('helpdesk_ticket_stage_id', '=', record.stage_id.id),
-        ('backend_id.active', '=', True)])
-      for line in lines:
-        if not (line.has_parent is True and record.parent_id is False):
-          DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
-          eta = datetime.strptime(line.backend_id.next_call, DATETIME_FORMAT)
-          eta = eta + timedelta(days=1)
-          record.with_delay(eta=eta).voicent_start_campaign(line)
+      line = env['backend.voicent.call.line'].browse(env.context.get('call_line_id'))
+      if not (line.has_parent is True and record.parent_id is False):
+        DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+        eta = datetime.strptime(line.backend_id.next_call, DATETIME_FORMAT)
+        eta = eta + timedelta(days=1)
+        record.with_delay(eta=eta).voicent_start_campaign(line)
     else:
       count = 0
     record.write({'call_count': count})
