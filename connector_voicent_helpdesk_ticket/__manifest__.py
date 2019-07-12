@@ -14,6 +14,11 @@
         'connector_voicent',
         'helpdesk_ticket_parent',
     ],
+    'external_dependencies': {
+        'python': [
+            'voicent',
+        ],
+    },
     'data': [
         'security/ir.model.access.csv',
         'view/backend_voicent_call_line.xml',
