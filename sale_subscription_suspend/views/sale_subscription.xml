@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+   <record id="subscription_suspension_form_view" model="ir.ui.view">
+        <field name="name">subscription.suspension.form.view</field>
+        <field name="model">sale.subscription</field>
+        <field name="inherit_id"
+               ref="sale_subscription.sale_subscription_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='recurring_invoice']" position="after">
+                <button string="Suspend"
+                        name="action_suspend"
+                        id="action_suspend"
+                        type="object"
+                        attrs="{'invisible': [('in_progress', '=', False)]}"/>
+                <button string="Re-Activate"
+                        name="action_re_activate"
+                        id="action_re_activate"
+                        type="object"
+                        attrs="{'invisible': [('stage_id', '!=', %(sale_subscription_suspend.sale_subscription_stage_suspend)d)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

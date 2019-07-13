@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+
+    <!-- Add Suspended Stage -->
+    <record id="sale_subscription_stage_suspend" model="sale.subscription.stage">
+        <field name="name">Suspended</field>
+        <field name="sequence">15</field>
+        <field name="in_progress" eval="False"/>
+    </record>
+
+</odoo>
