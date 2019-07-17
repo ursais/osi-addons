@@ -61,7 +61,7 @@ class StockRequest(models.Model):
             ticket = self.env['helpdesk.ticket'].browse(
                 self.helpdesk_ticket_id.id)
             return {'name': ticket.name,
-                    'fsm_order_id': ticket.id,
+                    'helpdesk_ticket_id': ticket.id,
                     'move_type': 'direct'}
         else:
             return {}
