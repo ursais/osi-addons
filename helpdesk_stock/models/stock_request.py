@@ -76,19 +76,20 @@ class StockRequest(models.Model):
 
     @api.multi
     def _action_confirm(self):
-        if self.helpdesk_ticket_id:
-            ticket = self.env['helpdesk.ticket'].browse(
-                self.helpdesk_ticket_id.id)
-            group = self.env['procurement.group'].search([
-                ('helpdesk_ticket_id', '=', ticket.id)])
-            if not group:
-                values = self._prepare_procurement_group_values()
-                group = self.env['procurement.group'].create(values)
-            if self.order_id:
-                self.order_id.procurement_group_id = group.id
-            self.procurement_group_id = group.id
-            res = super()._action_confirm()
-            ticket.request_stage = 'open'
-        else:
-            res = super()._action_confirm()
+        for req in self:
+            if (not req.procurement_group_id) and req.helpdesk_ticket_id:
+                ticket = self.env['helpdesk.ticket'].browse(
+                    req.helpdesk_ticket_id.id)
+                group = self.env['procurement.group'].search([
+                    ('helpdesk_ticket_id', '=', ticket.id)])
+                if not group:
+                    values = req._prepare_procurement_group_values()
+                    group = self.env['procurement.group'].create(values)
+                if req.order_id:
+                    req.order_id.procurement_group_id = group.id
+                req.procurement_group_id = group.id
+                res = super(StockRequest, req)._action_confirm()
+                ticket.request_stage = 'open'
+            else:
+                res = super(StockRequest, req)._action_confirm()
         return res
