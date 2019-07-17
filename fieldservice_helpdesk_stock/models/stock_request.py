@@ -71,3 +71,38 @@ class StockRequest(models.Model):
                         'helpdesk_ticket_id':
                             self.fsm_order_id.ticket_id.id or False})
         return res
+
+    @api.multi
+    def _action_confirm(self):
+        for req in self:
+            if (not req.procurement_group_id) and req.fsm_order_id:
+                fsm_order = self.env['fsm.order'].browse(req.fsm_order_id.id)
+                group = self.env['procurement.group'].search([
+                    ('fsm_order_id', '=', fsm_order.id)])
+                if not group:
+                    values = req._prepare_procurement_group_values()
+                    group = self.env['procurement.group'].create(values)
+                if req.order_id:
+                    req.order_id.procurement_group_id = group.id
+                req.procurement_group_id = group.id
+                res = super(StockRequest, req)._action_confirm()
+                fsm_order.request_stage = 'open'
+            elif (not req.procurement_group_id) and req.helpdesk_ticket_id:
+                ticket = self.env['helpdesk.ticket'].browse(
+                    req.helpdesk_ticket_id.id)
+                # If the ticket has many fsm orders, use the group with no
+                # fsm_order_id
+                group = self.env['procurement.group'].search([
+                    ('helpdesk_ticket_id', '=', ticket.id),
+                    ('fsm_order_id', '=', False)])
+                if not group:
+                    values = req._prepare_procurement_group_values()
+                    group = self.env['procurement.group'].create(values)
+                if req.order_id:
+                    req.order_id.procurement_group_id = group.id
+                req.procurement_group_id = group.id
+                res = super(StockRequest, req)._action_confirm()
+                ticket.request_stage = 'open'
+            else:
+                res = super(StockRequest, req)._action_confirm()
+        return res
