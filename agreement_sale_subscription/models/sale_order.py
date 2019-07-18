@@ -9,12 +9,12 @@ class SaleOrder(models.Model):
 
     @api.multi
     def create_subscriptions(self):
-        res = super(SaleOrder, self).create_subscriptions()
+        res = super().create_subscriptions()
         for order in self:
             for line in order.order_line:
-                if line.subscription_id:
-                    order.agreement_id.subscription_id = \
-                        line.subscription_id.id
-                    line.subscription_id.agreement_id = \
-                        order.agreement_id.id or False
+                if line.subscription_id and order.agreement_id:
+                    # Set the subscription on the agreement
+                    order.agreement_id.subscription_id = line.subscription_id.id
+                    # Set the agreement on the subscription
+                    line.subscription_id.agreement_id = order.agreement_id.id
         return res
