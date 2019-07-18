@@ -27,22 +27,22 @@ class HelpdeskTicket(models.Model):
                 call_line.backend_id.callerid,
                 str(call_line.backend_id.line))
             res = voicent_obj.checkStatus(campaign)
-            i = 0
-            # Wait 20s for the campaign to finish
+            i = 1
+            # Wait for the campaign to finish
             while res.get('status') != 'FINISHED':
                 time.sleep(i)
-                i += 20
+                i += 2
                 res = voicent_obj.checkStatus(campaign)
             filename = \
                 str(rec.id) + '-' + str(rec.stage_id.id) + '-' + \
                 fields.Datetime.now().strftime(
                     '%Y-%m-%d-%H-%M-%S') + '.csv'
             res2 = voicent_obj.exportResult(campaign, filename)
-            i = 0
-            # Wait 5s to get the results
+            i = 1
+            # Wait to get the results
             while not (res2 and 'Notes' in res2):
                 time.sleep(i)
-                i += 5
+                i += 1
                 res2 = voicent_obj.exportResult(campaign, filename)
             # Post the response on the ticket
             message = _("""Status of campaign <b>%s</b> on <b>%s</b>:
