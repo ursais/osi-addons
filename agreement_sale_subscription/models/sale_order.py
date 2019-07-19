@@ -14,7 +14,8 @@ class SaleOrder(models.Model):
             for line in order.order_line:
                 if line.subscription_id and order.agreement_id:
                     # Set the subscription on the agreement
-                    order.agreement_id.subscription_id = line.subscription_id.id
+                    order.agreement_id.subscription_id = \
+                        line.subscription_id.id
                     # Set the agreement on the subscription
                     line.subscription_id.agreement_id = order.agreement_id.id
         return res
