@@ -9,8 +9,10 @@ class SaleOrder(models.Model):
 
     @api.multi
     def create_subscriptions(self):
-        res = super(SaleOrder, self).create_subscriptions()
-        for sub_id in res:
-            subscription = self.env['sale.subscription'].search([('id', '=', sub_id)])
-            subscription.brand = self.brand
+        for order in self:
+            res = super(SaleOrder, order).create_subscriptions()
+            for sub_id in res:
+                subscription = self.env['sale.subscription'].browse(sub_id)
+                subscription.brand_id = order.brand_id.id
+        return res
 

@@ -8,5 +8,12 @@ from odoo import api, fields, models, _
 class SaleSubscription(models.Model):
     _inherit = 'sale.subscription'
 
-    brand = fields.Many2one('res.partner', 'Brand',
-                            domain="[('type', '=', 'brand')]")
+    brand_id = fields.Many2one('res.partner', string='Brand',
+                               domain="[('type', '=', 'brand')]")
+
+    def _prepare_invoice_data(self):
+        res = super()._prepare_invoice_data()
+        if self.brand_id:
+            res.update({'brand_id': self.brand_id.id})
+        return res
+
