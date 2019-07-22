@@ -19,7 +19,9 @@ class AccountInvoice(models.Model):
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
+        res = super()._onchange_partner_id()
         self.payment_method = self.partner_id.payment_method
+        return res
 
     # Load all unsold PO lines
     @api.onchange('purchase_id')
