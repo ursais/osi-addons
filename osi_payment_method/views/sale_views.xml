@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <!-- Copyright (C) 2019 Open Source Integrators
+         License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 
     <record id="view_order_form_payment_method" model="ir.ui.view">
         <field name="name">order.form.payment.method</field>
@@ -7,7 +9,7 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="//field[@name ='payment_term_id']"
+                <xpath expr="//field[@name='payment_term_id']"
                        position="after">
                     <field name="payment_method" widget="selection"/>
                 </xpath>
@@ -24,7 +26,7 @@
                eval="[(6, 0, [ref('sales_team.group_sale_manager')])]"/>
         <field name="arch" type="xml">
             <data>
-                <xpath expr="//field[@name ='payment_method']"
+                <xpath expr="//field[@name='payment_method']"
                        position="attributes">
                     <attribute name="readonly">False</attribute>
                 </xpath>
