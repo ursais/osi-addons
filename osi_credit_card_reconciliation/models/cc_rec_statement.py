@@ -5,7 +5,7 @@ import time
 from operator import itemgetter
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
-from odoo.exceptions import Warning, UserError
+from odoo.exceptions import UserError
 
 
 class CcRecStatement(models.Model):
@@ -91,13 +91,13 @@ class CcRecStatement(models.Model):
         for statement in self:
             if statement.cleared_balance_cur:
                 if statement.difference_cur != 0.0:
-                    raise Warning(_(
+                    raise UserError(_(
                         "Prior to reconciling a statement, all differences "
                         "must be accounted for and the difference must be "
                         "zero. Please review and make necessary changes."))
             else:
                 if statement.difference != 0.0:
-                    raise Warning(_(
+                    raise UserError(_(
                         "Prior to reconciling a statement, all differences "
                         "must be accounted for and the difference must be "
                         "zero. Please review and make necessary changes."))
@@ -268,7 +268,7 @@ class CcRecStatement(models.Model):
     def onchange_journal_id(self):
         if self.journal_id:
             if not self.journal_id.partner_id:
-                raise Warning(_(
+                raise UserError(_(
                     'Please define the credit card company on the selected '
                     'journal (%s).' % self.journal_id.name))
             self.account_id = \
