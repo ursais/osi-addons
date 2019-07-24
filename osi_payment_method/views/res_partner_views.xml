@@ -1,18 +1,18 @@
 <odoo>
 
-     <!-- Copyright (C) 2019 Open Source Integrators
-          License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+    <!-- Copyright (C) 2019 Open Source Integrators
+         License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 
     <record id="view_res_partner_form_payment_method" model="ir.ui.view">
         <field name="name">res.partner.form.payment.method</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="account.view_partner_property_form"/>
         <field name="arch" type="xml">
-            <data>
-                <xpath expr="//field[@name='currency_id']" position="after">
+            <xpath expr="//group[@name='accounting_entries']" position="after">
+                <group name="payment-info" string="Payment Information">
                     <field name="payment_method" widget="selection"/>
-                </xpath>
-            </data>
+                </group>
+            </xpath>
         </field>
     </record>
 
