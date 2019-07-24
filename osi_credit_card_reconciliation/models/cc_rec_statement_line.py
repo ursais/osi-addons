@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.addons import decimal_precision as dp
-from odoo.exceptions import Warning
+from odoo.exceptions import UserError
 
 
 class CCRecStatementLine(models.Model):
@@ -49,7 +49,7 @@ class CCRecStatementLine(models.Model):
         # This would allow only onchange method to pre-populate statement lines
         # based on the filter rules.
         if 'from_filter' in vals and vals['from_filter'] is False:
-            raise Warning(_(
+            raise UserError(_(
                 'You cannot add any new bank statement line manually as of '
                 'this revision for "%s" !') % vals['name'])
         return super().create(vals)
