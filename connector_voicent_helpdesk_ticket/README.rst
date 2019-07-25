@@ -30,6 +30,8 @@ Configuration
 | a Parent   | No  | Call                          |
 +------------+-----+----------------+--------------+
 
+* Create Contact Info to create the structure of the CSV file to send to Voicent
+* Create Replies to determine what to do based on the replies (See example below)
 * Go to Contacts
 * Review customers to set the "Accepts Voicent Calls" checkbox or not
 
@@ -63,7 +65,7 @@ To use this module, you need to:
 ROADMAP
 =======
 
-* This module does not support all the message type provided by Voicent yet:
+* This module does not support all the message types provided by Voicent yet:
 
 +-----------------------+-----------------+
 | Voicent Message Type  | Supported       |

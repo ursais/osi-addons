@@ -4,7 +4,7 @@
 
 {
     'name': 'Voicent Helpdesk Ticket Connector',
-    'version': '12.0.1.2.0',
+    'version': '12.0.1.2.1',
     'license': 'LGPL-3',
     'category': 'connector',
     'author': 'Open Source Integrators',
@@ -14,6 +14,11 @@
         'connector_voicent',
         'helpdesk_ticket_parent',
     ],
+    'external_dependencies': {
+        'python': [
+            'voicent',
+        ],
+    },
     'data': [
         'security/ir.model.access.csv',
         'view/backend_voicent_call_line.xml',

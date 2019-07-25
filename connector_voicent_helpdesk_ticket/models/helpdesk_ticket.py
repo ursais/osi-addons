@@ -6,11 +6,12 @@ import hashlib
 import io
 import shutil
 import tempfile
+import time
+from voicent import voicent
 from odoo import api, fields, models, _
+from odoo.tools import pycompat
 from ...queue_job.job import job
 from ...queue_job.exception import RetryableJobError
-from odoo.tools import pycompat
-from ...connector_voicent.examples import voicent
 
 
 class HelpdeskTicket(models.Model):
@@ -25,7 +26,7 @@ class HelpdeskTicket(models.Model):
         return hasher.hexdigest()
 
     @api.multi
-    def check_status_job(self, campaign, call_line):
+    def voicent_check_status(self, campaign, call_line):
         for rec in self:
             voicent_obj = voicent.Voicent(
                 call_line.backend_id.host,
@@ -33,37 +34,48 @@ class HelpdeskTicket(models.Model):
                 call_line.backend_id.callerid,
                 str(call_line.backend_id.line))
             res = voicent_obj.checkStatus(campaign)
+            i = 1
+            # Wait for the campaign to finish
+            while res.get('status') != 'FINISHED':
+                time.sleep(i)
+                i += 2
+                res = voicent_obj.checkStatus(campaign)
+            filename = \
+                str(rec.id) + '-' + str(rec.stage_id.id) + '-' + \
+                fields.Datetime.now().strftime(
+                    '%Y-%m-%d-%H-%M-%S') + '.csv'
+            res2 = voicent_obj.exportResult(campaign, filename)
+            i = 1
+            # Wait to get the results
+            while not (res2 and 'Notes' in res2):
+                time.sleep(i)
+                i += 1
+                res2 = voicent_obj.exportResult(campaign, filename)
+            # Post the response on the ticket
             message = _("""Status of campaign <b>%s</b> on <b>%s</b>:
              <b>%s</b>""" % (campaign,
                              call_line.backend_id.name,
                              res.get('status')))
             rec.message_post(body=message)
-            if res.get('status') == 'FINISHED':
-                for reply in call_line.reply_ids:
-                    if reply.reply_field == 'notes':
-                        filename = \
-                            str(rec.id) + '-' + str(rec.stage_id.id) + '-' + \
-                            fields.Datetime.now().strftime(
-                                '%Y-%m-%d-%H-%M-%S') + '.csv'
-                        res2 = voicent_obj.exportResult(campaign, filename)
-                        field = res2['Notes']
-                    else:
-                        field = res.get(reply.reply_field)
-                    if reply.reply_value in str(field):
-                        ctx = dict(self.env.context or {})
-                        ctx.update(
-                            {'active_id': rec.id,
-                             'active_model': 'helpdesk.ticket'})
-                        reply.action_id.with_context(ctx).run()
-            else:
-                raise RetryableJobError(res)
+            # Execute the actions
+            for reply in call_line.reply_ids:
+                if reply.reply_field == 'notes':
+                    field = res2['Notes']
+                else:
+                    field = res.get(reply.reply_field)
+                if reply.reply_value in str(field):
+                    ctx = dict(self.env.context or {})
+                    ctx.update(
+                        {'active_id': rec.id,
+                         'active_model': 'helpdesk.ticket',
+                         'call_line_id': call_line.id})
+                    reply.action_id.with_context(ctx).run()
 
     @job(identity_key=generate_identity)
     @api.multi
-    def voicent_import_and_runcampaign(self, call_line):
+    def voicent_start_campaign(self, call_line):
         for rec in self:
-            if call_line.helpdesk_ticket_stage_id.id \
-                    == rec.stage_id.id:
+            if call_line.helpdesk_ticket_stage_id.id == rec.stage_id.id:
                 # Generate the CSV file
                 fp = io.BytesIO()
                 writer = pycompat.csv_writer(fp, quoting=1)
@@ -96,35 +108,27 @@ class HelpdeskTicket(models.Model):
                 write_file.write(fp.getvalue())
                 write_file.close()
                 # Connect to Voicent
-                voicent_obj = voicent.Voicent(
-                    call_line.backend_id.host,
-                    str(call_line.backend_id.port),
-                    call_line.backend_id.callerid,
-                    str(call_line.backend_id.line))
-                res = voicent_obj.importAndRunCampaign(
-                    file_name,
-                    call_line.msgtype,
-                    call_line.msginfo)
+                voicent_obj = voicent.Voicent(call_line.backend_id.host,
+                                              str(call_line.backend_id.port),
+                                              call_line.backend_id.callerid,
+                                              str(call_line.backend_id.line))
+                res = voicent_obj.importAndRunCampaign(file_name,
+                                                       call_line.msgtype,
+                                                       call_line.msginfo)
                 # Delete the file on the filesystem
                 shutil.rmtree(directory)
-                if res.get('camp_id'):
-                    message = _("""Call has been sent to <b>%s</b>.
-                    The campaign ID is <b>%s</b> and the status is:
-                    <b>%s</b>""" % (call_line.backend_id.name,
-                                    res.get('camp_id'),
-                                    res.get('status')))
-                    rec.with_delay().check_status_job(
-                        res.get('camp_id'),
-                        call_line)
+                if res.get('camp_id') and res.get('status') == 'OK':
+                    rec.voicent_check_status(res.get('camp_id'), call_line)
                 else:
                     message = _("""Call has been sent to <b>%s</b> but failed
-                     with the following message: <b>%s</b>""" %
-                                (call_line.backend_id.name,
-                                 res))
+                    with the following message: <b>%s</b>""" %
+                                (call_line.backend_id.name, res))
+                    rec.message_post(body=message)
+                    raise RetryableJobError(res)
             else:
                 message = _("Call has been cancelled because the stage has "
                             "changed.")
-            rec.message_post(body=message)
+                rec.message_post(body=message)
 
     @api.multi
     def write(self, vals):
