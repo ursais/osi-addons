@@ -33,6 +33,23 @@ Configuration
 * Go to Contacts
 * Review customers to set the "Accepts Voicent Calls" checkbox or not
 
+Example
+-------
+
+Here is a server action to retry a call up to 3 times:
+
+.. code-block:: python
+
+    count = record.call_count + 1
+    if count < 3:
+      line = env['backend.voicent.call.line'].browse(env.context.get('call_line_id'))
+      if not (line.has_parent is True and record.parent_id is False):
+        eta = line.backend_id.next_call + datetime.timedelta(days=1)
+        record.with_delay(eta=eta, identity_key=self.generate_identity).voicent_start_campaign(line)
+    else:
+      count = 0
+    record.write({'call_count': count})
+
 Usage
 =====
 
