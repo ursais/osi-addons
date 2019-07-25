@@ -9,7 +9,7 @@ import time
 from voicent import voicent
 from odoo import api, fields, models, _
 from odoo.tools import pycompat
-from ...queue_job.job import job
+from ...queue_job.job import job, build_hash
 from ...queue_job.exception import RetryableJobError
 
 
@@ -17,6 +17,9 @@ class HelpdeskTicket(models.Model):
     _inherit = 'helpdesk.ticket'
 
     call_count = fields.Integer(string='Call count', default=0)
+
+    def generate_identity(self):
+        return build_hash(self.id, self.stage_id.id)
 
     @api.multi
     def voicent_check_status(self, campaign, call_line):
@@ -64,7 +67,7 @@ class HelpdeskTicket(models.Model):
                          'call_line_id': call_line.id})
                     reply.action_id.with_context(ctx).run()
 
-    @job
+    @job(identity_key=generate_identity)
     @api.multi
     def voicent_start_campaign(self, call_line):
         for rec in self:
