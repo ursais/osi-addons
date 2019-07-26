@@ -80,7 +80,15 @@ class StockRequest(models.Model):
     @api.multi
     def _action_confirm(self):
         for req in self:
-            if (not req.procurement_group_id) and req.fsm_order_id:
+            # If we can find a group, use it
+            if (req.procurement_group_id) or \
+                    (req.order_id and req.order_id.procurement_group_id):
+                req.procurement_group_id = \
+                    req.procurement_group_id.id or \
+                    (req.order_id and req.order_id.procurement_group_id.id)
+                res = super(StockRequest, req)._action_confirm()
+            # otherwise create one with the fsm order if we have one
+            elif req.fsm_order_id:
                 fsm_order = self.env['fsm.order'].browse(req.fsm_order_id.id)
                 group = self.env['procurement.group'].search([
                     ('fsm_order_id', '=', fsm_order.id)])
@@ -92,7 +100,8 @@ class StockRequest(models.Model):
                 req.procurement_group_id = group.id
                 res = super(StockRequest, req)._action_confirm()
                 fsm_order.request_stage = 'open'
-            elif (not req.procurement_group_id) and req.helpdesk_ticket_id:
+            # otherwise create one with the ticket if we have one
+            elif req.helpdesk_ticket_id:
                 ticket = self.env['helpdesk.ticket'].browse(
                     req.helpdesk_ticket_id.id)
                 # If the ticket has many fsm orders, use the group with no

@@ -1,12 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <!-- Copyright (C) 2019 Open Source Integrators
+         License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 
     <record id="invoice_supplier_tree_payment_method" model="ir.ui.view">
         <field name="name">invoice.supplier.tree.payment.method</field>
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account.invoice_supplier_tree"/>
         <field name="arch" type="xml">
-            <xpath expr="//tree/field[@name ='origin']" position="after">
+            <xpath expr="//tree/field[@name='origin']" position="after">
                 <field name="payment_method"/>
             </xpath>
         </field>
@@ -17,7 +19,7 @@
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account.invoice_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name ='payment_term_id']"
+            <xpath expr="//field[@name='payment_term_id']"
                    position="after">
                 <field name="payment_method" widget="selection"/>
             </xpath>
@@ -32,7 +34,7 @@
         <field name="groups_id"
                eval="[(6, 0, [ref('account.group_account_user'),ref('account.group_account_manager'),ref('account.group_account_invoice')])]"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name ='payment_method']"
+            <xpath expr="//field[@name='payment_method']"
                    position="attributes">
                 <attribute name="readonly">False</attribute>
             </xpath>
@@ -44,7 +46,7 @@
         <field name="model">account.invoice</field>
         <field name="inherit_id" ref="account.invoice_supplier_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name ='date_due']" position="after">
+            <xpath expr="//field[@name='date_due']" position="after">
                 <field name="payment_method" widget="selection"/>
             </xpath>
         </field>
@@ -60,7 +62,7 @@
         <field name="groups_id"
                eval="[(6, 0, [ref('account.group_account_user'),ref('account.group_account_manager'),ref('account.group_account_invoice')])]"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name ='payment_method']"
+            <xpath expr="//field[@name='payment_method']"
                    position="attributes">
                 <attribute name="readonly">False</attribute>
             </xpath>
