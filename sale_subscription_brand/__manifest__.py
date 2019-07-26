@@ -9,7 +9,7 @@
     "website": "https://github.com/ursais/osi-addons",
     "author": "Open Source Integrators",
     "license": "LGPL-3",
-    "depends": [ 
+    "depends": [
         'sale_subscription',
         'sale_brand',
     ],
