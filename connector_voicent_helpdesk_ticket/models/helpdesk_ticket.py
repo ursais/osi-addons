@@ -71,7 +71,7 @@ class HelpdeskTicket(models.Model):
                          'call_line_id': call_line.id})
                     reply.action_id.with_context(ctx).run()
 
-    @job(identity_key=generate_identity)
+    @job
     @api.multi
     def voicent_start_campaign(self, call_line):
         for rec in self:
