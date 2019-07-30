@@ -44,4 +44,3 @@ class sale_subscription_financial_risk_partner(models.Model):
             ('years', 'Years')
         ]
     )
-

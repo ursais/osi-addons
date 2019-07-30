@@ -4,6 +4,7 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
+        <!-- 
             <xpath expr="//field[@name='credit_limit']" position="before">
                 <field name="credit_limit_type"/>
             </xpath>
@@ -24,6 +25,7 @@
                     }"
                 />
             </xpath>
+        -->
         </field>
     </record>
 </odoo>
