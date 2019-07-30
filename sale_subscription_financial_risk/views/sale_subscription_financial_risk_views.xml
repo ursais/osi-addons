@@ -1,0 +1,29 @@
+<odoo>
+    <record id="res_partner_risk_extend" model="ir.ui.view">
+        <field name="name">Res Partner Form View Extend</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='credit_limit']" position="before">
+                <field name="credit_limit_type"/>
+            </xpath>
+            <xpath expr="//field[@name='credit_limit']" position="attributes">
+                  <attribute name="attrs">{'invisible':[('credit_limit_type','!=', 'fixed')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='credit_limit']" position="after">
+                <field name="overdue_limit_qty"/>
+                <field name="overdue_limit_uom"/>
+                <field name="credit_limit_subscription_qty"
+                    attrs="{
+                        'invisible': [('credit_limit_type', '!=', 'subscription_based')]
+                    }"
+                />
+                <field name="credit_limit_subscription_uom"
+                    attrs="{
+                        'invisible': [('credit_limit_type', '!=', 'subscription_based')]
+                    }"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>
