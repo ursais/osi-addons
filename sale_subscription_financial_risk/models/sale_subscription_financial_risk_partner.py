@@ -1,7 +1,7 @@
 from odoo import models, fields, api
 
 
-class sale_subscription_financial_risk_partner(models.Model):
+class saleSubscriptionFinancialRiskPartner(models.Model):
     _inherit = 'res.partner'
 
     # Duration of overdue limit
