@@ -3,6 +3,7 @@
 {
     'name': 'Account Bank Reconciliation Extended',
     'version': '12.0.1.0.0',
+    'license': 'LGPL-3',
     'author': 'Open Source Integrators',
     'summary': 'Bank Reconciliation Entries restricted to specific accounts',
     'category': 'Accounting & Finance',
