@@ -2,6 +2,7 @@
 # <https://www.opensourceintegrators.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
+import hashlib
 import io
 import shutil
 import tempfile
@@ -9,7 +10,7 @@ import time
 from voicent import voicent
 from odoo import api, fields, models, _
 from odoo.tools import pycompat
-from ...queue_job.job import job, build_hash
+from ...queue_job.job import job
 from ...queue_job.exception import RetryableJobError
 
 
@@ -19,7 +20,10 @@ class HelpdeskTicket(models.Model):
     call_count = fields.Integer(string='Call count', default=0)
 
     def generate_identity(self):
-        return build_hash(self.id, self.stage_id.id)
+        hasher = hashlib.sha1()
+        hasher.update(self.id)
+        hasher.update(self.stage_id.id)
+        return hasher.hexdigest()
 
     @api.multi
     def voicent_check_status(self, campaign, call_line):
@@ -67,7 +71,7 @@ class HelpdeskTicket(models.Model):
                          'call_line_id': call_line.id})
                     reply.action_id.with_context(ctx).run()
 
-    @job(identity_key=generate_identity)
+    @job
     @api.multi
     def voicent_start_campaign(self, call_line):
         for rec in self:
@@ -138,7 +142,8 @@ class HelpdeskTicket(models.Model):
                     if not (line_rec.has_parent is True and
                             rec.parent_id is False):
                         rec.with_delay(
-                            eta=line_rec.backend_id.next_call). \
+                            eta=line_rec.backend_id.next_call,
+                            identity_key=self.generate_identity).\
                             voicent_start_campaign(line_rec)
                         vals.update({'call_count': 0})
         return super().write(vals)
