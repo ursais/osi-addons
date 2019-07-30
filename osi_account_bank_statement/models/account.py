@@ -16,8 +16,8 @@ class AccountReconciliation(models.AbstractModel):
                                               excluded_ids=None,
                                               search_str=False):
 
-        res = super(AccountReconciliation, self)\
-                        ._domain_move_lines_for_reconciliation(
+        res = super(AccountReconciliation, self).\
+                        _domain_move_lines_for_reconciliation(
                             st_line=st_line,
                             aml_accounts=aml_accounts,
                             partner_id=partner_id,
