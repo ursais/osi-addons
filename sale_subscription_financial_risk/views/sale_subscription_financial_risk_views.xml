@@ -3,6 +3,7 @@
         <field name="name">Res Partner Form View Risk Extend</field>
         <field name="model">res.partner.view.risk</field>
         <field name="inherit_id" ref="account_financial_risk.res_partner_view_risk"/>
+        <field name="arch" type="xml">
             <xpath expr="//field[@name='credit_limit']" position="before">
                 <field name="credit_limit_type"/>
             </xpath>
