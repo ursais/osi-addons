@@ -2,8 +2,6 @@ Overview
 ========
 
 This module restricts the reconciliation entries shown against a bank statement line.
-This module requires account_payment_cc module
-
 
 Credit
 ======

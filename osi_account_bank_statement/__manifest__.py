@@ -1,4 +1,4 @@
-# Copyright (C) 2019 - TODAY, Open Source Integrators
+# Copyright (C) 2019, Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
     'name': 'Account Bank Reconciliation Extended',
@@ -9,8 +9,7 @@
     'maintainer': 'Open Source Integrators',
     'website': 'http://www.opensourceintegrators.com',
     'depends': [
-                'account',
-                'account_payment_cc',
+                'account_payment_credit_card',
     ],
     'installable': True,
 }
