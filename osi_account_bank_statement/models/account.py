@@ -17,12 +17,11 @@ class AccountReconciliation(models.AbstractModel):
                                               search_str=False):
 
         res = super(AccountReconciliation, self).\
-                        _domain_move_lines_for_reconciliation(
-                            st_line=st_line,
-                            aml_accounts=aml_accounts,
-                            partner_id=partner_id,
-                            excluded_ids=excluded_ids,
-                            search_str=search_str)
+            _domain_move_lines_for_reconciliation(st_line=st_line,
+                                                  aml_accounts=aml_accounts,
+                                                  partner_id=partner_id,
+                                                  excluded_ids=excluded_ids,
+                                                  search_str=search_str)
         # Browse journal
         if self._context.get('journal_id', False):
             acc_ids = []
