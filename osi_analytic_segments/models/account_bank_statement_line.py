@@ -4,8 +4,8 @@
 from odoo import fields, models
 
 
-class AccountReconcileModel(models.Model):
-    _inherit = 'account.reconcile.model'
+class AccountBankStatementLine(models.Model):
+    _inherit = 'account.bank.statement.line'
 
     analytic_segment_one_id = fields.Many2one(
         'analytic.segment.one',
