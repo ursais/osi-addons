@@ -17,27 +17,26 @@ class AccountReconciliation(models.AbstractModel):
                                               search_str=False):
 
         res = super(AccountReconciliation, self)\
-                    ._domain_move_lines_for_reconciliation(
-                    st_line=st_line,
-                    aml_accounts=aml_accounts,
-                    partner_id=partner_id,
-                    excluded_ids=excluded_ids,
-                    search_str=search_str)
+                        ._domain_move_lines_for_reconciliation(
+                            st_line=st_line,
+                            aml_accounts=aml_accounts,
+                            partner_id=partner_id,
+                            excluded_ids=excluded_ids,
+                            search_str=search_str)
         # Browse journal
         if self._context.get('journal_id', False):
             acc_ids = []
             acc_lines_temp = []
             acc_move_obj = self.env['account.move.line']
-            journal = self.env['account.journal'].browse(
-                                                        self._context.get
-                                                        ('journal_id', False))
+            journal = self.env['account.journal'].browse(self._context.get
+                                                         ('journal_id', False))
 
             if journal and journal.liability_account_id:
                 # Get account lines only for liable account
                 acc_ids = acc_move_obj.search(
-                        [('account_id',
-                         'in',
-                          journal.liability_account_id.id)]).ids
+                    [('account_id',
+                      'in',
+                      journal.liability_account_id.id)]).ids
             else:
                 # Get debit account
                 if journal.default_debit_account_id:
