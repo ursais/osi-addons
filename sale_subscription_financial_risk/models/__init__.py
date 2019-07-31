@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-from . import saleSubscriptionFinancialRiskPartner
+from . import sale_subscription_financial_risk_partner
