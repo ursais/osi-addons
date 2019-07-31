@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="fsm_equipment_form_view_inherit" model="ir.ui.view">
+        <field name="model">fsm.equipment</field>
+        <field name="inherit_id"
+               ref="fieldservice.fsm_equipment_form_view"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Accounting">
+                    <group col="2">
+                        <group>
+                            <field name="asset_id" readonly="1"/>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="fsm_order_form_inherit" model="ir.ui.view">
+        <field name="model">fsm.order</field>
+        <field name="inherit_id"
+               ref="fieldservice.fsm_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='equipment_ids']/tree"
+                   position="inside">
+                <button string="RECOVER" name="do_recover"
+                        type="object" class="oe_highlight"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

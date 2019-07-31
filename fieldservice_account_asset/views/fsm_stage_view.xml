@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="fsm_stage_form_view_inherit" model="ir.ui.view">
+        <field name="model">fsm.stage</field>
+        <field name="inherit_id"
+               ref="fieldservice.fsm_stage_form_view"/>
+        <field name="arch" type="xml">
+            <field name="stage_type" position="after">
+                <field name="equipment_stage_id"
+                       attrs="{'invisible': [('stage_type', '!=', 'order')]}"/>
+                <field name="asset_action"
+                       attrs="{'invisible': [('stage_type', '!=', 'equipment')]}"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
