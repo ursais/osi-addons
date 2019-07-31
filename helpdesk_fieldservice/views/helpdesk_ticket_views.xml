@@ -46,7 +46,7 @@
         <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_search"/>
         <field name="arch" type="xml">
             <filter name="is_close" position="after">
-                <filter string="Closed Orders" domain="[('stage_id.is_close', '=', False),('all_orders_closed', '=', True)]" name="closed_fsm_order"/>
+                <filter string="Closed FSM Orders" domain="[('stage_id.is_close', '=', False), ('all_orders_closed', '=', True)]" name="closed_fsm_order"/>
             </filter>
         </field>
     </record>
