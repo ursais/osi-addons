@@ -91,4 +91,4 @@ class HelpdeskTicket(models.Model):
                     if order.stage_id.name not in  ['Closed', 'Cancelled']:
                         ticket.all_orders_closed = False
             else:
-                ticket.all_orders_closed = False                
+                ticket.all_orders_closed = False
