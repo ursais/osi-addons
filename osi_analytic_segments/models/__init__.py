@@ -7,4 +7,5 @@ from . import (
     account_move,
     analytic_seg,
     account_bank_statement_line,
+    account_reconcile_model,
 )

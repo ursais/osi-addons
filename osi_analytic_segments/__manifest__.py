@@ -19,7 +19,11 @@
         "views/account_invoice_view.xml",
         "views/account_analytic_line_view.xml",
         "views/account_move_view.xml",
+        "views/account_reconcile_model_view.xml",
         "views/account.xml",
+    ],
+    'qweb': [
+        "static/src/xml/account_reconciliation.xml",
     ],
     "installable": True,
 }

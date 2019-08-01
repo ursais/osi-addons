@@ -1,0 +1,22 @@
+<odoo>
+
+    <!-- Copyright 2019 Open Source Integrators
+         License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+
+    <!-- Form View account reconcile model -->
+    <record id="account_reconcile_model_form_segments" model="ir.ui.view">
+        <field name="name">account.reconcile.model.segments</field>
+        <field name="model">account.reconcile.model</field>
+        <field name="inherit_id"
+               ref="account.view_account_reconcile_model_form"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="before">
+                <field name="analytic_segment_one_id"
+                       groups="analytic.group_analytic_accounting"/>
+                <field name="analytic_segment_two_id"
+                       groups="analytic.group_analytic_accounting"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
