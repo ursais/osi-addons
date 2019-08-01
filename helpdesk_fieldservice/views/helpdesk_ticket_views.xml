@@ -35,7 +35,19 @@
             </notebook>
             <field name="partner_id" position="before">
                 <field name="fsm_location_id"/>
+                <field name="all_orders_closed" invisible="1"/>
             </field>
+        </field>
+    </record>
+
+    <record id="helpdesk_ticket_search_closed_orders" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.service.form.logic</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="arch" type="xml">
+            <filter name="is_close" position="after">
+                <filter string="Closed FSM Orders" domain="[('stage_id.is_close', '=', False), ('all_orders_closed', '=', True)]" name="closed_fsm_order"/>
+            </filter>
         </field>
     </record>
 
