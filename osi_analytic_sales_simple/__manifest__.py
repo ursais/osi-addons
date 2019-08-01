@@ -3,7 +3,7 @@
 
 {
     "name": "OSI Analytic Sales Simple",
-    "version": "12.0.1.0.0",
+    "version": "12.0.1.0.1",
     "license": "LGPL-3",
     "summary": "Analytic Accounts for sale order lines",
     "author": "Open Source Integrators",
