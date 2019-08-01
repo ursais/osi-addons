@@ -6,6 +6,9 @@
     <template id="assets_backend" name="account assets"
               inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
+<!-- TODO: Problem inheriting. Patching Odoo...
+           <script type="text/javascript"
+                    src="/osi_analytic_segments/static/src/js/reconciliation_model.js"></script> -->
             <script type="text/javascript"
                     src="/osi_analytic_segments/static/src/js/reconciliation_renderer.js"></script>
         </xpath>

@@ -1,4 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="reconciliation.line.create">
+        <t t-jquery='tr.create_amount' t-operation='append'>
+            <tr class="create_analytic_segment_one_id"
+                groups="analytic.group_analytic_accounting">
+                <td class="o_td_label">Analytic Seg. 1</td>
+                <td class="o_td_field"></td>
+            </tr>
+            <tr class="create_analytic_segment_two_id"
+                groups="analytic.group_analytic_accounting">
+                <td class="o_td_label">Analytic Seg. 2</td>
+                <td class="o_td_field"></td>
+            </tr>
+        </t>
+    </t>
+
+</templates>
+-->
 
 <templates xml:space="preserve">
 
@@ -209,20 +229,22 @@
                 <td class="o_td_label">Amount</td>
                 <td class="o_td_field"></td>
             </tr>
+            <tr class="create_analytic_segment_one_id"
+                groups="analytic.group_analytic_accounting">
+                <td class="o_td_label">Analytic Seg. 1</td>
+                <td class="o_td_field"></td>
+            </tr>
+            <tr class="create_analytic_segment_two_id"
+                groups="analytic.group_analytic_accounting">
+                <td class="o_td_label">Analytic Seg. 2</td>
+                <td class="o_td_field"></td>
+            </tr>
             <tr class="create_force_tax_included d-none">
                 <td class="o_td_label">Tax Included in Price</td>
                 <td class="o_td_field"></td>
             </tr>
             <tr class="create_date d-none">
                 <td class="o_td_label">Writeoff Date</td>
-                <td class="o_td_field"></td>
-            </tr>
-            <tr class="create_analytic_segment_one_id" groups="analytic.group_analytic_accounting">
-                <td class="o_td_label">Analytic Seg. 1</td>
-                <td class="o_td_field"></td>
-            </tr>
-            <tr class="create_analytic_segment_two_id" groups="analytic.group_analytic_tags">
-                <td class="o_td_label">Analytic Seg. 2</td>
                 <td class="o_td_field"></td>
             </tr>
         </tbody>
