@@ -46,20 +46,20 @@ class FSMEquipment(models.Model):
                     product_cost = stock_move_line.move_id.price_unit
                 move_line_list.append(
                     (0, 0, {'account_id': equip_rec.product_id.categ_id.
-                     property_stock_valuation_account_id.id,
+                            property_stock_valuation_account_id.id,
                             'credit': 0.0,
                             'debit': product_cost
                             }))
                 move_line_list.append(
                     (0, 0, {'account_id': equip_rec.product_id.
-                     asset_category_id.account_asset_id.id,
+                            asset_category_id.account_asset_id.id,
                             'credit': product_cost,
                             'debit': 0.0
                             }))
                 move_vals = {
                     'ref': equip_rec.name,
                     'journal_id':
-                        equip_rec.product_id.asset_category_id.journal_id.id,
+                    equip_rec.product_id.asset_category_id.journal_id.id,
                     'date': datetime.now(),
                     'line_ids': move_line_list
                 }
@@ -71,18 +71,19 @@ class FSMEquipment(models.Model):
                      'date_first_depreciation': 'manual',
                      'first_depreciation_manual_date': datetime.now(),
                      'currency_id':
-                         equip_rec.env.user.company_id.currency_id.id,
+                     equip_rec.env.user.company_id.currency_id.id,
                      'company_id': equip_rec.env.user.company_id.id,
                      'value': product_cost}).id
-            if equip_rec.stage_id.asset_action == 'recovery' and \
-                    not equip_rec.serviceprofile_id and equip_rec.asset_id:
-                equip_rec.asset_id.validate()
-                account_move = equip_rec.asset_id.set_to_close()
-                account_move_obj.browse(
-                    account_move.get('res_id')).action_post()
-            elif equip_rec.serviceprofile_id:
-                raise ValidationError(
-                    _('This equipment is still linked to a service profile.'))
+            elif equip_rec.stage_id.asset_action == 'recovery':
+                if not equip_rec.serviceprofile_id and equip_rec.asset_id:
+                    equip_rec.asset_id.validate()
+                    account_move = equip_rec.asset_id.set_to_close()
+                    account_move_obj.browse(
+                        account_move.get('res_id')).action_post()
+                else:
+                    raise ValidationError(
+                        _("This equipment is still linked to a service"
+                            " profile."))
 
     def next_stage(self):
         rec = super(FSMEquipment, self).next_stage()
