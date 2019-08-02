@@ -27,7 +27,7 @@
             <field name="unassigned_tickets" position="after">
                 <field name="assigned_tickets"/>
             </field>
-            <xpath expr="//div[hasclass('col-6 o_kanban_primary_right')]/div[2]"
+            <xpath expr="//div[hasclass('o_kanban_primary_right')]/div[2]"
                    position="after">
                 <div class="mb4">
                     <a name="%(helpdesk_team_assigned_tickets.helpdesk_ticket_action_assigned)d"
