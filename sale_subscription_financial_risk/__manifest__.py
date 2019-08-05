@@ -5,13 +5,15 @@
     'author': "Open Source Integrators / Amplex Internet",
     'website': "http://www.amplex.net",
     'category': 'Agreement',
-    'version': '12.0.1.0.0',
+    'version': '12.0.0.1.0',
     'license': 'AGPL-3',
     'depends': [
-        'account_financial_risk'
+        'account_financial_risk',
+        'sale_subscription'
     ],
     'data': [
         'views/sale_subscription_financial_risk_views.xml',
+        'data/sale_subscription_financial_risk_suspend.xml'
     ],
     'development_status': 'Beta',
     'maintainers': [

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from odoo import models, fields, api
 from datetime import date
 from odoo.exceptions import UserError
@@ -37,7 +35,7 @@ class checkServiceSuspensionState(models.Model):
         ]
     )
 
-    @api.multi
+    @api.model
     def check_service_suspensions(self, partner=None):
         try:
             # if a specific partner record is passed, do individual match
