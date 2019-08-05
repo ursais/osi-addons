@@ -3,7 +3,7 @@
 
 {
     'name': 'OSI Payment Method',
-    'version': '12.0.1.0.0',
+    'version': '12.0.1.0.1',
     'author': 'Open Source Integrators',
     'summary': 'Adds a payment method field to several models and views',
     'category': 'Customers',
