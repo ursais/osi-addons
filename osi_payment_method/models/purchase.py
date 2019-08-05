@@ -12,7 +12,7 @@ class PurchaseOrder(models.Model):
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
-        res = super()._change_partner_id()
+        res = super()._onchange_partner_id()
         self.payment_method = self.partner_id.payment_method
         return res
 
