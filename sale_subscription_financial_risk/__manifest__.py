@@ -13,7 +13,7 @@
     ],
     'data': [
         'views/sale_subscription_financial_risk_views.xml',
-        # 'data/sale_subscription_financial_risk_suspend.xml'
+        'data/sale_subscription_financial_risk_suspend.xml'
     ],
     'development_status': 'Beta',
     'maintainers': [
