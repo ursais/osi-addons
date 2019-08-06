@@ -6,7 +6,7 @@ from odoo.tools.translate import _
 
 class checkServiceSuspensionState(models.Model):
     _inherit = 'sale.subscription'
-    # inherit = 'ir.cron'
+    # _inherit = 'ir.cron'
 
     passed_partner = fields.Char()
 
