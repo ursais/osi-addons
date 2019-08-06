@@ -36,48 +36,49 @@ class SaleSubscription(models.Model):
 
     @api.model
     def check_service_suspensions(self, partner=None):
-        try:
-            # if a specific partner record is passed, do individual match
-            if partner:
-                self.passed_partner = partner
-                for service in self.partner_subscriptions:
-                    # need to call Brian's function as a super
-                    super(
-                        SaleSubscription, self
-                    ).service.action_re_activate()
-            # else default to processing all partner records
-            else:
-                # gather all valid, active subscriptions
-                for service in self.subscriptions:
-                    # compute their credit and credit limit by credit type &
-                    # compare the credit with their limit
-                    if self.partner.credit_limit_type == 'fixed':
-                        self.passed_partner_id = service.partner_id
-                        # if credit > credit limit or age > overdue limit then
-                        # suspend all partner subscriptions
-                        if self.partner.credit > self.partner.credit_limit:
-                            super(
-                                SaleSubscription, self
-                            ).service.action_suspend()
-                        else:
-                            super(
-                                SaleSubscription, self
-                            ).service.action_re_activate()
-                    #  ~~~ Below is definitely WIP ~~~ #
-                    # elif self.partner.credit_limit_type == 'subscription_based':
-                        # calculate the age of the oldest open invoice
-                        # self.partner.credit_limit_subscription_qty
-                        # self.partner.credit_limit_subscription_uom
-                        # if self.age > self.overdue_limit:
-                        #     #Suspend all partner subscriptions
-                        #     super(
-                        #         checkServiceSuspensionState, self
-                        #     ).service.action_suspend()
-                        # else:
-                        #     super(
-                        #         checkServiceSuspensionState, self
-                        #     ).service.action_re_activate()
-                        # suspend or reactivate service as the case demands
+        print('worked')
+        # try:
+        #     # if a specific partner record is passed, do individual match
+        #     if partner:
+        #         self.passed_partner = partner
+        #         for service in self.partner_subscriptions:
+        #             # need to call Brian's function as a super
+        #             super(
+        #                 SaleSubscription, self
+        #             ).service.action_re_activate()
+        #     # else default to processing all partner records
+        #     else:
+        #         # gather all valid, active subscriptions
+        #         for service in self.subscriptions:
+        #             # compute their credit and credit limit by credit type &
+        #             # compare the credit with their limit
+        #             if self.partner.credit_limit_type == 'fixed':
+        #                 self.passed_partner_id = service.partner_id
+        #                 # if credit > credit limit or age > overdue limit then
+        #                 # suspend all partner subscriptions
+        #                 if self.partner.credit > self.partner.credit_limit:
+        #                     super(
+        #                         SaleSubscription, self
+        #                     ).service.action_suspend()
+        #                 else:
+        #                     super(
+        #                         SaleSubscription, self
+        #                     ).service.action_re_activate()
+        #  ~~~ Below is definitely WIP ~~~ #
+        # elif self.partner.credit_limit_type == 'subscription_based':
+        #     calculate the age of the oldest open invoice
+        #     self.partner.credit_limit_subscription_qty
+        #     self.partner.credit_limit_subscription_uom
+        #     if self.age > self.overdue_limit:
+        #         #Suspend all partner subscriptions
+        #         super(
+        #             checkServiceSuspensionState, self
+        #         ).service.action_suspend()
+        #     else:
+        #         super(
+        #             checkServiceSuspensionState, self
+        #         ).service.action_re_activate()
+        #     suspend or reactivate service as the case demands
         except RuntimeError as error:
             msg = _('Error Encountered:\n {} \n {}'.format(error, error.args))
             raise UserError(msg)

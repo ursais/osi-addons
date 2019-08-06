@@ -3,20 +3,18 @@
     <data noupdate="1">
         <record id="check_service_suspensions" model="ir.cron">
             <field name="name">Suspended Services Check</field>
-            <field name="model_id" ref="model_sale_subscription_financial_risk_cron"/>
+            <field name="model_id" ref="model_SaleSubscription"/>
             <field name="active" eval="True" />
             <field name="user_id" ref="base.user_root" />
             <field name="interval_number">1</field>
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
             <field name="priority">1</field>
-            <!--<field eval="False" name="doall"/>-->
+            <field name="doall" eval="False"/>
             <field name="state">code</field>
-            <!-- <field name="function">_check_service_suspensions</field> -->
-            <!-- <field name="doall">1</field> -->
+            <field name="code">model.check_service_suspensions()</field>
             <field name="nextcall">2019-08-06 09:45:00</field>
             <!-- <field name="args" eval="'[]'" /> -->
-            <field name="code">model.check_service_suspensions()</field>
         </record>
     </data>
 </odoo>
