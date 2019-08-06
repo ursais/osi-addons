@@ -4,9 +4,8 @@ from odoo.exceptions import UserError
 from odoo.tools.translate import _
 
 
-class checkServiceSuspensionState(models.Model):
+class SaleSubscription(models.Model):
     _inherit = 'sale.subscription'
-    # _inherit = 'ir.cron'
 
     passed_partner = fields.Char()
 
@@ -44,7 +43,7 @@ class checkServiceSuspensionState(models.Model):
                 for service in self.partner_subscriptions:
                     # need to call Brian's function as a super
                     super(
-                        checkServiceSuspensionState, self
+                        SaleSubscription, self
                     ).service.action_re_activate()
             # else default to processing all partner records
             else:
@@ -58,11 +57,11 @@ class checkServiceSuspensionState(models.Model):
                         # suspend all partner subscriptions
                         if self.partner.credit > self.partner.credit_limit:
                             super(
-                                checkServiceSuspensionState, self
+                                SaleSubscription, self
                             ).service.action_suspend()
                         else:
                             super(
-                                checkServiceSuspensionState, self
+                                SaleSubscription, self
                             ).service.action_re_activate()
                     #  ~~~ Below is definitely WIP ~~~ #
                     # elif self.partner.credit_limit_type == 'subscription_based':
