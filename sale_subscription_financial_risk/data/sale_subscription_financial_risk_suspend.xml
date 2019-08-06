@@ -3,7 +3,7 @@
     <data noupdate="1">
         <record id="scheduled_suspended_services_check" model="ir.cron">
             <field name="name">Suspended Services Check</field>
-            <field name="model_id" ref="model_check_service_suspensions"/>
+            <field name="model_id" ref="check_service_suspensions"/>
             <!-- <field name="model_id" eval="sale.subscription"/> -->
             <field name="active" eval="True" />
             <field name="user_id" ref="base.user_root" />
