@@ -10,6 +10,7 @@
     'website': 'https://github.com/ursais/osi-addons',
     'depends': [
         'helpdesk_timesheet',
+        'stock_request_direction',
         'stock_request_picking_type',
     ],
     'data': [
