@@ -36,8 +36,8 @@ class SaleSubscription(models.Model):
 
     @api.model
     def check_service_suspensions(self, partner=None):
-        print('worked')
-        # try:
+        try:
+            print('worked')
         #     # if a specific partner record is passed, do individual match
         #     if partner:
         #         self.passed_partner = partner
