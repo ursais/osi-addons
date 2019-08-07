@@ -4,7 +4,7 @@
 
 {
     'name': 'Voicent Helpdesk Ticket Connector',
-    'version': '12.0.1.2.1',
+    'version': '12.0.1.2.2',
     'license': 'LGPL-3',
     'category': 'connector',
     'author': 'Open Source Integrators',
