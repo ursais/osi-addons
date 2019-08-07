@@ -143,7 +143,7 @@ class HelpdeskTicket(models.Model):
                             rec.parent_id is False):
                         rec.with_delay(
                             eta=line_rec.backend_id.next_call,
-                            identity_key=self.generate_identity).\
+                            identity_key=self.generate_identity()).\
                             voicent_start_campaign(line_rec)
                         vals.update({'call_count': 0})
         return super().write(vals)
