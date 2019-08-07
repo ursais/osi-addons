@@ -11,10 +11,9 @@ class PurchaseOrder(models.Model):
                                      string="Payment Method")
 
     @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        res = super()._onchange_partner_id()
-        self.payment_method = self.partner_id.payment_method
-        return res
+    def onchange_payment_method(self):
+        self.payment_method = self.partner_id.payment_method.id or False
+        return {}
 
     @api.multi
     def action_view_invoice(self):
