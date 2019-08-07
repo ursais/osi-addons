@@ -17,15 +17,10 @@ class AccountInvoice(models.Model):
                                readonly=True,
                                states={'draft': [('readonly', False)]})
 
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        res = super()._onchange_partner_id()
-        self.payment_method = self.partner_id.payment_method
-        return res
-
-    # Load all unsold PO lines
-    @api.onchange('purchase_id')
-    def purchase_order_change(self):
+    @api.onchange('partner_id', 'purchase_id')
+    def onchange_payment_method(self):
         if self._context.get('default_payment_method', False):
-            self.payment_method = self.purchase_id.payment_method.id
-        return super().purchase_order_change()
+            self.payment_method = self.purchase_id.payment_method.id or False
+        else:
+            self.payment_method = self.partner_id.payment_method.id or False
+        return {}
