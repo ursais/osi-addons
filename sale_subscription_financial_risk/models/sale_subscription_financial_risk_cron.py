@@ -7,32 +7,32 @@ from odoo.tools.translate import _
 class SaleSubscription(models.Model):
     _inherit = 'sale.subscription'
 
-    passed_partner = fields.Char()
+    # passed_partner = fields.Char()
 
-    passed_partner_id = fields.Integer()
+    # passed_partner_id = fields.Integer()
 
-    partner_subscriptions = fields.Many2one(
-        'sale.subscription',
-        domain=[
-            ('partner_id', '=', passed_partner)
-        ]
-    )
+    # partner_subscriptions = fields.Many2one(
+    #     'sale.subscription',
+    #     domain=[
+    #         ('partner_id', '=', passed_partner)
+    #     ]
+    # )
 
-    subscriptions = fields.Many2one(
-        'sale.subscription',
-        domain=[
-            '|',
-            ('stage_id', '=', 'In Progress'),
-            ('stage_id', '=', 'Suspended')
-        ]
-    )
+    # subscriptions = fields.Many2one(
+    #     'sale.subscription',
+    #     domain=[
+    #         '|',
+    #         ('stage_id', '=', 'In Progress'),
+    #         ('stage_id', '=', 'Suspended')
+    #     ]
+    # )
 
-    subscription_partner = fields.Many2one(
-        'res.partner',
-        domain=[
-            ('id', '=', passed_partner_id)
-        ]
-    )
+    # subscription_partner = fields.Many2one(
+    #     'res.partner',
+    #     domain=[
+    #         ('id', '=', passed_partner_id)
+    #     ]
+    # )
 
     @api.model
     def check_service_suspensions(self, partner=None):
