@@ -7,6 +7,15 @@ from odoo.tools.translate import _
 class SaleSubscription(models.Model):
     _inherit = 'sale.subscription'
 
+    subscriptions = fields.Many2one(
+        'sale.subscription',
+        domain=[
+            '|',
+            ('stage_id', '=', 'In Progress'),
+            ('stage_id', '=', 'Suspended')
+        ]
+    )
+
     @api.model
     def check_service_suspensions(self, partner=None):
         try:
@@ -29,16 +38,9 @@ class SaleSubscription(models.Model):
             # EVERYTHING BELOW NEEDS COMPLETELY REVIEW AND HASHED OUT
 
             else:
+                # I think it is angry about using subscriptions in this manner
                 # gather all valid, active subscriptions
-                subscriptions = fields.Many2one(
-                    'sale.subscription',
-                    domain=[
-                        '|',
-                        ('stage_id', '=', 'In Progress'),
-                        ('stage_id', '=', 'Suspended')
-                    ]
-                )
-                for service in subscriptions:
+                for service in self.subscriptions:
                     # compute their credit and credit limit by credit type &
                     # compare the credit with their limit
                     partner = fields.Many2one(
