@@ -21,8 +21,8 @@ class HelpdeskTicket(models.Model):
 
     def generate_identity(self):
         hasher = hashlib.sha1()
-        hasher.update(self.id)
-        hasher.update(self.stage_id.id)
+        hasher.update(str(self.id).encode('utf-8'))
+        hasher.update(str(self.stage_id.id).encode('utf-8'))
         return hasher.hexdigest()
 
     @api.multi
