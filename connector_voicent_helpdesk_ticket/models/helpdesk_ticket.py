@@ -21,8 +21,8 @@ class HelpdeskTicket(models.Model):
 
     def generate_identity(self):
         hasher = hashlib.sha1()
-        hasher.update(self.id)
-        hasher.update(self.stage_id.id)
+        hasher.update(str(self.id).encode('utf-8'))
+        hasher.update(str(self.stage_id.id).encode('utf-8'))
         return hasher.hexdigest()
 
     @api.multi
@@ -143,7 +143,7 @@ class HelpdeskTicket(models.Model):
                             rec.parent_id is False):
                         rec.with_delay(
                             eta=line_rec.backend_id.next_call,
-                            identity_key=self.generate_identity).\
+                            identity_key=self.generate_identity()).\
                             voicent_start_campaign(line_rec)
                         vals.update({'call_count': 0})
         return super().write(vals)
