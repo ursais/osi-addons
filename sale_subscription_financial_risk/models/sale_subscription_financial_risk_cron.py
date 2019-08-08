@@ -34,9 +34,6 @@ class SaleSubscription(models.Model):
                         SaleSubscription, self
                     ).service.action_re_activate()
             # else default to processing all partner records
-
-            # EVERYTHING BELOW NEEDS COMPLETELY REVIEW AND HASHED OUT
-
             else:
                 # I think it is angry about using subscriptions in this manner
                 # gather all valid, active subscriptions
