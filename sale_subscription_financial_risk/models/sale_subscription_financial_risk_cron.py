@@ -11,13 +11,6 @@ class SaleSubscription(models.Model):
 
     # passed_partner_id = fields.Integer()
 
-    # partner_subscriptions = fields.Many2one(
-    #     'sale.subscription',
-    #     domain=[
-    #         ('partner_id', '=', passed_partner)
-    #     ]
-    # )
-
     # subscriptions = fields.Many2one(
     #     'sale.subscription',
     #     domain=[
@@ -37,15 +30,20 @@ class SaleSubscription(models.Model):
     @api.model
     def check_service_suspensions(self, partner=None):
         try:
-            print('worked')
-        #     # if a specific partner record is passed, do individual match
-        #     if partner:
-        #         self.passed_partner = partner
-        #         for service in self.partner_subscriptions:
-        #             # need to call Brian's function as a super
-        #             super(
-        #                 SaleSubscription, self
-        #             ).service.action_re_activate()
+            # if a specific partner record is passed, do individual match
+            if partner:
+                self.passed_partner = partner
+                partner_subscriptions = fields.Many2one(
+                    'sale.subscription',
+                    domain=[
+                        ('partner_id', '=', partner)
+                    ]
+                )
+                for service in partner_subscriptions:
+                    # need to call Brian's function as a super
+                    super(
+                        SaleSubscription, self
+                    ).service.action_re_activate()
         #     # else default to processing all partner records
         #     else:
         #         # gather all valid, active subscriptions
