@@ -8,9 +8,18 @@
                 <field name="helpdesk_ticket_id"/>
             </field>
             <field name="stock_request_ids" position="attributes">
-                <attribute name="context">{'default_helpdesk_ticket_id': helpdesk_ticket_id,'default_expected_date': expected_date,'default_picking_policy':picking_policy,'default_warehouse_id': warehouse_id,'default_direction': direction,'default_location_id': location_id,'default_procurement_group_id': procurement_group_id,'default_company_id': company_id,'default_state': state}</attribute>
+                <attribute name="context">{
+                    'default_helpdesk_ticket_id': helpdesk_ticket_id,
+                    'default_expected_date': expected_date,
+                    'default_picking_policy': picking_policy,
+                    'default_warehouse_id': warehouse_id,
+                    'default_direction': direction,
+                    'default_location_id': location_id,
+                    'default_procurement_group_id': procurement_group_id,
+                    'default_company_id': company_id,
+                    'default_state': state}</attribute>
             </field>
-            <xpath expr="//field[@name='stock_request_ids']/tree/field[@name='direction']" position="after">
+            <xpath expr="//field[@name='stock_request_ids']/tree/field[@name='route_id']" position="after">
                 <field name="helpdesk_ticket_id" invisible="1"/>
             </xpath>
         </field>
