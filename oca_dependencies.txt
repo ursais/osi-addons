@@ -1,5 +1,8 @@
 odoo-addons https://github.com/gityopie/odoo-addons.git 12.0
+account-invoicing
 account-payment
 connector-telephony
 field-service
+partner-contact
+sale-workflow
 stock-logistics-warehouse
