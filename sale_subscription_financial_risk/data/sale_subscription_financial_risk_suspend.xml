@@ -13,7 +13,7 @@
             <field name="doall" eval="False"/>
             <field name="state">code</field>
             <field name="code">model.check_service_suspensions()</field>
-            <field name="nextcall">2019-08-06 09:45:00</field>
+            <field name="nextcall">2019-08-12 09:45:00</field>
             <!-- <field name="args" eval="'[]'" /> -->
         </record>
     </data>
