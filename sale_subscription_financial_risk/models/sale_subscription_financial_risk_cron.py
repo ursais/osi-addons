@@ -27,15 +27,15 @@ class SaleSubscription(models.Model):
         'res.partner'
     )
 
-    partner_credit_type = fields.Selection(
-        related='partner.credit_limit_type'
-    )
-    partner_credit_limit = fields.Float(
-        related='partner.credit_limit'
-    )
-    partner_credit = fields.Monetary(
-        related='partner.credit'
-    )
+    # partner_credit_type = fields.Selection(
+    #     related='partner.credit_limit_type'
+    # )
+    # partner_credit_limit = fields.Float(
+    #     related='partner.credit_limit'
+    # )
+    # partner_credit = fields.Monetary(
+    #     related='partner.credit'
+    # )
 
     # service = fields.Many2one(
     #     'sale.subscription'
