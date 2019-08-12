@@ -104,7 +104,6 @@ class SaleSubscription(models.Model):
                         _logger.info('Jacob partner credit type {}'.format(
                             self.sub.partner_id.credit_limit_type)
                         )
-                        self.sub.partner_id = self.sub.partner_id
                         # if credit > credit limit or age > overdue limit then
                         # suspend all partner subscriptions
                         if self.sub.partner_id.credit > self.sub.partner_id.credit_limit:
