@@ -27,19 +27,10 @@ class SaleSubscription(models.Model):
         'res.partner'
     )
 
-    # partner_credit_type = fields.Selection(
-    #     related='partner.credit_limit_type'
-    # )
-    # partner_credit_limit = fields.Float(
-    #     related='partner.credit_limit'
-    # )
-    # partner_credit = fields.Monetary(
-    #     related='partner.credit'
-    # )
-
-    # service = fields.Many2one(
-    #     'sale.subscription'
-    # )
+    # partner_credit_type = fields.Selection()
+    # partner_credit_limit = fields.Float()
+    # partner_credit = fields.Monetary()
+    # service = fields.Many2one()
 
     # These functions are in agreement_sale_subscription_suspension
     # It's just not merged into osi-addons yet
@@ -82,7 +73,9 @@ class SaleSubscription(models.Model):
         try:
             # if a specific partner record is passed, do an individual match
             if single_partner:
-                _logger.info('Jacob passed a partner {}'.format(single_partner))
+                _logger.info('Jacob passed a partner {}'.format(
+                    single_partner)
+                )
                 self.partner_subscriptions = fields.Many2one(
                     'sale.subscription',
                     domain=[
@@ -101,7 +94,9 @@ class SaleSubscription(models.Model):
                 # for all subscriptions, suspended or in progress
                 for sub in self.subscriptions:
                     _logger.info('Jacob in for service-in-subscription loop 2')
-                    _logger.info('Jacob partner matched {}'.format(self.sub.partner_id))
+                    _logger.info('Jacob partner matched {}'.format(
+                        self.sub.partner_id)
+                    )
                     # compute their credit and credit limit by credit type &
                     # compare the credit with their limit
                     # self.partner_credit_type = fields.Selection(
@@ -114,12 +109,14 @@ class SaleSubscription(models.Model):
                     #     related='self.service.partner_id.credit'
                     # )
 
-                    if self.self.sub.partner_id.credit_limit_type == 'fixed':
-                        _logger.info('Jacob partner credit type {}'.format(self.self.sub.partner_id.credit_limit_type))
+                    if self.sub.partner_id.credit_limit_type == 'fixed':
+                        _logger.info('Jacob partner credit type {}'.format(
+                            self.sub.partner_id.credit_limit_type)
+                        )
                         self.sub.partner_id = self.sub.partner_id
                         # if credit > credit limit or age > overdue limit then
                         # suspend all partner subscriptions
-                        if self.self.sub.partner_id.credit > self.self.sub.partner_id.credit_limit:
+                        if self.sub.partner_id.credit > self.sub.partner_id.credit_limit:
                             super(
                                 SaleSubscription, self
                             ).sub.action_suspend()
@@ -127,8 +124,10 @@ class SaleSubscription(models.Model):
                             super(
                                 SaleSubscription, self
                             ).sub.action_re_activate()
-                    elif self.self.sub.partner_id.credit_limit_type == 'subscription_based':
-                        _logger.info('Jacob partner credit type {}'.format(self.self.sub.partner_id.credit_limit_type))
+                    elif self.sub.partner_id.credit_limit_type == 'subscription_based':
+                        _logger.info('Jacob partner credit type {}'.format(
+                            self.sub.partner_id.credit_limit_type)
+                        )
                         # get the age of the oldest open invoice
                         # partner_credit_limit_subscription_qty = fields.Int(
                         #     related='partner.credit_limit_subscription_qty'
