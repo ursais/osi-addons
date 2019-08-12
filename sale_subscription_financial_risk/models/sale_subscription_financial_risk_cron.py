@@ -32,7 +32,7 @@ class SaleSubscription(models.Model):
     # partner_credit = fields.Monetary()
     # service = fields.Many2one()
 
-    # These functions are in agreement_sale_subscription_suspension
+    # These functions are in agreement_sale_subscription_suspension Ken did
     # It's just not merged into osi-addons yet
     def suspend_service_profile(self):
         sp_ids = self.env['agreement.serviceprofile'].search([
@@ -69,7 +69,6 @@ class SaleSubscription(models.Model):
     @api.model
     def check_service_suspensions(self, single_partner=None):
         # accepts opitonal passed partner_id to match subscriptions on
-        # Doesn't it make more sense to base this off of subscription agreements?
         try:
             # if a specific partner record is passed, do an individual match
             if single_partner:
@@ -93,21 +92,13 @@ class SaleSubscription(models.Model):
                 _logger.info('Jacob did not pass a partner')
                 # for all subscriptions, suspended or in progress
                 for sub in self.subscriptions:
+                    # Never get in here
                     _logger.info('Jacob in for service-in-subscription loop 2')
-                    _logger.info('Jacob partner matched {}'.format(
+                    _logger.info('Jacob partner working on {}'.format(
                         self.sub.partner_id)
                     )
                     # compute their credit and credit limit by credit type &
                     # compare the credit with their limit
-                    # self.partner_credit_type = fields.Selection(
-                    #     related='self.service.partner_id.credit_limit_type'
-                    # )
-                    # self.partner_credit_limit = fields.Float(
-                    #     related='self.service.partner_id.credit_limit'
-                    # )
-                    # self.partner_credit = fields.Monetary(
-                    #     related='self.service.partner_id.credit'
-                    # )
 
                     if self.sub.partner_id.credit_limit_type == 'fixed':
                         _logger.info('Jacob partner credit type {}'.format(
@@ -136,7 +127,7 @@ class SaleSubscription(models.Model):
                         #     related='partner.credit_limit_subscription_uom'
                         # )
                         # if age > overdue limit then
-                        # suspend all partner subscriptions
+                        # suspend or reactivate service as the case demands
                         if self.age > self.overdue_limit:
                             super(
                                 SaleSubscription, self
@@ -145,22 +136,7 @@ class SaleSubscription(models.Model):
                             super(
                                 SaleSubscription, self
                             ).sub.action_re_activate()
-                        # suspend or reactivate service as the case demands
-        #  ~~~ Below is definitely WIP backup ~~~ #
-        # elif self.partner.credit_limit_type == 'subscription_based':
-        #     calculate the age of the oldest open invoice
-        #     self.partner.credit_limit_subscription_qty
-        #     self.partner.credit_limit_subscription_uom
-        #     if self.age > self.overdue_limit:
-        #         #Suspend all partner subscriptions
-        #         super(
-        #             checkServiceSuspensionState, self
-        #         ).sub.action_suspend()
-        #     else:
-        #         super(
-        #             checkServiceSuspensionState, self
-        #         ).sub.action_re_activate()
-        #     suspend or reactivate service as the case demands
+
         except RuntimeError as error:
             msg = _('Error Encountered:\n {} \n {}'.format(error, error.args))
             raise UserError(msg)
