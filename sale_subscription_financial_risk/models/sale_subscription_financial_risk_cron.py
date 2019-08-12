@@ -150,16 +150,16 @@ class SaleSubscription(models.Model):
                             super(
                                 SaleSubscription, self
                             ).sub.action_suspend()
-                        # get the age of the oldest open invoice
-                        self.partner_invoices = fields.Many2one(
-                            'account.invoice',
-                            domain=[
-                                ('partner_id', '=', self.sub.partner_id)
-                                ('state', '=', 'open')
-                            ]
-                        )
-                        # ...
-                        # ...
+                            # get the age of the oldest open invoice
+                            self.partner_invoices = fields.Many2one(
+                                'account.invoice',
+                                domain=[
+                                    ('partner_id', '=', self.sub.partner_id)
+                                    ('state', '=', 'open')
+                                ]
+                            )
+                            # ...
+                            # ...
                         elif self.sub.partner_id.age > self.sub.partner_id.overdue_limit_qty:
                             super(
                                 SaleSubscription, self
