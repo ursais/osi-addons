@@ -8,7 +8,7 @@ class ResPartner(models.Model):
     overdue_limit_qty = fields.Integer(
         string='Overdue Limit',
         help='If one invoice is due for more than the duration \
-        specified here, all the subscriptionsof the customer will \
+        specified here, all the subscriptions of the customer will \
         be suspended.'
     )
 
