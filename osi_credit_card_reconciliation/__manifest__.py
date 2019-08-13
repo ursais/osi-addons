@@ -4,7 +4,7 @@
 {
     "name": "Credit Card Reconciliation",
     "summary": "Reconcile your credit cards",
-    "version": "12.0.1.0.0",
+    "version": "12.0.1.0.1",
     "license": "LGPL-3",
     "author": "Open Source Integrators",
     "maintainer": "Open Source Integrators",
