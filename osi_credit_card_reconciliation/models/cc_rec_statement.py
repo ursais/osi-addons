@@ -485,7 +485,7 @@ class CcRecStatement(models.Model):
     journal_id = fields.Many2one(
         'account.journal', string='Journal', required=True,
         states={'done': [('readonly', True)]},
-        domain="[('support_creditcard_transactions', '=', True)]")
+        domain="[('credit_card', '=', True)]")
 
     _sql_constraints = [
         ('name_company_uniq',
