@@ -88,11 +88,11 @@ class SaleSubscription(models.Model):
             curDate = date.today()
 
             deltaQty = timedelta(days=self.partner_id.overdue_limit_qty)
-            if self.overdue_limit_uom == 'days':
+            if self.partner_id.overdue_limit_uom == 'days':
                 deltaQty = timedelta(days=self.partner_id.overdue_limit_qty)
-            elif self.overdue_limit_uom == 'weeks':
+            elif self.partner_id.overdue_limit_uom == 'weeks':
                 deltaQty = timedelta(months=self.partner_id.overdue_limit_qty)
-            elif self.overdue_limit_uom == 'months':
+            elif self.partner_id.overdue_limit_uom == 'months':
                 deltaQty = timedelta(years=self.partner_id.overdue_limit_qty)
 
             # time_now = datetime.now()
