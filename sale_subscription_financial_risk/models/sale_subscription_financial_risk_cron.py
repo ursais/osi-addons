@@ -112,7 +112,6 @@ class SaleSubscription(models.Model):
             #     )
             #     for sub in self.partner_subscriptions:
             #         _logger.info('Jacob in for service-in-subscription loop')
-            #         # need to call Brian's function as a super
             #         self.action_re_activate()
             # # else default to processing/auditing all partner records
         # else:
@@ -133,11 +132,11 @@ class SaleSubscription(models.Model):
             _logger.info('Jacob grabbed oldest invoice for contact {}'.format(
                 self.partner_id.name
             ))
-            _logger.info('Jacob grabbed oldest invoice name is {}'.format(
-                oldest_invoice[0].name
-            ))
 
             if oldest_invoice:
+                _logger.info('Jacob grabbed oldest invoice name is {}'.format(
+                    oldest_invoice[0].name
+                ))
                 # compute their credit and their credit limit
                 # (based on the type)
                 if self.partner_id.credit_limit_type == 'fixed':
