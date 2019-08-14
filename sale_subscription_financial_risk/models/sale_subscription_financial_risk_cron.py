@@ -87,6 +87,8 @@ class SaleSubscription(models.Model):
 
             curDate = date.today()
 
+            # this is ugly and needs to be fixed, but I can't directly
+            # insert self.partner_id.overdue_limit_uom in the timedelta call
             deltaQty = timedelta(days=self.partner_id.overdue_limit_qty)
             if self.partner_id.overdue_limit_uom == 'days':
                 deltaQty = timedelta(days=self.partner_id.overdue_limit_qty)
@@ -121,7 +123,7 @@ class SaleSubscription(models.Model):
             # whenever trying to get a field, use seach([])
             oldest_invoice = self.env['account.invoice'].search(
                 [
-                    ('partner_id', '=', self.partner_id),
+                    ('partner_id', '=', self.partner_id.id),
                     ('state', '=', 'open')
                 ],
                 # ValueError: <class 'ValueError'>:

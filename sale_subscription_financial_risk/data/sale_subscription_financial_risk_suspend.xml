@@ -16,9 +16,9 @@
             <!-- see CRON_LOOP_EXAMPLE.png -->
             <field name="code">
                 records = model.search([
-                    '|',
+                    <!-- '|',
                     ('stage_id', '=', 'In Progress'),
-                    ('stage_id', '=', 'Suspended')
+                    ('stage_id', '=', 'Suspended') -->
                 ])
                 for record in records:
                     model.check_service_suspensions()
