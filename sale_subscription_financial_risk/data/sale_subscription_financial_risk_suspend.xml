@@ -14,7 +14,15 @@
             <field name="state">code</field>
             <!-- extend this call logic to control the iteration and 'domain' conditions -->
             <!-- see CRON_LOOP_EXAMPLE.png -->
-            <field name="code">model.check_service_suspensions()</field>
+            <field name="code">
+                records= model.search([
+                    '|',
+                    ('stage_id', '=', 'In Progress'),
+                    ('stage_id', '=', 'Suspended')
+                ])
+                for record in records:
+                    model.check_service_suspensions()
+            </field>
             <field name="nextcall">2019-08-12 09:45:00</field>
             <!-- <field name="args" eval="'[]'" /> -->
         </record>

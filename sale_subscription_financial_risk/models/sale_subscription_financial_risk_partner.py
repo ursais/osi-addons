@@ -9,7 +9,8 @@ class ResPartner(models.Model):
         string='Overdue Limit',
         help='If one invoice is due for more than the duration \
         specified here, all the subscriptions of the customer will \
-        be suspended.'
+        be suspended.',
+        default=15
     )
 
     # Overdue limit unit of measurement
@@ -32,7 +33,10 @@ class ResPartner(models.Model):
     )
 
     # Hide these last 2 fields only if the type is not "Based on Subscriptions"
-    credit_limit_subscription_qty = fields.Integer(string='Using the last')
+    credit_limit_subscription_qty = fields.Integer(
+        string='Using the last',
+        default=4
+    )
 
     # Credit limit unit of measurement
     credit_limit_subscription_uom = fields.Selection(
