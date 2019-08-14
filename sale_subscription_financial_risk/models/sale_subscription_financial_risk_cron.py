@@ -91,9 +91,9 @@ class SaleSubscription(models.Model):
             if self.partner_id.overdue_limit_uom == 'days':
                 deltaQty = timedelta(days=self.partner_id.overdue_limit_qty)
             elif self.partner_id.overdue_limit_uom == 'weeks':
-                deltaQty = timedelta(months=self.partner_id.overdue_limit_qty)
+                deltaQty = timedelta(weeks=self.partner_id.overdue_limit_qty)
             elif self.partner_id.overdue_limit_uom == 'months':
-                deltaQty = timedelta(years=self.partner_id.overdue_limit_qty)
+                deltaQty = timedelta(months=self.partner_id.overdue_limit_qty)
 
             # time_now = datetime.now()
             _logger.info('Jacob time_now is {}'.format(
@@ -101,71 +101,67 @@ class SaleSubscription(models.Model):
             )
             # due_date is as "08/12/2019"
             # if a specific partner record is passed, do an individual match
-            if single_partner:
-                _logger.info('Jacob passed a partner {}'.format(
-                    single_partner)
+            # if single_partner:
+            #     _logger.info('Jacob passed a partner {}'.format(
+            #         single_partner)
+            #     )
+            #     self.partner_subscriptions = self.env['sale.subscription'].search(
+            #         [
+            #             ('partner_id', '=', single_partner)
+            #         ]
+            #     )
+            #     for sub in self.partner_subscriptions:
+            #         _logger.info('Jacob in for service-in-subscription loop')
+            #         # need to call Brian's function as a super
+            #         self.action_re_activate()
+            # # else default to processing/auditing all partner records
+        # else:
+        # Skipping the passed partner for now
+            _logger.info('Jacob starting suspension check batch')
+            # get the age of the oldest open invoice
+            # whenever trying to get a field, use seach([])
+            oldest_invoice = self.env['account.invoice'].search(
+                [
+                    ('partner_id', '=', self.partner_id),
+                    ('state', '=', 'open')
+                ],
+                order="due_date asc"
+            )
+            _logger.info('Jacob grabbed oldest invoice')
+
+            # compute their credit and their credit limit
+            # (based on the type)
+            if self.partner_id.credit_limit_type == 'fixed':
+                _logger.info('Jacob partner credit type {}'.format(
+                    self.partner_id.credit_limit_type)
                 )
-                self.partner_subscriptions = fields.Many2one(
-                    'sale.subscription',
-                    domain=[
-                        ('partner_id', '=', single_partner)
-                    ]
-                )
-                for sub in self.partner_subscriptions:
-                    _logger.info('Jacob in for service-in-subscription loop')
-                    # need to call Brian's function as a super
+                if self.partner_id.credit > self.partner_id.credit_limit:
+                    _logger.info('Jacob suspending!')
+                    self.action_suspend()
+                elif oldest_invoice[0].due_date + deltaQty > curDate:
+                    _logger.info('Jacob suspending!')
+                    self.action_suspend()
+                else:
+                    _logger.info('Jacob activating!')
                     self.action_re_activate()
-            # else default to processing/auditing all partner records
-            else:
-                _logger.info('Jacob did not pass a partner')
-                # get the age of the oldest open invoice
-                # whenever trying to get a field, use seach([])
-                oldest_invoice = self.env['account.invoice'].search(
-                    [
-                        ('partner_id', '=', self.partner_id),
-                        ('state', '=', 'open')
-                    ],
-                    order="due_date asc"
+            # Same thing, but for subscription-based credit limits
+            elif self.partner_id.credit_limit_type == 'subscription_based':
+                _logger.info('Jacob partner credit type {}'.format(
+                    self.partner_id.credit_limit_type)
                 )
-                _logger.info('Jacob partner {} oldest invoice {}'.format(
-                    self.partner_id,
-                    oldest_invoice[0].due_date
-                    )
-                )
+                # grab the timezone, format into a datetime, add QTY based
+                # on UOM
+                # THen compare to oldest_invoice due_date and see if it is
+                # in violation
+                # self.partner_id.credit_limit_subscription_qty
+                # self.partner_id.credit_limit_subscription_uom
 
-                # compute their credit and their credit limit
-                # (based on the type)
-                if self.partner_id.credit_limit_type == 'fixed':
-                    _logger.info('Jacob partner credit type {}'.format(
-                        self.partner_id.credit_limit_type)
-                    )
-                    if self.partner_id.credit > self.partner_id.credit_limit:
-                        _logger.info('Jacob suspending!')
-                        self.action_suspend()
-                    elif oldest_invoice[0].due_date + deltaQty > curDate:
-                        _logger.info('Jacob suspending!')
-                        self.action_suspend()
-                    else:
-                        _logger.info('Jacob activating!')
-                        self.action_re_activate()
-                # Same thing, but for subscription-based credit limits
-                elif self.partner_id.credit_limit_type == 'subscription_based':
-                    _logger.info('Jacob partner credit type {}'.format(
-                        self.partner_id.credit_limit_type)
-                    )
-                    # grab the timezone, format into a datetime, add QTY based
-                    # on UOM
-                    # THen compare to oldest_invoice due_date and see if it is
-                    # in violation
-                    # self.partner_id.credit_limit_subscription_qty
-                    # self.partner_id.credit_limit_subscription_uom
-
-                    # if self.partner_id.credit > self.partner_id.credit_limit:
-                    #     self.action_suspend()
-                    # elif oldest_invoice[0].due_date  self.:
-                    #     self.action_suspend()
-                    # else:
-                    #     self.action_re_activate()
+                # if self.partner_id.credit > self.partner_id.credit_limit:
+                #     self.action_suspend()
+                # elif oldest_invoice[0].due_date  self.:
+                #     self.action_suspend()
+                # else:
+                #     self.action_re_activate()
 
         except RuntimeError as error:
             msg = _('Error Encountered:\n {} \n {}'.format(error, error.args))
