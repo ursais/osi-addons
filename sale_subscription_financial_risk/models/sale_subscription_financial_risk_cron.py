@@ -122,7 +122,7 @@ class SaleSubscription(models.Model):
             # whenever trying to get a field, use seach([])
             oldest_invoice = self.env['account.invoice'].search(
                 [
-                    ('partner_id', '=', self.partner_id),
+                    ('partner_id', '=', self.partner_id.id),
                     ('state', '=', 'open')
                 ],
                 order="due_date asc"

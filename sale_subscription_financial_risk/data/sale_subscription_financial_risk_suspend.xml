@@ -15,7 +15,7 @@
             <!-- extend this call logic to control the iteration and 'domain' conditions -->
             <!-- see CRON_LOOP_EXAMPLE.png -->
             <field name="code">
-                records= model.search([
+                records = model.search([
                     '|',
                     ('stage_id', '=', 'In Progress'),
                     ('stage_id', '=', 'Suspended')
