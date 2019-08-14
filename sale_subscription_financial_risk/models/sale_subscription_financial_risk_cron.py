@@ -130,41 +130,47 @@ class SaleSubscription(models.Model):
                 # while evaluating 'model.check_service_suspensions()'
                 order="date_due asc"
             )
-            _logger.info('Jacob grabbed oldest invoice')
+            _logger.info('Jacob grabbed oldest invoice for contact {}'.format(
+                self.partner_id.name
+            ))
+            _logger.info('Jacob grabbed oldest invoice name is {}'.format(
+                oldest_invoice[0].name
+            ))
 
-            # compute their credit and their credit limit
-            # (based on the type)
-            if self.partner_id.credit_limit_type == 'fixed':
-                _logger.info('Jacob partner credit type {}'.format(
-                    self.partner_id.credit_limit_type)
-                )
-                if self.partner_id.credit > self.partner_id.credit_limit:
-                    _logger.info('Jacob suspending!')
-                    self.action_suspend()
-                elif oldest_invoice[0].date_due + deltaQty > curDate:
-                    _logger.info('Jacob suspending!')
-                    self.action_suspend()
-                else:
-                    _logger.info('Jacob activating!')
-                    self.action_re_activate()
-            # Same thing, but for subscription-based credit limits
-            elif self.partner_id.credit_limit_type == 'subscription_based':
-                _logger.info('Jacob partner credit type {}'.format(
-                    self.partner_id.credit_limit_type)
-                )
-                # grab the timezone, format into a datetime, add QTY based
-                # on UOM
-                # THen compare to oldest_invoice date_due and see if it is
-                # in violation
-                # self.partner_id.credit_limit_subscription_qty
-                # self.partner_id.credit_limit_subscription_uom
+            if oldest_invoice:
+                # compute their credit and their credit limit
+                # (based on the type)
+                if self.partner_id.credit_limit_type == 'fixed':
+                    _logger.info('Jacob partner credit type {}'.format(
+                        self.partner_id.credit_limit_type)
+                    )
+                    if self.partner_id.credit > self.partner_id.credit_limit:
+                        _logger.info('Jacob suspending!')
+                        self.action_suspend()
+                    elif oldest_invoice[0].date_due + deltaQty > curDate:
+                        _logger.info('Jacob suspending!')
+                        self.action_suspend()
+                    else:
+                        _logger.info('Jacob activating!')
+                        self.action_re_activate()
+                # Same thing, but for subscription-based credit limits
+                elif self.partner_id.credit_limit_type == 'subscription_based':
+                    _logger.info('Jacob partner credit type {}'.format(
+                        self.partner_id.credit_limit_type)
+                    )
+                    # grab the timezone, format into a datetime, add QTY based
+                    # on UOM
+                    # THen compare to oldest_invoice date_due and see if it is
+                    # in violation
+                    # self.partner_id.credit_limit_subscription_qty
+                    # self.partner_id.credit_limit_subscription_uom
 
-                # if self.partner_id.credit > self.partner_id.credit_limit:
-                #     self.action_suspend()
-                # elif oldest_invoice[0].date_due  self.:
-                #     self.action_suspend()
-                # else:
-                #     self.action_re_activate()
+                    # if self.partner_id.credit > self.partner_id.credit_limit:
+                    #     self.action_suspend()
+                    # elif oldest_invoice[0].date_due  self.:
+                    #     self.action_suspend()
+                    # else:
+                    #     self.action_re_activate()
 
         except RuntimeError as error:
             msg = _('Error Encountered:\n {} \n {}'.format(error, error.args))
