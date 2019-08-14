@@ -1,5 +1,5 @@
 from odoo import models, fields, api
-from datetime import date
+from datetime import date, datetime
 from odoo.exceptions import UserError
 from odoo.tools.translate import _
 import logging
@@ -72,7 +72,7 @@ class SaleSubscription(models.Model):
         return res
     # End unnecessary function duplication from Ken's unloaded module
 
-    # Big 'ol WIP
+    # CRON will loop through all records in the model
     @api.model
     def check_service_suspensions(self, single_partner=None):
         # accepts opitonal passed partner_id to match subscriptions on
@@ -99,75 +99,59 @@ class SaleSubscription(models.Model):
                 _logger.info('Jacob did not pass a partner')
                 # for all subscriptions, suspended or in progress
                 # I don't think it likes this iteration at all
-                for sub in self.subscriptions:
-                    # Never get in here
-                    _logger.info('Jacob in for service-in-subscription loop 2')
-                    _logger.info('Jacob partner working on {}'.format(
-                        self.sub.partner_id)
+
+                # Never get in here
+                _logger.info('Jacob in for service-in-subscription loop 2')
+                _logger.info('Jacob partner working on {}'.format(
+                    self.partner_id)
+                )
+                # get the age of the oldest open invoice
+                # whenever trying to get a field, use seach([])
+                oldest_invoice = self.env['account.invoice'].search(
+                    [
+                        ('partner_id', '=', self.partner_id),
+                        ('state', '=', 'open')
+                    ],
+                    order="due_date asc"
+                )
+                # compute their credit and their credit limit
+                # (based on the type)
+                if self.partner_id.credit_limit_type == 'fixed':
+                    _logger.info('Jacob partner credit type {}'.format(
+                        self.partner_id.credit_limit_type)
                     )
-                    # compute their credit and their credit limit
-                    # (based on the type)
-                    if self.sub.partner_id.credit_limit_type == 'fixed':
-                        _logger.info('Jacob partner credit type {}'.format(
-                            self.sub.partner_id.credit_limit_type)
-                        )
-                        # compare the credit with their limit
-                        # if credit > credit limit or age > overdue limit then
-                        # suspend all partner subscriptions/service profiles,
-                        # otherwise make sure they are active
-                        if self.sub.partner_id.credit > self.sub.partner_id.credit_limit:
-                            super(
-                                SaleSubscription, self
-                            ).sub.action_suspend()
-                            # get the age of the oldest open invoice
-                            self.partner_invoices = fields.Many2one(
-                                'account.invoice',
-                                domain=[
-                                    ('partner_id', '=', self.sub.partner_id)
-                                    ('state', '=', 'open')
-                                ]
-                            )
-                            # ...
-                            # ...
-                            # account.invoice
-                            # partner_id
-                            # date_invoice (invoice date)
-                            # date_due (due date)
-                        elif self.sub.partner_id.age > self.sub.partner_id.overdue_limit_qty:
-                            super(
-                                SaleSubscription, self
-                            ).sub.action_suspend()
-                        else:
-                            super(
-                                SaleSubscription, self
-                            ).sub.action_re_activate()
-                    # Same thing, but for subscription-based credit limits
-                    elif self.sub.partner_id.credit_limit_type == 'subscription_based':
-                        _logger.info('Jacob partner credit type {}'.format(
-                            self.sub.partner_id.credit_limit_type)
-                        )
-                        if self.sub.partner_id.credit > self.sub.partner_id.credit_limit:
-                            super(
-                                SaleSubscription, self
-                            ).sub.action_suspend()
-                            # get the age of the oldest open invoice
-                            self.partner_invoices = fields.Many2one(
-                                'account.invoice',
-                                domain=[
-                                    ('partner_id', '=', self.sub.partner_id)
-                                    ('state', '=', 'open')
-                                ]
-                            )
-                            # ...
-                            # ...
-                        elif self.sub.partner_id.age > self.sub.partner_id.overdue_limit_qty:
-                            super(
-                                SaleSubscription, self
-                            ).sub.action_suspend()
-                        else:
-                            super(
-                                SaleSubscription, self
-                            ).sub.action_re_activate()
+                    # compare the credit with their limit
+                    # if credit > credit limit or age > overdue limit then
+                    # suspend all partner subscriptions/service profiles,
+                    # otherwise make sure they are active
+                    if self.partner_id.credit > self.partner_id.credit_limit:
+                        self.action_suspend()
+                        # ...
+                        # ...
+                        # account.invoice
+                        # partner_id
+                        # date_invoice (invoice date)
+                        # date_due (due date)
+                        # grab the timezone, format into a datetime, add QTY based on UOM
+                        # THen compare to oldest_invoice due_date and see if it is in violation
+                    elif oldest_invoice[0].due_date > self.partner_id.overdue_limit_qty:
+                        self.action_suspend()
+                    else:
+                        self.action_re_activate()
+                # Same thing, but for subscription-based credit limits
+                elif self.partner_id.credit_limit_type == 'subscription_based':
+                    _logger.info('Jacob partner credit type {}'.format(
+                        self.partner_id.credit_limit_type)
+                    )
+                    if self.partner_id.credit > self.partner_id.credit_limit:
+                        self.action_suspend()
+                        # get the age of the oldest open invoice
+                        # grab the timezone, format into a datetime, add QTY based on UOM
+                        # THen compare to oldest_invoice due_date and see if it is in violation
+                    elif oldest_invoice[0].due_date  self.:
+                        self.action_suspend()
+                    else:
+                        self.action_re_activate()
 
         except RuntimeError as error:
             msg = _('Error Encountered:\n {} \n {}'.format(error, error.args))

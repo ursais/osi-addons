@@ -12,6 +12,8 @@
             <field name="priority">1</field>
             <field name="doall" eval="False"/>
             <field name="state">code</field>
+            <!-- extend this call logic to control the iteration and 'domain' conditions -->
+            <!-- see CRON_LOOP_EXAMPLE.png -->
             <field name="code">model.check_service_suspensions()</field>
             <field name="nextcall">2019-08-12 09:45:00</field>
             <!-- <field name="args" eval="'[]'" /> -->
