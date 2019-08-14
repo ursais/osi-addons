@@ -43,7 +43,8 @@ class StockRequest(models.Model):
             ticket = self.env['helpdesk.ticket'].browse(
                 vals['helpdesk_ticket_id'])
             ticket.request_stage = 'draft'
-            val_date = datetime.strptime(vals['expected_date'], '%Y-%m-%d %H:%M:%S')
+            val_date = datetime.strptime(vals['expected_date'],
+                                         '%Y-%m-%d %H:%M:%S')
             date_window_after = val_date - timedelta(hours=1)
             order = self.env['stock.request.order'].search([
                 ('helpdesk_ticket_id', '=', vals['helpdesk_ticket_id']),
@@ -56,7 +57,8 @@ class StockRequest(models.Model):
                 vals['order_id'] = order.id
             else:
                 values = self.prepare_order_values(vals)
-                vals['order_id'] = self.env['stock.request.order'].create(values).id
+                vals['order_id'] = self.env['stock.request.order'].\
+                    create(values).id
         return super().create(vals)
 
     def _prepare_procurement_group_values(self):
