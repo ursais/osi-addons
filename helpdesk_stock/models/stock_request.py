@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
+from datetime import datetime, timedelta
 
 
 class StockRequest(models.Model):
@@ -38,23 +39,27 @@ class StockRequest(models.Model):
 
     @api.model
     def create(self, vals):
-        res = super().create(vals)
         if 'helpdesk_ticket_id' in vals and vals['helpdesk_ticket_id']:
             ticket = self.env['helpdesk.ticket'].browse(
                 vals['helpdesk_ticket_id'])
             ticket.request_stage = 'draft'
+            val_date = datetime.strptime(vals['expected_date'],
+                                         '%Y-%m-%d %H:%M:%S')
+            date_window_after = val_date - timedelta(hours=1)
             order = self.env['stock.request.order'].search([
                 ('helpdesk_ticket_id', '=', vals['helpdesk_ticket_id']),
                 ('direction', '=', vals['direction']),
-                ('expected_date', '=', vals['expected_date']),
+                ('expected_date', '>', date_window_after),
                 ('state', '=', 'draft')
             ])
             if order:
-                res.order_id = order.id
+                vals['expected_date'] = order.expected_date
+                vals['order_id'] = order.id
             else:
                 values = self.prepare_order_values(vals)
-                res.order_id = self.env['stock.request.order'].create(values)
-        return res
+                vals['order_id'] = self.env['stock.request.order'].\
+                    create(values).id
+        return super().create(vals)
 
     def _prepare_procurement_group_values(self):
         if self.helpdesk_ticket_id:
