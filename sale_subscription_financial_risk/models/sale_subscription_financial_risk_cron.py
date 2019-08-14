@@ -83,23 +83,26 @@ class SaleSubscription(models.Model):
             # it is in violation
             # user_tz = timezone(self.env.context.get('tz') or
             #                     self.env.use.tz or 'UTC')
-            # curDate = datetime.now().strftime('%m/%d/%Y')
+            # cur_date = datetime.now().strftime('%m/%d/%Y')
 
-            curDate = date.today()
+            cur_date = date.today()
 
             # this is ugly and needs to be fixed, but I can't directly
             # insert self.partner_id.overdue_limit_uom in the timedelta call
-            deltaQty = timedelta(days=self.partner_id.overdue_limit_qty)
+            delta_qty = timedelta(days=self.partner_id.overdue_limit_qty)
             if self.partner_id.overdue_limit_uom == 'days':
-                deltaQty = timedelta(days=self.partner_id.overdue_limit_qty)
+                delta_qty = timedelta(days=self.partner_id.overdue_limit_qty)
             elif self.partner_id.overdue_limit_uom == 'weeks':
-                deltaQty = timedelta(weeks=self.partner_id.overdue_limit_qty)
+                delta_qty = timedelta(weeks=self.partner_id.overdue_limit_qty)
             elif self.partner_id.overdue_limit_uom == 'months':
-                deltaQty = timedelta(months=self.partner_id.overdue_limit_qty)
+                delta_qty = timedelta(months=self.partner_id.overdue_limit_qty)
 
             # time_now = datetime.now()
             _logger.info('Jacob time_now is {}'.format(
-                curDate)
+                cur_date)
+            )
+            _logger.info('Jacob delta_qty is {}'.format(
+                delta_qty)
             )
             # due_date is as "08/12/2019"
             # if a specific partner record is passed, do an individual match
@@ -148,7 +151,7 @@ class SaleSubscription(models.Model):
                     if self.partner_id.credit > self.partner_id.credit_limit:
                         _logger.info('Jacob suspending!')
                         self.action_suspend()
-                    elif oldest_invoice[0].date_due + deltaQty > curDate:
+                    elif oldest_invoice[0].date_due + delta_qty > cur_date:
                         _logger.info('Jacob suspending!')
                         self.action_suspend()
                     else:
