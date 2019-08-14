@@ -125,7 +125,10 @@ class SaleSubscription(models.Model):
                     ('partner_id', '=', self.partner_id.id),
                     ('state', '=', 'open')
                 ],
-                order="due_date asc"
+                # ValueError: <class 'ValueError'>:
+                # "Sorting field date_due not found on model account.invoice"
+                # while evaluating 'model.check_service_suspensions()'
+                order="date_due asc"
             )
             _logger.info('Jacob grabbed oldest invoice')
 
@@ -138,7 +141,7 @@ class SaleSubscription(models.Model):
                 if self.partner_id.credit > self.partner_id.credit_limit:
                     _logger.info('Jacob suspending!')
                     self.action_suspend()
-                elif oldest_invoice[0].due_date + deltaQty > curDate:
+                elif oldest_invoice[0].date_due + deltaQty > curDate:
                     _logger.info('Jacob suspending!')
                     self.action_suspend()
                 else:
@@ -151,14 +154,14 @@ class SaleSubscription(models.Model):
                 )
                 # grab the timezone, format into a datetime, add QTY based
                 # on UOM
-                # THen compare to oldest_invoice due_date and see if it is
+                # THen compare to oldest_invoice date_due and see if it is
                 # in violation
                 # self.partner_id.credit_limit_subscription_qty
                 # self.partner_id.credit_limit_subscription_uom
 
                 # if self.partner_id.credit > self.partner_id.credit_limit:
                 #     self.action_suspend()
-                # elif oldest_invoice[0].due_date  self.:
+                # elif oldest_invoice[0].date_due  self.:
                 #     self.action_suspend()
                 # else:
                 #     self.action_re_activate()
