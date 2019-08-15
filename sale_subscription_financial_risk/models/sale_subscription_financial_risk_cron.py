@@ -152,8 +152,23 @@ class SaleSubscription(models.Model):
                     )
                     if self.partner_id.credit > self.partner_id.credit_limit:
                         _logger.info('Jacob suspending case 1!')
+                        _logger.info('Jacob self.partner_id.credit {} !'.format(
+                            self.partner_id.credit
+                        ))
+                        _logger.info('Jacob self.partner_id.credit_limit {} !'.format(
+                            self.partner_id.credit_limit
+                        ))
                         self.action_suspend()
                     elif oldest_invoice[0].date_due + delta_qty > cur_date:
+                        _logger.info('Jacob oldest_invoice[0].date_due {} !'.format(
+                            oldest_invoice[0].date_due
+                        ))
+                        _logger.info('Jacob oldest_invoice[0].date_due + delta_qty {} !'.format(
+                            (oldest_invoice[0].date_due + delta_qty)
+                        ))
+                        _logger.info('Jacob cur_date {} !'.format(
+                            cur_date
+                        ))
                         _logger.info('Jacob suspending case 2!')
                         self.action_suspend()
                     else:
