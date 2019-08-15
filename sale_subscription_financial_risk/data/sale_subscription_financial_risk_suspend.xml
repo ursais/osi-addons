@@ -15,13 +15,10 @@
             <!-- extend this call logic to control the iteration and 'domain' conditions -->
             <!-- see CRON_LOOP_EXAMPLE.png -->
             <field name="code">
-records = model.search([
-    '|',
-    ('stage_id', '=', 'In Progress'),
-    ('stage_id', '=', 'Suspended')
-])
+records = model.search([])
 for record in records:
-    record.check_service_suspensions()
+    if record.stage_id.name == 'In Progress' or record.stage_id.name == 'Suspended':
+        record.check_service_suspensions()
             </field>
             <field name="nextcall">2019-08-12 09:45:00</field>
             <!-- <field name="args" eval="'[]'" /> -->
@@ -44,10 +41,13 @@ for record in records:
             <field name="doall" eval="False"/>
             <field name="state">code</field>
             <field name="code">
-records = model.search([])
+records = model.search([
+    '|',
+    ('stage_id', '=', 'In Progress'),
+    ('stage_id', '=', 'Suspended')
+])
 for record in records:
-    if record.stage_id.name == 'In Progress' or record.stage_id.name == 'Suspended':
-        record.check_service_suspensions()
+    record.check_service_suspensions()
             </field>
             <field name="nextcall">2019-08-12 09:45:00</field>
         </record>
