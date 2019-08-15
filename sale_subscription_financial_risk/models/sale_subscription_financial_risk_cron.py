@@ -150,10 +150,17 @@ class SaleSubscription(models.Model):
                     _logger.info('Jacob partner credit type {}'.format(
                         self.partner_id.credit_limit_type)
                     )
-                    if self.partner_id.credit > self.partner_id.credit_limit:
+                    # Failing this - float precision of credit is garbage
+                    # returning 2.3000000000000003 as > than 49.95
+                    # is credit a calculated monetary field, enforce precision?
+                    formatted_credit = format(self.partner_id.credit, '.2f')
+                    if formatted_credit > self.partner_id.credit_limit:
                         _logger.info('Jacob suspending case 1!')
                         _logger.info('Jacob self.partner_id.credit {} !'.format(
                             self.partner_id.credit
+                        ))
+                        _logger.info('Jacob formatted_credit {} !'.format(
+                            formatted_credit
                         ))
                         _logger.info('Jacob self.partner_id.credit_limit {} !'.format(
                             self.partner_id.credit_limit
