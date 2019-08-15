@@ -36,10 +36,10 @@ class SaleOrderLine(models.Model):
 
     @api.multi
     def _prepare_invoice_line(self, qty):
-        res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
-        res.update(
-            {'analytic_segment_one_id': self.analytic_segment_one_id.id,
-             'analytic_segment_two_id': self.analytic_segment_two_id.id,
-             'account_analytic_id': self.analytic_account_id.id,
-             })
+        res = super()._prepare_invoice_line(qty)
+        res.update({
+            'analytic_segment_one_id':
+                self.order_id.analytic_segment_one_id.id,
+            'analytic_segment_two_id':
+                self.order_id.analytic_segment_two_id.id})
         return res

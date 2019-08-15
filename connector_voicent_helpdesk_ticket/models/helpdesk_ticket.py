@@ -2,6 +2,7 @@
 # <https://www.opensourceintegrators.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
+import hashlib
 import io
 import shutil
 import tempfile
@@ -17,6 +18,12 @@ class HelpdeskTicket(models.Model):
     _inherit = 'helpdesk.ticket'
 
     call_count = fields.Integer(string='Call count', default=0)
+
+    def generate_identity(self):
+        hasher = hashlib.sha1()
+        hasher.update(str(self.id).encode('utf-8'))
+        hasher.update(str(self.stage_id.id).encode('utf-8'))
+        return hasher.hexdigest()
 
     @api.multi
     def voicent_check_status(self, campaign, call_line):
@@ -135,7 +142,8 @@ class HelpdeskTicket(models.Model):
                     if not (line_rec.has_parent is True and
                             rec.parent_id is False):
                         rec.with_delay(
-                            eta=line_rec.backend_id.next_call). \
+                            eta=line_rec.backend_id.next_call,
+                            identity_key=self.generate_identity()).\
                             voicent_start_campaign(line_rec)
                         vals.update({'call_count': 0})
         return super().write(vals)

@@ -6,8 +6,11 @@
         <field name="res_model">helpdesk.ticket</field>
         <field name="view_type">form</field>
         <field name="view_mode">kanban,tree,form,activity</field>
-        <field name="context">{'search_default_team_id': active_id, 'search_default_assigned': True}</field>
-        <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="context">{'search_default_team_id': active_id,
+            'search_default_assigned': True}
+        </field>
+        <field name="search_view_id"
+               ref="helpdesk.helpdesk_tickets_view_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new ticket
@@ -24,9 +27,15 @@
             <field name="unassigned_tickets" position="after">
                 <field name="assigned_tickets"/>
             </field>
-            <xpath expr="//div[@class='col-6 o_kanban_primary_right']/div[2]" position="after">
+            <xpath expr="//div[hasclass('o_kanban_primary_right')]/div[2]"
+                   position="after">
                 <div class="mb4">
-                    <a name="%(helpdesk_team_assigned_tickets.helpdesk_ticket_action_assigned)d" type="action" context="{'search_default_team_id': active_id, 'default_team_id': active_id}"><t t-esc="record.assigned_tickets.raw_value"/> Assigned Tickets</a>
+                    <a name="%(helpdesk_team_assigned_tickets.helpdesk_ticket_action_assigned)d"
+                       type="action"
+                       context="{'search_default_team_id': active_id, 'default_team_id': active_id}">
+                        <t t-esc="record.assigned_tickets.raw_value"/>
+                        Assigned Tickets
+                    </a>
                 </div>
             </xpath>
         </field>
@@ -38,7 +47,8 @@
         <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_search"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='unassigned']" position="before">
-                <filter string="Assigned Tickets" domain="[('user_id','!=',False)]" name="assigned"/>
+                <filter string="Assigned Tickets"
+                        domain="[('user_id','!=',False)]" name="assigned"/>
             </xpath>
         </field>
     </record>
@@ -49,7 +59,9 @@
         <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
         <field name="arch" type="xml">
             <field name="stage_id" position="attributes">
-                <attribute name="context">{'active_id': id, 'active_ids': [id], 'active_model': 'helpdesk.ticket'}</attribute>
+                <attribute name="context">{'active_id': id, 'active_ids': [id],
+                    'active_model': 'helpdesk.ticket'}
+                </attribute>
             </field>
         </field>
     </record>
