@@ -154,7 +154,7 @@ class SaleSubscription(models.Model):
                     # returning 2.3000000000000003 as > than 49.95
                     # is credit a calculated monetary field, enforce precision?
                     formatted_credit = format(self.partner_id.credit, '.2f')
-                    if formatted_credit > self.partner_id.credit_limit:
+                    if float(formatted_credit) > self.partner_id.credit_limit:
                         _logger.info('Jacob suspending case 1!')
                         _logger.info('Jacob self.partner_id.credit {} !'.format(
                             self.partner_id.credit
