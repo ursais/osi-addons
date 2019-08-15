@@ -139,8 +139,8 @@ class SaleSubscription(models.Model):
             ))
 
             if oldest_invoice:
-                _logger.info('Jacob grabbed oldest invoice name is {}'.format(
-                    oldest_invoice[0].name
+                _logger.info('Jacob grabbed oldest invoice date_due is {}'.format(
+                    oldest_invoice[0].date_due
                 ))
                 # compute their credit and their credit limit
                 # (based on the type)
