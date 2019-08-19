@@ -166,9 +166,10 @@ class SaleSubscription(models.Model):
                             subscription_id.action_suspend()
                         # Otherwise, re-activate everything if suspended
                         # Where is this selection menu?  Can't see values
-                        elif subscription_id.stage_id == 'suspended':
-                            # else:
+                        # elif subscription_id.stage_id == 'suspended':
+                        else:
                             _logger.info('Jacob activating!')
+                            _logger.info('Jacob stage id is {}!'.format(subscription_id.stage_id))
                             subscription_id.action_re_activate()
 
                     # Same thing, but for subscription-based credit limits
@@ -224,9 +225,10 @@ class SaleSubscription(models.Model):
                             _logger.info('Jacob activating!')
                             subscription_id.action_re_activate()
 
-                elif subscription_id.stage_id == 'suspended':
-                    # else:
+                # elif subscription_id.stage_id == 'suspended':
+                else:
                     _logger.info('Jacob activating!')
+                    _logger.info('Jacob stage id is {}!'.format(subscription_id.stage_id))
                     subscription_id.action_re_activate()
 
             except RuntimeError as error:
