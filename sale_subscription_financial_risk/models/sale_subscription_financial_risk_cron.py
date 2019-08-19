@@ -74,9 +74,32 @@ class SaleSubscription(models.Model):
 
     # End unnecessary function duplication from Ken's unloaded module
 
+    def _get_delta_qty(self, limit_qty, limit_uom):
+        # delta_qty = timedelta(days=limit_qty)
+        if limit_uom == 'days':
+            delta_qty = timedelta(days=limit_qty)
+        elif limit_uom == 'weeks':
+            delta_qty = timedelta(weeks=limit_qty)
+        elif limit_uom == 'months':
+            delta_qty = timedelta(months=limit_qty)
+        return delta_qty
+
+    def _get_delta_mod(self, subscription_qty, subscription_uom):
+        if subscription_uom == 'weeks':
+            delta_mod = timedelta(weeks=subscription_qty)
+        elif subscription_uom == 'months':
+            delta_mod = timedelta(months=subscription_qty)
+        elif subscription_uom == 'quarters':
+            delta_mod = timedelta(months=(3 * subscription_qty))
+        elif subscription_uom == 'years':
+            delta_mod = timedelta(years=subscription_qty)
+        return delta_mod
+
     # CRON will loop through all records in the model
     @api.model
     def check_service_suspensions(self, single_partner=None):
+
+        oldest_invoice = ''
         # accepts opitonal passed partner_id to match subscriptions on
         try:
             # if a specific partner record is passed, do an individual match
@@ -120,13 +143,18 @@ class SaleSubscription(models.Model):
                         # as a keyword
 
                         # Calculate the delta_qty allowable for aging invoices
-                        delta_qty = timedelta(days=self.partner_id.overdue_limit_qty)
-                        if self.partner_id.overdue_limit_uom == 'days':
-                            delta_qty = timedelta(days=self.partner_id.overdue_limit_qty)
-                        elif self.partner_id.overdue_limit_uom == 'weeks':
-                            delta_qty = timedelta(weeks=self.partner_id.overdue_limit_qty)
-                        elif self.partner_id.overdue_limit_uom == 'months':
-                            delta_qty = timedelta(months=self.partner_id.overdue_limit_qty)
+                        delta_qty = self._get_delta_qty(
+                            self.partner_id.overdue_limit_qty,
+                            self.partner_id.overdue_limit_uom
+                        )
+
+                        # delta_qty = timedelta(days=self.partner_id.overdue_limit_qty)
+                        # if self.partner_id.overdue_limit_uom == 'days':
+                        #     delta_qty = timedelta(days=self.partner_id.overdue_limit_qty)
+                        # elif self.partner_id.overdue_limit_uom == 'weeks':
+                        #     delta_qty = timedelta(weeks=self.partner_id.overdue_limit_qty)
+                        # elif self.partner_id.overdue_limit_uom == 'months':
+                        #     delta_qty = timedelta(months=self.partner_id.overdue_limit_qty)
 
                         # for devel only
                         _logger.info('Jacob time_now is {}'.format(
@@ -184,13 +212,18 @@ class SaleSubscription(models.Model):
                         )
 
                         # Calculate the delta_qty allowable for aging invoices
-                        delta_qty = timedelta(days=self.partner_id.overdue_limit_qty)
-                        if self.partner_id.overdue_limit_uom == 'days':
-                            delta_qty = timedelta(days=self.partner_id.overdue_limit_qty)
-                        elif self.partner_id.overdue_limit_uom == 'weeks':
-                            delta_qty = timedelta(weeks=self.partner_id.overdue_limit_qty)
-                        elif self.partner_id.overdue_limit_uom == 'months':
-                            delta_qty = timedelta(months=self.partner_id.overdue_limit_qty)
+                        # delta_qty = timedelta(days=self.partner_id.overdue_limit_qty)
+                        # if self.partner_id.overdue_limit_uom == 'days':
+                        #     delta_qty = timedelta(days=self.partner_id.overdue_limit_qty)
+                        # elif self.partner_id.overdue_limit_uom == 'weeks':
+                        #     delta_qty = timedelta(weeks=self.partner_id.overdue_limit_qty)
+                        # elif self.partner_id.overdue_limit_uom == 'months':
+                        #     delta_qty = timedelta(months=self.partner_id.overdue_limit_qty)
+
+                        delta_qty = self._get_delta_qty(
+                            self.partner_id.overdue_limit_qty,
+                            self.partner_id.overdue_limit_uom
+                        )
 
                         _logger.info('Jacob time_now is {}'.format(
                             cur_date)
@@ -201,14 +234,19 @@ class SaleSubscription(models.Model):
 
                         # calculate credit using credit_limit_subscription_qty
                         # and credit_limit_subscription_uom, add to delta_qty
-                        if self.partner_id.credit_limit_subscription_uom == 'weeks':
-                            delta_mod = timedelta(weeks=self.partner_id.credit_limit_subscription_qty)
-                        elif self.partner_id.credit_limit_subscription_uom == 'months':
-                            delta_mod = timedelta(months=self.partner_id.credit_limit_subscription_qty)
-                        elif self.partner_id.credit_limit_subscription_uom == 'quarters':
-                            delta_mod = timedelta(months=(3*self.partner_id.credit_limit_subscription_qty))
-                        elif self.partner_id.credit_limit_subscription_uom == 'years':
-                            delta_mod = timedelta(years=self.partner_id.credit_limit_subscription_qty)
+                        # if self.partner_id.credit_limit_subscription_uom == 'weeks':
+                        #     delta_mod = timedelta(weeks=self.partner_id.credit_limit_subscription_qty)
+                        # elif self.partner_id.credit_limit_subscription_uom == 'months':
+                        #     delta_mod = timedelta(months=self.partner_id.credit_limit_subscription_qty)
+                        # elif self.partner_id.credit_limit_subscription_uom == 'quarters':
+                        #     delta_mod = timedelta(months=(3*self.partner_id.credit_limit_subscription_qty))
+                        # elif self.partner_id.credit_limit_subscription_uom == 'years':
+                        #     delta_mod = timedelta(years=self.partner_id.credit_limit_subscription_qty)
+
+                        delta_mod = self._get_delta_mod(
+                            self.partner_id.credit_limit_subscription_qty,
+                            self.partner_id.credit_limit_subscription_uom
+                        )
 
                         _logger.info('Jacob delta_mod is {}'.format(
                             delta_mod)
