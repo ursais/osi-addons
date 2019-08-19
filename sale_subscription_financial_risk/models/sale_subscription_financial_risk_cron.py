@@ -220,6 +220,8 @@ class SaleSubscription(models.Model):
                         else:
                             _logger.info('Jacob activating!')
                             subscription_id.action_re_activate()
+                else:
+                    subscription_id.action_re_activate()
 
             except RuntimeError as error:
                 msg = _('Error Encountered:\n {} \n {}'.format(error, error.args))
