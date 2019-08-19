@@ -164,7 +164,10 @@ class SaleSubscription(models.Model):
                             ))
                             _logger.info('Jacob suspending case 2!')
                             subscription_id.action_suspend()
-                        else:
+                        # Otherwise, re-activate everything if suspended
+                        # Where is this selection menu?  Can't see values
+                        elif subscription_id.stage_id == 'suspended':
+                            # else:
                             _logger.info('Jacob activating!')
                             subscription_id.action_re_activate()
 
@@ -220,7 +223,8 @@ class SaleSubscription(models.Model):
                         else:
                             _logger.info('Jacob activating!')
                             subscription_id.action_re_activate()
-                else:
+                elif subscription_id.stage_id == 'suspended':
+                    # else:
                     _logger.info('Jacob activating!')
                     subscription_id.action_re_activate()
 

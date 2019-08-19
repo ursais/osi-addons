@@ -15,6 +15,7 @@ if record.run_suspension_check == True:
     ])
     for record_id in records:
         record_id.check_service_suspensions()
+        record_id.write({'run_suspension_check': False})
     <!-- need to write bool back to False -->
             </field>
         </record>
