@@ -170,7 +170,8 @@ class SaleSubscription(models.Model):
 
                     # Same thing, but for subscription-based credit limits
                     # I need a little clarification on calculating this - Max
-                    elif subscription_id.partner_id.credit_limit_type == 'subscription_based':
+                    elif subscription_id.partner_id.credit_limit_type == \
+                            'subscription_based':
                         cur_date = date.today()
                         _logger.info('Jacob partner credit type {}'.format(
                             subscription_id.partner_id.credit_limit_type)
