@@ -16,12 +16,10 @@
 record = model.browse(env.context['active_id'])
 if record.run_suspension_check == True:
     records = env['sale.subscription'].search([
-        ('partner_id', '=', record.partner_id.id),
-        ('stage_id', '=', 'In Progress'),
-        ('stage_id', '=', 'Suspended')
+        ('partner_id', '=', record.partner_id.id)
     ])
     for record_id in records:
-        record_id.check_service_suspensions()
+      record_id.check_service_suspensions()
     <!-- need to write bool back to False -->
             </field>
         </record>
