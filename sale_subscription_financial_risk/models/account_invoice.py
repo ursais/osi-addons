@@ -20,6 +20,6 @@ class AccountInvoice(models.Model):
             else:
                 vals.update({'run_suspension_check': False})
                 _logger.info('Jacob updated run_susp_check to False')
-        return super().write(vals)
+        return super(AccountInvoice, self).write(vals)
 
     # after checking, need to write bool back to False
