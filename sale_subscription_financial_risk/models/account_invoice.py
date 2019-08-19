@@ -1,4 +1,7 @@
 from odoo import models, fields, api
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountInvoice(models.Model):
@@ -10,9 +13,13 @@ class AccountInvoice(models.Model):
     # invoice stage == 'paid'
     @api.multi
     def write(self, vals):
-        if 'stage_id' in vals:
-            if vals['stage_id'] == 'paid':
+        if 'state' in vals:
+            if vals['state'] == 'paid':
                 vals.update({'run_suspension_check': True})
+                _logger.info('Jacob updated run_susp_check to True')
             else:
                 vals.update({'run_suspension_check': False})
+                _logger.info('Jacob updated run_susp_check to False')
         return super().write(vals)
+
+    # after checking, need to write bool back to False

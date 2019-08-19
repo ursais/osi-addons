@@ -95,7 +95,7 @@ class SaleSubscription(models.Model):
     def check_service_suspensions(self):
         for subscription_id in self:
             try:
-                _logger.info('Jacob starting suspension check batch')
+                _logger.info('Jacob starting suspension check!')
                 # get the age of the oldest open invoice
                 oldest_invoice = subscription_id.env['account.invoice'].search(
                     [
@@ -221,6 +221,7 @@ class SaleSubscription(models.Model):
                             _logger.info('Jacob activating!')
                             subscription_id.action_re_activate()
                 else:
+                    _logger.info('Jacob activating!')
                     subscription_id.action_re_activate()
 
             except RuntimeError as error:
