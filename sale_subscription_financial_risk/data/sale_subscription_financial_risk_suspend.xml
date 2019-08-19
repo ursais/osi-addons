@@ -12,8 +12,6 @@
             <field name="priority">1</field>
             <field name="doall" eval="False"/>
             <field name="state">code</field>
-            <!-- extend this call logic to control the iteration and 'domain' conditions -->
-            <!-- see CRON_LOOP_EXAMPLE.png -->
             <field name="code">
 records = model.search([])
 for record in records:
@@ -25,32 +23,3 @@ for record in records:
         </record>
     </data>
 </odoo>
-<!--
-<?xml version="1.0" ?>
-<odoo>
-    <data noupdate="1">
-        <record id="check_service_suspensions" model="ir.cron">
-            <field name="name">Suspended Services Check</field>
-            <field name="model_id" ref="model_sale_subscription"/>
-            <field name="active" eval="True" />
-            <field name="user_id" ref="base.user_root" />
-            <field name="interval_number">1</field>
-            <field name="interval_type">days</field>
-            <field name="numbercall">-1</field>
-            <field name="priority">1</field>
-            <field name="doall" eval="False"/>
-            <field name="state">code</field>
-            <field name="code">
-records = model.search([
-    '|',
-    ('stage_id', '=', 'In Progress'),
-    ('stage_id', '=', 'Suspended')
-])
-for record in records:
-    record.check_service_suspensions()
-            </field>
-            <field name="nextcall">2019-08-12 09:45:00</field>
-        </record>
-    </data>
-</odoo>
--->
