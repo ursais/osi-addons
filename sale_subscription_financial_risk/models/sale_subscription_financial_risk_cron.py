@@ -146,26 +146,22 @@ class SaleSubscription(models.Model):
                         # Check for suspension by credit limit
                         if float(formatted_credit) > self.partner_id.credit_limit:
                             _logger.info('Jacob suspending case 1!')
-                            _logger.info('Jacob self.partner_id.credit\
-                                {} !'.format(
+                            _logger.info('Jacob self.partner_id.credit {} !'.format(
                                 self.partner_id.credit
                             ))
                             _logger.info('Jacob formatted_credit {} !'.format(
                                 formatted_credit
                             ))
-                            _logger.info('Jacob self.partner_id.credit_limit\
-                                {} !'.format(
+                            _logger.info('Jacob self.partner_id.credit_limit {} !'.format(
                                 self.partner_id.credit_limit
                             ))
                             self.action_suspend()
                         # Check for suspension by invoice age
                         elif oldest_invoice[0].date_due + delta_qty < cur_date:
-                            _logger.info('Jacob oldest_invoice[0].date_due\
-                                {} !'.format(
+                            _logger.info('Jacob oldest_invoice[0].date_due {} !'.format(
                                 oldest_invoice[0].date_due
                             ))
-                            _logger.info('Jacob oldest_invoice[0].date_due\
-                                + delta_qty {} !'.format(
+                            _logger.info('Jacob oldest_invoice[0].date_due + delta_qty {} !'.format(
                                 (oldest_invoice[0].date_due + delta_qty)
                             ))
                             _logger.info('Jacob cur_date {} !'.format(
@@ -176,9 +172,11 @@ class SaleSubscription(models.Model):
                         else:
                             _logger.info('Jacob activating!')
                             self.action_re_activate()
+
                     # Same thing, but for subscription-based credit limits
                     # I need a little clarification on calculating this
                     # Not sure exactly what is desired
+                    # Should I look for total uom overdue in the last sub uom?
                     elif self.partner_id.credit_limit_type == 'subscription_based':
                         cur_date = date.today()
                         _logger.info('Jacob partner credit type {}'.format(
@@ -193,22 +191,25 @@ class SaleSubscription(models.Model):
                             delta_qty = timedelta(weeks=self.partner_id.overdue_limit_qty)
                         elif self.partner_id.overdue_limit_uom == 'months':
                             delta_qty = timedelta(months=self.partner_id.overdue_limit_qty)
+
                         _logger.info('Jacob time_now is {}'.format(
                             cur_date)
                         )
                         _logger.info('Jacob delta_qty is {}'.format(
                             delta_qty)
                         )
+
                         # calculate credit using credit_limit_subscription_qty
                         # and credit_limit_subscription_uom, add to delta_qty
-                        if self.partner_id.credit_limit_subscription_uom == 'days':
-                            delta_mod = timedelta(days=self.partner_id.credit_limit_subscription_qty)
-                        elif self.partner_id.credit_limit_subscription_uom == 'weeks':
+                        if self.partner_id.credit_limit_subscription_uom == 'weeks':
                             delta_mod = timedelta(weeks=self.partner_id.credit_limit_subscription_qty)
                         elif self.partner_id.credit_limit_subscription_uom == 'months':
                             delta_mod = timedelta(months=self.partner_id.credit_limit_subscription_qty)
+                        elif self.partner_id.credit_limit_subscription_uom == 'quarters':
+                            delta_mod = timedelta(months=(3*self.partner_id.credit_limit_subscription_qty))
                         elif self.partner_id.credit_limit_subscription_uom == 'years':
                             delta_mod = timedelta(years=self.partner_id.credit_limit_subscription_qty)
+
                         _logger.info('Jacob delta_mod is {}'.format(
                             delta_mod)
                         )
@@ -216,14 +217,13 @@ class SaleSubscription(models.Model):
                         _logger.info('Jacob final delta_qty is {}'.format(
                             delta_qty)
                         )
+
                         # Check for suspension by invoice age
                         if oldest_invoice[0].date_due + delta_qty < cur_date:
-                            _logger.info('Jacob oldest_invoice[0].date_due\
-                                {} !'.format(
+                            _logger.info('Jacob oldest_invoice[0].date_due {} !'.format(
                                 oldest_invoice[0].date_due
                             ))
-                            _logger.info('Jacob oldest_invoice[0].date_due\
-                                + delta_qty {} !'.format(
+                            _logger.info('Jacob oldest_invoice[0].date_due + delta_qty {} !'.format(
                                 (oldest_invoice[0].date_due + delta_qty)
                             ))
                             _logger.info('Jacob cur_date {} !'.format(
