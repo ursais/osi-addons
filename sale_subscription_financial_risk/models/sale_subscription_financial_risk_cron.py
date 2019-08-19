@@ -223,6 +223,7 @@ class SaleSubscription(models.Model):
                             subscription_id.action_suspend()
                         else:
                             _logger.info('Jacob activating!')
+                            _logger.info('Jacob stage id is {}!'.format(subscription_id.stage_id))
                             subscription_id.action_re_activate()
 
                 # elif subscription_id.stage_id == 'suspended':

@@ -18,10 +18,8 @@ class AccountInvoice(models.Model):
             if vals['state'] == 'paid':
                 vals.update({'run_suspension_check': True})
                 _logger.info('Jacob updated run_susp_check to True')
-        # If we aren't writing to 'state', maintain 'false' 
+        # If we aren't writing to 'state' in this call, maintain 'false'
         else:
             vals.update({'run_suspension_check': False})
             _logger.info('Jacob updated run_susp_check to False')
         return super(AccountInvoice, self).write(vals)
-
-    # after checking, need to write bool back to False
