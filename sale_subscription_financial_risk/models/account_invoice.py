@@ -4,7 +4,7 @@ from odoo import models, fields, api
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
-    run_suspension = fields.Booleans(default=False)
+    run_suspension = fields.Boolean(default=False)
 
     # override the write method to update run_suspension
     # invoice stage == 'paid'
