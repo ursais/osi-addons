@@ -9,7 +9,8 @@
     'license': 'AGPL-3',
     'depends': [
         'account_financial_risk',
-        'sale_subscription'
+        'sale_subscription',
+        'sale_subscription_suspend'
     ],
     'data': [
         'views/sale_subscription_financial_risk_views.xml',
