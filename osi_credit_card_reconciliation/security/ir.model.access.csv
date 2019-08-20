@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cc_rec_statement,cc.rec.statement,model_cc_rec_statement,account.group_account_user,1,0,0,0
+access_cc_rec_statement_internal_user,cc.rec.statement internal user,model_cc_rec_statement,base.group_user,1,0,0,0
+access_cc_rec_statement_manager,cc.rec.statement,model_cc_rec_statement,account.group_account_manager,1,1,1,1
+access_cc_rec_statement_line,cc.rec.statement.line,model_cc_rec_statement_line,account.group_account_user,1,0,0,0
+access_cc_rec_statement_line_internal_user,cc.rec.statement.line internal user,model_cc_rec_statement_line,base.group_user,1,0,0,0
+access_cc_rec_statement_line_manager,cc.rec.statement.line,model_cc_rec_statement_line,account.group_account_manager,1,1,1,1
