@@ -1,9 +1,9 @@
 from odoo import models, fields, api
 from datetime import date, timedelta
+from dateutil.relativedelta import relativedelta
 from odoo.exceptions import UserError
 from odoo.tools.translate import _
 import logging
-import math
 
 _logger = logging.getLogger(__name__)
 
@@ -77,13 +77,14 @@ class SaleSubscription(models.Model):
         if uom == 'days':
             delta_qty = timedelta(days=qty)
         elif uom == 'weeks':
-            delta_qty = timedelta(days=(math.floor(365 / 7) * qty))
+            delta_qty = relativedelta(weeks=qty)
         elif uom == 'months':
-            delta_qty = timedelta(days=(math.floor(365 / 12) * qty))
+            delta_qty = relativedelta(months=qty)
+        # Need proper conversion to quarter calc
         elif uom == 'quarters':
-            delta_qty = timedelta(days=(math.floor(365 / 4) * qty))
+            delta_qty = relativedelta(months=(3 * qty))
         elif uom == 'years':
-            delta_qty = timedelta(days=(365 * qty))
+            delta_qty = relativedelta(years=qty)
         return delta_qty
 
     # May be called by an account.invoice onchange/payment received or
@@ -202,7 +203,9 @@ class SaleSubscription(models.Model):
                         _logger.info('Jacob delta_mod is {}'.format(
                             delta_mod)
                         )
-                        delta_qty = delta_qty + delta_mod
+
+                        # delta_qty = delta_qty + delta_mod
+
                         _logger.info('Jacob final delta_qty is {}'.format(
                             delta_qty)
                         )
@@ -221,7 +224,10 @@ class SaleSubscription(models.Model):
                         # Check for violation for invoices in valid range
                         for invoice in valid_invoices:
                             # if the invoice is in violation, suspend
-                            if invoice.date_due + delta_qty < cur_date:
+                            comp_date = invoice.date_due
+                            comp_date += delta_qty
+                            comp_date += delta_mod
+                            if comp_date < cur_date:
                                 _logger.info('Jacob open_invoices[{}].date_due {} !'.format(open_invoices.date_due))
                                 _logger.info('Jacob open_invoices[{}].date_due + delta_qty {} !'.format((open_invoices.date_due + delta_qty)))
                                 _logger.info('Jacob cur_date {} !'.format(
