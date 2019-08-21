@@ -1,5 +1,6 @@
 from odoo import models, fields, api
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
+from dateutil.relativedelta import relativedelta
 from odoo.exceptions import UserError
 from odoo.tools.translate import _
 import logging
@@ -76,13 +77,13 @@ class SaleSubscription(models.Model):
         if uom == 'days':
             delta_qty = timedelta(days=qty)
         elif uom == 'weeks':
-            delta_qty = timedelta(weeks=qty)
+            delta_qty = relativedelta(weeks=qty)
         elif uom == 'months':
-            delta_qty = timedelta(months=qty)
+            delta_qty = relativedelta(months=qty)
         elif uom == 'quarters':
-            delta_qty = timedelta(months=(3 * qty))
+            delta_qty = relativedelta(months=(3 * qty))
         elif uom == 'years':
-            delta_qty = timedelta(years=qty)
+            delta_qty = relativedelta(years=qty)
         return delta_qty
 
     # May be called by an account.invoice onchange/payment received or
