@@ -162,9 +162,10 @@ class SaleSubscription(models.Model):
                             _logger.info('Jacob suspending case 2!')
                             subscription_id.action_suspend()
                         # Otherwise, re-activate everything if suspended
-                        elif subscription_id.stage_id.name == 'suspended':
+                        elif subscription_id.stage_id.name.lower() ==\
+                                'suspended':
                             _logger.info('Jacob activating!')
-                            _logger.info('Jacob stage id is {}!'.format(subscription_id.stage_id.name))
+                            _logger.info('Jacob stage id is {}!'.format(subscription_id.stage_id.name.lower()))
                             subscription_id.action_re_activate()
                         # Default state print to confirm inspection for testng
                         else:
@@ -235,23 +236,25 @@ class SaleSubscription(models.Model):
                             subscription_id.action_suspend()
                         # If violation false and subscription is suspended
                         # Then activate it
-                        elif subscription_id.stage_id.name == 'suspended':
+                        elif subscription_id.stage_id.name.lower() ==\
+                                'suspended':
                             _logger.info('Jacob activating!')
-                            _logger.info('Jacob stage id is {}!'.format(subscription_id.stage_id.name))
+                            _logger.info('Jacob stage id is {}!'.format(subscription_id.stage_id.name.lower()))
                             subscription_id.action_re_activate()
                         # Default state print to confirm inspection for testng
                         else:
                             _logger.info('Jacob no action needed for customer')
+                            _logger.info('Jacob stage id is {}!'.format(subscription_id.stage_id.name.lower()))
 
                 # Else there are no open invoices, verify services are active
-                elif subscription_id.stage_id.name == 'suspended':
+                elif subscription_id.stage_id.name.lower() == 'suspended':
                     _logger.info('Jacob activating!')
-                    _logger.info('Jacob stage id is {}!'.format(subscription_id.stage_id.name))
+                    _logger.info('Jacob stage id is {}!'.format(subscription_id.stage_id.name.lower()))
                     subscription_id.action_re_activate()
                 # Default state print to confirm inspection for testng
                 else:
                     _logger.info('Jacob no action needed for customer')
-                    _logger.info('Jacob stage id is {}!'.format(subscription_id.stage_id.name))
+                    _logger.info('Jacob stage id is {}!'.format(subscription_id.stage_id.name.lower()))
 
             except RuntimeError as error:
                 msg = _('Error Encountered:\n {} \n {}'.format(error, error.args))
