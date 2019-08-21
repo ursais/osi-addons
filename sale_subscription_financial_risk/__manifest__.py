@@ -5,7 +5,7 @@
     'author': "Open Source Integrators / Amplex Internet",
     'website': "http://www.amplex.net",
     'category': 'Agreement',
-    'version': '12.0.0.1.0',
+    'version': '12.0.1.0.0',
     'license': 'AGPL-3',
     'depends': [
         'account_financial_risk',
