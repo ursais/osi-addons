@@ -92,7 +92,7 @@ class SaleSubscription(models.Model):
         for subscription_id in self:
             try:
                 _logger.info('Jacob starting suspension check!')
-                # get the age of the oldest open invoice
+                # get list of open invoices, sorted by oldest open
                 open_invoices = subscription_id.env['account.invoice'].search(
                     [
                         ('partner_id', '=', subscription_id.partner_id.id),
@@ -107,12 +107,11 @@ class SaleSubscription(models.Model):
                     _logger.info('Jacob grabbed oldest invoice date_due is {}'.format(
                         open_invoices[0].date_due
                     ))
-                    # compute their credit and their credit limit based on type
+                    # Compute their credit and their credit limit based on type
+                    # Using the oldest open invoice
+                    # Inspected fixed credit based limits
                     if subscription_id.partner_id.credit_limit_type == 'fixed':
                         cur_date = date.today()
-                        # this is ugly and needs to be fixed, but I can't directly
-                        # insert self.partner_id.overdue_limit_uom in the timedelta call
-                        # as a keyword
 
                         # Calculate the delta_qty allowable for aging invoices
                         delta_qty = subscription_id._get_delta_qty(
@@ -131,9 +130,11 @@ class SaleSubscription(models.Model):
                         )
 
                         # format the credit float to prevent precision error
-                        formatted_credit = format(subscription_id.partner_id.credit, '.2f')
+                        formatted_credit = format(
+                            subscription_id.partner_id.credit, '.2f'
+                        )
 
-                        # Check for suspension by credit limit
+                        # Check for violation by credit limit
                         if float(formatted_credit) > subscription_id.\
                                 partner_id.credit_limit:
                             _logger.info('Jacob suspending case 1!')
@@ -147,7 +148,7 @@ class SaleSubscription(models.Model):
                                 subscription_id.partner_id.credit_limit
                             ))
                             subscription_id.action_suspend()
-                        # Check for suspension by invoice age
+                        # Check for violation by invoice age
                         elif open_invoices[0].date_due + delta_qty < cur_date:
                             _logger.info('Jacob open_invoices[0].date_due {} !'.format(
                                 open_invoices[0].date_due
@@ -161,24 +162,21 @@ class SaleSubscription(models.Model):
                             _logger.info('Jacob suspending case 2!')
                             subscription_id.action_suspend()
                         # Otherwise, re-activate everything if suspended
-                        # Where is this selection menu?  Can't see values
-                        # elif subscription_id.stage_id == 'suspended':
-                        else:
+                        elif subscription_id.stage_id.name == 'suspended':
                             _logger.info('Jacob activating!')
                             _logger.info('Jacob stage id is {}!'.format(subscription_id.stage_id.name))
                             subscription_id.action_re_activate()
+                        # Default state print to confirm inspection for testng
+                        else:
+                            _logger.info('Jacob no action needed for customer')
 
-                    # Same thing, but for subscription-based credit limits
+                    # Inspecting subscription-based credit limits
                     elif subscription_id.partner_id.credit_limit_type == \
                             'subscription_based':
                         cur_date = date.today()
                         _logger.info('Jacob partner credit type {}'.format(
                             subscription_id.partner_id.credit_limit_type)
                         )
-
-                        # 1) Get all open invoices for the period described in
-                        # 'using the last'
-                        # credit_limit_subscription_qty and uom
 
                         # Calculate the delta_qty allowable for aging invoices
                         delta_qty = subscription_id._get_delta_qty(
@@ -220,10 +218,7 @@ class SaleSubscription(models.Model):
                         # use subscription_id.partner_id.risk_exception instead?
                         in_violation = False
 
-                        # Determine if any of these open invoices are overdue
-                        # If so, suspend; else re-activate
-
-                        # Check for suspension by invoice age
+                        # Check for violation for invoices in valid range
                         for invoice in valid_invoices:
                             # if the invoice is in violation, suspend
                             if invoice.date_due + delta_qty < cur_date:
@@ -234,22 +229,28 @@ class SaleSubscription(models.Model):
                                 ))
                                 in_violation = True
 
-                        # Check state of violation
+                        # Check state of violation; if True, suspend
                         if in_violation is True:
                             _logger.info('Jacob suspending!')
                             subscription_id.action_suspend()
-                        # elif ... subscription_id.stage_id.name == 'suspended':
-                        else:
+                        # If violation false and subscription is suspended
+                        # Then activate it
+                        elif subscription_id.stage_id.name == 'suspended':
                             _logger.info('Jacob activating!')
                             _logger.info('Jacob stage id is {}!'.format(subscription_id.stage_id.name))
                             subscription_id.action_re_activate()
+                        # Default state print to confirm inspection for testng
+                        else:
+                            _logger.info('Jacob no action needed for customer')
 
-                # For Amplex custom extension?
-                # elif ... subscription_id.stage_id.name == 'suspended':
-                else:
+                # Else there are no open invoices, verify services are active
+                elif subscription_id.stage_id.name == 'suspended':
                     _logger.info('Jacob activating!')
                     _logger.info('Jacob stage id is {}!'.format(subscription_id.stage_id.name))
                     subscription_id.action_re_activate()
+                # Default state print to confirm inspection for testng
+                else:
+                    _logger.info('Jacob no action needed for customer')
 
             except RuntimeError as error:
                 msg = _('Error Encountered:\n {} \n {}'.format(error, error.args))
