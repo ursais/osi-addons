@@ -57,8 +57,6 @@ class SaleSubscription(models.Model):
             delta_qty = relativedelta(weeks=qty)
         elif uom == 'months':
             delta_qty = relativedelta(months=qty)
-        # elif uom == 'quarters':
-        #     delta_qty = relativedelta(months=(3 * qty))
         elif uom == 'years':
             delta_qty = relativedelta(years=qty)
         return delta_qty
@@ -127,7 +125,7 @@ class SaleSubscription(models.Model):
                                 subscription_id.partner_id.
                                 credit_limit_subscription_uom
                             )
-                            # filter open_invoices list to valid subscription range
+                            # filter open_invoices list to valid sub range
                             valid_invoices = filter(
                                 lambda invoice:
                                     invoice.date_due + delta_mod > cur_date,
