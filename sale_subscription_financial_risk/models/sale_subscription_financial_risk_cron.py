@@ -251,6 +251,7 @@ class SaleSubscription(models.Model):
                 # Default state print to confirm inspection for testng
                 else:
                     _logger.info('Jacob no action needed for customer')
+                    _logger.info('Jacob stage id is {}!'.format(subscription_id.stage_id.name))
 
             except RuntimeError as error:
                 msg = _('Error Encountered:\n {} \n {}'.format(error, error.args))
