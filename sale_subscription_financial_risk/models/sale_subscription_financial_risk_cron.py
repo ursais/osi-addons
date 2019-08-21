@@ -206,10 +206,6 @@ class SaleSubscription(models.Model):
 
                         # delta_qty = delta_qty + delta_mod
 
-                        _logger.info('Jacob final delta_qty is {}'.format(
-                            delta_qty)
-                        )
-
                         # filter open_invoices list to valid subscription range
                         valid_invoices = filter(
                             lambda invoice:
@@ -224,15 +220,18 @@ class SaleSubscription(models.Model):
                         # Check for violation for invoices in valid range
                         for invoice in valid_invoices:
                             # if the invoice is in violation, suspend
-                            comp_date = invoice.date_due
-                            comp_date += delta_qty
-                            comp_date += delta_mod
-                            if comp_date < cur_date:
-                                _logger.info('Jacob open_invoices[{}].date_due {} !'.format(open_invoices.date_due))
-                                _logger.info('Jacob open_invoices[{}].date_due + delta_qty {} !'.format((open_invoices.date_due + delta_qty)))
-                                _logger.info('Jacob cur_date {} !'.format(
-                                    cur_date
-                                ))
+                            _logger.info('Jacob open_invoices[{}].date_due {} !'.format(open_invoices.date_due))
+                            _logger.info('Jacob open_invoices[{}].date_due + delta_qty {} !'.format((open_invoices.date_due + delta_qty)))
+                            _logger.info('Jacob cur_date {} !'.format(
+                                cur_date
+                            ))
+                            # comp_date = invoice.date_due
+                            # comp_date += delta_qty
+                            # comp_date += delta_mod
+                            # _logger.info('Jacob comp_date is {}'.format(
+                            #     comp_date)
+                            # )
+                            if invoice.date_due + delta_qty < cur_date:
                                 in_violation = True
 
                         # Check state of violation; if True, suspend
