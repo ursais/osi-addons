@@ -81,6 +81,8 @@ class SaleSubscription(models.Model):
         elif uom == 'months':
             delta_qty = relativedelta(months=qty)
         # Need proper conversion to quarter calc
+        # something like cur_date.month//3 + 1 will return the current quarter
+        # then process with any active/open invoices within that quarter
         elif uom == 'quarters':
             delta_qty = relativedelta(months=(3 * qty))
         elif uom == 'years':
@@ -220,8 +222,8 @@ class SaleSubscription(models.Model):
                         # Check for violation for invoices in valid range
                         for invoice in valid_invoices:
                             # if the invoice is in violation, suspend
-                            _logger.info('Jacob open_invoices[{}].date_due {} !'.format(open_invoices.date_due))
-                            _logger.info('Jacob open_invoices[{}].date_due + delta_qty {} !'.format((open_invoices.date_due + delta_qty)))
+                            _logger.info('Jacob open_invoices.date_due {} !'.format(invoice.date_due))
+                            _logger.info('Jacob open_invoices.date_due + delta_qty {} !'.format((invoice.date_due + delta_qty)))
                             _logger.info('Jacob cur_date {} !'.format(
                                 cur_date
                             ))
