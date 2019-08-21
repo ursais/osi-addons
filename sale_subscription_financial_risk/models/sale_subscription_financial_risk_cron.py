@@ -11,29 +11,6 @@ _logger = logging.getLogger(__name__)
 class SaleSubscription(models.Model):
     _inherit = 'sale.subscription'
 
-    subscriptions = fields.Many2one(
-        'sale.subscription',
-        domain=[
-            '|',
-            ('stage_id', '=', 'In Progress'),
-            ('stage_id', '=', 'Suspended')
-        ]
-    )
-
-    partner_subscriptions = fields.Many2one(
-        'sale.subscription'
-    )
-
-    single_partner = fields.Many2one(
-        'res.partner'
-    )
-
-    to_suspend = fields.Boolean(default=False)
-
-    partner_invoices = fields.Date(
-        'account.invoice'
-    )
-
     # ~~These functions are in agreement_sale_subscription_suspension Ken did
     # ~~It's just not merged into osi-addons yet
 
