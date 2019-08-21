@@ -57,11 +57,8 @@ class SaleSubscription(models.Model):
             delta_qty = relativedelta(weeks=qty)
         elif uom == 'months':
             delta_qty = relativedelta(months=qty)
-        # Need proper conversion to quarter calc
-        # something like cur_date.month//3 + 1 will return the current quarter
-        # then process with any active/open invoices within that quarter
-        elif uom == 'quarters':
-            delta_qty = relativedelta(months=(3 * qty))
+        # elif uom == 'quarters':
+        #     delta_qty = relativedelta(months=(3 * qty))
         elif uom == 'years':
             delta_qty = relativedelta(years=qty)
         return delta_qty
@@ -106,7 +103,7 @@ class SaleSubscription(models.Model):
                         elif open_invoices[0].date_due + delta_qty < cur_date:
                             subscription_id.action_suspend()
                         # Otherwise, re-activate everything if suspended
-                        elif subscription_id.stage_id.name.lower() ==\
+                        elif subscription_id.stage_id.name.lower() == \
                                 'suspended':
                             subscription_id.action_re_activate()
 
@@ -122,19 +119,31 @@ class SaleSubscription(models.Model):
                         )
 
                         # Determine delta modifier to define invoice range
-                        delta_mod = subscription_id._get_delta_qty(
-                            subscription_id.partner_id.
-                            credit_limit_subscription_qty,
-                            subscription_id.partner_id.
-                            credit_limit_subscription_uom
-                        )
-
-                        # filter open_invoices list to valid subscription range
-                        valid_invoices = filter(
-                            lambda invoice:
-                                invoice.date_due + delta_mod > cur_date,
-                                open_invoices
-                        )
+                        if subscription_id.partner_id.\
+                                credit_limit_subscription_uom != 'quarters':
+                            delta_mod = subscription_id._get_delta_qty(
+                                subscription_id.partner_id.
+                                credit_limit_subscription_qty,
+                                subscription_id.partner_id.
+                                credit_limit_subscription_uom
+                            )
+                            # filter open_invoices list to valid subscription range
+                            valid_invoices = filter(
+                                lambda invoice:
+                                    invoice.date_due + delta_mod > cur_date,
+                                    open_invoices
+                            )
+                        # if invoice range is quarters, identify active quarter
+                        else:
+                            # determine which quarter month belongs in
+                            cur_quarter = cur_date.month // 3 + 1
+                            # filter open_invoices list to active quarter
+                            valid_invoices = filter(
+                                lambda invoice:
+                                    (invoice.date_due.month // 3 + 1) ==
+                                    cur_quarter,
+                                    open_invoices
+                            )
 
                         # Bool to hold whether a partner is in violation or not
                         # do subscription_id.partner_id.risk_exception instead?
@@ -151,7 +160,7 @@ class SaleSubscription(models.Model):
                             subscription_id.action_suspend()
                         # If violation false and subscription is suspended
                         # Then activate it
-                        elif subscription_id.stage_id.name.lower() ==\
+                        elif subscription_id.stage_id.name.lower() == \
                                 'suspended':
                             subscription_id.action_re_activate()
 
