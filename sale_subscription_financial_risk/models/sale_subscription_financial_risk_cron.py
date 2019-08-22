@@ -8,44 +8,6 @@ from odoo.tools.translate import _
 class SaleSubscription(models.Model):
     _inherit = 'sale.subscription'
 
-    # ~~These functions are in agreement_sale_subscription_suspension Ken did
-    # ~~It's just not merged into osi-addons yet
-
-    def suspend_service_profile(self):
-        for subscription_id in self:
-            sp_ids = self.env['agreement.serviceprofile'].search([
-                ('agreement_id', '=', subscription_id.agreement_id.id)])
-            if sp_ids:
-                sp_ids.write({'state': 'suspended'})
-
-    def activate_service_profile(self):
-        for subscription_id in self:
-            sp_ids = self.env['agreement.serviceprofile'].search([
-                ('agreement_id', '=', subscription_id.agreement_id.id)])
-            if sp_ids:
-                sp_ids.write({'state': 'active'})
-
-    def action_suspend(self):
-        self.suspend_service_profile()
-        return super().action_suspend()
-
-    def action_re_activate(self):
-        self.activate_service_profile()
-        return super().action_re_activate()
-
-    def write(self, vals):
-        res = super().write(vals)
-        if 'stage_id' in vals:
-            stage_id = self.env['sale.subscription.stage'].search(
-                [('id', '=', vals['stage_id'])])
-            if stage_id.name == 'Suspended':
-                self.suspend_service_profile()
-            elif stage_id.name == "In Progress":
-                self.activate_service_profile()
-        return res
-
-    # ~~End unnecessary function duplication from Ken's unloaded module~~ #
-
     # Calculates and returns a timedelta based on the customer's credit terms
     def _get_delta_qty(self, qty, uom):
         if uom == 'days':
