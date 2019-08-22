@@ -44,7 +44,7 @@ class ResPartner(models.Model):
         selection=[
             ('weeks', 'Weeks'),
             ('months', 'Months'),
-            # ('quarters', 'Quarters'),
+            ('quarters', 'Quarters'),
             ('years', 'Years')
         ]
     )

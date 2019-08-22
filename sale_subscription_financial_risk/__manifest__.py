@@ -20,7 +20,7 @@
     'development_status': 'Beta',
     'maintainers': [
         'kvedder-amplex',
-        'barnarj-amplex'
+        'barnarj-amplex',
     ],
     'installable': True,
 }

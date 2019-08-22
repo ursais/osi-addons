@@ -3,9 +3,6 @@ from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import UserError
 from odoo.tools.translate import _
-import logging
-
-_logger = logging.getLogger(__name__)
 
 
 class SaleSubscription(models.Model):
