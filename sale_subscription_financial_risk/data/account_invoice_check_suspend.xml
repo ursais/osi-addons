@@ -10,7 +10,7 @@
             <field name="state">code</field>
             <field name="code">
 record = model.browse(env.context['active_id'])
-if record.run_suspension_check == True:
+if record.run_suspension_check:
     records = env['sale.subscription'].search([
         ('partner_id', '=', record.partner_id.id)
     ])

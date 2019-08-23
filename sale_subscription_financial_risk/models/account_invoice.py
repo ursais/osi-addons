@@ -14,10 +14,9 @@ class AccountInvoice(models.Model):
     @api.multi
     def write(self, vals):
         # If we are writing to 'state' to value 'paid', run the suspend check
-        if 'state' in vals:
-            if vals['state'] == 'paid':
-                vals.update({'run_suspension_check': True})
-                _logger.info('Jacob updated run_susp_check to True')
+        if vals.get('state', False) == 'paid':
+            vals.update({'run_suspension_check': True})
+            _logger.info('Jacob updated run_susp_check to True')
         # If we aren't writing to 'state' in this call, maintain 'false'
         else:
             vals.update({'run_suspension_check': False})

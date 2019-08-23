@@ -1,5 +1,5 @@
 {
-    'name': "sale_subscription_financial_risk",
+    'name': "Sale Subscription Financial Risk",
     'summary': """
         Extends Financial risk to support service suspension activities.""",
     'author': "Open Source Integrators / Amplex Internet",
@@ -13,9 +13,9 @@
         'sale_subscription_suspend'
     ],
     'data': [
-        'views/sale_subscription_financial_risk_views.xml',
         'data/sale_subscription_financial_risk_suspend.xml',
-        'data/account_invoice_check_suspend.xml'
+        'data/account_invoice_check_suspend.xml',
+        'views/sale_subscription_financial_risk_views.xml'
     ],
     'development_status': 'Beta',
     'maintainers': [

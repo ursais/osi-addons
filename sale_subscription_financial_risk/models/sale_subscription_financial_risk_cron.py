@@ -1,8 +1,7 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, _
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import UserError
-from odoo.tools.translate import _
 
 
 class SaleSubscription(models.Model):

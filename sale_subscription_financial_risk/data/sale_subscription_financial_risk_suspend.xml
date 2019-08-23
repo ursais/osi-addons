@@ -16,7 +16,7 @@
             <field name="code">
 records = model.search([])
 for record in records:
-    if record.stage_id.name == 'In Progress' or record.stage_id.name == 'Suspended':
+    if record.stage_id.name in ['In Progress', 'Suspended']:
         record.check_service_suspensions()
             </field>
             <field name="nextcall">2019-08-20 04:45:00</field>
