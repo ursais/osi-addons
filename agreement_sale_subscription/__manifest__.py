@@ -4,7 +4,7 @@
 {
     'name': 'Agreement - Sales Subscription',
     'summary': 'Link your sales subscriptions to an agreement',
-    'version': '12.0.1.1.0',
+    'version': '12.0.1.0.1',
     'license': 'LGPL-3',
     'author': 'Open Source Integrators',
     'category': 'Agreement',
