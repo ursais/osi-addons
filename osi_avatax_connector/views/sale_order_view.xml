@@ -28,12 +28,12 @@
 		</group>
 		-->
                 <xpath expr="/form/sheet/notebook/page[1]/field[@name='order_line']/tree/field[@name='price_unit']" position="after">
-                    <field name="tax_amt" readonly="1" groups="avatax_connector.group_avatax_view"/>
+                    <field name="tax_amt" readonly="1" groups="osi_avatax_connector.group_avatax_view"/>
                 </xpath>
 
 
                 <xpath expr="/form/sheet/notebook/page[1]/field[@name='order_line']/form/group/group/field[@name='price_unit']" position="after">
-                    <field name="tax_amt" readonly="1" groups="avatax_connector.group_avatax_view"/>
+                    <field name="tax_amt" readonly="1" groups="osi_avatax_connector.group_avatax_view"/>
                 </xpath>
 
                 <field name="payment_term_id" position="after">

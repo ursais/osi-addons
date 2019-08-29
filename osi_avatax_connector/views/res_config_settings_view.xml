@@ -8,10 +8,10 @@
             <div name="account_taxcloud_right_pane" position="before">
             <div class="col-12 col-lg-6 o_setting_box" id="taxcloud_settings">
                 <div class="o_setting_left_pane">
-                    <field name="module_avatax_connector" widget="upgrade_boolean"/>
+                    <field name="module_osi_avatax_connector" widget="upgrade_boolean"/>
                 </div>
                 <div class="o_setting_right_pane" name="avalara_connector_right_pane">
-                    <label for="module_avatax_connector" string="AvaTax"/>
+                    <label for="module_osi_avatax_connector" string="AvaTax"/>
                     <div class="text-muted">
                     Compute tax rates using AvaTax service
                     </div>
