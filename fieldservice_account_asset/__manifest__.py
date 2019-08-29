@@ -1,13 +1,13 @@
 # Copyright (C) 2019 Open Source Integrators
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# Copyright (C) 2019 Serpent Consulting Services
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 {
-    'name': 'Fieldservice Account Asset',
-    'summary': 'This module aims to link the FSM equipment with its accounting'
-               'asset and allow tracking of its depreciation.',
+    'name': 'Field Service - Asset',
+    'summary': 'Manage your field service assets',
     'version': '12.0.1.0.0',
     'category': 'Field Service',
-    'license': 'AGPL-3',
+    'license': 'LGPL-3',
     'author': 'Open Source Integrators',
     'website': 'https://github.com/ursais/osi-addons',
     'depends': [
