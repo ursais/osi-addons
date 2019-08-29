@@ -36,10 +36,11 @@ The roadmap and issues are documented at https://github.cim/ursais/osi-addons/is
 Credits
 =======
 
-* Steve Campbell <scampbell@opensourceintegrators.com>
+* Open Source Integrators <contact@opensourceintegrators.com>
 
 Contributors
 ------------
 
-* Open Source Integrators <contact@opensourceintegrators.com>
+* Steve Campbell <scampbell@opensourceintegrators.com>
 * Serpent Consulting Services Pvt. Ltd. <support@serpentcs.com>
+* Bhavesh Odedra <bodedra@opensourceintegrators.com>
