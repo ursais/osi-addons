@@ -14,5 +14,6 @@ class SaleOrder(models.Model):
                 if line.subscription_id and order.agreement_id:
                     order.agreement_id.subscription_id = \
                         line.subscription_id.id
-                    line.subscription_id.agreement_id = order.agreement_id
+                    line.subscription_id.agreement_id = \
+                        order.agreement_id.id
         return res
