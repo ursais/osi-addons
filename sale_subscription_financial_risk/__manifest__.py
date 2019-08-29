@@ -10,7 +10,7 @@
     'website': "https://github.com/ursais/osi-addons",
     'category': 'Agreement',
     'version': '12.0.1.0.0',
-    'license': 'AGPL-3',
+    'license': 'LGPL-3',
     'depends': [
         'account_financial_risk',
         'sale_subscription',
