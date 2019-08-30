@@ -1,0 +1,13 @@
+<!-- Copyright (c) 2019 Open Source Integrators
+     Copyright (c) 2019 Serpent Consulting Services
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+
+    <record id="asset_location" model="stock.location">
+        <field name="name">Asset Location</field>
+        <field name="location_id" ref="stock.stock_location_locations_virtual"/>
+        <field name="usage">inventory</field>
+        <field name="scrap_location">1</field>
+    </record>
+
+</odoo>

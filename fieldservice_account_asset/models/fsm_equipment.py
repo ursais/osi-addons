@@ -23,16 +23,13 @@ class FSMEquipment(models.Model):
     def asset_recover(self):
         move = self.env['account.move']
         for equipment in self:
-            equipment.asset_id.validate()
             account_move = equipment.asset_id.set_to_close()
             move.browse(account_move.get('res_id')).action_post()
 
     @api.multi
     def asset_create(self):
-        move = self.env['account.move']
         asset = self.env['account.asset.asset']
         for equipment in self:
-            move_line_list = []
             product_cost = 0.0
             if equipment.product_id.categ_id.property_cost_method in \
                     ['standard', 'average']:
@@ -42,34 +39,46 @@ class FSMEquipment(models.Model):
                     ('product_id', '=', equipment.product_id.id),
                     ('lot_id', '=', equipment.lot_id.id)])
                 product_cost = stock_move_line.move_id.price_unit
-            move_line_list.append((0, 0, {
-                'account_id': equipment.product_id.categ_id.
-                    property_stock_valuation_account_id.id,
-                'credit': 0.0,
-                'debit': product_cost}))
-            move_line_list.append((0, 0, {
-                'account_id': equipment.product_id.
-                    asset_category_id.account_asset_id.id,
-                'credit': product_cost,
-                'debit': 0.0}))
-            move_vals = {
-                'ref': equipment.name,
-                'journal_id':
-                    equipment.product_id.asset_category_id.journal_id.id,
+            # Move the inventory item to the Fixed Asset inventory location
+            stock_move = self.env['stock.move'].create({
+                'name': 'Asset Creation - ' + equipment.name,
+                'reference': 'Asset Creation - ' + equipment.name,
+                'product_id': equipment.product_id.id,
+                'product_uom_qty': 1.0,
+                'product_uom': equipment.product_id.uom_id.id,
+                'price_unit': product_cost,
                 'date': datetime.now(),
-                'line_ids': move_line_list}
-            move.create(move_vals)
-            res = asset.create({
+                'location_id': equipment.current_stock_location_id.id,
+                'location_dest_id': equipment.company_id.asset_location_id.id,
+            })
+            self.env['stock.move.line'].create({
+                'reference': 'Asset Creation - ' + equipment.name,
+                'product_id': equipment.product_id.id,
+                'product_uom_id': equipment.product_id.uom_id.id,
+                'lot_id': equipment.lot_id.id,
+                'qty_done': 1.0,
+                'date': datetime.now(),
+                'location_id': equipment.current_stock_location_id.id,
+                'location_dest_id': equipment.company_id.asset_location_id.id,
+                'move_id': stock_move.id,
+            })
+            stock_move._action_confirm()
+            stock_move._action_done()
+            # Create the asset
+            asset = asset.create({
                 'name': equipment.name,
+                'code': equipment.name,
                 'category_id': equipment.product_id.asset_category_id.id,
                 'date': datetime.now(),
                 'date_first_depreciation': 'manual',
                 'first_depreciation_manual_date': datetime.now(),
-                'currency_id':
-                    equipment.env.user.company_id.currency_id.id,
+                'currency_id': equipment.env.user.company_id.currency_id.id,
                 'company_id': equipment.env.user.company_id.id,
-                'value': product_cost}).id
-            return res
+                'value': product_cost})
+            asset.onchange_category_id()
+            if asset.category_id.open_asset:
+                asset.validate()
+            return asset.id
 
     @api.multi
     def change_equipment_stage(self):

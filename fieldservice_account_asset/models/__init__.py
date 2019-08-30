@@ -3,8 +3,10 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from . import (
+    res_company,
+    res_config_settings,
     fsm_equipment,
     fsm_stage,
     fsm_order,
-    stock_picking,
+    stock_move_line,
 )

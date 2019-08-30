@@ -16,9 +16,11 @@
         'account_asset',
     ],
     'data': [
+        'data/stock_location.xml',
+        'views/res_config_settings.xml',
         'views/fsm_stage_view.xml',
         'views/fsm_equipment_view.xml',
-        'views/fsm_order.xml',
+        'views/fsm_order_view.xml',
     ],
     'installable': True,
 }

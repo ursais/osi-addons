@@ -10,7 +10,8 @@
         <field name="arch" type="xml">
             <field name="stage_type" position="after">
                 <field name="equipment_stage_id"
-                       attrs="{'invisible': [('stage_type', '!=', 'order')]}"/>
+                       attrs="{'invisible': [('stage_type', '!=', 'order')]}"
+                       domain="[('stage_type', '=', 'equipment')]"/>
                 <field name="asset_action"
                        attrs="{'invisible': [('stage_type', '!=', 'equipment')]}"/>
             </field>

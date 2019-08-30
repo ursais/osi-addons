@@ -1,0 +1,41 @@
+<!-- Copyright (c) 2019 Open Source Integrators
+     Copyright (c) 2019 Serpent Consulting Services
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html). -->
+<odoo>
+
+    <record model="res.config.settings" id="res_config_settings_fsm_equipment">
+        <field name="group_fsm_equipment" eval="1"/>
+    </record>
+
+    <function model="res.config.settings" name="execute">
+        <!-- ids = -->      <value eval="[ref('fieldservice_account_asset.res_config_settings_fsm_equipment')]"/>
+        <!-- context = -->  <value eval="{}"/>
+    </function>
+
+    <record id="res_config_settings_asset_location_form" model="ir.ui.view">
+        <field name="name">Asset Location</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="fieldservice.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='equipments']" position="inside">
+                 <div class="col-12 col-lg-6 o_setting_box"
+                     attrs="{'invisible': [('group_fsm_equipment', '=', False)]}">
+                    <div class="o_setting_left_pane"/>
+                    <div class="o_setting_right_pane">
+                        <span class="o_form_label">Asset Location</span>
+                        <div class="text-muted">
+                            Inventory location where assets will be stored.
+                            Make sure to set the accounting information on that location.
+                        </div>
+                        <div class="content-group">
+                            <div class="ow mt16 ml4">
+                                <field name="asset_location_id"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
