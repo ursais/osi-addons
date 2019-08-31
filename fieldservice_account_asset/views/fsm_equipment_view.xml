@@ -13,6 +13,7 @@
                     <group col="2">
                         <group>
                             <field name="asset_id" readonly="1"/>
+                            <field name="asset_location_id" readonly="1"/>
                         </group>
                     </group>
                 </page>

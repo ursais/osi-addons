@@ -11,6 +11,9 @@ class FSMEquipment(models.Model):
     _inherit = 'fsm.equipment'
 
     asset_id = fields.Many2one('account.asset.asset', string='Asset')
+    asset_location_id = fields.Many2one(
+        'stock.location', string='Location',
+        help='Inventory location when the equipment turned into an asset')
 
     @api.onchange('current_location_id')
     def _on_change_current_location_id(self):
@@ -25,6 +28,37 @@ class FSMEquipment(models.Model):
         for equipment in self:
             action = equipment.asset_id.set_to_close()
             move.browse(action.get('res_id')).action_post()
+            move_line = self.env['account.move.line'].search([
+                ('move_id', '=', move.id),
+                ('account_id', '=', self.asset_id.category_id.account_depreciation_expense_id.id)])
+            self.asset_id = False
+            product_cost = move_line.debit
+            # Move the inventory item back to where it was
+            stock_move = self.env['stock.move'].create({
+                'name': 'Asset Recovery - ' + equipment.name,
+                'reference': 'Asset Recovery - ' + equipment.name,
+                'product_id': equipment.product_id.id,
+                'product_uom_qty': 1.0,
+                'product_uom': equipment.product_id.uom_id.id,
+                'price_unit': product_cost,
+                'date': datetime.now(),
+                'location_id': equipment.current_stock_location_id.id,
+                'location_dest_id': equipment.asset_location_id.id,
+            })
+            self.env['stock.move.line'].create({
+                'reference': 'Asset Recovery - ' + equipment.name,
+                'product_id': equipment.product_id.id,
+                'product_uom_id': equipment.product_id.uom_id.id,
+                'lot_id': equipment.lot_id.id,
+                'qty_done': 1.0,
+                'date': datetime.now(),
+                'location_id': equipment.current_stock_location_id.id,
+                'location_dest_id': equipment.asset_location_id.id,
+                'move_id': stock_move.id,
+            })
+            stock_move._action_confirm()
+            stock_move._action_done()
+            self.asset_location_id = False
 
     @api.multi
     def asset_create(self):
@@ -62,6 +96,9 @@ class FSMEquipment(models.Model):
                 'location_dest_id': equipment.company_id.asset_location_id.id,
                 'move_id': stock_move.id,
             })
+            # Keep the current location to move it back there when the asset
+            # is recovered
+            self.asset_location_id = equipment.current_stock_location_id.id
             stock_move._action_confirm()
             stock_move._action_done()
             # Create the asset
@@ -85,7 +122,8 @@ class FSMEquipment(models.Model):
         for equipment in self:
             if equipment.stage_id.asset_action == 'creation' and \
                     equipment.current_stock_location_id.usage == 'internal' \
-                    and equipment.product_id.asset_category_id:
+                    and equipment.product_id.asset_category_id and \
+                    not equipment.asset_id:
                 equipment.asset_id = self.asset_create()
             elif equipment.stage_id.asset_action == 'recovery':
                 if not equipment.serviceprofile_ids and equipment.asset_id:

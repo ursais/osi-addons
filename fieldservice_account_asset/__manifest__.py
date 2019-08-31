@@ -11,8 +11,8 @@
     'author': 'Open Source Integrators',
     'website': 'https://github.com/ursais/osi-addons',
     'depends': [
-        'fieldservice_stock',
-        'agreement_serviceprofile',
+        'fieldservice_maintenance',
+        'agreement_maintenance',
         'account_asset',
     ],
     'data': [
