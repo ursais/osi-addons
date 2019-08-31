@@ -23,8 +23,8 @@ class FSMEquipment(models.Model):
     def asset_recover(self):
         move = self.env['account.move']
         for equipment in self:
-            account_move = equipment.asset_id.set_to_close()
-            move.browse(account_move.get('res_id')).action_post()
+            action = equipment.asset_id.set_to_close()
+            move.browse(action.get('res_id')).action_post()
 
     @api.multi
     def asset_create(self):
@@ -88,7 +88,7 @@ class FSMEquipment(models.Model):
                     and equipment.product_id.asset_category_id:
                 equipment.asset_id = self.asset_create()
             elif equipment.stage_id.asset_action == 'recovery':
-                if not equipment.serviceprofile_id and equipment.asset_id:
+                if not equipment.serviceprofile_ids and equipment.asset_id:
                     self.asset_recover()
                 else:
                     raise ValidationError(_("This equipment is still linked to"
