@@ -126,7 +126,7 @@ class ResPartner(models.Model):
     @api.multi
     def button_avatax_validate_address(self):
         """Method is used to verify of state and country """
-        view_ref = self.env.ref('avatax_connector.view_avalara_salestax_address_validate', False)
+        view_ref = self.env.ref('osi_avatax_connector.view_avalara_salestax_address_validate', False)
         address = self.read(['street', 'street2', 'city', 'state_id', 'zip', 'country_id'])[0]
         address['state_id'] = address.get('state_id') and address['state_id'][0]
         address['country_id'] = address.get('country_id') and address['country_id'][0]

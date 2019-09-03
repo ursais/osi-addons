@@ -30,7 +30,7 @@
                         <field name="company_id" groups="base.group_multi_company"/>
                         <field name="description"/>
                         <field name="type"/>
-                    </group>                        
+                    </group>
                 </form>
             </field>
         </record>
@@ -44,7 +44,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem action="action_product_tax_code" id="menu_product_tax_code" name="Product Tax Codes" parent="avatax_connector.menu_avatax" />
+        <menuitem action="action_product_tax_code" id="menu_product_tax_code" name="Product Tax Codes" parent="menu_avatax" />
 
         <!--
         Product
@@ -52,7 +52,7 @@
 
         <record id="view_product_normal_form_avatax_inherit" model="ir.ui.view">
             <field name="name">product.normal.form.avatax</field>
-            <field name="model">product.template</field> 
+            <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook" position="inside">
@@ -96,7 +96,7 @@
                         <field name="tax_code_id"/>
                     </group>
                 </xpath>
-                
+
             </field>
         </record>
 

@@ -11,7 +11,7 @@
             <field name="arch" type="xml">
 
                 <xpath expr="//notebook/page[1]/field[@name='invoice_line_ids']/tree/field[@name='price_unit']" position="before">
-                    <field name="tax_amt" readonly="1" groups="avatax_connector.group_avatax_view"/>
+                    <field name="tax_amt" readonly="1" groups="osi_avatax_connector.group_avatax_view"/>
                 </xpath>
 
                 <field name="user_id" position="after">
@@ -42,7 +42,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="price_unit" position="before">
-                    <field name="tax_amt" readonly="1" groups="avatax_connector.group_avatax_view"/>
+                    <field name="tax_amt" readonly="1" groups="osi_avatax_connector.group_avatax_view"/>
                 </field>
             </field>
         </record>

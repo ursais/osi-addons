@@ -1,5 +1,5 @@
 from odoo import api, fields, models
-from odoo.addons.avatax_connector.models.avalara_api import AvaTaxService
+from odoo.addons.osi_avatax_connector.models.avalara_api import AvaTaxService
 
 
 class AvalaraSalestaxPing(models.TransientModel):
