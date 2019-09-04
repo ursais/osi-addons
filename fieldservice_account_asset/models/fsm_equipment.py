@@ -30,8 +30,8 @@ class FSMEquipment(models.Model):
             move.browse(action.get('res_id')).action_post()
             move_line = self.env['account.move.line'].search([
                 ('move_id', '=', move.id),
-                ('account_id', '=', self.asset_id.category_id.account_depreciation_expense_id.id)])
-            self.asset_id = False
+                ('account_id', '=', equipment.asset_id.category_id.account_depreciation_expense_id.id)])
+            equipment.asset_id = False
             product_cost = move_line.debit
             # Move the inventory item back to where it was
             stock_move = self.env['stock.move'].create({
@@ -58,7 +58,7 @@ class FSMEquipment(models.Model):
             })
             stock_move._action_confirm()
             stock_move._action_done()
-            self.asset_location_id = False
+            equipment.asset_location_id = False
 
     @api.multi
     def asset_create(self):
@@ -98,7 +98,7 @@ class FSMEquipment(models.Model):
             })
             # Keep the current location to move it back there when the asset
             # is recovered
-            self.asset_location_id = equipment.current_stock_location_id.id
+            equipment.asset_location_id = equipment.current_stock_location_id.id
             stock_move._action_confirm()
             stock_move._action_done()
             # Create the asset
@@ -124,10 +124,10 @@ class FSMEquipment(models.Model):
                     equipment.current_stock_location_id.usage == 'internal' \
                     and equipment.product_id.asset_category_id and \
                     not equipment.asset_id:
-                equipment.asset_id = self.asset_create()
+                equipment.asset_id = equipment.asset_create()
             elif equipment.stage_id.asset_action == 'recovery':
                 if not equipment.serviceprofile_ids and equipment.asset_id:
-                    self.asset_recover()
+                    equipment.asset_recover()
                 else:
                     raise ValidationError(_("This equipment is still linked to"
                                             " a service profile."))
