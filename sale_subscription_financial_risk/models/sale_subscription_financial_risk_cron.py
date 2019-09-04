@@ -12,15 +12,10 @@ class SaleSubscription(models.Model):
 
     # Calculates and returns a timedelta based on the customer's credit terms
     def _get_delta_qty(self, qty, uom):
-        if uom == 'days':
-            delta_qty = timedelta(days=qty)
-        elif uom == 'weeks':
-            delta_qty = relativedelta(weeks=qty)
-        elif uom == 'months':
-            delta_qty = relativedelta(months=qty)
-        elif uom == 'years':
-            delta_qty = relativedelta(years=qty)
-        return delta_qty
+        uom_list = ["days", "weeks", "months", "years"]
+        if uom in uom_list:
+            kwargs = {uom: qty}
+            return relativedelta(**kwargs)
 
     # May be called by an account.invoice onchange/payment received or
     # by the batch loop cron sale_subscription_financial_risk_suspend.xml
