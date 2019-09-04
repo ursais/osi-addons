@@ -2,7 +2,7 @@
 # Copyright (C) 2019 Serpent Consulting Services
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from odoo import api, models, _
+from odoo import models, _
 from odoo.exceptions import ValidationError
 
 

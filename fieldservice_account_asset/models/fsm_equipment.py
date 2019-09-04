@@ -30,7 +30,8 @@ class FSMEquipment(models.Model):
             move.browse(action.get('res_id')).action_post()
             move_line = self.env['account.move.line'].search([
                 ('move_id', '=', move.id),
-                ('account_id', '=', equipment.asset_id.category_id.account_depreciation_expense_id.id)])
+                ('account_id', '=', equipment.asset_id.category_id.
+                 account_depreciation_expense_id.id)])
             equipment.asset_id = False
             product_cost = move_line.debit
             # Move the inventory item back to where it was
@@ -98,7 +99,8 @@ class FSMEquipment(models.Model):
             })
             # Keep the current location to move it back there when the asset
             # is recovered
-            equipment.asset_location_id = equipment.current_stock_location_id.id
+            equipment.asset_location_id = \
+                equipment.current_stock_location_id.id
             stock_move._action_confirm()
             stock_move._action_done()
             # Create the asset
