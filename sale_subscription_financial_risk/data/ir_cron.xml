@@ -3,7 +3,9 @@
       # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
 <odoo>
     <data noupdate="1">
-        <!-- scheduled action to batch check all subscription states for financial risk violation and suspend/re-activate as needed -->
+
+        <!-- Scheduled action to check all subscriptions states for
+             financial risk violation and suspend/re-activate as needed -->
         <record id="check_service_suspensions" model="ir.cron">
             <field name="name">Suspended Services Check</field>
             <field name="model_id" ref="model_sale_subscription"/>
@@ -18,10 +20,10 @@
             <field name="code">
 records = model.search([])
 for record in records:
-    if record.stage_id.id in [2, 6]:
+    if record.stage_id.id in [env.ref('sale_subscription.sale_subscription_stage_in_progress'), env.ref('sale_subscription_suspend.sale_subscription_stage_suspend')]:
         record.check_service_suspensions()
             </field>
-            <field name="nextcall">2019-08-20 04:45:00</field>
         </record>
+
     </data>
 </odoo>

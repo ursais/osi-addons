@@ -20,5 +20,4 @@ class AccountInvoice(models.Model):
             run_suspension_check = True
         # update the variable
         vals.update({'run_suspension_check': run_suspension_check})
-
-        return super(AccountInvoice, self).write(vals)
+        return super().write(vals)

@@ -6,7 +6,7 @@
     'name': "Sale Subscription Financial Risk",
     'summary': """
         Extends Financial risk to support service suspension activities.""",
-    'author': "Open Source Integrators / Amplex Internet",
+    'author': "Open Source Integrators, Amplex Internet",
     'website': "https://github.com/ursais/osi-addons",
     'category': 'Agreement',
     'version': '12.0.1.0.0',
@@ -17,9 +17,9 @@
         'sale_subscription_suspend'
     ],
     'data': [
-        'data/sale_subscription_financial_risk_suspend.xml',
-        'data/account_invoice_check_suspend.xml',
-        'views/sale_subscription_financial_risk_views.xml'
+        'data/base_automation.xml',
+        'data/ir_cron.xml',
+        'views/res_partner_views.xml'
     ],
     'development_status': 'Beta',
     'maintainers': [
