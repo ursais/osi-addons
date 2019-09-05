@@ -43,7 +43,7 @@ class StockRequestOrder(models.Model):
 
     @api.multi
     def _action_confirm(self):
-        if self.helpdesk_ticket_id:
+        if self.helpdesk_ticket_id and not self.procurement_group_id:
             ticket = self.env['helpdesk.ticket'].browse(
                 self.helpdesk_ticket_id.id)
             group = self.env['procurement.group'].search([
