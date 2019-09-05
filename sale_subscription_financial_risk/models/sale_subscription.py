@@ -18,8 +18,6 @@ class SaleSubscription(models.Model):
             delta_qty = relativedelta(weeks=qty)
         elif uom == 'months':
             delta_qty = relativedelta(months=qty)
-        elif uom == 'quarters':
-            delta_qty = relativedelta(months=qty*3)
         elif uom == 'years':
             delta_qty = relativedelta(years=qty)
         return delta_qty

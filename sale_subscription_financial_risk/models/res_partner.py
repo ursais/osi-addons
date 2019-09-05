@@ -38,6 +38,5 @@ class ResPartner(models.Model):
         string='Unit of Measure',
         selection=[('weeks', 'Weeks'),
                    ('months', 'Months'),
-                   ('quarters', 'Quarters'),
                    ('years', 'Years')],
         default='weeks', required=True)
