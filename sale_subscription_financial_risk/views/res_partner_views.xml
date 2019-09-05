@@ -1,0 +1,32 @@
+<!--  # Copyright (C) 2019 Amplex
+      # Copyright (C) 2019 Open Source Integrators
+      # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+    <record id="res_partner_risk_extend" model="ir.ui.view">
+        <field name="name">Partner Form Financial Risk Subscription</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account_financial_risk.res_partner_view_risk"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='credit_limit']" position="before">
+                <field name="credit_limit_type"/>
+            </xpath>
+            <xpath expr="//field[@name='credit_limit']" position="attributes">
+                <attribute name="attrs">{'invisible': [('credit_limit_type', '!=', 'fixed')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='credit_limit']" position="after">
+                <label for="overdue_limit_qty"/>
+                <div class="o_row">
+                    <field name="overdue_limit_qty"/>
+                    <field name="overdue_limit_uom"/>
+                </div>
+                <label for="credit_limit_subscription_qty"
+                       attrs="{'invisible': [('credit_limit_type', '!=', 'subscription_based')]}"/>
+                <div class="o_row"
+                     attrs="{'invisible': [('credit_limit_type', '!=', 'subscription_based')]}">
+                    <field name="credit_limit_subscription_qty"/>
+                    <field name="credit_limit_subscription_uom"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
