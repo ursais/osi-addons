@@ -1,0 +1,27 @@
+<!-- # Copyright (C) 2019 Amplex
+      # Copyright (C) 2019 Open Source Integrators
+      # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+    <data noupdate="1">
+        <!-- scheduled action to batch check all subscription states for financial risk violation and suspend/re-activate as needed -->
+        <record id="check_service_suspensions" model="ir.cron">
+            <field name="name">Suspended Services Check</field>
+            <field name="model_id" ref="model_sale_subscription"/>
+            <field name="active" eval="True" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="priority">1</field>
+            <field name="doall" eval="False"/>
+            <field name="state">code</field>
+            <field name="code">
+records = model.search([])
+for record in records:
+    if record.stage_id.id in [2, 6]:
+        record.check_service_suspensions()
+            </field>
+            <field name="nextcall">2019-08-20 04:45:00</field>
+        </record>
+    </data>
+</odoo>
