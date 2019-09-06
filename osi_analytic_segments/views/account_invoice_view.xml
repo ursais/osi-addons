@@ -34,6 +34,13 @@
                 <field name="analytic_segment_two_id"
                        groups="analytic.group_analytic_accounting"/>
             </xpath>
+
+            <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='account_analytic_id']" position="after">
+                <field name="analytic_segment_one_id"
+                       groups="analytic.group_analytic_accounting"/>
+                <field name="analytic_segment_two_id"
+                       groups="analytic.group_analytic_accounting"/>
+            </xpath>
         </field>
     </record>
 

@@ -6,4 +6,5 @@ from . import (
     account_invoice,
     account_move_line,
     analytic_seg,
+    account_invoice_tax
 )
