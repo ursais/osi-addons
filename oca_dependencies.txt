@@ -4,5 +4,6 @@ account-payment
 connector-telephony
 field-service
 partner-contact
+purchase-subscription https://gitlab.sudokeys.com/share/purchase/purchase_subscription.git 12.0
 sale-workflow
 stock-logistics-warehouse
