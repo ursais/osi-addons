@@ -9,12 +9,13 @@ Analytic Segments in Purchase Subscriptions
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-ursais%2Fosi--addons-lightgray.png?logo=github
-    :target: https://github.com/ursais/osi-addons/tree/12.0/sale_subscription_brand
+    :target: https://github.com/ursais/osi-addons/
     :alt: ursais/osi-addons
 
 |badge1| |badge2| |badge3|
 
-This module adds 2 additional analytic segments to purchase subscription related models and views.
+This module adds 2 analytic segments to purchase subscriptions and copy them to
+the vendor bills.
 
 **Table of contents**
 
@@ -30,7 +31,9 @@ Configuration
 Usage
 =====
 
-* Create purchase subscription and set the analytic segments
+* Go to Purchase Subscription
+* Select or create a purchase subscription and set the analytic segments
+* Generate a vendor bill from the subscription
 
 Bug Tracker
 ===========
