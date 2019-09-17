@@ -15,9 +15,8 @@ class AccountInvoice(models.Model):
     def write(self, vals):
         # If we aren't writing to 'state' in this call, maintain 'false'
         run_suspension_check = False
-        # If we are writing to 'state' to value 'paid' or 'in_payment', then
-        # run the suspend check
-        if vals.get('state', False) in ['paid', 'in_payment']:
+        # If we are writing to 'state' to value 'paid', run the suspend check
+        if vals.get('state', False) == 'paid':
             run_suspension_check = True
         # update the variable
         vals.update({'run_suspension_check': run_suspension_check})
