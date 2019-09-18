@@ -1,3 +1,6 @@
+# Copyright (C) 2019 Odoo
+# Copyright (C) 2019 Open Source Integrators
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 from odoo import api, fields, models
 from odoo.addons.osi_avatax_connector.models.avalara_api import AvaTaxService
 
@@ -24,8 +27,9 @@ class AvalaraSalestaxPing(models.TransientModel):
             avatax_pool = self.env['avalara.salestax']
             avatax_config = avatax_pool.browse(active_id)
             avapoint = AvaTaxService(avatax_config.account_number, avatax_config.license_key,
-                                      avatax_config.service_url, avatax_config.request_timeout, avatax_config.logging)
-            taxSvc = avapoint.create_tax_service().taxSvc     # Create 'tax' service for Ping and is_authorized calls
+                                     avatax_config.service_url, avatax_config.request_timeout, avatax_config.logging)
+            # Create 'tax' service for Ping and is_authorized calls
+            avapoint.create_tax_service().taxSvc
             avapoint.ping()
             result = avapoint.is_authorized()
             avatax_config.write({'date_expiration': result.Expires})

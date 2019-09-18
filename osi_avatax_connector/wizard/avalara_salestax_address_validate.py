@@ -1,3 +1,6 @@
+# Copyright (C) 2019 Odoo
+# Copyright (C) 2019 Open Source Integrators
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 import time
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -43,8 +46,10 @@ class AvalaraSalestaxAddressValidate(models.TransientModel):
                 raise UserError(_("The AvaTax Tax Service is not active."))
             address = address_obj.browse(active_id)
             if avatax_config.validation_on_save:
-                raise UserError(_("Address Validation on Save is already active in the AvaTax Configuration."))
-            address_obj.check_avatax_support(avatax_config, address.country_id and address.country_id.id or False)
+                raise UserError(
+                    _("Address Validation on Save is already active in the AvaTax Configuration."))
+            address_obj.check_avatax_support(
+                avatax_config, address.country_id and address.country_id.id or False)
         return True
 
     @api.model
@@ -59,15 +64,18 @@ class AvalaraSalestaxAddressValidate(models.TransientModel):
             address_obj = self.env['res.partner']
             address_brw = address_obj.browse(active_id)
             address_brw.write({
-                                'partner_latitude': 0,
-                                'partner_longitude': 0,
-                                'date_validation': False,
-                                'validation_method': '',
-                            })
+                'partner_latitude': 0,
+                'partner_longitude': 0,
+                'date_validation': False,
+                'validation_method': '',
+            })
 
-            address = address_brw.read(['street', 'street2', 'city', 'state_id', 'zip', 'country_id'])[0]
-            address['state_id'] = address.get('state_id') and address['state_id'][0]
-            address['country_id'] = address.get('country_id') and address['country_id'][0]
+            address = address_brw.read(
+                ['street', 'street2', 'city', 'state_id', 'zip', 'country_id'])[0]
+            address['state_id'] = address.get(
+                'state_id') and address['state_id'][0]
+            address['country_id'] = address.get(
+                'country_id') and address['country_id'][0]
             # Get the valid result from the AvaTax Address Validation Service
             valid_address = address_obj._validate_address(address)
             if 'original_street' in fields:
@@ -77,11 +85,13 @@ class AvalaraSalestaxAddressValidate(models.TransientModel):
             if 'original_city' in fields:
                 res.update({'original_city': address['city']})
             if 'original_state' in fields:
-                res.update({'original_state': address_obj.get_state_code(address['state_id'])})
+                res.update(
+                    {'original_state': address_obj.get_state_code(address['state_id'])})
             if 'original_zip' in fields:
                 res.update({'original_zip': address['zip']})
             if 'original_country' in fields:
-                res.update({'original_country': address_obj.get_country_code(address['country_id'])})
+                res.update(
+                    {'original_country': address_obj.get_country_code(address['country_id'])})
             if 'street' in fields:
                 res.update({'street': str(valid_address.Line1 or '')})
             if 'street2' in fields:

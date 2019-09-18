@@ -1,32 +1,14 @@
+# Copyright (C) 2019 Odoo
+# Copyright (C) 2019 Open Source Integrators
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 {
     "name": "Avalara Avatax Connector",
-    "version": "1.0",
+    "version": "12.0.1.0.0",
     "author": "Fabrice Henrion, Open Source Integrators",
-    "summary": "Sales tax Calculation",
+    "website": "https://github.com/ursais/osi-addons/",
+    "summary": "Tax Calculation using Avalara Avatax Services",
     "license": "LGPL-3",
-    "description": """
-
-The Avatax module automates the complex task of sales tax calculation with ease.
-Sale tax calculations are based on prevalidated shop, warehouse and customer address.
-This app plugs into your current installation of odoo with minimal configuration and just works.
-Your sales orders, invoices and refunds activity is automatically calculated from Avalara's calc service
-returning the proper sales tax and places the tax into the order/invoice seamlessly.
-
-This module has Following Features:
-
-1. Customer and Company Address Validation
-2. Line or Total Order amount sale tax calculation
-3. Handling of Customer Refunds
-4. Customer Exemption handling
-5. Calculation of Shipping Cost tax
-6. Use both Avalara and Odoo Taxes etc
-7. International support
-8. Discount management
-9. Detailed logging to verify transactions
-10. Documentation included
-
-""",
-    "category": "Generic Modules/Accounting",
+    "category": "Accounting",
     "depends": [
         'account',
         'sale',
@@ -48,7 +30,7 @@ This module has Following Features:
         "views/sale_order_action.xml",
         "views/account_tax_view.xml",
         "report/sale_order_templates.xml",
-        #"views/res_config_settings_view.xml",
+        # "views/res_config_settings_view.xml",
     ],
     'images': [
         'static/description/avatax.png',

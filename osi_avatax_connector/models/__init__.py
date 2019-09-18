@@ -1,9 +1,14 @@
-from . import avalara_salestax
-from . import product
-from . import partner
-from . import avalara_api
-from . import sale_order
-from . import account_invoice
-from . import account_tax
+# Copyright (C) 2019 Odoo
+# Copyright (C) 2019 Open Source Integrators
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from . import res_config_settings
+from . import (
+    avalara_salestax,
+    product,
+    partner,
+    avalara_api,
+    sale_order,
+    account_invoice,
+    account_tax,
+    res_config_settings,
+)
