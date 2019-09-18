@@ -23,9 +23,14 @@ class AvalaraSalestaxPing(models.TransientModel):
         if active_id:
             avatax_pool = self.env['avalara.salestax']
             avatax_config = avatax_pool.browse(active_id)
-            avapoint = AvaTaxService(avatax_config.account_number, avatax_config.license_key,
-                                      avatax_config.service_url, avatax_config.request_timeout, avatax_config.logging)
-            taxSvc = avapoint.create_tax_service().taxSvc     # Create 'tax' service for Ping and is_authorized calls
+            avapoint = AvaTaxService(
+                avatax_config.account_number,
+                avatax_config.license_key,
+                avatax_config.service_url,
+                avatax_config.request_timeout,
+                avatax_config.logging)
+            # Create 'tax' service for Ping and is_authorized calls
+            avapoint.create_tax_service().taxSvc
             avapoint.ping()
             result = avapoint.is_authorized()
             avatax_config.write({'date_expiration': result.Expires})

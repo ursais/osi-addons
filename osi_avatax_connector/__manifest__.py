@@ -6,11 +6,14 @@
     "license": "LGPL-3",
     "description": """
 
-The Avatax module automates the complex task of sales tax calculation with ease.
-Sale tax calculations are based on prevalidated shop, warehouse and customer address.
-This app plugs into your current installation of odoo with minimal configuration and just works.
-Your sales orders, invoices and refunds activity is automatically calculated from Avalara's calc service
-returning the proper sales tax and places the tax into the order/invoice seamlessly.
+The Avatax module automates the complex task of sales tax calculation.
+Sale tax calculations are based on prevalidated shop, warehouse and
+customer address.
+This app plugs into your current installation of Odoo with
+minimal configuration and just works.
+Your sales orders, invoices and refunds activity is automatically calculated
+from Avalara's calc service returning the proper sales tax
+and places the tax into the order/invoice seamlessly.
 
 This module has Following Features:
 
@@ -48,7 +51,6 @@ This module has Following Features:
         "views/sale_order_action.xml",
         "views/account_tax_view.xml",
         "report/sale_order_templates.xml",
-        #"views/res_config_settings_view.xml",
     ],
     'images': [
         'static/description/avatax.png',

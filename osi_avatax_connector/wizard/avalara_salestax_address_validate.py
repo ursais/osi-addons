@@ -35,7 +35,8 @@ class AvalaraSalestaxAddressValidate(models.TransientModel):
         active_model = context.get('active_model')
 
         # Check if there is avatax tax service active for the user company.
-        # Prevent validating the address if the address validation is disabled by the administrator.
+        # Prevent validating the address if the address validation
+        # is disabled by the administrator.
 
         if active_id and active_model == 'res.partner':
             avatax_config = avatax_config_obj.get_avatax_config_company()
@@ -43,8 +44,13 @@ class AvalaraSalestaxAddressValidate(models.TransientModel):
                 raise UserError(_("The AvaTax Tax Service is not active."))
             address = address_obj.browse(active_id)
             if avatax_config.validation_on_save:
-                raise UserError(_("Address Validation on Save is already active in the AvaTax Configuration."))
-            address_obj.check_avatax_support(avatax_config, address.country_id and address.country_id.id or False)
+                raise UserError(_(
+                    "Address Validation on Save is already active "
+                    "in the AvaTax Configuration."))
+            address_obj.check_avatax_support(
+                avatax_config, address.country_id
+                and address.country_id.id
+                or False)
         return True
 
     @api.model
@@ -65,9 +71,13 @@ class AvalaraSalestaxAddressValidate(models.TransientModel):
                                 'validation_method': '',
                             })
 
-            address = address_brw.read(['street', 'street2', 'city', 'state_id', 'zip', 'country_id'])[0]
-            address['state_id'] = address.get('state_id') and address['state_id'][0]
-            address['country_id'] = address.get('country_id') and address['country_id'][0]
+            address = address_brw.read(
+                ['street', 'street2', 'city', 'state_id', 'zip', 'country_id']
+                )[0]
+            address['state_id'] = \
+                address.get('state_id') and address['state_id'][0]
+            address['country_id'] = \
+                address.get('country_id') and address['country_id'][0]
             # Get the valid result from the AvaTax Address Validation Service
             valid_address = address_obj._validate_address(address)
             if 'original_street' in fields:
@@ -77,11 +87,14 @@ class AvalaraSalestaxAddressValidate(models.TransientModel):
             if 'original_city' in fields:
                 res.update({'original_city': address['city']})
             if 'original_state' in fields:
-                res.update({'original_state': address_obj.get_state_code(address['state_id'])})
+                orig_state = address_obj.get_state_code(address['state_id'])
+                res.update({'original_state': orig_state})
             if 'original_zip' in fields:
                 res.update({'original_zip': address['zip']})
             if 'original_country' in fields:
-                res.update({'original_country': address_obj.get_country_code(address['country_id'])})
+                orig_country = address_obj.get_country_code(
+                    address['country_id'])
+                res.update({'original_country': orig_country})
             if 'street' in fields:
                 res.update({'street': str(valid_address.Line1 or '')})
             if 'street2' in fields:
@@ -102,7 +115,10 @@ class AvalaraSalestaxAddressValidate(models.TransientModel):
 
     @api.multi
     def accept_valid_address(self):
-        """ Updates the existing address with the valid address returned by the service. """
+        """
+        Updates the existing address with the valid address
+        returned by the service.
+        """
         valid_address = self.read()[0]
         context = dict(self._context or {})
         active_id = context.get('active_id')
@@ -113,9 +129,11 @@ class AvalaraSalestaxAddressValidate(models.TransientModel):
                 'street': valid_address['street'],
                 'street2': valid_address['street2'],
                 'city': valid_address['city'],
-                'state_id': address_obj.get_state_id(valid_address['state'], valid_address['country']),
+                'state_id': address_obj.get_state_id(
+                    valid_address['state'], valid_address['country']),
                 'zip': valid_address['zip'],
-                'country_id': address_obj.get_country_id(valid_address['country']),
+                'country_id': address_obj.get_country_id(
+                    valid_address['country']),
                 'partner_latitude': valid_address['partner_latitude'] or 0,
                 'partner_longitude': valid_address['partner_longitude'] or 0,
                 'date_validation': time.strftime(DEFAULT_SERVER_DATE_FORMAT),
