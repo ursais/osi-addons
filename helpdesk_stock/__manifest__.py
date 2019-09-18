@@ -1,10 +1,10 @@
-# Copyright (C) 2019 - TODAY, Open Source Integrators
+# Copyright (C) 2019 Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 {
     'name': 'Helpdesk - Stock',
     'summary': 'Inventory and Stock Operations for Helpdesk Tickets',
-    'version': '12.0.1.1.0',
+    'version': '12.0.1.2.0',
     'category': 'Helpdesk',
     'author': 'Open Source Integrators',
     'website': 'https://github.com/ursais/osi-addons',
