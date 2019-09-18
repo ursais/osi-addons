@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
 
     <!--
     Partner Tax & Address Validation
@@ -56,5 +55,5 @@
         <field name="state">code</field>
         <field name="code">records.multi_address_validation()</field>
     </record>
-    </data>
+
 </odoo>

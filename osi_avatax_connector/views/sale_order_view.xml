@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
 
         <record id="group_avatax_view" model="res.groups">
             <field name="name">Avalara Order Line View</field>
@@ -69,5 +68,4 @@
             </field>
         </record>
 
-    </data>
 </odoo>
