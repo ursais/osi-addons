@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<odoo noupdate="0">
+
+        <record id="paperformat_check_us" model="report.paperformat">
+            <field name="name">US Check Letter</field>
+            <field name="default" eval="False" />
+            <field name="format">Letter</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">0</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <report id="action_print_check_top"
+            string="OSI Print Check (Top)"
+            model="account.payment"
+            name="osi_check_layout.osi_print_check_top"
+            file="osi_check_layout.osi_print_check_top"
+            report_type="qweb-pdf"
+            menu="False"
+            attachment_use="False"
+            attachment=""
+            paperformat="osi_check_layout.paperformat_check_us"
+            print_report_name="'Check Top - %s' % (object.partner_id.name or '',)"
+        />
+
+        <report id="action_print_check_middle"
+            string="OSI Print Check (Middle)"
+            model="account.payment"
+            name="osi_check_layout.osi_print_check_middle"
+            file="osi_check_layout.osi_print_check_middle"
+            report_type="qweb-pdf"
+            menu="False"
+            attachment_use="False"
+            attachment=""
+            paperformat="osi_check_layout.paperformat_check_us"
+            print_report_name="'Check Middle - %s' % (object.partner_id.name or '',)"
+        />
+
+        <report id="action_print_check_bottom"
+            string="OSI Print Check (Bottom)"
+            model="account.payment"
+            name="osi_check_layout.osi_print_check_bottom"
+            file="osi_check_layout.osi_print_check_bottom"
+            report_type="qweb-pdf"
+            menu="False"
+            attachment_use="False"
+            attachment=""
+            paperformat="osi_check_layout.paperformat_check_us"
+            print_report_name="'Check Bottom - %s' % (object.partner_id.name or '',)"
+        />
+
+        <report id="action_print_check_stubs"
+            string="OSI Print Check Stubs"
+            model="account.payment"
+            name="osi_check_layout.osi_print_check_stubs"
+            file="osi_check_layout.osi_print_check_stubs"
+            report_type="qweb-pdf"
+            menu="True"
+            attachment_use="False"
+            attachment=""
+            paperformat="osi_check_layout.paperformat_check_us"
+            print_report_name="'Check Stubs - %s' % (object.partner_id.name or '',)"
+        />
+
+        <report id="l10n_us_check_printing.action_print_check_top"
+            string="Print Check (Top)"
+            model="account.payment"
+            name="l10n_us_check_printing.print_check_top"
+            file="l10n_us_check_printing.print_check_top"
+            report_type="qweb-pdf"
+            menu="False"
+            attachment_use="False"
+            attachment=""
+            paperformat="l10n_us_check_printing.paperformat_check_us"
+            print_report_name="'Check Top - %s' % (object.partner_id.name or '',)"
+        />
+
+        <report id="l10n_us_check_printing.action_print_check_middle"
+            string="Print Check (Middle)"
+            model="account.payment"
+            name="l10n_us_check_printing.print_check_middle"
+            file="l10n_us_check_printing.print_check_middle"
+            report_type="qweb-pdf"
+            menu="False"
+            attachment_use="False"
+            attachment=""
+            paperformat="l10n_us_check_printing.paperformat_check_us"
+            print_report_name="'Check Middle - %s' % (object.partner_id.name or '',)"
+        />
+
+        <report id="l10n_us_check_printing.action_print_check_bottom"
+            string="Print Check (Bottom)"
+            model="account.payment"
+            name="l10n_us_check_printing.print_check_bottom"
+            file="l10n_us_check_printing.print_check_bottom"
+            report_type="qweb-pdf"
+            menu="False"
+            attachment_use="False"
+            attachment=""
+            paperformat="l10n_us_check_printing.paperformat_check_us"
+            print_report_name="'Check Bottom - %s' % (object.partner_id.name or '',)"
+        />
+</odoo>

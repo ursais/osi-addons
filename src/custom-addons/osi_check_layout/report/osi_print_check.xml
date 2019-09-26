@@ -1,0 +1,128 @@
+<?xml version="1.0"?>
+<odoo>
+
+<template id="assets_common" name="osi_check_layout pdf assets" inherit_id="web.report_assets_common">
+    <xpath expr="." position="inside">
+        <link href="/osi_check_layout/static/src/less/report_check_commons.less" rel="stylesheet"/>
+        <link href="/osi_check_layout/static/src/less/report_check_bottom.less" rel="stylesheet"/>
+        <link href="/osi_check_layout/static/src/less/report_check_middle.less" rel="stylesheet"/>
+        <link href="/osi_check_layout/static/src/less/report_check_top.less" rel="stylesheet"/>
+    </xpath>
+</template>
+
+<template id="ckus_check">
+    <div class="ckus_check">
+        <t t-if="page['state'] == 'cancelled'">
+            <div class="o-watermark">VOID</div>
+        </t>
+        <div class="sequence_number" t-if="page['sequence_number']" t-esc="page['sequence_number']" />
+        <div class="ckus_date" t-esc="page['payment_date']"/>		
+        <div class="ckus_amount">
+            <t t-esc="page['amount']"/>
+        </div>
+        <div class="ckus_amount_in_word" t-esc="page['amount_in_word']"/>
+        <div class="ckus_payee_addr">
+            <t t-esc="page['partner_name']"/><br/>
+            <t t-if="page['partner_street']"><t t-esc="page['partner_street']"/><br/></t>
+            <t t-if="page['partner_street2']"><t t-esc="page['partner_street2']"/><br/></t>
+            <t t-if="page['partner_city']"><t t-esc="page['partner_city']"/></t>
+            <t t-if="page['partner_state']"><t t-esc="page['partner_state']"/></t>
+            <t t-if="page['partner_zip']"><t t-esc="page['partner_zip']"/></t>
+            <t t-if="page['partner_country']"><br/><t t-esc="page['partner_country']"/></t>
+        </div>
+    </div>
+</template>
+
+<template id="ckus_stub">
+    <div t-attf-class="ckus_stub ckus_stub_{{ stub_num }}">
+        <div class="sequence_number" t-if="page['sequence_number']" t-esc="page['sequence_number']" />
+        <div class="row summary_line">
+            <div class="col-xs-6 text-left">
+                <span t-esc="page['partner_name']"/>
+            </div>
+            <div class="col-xs-6 text-right"> 
+                <span t-esc="page['payment_date']"/>
+            </div>
+        </div>
+
+        <table class="table table-bordered table-condensed stub_lines" t-if="page['stub_lines']">
+            <thead><tr>
+                <th class="text-left">Inv. Date</th>
+                <th class="text-left">PO Ref#</th>
+                <th class="text-left">Invoice Number</th>
+                <th class="text-right">Inv. Amount</th>
+                <th class="text-right">Payment</th>
+            </tr></thead>
+            <tbody>
+                <t t-foreach="page['stub_lines']" t-as="stub_line">
+                    <t t-if="stub_line.get('header')">
+                        <tr><th colspan="6"><t t-esc="stub_line['name']"/></th></tr>
+                    </t>
+                    <t t-if="not stub_line.get('header')"><tr>
+                        <td class="text-left"><t t-if="stub_line['inv_date']" t-esc="stub_line['inv_date']"/></td>
+                        <td class="text-left"><t t-esc="stub_line['purchase_ref']"/></td>
+                        <td class="text-left"><t t-esc="stub_line['supplier_info']"/></td>
+                        <td class="text-right">
+                            <t t-esc="stub_line['amount_total']"/>
+                        </td>
+                        <td class="text-right"><t t-esc="stub_line['amount_paid']"/></td>
+                    </tr></t>
+                </t>
+                <tr t-if="page['stub_cropped']"><td colspan="6" class="text-right">...</td></tr>
+            </tbody>
+        </table>
+        <div class="stub_total_amount">Check Amount:
+            <t t-esc="page['amount']"/>
+        </div>
+    </div>
+</template>
+
+<template id="ckus_stubs">
+    <div t-attf-class="ckus_stubs">
+        <div class="row summary_line">
+            <div class="col-xs-6 text-left">Payee: 
+                <span t-esc="page['partner_name']"/>
+            </div>
+            <div class="col-xs-6 text-right">Check Date: 
+                <span t-esc="page['payment_date']"/>
+            </div>
+        </div>
+
+        <table class="table table-bordered table-condensed stub_lines" t-if="page['stub_lines']">
+            <thead><tr>
+                <th class="text-left">Inv. Date</th>
+                <th class="text-left">PO Ref#</th>
+                <th class="text-left">Invoice Number</th>
+                <th class="text-right">Inv. Amount</th>
+                <th class="text-right">Payment</th>
+            </tr></thead>
+            <tbody>
+                <t t-foreach="page['stub_lines']" t-as="stub_line">
+                    <t t-if="stub_line.get('header')">
+                        <tr><th colspan="6"><t t-esc="stub_line['name']"/></th></tr>
+                    </t>
+                    <t t-if="not stub_line.get('header')"><tr>
+                        <td class="text-left"><t t-if="stub_line['inv_date']" t-esc="stub_line['inv_date']"/></td>
+                        <td class="text-left"><t t-esc="stub_line['purchase_ref']"/></td>
+                        <td class="text-left"><t t-esc="stub_line['supplier_info']"/></td>
+                        <td class="text-right">
+                            <t t-esc="stub_line['amount_total']"/>
+                        </td>
+                        <td class="text-right"><t t-esc="stub_line['amount_paid']"/></td>
+                    </tr></t>
+                </t>
+                <tr t-if="page['stub_cropped']"><td colspan="6" class="text-right">...</td></tr>
+            </tbody>
+        </table>
+        <div class="stub_total_amount">
+            <div class="col-xs-6 text-left">Check Number: 
+                <t t-esc="page['seq_number']"/>
+            </div>
+            <div class="col-xs-6 text-right">Check Amount: 
+                <t t-esc="page['amount']"/>
+            </div>
+        </div>
+    </div>
+</template>
+
+</odoo>
