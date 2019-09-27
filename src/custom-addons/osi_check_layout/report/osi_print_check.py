@@ -5,7 +5,7 @@ from odoo import models, _
 from odoo.tools.misc import formatLang, format_date
 
 LINE_FILLER = '*'
-INV_LINES_PER_STUB = 9
+INV_LINES_PER_STUB = 8
 INV_LINES_PER_PAGE = 31
 
 class ReportPrintCheck(models.Model):
