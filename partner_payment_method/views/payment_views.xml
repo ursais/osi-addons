@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="action_payment_methods" model="ir.actions.act_window">
+        <field name="name">Payment Methods</field>
+        <field name="res_model">partner.payment.method</field>
+        <field name='view_type'>form</field>
+        <field name='view_mode'>tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a payment method.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        action='action_payment_methods'
+        id='payment_method_menu'
+        parent='payment.root_payment_menu'
+        sequence='10' />
+
+</odoo>

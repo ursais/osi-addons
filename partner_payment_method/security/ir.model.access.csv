@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_partner_payment_method_user,access_partner_payment_method_user,model_partner_payment_method,base.group_user,1,0,0,0
+access_partner_payment_method_accountant,access_partner_payment_method_accountant,model_partner_payment_method,account.group_account_user,1,1,1,1
+access_partner_payment_method_adviser,access_partner_payment_method_adviser,model_partner_payment_method,account.group_account_manager,1,1,1,1

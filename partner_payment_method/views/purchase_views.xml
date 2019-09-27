@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="purchase_order_form_payment_method" model="ir.ui.view">
+        <field name="name">purchase.order.form.payment.method</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name ='date_order']" position="after">
+                    <field name="payment_method" widget="selection" attrs="{'readonly':True}"/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="purchase_order_form_payment_method_editable" model="ir.ui.view">
+        <field name="name">purchase.order.form.payment.method.editable</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="partner_payment_method.purchase_order_form_payment_method"/>
+        <field name="groups_id" eval="[(6, 0, [ref('purchase.group_purchase_manager')])]"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name ='payment_method']" position="attributes">
+                    <attribute name="readonly">False</attribute>      
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+</odoo>
