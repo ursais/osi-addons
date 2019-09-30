@@ -13,7 +13,7 @@
     'website': 'http://www.opensourceintegrators.com',
     'depends': [
         'hr_expense',
-        'partner_payment_method',
+        'osi_payment_method',
     ],
     'data': [
         'views/expenses_view.xml',
