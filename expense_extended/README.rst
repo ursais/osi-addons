@@ -1,9 +1,13 @@
-Overview
-========
+.. image:: https://img.shields.io/badge/licence-LGPL--3-blue.svg
+   :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
+   :alt: License: LGPL-3
+
+================
+Expense Extended
+================
 
 This module ensures that the account on the expense matches the expense
 account for the product. User can not approve own expense reports.
-
 
 Usage
 =====
@@ -15,6 +19,7 @@ Usage
 
 Credits
 =======
+
 * Open Source Integrators <http://www.opensourceintegrators.com>
 
 Contributors
@@ -23,3 +28,4 @@ Contributors
 * Balaji Kannan <bkannan@opensourceintegrators.com>
 * Sudarshan Kadalazhi <skadalazhi@opensourceintegrators.com>
 * Bhavesh Odedra <bodedra@opensourceintegrators.com>
+* Sandip Mangukiya <smangukiya@opensourceintegrators.com>
