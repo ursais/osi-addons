@@ -9,7 +9,7 @@ class ResCompany(models.Model):
     _inherit = 'res.company'
 
     def _default_asset_location_id(self):
-        return self.env.ref('fieldservice_account_asset.asset_location')
+        return self.env.ref('fieldservice_account_asset.asset_location', False)
 
     asset_location_id = fields.Many2one(
         'stock.location', string='Asset Location',
