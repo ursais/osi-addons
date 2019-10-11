@@ -44,8 +44,10 @@ class StockRequest(models.Model):
                 vals['helpdesk_ticket_id'])
             ticket.request_stage = 'draft'
             vals['warehouse_id'] = ticket.warehouse_id.id
-            val_date = datetime.strptime(vals['expected_date'],
-                                         '%Y-%m-%d %H:%M:%S')
+            val_date = vals['expected_date']
+            if not isinstance(vals['expected_date'], str):
+                val_date = datetime.strftime(vals['expected_date'], '%Y-%m-%d %H:%M:%S')
+            val_date = datetime.strptime(val_date, '%Y-%m-%d %H:%M:%S')
             picking_type_id = self.env['stock.picking.type'].search([
                     ('code', '=', 'stock_request_order'),
                     ('warehouse_id', '=', vals['warehouse_id'])],
