@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_delivery_carrier_form_with_provider_fedex" model="ir.ui.view">
+        <field name="name">delivery.carrier.form.provider.fedex</field>
+        <field name="model">delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='destination']" position='before'>
+                <page string="Fedex Configuration" attrs="{'invisible': [('delivery_type', '!=', 'fedex')]}">
+                    <group>
+                        <group>
+                            <field name="fedex_developer_key" attrs="{'required': [('delivery_type', '=', 'fedex')]}"/>
+                            <field name="fedex_developer_password" attrs="{'required': [('delivery_type', '=', 'fedex')]}"/>
+                            <field name="fedex_account_number" string="Account Number" attrs="{'required': [('delivery_type', '=', 'fedex')]}"/>
+                            <field name="fedex_meter_number" attrs="{'required': [('delivery_type', '=', 'fedex')]}"/>
+                        </group>
+                        <group>
+                            <field name="fedex_droppoff_type" attrs="{'required': [('delivery_type', '=', 'fedex')]}"/>
+                            <field name="fedex_default_packaging_id" attrs="{'required': [('delivery_type', '=', 'fedex')]}" domain="[('package_carrier_type', '=', 'fedex')]"/>
+                            <field name="fedex_service_type" attrs="{'required': [('delivery_type', '=', 'fedex')]}"/>
+                            <field name="fedex_duty_payment" widget="radio" attrs="{'required': [('delivery_type', '=', 'fedex')]}"/>
+                            <field name="fedex_weight_unit" attrs="{'required': [('delivery_type', '=', 'fedex')]}"/>
+                            <field name="fedex_label_stock_type" attrs="{'required': [('delivery_type', '=', 'fedex')]}"/>
+                            <field name="fedex_label_file_type" attrs="{'required': [('delivery_type', '=', 'fedex')]}"/>
+                            <field name="fedex_document_stock_type" attrs="{'required': [('delivery_type', '=', 'fedex')]}"/>
+                            <field name="fedex_saturday_delivery" string="Saturday Delivery" attrs="{'required': [('delivery_type', '=', 'fedex')], 'invisible': [('fedex_service_type', 'not in', ['INTERNATIONAL_PRIORITY', 'FEDEX_2_DAY', 'FIRST_OVERNIGHT', 'PRIORITY_OVERNIGHT'])]}"/>
+                        </group>
+                    </group>
+                    <group string='Fedex Tutorial' attrs="{'invisible': [('delivery_type', '!=', 'fedex')]}">
+                        <ul>
+                            <li>
+                                <b>Go to <a href='https://www.fedex.com/' target='_blank'>Fedex Website</a> to create a FedEx account of the following type:</b>
+                                <br/><br/> <img src='/delivery_fedex/static/src/img/setup_01.png' alt="Screenshot"/>
+                                <br/><br/> <img src='/delivery_fedex/static/src/img/setup_02.png' alt="Screenshot"/>
+                                <br/><br/>
+                            </li>
+
+                            <li>
+                                <b>Once your account is created, go to <a href='https://www.fedex.com/us/developer/web-services/process.html?tab=tab4' target='_blank'>FedEx Web Services "Move to Production"</a>, click on "Get Production Key" and follow all the steps.</b>
+                                <br/> <img src='/delivery_fedex/static/src/img/setup_03.png' alt="Screenshot"/>
+                                <br/><br/>
+                            </li>
+                            <li>
+                                <b>The last step is the <a href='https://www.fedex.com/us/developer/web-services/process.html?tab=tab3' target='_blank'>Certification Process</a></b>
+                                <br/> <img src='/delivery_fedex/static/src/img/setup_04.png' alt="Screenshot"/>
+                                <br/>According to your needs, you will need to contact different certifications :
+                                <ul>
+                                    <li>Standard Services</li>
+                                    <li>Advanced Services without Label Certification</li>
+                                    <li>Advanced Services with Label Certification</li>
+                                </ul>
+                                These certifications usually require that you contact the FedEx support team by email.
+                            </li>
+                        </ul>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
