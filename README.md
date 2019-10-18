@@ -2,5 +2,4 @@
 
 # OSI Addons
 
-Odoo modules from Open Source Intergrators.
-
+Odoo modules from Open Source Integrators.
