@@ -3,8 +3,7 @@
 
 {
     'name': 'Agreement - Sales Subscription Suspension',
-    'summary': 'Changes the state of service profiles based upon a '
-               'subscription being suspended or activated / re-activated.',
+    'summary': 'Suspend services from the subscription.',
     'version': '12.0.1.0.0',
     'license': 'LGPL-3',
     'author': 'Open Source Integrators',
@@ -14,6 +13,8 @@
         'agreement_sale_subscription',
         'agreement_serviceprofile',
         'sale_subscription_suspend'
-        ],
+    ],
     'installable': True,
+    'development_status': 'Beta',
+    'maintainers': ['max3903'],
 }
