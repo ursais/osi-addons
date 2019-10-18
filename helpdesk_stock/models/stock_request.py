@@ -46,12 +46,12 @@ class StockRequest(models.Model):
             vals['warehouse_id'] = ticket.warehouse_id.id
             val_date = vals['expected_date']
             if not isinstance(vals['expected_date'], str):
-                val_date = datetime.strftime(vals['expected_date'], '%Y-%m-%d %H:%M:%S')
+                val_date = datetime.strftime(vals['expected_date'],
+                                             '%Y-%m-%d %H:%M:%S')
             val_date = datetime.strptime(val_date, '%Y-%m-%d %H:%M:%S')
             picking_type_id = self.env['stock.picking.type'].search([
-                    ('code', '=', 'stock_request_order'),
-                    ('warehouse_id', '=', vals['warehouse_id'])],
-                    limit=1).id
+                ('code', '=', 'stock_request_order'),
+                ('warehouse_id', '=', vals['warehouse_id'])], limit=1).id
             date_window_after = val_date - timedelta(hours=1)
             order = self.env['stock.request.order'].search([
                 ('helpdesk_ticket_id', '=', vals['helpdesk_ticket_id']),
@@ -59,17 +59,15 @@ class StockRequest(models.Model):
                 ('picking_type_id', '=', picking_type_id),
                 ('direction', '=', vals['direction']),
                 ('expected_date', '>', date_window_after),
-                ('state', '=', 'draft')
-            ])
+                ('state', '=', 'draft')])
             if order:
                 vals['expected_date'] = order.expected_date
                 vals['order_id'] = order.id
             else:
                 values = self.prepare_order_values(vals)
                 values.update({
-                    'picking_type_id':picking_type_id,
-                    'warehouse_id': vals['warehouse_id'],
-                    })
+                    'picking_type_id': picking_type_id,
+                    'warehouse_id': vals['warehouse_id']})
                 vals['order_id'] = self.env['stock.request.order'].\
                     create(values).id
         return super().create(vals)
@@ -88,8 +86,7 @@ class StockRequest(models.Model):
         res = super()._prepare_procurement_values(group_id=group_id)
         res.update({
             'helpdesk_ticket_id': self.helpdesk_ticket_id.id,
-            'partner_id': self.helpdesk_ticket_id.partner_id.id,
-        })
+            'partner_id': self.helpdesk_ticket_id.partner_id.id})
         return res
 
     @api.multi
