@@ -1,7 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2018 Open Source Integrators
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <!-- Copyright 2018 Open Source Integrators
-         License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 
     <record id="stock_scrap_form_reason_code" model="ir.ui.view">
         <field name="name">stock.scrap.form.reason.code</field>

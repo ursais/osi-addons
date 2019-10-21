@@ -1,24 +1,21 @@
-# Copyright (C) 2018 - TODAY, Open Source Integrators
+# Copyright (C) 2018 Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    "name": "OSI Scrap Reason Code",
+    "name": "Scrap Reason Code",
+    "summary": "Provide a user-defined list of scrapping reasons",
     "version": "12.0.1.0.0",
     "license": "AGPL-3",
-	"description": """
-    Reason code for scrapping.
-    """,
     "author": "Open Source Integrators",
     "maintainer": "Open Source Integrators",
     "website": "http://www.opensourceintegrators.com",
-    "category": "Analytic Accounting",
-    "images": [],
+    "category": "Inventory",
     "depends": [
         "account",
         "purchase",
         "sales_team",
         "stock",
-        "hr",
+        "hr"
     ],
     "data": [
         "security/ir.model.access.csv",
@@ -26,7 +23,5 @@
         "views/stock_scrap_views.xml",
         "views/stock_move_views.xml",
     ],
-    "auto_install": False,
     "application": False,
-    "installable": True,
 }

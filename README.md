@@ -40,6 +40,7 @@ addon | version | summary
 [osi_analytic_segments_sales](osi_analytic_segments_sales/) | 12.0.1.0.1 | Additional segments for analytic accounts for Sales
 [osi_credit_card_reconciliation](osi_credit_card_reconciliation/) | 12.0.1.0.1 | Reconcile your credit cards
 [osi_payment_method](osi_payment_method/) | 12.0.1.1.0 | Adds a payment method field to several models and views
+[osi_scrap_reason_code](osi_scrap_reason_code/) | 12.0.1.0.0 | Provide a user-defined list of scrapping reasons
 [osi_vendor_reference](osi_vendor_reference/) | 12.0.1.0.0 | When vendor bill is created, copy the vendor reference info from the PO into the bill. If the bill already has a reference, append to existing reference using ; [Bill can be for multiple PO's]
 [sale_subscription_brand](sale_subscription_brand/) | 12.0.1.0.0 | Brand your subscription invoices
 [sale_subscription_financial_risk](sale_subscription_financial_risk/) | 12.0.1.0.0 | Extends Financial risk to support service suspension activities.
