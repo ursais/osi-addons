@@ -6,11 +6,10 @@ from odoo import fields, models
 
 class StockMove(models.Model):
     _inherit = "stock.move"
-    
-    reason_code_id = fields.Many2one('reason.code', string='Reason code')
-    employee_id = fields.Many2one('hr.employee', string='Employee')
+
+    reason_code_id = fields.Many2one("reason.code", string="Reason code")
+    employee_id = fields.Many2one("hr.employee", string="Employee")
     scrap_location = fields.Boolean(
         related="location_dest_id.scrap_location",
-        string='Scrap Location flag',
-        store=True
-    )
+        string="Scrap Location flag",
+        store=True)
