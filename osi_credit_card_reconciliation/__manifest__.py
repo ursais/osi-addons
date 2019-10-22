@@ -13,6 +13,7 @@
     "depends": [
         'account_accountant',
         'account_payment_credit_card',
+        'account_voucher'
     ],
     "data": [
         "security/credit_card_reconciliation_security.xml",
