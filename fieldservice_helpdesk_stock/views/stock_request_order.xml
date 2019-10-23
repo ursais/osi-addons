@@ -1,0 +1,12 @@
+<odoo>
+    <record id="stock_request_order_fsm_location" model="ir.ui.view">
+        <field name="name">stock.request.order.fsm.location</field>
+        <field name="model">stock.request.order</field>
+        <field name="inherit_id" ref="fieldservice_stock.stock_request_order_fsm_order_form"/>
+        <field name="arch" type="xml">
+            <field name="fsm_order_id" position="after">
+                <field name="fsm_location_id"/>
+            </field>
+        </field>
+    </record>
+</odoo>
