@@ -6,4 +6,5 @@ from . import (
     helpdesk_ticket,
     stock_request,
     stock_request_order,
+    fsm_location
 )
