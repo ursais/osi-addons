@@ -17,7 +17,7 @@
     'data': [
         'views/helpdesk_views.xml',
         'views/stock_request_order.xml',
-        'views/stock_request.xml'
+        'views/stock_request.xml',
         'views/fsm_location.xml'
     ],
     'development_status': 'Beta',
