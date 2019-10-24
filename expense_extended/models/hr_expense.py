@@ -1,4 +1,4 @@
-# Copyright (C) 2019 - TODAY, Open Source Integrators
+# Copyright (C) 2019 Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo import api, fields, models, _
@@ -9,9 +9,8 @@ class HrExpense(models.Model):
     _inherit = "hr.expense"
 
     payment_method = fields.Many2one(
-        "partner.payment.method",
-        string="Company Credit Card"
-    )
+        "account.payment.method",
+        string="Company Credit Card")
 
     @api.multi
     def action_submit_expenses(self):
@@ -26,11 +25,10 @@ class HrExpense(models.Model):
                     vals = {
                         'state': 'submit',
                         'payment_method': self.payment_method.id,
-                        'expense_line_ids': [(6, 0, [
-                                line.id for line in self])],
+                        'expense_line_ids':
+                            [(6, 0, [line.id for line in self])],
                         'employee_id': self[0].employee_id.id,
-                        'name': self[0].name if len(self.ids) == 1 else ''
-                    }
+                        'name': self[0].name if len(self.ids) == 1 else ''}
                     new_expense = self.env['hr.expense.sheet'].create(vals)
                     # Redirect to expense sheet view
                     return {
@@ -38,8 +36,7 @@ class HrExpense(models.Model):
                         'view_mode': 'form',
                         'res_model': 'hr.expense.sheet',
                         'target': 'current',
-                        'res_id': new_expense.id
-                    }
+                        'res_id': new_expense.id}
                 else:
                     break
         # check context if called from submit to manager button
@@ -47,11 +44,10 @@ class HrExpense(models.Model):
             # update context to make hr expense sheet in submit state
             exp_ids = [line.id for line in self]
             vals = {
-                    'state': 'submit',
-                    'expense_line_ids': [(6, 0, exp_ids)],
-                    'employee_id': self[0].employee_id.id,
-                    'name': self[0].name if len(self.ids) == 1 else ''
-                }
+                'state': 'submit',
+                'expense_line_ids': [(6, 0, exp_ids)],
+                'employee_id': self[0].employee_id.id,
+                'name': self[0].name if len(self.ids) == 1 else ''}
             new_expense = self.env['hr.expense.sheet'].create(vals)
             # Redirect to expense sheet view
             return {
@@ -59,18 +55,17 @@ class HrExpense(models.Model):
                 'view_mode': 'form',
                 'res_model': 'hr.expense.sheet',
                 'target': 'current',
-                'res_id': new_expense.id
-            }
+                'res_id': new_expense.id}
         return res
 
 
 class HrExpenseSheet(models.Model):
     _inherit = "hr.expense.sheet"
 
-    payment_method = fields.Many2one("partner.payment.method",
+    payment_method = fields.Many2one("account.payment.method",
                                      string="Company Card used to Pay")
     emp_manager = fields.Many2one(related='employee_id.parent_id',
-                                  string='Manager')
+                                  string='Employee Manager')
     accounting_date = fields.Date(string='Accounting Date')
 
     @api.multi

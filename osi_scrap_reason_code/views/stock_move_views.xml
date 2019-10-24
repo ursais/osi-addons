@@ -1,0 +1,36 @@
+<!-- Copyright 2018 Open Source Integrators
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <!-- Stock move Form view -->
+    <record id="stock_move_reason_code_form" model="ir.ui.view">
+        <field name="name">stock.move.reason.code.form</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[1]" position='after'>
+                <group string="Reason Code" attrs="{'invisible': [('scrap_location', '!=', True)]}">
+                    <field name="scrap_location" invisible="1"/>
+                    <field name="reason_code_id"/>
+                    <field name="employee_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="stock_reason_code_form" model="ir.ui.view">
+        <field name="name">stock.reason.code.form</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='origin_grp']" position='after'>
+                <group string="Reason Code" attrs="{'invisible': [('scrap_location', '!=', True)]}">
+                    <field name="scrap_location" invisible="1"/>
+                    <field name="reason_code_id"/>
+                    <field name="employee_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

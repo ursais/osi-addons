@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_reason_code_user,reason.code,model_reason_code,base.group_user,1,0,0,0
+access_reason_code_account_user,reason.code,model_reason_code,account.group_account_user,1,0,0,0
+access_reason_code_puchase_user,reason.code,model_reason_code,purchase.group_purchase_user,1,0,0,0
+access_reason_code_salesman,reason.code,model_reason_code,sales_team.group_sale_salesman,1,0,0,0
+access_reason_code_stock_user,reason.code,model_reason_code,stock.group_stock_user,1,1,0,0
+access_reason_code_manager,reason.code,model_reason_code,account.group_account_manager,1,0,0,0
+access_reason_code_purchase_manager,reason.code,model_reason_code,purchase.group_purchase_manager,1,1,1,0
+access_reason_code_sales_manager,reason.code,model_reason_code,sales_team.group_sale_manager,1,0,0,0
+access_reason_code_stock_manager,reason.code,model_reason_code,stock.group_stock_manager,1,1,1,1

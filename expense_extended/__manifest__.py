@@ -19,4 +19,6 @@
         'views/expenses_view.xml',
     ],
     'installable': True,
+    'development_status': 'Beta',
+    'maintainers': ['b-kannan'],
 }
