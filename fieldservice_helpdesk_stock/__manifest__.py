@@ -15,7 +15,8 @@
         'helpdesk_stock',
     ],
     'data': [
-        'views/helpdesk_views.xml'
+        'views/helpdesk_views.xml',
+        'views/fsm_location.xml'
     ],
     'development_status': 'Beta',
     'maintainers': [

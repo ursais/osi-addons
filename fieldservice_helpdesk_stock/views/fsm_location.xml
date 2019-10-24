@@ -1,0 +1,17 @@
+<odoo>
+
+    <!-- Copyright (C) 2018 Brian McMaster
+         Copyright (C) 2019 Open Source Integrators
+         License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+    <record id="fsm_location_stock_add_default_warehouse" model="ir.ui.view">
+        <field name="model">fsm.location</field>
+        <field name="inherit_id" ref="fieldservice.fsm_location_form_view"/>
+        <field name="arch" type="xml">
+            <field name="inventory_location_id" position="after">
+                <field name="default_warehouse_id"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
