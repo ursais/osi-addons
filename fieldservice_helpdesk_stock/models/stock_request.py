@@ -1,11 +1,13 @@
 # Copyright (C) 2019 - TODAY, Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from odoo import api, models
+from odoo import api, fields, models
 
 
 class StockRequest(models.Model):
     _inherit = 'stock.request'
+
+    fsm_location_id = fields.Many2one('fsm.location', string="FSM Location")
 
     @api.onchange('direction', 'fsm_order_id', 'helpdesk_ticket_id')
     def _onchange_location_id(self):
@@ -20,6 +22,8 @@ class StockRequest(models.Model):
                 # Otherwise the stock location of the warehouse
                 self.location_id = \
                     self.fsm_order_id.warehouse_id.lot_stock_id.id
+        if self.fsm_order_id.location_id:
+                self.fsm_location_id = self.fsm_order_id.location_id
 
     @api.model
     def create(self, vals):
@@ -28,6 +32,14 @@ class StockRequest(models.Model):
             if order.ticket_id:
                 vals.update({
                     'helpdesk_ticket_id': order.ticket_id.id or False})
+            vals.update({
+                'fsm_location_id': order.location_id.id or False
+            })
+        elif vals.get('helpdesk_ticket_id', False):
+            ticket = self.env['helpdesk.ticket'].\
+                browse(vals['helpdesk_ticket_id'])
+            vals.update({
+                'fsm_location_id': ticket.fsm_location_id.id or False})
         return super().create(vals)
 
     @api.multi
@@ -44,6 +56,7 @@ class StockRequest(models.Model):
             res.update({
                 'fsm_order_id': vals['fsm_order_id'],
                 'helpdesk_ticket_id': fsm_order.ticket_id.id or False,
+                'fsm_location_id': fsm_order.location_id.id
             })
         return res
 

@@ -23,3 +23,10 @@ class FSMOrder(models.Model):
                 if line.state in ('draft', 'cancelled'):
                     line.ticket_id = vals.get('ticket_id')
         return res
+
+    @api.onchange('location_id')
+    def onchange_location_id(self):
+        res = super().onchange_location_id()
+        if self.location_id:
+            self.warehouse_id = self.location_id.default_warehouse_id
+        return res
