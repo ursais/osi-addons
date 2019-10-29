@@ -1,0 +1,18 @@
+<?xml version ="1.0" encoding="utf-8"?>
+<!-- Copyright 2018 Sodexis
+     License OPL-1 (See LICENSE file for full copyright and licensing details). -->
+
+<odoo>
+    <record model="ir.ui.view" id="view_partner_form">
+        <field name="name">payment method form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="payment_url" type="object" string="Add a card"
+                    class="oe_stat_button" icon="fa-credit-card">
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

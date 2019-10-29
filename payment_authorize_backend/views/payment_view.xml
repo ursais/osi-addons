@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2018 Sodexis
+     License OPL-1 (See LICENSE file for full copyright and licensing details). -->
+
+<odoo>
+    <record id="transaction_form" model="ir.ui.view">
+        <field name="name">payment.transaction.form.inherit</field>
+        <field name="model">payment.transaction</field>
+        <field name="inherit_id" ref="payment.transaction_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_capture']"
+                position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_void']"
+                position="after">
+                <button name="re_authorize" string="Re-Authorize" class="oe_highlight" type="object"
+                    attrs="{'invisible': [('is_expired','=', False)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='state']" position="attributes">
+                <attribute name="clickable"></attribute>
+            </xpath>
+            <xpath expr="//field[@name='reference']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state',
+                    'in',('done','authorized'))]}
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='amount']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state',
+                    'in',('done','authorized'))]}
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='currency_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state',
+                    'in',('done','authorized'))]}
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='acquirer_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state',
+                    'in',('done','authorized'))]}
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='payment_token_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state',
+                    'in',('done','authorized'))]}
+                </attribute>
+                <attribute name="options">{'no_open': true}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="attrs">{'readonly':
+                    [('state','in',('done','authorized'))]}
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='date']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state',
+                    'in',('done','authorized'))]}
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='state_message']" position="attributes">
+                <attribute name="attrs">{'readonly': [('state',
+                    'in',('done','authorized'))]}
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='acquirer_reference']" position="after">
+                <field name="bk_order"/>
+                <field name="create_date" attrs="{'invisible': True}"/>
+                <field name="creation_date"/>
+                <field name="is_expired" attrs="{'invisible': [('is_expired','=',False)]}"/>
+                <field name="old_acquirer_reference" attrs="{'invisible': [('is_expired','=',False)]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

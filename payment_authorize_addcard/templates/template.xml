@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2018 Sodexis
+     License OPL-1 (See LICENSE file for full copyright and licensing details). -->
+
+<odoo>
+    <template id="pay_methods" inherit_id="payment.pay_methods"
+        primary="True">
+        <xpath expr="//div[hasclass('wrap')]//div[hasclass('row')]"
+            position="inside">
+            <div class="pull-right css_editable_mode_hidden">
+                <ul class="list-inline">
+                    <li>
+                        <a class="btn btn-info"
+                            t-att-href="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (model, id, action)">
+                            <span class="fa fa-long-arrow-left" />
+                            Back to Record
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </xpath>
+       <!--  <xpath expr="//div[@class='clearfix']"
+            position="before">
+            <div>
+                <p class="alert alert-danger" t-if="error">
+                    <t t-esc="error"/>
+                </p>
+            </div>
+        </xpath>
+        <xpath expr="//div[@class='row']/div[@class='col-md-6']/form"
+            position="attributes">
+            <attribute name="action" />
+            <attribute name="t-attf-action"><![CDATA[#{delete_url}]]></attribute>
+        </xpath> -->
+    </template>
+</odoo>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2018 Sodexis
+     License OPL-1 (See LICENSE file for full copyright and licensing details). -->
+
+<odoo>
+    <template id="payment" inherit_id="website_sale.payment">
+        <xpath expr="//div[@id='payment_method']//t[@t-set='partner_id']" position="replace">
+            <t t-set="partner_id" t-value="order.partner_invoice_id.id"/>
+        </xpath>
+    </template>
+    <template id="sale_order_portal_template" inherit_id="sale.sale_order_portal_template">
+        <xpath expr="//div[@id='payment_method']//t[@t-call='payment.payment_tokens_list']" position="inside">
+            <t t-set="partner_id" t-value="sale_order.partner_invoice_id.id" />
+        </xpath>
+    </template>
+</odoo>

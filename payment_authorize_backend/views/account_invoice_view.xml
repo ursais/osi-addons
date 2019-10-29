@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2018 Sodexis
+     License OPL-1 (See LICENSE file for full copyright and licensing details). -->
+
+<odoo>
+    <record id="invoice_form_inherit" model="ir.ui.view">
+        <field name="name">invoice.form.inherit</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_term_id']"
+                position="after">
+                <field name="payment_method_id" />
+                <field name="hide_addcard" invisible="1" />
+                <field name="payment_acquirer_id"
+                    domain="[('journal_id', '=', payment_method_id)]"
+                    options="{'no_create': True}"
+                    invisible="1"
+                    attrs="{'invisible': [('payment_method_id','=',False)]}" />
+                <field name="payment_token_id"
+                    attrs="{'invisible': [('payment_acquirer_id','=',False)]}"
+                    options="{'no_create': True}"
+                    domain="[('partner_id', 'child_of', commercial_partner_id),('acquirer_id','=',payment_acquirer_id)]" />
+                <field name="payment_tx_id"
+                    attrs="{'invisible': [('payment_token_id','=',False)]}"
+                    options="{'no_create': True}"
+                    domain="[('payment_token_id', '=', payment_token_id),('state', 'not in', ['cancel', 'refunding', 'refunded']),('payment_id','=',False)]" />
+                <field name="real_payment_tx_id" invisible="1" />
+                <field name="commercial_partner_id" invisible="1" />
+            </xpath>
+            <xpath expr="//button[@name='%(account.action_account_invoice_payment)d']"
+                position="attributes">
+                <attribute name="context">{'default_journal_id': payment_method_id, 'default_payment_token_id': payment_token_id, 'default_payment_transaction_id': real_payment_tx_id, 'default_new_tx': not real_payment_tx_id}</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="invoice_form">
+        <field name="name">payment method forms</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="payment_authorize_addcard.invoice_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='payment_url_invoice']" position="attributes">
+                <attribute name="attrs">{'invisible': [('hide_addcard','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='payment_action_capture']" position="attributes">
+                <attribute name="attrs">{'invisible': 1}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='payment_action_void']" position="attributes">
+                <attribute name="attrs">{'invisible': 1}</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="account_invoice_view_form_inherit_payment" model="ir.ui.view">
+            <field name="name">account.invoice.view.form.inherit.payment</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="payment.account_invoice_view_form_inherit_payment"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@id='account_invoice_payment_btn']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('state', '!=', 'open')]}</attribute>
+                </xpath>
+            </field>
+    </record>
+</odoo>

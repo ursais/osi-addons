@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2018 Sodexis
+     License OPL-1 (See LICENSE file for full copyright and licensing details). -->
+
+<odoo>
+    <record model="ir.ui.view" id="view_order_form_inherit">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_confirm']"
+                position="before">
+                <button name="create_transaction" type="object"
+                    string="Create Transaction" attrs="{'invisible': [('hide_create_transaction','=',True)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="hide_create_transaction" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="hide_addcard" invisible="1" />
+                <field name="payment_acquirer_id" invisible="1" />
+                <field name="payment_tx_id" attrs="{'invisible': 1}"/>
+                <field name="payment_token_id" options="{'no_create': True}"
+                    attrs="{'invisible': [('is_electronic_payment_method','=',False)]}"
+                    domain="[('partner_id', 'child_of', commercial_partner_invoice_id),('acquirer_id','=',payment_acquirer_id)]" />
+                <field name="commercial_partner_id" invisible="1" />
+                <field name="commercial_partner_invoice_id" invisible="1" />
+                <field name="is_electronic_payment_method" invisible="1" />
+            </xpath>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_order_form">
+        <field name="name">payment method form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="payment_authorize_addcard.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='payment_url_sale']" position="attributes">
+                <attribute name="attrs">{'invisible': [('hide_addcard','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='payment_action_capture']" position="attributes">
+                <attribute name="attrs">{'invisible': 1}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='payment_action_void']" position="attributes">
+                <attribute name="attrs">{'invisible': 1}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_transaction" type="object" class="oe_stat_button" icon="fa-money" attrs="{'invisible': [('payment_transaction_count', '=', 0)]}">
+                    <field name="payment_transaction_count" widget="statinfo" string="Transactions"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+

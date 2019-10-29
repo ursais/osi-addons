@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright 2018 Sodexis
+     License OPL-1 (See LICENSE file for full copyright and licensing details). -->
+
+<odoo>
+    <record id="view_account_payment_invoice_form_inherit_payment"
+        model="ir.ui.view">
+        <field name="name">account.payment.inherit</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id"
+            ref="payment.view_account_payment_invoice_form_inherit_payment" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_token_id']"
+                position="after">
+                <field name="new_tx"
+                    attrs="{'invisible': [('payment_method_code', '!=', 'electronic')]}"/>
+                <field name="payment_transaction_id" options="{'no_create': True}" 
+                    domain="[('payment_token_id', '=', payment_token_id),('state', 'not in', ['cancel', 'refunding', 'refunded']),('payment_id','=',False)]"
+                    attrs="{'invisible': [('new_tx','=',True)]}"/>
+                <field name="commercial_partner_id" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='payment_token_id']" position="attributes">
+                <attribute name="domain">[('partner_id', 'child_of', commercial_partner_id)]</attribute>
+                <attribute name="options">{'no_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_account_payment_form_inherit" model="ir.ui.view">
+        <field name="name">account.payment.form.inherit</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_method_code']" position="after">
+                <field name="payment_token_id" options="{'no_create': True}"
+                    attrs="{'invisible': [('payment_method_code', '!=', 'electronic')],
+                           'required': [('payment_method_code', '=', 'electronic')]}"
+                    domain="[('partner_id', 'child_of', commercial_partner_id)]" />
+                <field name="commercial_partner_id" invisible="1" />
+            </xpath>
+        </field>
+    </record>
+    <record id="view_account_payment_form_inherit_payment" model="ir.ui.view">
+        <field name="name">view.account.payment.form.inherit.payment</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="payment.view_account_payment_form_inherit_payment"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_transaction_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [('payment_transaction_id','=',False)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
