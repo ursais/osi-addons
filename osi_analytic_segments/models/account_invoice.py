@@ -9,12 +9,10 @@ class AccountInvoiceLine(models.Model):
 
     analytic_segment_one_id = fields.Many2one(
         'analytic.segment.one',
-        string='Analytic Segment One',
-        copy=False)
+        string='Analytic Segment One')
     analytic_segment_two_id = fields.Many2one(
         'analytic.segment.two',
-        string='Analytic Segment Two',
-        copy=False)
+        string='Analytic Segment Two')
 
 
 class AccountInvoice(models.Model):
