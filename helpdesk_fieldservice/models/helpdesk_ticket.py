@@ -75,7 +75,6 @@ class HelpdeskTicket(models.Model):
             'default_ticket_id': self.id,
             'default_priority': self.priority,
             'default_location_id': self.fsm_location_id.id,
-            'default_customer_id': self.partner_id.id,
             'default_origin': self.name
         }
         res = self.env.ref('fieldservice.fsm_order_form', False)
