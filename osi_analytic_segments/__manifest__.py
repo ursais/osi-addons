@@ -3,7 +3,7 @@
 
 {
     "name": "OSI Analytic Segments",
-    "version": "12.0.1.0.0",
+    "version": "12.0.1.0.1",
     "license": "LGPL-3",
     "summary": "Additional segments for analytic accounts",
     "author": "Open Source Integrators",
