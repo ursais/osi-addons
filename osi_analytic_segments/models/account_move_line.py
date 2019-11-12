@@ -19,4 +19,4 @@ class AccountMoveLine(models.Model):
         res[0].update(
             {'analytic_segment_one_id': self.analytic_segment_one_id.id,
              'analytic_segment_two_id': self.analytic_segment_two_id.id})
-        return res[0]
+        return res
