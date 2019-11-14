@@ -3,7 +3,8 @@
 
 import logging
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -33,7 +34,9 @@ class FSMOrder(models.Model):
                 self.write({'stage_id': self.env.ref(
                     'fieldservice.fsm_stage_completed').id})
                 view_id = self.env.ref(
-                    'helpdesk_fieldservice.fsm_order_close_wizard_view_form').id
+                    'helpdesk_fieldservice.fsm_order_close_wizard_view_form'
+                    ).id
+
                 return {
                     'view_id': view_id,
                     'view_type': 'form',
