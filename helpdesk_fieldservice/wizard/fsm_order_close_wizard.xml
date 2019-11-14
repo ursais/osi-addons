@@ -1,5 +1,5 @@
 <!-- Copyright (C) 2019 Pavlov Media
-    License Proprietary. Do not copy, share nor distribute.-->
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 
 <odoo>
     <record id="fsm_order_close_wizard_view_form" model="ir.ui.view">
@@ -25,7 +25,7 @@
                          required="1"/>
               </group>
               <footer>
-                  <button string="Update Ticket"
+                  <button string="Close Ticket"
                           name="action_close_ticket"
                           type="object"
                           class="oe_highlight"/>
