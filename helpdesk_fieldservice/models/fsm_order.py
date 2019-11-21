@@ -65,3 +65,32 @@ class FSMOrder(models.Model):
                                          'fsm_order_form').id, 'form')]
         action['res_id'] = order.id
         return action
+
+    def _location_contact_fill(self, loc):
+        """loc is a boolean that lets us know if this is coming from the
+        partner onchange or the location onchange"""
+        if loc:
+            if self.location_id and self.customer_id:
+                if self.customer_id.service_location_id != self.location_id:
+                    self.customer_id = False
+        else:
+            if self.customer_id:
+                if not self.location_id:
+                    self.location_id = self.customer_id.service_location_id
+
+    @api.onchange('location_id')
+    def _onchange_location_id_partner(self):
+        if self.location_id:
+            self._location_contact_fill(True)
+            if self.location_id and not self.customer_id:
+                return {'domain': {
+                    'customer_id':
+                        [('service_location_id', '=',
+                          self.location_id.name)]}}
+        else:
+            return {'domain': {'customer_id': [('id', '!=', None)]}}
+
+    @api.onchange('customer_id')
+    def _onchange_customer_id_location(self):
+        if self.customer_id:
+            self._location_contact_fill(False)
