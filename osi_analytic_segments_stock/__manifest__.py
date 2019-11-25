@@ -2,7 +2,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 {
     "name": "OSI Analytic Segments Stock",
-    "version": "12.0.1.0.1",
+    "version": "12.0.1.0.0",
     "license": "LGPL-3",
     "summary": "Additional segments for analytic accounts for Stock",
     "author": "Open Source Integrators",
