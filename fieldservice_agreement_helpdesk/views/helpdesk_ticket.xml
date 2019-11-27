@@ -9,15 +9,6 @@
         <field name="model">helpdesk.ticket</field>
         <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
         <field name="arch" type="xml">
-            <field name="fsm_order_ids" position="attributes">
-                <attribute name="context">{
-                    'default_customer_id': partner_id,
-                    'default_location_id': fsm_location_id,
-                    'default_priority': priority,
-                    'default_agreement_id': agreement_id,
-                    'default_serviceprofile_id': serviceprofile_id
-                    }</attribute>
-            </field>
             <field name="agreement_id" position="attributes">
                 <attribute name="domain">[
                     '|',
