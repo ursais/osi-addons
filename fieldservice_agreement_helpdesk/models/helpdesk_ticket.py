@@ -14,8 +14,8 @@ class HelpdeskTicket(models.Model):
         """
         res = super().action_create_order()
         # override the context to get rid of the default filtering
-        res['context'] = {
+        res['context'].update({
             'default_agreement_id': self.agreement_id.id,
             'default_serviceprofile_id': self.serviceprofile_id.id,
-        }
+        })
         return res
