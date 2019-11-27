@@ -9,7 +9,6 @@ class HelpdeskTicket(models.Model):
 
     @api.multi
     def action_create_order(self):
-        import pdb; pdb.set_trace()
         res = super().action_create_order()
         '''
         This function returns an action that displays a full FSM Order
