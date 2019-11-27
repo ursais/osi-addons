@@ -9,11 +9,11 @@ class HelpdeskTicket(models.Model):
 
     @api.multi
     def action_create_order(self):
-        res = super().action_create_order()
-        '''
+        """
         This function returns an action that displays a full FSM Order
         form when creating an FSM Order from a ticket.
-        '''
+        """
+        res = super().action_create_order()
         # override the context to get rid of the default filtering
         res['context'] = {
             'default_agreement_id': self.agreement_id.id,
