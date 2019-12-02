@@ -22,21 +22,20 @@ class FSMOrder(models.Model):
         if not self.resolution:
             raise ValidationError(_("Cannot move to Complete " +
                                     "until 'Resolution' is filled in"))
+        res = super().action_complete()
         if self.ticket_id:
             open_fsm_orders_count = self.env['fsm.order'].search_count(
                 [('ticket_id', '=', self.ticket_id.id),
                  ('stage_id.is_closed', '=', False)])
 
             if self.ticket_id.stage_id.is_close:
-                return self.write({'stage_id': self.env.ref(
-                    'fieldservice.fsm_stage_completed').id})
+                return res
             elif open_fsm_orders_count == 1:
                 self.write({'stage_id': self.env.ref(
                     'fieldservice.fsm_stage_completed').id})
                 view_id = self.env.ref(
                     'helpdesk_fieldservice.fsm_order_close_wizard_view_form'
                     ).id
-
                 return {
                     'view_id': view_id,
                     'view_type': 'form',
@@ -49,8 +48,9 @@ class FSMOrder(models.Model):
                                 'default_resolution': self.resolution}
                 }
             else:
-                return self.write({'stage_id': self.env.ref(
-                    'fieldservice.fsm_stage_completed').id})
+                return res
+        else:
+            return res
 
     @api.multi
     def action_view_order(self):
