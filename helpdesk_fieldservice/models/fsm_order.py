@@ -30,9 +30,7 @@ class FSMOrder(models.Model):
 
             if self.ticket_id.stage_id.is_close:
                 return res
-            elif open_fsm_orders_count == 1:
-                self.write({'stage_id': self.env.ref(
-                    'fieldservice.fsm_stage_completed').id})
+            elif open_fsm_orders_count == 0:
                 view_id = self.env.ref(
                     'helpdesk_fieldservice.fsm_order_close_wizard_view_form'
                     ).id
