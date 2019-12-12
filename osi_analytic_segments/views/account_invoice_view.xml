@@ -44,4 +44,15 @@
         </field>
     </record>
 
+    <record id="analytic_account_invoice_line" model="ir.ui.view">
+        <field name="name">analytic.account.invoice.line.supplier.form.ext</field>
+        <field name="model">account.invoice.line</field>
+        <field name="inherit_id" ref="account.view_invoice_line_form"/>
+        <field name="arch" type="xml">
+            <field name="account_analytic_id" position="after">
+                <field name="analytic_segment_one_id"/>
+                <field name="analytic_segment_two_id"/>
+            </field>
+        </field>
+    </record>
 </odoo>
