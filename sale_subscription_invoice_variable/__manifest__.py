@@ -12,5 +12,8 @@
     'depends': [
         'sale_subscription',
     ],
+    'data': [
+        'views/sale_subscription_views.xml',
+    ],
     'installable': True,
 }

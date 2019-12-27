@@ -1,70 +1,76 @@
 # Copyright (C) 2019, Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from dateutil.relativedelta import relativedelta
-from odoo import models, api
+from datetime import date, timedelta
+from odoo import api, fields, models
 
 
 class SaleSubscription(models.Model):
 
     _inherit = 'sale.subscription'
 
+    recurring_last_date = fields.Date()
+
     def _prepare_invoice_variable_dates(self):
         """
+        Variable amounts are billed for the previous period.
         The dates for the previous billing period.
-        Based on the implementation of _prepare_invoice_data().
         """
         self.ensure_one()
-        next_date = fields.Date.from_string(self.recurring_next_date)
-        if not next_date:
-            raise UserError(
-                _('Please define Date of Next Invoice of "%s".')
-                % (self.display_name,))
-        periods = {
-            'daily': 'days', 'weekly': 'weeks',
-            'monthly': 'months', 'yearly': 'years'}
-        start_date = next_date - relativedelta(
-            **{periods[self.recurring_rule_type]: self.recurring_interval})
-        end_date = next_date - relativedelta(days=1)
+        start_date = self.recurring_last_date or date(1900, 1, 1)
+        end_date = self.recurring_next_date - timedelta(days=1)
         return start_date, end_date
 
     @api.model
     def _prepare_invoice_variable_name(self, analytic_line):
         """Returns the description to use for the invoice line"""
+        self.ensure_one()
         return analytic_line.product_id.name
 
-    def _prepare_invoice_lines(self, fiscal_position):
-        res = super()._prepare_invoice_lines(fiscal_position)
-        import pudb; pu.db
+    @api.model
+    def _prepare_invoice_analytic_domain(self, start_date, end_date):
+        return [
+            ('account_id', '=', self.analytic_account_id.id),
+            ('date', '>=', start_date),
+            ('date', '<=', end_date),
+            ('amount', '!=', 0.0),
+            ('move_id', '=', False),
+        ]
 
+    def _prepare_invoice_lines(self, fiscal_position):
         self.ensure_one()
+        res = super()._prepare_invoice_lines(fiscal_position)
+
         Analytic = self.env['account.analytic.line']
         FiscalPos = self.env['account.fiscal.position']
         fiscal_position = FiscalPos.browse(fiscal_position)
         start_date, end_date = self._prepare_invoice_variable_dates()
-        domain = [
-            ('account_id', '=', self.analytic_account_id.id),
-            ('date', '>=', start_date),
-            ('date', '<=', end_date),
-            ('amount', '!=', 0.0)
-        ]
+
+        domain = self._prepare_invoice_analytic_domain(start_date, end_date)
         analytic_lines = Analytic.search(domain)
         inv_lines = {}
         for line in analytic_lines:
             key = (line.product_id, line.product_uom_id)
             inv_lines.setdefault(
                 key,
-                {'analytic_account_id': line.account_id.id,
+                {'analytic_account_id': self.id,
                  'product_id': line.product_id.id,
                  'name': self._prepare_invoice_variable_name(line),
                  'uom_id': line.product_uom_id.id,
+                 'quantity': 1,
                  'price_unit': 0,
                  })
             inv_line = inv_lines[key]
             inv_line['price_unit'] += line.amount
 
-        for key, value in inv_lines:
-            new_line = Analytic.new(value)
+        for key, value in inv_lines.items():
+            new_line = self.env['sale.subscription.line'].new(value)
             res.append(
-                [(0, 0, self._prepare_invoice_line(new_line, fiscal_position))]
+                (0, 0, self._prepare_invoice_line(new_line, fiscal_position))
+            )
         return res
+
+    def increment_period(self):
+        for subs in self:
+            subs.recurring_last_date = subs.recurring_next_date
+        super().increment_period()

@@ -1,0 +1,18 @@
+<odoo>
+
+    <!-- Copyright (C) 2019 Open Source Integrators
+         License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+
+    <record id="sale_subscription_view_form_last_date" model="ir.ui.view">
+        <field name="name">sale.subscription.form add last date</field>
+        <field name="model">sale.subscription</field>
+        <field name="inherit_id"
+               ref="sale_subscription.sale_subscription_view_form"/>
+        <field name="arch" type="xml">
+            <field name="recurring_rule_boundary" position="after">
+                <field name="recurring_last_date"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
