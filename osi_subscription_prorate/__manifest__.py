@@ -11,6 +11,7 @@
     "license": "LGPL-3",
     "depends": [
         'sale_subscription',
+        'sale_subscription_invoice_variable',
     ],
     "data": [
     ],
