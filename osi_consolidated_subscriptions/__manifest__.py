@@ -10,13 +10,12 @@
     "author": "Open Source Integrators",
     "license": "LGPL-3",
     "depends": [
+        'account_invoice_consolidated',
         'sale_subscription',
-        'account_invoice_consolidated'
+        'osi_subscription_billing_date',
     ],
     "data": [
         "data/consolidated_invoice_data.xml",
-        "views/res_partner.xml",
-        "wizard/change_bill_date_wizard.xml"
     ],
     "installable": True,
     "development_status": "Beta",
