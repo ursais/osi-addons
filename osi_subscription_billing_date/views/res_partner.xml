@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_form_ticket_context" model="ir.ui.view">
+        <field name="name">res.partner.form.ticket.context</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+
+            <field name="vat" position="after">
+                <field name="authoritative_bill_date"/>
+            </field>
+
+        </field>
+    </record>
+</odoo>
