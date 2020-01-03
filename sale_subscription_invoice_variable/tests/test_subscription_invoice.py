@@ -8,7 +8,6 @@ class TestInvoice(TestSubscriptionCommon):
     def setUp(self, *args, **kwargs):
         super(TestInvoice, self).setUp(*args, **args)
 
-        import pudb; pu.db
         Product = self.env['product.product']
         self.prod_toilet_paper = Product.create({'name': 'Toilet Paper'})
         self.prod_hand_soap = Product.create({'name': 'Hand Soap'})
