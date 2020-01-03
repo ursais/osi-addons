@@ -11,6 +11,8 @@
     "license": "LGPL-3",
     "depends": [
         'osi_subscription_prorate',
+        # ... used for the prorata caclulations
+        # needed when a billing day is changed
     ],
     "data": [
         "views/res_partner.xml",

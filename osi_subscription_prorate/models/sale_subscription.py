@@ -3,10 +3,6 @@
 
 import datetime
 from odoo import api, fields, models, _
-from datetime import date
-from dateutil.relativedelta import relativedelta
-import calendar
-from odoo.exceptions import UserError
 
 
 DAY = datetime.timedelta(days=1)  # one day, to add to dates
@@ -107,7 +103,9 @@ class SaleSubscriptionLine(models.Model):
         """ Adding a new line creates an immediate prorated invoice for it """
         line = super().create(vals)
         subscription = line.analytic_account_id
-        if subscription.stage_id.in_progress and subscription.recurring_last_date:
+        is_in_progress = subscription.stage_id.in_progress
+        has_recurring_last_date = bool(subscription.recurring_last_date)
+        if is_in_progress and has_recurring_last_date:
             today = fields.Date.today()
             subscription._prorate_create_invoice(line, date_from=today)
         return line
@@ -120,7 +118,9 @@ class SaleSubscriptionLine(models.Model):
         """
         for line in self:
             subscription = line.analytic_account_id
-            if subscription.stage_id.in_progress and subscription.recurring_last_date:
+            is_in_progress = subscription.stage_id.in_progress
+            has_recurring_last_date = bool(subscription.recurring_last_date)
+            if is_in_progress and has_recurring_last_date:
                 today = fields.Date.today()
                 subscription._prorate_create_invoice(line, date_to=today)
         return super().unlink()

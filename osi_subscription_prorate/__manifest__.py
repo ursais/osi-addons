@@ -12,6 +12,9 @@
     "depends": [
         'sale_subscription',
         'sale_subscription_invoice_variable',
+        # ... because the of the recurring_last_date field,
+        # needed to determine the period to query variable
+        # amounts from the Analytic Accounts
     ],
     "data": [
     ],

@@ -13,6 +13,8 @@
         'account_invoice_consolidated',
         'sale_subscription',
         'osi_subscription_billing_date',
+        # ... bacause of the Customer billing day,
+        # used to know when to perform the Customer's invoice consolidation
     ],
     "data": [
         "data/consolidated_invoice_data.xml",

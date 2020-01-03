@@ -1,7 +1,7 @@
 # Copyright (C) 2019 Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from odoo import api, fields, models
+from odoo import api, models
 from datetime import datetime
 import calendar
 from datetime import date
@@ -13,7 +13,7 @@ class SaleSubscription(models.Model):
 
     def wizard_change_recurring_next_date(self, next_month):
         day_next = self.partner_id.authoritative_bill_date
-        old_date = self.recurring_next_date
+        # old_date = self.recurring_next_date
         if next_month:
             self.increment_period()
         if day_next == 'eom' or (self.recurring_next_date.month == '2' and day_next in ['29', '30']):
