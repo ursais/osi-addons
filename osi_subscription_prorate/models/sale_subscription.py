@@ -55,20 +55,21 @@ class SaleSubscription(models.Model):
         self.ensure_one()
         self = self.with_context(lang=self.partner_id.lang)
         invoice = self._prepare_invoice_data()
-        fiscal_position = self.env['account.fiscal.position'].browse(
-            invoice['fiscal_position'])
         days, ratio = self._prorate_compute_ratio(
             date_from=date_from, date_to=date_to)
         if days < 0:
             invoice['comment'] = _('Credit for %d days') % abs(days)
             invoice['type'] = 'out_refund'
         # Prepare line
+        fiscal_position = self.env['account.fiscal.position'].browse(
+            invoice['fiscal_position_id'])
         line_values = [
-            (6, 0, self._prorate_invoice_line(
-                line, fiscal_position, ratio, days))
+            self._prorate_invoice_line(
+                line, fiscal_position, ratio, days)
             for line in lines]
         # Add to invoice values
-        invoice['invoice_line_ids'] = line_values
+        invoice['invoice_line_ids'] = [
+            (0, 0, value) for value in line_values]
         return invoice
 
     def _prorate_create_invoice(self, lines, date_from=None, date_to=None):
@@ -80,19 +81,22 @@ class SaleSubscription(models.Model):
         new_invoice = self.env['account.invoice'].create(values)
         return new_invoice
 
-
     @api.onchange('stage_id')
     def onchange_stage_id(self):
         res = super().onchange_stage_id()
         if self.stage_id.name == 'Closed':
-            # TODO Check proper dependency adding recurring_last_date field!
             today = fields.Date.today()
             lines = self.recurring_invoice_line_ids
             self._prorate_create_invoice(lines, to_date=today)
         return res
 
-    # TODO def set_close(self):
-    #    return super().set_close()
+    def set_close(self):
+        res = super().set_close()
+        today = fields.Date.today()
+        for subscription in self:
+            lines = self.recurring_invoice_line_ids
+            subscription._prorate_create_invoice(lines, date_to=today)
+        return res
 
 
 class SaleSubscriptionLine(models.Model):
@@ -102,8 +106,8 @@ class SaleSubscriptionLine(models.Model):
     def create(self, vals):
         """ Adding a new line creates an immediate prorated invoice for it """
         line = super().create(vals)
-        subscription = line.account_analytic_id
-        if subscription.stage_id.in_progress:
+        subscription = line.analytic_account_id
+        if subscription.stage_id.in_progress and subscription.recurring_last_date:
             today = fields.Date.today()
             subscription._prorate_create_invoice(line, date_from=today)
         return line
@@ -115,8 +119,8 @@ class SaleSubscriptionLine(models.Model):
         create Credit Note for the unused service days.
         """
         for line in self:
-            subscription = line.account_analytic_id
-            if subscription.stage_id.in_progress:
+            subscription = line.analytic_account_id
+            if subscription.stage_id.in_progress and subscription.recurring_last_date:
                 today = fields.Date.today()
                 subscription._prorate_create_invoice(line, date_to=today)
         return super().unlink()
