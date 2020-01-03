@@ -70,7 +70,16 @@ class SaleSubscription(models.Model):
             )
         return res
 
-    def increment_period(self):
-        for subs in self:
-            subs.recurring_last_date = subs.recurring_next_date
-        super().increment_period()
+    def _prepare_invoice(self):
+        """
+        Set the last invoice date.
+
+        Done when an recurring invoice is prepared.
+        The _prepare_invoice() method is not called
+        by the line prorating features, and so doesn't
+        trigger setting this date.
+        """
+        invoicing_date = self.recurring_next_date
+        values = super()._prepare_invoice()
+        self.recurring_last_date = invoicing_date
+        return values
