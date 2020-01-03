@@ -51,16 +51,17 @@ class SaleSubscription(models.Model):
 
         values = super()._prepare_invoice()
         adb = self.partner_id.authoritative_bill_date
-        if not adb:
+        if not adb or not self.recurring_next_date:
             return values
+
         # Find billing date, according to current customer billing day
-        invoiced_date = self.recurring_next_date
-        expected_date = date_set_day(invoiced_date, adb)
+        invoicing_date = self.recurring_next_date
+        expected_date = date_set_day(invoicing_date, adb)
         # If billing date not the current one, prorate current invoice
-        if expected_date != invoiced_date:
+        if expected_date != invoicing_date:
             # find the base date to increment, for the next invoicing date
             # and set as next date to be incremented after invoice generation
-            if expected_date < invoiced_date:
+            if expected_date < invoicing_date:
                 base_date = expected_date
             else:
                 base_date = self._get_add_periods(expected_date, -1)
@@ -68,7 +69,7 @@ class SaleSubscription(models.Model):
             # Prorate the invoice line
             period_to = self._get_add_periods(base_date) - DAY
             days, ratio = self._prorate_compute_ratio(
-                date_from=invoiced_date,
+                date_from=invoicing_date,
                 period_from=base_date,
                 period_to=period_to)
             for a, b, line in values.get('invoice_line_ids', []):
