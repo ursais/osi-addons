@@ -1,9 +1,10 @@
 # Copyright (C) 2019 Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from odoo import models
 import calendar
 from dateutil.relativedelta import relativedelta
+from odoo import models, _
+from odoo.tools import format_date
 
 
 DAY = relativedelta(days=1)  # one day, to add to dates
@@ -50,29 +51,40 @@ class SaleSubscription(models.Model):
             return my_date.replace(day=min(day, last_day))
 
         values = super()._prepare_invoice()
-        adb = self.partner_id.authoritative_bill_date
-        if not adb or not self.recurring_next_date:
-            return values
-
         # Find billing date, according to current customer billing day
-        invoicing_date = self.recurring_next_date
-        expected_date = date_set_day(invoicing_date, adb)
         # If billing date not the current one, prorate current invoice
-        if expected_date != invoicing_date:
+        adb = self.partner_id.authoritative_bill_date
+        current_date = self.recurring_next_date
+        add_period = self._get_add_periods
+        expected_current_date = add_period(
+            date_set_day(
+                add_period(current_date, -1), adb))
+        if expected_current_date != current_date:
+            # Billling day was adjusted
+            # Base date is used to simulate a full period and compute ratio
             # find the base date to increment, for the next invoicing date
             # and set as next date to be incremented after invoice generation
-            if expected_date < invoicing_date:
-                base_date = expected_date
-            else:
-                base_date = self._get_add_periods(expected_date, -1)
-            self.recurring_next_date = base_date
+            date_from = current_date
+            period_from = expected_current_date
+            if period_from >= date_from:
+                period_from = self._get_add_periods(period_from, -1)
+            next_date = self._get_add_periods(period_from)
+            period_to = next_date - DAY
             # Prorate the invoice line
-            period_to = self._get_add_periods(base_date) - DAY
-            days, ratio = self._prorate_compute_ratio(
-                date_from=invoicing_date,
-                period_from=base_date,
+            Line = self.env['sale.subscription.line']
+            bill_dates = Line._prorate_calc_periods(
+                date_from=date_from,
+                period_from=period_from,
                 period_to=period_to)
-            for a, b, line in values.get('invoice_line_ids', []):
-                line['quantity'] *= ratio
-                line['name'] += " (%d days)" % days
+            for a, b, line_vals in values.get('invoice_line_ids', []):
+                line_vals['quantity'] *= bill_dates['ratio']
+                line_vals['name'] += " (%d days)" % bill_dates['bill_days']
+
+            values['comment'] = (
+                _('This invoice is a billing period adjustment,'
+                  ' and covers the following period: %s - %s')
+                % (format_date(self.env, date_from),
+                   format_date(self.env, period_to))
+            )
+            self.recurring_next_date = period_from  # Will be incremented
         return values

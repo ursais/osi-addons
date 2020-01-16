@@ -39,8 +39,7 @@ class ResPartner(models.Model):
          ('27', '27th of the Month'),
          ('28', '28th of the Month'),
          ('29', '29th of the Month'),
-         ('30', '30th of the Month'),
-         ('eom', 'End of the Month')],
+         ('30', '30th of the Month')],
         string='Authoritative Bill Date',
         help='Specify the date this partner record will have \
         all of his/her subscriptions billed on')
