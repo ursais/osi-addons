@@ -57,6 +57,8 @@ class StockRequestOrder(models.Model):
                 line.fsm_order_id = self.fsm_order_id.id
                 line.helpdesk_ticket_id = \
                     self.fsm_order_id.ticket_id.id or False
+                if not line.helpdesk_ticket_id:
+                    line.helpdesk_ticket_id = self.helpdesk_ticket_id
 
     @api.multi
     def write(self, vals):
