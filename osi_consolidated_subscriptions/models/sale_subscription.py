@@ -32,6 +32,7 @@ class SaleSubscription(models.Model):
 
     @api.onchange('stage_id')
     def onchange_stage_id(self):
+        super().onchange_stage_id()
         if self.stage_id.name == 'In Progress':
             if self.recurring_next_date == date.today():
                 periods = {'daily': 'days', 'weekly': 'weeks', 'monthly': 'months', 'yearly': 'years'}
