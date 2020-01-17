@@ -16,7 +16,7 @@ class SaleSubscription(models.Model):
         # old_date = self.recurring_next_date
         if next_month:
             self.increment_period()
-        if day_next == 'eom' or (self.recurring_next_date.month == '2' and day_next in ['29', '30']):
+        if (self.recurring_next_date.month == '2' and day_next in ['29', '30']):
             day = calendar.monthrange(self.recurring_next_date.year,self.recurring_next_date.month)[1]
             month = self.recurring_next_date.month
             year = self.recurring_next_date.year
