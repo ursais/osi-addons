@@ -46,9 +46,10 @@ class SaleSubscription(models.Model):
         before the next intended invoicing date.
         """
         def date_set_day(my_date, day):
-            day = 31 if day == 'eom' else int(day)
-            last_day = calendar.monthrange(my_date.year, my_date.month)[1]
-            return my_date.replace(day=min(day, last_day))
+            if day:
+                last_day = calendar.monthrange(my_date.year, my_date.month)[1]
+                my_date = my_date.replace(day=min(day, last_day))
+            return my_date
 
         values = super()._prepare_invoice()
         # Find billing date, according to current customer billing day
