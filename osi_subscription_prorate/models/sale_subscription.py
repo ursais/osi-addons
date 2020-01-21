@@ -15,12 +15,15 @@ class SaleSubscription(models.Model):
     def _prorate_invoice_line(self, line, fiscal_position, ratio, days):
         """
         Prepares the values for a prorated invoice line.
+        Only consider lines for recurring products, ignore lines
+        for other products and services.
         Ratio and Days can both be positive or negative.
         """
-        values = self._prepare_invoice_line(line, fiscal_position)
-        values['quantity'] *= ratio
-        values['name'] += " (%d days)" % days
-        return values
+        if line.product_id.recurring_invoice:
+            values = self._prepare_invoice_line(line, fiscal_position)
+            values['quantity'] *= ratio
+            values['name'] += " (%d days)" % days
+            return values
 
     def _prorate_prepare_invoice(
             self, lines,
@@ -40,14 +43,13 @@ class SaleSubscription(models.Model):
         line_values = []
         for line in lines:
             bill_info = line._prorate_calc_periods(date_from, date_to)
-            line_values.append(
-                self._prorate_invoice_line(
-                    line,
-                    fiscal_position,
-                    bill_info['ratio'],
-                    bill_info['bill_days'],
-                )
-            )
+            values = self._prorate_invoice_line(
+                line,
+                fiscal_position,
+                bill_info['ratio'],
+                bill_info['bill_days'])
+            if values:
+                line_values.append(values)
         # Add to invoice values
         invoice['invoice_line_ids'] = [
             (0, 0, value) for value in line_values]

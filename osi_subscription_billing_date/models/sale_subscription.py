@@ -48,7 +48,7 @@ class SaleSubscription(models.Model):
         def date_set_day(my_date, day):
             if day:
                 last_day = calendar.monthrange(my_date.year, my_date.month)[1]
-                my_date = my_date.replace(day=min(day, last_day))
+                my_date = my_date.replace(day=min(int(day), last_day))
             return my_date
 
         values = super()._prepare_invoice()
@@ -77,9 +77,12 @@ class SaleSubscription(models.Model):
                 date_from=date_from,
                 period_from=period_from,
                 period_to=period_to)
+            Product = self.env['product.product']
             for a, b, line_vals in values.get('invoice_line_ids', []):
-                line_vals['quantity'] *= bill_dates['ratio']
-                line_vals['name'] += " (%d days)" % bill_dates['bill_days']
+                product = Product.browse(line_vals.get('product_id'))
+                if product.recurring_invoice:
+                    line_vals['quantity'] *= bill_dates['ratio']
+                    line_vals['name'] += " (%d days)" % bill_dates['bill_days']
 
             values['comment'] = (
                 _('This invoice is a billing period adjustment,'
