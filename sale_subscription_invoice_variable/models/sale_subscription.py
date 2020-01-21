@@ -25,7 +25,7 @@ class SaleSubscription(models.Model):
     def _prepare_invoice_variable_name(self, analytic_line):
         """Returns the description to use for the invoice line"""
         self.ensure_one()
-        return analytic_line.product_id.name
+        return analytic_line.product_id.display_name
 
     @api.model
     def _prepare_invoice_analytic_domain(self, start_date, end_date):
