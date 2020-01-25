@@ -3,7 +3,7 @@
 
 import calendar
 from dateutil.relativedelta import relativedelta
-from odoo import models, _
+from odoo import api, fields, models, _
 from odoo.tools import format_date
 
 
@@ -12,6 +12,8 @@ DAY = relativedelta(days=1)  # one day, to add to dates
 
 class SaleSubscription(models.Model):
     _inherit = 'sale.subscription'
+
+    draft = fields.Boolean(compute='_compute_draft')
 
     def _get_add_periods(self, current_date=None, periods=1):
         self.ensure_one()
@@ -92,3 +94,13 @@ class SaleSubscription(models.Model):
             )
             self.recurring_next_date = period_from  # Will be incremented
         return values
+
+    def set_in_progress(self):
+        self.stage_id = self.env.ref('sale_subscription.sale_subscription_stage_in_progress')
+
+    @api.depends('stage_id')
+    def _compute_draft(self):
+        if self.stage_id.name == 'Draft':
+            self.draft = True
+        else:
+            self.draft = False

@@ -17,8 +17,8 @@ class ResPartner(models.Model):
         # Loop through Contacts
         for contact_id in contact_ids:
             # If today is this partner's ABD and they have at least 1 open invoice
-            if (contact_id.authoritative_bill_date == date.today().day) and \
-                    (self.env['account.invoice'].search_count([('partner_id', '=', contact_id.id),('state_id')]) > 0):
+            if (int(contact_id.authoritative_bill_date) == date.today().day) and \
+                    (self.env['account.invoice'].search_count([('partner_id', '=', contact_id.id),('state', '=', 'open')])):
                 contact_id.last_invoice_date = date.today()
                 inv = self.env['account.invoice.consolidated'].\
                     create(contact_id.cron_prepare_consolidated_invoice_values())

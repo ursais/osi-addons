@@ -16,6 +16,7 @@
     ],
     "data": [
         "views/res_partner.xml",
+        "views/sale_subscription.xml"
     ],
     "installable": True,
     "development_status": "Beta",

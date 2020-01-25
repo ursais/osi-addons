@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_subscription_button_workflow" model="ir.ui.view">
+        <field name="name">sale.subscription.button.workflow</field>
+        <field name="model">sale.subscription</field>
+        <field name="inherit_id" ref="sale_subscription.sale_subscription_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="draft" invisible="1"/>
+                <button name="set_in_progress" string="Start Subscription" type="object" attrs="{'invisible': [('draft', '=', False)]}"/>
+            </xpath>
+            <field name="stage_id" position="attributes">
+                <attribute name="options">{'clickable': False}</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

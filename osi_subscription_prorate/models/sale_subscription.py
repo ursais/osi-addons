@@ -4,7 +4,7 @@
 import datetime
 from odoo import api, fields, models, _
 from odoo.tools import format_date
-
+from dateutil.relativedelta import relativedelta
 
 DAY = datetime.timedelta(days=1)  # one day, to add to dates
 
@@ -22,7 +22,11 @@ class SaleSubscription(models.Model):
         if line.product_id.recurring_invoice:
             values = self._prepare_invoice_line(line, fiscal_position)
             values['quantity'] *= ratio
+            if days < 0:
+                days = days * -1
             values['name'] += " (%d days)" % days
+            import pdb; pdb.set_trace
+            values['start_date'] = line.start_date
             return values
 
     def _prorate_prepare_invoice(
@@ -78,9 +82,60 @@ class SaleSubscription(models.Model):
         today = fields.Date.today()
         for subscription in self:
             lines = self.recurring_invoice_line_ids
-            subscription._prorate_create_invoice(
+            inv = subscription._prorate_create_invoice(
                 lines, date_to=today, inv_type='out_refund')
+            for line_id in inv.invoice_line_ids:
+                non_use_days = self.recurring_next_date - today
+                # total_days = self.recurring_next_date - self.recurring_last_date
+                prev_date = self.recurring_next_date - relativedelta(months=1)
+                total_days = self.recurring_next_date - prev_date
+                line_id.quantity = non_use_days.days/total_days.days
+                desc = line_id.name
+                new_desc = desc.split(')', 1)[0]
+                line_id.name = new_desc +  ") (%d days)" % non_use_days.days
         return res
+
+    # @api.onchange('stage_id')
+    def set_in_progress(self):
+        res = super().set_in_progress()
+        is_in_progress = self.stage_id.in_progress
+        today = fields.Date.today()
+        if is_in_progress and self.recurring_invoice_line_ids:
+            lines = self.recurring_invoice_line_ids
+            # Set ABD to today
+            if not self.partner_id.authoritative_bill_date:
+                day = str(today.day)
+                # ABD between '1'-'30'
+                if day == '31':
+                    day = '1'
+                self.partner_id.write({'authoritative_bill_date': day})
+            # Set Next Bill Date
+            next_date = today
+            if int(self.partner_id.authoritative_bill_date) <= today.day:
+                next_date = next_date + relativedelta(months=1)
+            next_date = next_date.replace(day=int(self.partner_id.authoritative_bill_date))
+            prev_date = next_date - relativedelta(months=1)
+            self.recurring_next_date = next_date
+            if not self.recurring_last_date:
+                self.recurring_last_date = prev_date
+            inv = self._prorate_create_invoice(
+                lines, date_to=today, inv_type='out_invoice')
+            self.recurring_last_date = today
+            total_days = prev_date - next_date
+            use_days = today - next_date
+            for line_id in inv.invoice_line_ids:
+                line_id.write({'quantity': use_days.days/total_days.days})
+                desc = line_id.name
+                new_desc = desc.split(')', 1)[0]
+                use_days = use_days.days * -1
+                new_desc = new_desc +  ") (%d days)" % use_days
+                line_id.write({'name': new_desc})
+            for sub_line_id in self.recurring_invoice_line_ids:
+                if not sub_line_id.start_date:
+                    # sub_line_id.write({'start_date': today})
+                    # TESTING
+                    sub_line_id.write({'start_date': today - relativedelta(days=5)})
+            return res
 
 
 class SaleSubscriptionLine(models.Model):
@@ -121,6 +176,7 @@ class SaleSubscriptionLine(models.Model):
         bill_to = min(bill_to, period_to)
         bill_delta = bill_to - bill_from + DAY
         bill_days = bill_delta.days * sign
+        days = period_delta.days or 1
         return {
             'period_from': period_from,
             'period_to': period_to,
@@ -128,7 +184,7 @@ class SaleSubscriptionLine(models.Model):
             'bill_from': bill_from,
             'bill_to': bill_to,
             'bill_days': bill_days,
-            'ratio': float(bill_days) / period_delta.days,
+            'ratio': float(bill_days) / days,
         }
 
     @api.model
@@ -138,11 +194,14 @@ class SaleSubscriptionLine(models.Model):
         subscription = line.analytic_account_id
         is_in_progress = subscription.stage_id.in_progress
         has_recurring_last_date = bool(subscription.recurring_last_date)
-        if is_in_progress and has_recurring_last_date:
+        # if is_in_progress and has_recurring_last_date
+        if is_in_progress:
             start_date = fields.Date.context_today(self)
             subscription._prorate_create_invoice(
                 line, date_from=start_date)
-            line.start_date = start_date
+            # line.start_date = start_date
+            # Testing
+            line.start_date = start_date - relativedelta(days=10)
         return line
 
     def unlink(self):
@@ -154,8 +213,9 @@ class SaleSubscriptionLine(models.Model):
             subscription = line.analytic_account_id
             is_in_progress = subscription.stage_id.in_progress
             has_recurring_last_date = bool(subscription.recurring_last_date)
-            if is_in_progress and has_recurring_last_date:
-                end_date = fields.Date.context_today(self)
+            # if is_in_progress and has_recurring_last_date:
+            if is_in_progress:
+                end_date = fields.Date.context_today(self) - relativedelta(days=1)
                 subscription._prorate_create_invoice(
                     line, date_to=end_date, inv_type='out_refund')
         return super().unlink()
