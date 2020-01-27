@@ -25,7 +25,6 @@ class SaleSubscription(models.Model):
             if days < 0:
                 days = days * -1
             values['name'] += " (%d days)" % days
-            import pdb; pdb.set_trace
             values['start_date'] = line.start_date
             return values
 
@@ -95,9 +94,9 @@ class SaleSubscription(models.Model):
                 line_id.name = new_desc +  ") (%d days)" % non_use_days.days
         return res
 
-    # @api.onchange('stage_id')
+    @api.multi
     def set_in_progress(self):
-        res = super().set_in_progress()
+        self.stage_id = self.env.ref('sale_subscription.sale_subscription_stage_in_progress')
         is_in_progress = self.stage_id.in_progress
         today = fields.Date.today()
         if is_in_progress and self.recurring_invoice_line_ids:
@@ -135,7 +134,6 @@ class SaleSubscription(models.Model):
                     # sub_line_id.write({'start_date': today})
                     # TESTING
                     sub_line_id.write({'start_date': today - relativedelta(days=5)})
-            return res
 
 
 class SaleSubscriptionLine(models.Model):

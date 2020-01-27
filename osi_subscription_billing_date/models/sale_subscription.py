@@ -95,9 +95,6 @@ class SaleSubscription(models.Model):
             self.recurring_next_date = period_from  # Will be incremented
         return values
 
-    def set_in_progress(self):
-        self.stage_id = self.env.ref('sale_subscription.sale_subscription_stage_in_progress')
-
     @api.depends('stage_id')
     def _compute_draft(self):
         if self.stage_id.name == 'Draft':

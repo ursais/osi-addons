@@ -18,6 +18,7 @@
     ],
     "data": [
         "data/consolidated_invoice_data.xml",
+        "views/sale_subscription.xml"
     ],
     "installable": True,
     "development_status": "Beta",

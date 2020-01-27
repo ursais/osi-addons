@@ -15,8 +15,7 @@
         # needed when a billing day is changed
     ],
     "data": [
-        "views/res_partner.xml",
-        "views/sale_subscription.xml"
+        "views/res_partner.xml"
     ],
     "installable": True,
     "development_status": "Beta",
