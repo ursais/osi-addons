@@ -152,28 +152,75 @@ class SaleSubscriptionLine(models.Model):
         subscription = self.analytic_account_id
         line_start_date = self and self.start_date
         # Period of the last invoice
-        period_from = subscription.recurring_next_date - relativedelta(months=1)
-        period_to = subscription.recurring_next_date
-        period_delta = period_to - period_from
-        # Period to prorate
-        if date_from:
-            sign = +1
-            # bill_from = date_from
-            # bill_to = date_to or period_to
+        if subscription:
+            period_from = subscription.recurring_next_date - relativedelta(months=1)
+            period_to = subscription.recurring_next_date
+            period_delta = period_to - period_from
+            # Period to prorate
+            if date_from:
+                sign = +1
+                # bill_from = date_from
+                # bill_to = date_to or period_to
+            else:
+                sign = -1
+                # bill_from = (date_to or line_start_date or period_from) + DAY
+                # bill_to = period_to
+            # bill_from = max(bill_from, period_from)
+            # bill_to = min(bill_to, period_to)
+            # bill_delta = bill_to - bill_from + DAY
+            # bill_days = bill_delta.days * sign
+            days = period_delta.days or 1
+            bill_to = subscription.recurring_next_date
+            bill_from = fields.Date.today()
+            bill_delta = bill_to - bill_from
+            bill_days = bill_delta.days * sign
         else:
-            sign = -1
-            # bill_from = (date_to or line_start_date or period_from) + DAY
-            # bill_to = period_to
-        # bill_from = max(bill_from, period_from)
-        # bill_to = min(bill_to, period_to)
-        # bill_delta = bill_to - bill_from + DAY
-        # bill_days = bill_delta.days * sign
-        days = period_delta.days or 1
-        bill_to = subscription.recurring_next_date
-        bill_from = fields.Date.today()
-        bill_delta = bill_to - bill_from
-        bill_days = bill_delta.days * sign
-
+            # period_from = period_from
+            # period_to = period_to
+            # period_delta = period_to - period_from
+            # # Period to prorate
+            # if date_from:
+            #     sign = +1
+            #     # bill_from = date_from
+            #     # bill_to = date_to or period_to
+            # else:
+            #     sign = -1
+            #     # bill_from = (date_to or line_start_date or period_from) + DAY
+            #     # bill_to = period_to
+            # # bill_from = max(bill_from, period_from)
+            # # bill_to = min(bill_to, period_to)
+            # # bill_delta = bill_to - bill_from + DAY
+            # # bill_days = bill_delta.days * sign
+            # days = period_delta.days or 1
+            # bill_to = subscription.recurring_next_date
+            # bill_from = date_from
+            # bill_delta = bill_to - bill_from
+            # bill_days = bill_delta.days * sign
+            subscription = self.analytic_account_id
+            line_start_date = self and self.start_date
+            # Period of the last invoice
+            period_from = (
+                period_from or
+                (subscription and subscription.recurring_last_date) or
+                (subscription and subscription.date_start))
+            period_to = (
+                period_to or
+                (subscription and subscription.date) or  # End Date
+                (subscription and subscription.recurring_next_date - DAY))
+            period_delta = period_to - period_from + DAY
+            # Period to prorate
+            if date_from:
+                sign = +1
+                bill_from = date_from
+                bill_to = date_to or period_to
+            else:
+                sign = -1
+                bill_from = (date_to or line_start_date or period_from) + DAY
+                bill_to = period_to
+            bill_from = max(bill_from, period_from)
+            bill_to = min(bill_to, period_to)
+            bill_delta = bill_to - bill_from + DAY
+            bill_days = bill_delta.days * sign
         return {
             'period_from': period_from,
             'period_to': period_to,
@@ -181,7 +228,7 @@ class SaleSubscriptionLine(models.Model):
             'bill_from': bill_from,
             'bill_to': bill_to,
             'bill_days': bill_days,
-            'ratio': float(bill_days) / days,
+            'ratio': float(bill_days) / period_delta.days,
         }
 
     @api.model
