@@ -169,7 +169,6 @@ class SaleSubscriptionLine(models.Model):
         bill_delta = bill_to - bill_from + DAY
         bill_days = bill_delta.days * sign
         days = period_delta.days or 1
-        import pdb; pdb.set_trace()
         return {
             'period_from': period_from,
             'period_to': period_to,
