@@ -154,7 +154,7 @@ class SaleSubscriptionLine(models.Model):
         # Period of the last invoice
         period_from = subscription.recurring_next_date - relativedelta(months=1)
         period_to = subscription.recurring_next_date
-        period_delta = period_to - period_from + DAY
+        period_delta = period_to - period_from
         # Period to prorate
         if date_from:
             sign = +1
