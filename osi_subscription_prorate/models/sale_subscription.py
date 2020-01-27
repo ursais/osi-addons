@@ -152,14 +152,8 @@ class SaleSubscriptionLine(models.Model):
         subscription = self.analytic_account_id
         line_start_date = self and self.start_date
         # Period of the last invoice
-        period_from = (
-            period_from or
-            (subscription and subscription.recurring_last_date) or
-            (subscription and subscription.date_start))
-        period_to = (
-            period_to or
-            (subscription and subscription.date) or  # End Date
-            (subscription and subscription.recurring_next_date - DAY))
+        period_from = subscription.recurring_next_date - relativedelta(months=1)
+        period_to = subscription.recurring_next_date
         period_delta = period_to - period_from + DAY
         # Period to prorate
         if date_from:
@@ -175,6 +169,7 @@ class SaleSubscriptionLine(models.Model):
         bill_delta = bill_to - bill_from + DAY
         bill_days = bill_delta.days * sign
         days = period_delta.days or 1
+        import pdb; pdb.set_trace()
         return {
             'period_from': period_from,
             'period_to': period_to,
