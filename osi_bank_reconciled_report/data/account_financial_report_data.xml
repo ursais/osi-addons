@@ -1,0 +1,7 @@
+<odoo>
+    <record id="action_account_report_bank_reconciled_with_journal" model="ir.actions.client">
+        <field name="name">Bank Reconciled</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'model': 'account.bank.reconciled.report'}" />
+    </record>
+</odoo>
