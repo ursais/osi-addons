@@ -9,7 +9,6 @@ class StockRequest(models.Model):
 
     @api.model
     def create(self, vals):
-        import pdb; pdb.set_trace()
         # Get our ticket
         if vals.get('helpdesk_ticket_id', False):
             ticket_id = self.env['helpdesk.ticket'].\
