@@ -232,14 +232,6 @@ class account_bank_reconciliation_report(models.AbstractModel):
 
         lines.append(self._add_title_line(options, _("Operations to Process"), level=1))
 
-        if report_data.get('reconciled_st_positive') or report_data.get('reconciled_st_negative'):
-            lines.append(self._add_title_line(options, _("Reconciled Bank Statement Lines"), level=2))
-            for line in report_data.get('reconciled_st_positive', []):
-                lines.append(self._add_bank_statement_line(line, line.amount))
-
-            for line in report_data.get('reconciled_st_negative', []):
-                lines.append(self._add_bank_statement_line(line, line.amount))
-
         if report_data.get('not_reconciled_st_positive') or report_data.get('not_reconciled_st_negative'):
             lines.append(self._add_title_line(options, _("Uneconciled Bank Statement Lines"), level=2))
             for line in report_data.get('not_reconciled_st_positive', []):
@@ -248,9 +240,18 @@ class account_bank_reconciliation_report(models.AbstractModel):
             for line in report_data.get('not_reconciled_st_negative', []):
                 lines.append(self._add_bank_statement_line(line, line.amount))
 
-        if report_data.get('reconciled_pmts'):
-            lines.append(self._add_title_line(options, _("Validated Payments Linked with a Bank Statement Line"), level=2))
-            for line in report_data['reconciled_pmts']:
+        if report_data.get('reconciled_st_positive') or report_data.get('reconciled_st_negative'):
+            lines.append(self._add_title_line(options, _("Reconciled Bank Statement Lines"), level=2))
+            for line in report_data.get('reconciled_st_positive', []):
+                lines.append(self._add_bank_statement_line(line, line.amount))
+
+            for line in report_data.get('reconciled_st_negative', []):
+                lines.append(self._add_bank_statement_line(line, line.amount))
+
+
+        if report_data.get('not_reconciled_pmts'):
+            lines.append(self._add_title_line(options, _("Validated Payments Not Linked with a Bank Statement Line"), level=2))
+            for line in report_data['not_reconciled_pmts']:
                     self.line_number += 1
                     line_description = line_title = line.ref
                     if line_description and len(line_description) > 70 and not self.env.context.get('print_mode'):
@@ -267,9 +268,9 @@ class account_bank_reconciliation_report(models.AbstractModel):
                         'caret_options': 'account.payment',
                     })
 
-        if report_data.get('not_reconciled_pmts'):
-            lines.append(self._add_title_line(options, _("Validated Payments Not Linked with a Bank Statement Line"), level=2))
-            for line in report_data['not_reconciled_pmts']:
+        if report_data.get('reconciled_pmts'):
+            lines.append(self._add_title_line(options, _("Validated Payments Linked with a Bank Statement Line"), level=2))
+            for line in report_data['reconciled_pmts']:
                     self.line_number += 1
                     line_description = line_title = line.ref
                     if line_description and len(line_description) > 70 and not self.env.context.get('print_mode'):
