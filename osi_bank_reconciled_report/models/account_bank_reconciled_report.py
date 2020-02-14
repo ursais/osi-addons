@@ -20,8 +20,9 @@ class account_bank_reconciliation_report(models.AbstractModel):
         return [
             {'name': ''},
             {'name': _("Date")},
-            {'name': _("Reference")},
             {'name': _("Amount"), 'class': 'number'},
+            {'name': _("Memo")},
+            {'name': _("Reference")},
         ]
 
     def _add_title_line(self, options, title, amount=None, level=0, date=False):
@@ -32,8 +33,9 @@ class account_bank_reconciliation_report(models.AbstractModel):
             'name': title,
             'columns': [
                 {'name': date and format_date(self.env, date) or '', 'class': 'date'},
-                {'name': ''},
                 {'name': amount and self.format_value(amount, line_currency)},
+                {'name': ''},
+                {'name': ''},
             ],
             'level': level,
         }
@@ -46,8 +48,9 @@ class account_bank_reconciliation_report(models.AbstractModel):
             'name': _('Total Virtual GL Balance'),
             'columns': [
                 {'name': '', 'class': 'date'},
-                {'name': ''},
                 {'name': self.format_value(amount, line_currency)},
+                {'name': ''},
+                {'name': ''},
             ],
             'level': 1,
             'class': 'total',
@@ -56,6 +59,22 @@ class account_bank_reconciliation_report(models.AbstractModel):
     def _add_bank_statement_line(self, line, amount):
         name = line.name
         line_currency = self.env.context.get('line_currency', False)
+        if line.journal_entry_ids:
+            for entry_id in line.journal_entry_ids:
+                if entry_id.payment_id:
+                    return {
+                        'id': str(line.id),
+                        'caret_options': 'account.bank.statement.line',
+                        'model': 'account.bank.statement.line',
+                        'name': len(name) >= 75 and name[0:70] + '...' or name,
+                        'columns': [
+                            {'name': format_date(self.env, line.date), 'class': 'date'},
+                            {'name': self.format_value(amount, line_currency)},
+                            {'name': line.journal_entry_ids[0].payment_id.communication},
+                            {'name': line.ref},
+                        ],
+                        'class': 'o_account_reports_level3',
+                    }
         return {
             'id': str(line.id),
             'caret_options': 'account.bank.statement.line',
@@ -63,8 +82,9 @@ class account_bank_reconciliation_report(models.AbstractModel):
             'name': len(name) >= 75 and name[0:70] + '...' or name,
             'columns': [
                 {'name': format_date(self.env, line.date), 'class': 'date'},
-                {'name': line.ref},
                 {'name': self.format_value(amount, line_currency)},
+                {'name': ''},
+                {'name': line.ref},
             ],
             'class': 'o_account_reports_level3',
         }
