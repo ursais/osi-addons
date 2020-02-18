@@ -11,5 +11,7 @@ class StockScrap(models.Model):
     def onchange_reason_code_id(self):
         if self.reason_code_id:
             self.analytic_account_id = self.reason_code_id.analytic_account_id
-            self.analytic_segment_one_id = self.reason_code_id.analytic_segment_one_id
-            self.analytic_segment_two_id = self.reason_code_id.analytic_segment_two_id
+            self.analytic_segment_one_id = self.\
+                reason_code_id.analytic_segment_one_id
+            self.analytic_segment_two_id = self.\
+                reason_code_id.analytic_segment_two_id

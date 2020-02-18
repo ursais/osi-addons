@@ -12,13 +12,12 @@ class StockRequest(models.Model):
         # Get our ticket
         if vals.get('helpdesk_ticket_id', False):
             ticket_id = self.env['helpdesk.ticket'].\
-                        browse(vals.get('helpdesk_ticket_id'))
+                browse(vals.get('helpdesk_ticket_id'))
             # Check ticket for Location
             if ticket_id.fsm_location_id:
                 # Check Location for Analytic Account
                 if ticket_id.fsm_location_id.analytic_account_id:
                     vals.update({
-                        'analytic_account_id': ticket_id.\
-                            fsm_location_id.analytic_account_id.id
-                    })
+                        'analytic_account_id': ticket_id.
+                        fsm_location_id.analytic_account_id.id})
         return super().create(vals)
