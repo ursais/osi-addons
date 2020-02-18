@@ -133,14 +133,13 @@ class account_bank_reconciliation_report(models.AbstractModel):
                                     in lines_already_accounted])
 
         # Payments reconciled with a bank statement line
-        aml_domain = [
-                     ('account_id', 'in', rslt['account_ids']),
-                     '|', ('statement_line_id', '=', False),
-                     ('statement_line_id.date', '>',
-                      self.env.context['date_to']),
-                     ('user_type_id.type', '=', 'liquidity'),
-                     ('full_reconcile_id', '!=', False),
-                     ('date', '<=', self.env.context['date_to']),
+        aml_domain = [('account_id', 'in', rslt['account_ids']),
+                       '|', ('statement_line_id', '=', False),
+                      ('statement_line_id.date', '>',
+                       self.env.context['date_to']),
+                      ('user_type_id.type', '=', 'liquidity'),
+                      ('full_reconcile_id', '!=', False),
+                      ('date', '<=', self.env.context['date_to']),
         ]
         companies_unreconciled_selection_domain = []
         for company in selected_companies:
@@ -161,14 +160,13 @@ class account_bank_reconciliation_report(models.AbstractModel):
             rslt['reconciled_pmts'] = move_lines
 
         # Payments not reconciled with a bank statement line
-        aml_domain2 = [
-                     ('account_id', 'in', rslt['account_ids']),
-                     '|', ('statement_line_id', '=', False),
-                     ('statement_line_id.date', '>',
-                      self.env.context['date_to']),
-                     ('user_type_id.type', '=', 'liquidity'),
-                     ('full_reconcile_id', '=', False),
-                     ('date', '<=', self.env.context['date_to']),
+        aml_domain2 = [('account_id', 'in', rslt['account_ids']),
+                        '|', ('statement_line_id', '=', False),
+                       ('statement_line_id.date', '>',
+                        self.env.context['date_to']),
+                       ('user_type_id.type', '=', 'liquidity'),
+                       ('full_reconcile_id', '=', False),
+                       ('date', '<=', self.env.context['date_to']),
         ]
         companies_unreconciled_selection_domain = []
         for company in selected_companies:
@@ -226,12 +224,11 @@ class account_bank_reconciliation_report(models.AbstractModel):
                         self.env.context['company_ids'])])
 
         # Final
-        last_statement = self.env['account.bank.statement'].search(
-                [
-                    ('journal_id', '=', journal_id),
+        last_statement = self.env['account.bank.statement'].\
+            search([('journal_id', '=', journal_id),
                     ('date', '<=', self.env.context['date_to']),
-                    ('company_id', 'in', self.env.context['company_ids'])
-                ], order="date desc, id desc", limit=1)
+                    ('company_id', 'in', self.env.context['company_ids'])],
+                    order="date desc, id desc", limit=1)
         rslt['last_st_balance'] = last_statement.balance_end
         rslt['last_st_end_date'] = last_statement.date
 
