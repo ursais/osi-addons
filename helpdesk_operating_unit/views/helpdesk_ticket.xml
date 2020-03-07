@@ -15,4 +15,17 @@
         </field>
     </record>
 
+    <record id="helpdesk_ticket_group_by_ou" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.group.by.ou</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_search"/>
+        <field name="arch" type="xml">
+            <filter name="stage" position="after">
+                <filter string="Operating Unit" name="operating_unit_grouped"
+                        domain="[]" context="{'group_by':'operating_unit_id'}"
+                        groups="operating_unit.group_multi_operating_unit"/>
+            </filter>
+        </field>
+    </record>
+
 </odoo>
