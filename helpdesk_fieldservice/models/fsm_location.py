@@ -33,5 +33,6 @@ class FSMLocation(models.Model):
                 action['res_id'] = ticket_ids.ids[0]
             else:
                 action['domain'] = [('id', 'in', ticket_ids.ids)]
-                action['context'].update({'search_default_is_open': 1})
+                action['context'].update({'search_default_is_open': 1,
+                                          'default_fsm_location_id': self.id})
             return action
