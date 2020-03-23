@@ -12,25 +12,31 @@
         <field name="name">helpdesk.ticket.service.request.form</field>
         <field name="model">helpdesk.ticket</field>
         <field name="inherit_id"
-               ref="helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet"/>
+               ref="helpdesk.helpdesk_ticket_view_form"/>
         <field name="arch" type="xml">
-            <notebook position="inside">
-                <page string="Service Orders">
-                    <button name="action_create_order" string="Create FSM Order" type="object" class="oe_highlight"/>
-                    <field name="fsm_order_ids">
-                        <tree create="false">
-                            <field name="name" style="pointer-events:none;"/>
-                            <field name="location_id" style="pointer-events:none;"/>
-                            <button name="action_view_order" string="View FSM Order" type="object" class="helpdesk_column"/>
-                            <field name="stage_id" style="pointer-events:none;"/>
-                            <field name="person_id" style="pointer-events:none;"/>
-                            <field name="scheduled_date_start" style="pointer-events:none;"/>
-                            <field name="scheduled_date_end" style="pointer-events:none;"/>
-                            <field name="scheduled_duration" style="pointer-events:none;"/>
-                        </tree>
-                    </field>
-                </page>
-            </notebook>
+            <field name="description" position="replace">
+                <notebook position="inside">
+                    <page string="Description">
+                        <field name="description"
+                               placeholder="Description of the ticket..."/>
+                    </page>
+                    <page string="Service Orders">
+                        <button name="action_create_order" string="Create FSM Order" type="object" class="oe_highlight"/>
+                        <field name="fsm_order_ids">
+                            <tree create="false">
+                                <field name="name" style="pointer-events:none;"/>
+                                <field name="location_id" style="pointer-events:none;"/>
+                                <button name="action_view_order" string="View FSM Order" type="object" class="helpdesk_column"/>
+                                <field name="stage_id" style="pointer-events:none;"/>
+                                <field name="person_id" style="pointer-events:none;"/>
+                                <field name="scheduled_date_start" style="pointer-events:none;"/>
+                                <field name="scheduled_date_end" style="pointer-events:none;"/>
+                                <field name="scheduled_duration" style="pointer-events:none;"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </field>
             <field name="partner_id" position="before">
                 <field name="fsm_location_id"/>
                 <field name="all_orders_closed" invisible="1"/>
@@ -97,8 +103,8 @@
               parent="menu_helpdesk_op"
               sequence="20"/>
 
-    <menuitem id="helpdesk.helpdesk_ticket_menu_main" 
-        name="All Tickets"
-        parent="menu_helpdesk_op"/>
+    <menuitem id="helpdesk.helpdesk_ticket_menu_main"
+              name="All Tickets"
+              parent="menu_helpdesk_op"/>
 
 </odoo>
