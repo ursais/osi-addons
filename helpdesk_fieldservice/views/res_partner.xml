@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
     <record id="res_partner_form_ticket_context" model="ir.ui.view">
         <field name="name">res.partner.form.ticket.context</field>
         <field name="model">res.partner</field>
