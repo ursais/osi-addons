@@ -1,0 +1,39 @@
+# Copyright (C) 2020 Open Source Integrators
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+from odoo import api, fields, models
+
+
+class SaleOrder(models.Model):
+    _inherit = "sale.order"
+
+    payment_journal_id = fields.Many2one(
+        "account.journal", string="Payment Journal",
+        domain=[('type', 'in', ('bank', 'cash'))])
+    payment_method_id = fields.Many2one(
+        "account.payment.method", string="Payment Method")
+
+    @api.multi
+    @api.onchange('partner_id')
+    def onchange_payment_info(self):
+        for rec in self:
+            if rec.partner_id:
+                rec.payment_journal_id = \
+                    rec.partner_id.in_payment_journal_id.id or False
+                rec.payment_method_id = \
+                    rec.partner_id.in_payment_method_id.id or False
+
+    @api.multi
+    @api.onchange('payment_journal_id')
+    def onchange_payment_journal(self):
+        for rec in self:
+            ids = rec.payment_journal_id.inbound_payment_method_ids.ids \
+                or False
+            return {'domain': {'payment_method_id': [('id', 'in', ids)]}}
+
+    @api.multi
+    def _prepare_invoice(self):
+        invoice_vals = super()._prepare_invoice()
+        invoice_vals.update({
+            'payment_journal_id': self.payment_journal_id.id,
+            'payment_method_id': self.payment_method_id.id})
+        return invoice_vals
