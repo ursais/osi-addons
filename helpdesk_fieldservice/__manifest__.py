@@ -14,6 +14,7 @@
         'fieldservice',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'views/helpdesk_ticket_views.xml',
         'views/fsm_location_views.xml',
         'views/fsm_order_views.xml',
