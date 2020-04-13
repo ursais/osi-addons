@@ -1,0 +1,43 @@
+<!-- Copyright (c) 2020 Open Source Integrators
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+
+    <!-- Helpdesk Ticket Form View -->
+    <record id="helpdesk_ticket_view_fieldservice_form" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.fieldservice.form</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id"
+               ref="helpdesk_fieldservice.helpdesk_ticket_view_service_request_form"/>
+        <field name="arch" type="xml">
+            <notebook position="replace"/>
+        </field>
+    </record>
+
+    <!-- Helpdesk Ticket Form View -->
+    <record id="helpdesk_ticket_view_timesheet_form" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.fieldservice.form</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id"
+               ref="helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Service Orders">
+                    <button name="action_create_order" string="Create FSM Order" type="object" class="oe_highlight"/>
+                    <field name="fsm_order_ids">
+                        <tree create="false">
+                            <field name="name" style="pointer-events:none;"/>
+                            <field name="location_id" style="pointer-events:none;"/>
+                            <button name="action_view_order" string="View FSM Order" type="object" class="helpdesk_column"/>
+                            <field name="stage_id" style="pointer-events:none;"/>
+                            <field name="person_id" style="pointer-events:none;"/>
+                            <field name="scheduled_date_start" style="pointer-events:none;"/>
+                            <field name="scheduled_date_end" style="pointer-events:none;"/>
+                            <field name="scheduled_duration" style="pointer-events:none;"/>
+                        </tree>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+</odoo>
