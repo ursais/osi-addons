@@ -6,7 +6,7 @@ from odoo.tools.misc import format_date
 from odoo.osv import expression
 
 
-class account_bank_reconciliation_report(models.AbstractModel):
+class AccountBankReconciliationReport(models.AbstractModel):
     _name = 'account.bank.reconciled.report'
     _description = 'Bank Reconciled Report'
     _inherit = "account.report"
@@ -96,12 +96,12 @@ class account_bank_reconciliation_report(models.AbstractModel):
 
     def print_pdf(self, options):
         options['active_id'] = self.env.context.get('active_id')
-        return super(account_bank_reconciliation_report, self).\
+        return super(AccountBankReconciliationReport, self).\
             print_pdf(options)
 
     def print_xlsx(self, options):
         options['active_id'] = self.env.context.get('active_id')
-        return super(account_bank_reconciliation_report, self).\
+        return super(AccountBankReconciliationReport, self).\
             print_xlsx(options)
 
     @api.model
@@ -119,7 +119,7 @@ class account_bank_reconciliation_report(models.AbstractModel):
             journal.currency_id != journal.company_id.currency_id \
             if journal.currency_id else False
         rslt['account_ids'] = list(set([journal.default_debit_account_id.id,
-                                       journal.default_credit_account_id.id]))
+                                        journal.default_credit_account_id.id]))
         rslt['line_currency'] = journal.currency_id \
             if rslt['use_foreign_currency'] else False
         self = self.with_context(line_currency=rslt['line_currency'])
@@ -192,7 +192,7 @@ class account_bank_reconciliation_report(models.AbstractModel):
                     ('journal_entry_ids', '!=', False),
                     ('amount', '>', 0),
                     ('company_id', 'in',
-                    self.env.context['company_ids'])])
+                     self.env.context['company_ids'])])
 
         rslt['reconciled_st_negative'] = self.\
             env['account.bank.statement.line'].\
@@ -254,13 +254,13 @@ class account_bank_reconciliation_report(models.AbstractModel):
 
         # Compute totals
         unrec_tot = sum([-(self._get_amount(aml, report_data))
-                        for aml in report_data.get('reconciled_pmts', [])])
+                         for aml in report_data.get('reconciled_pmts', [])])
         outstanding_plus_tot = sum([st_line.amount
-                                   for st_line in report_data.
-                                   get('reconciled_st_positive', [])])
-        outstanding_minus_tot = sum([st_line.amount
                                     for st_line in report_data.
-                                    get('reconciled_st_negative', [])])
+                                    get('reconciled_st_positive', [])])
+        outstanding_minus_tot = sum([st_line.amount
+                                     for st_line in report_data.
+                                     get('reconciled_st_negative', [])])
         computed_stmt_balance = report_data['odoo_balance'] + \
             outstanding_plus_tot + outstanding_minus_tot + unrec_tot
         difference = computed_stmt_balance - report_data['last_st_balance']
@@ -282,12 +282,13 @@ class account_bank_reconciliation_report(models.AbstractModel):
         accounts = self.env['account.account'].\
             browse(report_data['account_ids'])
         accounts_string = ', '.join(accounts.mapped('code'))
-        lines.append(self._add_title_line(options, gl_title % accounts_string,
-                     level=1, amount=report_data['odoo_balance'],
-                     date=options['date']['date']))
+        lines.append(self._add_title_line(
+            options, gl_title % accounts_string,
+            level=1, amount=report_data['odoo_balance'],
+            date=options['date']['date']))
 
-        lines.append(self._add_title_line(options, _("Operations to Process"),
-                     level=1))
+        lines.append(self._add_title_line(
+            options, _("Operations to Process"), level=1))
 
         if report_data.get('not_reconciled_st_positive') or \
                 report_data.get('not_reconciled_st_negative'):
@@ -322,54 +323,54 @@ class account_bank_reconciliation_report(models.AbstractModel):
                                             Not Linked with a Bank \
                                             Statement Line"), level=2))
             for line in report_data['not_reconciled_pmts']:
-                    self.line_number += 1
-                    line_description = line_title = line.ref
-                    if line_description and len(line_description) > 70 \
-                            and not self.env.context.get('print_mode'):
-                        line_description = line.ref[:65] + '...'
-                    lines.append({
-                        'id': str(line.id),
-                        'name': line.name,
-                        'columns': [
-                            {'name': format_date(self.env, line.date)},
-                            {'name': line_description,
-                             'title': line_title, 'style': 'display:block;'},
-                            {'name': self.
-                             format_value(-self.
-                                          _get_amount(line, report_data),
-                                          report_data['line_currency'])},
-                        ],
-                        'class': 'o_account_reports_level3',
-                        'caret_options': 'account.payment',
-                    })
+                self.line_number += 1
+                line_description = line_title = line.ref
+                if line_description and len(line_description) > 70 \
+                        and not self.env.context.get('print_mode'):
+                    line_description = line.ref[:65] + '...'
+                lines.append({
+                    'id': str(line.id),
+                    'name': line.name,
+                    'columns': [
+                        {'name': format_date(self.env, line.date)},
+                        {'name': line_description,
+                         'title': line_title, 'style': 'display:block;'},
+                        {'name': self.
+                         format_value(-self.
+                                      _get_amount(line, report_data),
+                                      report_data['line_currency'])},
+                    ],
+                    'class': 'o_account_reports_level3',
+                    'caret_options': 'account.payment',
+                })
 
         if report_data.get('reconciled_pmts'):
             lines.append(self._add_title_line(options,
-                         _("Validated Payments Linked \
+                                              _("Validated Payments Linked \
                             with a Bank Statement Line"),
-                         level=2))
+                                              level=2))
             for line in report_data['reconciled_pmts']:
-                    self.line_number += 1
-                    line_description = line_title = line.ref
-                    if line_description and len(line_description) > \
-                            70 and not self.env.context.get('print_mode'):
-                        line_description = line.ref[:65] + '...'
-                    lines.append({
-                        'id': str(line.id),
-                        'name': line.name,
-                        'columns': [
-                            {'name': format_date(self.env, line.date)},
-                            {'name': line_description,
-                             'title': line_title,
-                             'style': 'display:block;'},
-                            {'name': self.
-                             format_value(-self._get_amount
-                                          (line, report_data),
-                                          report_data['line_currency'])},
-                        ],
-                        'class': 'o_account_reports_level3',
-                        'caret_options': 'account.payment',
-                    })
+                self.line_number += 1
+                line_description = line_title = line.ref
+                if line_description and len(line_description) > \
+                        70 and not self.env.context.get('print_mode'):
+                    line_description = line.ref[:65] + '...'
+                lines.append({
+                    'id': str(line.id),
+                    'name': line.name,
+                    'columns': [
+                        {'name': format_date(self.env, line.date)},
+                        {'name': line_description,
+                         'title': line_title,
+                         'style': 'display:block;'},
+                        {'name': self.
+                         format_value(-self._get_amount
+                                      (line, report_data),
+                                      report_data['line_currency'])},
+                    ],
+                    'class': 'o_account_reports_level3',
+                    'caret_options': 'account.payment',
+                })
 
         if self.env.user.company_id.totals_below_sections:
             lines.append(self._add_total_line(computed_stmt_balance))
