@@ -1,0 +1,24 @@
+<odoo>
+
+    <!-- Copyright (C) 2019 Open Source Integrators
+         License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+    <record id="view_res_partner_form_payment_method" model="ir.ui.view">
+        <field name="name">res.partner.form.payment.method</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='accounting_entries']" position="after">
+                <group name="payment-info" string="Payment Information">
+                    <field name="in_payment_journal_id" widget="selection"/>
+                    <field name="in_payment_method_id"
+                           domain="[('id', 'in', in_payment_journal_id and in_payment_journal_id.inbound_payment_method_ids[0][2])]"/>
+                    <field name="out_payment_journal_id" widget="selection"/>
+                    <field name="out_payment_method_id"
+                           domain="[('id', 'in', out_payment_journal_id and out_payment_journal_id.outbound_payment_method_ids[0][2])]"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
