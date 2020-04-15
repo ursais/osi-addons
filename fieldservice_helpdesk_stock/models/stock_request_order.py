@@ -24,7 +24,8 @@ class StockRequestOrder(models.Model):
                          ticket.fsm_location_id.id or False})
         return super().create(vals)
 
-    @api.onchange('direction', 'fsm_order_id', 'helpdesk_ticket_id')
+    @api.onchange('warehouse_id', 'direction', 'fsm_order_id',
+                  'helpdesk_ticket_id')
     def _onchange_location_id(self):
         super()._onchange_location_id()
         # FSM Order takes priority over Helpdesk Ticket
