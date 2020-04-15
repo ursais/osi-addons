@@ -40,7 +40,7 @@
         <field name="inherit_id" ref="stock_request_picking_type.view_stock_request_order_filter"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="helpdesk_ticket_id"/>
+                <field name="helpdesk_ticket_id" filter_domain="['|', ('helpdesk_ticket_id.name', 'ilike', self), ('helpdesk_ticket_id.id', 'ilike', self)]"/>
             </field>
             <filter name="state" position="before">
                 <filter string="Helpdesk Ticket" name="helpdesk_ticket_id" domain="[]" context="{'group_by': 'helpdesk_ticket_id'}"/>
