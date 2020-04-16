@@ -11,7 +11,7 @@ class StockRequestOrder(models.Model):
                                          ondelete='cascade', index=True,
                                          copy=False)
 
-    @api.onchange('direction', 'helpdesk_ticket_id')
+    @api.onchange('warehouse_id', 'direction', 'helpdesk_ticket_id')
     def _onchange_location_id(self):
         super()._onchange_location_id()
         if self.helpdesk_ticket_id:
