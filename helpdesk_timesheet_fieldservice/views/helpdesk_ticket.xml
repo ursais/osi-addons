@@ -9,7 +9,9 @@
         <field name="inherit_id"
                ref="helpdesk_fieldservice.helpdesk_ticket_view_service_request_form"/>
         <field name="arch" type="xml">
-            <notebook position="replace"/>
+            <xpath expr="//notebook/page/notebook" position="replace">
+                <field name="description" placeholder="Description of the ticket..."/>
+            </xpath>
         </field>
     </record>
 
