@@ -15,7 +15,8 @@
     ],
     'data': [
         'security/ir.model.access.csv',
-        'views/helpdesk_views.xml',
+        'views/helpdesk_ticket.xml',
+        'views/menu.xml',
         'views/stock_request.xml',
         'views/stock_request_order.xml',
     ],

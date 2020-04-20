@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
     <record id="view_helpdesk_ticket_form_inherit_stock" model="ir.ui.view">
@@ -43,7 +42,7 @@
                             <field name="inventory_location_id"
                                    domain="[('usage', 'in', ['internal', 'supplier', 'customer'])]"/>
                         </group>
-                        <group id="stock-right"></group>
+                        <group id="stock-right"/>
                     </group>
                     <field name="stock_request_ids" nolabel="1">
                         <tree editable="bottom">
@@ -75,28 +74,5 @@
             </xpath>
         </field>
     </record>
-
-    <menuitem id="menu_helpdesk_data"
-              name="Master Data"
-              parent="helpdesk.menu_helpdesk_root"
-              sequence="15"/>
-
-    <menuitem id="menu_helpdesk_product"
-              name="Products"
-              action="stock.product_template_action_product"
-              parent="menu_helpdesk_data"
-              sequence="50"/>
-
-    <menuitem id="menu_helpdesk_reporting_inventory"
-              name="Inventory"
-              action="stock.quantsact"
-              parent="helpdesk.helpdesk_ticket_report_menu_main"
-              sequence="50"/>
-
-    <menuitem id="menu_helpdesk_stock_request"
-              name="Stock Requests"
-              action="stock_request.action_stock_request_form"
-              parent="menu_helpdesk_data"
-              sequence="90"/>
 
 </odoo>
