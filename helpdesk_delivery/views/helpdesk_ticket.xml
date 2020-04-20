@@ -4,7 +4,7 @@
         <field name="name">helpdesk.ticket.form.stock</field>
         <field name="model">helpdesk.ticket</field>
         <field name="inherit_id"
-               ref="helpdesk.helpdesk_ticket_view_form"/>
+               ref="helpdesk_stock.view_helpdesk_ticket_form_inherit_stock"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@id='stock-right']" position="inside">
                 <field name="carrier_id"/>
