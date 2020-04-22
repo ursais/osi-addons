@@ -1,8 +1,8 @@
 # Copyright (C) 2019 - TODAY, Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
-from datetime import datetime, timedelta
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class StockRequest(models.Model):
@@ -44,32 +44,36 @@ class StockRequest(models.Model):
                 vals['helpdesk_ticket_id'])
             ticket.request_stage = 'draft'
             vals['warehouse_id'] = ticket.warehouse_id.id
-            val_date = vals['expected_date']
-            if not isinstance(vals['expected_date'], str):
-                val_date = datetime.strftime(vals['expected_date'],
-                                             '%Y-%m-%d %H:%M:%S')
-            val_date = datetime.strptime(val_date, '%Y-%m-%d %H:%M:%S')
             picking_type_id = self.env['stock.picking.type'].search([
                 ('code', '=', 'stock_request_order'),
-                ('warehouse_id', '=', vals['warehouse_id'])], limit=1).id
-            date_window_after = val_date - timedelta(hours=1)
-            order = self.env['stock.request.order'].search([
+                ('warehouse_id', '=', vals['warehouse_id'])], limit=1)
+            helpdesk_ticket = self.env['stock.request.order'].search([
                 ('helpdesk_ticket_id', '=', vals['helpdesk_ticket_id']),
                 ('warehouse_id', '=', vals['warehouse_id']),
-                ('picking_type_id', '=', picking_type_id),
+                ('picking_type_id', '=', picking_type_id.id),
                 ('direction', '=', vals['direction']),
-                ('expected_date', '>', date_window_after),
-                ('state', '=', 'draft')])
-            if order:
-                vals['expected_date'] = order.expected_date
-                vals['order_id'] = order.id
-            else:
+                ('state', '=', 'draft')], order="id asc")
+
+            # User created a new SRO Manually
+            if len(helpdesk_ticket) > 1:
+                raise UserError(_('There is already a Stock Request Order \
+                                  with the same Helpdesk Ticket and \
+                                  Warehouse that is in Draft state. Please \
+                                  add this Stock Request there. \
+                                  (%s)') % helpdesk_ticket[0].name)
+            # Made from an HT for the first time, create the SRO here
+            elif not helpdesk_ticket and vals.get('helpdesk_ticket_id'):
                 values = self.prepare_order_values(vals)
                 values.update({
-                    'picking_type_id': picking_type_id,
-                    'warehouse_id': vals['warehouse_id']})
+                    'picking_type_id': picking_type_id.id,
+                    'warehouse_id': vals['warehouse_id'],
+                    })
                 vals['order_id'] = self.env['stock.request.order'].\
                     create(values).id
+            # There is an SRO made from HT, assign here
+            elif len(helpdesk_ticket) == 1 and vals.get('helpdesk_ticket_id'):
+                vals['expected_date'] = helpdesk_ticket.expected_date
+                vals['order_id'] = helpdesk_ticket.id
         return super().create(vals)
 
     def _prepare_procurement_group_values(self):
