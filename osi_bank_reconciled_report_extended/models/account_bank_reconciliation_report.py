@@ -75,8 +75,7 @@ class AccountBankReconciliationReport(models.AbstractModel):
                         self.env.context['date_to']),
                        ('user_type_id.type', '=', 'liquidity'),
                        ('full_reconcile_id', '=', False),
-                       ('date', '<=', self.env.context['date_to']),
-                       ('date', '>=', self.env.context['date_from'])]
+                       ('date', '<=', self.env.context['date_to'])]
 
         companies_unreconciled_selection_domain = []
         for company in selected_companies:
