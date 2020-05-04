@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+    <t t-extend="WebClient.DebugManager.Global">
+        <t t-jquery="a[data-action='select_view']" t-operation="after">
+            <li>
+                <a href="#" class="dropdown-item" data-action="model_help">Model Help</a>
+            </li>
+            <li>
+                <a href="#" class="dropdown-item" data-action="fields_help">Fields Help</a>
+            </li>
+        </t>
+    </t>
+</templates>
