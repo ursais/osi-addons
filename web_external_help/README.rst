@@ -2,9 +2,9 @@
    :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
    :alt: License: AGPL-3
 
-===========================
+=================
 Model and Fields Help
-===========================
+=================
 
 This module allows users to define contextual help on models
 and fields.
