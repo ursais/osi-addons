@@ -1,5 +1,4 @@
-# Copyright 2019 - TODAY Serpent Consulting Services Pvt. Ltd.
-# (<http://www.serpentcs.com>)
+# Copyright (C) 2019 Serpent Consulting Services Pvt. Ltd.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     'name': "Web External Help",
