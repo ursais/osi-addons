@@ -1,9 +1,8 @@
 # Copyright (C) 2020 Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
-from odoo import models, fields, api, _
-from odoo.tools.misc import formatLang, format_date
+from odoo import api, models, _
 from odoo.osv import expression
+from odoo.tools.misc import format_date
 
 
 class AccountBankReconciliationReport(models.AbstractModel):
