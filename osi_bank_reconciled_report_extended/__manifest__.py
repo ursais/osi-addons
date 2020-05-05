@@ -1,9 +1,8 @@
 # Copyright (C) 2020 Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
 {
-    "name": "Bank Reconciled Report Extended",
-    "summary": "Provide Custom Date FROM and DATE TO range",
+    "name": "Bank Reconciled Report by Date Range",
+    "summary": "Allows custom date range filter in reconciled report",
     "version": "12.0.1.0.0",
     "author": "Open Source Integrators",
     "maintainer": "Open Source Integrators",
@@ -15,5 +14,6 @@
     ],
     "data": [
     ],
-    "application": False,
+    "development_status": "Beta",
+    "maintainers": ["osi-scampbell"],
 }
