@@ -1,7 +1,7 @@
 # See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, models
-from odoo.exceptions import ValidationError
+
 
 class FieldHelpLine(models.Model):
     _name = "field.help.line"
