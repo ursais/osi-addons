@@ -1,17 +1,19 @@
-odoo.define('web_external_help.ExternalHelp', function(require) {
+odoo.define('web_external_help.ExternalHelp', function (require) {
     "use strict";
 
     var FormRenderer = require('web.FormRenderer');
     var FormController = require('web.FormController');
     var ListController = require('web.ListController');
     var DebugManager = require('web.DebugManager');
-    var KanbanController = require('web.KanbanController')
+    var KanbanController = require('web.KanbanController');
 
     FormRenderer.include({
+
         /**
          * @override
          */
-        _renderTagLabel: function(node) {
+
+        _renderTagLabel: function (node) {
             var self = this;
             var $result = this._super.apply(this, arguments);
             var fieldName = node.tag === 'label' ? node.attrs.for : node.attrs.name;
@@ -23,10 +25,10 @@ odoo.define('web_external_help.ExternalHelp', function(require) {
                     ['field_name', '=', fieldName],
                     ['model', '=', self.state.model]
                 ],
-            }).done(function(data) {
+            }).done(function (data) {
                 if (data) {
-                    _.each(data, function(help) {
-                        if(help) {
+                    _.each(data, function (help) {
+                        if (help) {
                             var $after_elem = $('<button>', {
                                 class: 'fa fa fa-question-circle help_icon',
                                 for: self._getIDForLabel(fieldName),
@@ -44,7 +46,7 @@ odoo.define('web_external_help.ExternalHelp', function(require) {
 
                             $popup_div.append($popup_text);
 
-                            if (help.external_url){
+                            if (help.external_url) {
                                 var $popup_elem = $('<a>', {
                                     class: 'text-center',
                                     for: self._getIDForLabel(fieldName),
@@ -64,7 +66,10 @@ odoo.define('web_external_help.ExternalHelp', function(require) {
                                 placement: 'top',
                                 title: $result.text(),
                                 trigger: 'focus',
-                                delay: { "show": 0, "hide": 100 },
+                                delay: {
+                                    "show": 0,
+                                    "hide": 100
+                                },
                             };
                             $after_elem.popover(options);
                             $result.append($after_elem);
@@ -88,10 +93,10 @@ odoo.define('web_external_help.ExternalHelp', function(require) {
                     domain: [
                         ['model', '=', self.modelName]
                     ],
-                }).done(function(data) {
+                }).done(function (data) {
                     if (data) {
-                        _.each(data, function(help) {
-                            if(help) {
+                        _.each(data, function (help) {
+                            if (help) {
                                 var $after_elem = $('<button>', {
                                     class: 'fa fa fa-question-circle model_help',
                                     role: "button",
@@ -108,7 +113,7 @@ odoo.define('web_external_help.ExternalHelp', function(require) {
 
                                 $popup_div.append($popup_text);
 
-                                if(help.external_url){
+                                if (help.external_url) {
                                     var $popup_elem = $('<a>', {
                                         class: 'text-center',
                                         role: "button",
@@ -126,7 +131,10 @@ odoo.define('web_external_help.ExternalHelp', function(require) {
                                     placement: 'right',
                                     title: self.displayName,
                                     trigger: 'focus',
-                                    delay: { "show": 0, "hide": 100 },
+                                    delay: {
+                                        "show": 0,
+                                        "hide": 100
+                                    },
                                 };
                                 $after_elem.popover(options);
                                 self.$buttons.find('.model_help').remove();
@@ -150,10 +158,10 @@ odoo.define('web_external_help.ExternalHelp', function(require) {
                     domain: [
                         ['model', '=', self.modelName]
                     ],
-                }).done(function(data) {
+                }).done(function (data) {
                     if (data) {
-                        _.each(data, function(help) {
-                            if(help) {
+                        _.each(data, function (help) {
+                            if (help) {
                                 var $after_elem = $('<button>', {
                                     class: 'fa fa fa-question-circle model_help',
                                     role: "button",
@@ -170,7 +178,7 @@ odoo.define('web_external_help.ExternalHelp', function(require) {
 
                                 $popup_div.append($popup_text);
 
-                                if(help.external_url){
+                                if (help.external_url) {
                                     var $popup_elem = $('<a>', {
                                         class: 'text-center',
                                         role: "button",
@@ -188,7 +196,10 @@ odoo.define('web_external_help.ExternalHelp', function(require) {
                                     placement: 'right',
                                     title: self.displayName,
                                     trigger: 'focus',
-                                    delay: { "show": 0, "hide": 100 },
+                                    delay: {
+                                        "show": 0,
+                                        "hide": 100
+                                    },
                                 };
                                 $after_elem.popover(options);
                                 self.$buttons.find('.model_help').remove();
@@ -212,10 +223,10 @@ odoo.define('web_external_help.ExternalHelp', function(require) {
                     domain: [
                         ['model', '=', self.modelName]
                     ],
-                }).done(function(data) {
+                }).done(function (data) {
                     if (data) {
-                        _.each(data, function(help) {
-                            if(help) {
+                        _.each(data, function (help) {
+                            if (help) {
                                 var $after_elem = $('<button>', {
                                     class: 'fa fa fa-question-circle model_help',
                                     role: "button",
@@ -232,7 +243,7 @@ odoo.define('web_external_help.ExternalHelp', function(require) {
 
                                 $popup_div.append($popup_text);
 
-                                if(help.external_url){
+                                if (help.external_url) {
                                     var $popup_elem = $('<a>', {
                                         class: 'text-center',
                                         role: "button",
@@ -250,7 +261,10 @@ odoo.define('web_external_help.ExternalHelp', function(require) {
                                     placement: 'right',
                                     title: self.displayName,
                                     trigger: 'focus',
-                                    delay: { "show": 0, "hide": 100 },
+                                    delay: {
+                                        "show": 0,
+                                        "hide": 100
+                                    },
                                 };
                                 $after_elem.popover(options);
                                 self.$buttons.find('.model_help').remove();
@@ -271,14 +285,20 @@ odoo.define('web_external_help.ExternalHelp', function(require) {
             this._rpc({
                 model: 'model.external.help',
                 method: 'search',
-                args: [[['model', '=', model]]]
+                args: [
+                    [
+                        ['model', '=', model]
+                    ]
+                ]
             }).done(function (ids) {
                 self.do_action({
                     res_id: ids[0],
                     res_model: 'model.external.help',
                     name: 'Model Help',
                     type: 'ir.actions.act_window',
-                    views: [[false, 'form']],
+                    views: [
+                        [false, 'form']
+                    ],
                     view_mode: 'form',
                     target: 'current',
                 });
@@ -291,14 +311,20 @@ odoo.define('web_external_help.ExternalHelp', function(require) {
             this._rpc({
                 model: 'fields.external.help',
                 method: 'search',
-                args: [[['model', '=', model]]]
+                args: [
+                    [
+                        ['model', '=', model]
+                    ]
+                ]
             }).done(function (ids) {
                 self.do_action({
                     res_id: ids[0],
                     res_model: 'fields.external.help',
                     name: 'Fields Help',
                     type: 'ir.actions.act_window',
-                    views: [[false, 'form']],
+                    views: [
+                        [false, 'form']
+                    ],
                     view_mode: 'form',
                     target: 'current',
                 });
