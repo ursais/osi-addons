@@ -4,4 +4,6 @@
 from . import (
     helpdesk_ticket,
     stock_request,
+    stock_move,
+    stock_rule
 )
