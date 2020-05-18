@@ -7,7 +7,8 @@ from odoo import api, fields, models
 class HelpdeskTicket(models.Model):
     _inherit = 'helpdesk.ticket'
 
-    scope_id = fields.Many2one('helpdesk.scope', string="Scope")
+    scope_id = fields.Many2one('helpdesk.scope', string="Scope",
+                               track_visibility='onchange')
 
     @api.onchange('team_id')
     def onchange_team_id(self):
