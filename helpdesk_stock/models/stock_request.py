@@ -39,7 +39,7 @@ class StockRequest(models.Model):
 
     @api.model
     def create(self, vals):
-        if 'helpdesk_ticket_id' in vals and vals['helpdesk_ticket_id']:
+        if 'helpdesk_ticket_id' in vals and vals['helpdesk_ticket_id'] and not vals.get('order_id'):
             ticket = self.env['helpdesk.ticket'].browse(
                 vals['helpdesk_ticket_id'])
             ticket.request_stage = 'draft'
@@ -67,7 +67,7 @@ class StockRequest(models.Model):
                 values.update({
                     'picking_type_id': picking_type_id.id,
                     'warehouse_id': vals['warehouse_id'],
-                    })
+                })
                 vals['order_id'] = self.env['stock.request.order'].\
                     create(values).id
             # There is an SRO made from HT, assign here
