@@ -24,7 +24,7 @@ class PurchaseSubscription(models.Model):
         res = super()._prepare_invoice_line(line, fiscal_position)
         res.update({
             'analytic_segment_one_id':
-                self.order_id.analytic_segment_one_id.id,
+                line.analytic_segment_one_id.id,
             'analytic_segment_two_id':
-                self.order_id.analytic_segment_two_id.id})
+                line.analytic_segment_two_id.id})
         return res
