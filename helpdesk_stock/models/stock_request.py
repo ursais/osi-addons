@@ -39,7 +39,9 @@ class StockRequest(models.Model):
 
     @api.model
     def create(self, vals):
-        if 'helpdesk_ticket_id' in vals and vals['helpdesk_ticket_id'] and not vals.get('order_id'):
+        if 'helpdesk_ticket_id' in vals and \
+                vals.get('helpdesk_ticket_id', False) and \
+                not vals.get('order_id', False):
             ticket = self.env['helpdesk.ticket'].browse(
                 vals['helpdesk_ticket_id'])
             ticket.request_stage = 'draft'
