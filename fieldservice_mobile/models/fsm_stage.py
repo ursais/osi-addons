@@ -9,3 +9,5 @@ class FSMStage(models.Model):
     _inherit = 'fsm.stage'
 
     is_display_on_mobile = fields.Boolean('Is Display on Mobile?')
+    automation_action_id = fields.Many2one(
+        'base.automation', 'Automation Actions')
