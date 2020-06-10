@@ -8,6 +8,11 @@
             <field name="is_default" position="after">
                 <field name="is_display_on_mobile"/>
             </field>
+            <field name="description" position="after">
+                <group>
+                    <field name="automation_action_id"/>
+                </group>
+            </field>
         </field>
     </record>
     

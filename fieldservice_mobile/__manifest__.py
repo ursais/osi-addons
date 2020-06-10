@@ -12,6 +12,7 @@
     'author': 'Open Source Integrators',
     'website': 'https://github.com/ursais/osi-addons',
     'depends': [
+        'base_automation',
         'fieldservice',
     ],
     'data': [
