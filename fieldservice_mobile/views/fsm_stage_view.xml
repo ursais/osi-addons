@@ -6,7 +6,8 @@
         <field name="inherit_id" ref="fieldservice.fsm_stage_form_view"/>
         <field name="arch" type="xml">
             <field name="is_default" position="after">
-                <field name="is_display_on_mobile"/>
+                <field name="is_display_in_mobile"/>
+                <field name="is_display_in_odoo"/>
             </field>
             <field name="description" position="after">
                 <group>
