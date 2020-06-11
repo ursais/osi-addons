@@ -8,6 +8,7 @@ from odoo import fields, models
 class FSMStage(models.Model):
     _inherit = 'fsm.stage'
 
-    is_display_on_mobile = fields.Boolean('Is Display on Mobile?')
+    is_display_in_mobile = fields.Boolean('Display in Mobile')
+    is_display_in_odoo = fields.Boolean('Display in Odoo')
     automation_action_id = fields.Many2one(
         'base.automation', 'Automation Actions')
