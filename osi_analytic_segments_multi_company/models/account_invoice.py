@@ -1,6 +1,6 @@
 # Copyright (C) 2019 Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
-from odoo import api, models
+from odoo import models
 
 
 class AccountInvoice(models.Model):
@@ -17,7 +17,6 @@ class AccountInvoice(models.Model):
                     analytic_segment_one_id.id
                 line_id['analytic_segment_two_id'] = invoice_line_id.\
                     analytic_segment_two_id.id
-
 
     # Mutli-Company (account_bill_line_distribution)
     def get_to_lines(self, to_lines, line, company, invoice_id, is_invoice):
