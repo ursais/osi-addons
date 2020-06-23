@@ -3,4 +3,5 @@
 
 from . import (
     account_invoice,
+    account_move
 )
