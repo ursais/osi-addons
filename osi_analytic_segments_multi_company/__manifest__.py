@@ -12,7 +12,8 @@
     "category": "Analytic Accounting",
     "depends": [
         'osi_analytic_segments',
-        'account_bill_line_distribution'
+        'account_bill_line_distribution',
+        'account_move_multi_company'
     ],
     "data": [],
     "installable": True,
