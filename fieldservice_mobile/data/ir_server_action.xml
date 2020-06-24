@@ -1,0 +1,31 @@
+<odoo>
+
+    <record id="fsm_order_stage_started" model="ir.actions.server">
+        <field name="name">FSM Order Stage Started</field>
+        <field name="model_id" ref="fieldservice.model_fsm_order"/>
+        <field name="state">code</field>
+        <field name="code"></field>
+    </record>
+
+    <record id="fsm_order_stage_break" model="ir.actions.server">
+        <field name="name">FSM Order Stage Break</field>
+        <field name="model_id" ref="fieldservice.model_fsm_order"/>
+        <field name="state">code</field>
+        <field name="code"></field>
+    </record>
+
+    <record id="fsm_order_stage_resume" model="ir.actions.server">
+        <field name="name">FSM Order Stage Resume</field>
+        <field name="model_id" ref="fieldservice.model_fsm_order"/>
+        <field name="state">code</field>
+        <field name="code"></field>
+    </record>
+
+    <record id="fsm_order_stage_completed" model="ir.actions.server">
+        <field name="name">FSM Order Stage Completed</field>
+        <field name="model_id" ref="fieldservice.model_fsm_order"/>
+        <field name="state">code</field>
+        <field name="code"></field>
+    </record>
+
+</odoo>
