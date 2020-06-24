@@ -12,14 +12,18 @@
     'author': 'Open Source Integrators',
     'website': 'https://github.com/ursais/osi-addons',
     'depends': [
-        'base_automation',
-        'fieldservice',
+        'fieldservice_stage_server_action',
     ],
     'data': [
+        'security/ir.model.access.csv',
+        'data/ir_server_action.xml',
+        'data/base_automation.xml',
         'views/res_config_settings.xml',
         'views/fsm_stage_view.xml',
+        'views/fsm_order_view.xml',
     ],
     'development_status': 'Beta',
+    # 'pre_init_hook': 'pre_init_hook',
     'maintainers': [
         'wolfhall',
     ],

@@ -5,8 +5,9 @@
 from odoo import fields, models
 
 
-class FSMStage(models.Model):
-    _inherit = 'fsm.stage'
+class FSMOrder(models.Model):
+    _inherit = 'fsm.order'
 
-    is_display_in_mobile = fields.Boolean('Display in Mobile')
-    is_display_in_odoo = fields.Boolean('Display in Odoo')
+    fsm_stage_history_ids = fields.One2many(
+        'fsm.stage.history', 'order_id',
+        string='Stage History')
