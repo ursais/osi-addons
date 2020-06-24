@@ -9,12 +9,7 @@
                 <field name="is_display_in_mobile"/>
                 <field name="is_display_in_odoo"/>
             </field>
-            <field name="description" position="after">
-                <group>
-                    <field name="automation_action_id"/>
-                </group>
-            </field>
         </field>
     </record>
-    
+
 </odoo>
