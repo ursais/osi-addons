@@ -6,6 +6,7 @@
         <field name="trigger">on_write</field>
         <field name="active" eval="True"/>
         <field name="state">multi</field>
+        <field name="filter_domain">[["stage_id.sequence","=",50]]</field>
         <field name="child_ids" eval=
             "[(6, 0, [
                 ref('fsm_order_stage_started')])
@@ -18,6 +19,7 @@
         <field name="trigger">on_write</field>
         <field name="active" eval="True"/>
         <field name="state">multi</field>
+        <field name="filter_domain">[["stage_id.sequence","=",52]]</field>
         <field name="child_ids" eval=
             "[(6, 0, [
                 ref('fsm_order_stage_break')])
@@ -30,6 +32,7 @@
         <field name="trigger">on_write</field>
         <field name="active" eval="True"/>
         <field name="state">multi</field>
+        <field name="filter_domain">[["stage_id.sequence","=",53]]</field>
         <field name="child_ids" eval=
             "[(6, 0, [
                 ref('fsm_order_stage_resume')])
@@ -42,6 +45,7 @@
         <field name="trigger">on_write</field>
         <field name="active" eval="True"/>
         <field name="state">multi</field>
+        <field name="filter_domain">[["stage_id.sequence","=",60]]</field>
         <field name="child_ids" eval=
             "[(6, 0, [
                 ref('fsm_order_stage_completed')])
