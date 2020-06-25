@@ -11,12 +11,13 @@
                                           ('is_display_in_odoo', '=', True)]</attribute>
             </xpath>
             <xpath expr="//notebook/page[@name='execution_page']/group" position="after">
-                <group string="Satges History">
+                <group string="Stages History">
                     <field name="fsm_stage_history_ids"  nolabel="1">
                         <tree editable="bottom">
                             <field name="start_datetime" required="1"/>
                             <field name="stage_id" required="1"/>
-                            <field name="duration"/>
+                            <field name="duration" widget="float_time"/>
+                            <field name="total_duration" widget="float_time"/>
                         </tree>
                     </field>
                 </group>
