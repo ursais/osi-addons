@@ -21,3 +21,6 @@ class FsmStageHistory(models.Model):
     duration = fields.Float(
         string='Duration',
     )
+    total_duration = fields.Float(
+        string='Total Duration',
+    )
