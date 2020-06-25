@@ -5,12 +5,12 @@
         <field name="model_id" ref="fieldservice.model_fsm_order"/>
         <field name="trigger">on_write</field>
         <field name="active" eval="True"/>
-        <field name="state">multi</field>
         <field name="filter_domain">[["stage_id.sequence","=",50]]</field>
-        <field name="child_ids" eval=
-            "[(6, 0, [
-                ref('fsm_order_stage_started')])
-            ]"/>
+        <field name="state">code</field>
+        <field name="code">records.write(
+  {'date_start': datetime.datetime.now(),
+  'fsm_stage_history_ids': [(0, 0, {'start_datetime': datetime.datetime.now(), 'stage_id': records.stage_id.id, 'duration': 0.0, 'total_duration': 0.0
+  })]})</field>
     </record>
 
     <record id="fsm_order_break_stage_update" model="base.automation">
@@ -18,12 +18,16 @@
         <field name="model_id" ref="fieldservice.model_fsm_order"/>
         <field name="trigger">on_write</field>
         <field name="active" eval="True"/>
-        <field name="state">multi</field>
         <field name="filter_domain">[["stage_id.sequence","=",52]]</field>
-        <field name="child_ids" eval=
-            "[(6, 0, [
-                ref('fsm_order_stage_break')])
-            ]"/>
+        <field name="state">code</field>
+        <field name="code">stage_rec = env['fsm.stage.history'].search([('order_id', '=', records.id)], order='id desc', limit=1)
+start_date = stage_rec.start_datetime
+end_date = datetime.datetime.now()
+delta = end_date - start_date
+duration = round((delta.total_seconds() / 3600), 2)
+records.write(
+  {'fsm_stage_history_ids': [(0, 0, {'start_datetime': datetime.datetime.now(), 'stage_id': records.stage_id.id, 'duration': duration, 'total_duration': round((duration + stage_rec.total_duration), 2)
+  })]})</field>
     </record>
 
     <record id="fsm_order_resume_stage_update" model="base.automation">
@@ -31,12 +35,12 @@
         <field name="model_id" ref="fieldservice.model_fsm_order"/>
         <field name="trigger">on_write</field>
         <field name="active" eval="True"/>
-        <field name="state">multi</field>
         <field name="filter_domain">[["stage_id.sequence","=",53]]</field>
-        <field name="child_ids" eval=
-            "[(6, 0, [
-                ref('fsm_order_stage_resume')])
-            ]"/>
+        <field name="state">code</field>
+        <field name="code">stage_rec = env['fsm.stage.history'].search([('order_id', '=', records.id)], order='id desc', limit=1)
+records.write(
+  {'fsm_stage_history_ids': [(0, 0, {'start_datetime': datetime.datetime.now(), 'stage_id': records.stage_id.id, 'duration': 0.0, 'total_duration': round((records.duration + stage_rec.total_duration), 2)
+  })]})</field>
     </record>
 
     <record id="fsm_order_completed_stage_update" model="base.automation">
@@ -44,12 +48,17 @@
         <field name="model_id" ref="fieldservice.model_fsm_order"/>
         <field name="trigger">on_write</field>
         <field name="active" eval="True"/>
-        <field name="state">multi</field>
         <field name="filter_domain">[["stage_id.sequence","=",60]]</field>
-        <field name="child_ids" eval=
-            "[(6, 0, [
-                ref('fsm_order_stage_completed')])
-            ]"/>
+        <field name="state">code</field>
+        <field name="code">stage_rec = env['fsm.stage.history'].search([('order_id', '=', records.id)], order='id desc', limit=1)
+start_date = stage_rec.start_datetime
+end_date = datetime.datetime.now()
+delta = end_date - start_date
+duration = round((delta.total_seconds() / 3600), 2)
+records.write(
+  {'date_end': datetime.datetime.now(),
+    'fsm_stage_history_ids': [(0, 0, {'start_datetime': datetime.datetime.now(), 'stage_id': records.stage_id.id, 'duration': duration, 'total_duration': round((duration + stage_rec.total_duration), 2)
+  })]})</field>
     </record>
 
 </odoo>
