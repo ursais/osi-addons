@@ -16,7 +16,6 @@
     ],
     'data': [
         'security/ir.model.access.csv',
-        'data/ir_server_action.xml',
         'data/base_automation.xml',
         'views/res_config_settings.xml',
         'views/fsm_stage_view.xml',
