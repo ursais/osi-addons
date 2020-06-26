@@ -16,6 +16,8 @@ class FSMOrder(models.Model):
                 stage_rec = self.env['fsm.stage.history'].search(
                     [('order_id', '=', rec.id)], order='id desc', limit=1)
                 rec.duration = stage_rec.total_duration
+            elif not rec.date_end:
+                rec.duration = 0.0
         return res
 
     duration = fields.Float(
