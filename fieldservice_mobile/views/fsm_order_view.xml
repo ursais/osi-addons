@@ -15,7 +15,7 @@
             </field>
             <xpath expr="//notebook/page[@name='execution_page']/group" position="after">
                 <group string="Stages History">
-                    <field name="fsm_stage_history_ids" nolabel="1">
+                    <field name="fsm_stage_history_ids" nolabel="1" readonly="1">
                         <tree editable="bottom">
                             <field name="start_datetime" required="1"/>
                             <field name="stage_id" required="1"/>
