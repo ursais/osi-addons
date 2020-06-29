@@ -10,7 +10,7 @@
     'maintainer': 'Open Source Integrators',
     'website': 'https://www.opensourceintegrators.com',
     'depends': [
-        'web_google_maps',
+        'web_view_google_map',
         'fieldservice',
     ],
     'data': [
