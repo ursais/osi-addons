@@ -22,7 +22,6 @@
         'views/fsm_order_view.xml',
     ],
     'development_status': 'Beta',
-    # 'pre_init_hook': 'pre_init_hook',
     'maintainers': [
         'wolfhall',
     ],
