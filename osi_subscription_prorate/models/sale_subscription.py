@@ -12,6 +12,15 @@ DAY = datetime.timedelta(days=1)  # one day, to add to dates
 class SaleSubscription(models.Model):
     _inherit = 'sale.subscription'
 
+    def _get_invoicing_period(self):
+        """ Returns a relativedelta for invoicing time period """
+        self.ensure_one()
+        periods = {
+            'daily': 'days', 'weekly': 'weeks', 'monthly': 'months', 'yearly': 'years'}
+        invoicing_period = relativedelta(
+            **{periods[self.recurring_rule_type]: self.recurring_interval})
+        return invoicing_period
+
     def _prorate_invoice_line(self, line, fiscal_position, ratio, days):
         """
         Prepares the values for a prorated invoice line.
@@ -147,88 +156,55 @@ class SaleSubscriptionLine(models.Model):
         Calculate the last invoice billing period,
         and the billing period to consider for prorating.
 
+        End dates used in the computations
+        are expected to be the day after the period end.
+
         Returns a dict with the calculated values.
+
+        - period_from and period_to: to use for variable consumption in previous period
+        - bill_from, bill_to: to use for the fixed term invoicing
         """
+        def greatest_date(*args):
+            return max(x for x in args if x)
+
+        # Computation is done before the invoice is created
+        # so the invoice date will be the recirruing next date
         subscription = self.analytic_account_id
-        line_start_date = self and self.start_date
-        # Period of the last invoice
-        if subscription:
-            period_from = subscription.recurring_next_date - relativedelta(months=1)
-            period_to = subscription.recurring_next_date
-            period_delta = period_to - period_from
-            # Period to prorate
-            if date_from:
-                sign = +1
-                # bill_from = date_from
-                # bill_to = date_to or period_to
-            else:
-                sign = -1
-                # bill_from = (date_to or line_start_date or period_from) + DAY
-                # bill_to = period_to
-            # bill_from = max(bill_from, period_from)
-            # bill_to = min(bill_to, period_to)
-            # bill_delta = bill_to - bill_from + DAY
-            # bill_days = bill_delta.days * sign
-            days = period_delta.days or 1
-            bill_to = subscription.recurring_next_date
-            bill_from = fields.Date.today()
-            bill_delta = bill_to - bill_from
-            bill_days = bill_delta.days * sign
+        this_invoice_date = (
+            subscription.recurring_next_date or subscription.date_start)
+        last_invoice_date = subscription.recurring_last_date
+        next_invoice_date = this_invoice_date + subscription._get_invoicing_period()
+
+        # Period of the last invoice, to use for variable invoicing
+        period_from = last_invoice_date
+        period_to = this_invoice_date
+        # Full period to use as reference for the prorating
+        bill_period_from = this_invoice_date
+        bill_period_to = next_invoice_date
+        bill_period_days = (bill_period_to - bill_period_from).days
+        # Period to prorate
+        if date_to and not date_from:
+            # End of a service in the middle of the billing period
+            # Reverse the already billed period
+            bill_from = bill_period_from
+            bill_to = date_to
+            bill_days = -(bill_to - bill_from).days
         else:
-            # period_from = period_from
-            # period_to = period_to
-            # period_delta = period_to - period_from
-            # # Period to prorate
-            # if date_from:
-            #     sign = +1
-            #     # bill_from = date_from
-            #     # bill_to = date_to or period_to
-            # else:
-            #     sign = -1
-            #     # bill_from = (date_to or line_start_date or period_from) + DAY
-            #     # bill_to = period_to
-            # # bill_from = max(bill_from, period_from)
-            # # bill_to = min(bill_to, period_to)
-            # # bill_delta = bill_to - bill_from + DAY
-            # # bill_days = bill_delta.days * sign
-            # days = period_delta.days or 1
-            # bill_to = subscription.recurring_next_date
-            # bill_from = date_from
-            # bill_delta = bill_to - bill_from
-            # bill_days = bill_delta.days * sign
-            subscription = self.analytic_account_id
-            line_start_date = self and self.start_date
-            # Period of the last invoice
-            period_from = (
-                period_from or
-                (subscription and subscription.recurring_last_date) or
-                (subscription and subscription.date_start))
-            period_to = (
-                period_to or
-                (subscription and subscription.date) or  # End Date
-                (subscription and subscription.recurring_next_date - DAY))
-            period_delta = period_to - period_from + DAY
-            # Period to prorate
-            if date_from:
-                sign = +1
-                bill_from = date_from
-                bill_to = date_to or period_to
-            else:
-                sign = -1
-                bill_from = (date_to or line_start_date or period_from) + DAY
-                bill_to = period_to
-            bill_from = max(bill_from, period_from)
-            bill_to = min(bill_to, period_to)
-            bill_delta = bill_to - bill_from + DAY
-            bill_days = bill_delta.days * sign
+            # Start of a service in the middle of the billing period
+            # Invoice the period up to the next billing date (or end of service)
+            bill_from = date_from
+            bill_to = (date_to + DAY) if date_to else bill_period_to
+            bill_days = +(bill_to - bill_from).days
+        bill_ratio = bill_days / bill_period_days if bill_period_days else 1
         return {
+            # Variable invoicing during previous period
             'period_from': period_from,
-            'period_to': period_to,
-            'period_days': period_delta.days,
+            'period_to': period_to - DAY,
+            # Fixed service
             'bill_from': bill_from,
-            'bill_to': bill_to,
+            'bill_to': bill_to - DAY,
             'bill_days': bill_days,
-            'ratio': float(bill_days) / period_delta.days,
+            'ratio': bill_ratio,
         }
 
     @api.model
@@ -236,16 +212,11 @@ class SaleSubscriptionLine(models.Model):
         """ Adding a new line creates an immediate prorated invoice for it """
         line = super().create(vals)
         subscription = line.analytic_account_id
-        is_in_progress = subscription.stage_id.in_progress
-        has_recurring_last_date = bool(subscription.recurring_last_date)
-        # if is_in_progress and has_recurring_last_date
-        if is_in_progress:
+        if subscription.stage_id.in_progress:
             start_date = fields.Date.context_today(self)
             subscription._prorate_create_invoice(
                 line, date_from=start_date)
-            # line.start_date = start_date
-            # Testing
-            line.start_date = start_date - relativedelta(days=10)
+            line.start_date = start_date
         return line
 
     def unlink(self):
@@ -256,8 +227,6 @@ class SaleSubscriptionLine(models.Model):
         for line in self:
             subscription = line.analytic_account_id
             is_in_progress = subscription.stage_id.in_progress
-            has_recurring_last_date = bool(subscription.recurring_last_date)
-            # if is_in_progress and has_recurring_last_date:
             if is_in_progress:
                 end_date = fields.Date.context_today(self) - relativedelta(days=1)
                 subscription._prorate_create_invoice(
