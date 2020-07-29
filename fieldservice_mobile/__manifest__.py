@@ -22,6 +22,10 @@
         'fieldservice_substatus',
         'stock_request',
         'fieldservice_sign',
+        'account_reports_followup',
+        # Kudu custom addons
+        'purchase_subscription',
+        'account_banking_mandate'
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -29,7 +33,6 @@
         'views/res_config_settings.xml',
         'views/fsm_stage_view.xml',
         'views/fsm_order_view.xml',
-        'views/res_users_view.xml',
     ],
     'development_status': 'Beta',
     'maintainers': [
