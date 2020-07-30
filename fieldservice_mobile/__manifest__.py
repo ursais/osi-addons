@@ -23,6 +23,10 @@
         'stock_request',
         'fieldservice_sign',
         'account_reports_followup',
+        'documents',
+        'sale_commission',
+        'contract',
+        'crm',
         # Kudu custom addons
         'purchase_subscription',
         'account_banking_mandate'
