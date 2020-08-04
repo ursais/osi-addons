@@ -272,41 +272,48 @@ class TestAccountMove(common.TransactionCase):
 
         payroll_move.post()
 
-        company_one_move = self.env['account.move'].sudo(self.account_user.id).\
-            search([('journal_id', '=',
-                     self.due_to_due_from_journal_company_one.id),
-                    ('company_id', '=', self.company_one.id)])
+        company_one_move = \
+            self.env['account.move'].sudo(
+                self.account_user.id).search(
+                [('journal_id', '=',
+                  self.due_to_due_from_journal_company_one.id),
+                 ('company_id', '=', self.company_one.id)])
 
+        self.assertEqual(
+            company_one_move.line_ids[0].analytic_segment_one_id.id,
+            company_one_move.line_ids[1].analytic_segment_one_id.id,
+            self.seg_one_b.id)
 
-        self.assertEqual(company_one_move.line_ids[0].analytic_segment_one_id.id,
-                         company_one_move.line_ids[1].analytic_segment_one_id.id,
-                         self.seg_one_b.id)
+        self.assertEqual(
+            company_one_move.line_ids[2].analytic_segment_one_id.id,
+            company_one_move.line_ids[3].analytic_segment_one_id.id,
+            self.seg_one_c.id)
 
-        self.assertEqual(company_one_move.line_ids[2].analytic_segment_one_id.id,
-                         company_one_move.line_ids[3].analytic_segment_one_id.id,
-                         self.seg_one_c.id)
-        
-        self.assertEqual(company_one_move.line_ids[0].analytic_segment_two_id.id,
-                         company_one_move.line_ids[1].analytic_segment_two_id.id,
-                         self.seg_two_b.id)
+        self.assertEqual(
+            company_one_move.line_ids[0].analytic_segment_two_id.id,
+            company_one_move.line_ids[1].analytic_segment_two_id.id,
+            self.seg_two_b.id)
 
-        self.assertEqual(company_one_move.line_ids[2].analytic_segment_two_id.id,
-                         company_one_move.line_ids[3].analytic_segment_two_id.id,
-                         self.seg_two_c.id)
+        self.assertEqual(
+            company_one_move.line_ids[2].analytic_segment_two_id.id,
+            company_one_move.line_ids[3].analytic_segment_two_id.id,
+            self.seg_two_c.id)
 
         company_two_move =\
             self.env['account.move'].sudo(self.account_user.id).\
-                search([('journal_id', '=',
-                         self.due_to_due_from_journal_company_two.id),
-                       ('company_id', '=', self.company_two.id)])
+            search([('journal_id', '=',
+                     self.due_to_due_from_journal_company_two.id),
+                    ('company_id', '=', self.company_two.id)])
 
-        self.assertEqual(company_two_move.line_ids[0].analytic_segment_one_id.id,
-                         company_two_move.line_ids[1].analytic_segment_one_id.id,
-                         self.seg_one_a.id)
+        self.assertEqual(
+            company_two_move.line_ids[0].analytic_segment_one_id.id,
+            company_two_move.line_ids[1].analytic_segment_one_id.id,
+            self.seg_one_a.id)
 
-        self.assertEqual(company_two_move.line_ids[0].analytic_segment_two_id.id,
-                         company_two_move.line_ids[1].analytic_segment_two_id.id,
-                         self.seg_two_a.id)
+        self.assertEqual(
+            company_two_move.line_ids[0].analytic_segment_two_id.id,
+            company_two_move.line_ids[1].analytic_segment_two_id.id,
+            self.seg_two_a.id)
 
     def test_distribution_segments(self):
         """ Returns an open invoice """
