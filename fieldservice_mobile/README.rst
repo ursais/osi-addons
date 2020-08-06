@@ -25,8 +25,10 @@ If you want to follow Field Service Dynamic Workflow:
 * Select a server action based on Stages.
 
 * Manage domain on Automated Actions based on Stage sequence.
+
 For Example:- If the Started stage sequence is 6.
-* Go to Settings > Automated Actions > 	FSM Order Started Stage Update >Apply on > [["stage_id.sequence","=",6]]
+
+* Go to Settings > Automated Actions > FSM Order Started Stage Update > Apply on > [["stage_id.sequence","=",6]]
 
 Credits
 =======
