@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Sequences-->
+    <record id="helpdesk_scope_seq" model="ir.sequence">
+      <field name="name">Helpdesk Scope Sequence</field>
+      <field name="code">helpdesk.scope</field>
+      <field name="prefix">0</field>
+      <field name="padding">1</field>
+    </record>
 
     <!-- Helpdesk Scope -->
     <record id="helpdesk_scope_tree_view" model="ir.ui.view">
