@@ -137,10 +137,10 @@ class ReportPrintCheck(models.Model):
             supplier_info = invoice_payment_reconcile.supplier_invoice_number
 
         else:
-            purchase_ref = (invoice_payment_reconcile.debit_move_id.debit and invoice_payment_reconcile.credit_move_id.purchase_ref) or (invoice_payment_reconcile.credit_move_id.credit and invoice_payment_reconcile.debit_move_id.purchase_ref)
+            purchase_ref = (invoice_payment_reconcile[0].debit_move_id.debit and invoice_payment_reconcile[0].credit_move_id.purchase_ref) or (invoice_payment_reconcile[0].credit_move_id.credit and invoice_payment_reconcile[0].debit_move_id.purchase_ref)
             if invoice.type in ['out_refund'] and not purchase_ref:
-                purchase_ref = invoice_payment_reconcile.credit_move_id.purchase_ref
-            supplier_info = (invoice_payment_reconcile.debit_move_id.debit and invoice_payment_reconcile.credit_move_id.supplier_invoice_number) or (invoice_payment_reconcile.credit_move_id.credit and invoice_payment_reconcile.debit_move_id.supplier_invoice_number)
+                purchase_ref = invoice_payment_reconcile[0].credit_move_id.purchase_ref
+            supplier_info = (invoice_payment_reconcile[0].debit_move_id.debit and invoice_payment_reconcile[0].credit_move_id.supplier_invoice_number) or (invoice_payment_reconcile[0].credit_move_id.credit and invoice_payment_reconcile[0].debit_move_id.supplier_invoice_number)
 
             if self.currency_id != self.journal_id.company_id.currency_id:
                 amount_paid = abs(sum(invoice_payment_reconcile.mapped('amount_currency')))
