@@ -10,12 +10,8 @@
     "author": "Open Source Integrators, Brian McMaster",
     "category": "Sales",
     "website": "https://github.com/ursais/osi-addons",
-    "depends": [
-        "sale_subscription",
-    ],
-    "data": [
-        "data/sale_subscription_data.xml",
-        "views/sale_subscription.xml",
-    ],
+    "depends": ["sale_subscription"],
+    "data": ["data/sale_subscription_data.xml", "views/sale_subscription.xml"],
+    "maintainers": ["max3903"],
     "installable": True,
 }
