@@ -1,5 +1,5 @@
 <odoo>
-   <record id="subscription_suspension_form_view" model="ir.ui.view">
+   <record id="subscription_suspension_form_view_inherit_susp" model="ir.ui.view">
         <field name="name">subscription.suspension.form.view</field>
         <field name="model">sale.subscription</field>
         <field name="inherit_id"

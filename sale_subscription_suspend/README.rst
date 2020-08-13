@@ -33,3 +33,4 @@ Contributors
 
 * Open Source Integrators <https://www.opensourceintegrators.com>
 * Brian McMaster <brian@mcmpest.com>
+* Serpent Consulting Services Pvt. Ltd. <support@serpentcs.com>
