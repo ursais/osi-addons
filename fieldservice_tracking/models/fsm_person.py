@@ -7,10 +7,11 @@ from odoo import api, fields, models
 class FsmPerson(models.Model):
     _inherit = 'fsm.person'
 
-    track_lat = fields.Float('Last known latitude')
-    track_long = fields.Float('Last known longitude')
+    worker_allow_tracking = fields.Boolean('Worker Allow Tracking')
+    track_lat = fields.Float('Last known latitude', digits=(16, 5))
+    track_long = fields.Float('Last known longitude', digits=(16, 5))
     # track_shape = fields.Char('Last known location')
-    loc_rad = fields.Float('Last known location accuracy radius')
+    loc_rad = fields.Float('Last known location accuracy radius', digits=(16, 5))
     loc_time = fields.Datetime('Last location ping')
     rad_uom = fields.Many2one('uom.uom', 'Unit of measure')
 
