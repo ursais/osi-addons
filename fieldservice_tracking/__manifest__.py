@@ -10,12 +10,12 @@
     'author': 'Open Source Integrators',
     'website': 'https://github.com/ursais/osi-addons',
     'depends': [
-        'fieldservice',
         'fieldservice_substatus',
     ],
     'data': [
         'security/fsm_tracking_group.xml',
         'views/fsm_person_view.xml',
+        'views/fsm_stage_view.xml',
     ],
     'installable': True,
     'development_status': 'Beta',
