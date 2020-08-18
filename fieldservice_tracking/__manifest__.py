@@ -11,9 +11,11 @@
     'website': 'https://github.com/ursais/osi-addons',
     'depends': [
         'fieldservice_substatus',
+        'uom',
     ],
     'data': [
         'security/fsm_tracking_group.xml',
+        'security/ir.model.access.csv',
         'views/fsm_person_view.xml',
         'views/fsm_stage_view.xml',
     ],

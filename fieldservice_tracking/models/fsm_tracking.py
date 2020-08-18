@@ -6,12 +6,13 @@ from odoo import fields, models
 
 class FsmTracking(models.Model):
     _name = 'fsm.tracking'
+    _description = 'Fsm Tracking'
 
     partner_id = fields.Many2one('fsm.person')
     order_id = fields.Many2one('fsm.order')
-    lat = fields.Float('Latitude')
-    long = fields.Float('Longitude')
-    shape = fields.Char('Shape')
+    latitude = fields.Float('Latitude')
+    longitude = fields.Float('Longitude')
+    # shape = fields.Char('Shape')
     timestamp = fields.Datetime()
     accuracy = fields.Float('Accuracy Radius')
     route_stage = fields.Char('Route stage')

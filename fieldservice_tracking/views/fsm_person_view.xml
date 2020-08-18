@@ -19,7 +19,7 @@
                             <field name="loc_rad"/>
                         </group>
                     </group>
-                    <group col="4" groups="fieldservice_tracking.fsm_tracking_dispatcher">
+                    <group col="4" groups="fieldservice_tracking.group_fsm_tracking_dispatcher">
                         <field name="match_rad"/>
                         <field name="track_intv_coarse"/>
                         <field name="fence_rad"/>
