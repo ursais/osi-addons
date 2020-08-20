@@ -153,6 +153,8 @@ class ReportPrintCheck(models.Model):
             discount_amt = invoice.discount_taken
         else:
             discount_amt = 0
+        
+        amount_past_paid = invoice.amount_total - amount_residual - amount_paid + discount_amt
 
         if isinstance(supplier_info, tuple) or isinstance(supplier_info, list):
             supplier_info = supplier_info[0]
@@ -163,6 +165,7 @@ class ReportPrintCheck(models.Model):
             'number': invoice.reference and invoice.number + ' - ' + invoice.reference or invoice.number,
             'amount_total': formatLang(self.env, invoice_sign * invoice.amount_total, currency_obj=invoice.currency_id),
             'amount_residual': formatLang(self.env, amount_residual, currency_obj=invoice.currency_id) if amount_residual*10**4 != 0 else '-',
+            'amount_past_paid': formatLang(self.env, invoice_sign * (amount_past_paid), currency_obj=invoice.currency_id),
             'amount_paid': formatLang(self.env, invoice_sign * (amount_paid - discount_amt), currency_obj=invoice.currency_id),
             'discount': formatLang(self.env, invoice_sign * discount_amt, currency_obj=invoice.currency_id),
             'currency': invoice.currency_id,

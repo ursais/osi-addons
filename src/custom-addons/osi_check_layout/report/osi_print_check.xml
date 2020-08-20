@@ -51,8 +51,10 @@
                 <th class="text-left">PO Ref#</th>
                 <th class="text-left">Invoice Number</th>
                 <th class="text-right">Inv. Amount</th>
+                <th class="text-right">Past Payments</th>
                 <th class="text-right">Discount</th>
                 <th class="text-right">Payment</th>
+                <th class="text-right">Balance Due</th>
             </tr></thead>
             <tbody>
                 <t t-foreach="page['stub_lines']" t-as="stub_line">
@@ -66,8 +68,12 @@
                         <td class="text-right">
                             <t t-esc="stub_line['amount_total']"/>
                         </td>
+                        <td class="text-right">
+                            <t t-esc="stub_line['amount_past_paid']"/>
+                        </td>
                         <td class="text-right"><t t-esc="stub_line['discount']"/></td>
                         <td class="text-right"><t t-esc="stub_line['amount_paid']"/></td>
+                        <td class="text-right"><t t-esc="stub_line['amount_residual']"/></td>
                     </tr></t>
                 </t>
                 <tr t-if="page['stub_cropped']"><td colspan="6" class="text-right">...</td></tr>
@@ -96,8 +102,10 @@
                 <th class="text-left">PO Ref#</th>
                 <th class="text-left">Invoice Number</th>
                 <th class="text-right">Inv. Amount</th>
+                <th class="text-right">Past Payments</th>
                 <th class="text-right">Discount</th>
                 <th class="text-right">Payment</th>
+                <th class="text-right">Balance Due</th>
             </tr></thead>
             <tbody>
                 <t t-foreach="page['stub_lines']" t-as="stub_line">
@@ -111,8 +119,12 @@
                         <td class="text-right">
                             <t t-esc="stub_line['amount_total']"/>
                         </td>
+                        <td class="text-right">
+                            <t t-esc="stub_line['amount_past_paid']"/>
+                        </td>
                         <td class="text-right"><t t-esc="stub_line['discount']"/></td>
                         <td class="text-right"><t t-esc="stub_line['amount_paid']"/></td>
+                        <td class="text-right"><t t-esc="stub_line['amount_residual']"/></td>
                     </tr></t>
                 </t>
                 <tr t-if="page['stub_cropped']"><td colspan="6" class="text-right">...</td></tr>
