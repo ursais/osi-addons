@@ -6,7 +6,7 @@ from odoo import http, _
 from odoo.http import request
 from odoo.tools import consteq, plaintext2html
 from odoo.exceptions import AccessError, MissingError, UserError
-from odoo.addons.website_helpdesk_search.controllers.portal import CustomerPortal
+from .portal import CustomerPortal
 from odoo.addons.portal.controllers.mail import PortalChatter
 
 
