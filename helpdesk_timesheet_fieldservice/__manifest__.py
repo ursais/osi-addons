@@ -3,7 +3,7 @@
 {
     'name': 'Helpdesk Timesheet - Field Service',
     'summary': 'Create FSM Orders and Timesheet from Helpdesk Ticket',
-    'version': '12.0.1.0.0',
+    'version': '12.0.1.1.0',
     'license': 'LGPL-3',
     'author': 'Open Source Integrators',
     'category': 'Helpdesk',
