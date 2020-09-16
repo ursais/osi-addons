@@ -1,5 +1,4 @@
 <odoo>
-
     <record id="sale_subscription_view_form_inherit_openshift" model="ir.ui.view">
         <field name="name">sale.subscription.form.view</field>
         <field name="model">sale.subscription</field>
@@ -15,5 +14,4 @@
             </xpath>
         </field>
     </record>
-
 </odoo>
