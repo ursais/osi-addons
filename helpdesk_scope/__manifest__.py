@@ -3,7 +3,7 @@
 {
     'name': 'Helpdesk Scope',
     'summary': 'Improve Helpdesk by assigneing scope',
-    'version': '12.0.1.0.0',
+    'version': '12.0.1.1.0',
     'category': 'Helpdesk',
     'author': 'Open Source Integrators',
     'website': 'https://github.com/ursais/osi-addons',
