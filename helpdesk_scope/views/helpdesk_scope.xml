@@ -18,6 +18,7 @@
                 <field name="name"/>
                 <field name="description"/>
                 <field name="team_ids" widget="many2many_tags"/>
+                <field name="active"/>
             </tree>
         </field>
     </record>
