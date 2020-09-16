@@ -1,88 +1,72 @@
 <odoo>
-
     <!-- Instance is available -->
     <record id="email_kudu_instance_available" model="mail.template">
         <field name="name">Subscription: Instance Available</field>
         <field name="model_id" ref="sale_subscription.model_sale_subscription_line"/>
         <field name="subject">Kudu instance ${object.instance_name}</field>
-        <field name="email_from">${(object.user_id.email_formatted or object.company_id.email or user.email_formatted) | safe}</field>
-        <field name="email_to">${object.partner_id.email_formatted | safe}</field>
+        <field name="email_from">${(object.analytic_account_id.user_id.email_formatted or object.analytic_account_id.company_id.email or user.email_formatted) | safe}</field>
+        <field name="email_to">${object.analytic_account_id.partner_id.email_formatted | safe}</field>
         <field name="body_html">
             <![CDATA[<div style="font-family: 'Lucica Grande',
                 Ubuntu, Arial, Verdana, sans-serif; font-size: 14px;
-                color: rgb(34, 34, 34); background-color: #FFF;">
-                <p>Your Kudu instance ${object.instance_name} is available!
-                </p>
-            ]]>
+                color: rgb(34, 34, 34); background-color: #FFF;"><p>Your Kudu instance ${object.instance_name} is available!
+                </p>]]>
         </field>
     </record>
-
     <!-- Instance will be closed in 10 days-->
     <record id="email_kudu_instance_will_be_closed" model="mail.template">
         <field name="name">Subscription: Instance will be closed in 10 days</field>
         <field name="model_id" ref="sale_subscription.model_sale_subscription_line"/>
         <field name="subject">Kudu instance ${object.instance_name}</field>
-        <field name="email_from">${(object.user_id.email_formatted or object.company_id.email or user.email_formatted) | safe}</field>
-        <field name="email_to">${object.partner_id.email_formatted | safe}</field>
+        <field name="email_from">${(object.analytic_account_id.user_id.email_formatted or object.analytic_account_id.company_id.email or user.email_formatted) | safe}</field>
+        <field name="email_to">${object.analytic_account_id.partner_id.email_formatted | safe}</field>
         <field name="body_html">
             <![CDATA[<div style="font-family: 'Lucica Grande',
                 Ubuntu, Arial, Verdana, sans-serif; font-size: 14px;
-                color: rgb(34, 34, 34); background-color: #FFF;">
-                <p>Your Kudu instance ${object.instance_name} will be closed in 10 days
-                </p>
-            ]]>
+                color: rgb(34, 34, 34); background-color: #FFF;"><p>Your Kudu instance ${object.instance_name} will be closed in 10 days
+                </p>]]>
         </field>
     </record>
-
     <!-- Instance has been suspended. -->
     <record id="email_kudu_instance_has_been_suspended" model="mail.template">
         <field name="name">Subscription: Instance has been suspended</field>
         <field name="model_id" ref="sale_subscription.model_sale_subscription_line"/>
         <field name="subject">Kudu instance ${object.instance_name}</field>
-        <field name="email_from">${(object.user_id.email_formatted or object.company_id.email or user.email_formatted) | safe}</field>
-        <field name="email_to">${object.partner_id.email_formatted | safe}</field>
+        <field name="email_from">${(object.analytic_account_id.user_id.email_formatted or object.analytic_account_id.company_id.email or user.email_formatted) | safe}</field>
+        <field name="email_to">${object.analytic_account_id.partner_id.email_formatted | safe}</field>
         <field name="body_html">
             <![CDATA[<div style="font-family: 'Lucica Grande',
                 Ubuntu, Arial, Verdana, sans-serif; font-size: 14px;
-                color: rgb(34, 34, 34); background-color: #FFF;">
-                <p>Your Kudu instance ${object.instance_name} has been suspended.
-                </p>
-            ]]>
+                color: rgb(34, 34, 34); background-color: #FFF;"><p>Your Kudu instance ${object.instance_name} has been suspended.
+                </p>]]>
         </field>
     </record>
-
     <!-- Instance has been resumed. -->
     <record id="email_kudu_instance_has_been_resumed" model="mail.template">
         <field name="name">Subscription: Instance has been resumed</field>
         <field name="model_id" ref="sale_subscription.model_sale_subscription_line"/>
         <field name="subject">Kudu instance ${object.instance_name}</field>
-        <field name="email_from">${(object.user_id.email_formatted or object.company_id.email or user.email_formatted) | safe}</field>
-        <field name="email_to">${object.partner_id.email_formatted | safe}</field>
+        <field name="email_from">${(object.analytic_account_id.user_id.email_formatted or object.analytic_account_id.company_id.email or user.email_formatted) | safe}</field>
+        <field name="email_to">${object.analytic_account_id.partner_id.email_formatted | safe}</field>
         <field name="body_html">
             <![CDATA[<div style="font-family: 'Lucica Grande',
                 Ubuntu, Arial, Verdana, sans-serif; font-size: 14px;
-                color: rgb(34, 34, 34); background-color: #FFF;">
-                <p>Your Kudu instance ${object.instance_name} has been resumed.
-                </p>
-            ]]>
+                color: rgb(34, 34, 34); background-color: #FFF;"><p>Your Kudu instance ${object.instance_name} has been resumed.
+                </p>]]>
         </field>
     </record>
-
     <!-- Instance has been closed. -->
     <record id="email_kudu_instance_has_been_closed" model="mail.template">
         <field name="name">Subscription: Instance has been closed.</field>
         <field name="model_id" ref="sale_subscription.model_sale_subscription_line"/>
         <field name="subject">Kudu instance ${object.instance_name}</field>
-        <field name="email_from">${(object.user_id.email_formatted or object.company_id.email or user.email_formatted) | safe}</field>
-        <field name="email_to">${object.partner_id.email_formatted | safe}</field>
+        <field name="email_from">${(object.analytic_account_id.user_id.email_formatted or object.analytic_account_id.company_id.email or user.email_formatted) | safe}</field>
+        <field name="email_to">${object.analytic_account_id.partner_id.email_formatted | safe}</field>
         <field name="body_html">
             <![CDATA[<div style="font-family: 'Lucica Grande',
                 Ubuntu, Arial, Verdana, sans-serif; font-size: 14px;
-                color: rgb(34, 34, 34); background-color: #FFF;">
-                <p>Your Kudu instance ${object.instance_name} has been closed.
-                </p>
-            ]]>
+                color: rgb(34, 34, 34); background-color: #FFF;"><p>Your Kudu instance ${object.instance_name} has been closed.
+                </p>]]>
         </field>
     </record>
-
 </odoo>

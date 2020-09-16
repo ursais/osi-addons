@@ -1,5 +1,4 @@
 <odoo>
-
     <record id="product_template_view_form_recurring_inherit_openshift" model="ir.ui.view">
         <field name="name">product.template.product.form</field>
         <field name="model">product.template</field>
@@ -8,8 +7,8 @@
             <field name="subscription_template_id" position="after">
                 <field name="openshift_backend_id"/>
                 <field name="operator"/>
+                <field name="is_subscription"/>
             </field>
         </field>
     </record>
-
 </odoo>

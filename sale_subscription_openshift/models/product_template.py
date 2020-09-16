@@ -13,3 +13,4 @@ class ProductTemplate(models.Model):
         help="""OpenShift operator used to create an instance from
         when the product is sold""",
     )
+    is_subscription = fields.Boolean(string="IS Subscription")
