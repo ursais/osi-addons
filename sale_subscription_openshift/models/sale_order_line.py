@@ -14,7 +14,7 @@ class SaleOrderLine(models.Model):
         """Prepare a dictionnary of values to add lines to a subscription."""
         values = list()
         for line in self:
-            if line.product_id.is_subscription:
+            if line.product_id.recurring_invoice:
                 values.append(
                     (
                         0,

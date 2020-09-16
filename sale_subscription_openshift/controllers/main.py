@@ -15,7 +15,7 @@ class WebsiteSale(WebsiteSale):
     )
     def portal_create_user(self, **kw):
         product_id = request.env["product.product"].search(
-            [("recurring_invoice", "=", True), ("is_subscription", "=", True)], limit=1
+            [("recurring_invoice", "=", True)], limit=1
         )
         if not product_id:
             product_id = request.env["product.product"].search(
