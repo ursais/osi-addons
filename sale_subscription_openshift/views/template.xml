@@ -56,7 +56,7 @@
         <xpath expr="//tbody/t/tr/td[4]" position="replace">
             <td class="text-center td-qty">
                 <div class="css_quantity input-group mx-auto">
-                    <t t-if="not line.product_id.is_subscription">
+                    <t t-if="not line.product_id.recurring_invoice">
                         <div class="input-group-prepend">
                             <a aria-label="Remove one" class="btn btn-link js_add_cart_json d-none d-md-inline-block" t-attf-href="#" title="Remove one">
                                 <i class="fa fa-minus"/>

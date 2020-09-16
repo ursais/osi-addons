@@ -15,7 +15,7 @@ class SaleOrder(models.Model):
             product_id, line_id, add_qty, set_qty, **kwargs
         )
         sale_line = self.env["sale.order.line"].browse(lines.get("line_id"))
-        if sale_line.product_id.is_subscription:
+        if sale_line.product_id.recurring_invoice:
             sale_line.price_unit = 0
             if kwargs.get("instance_name"):
                 sale_line.instance_name = kwargs.get("instance_name")
