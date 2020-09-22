@@ -1,0 +1,17 @@
+<odoo>
+    <record id="sale_subscription_view_form_inherit_openshift" model="ir.ui.view">
+        <field name="name">sale.subscription.form.view</field>
+        <field name="model">sale.subscription</field>
+        <field name="inherit_id" ref="sale_subscription.sale_subscription_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='recurring_invoice_line_ids']/tree/field[@name='price_subtotal']" position="after">
+                <field name="instance_name" readonly="1"/>
+                <field name="instance_url" readonly="1"/>
+            </xpath>
+            <xpath expr="//field[@name='recurring_invoice_line_ids']/form/group/group/field[@name='discount']" position="after">
+                <field name="instance_name" readonly="1"/>
+                <field name="instance_url" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
