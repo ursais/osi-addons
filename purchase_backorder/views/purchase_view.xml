@@ -1,0 +1,30 @@
+<odoo>
+
+    <record id="purchase_order_form_backorder" model="ir.ui.view">
+        <field name="name">purchase.order.form.backorder</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_ref']" position="after">
+                <field name="uigr_value" readonly='1'/>
+                <field name="bo_value" readonly='1'/>
+                <field name="last_bill_date" readonly='1'/>
+                <field name="last_date_received" readonly='1'/>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree/field[@name='product_qty']" position='after'>
+                <field name="adjusted_qty"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="pruchase_order_line_backorder" model="ir.ui.view">
+        <field name="name">purchase.order.line.backorder</field>
+        <field name="model">purchase.order.line</field>
+        <field name="inherit_id" ref="purchase.purchase_order_line_form2"/>
+        <field name="arch" type="xml">
+            <field name="product_id" position="before">
+                <field name="exclude_from_bo_report"/>
+            </field>
+        </field>
+    </record>
+</odoo>
