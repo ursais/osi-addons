@@ -15,6 +15,7 @@
         'sign',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'views/fsm_order.xml',
         'views/sign_request.xml',
         'wizard/sign_send_request_views.xml',
