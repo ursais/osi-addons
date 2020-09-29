@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<odoo noupdate="0">
+
+    <record id="group_accounting_suppliers" model="res.groups">
+        <field name="name">Suppliers menu in Accounting</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+</odoo>

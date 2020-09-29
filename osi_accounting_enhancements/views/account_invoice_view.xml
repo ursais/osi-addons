@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- add field to Supplier Invoice form -->
+    <record id="invoice_supplier_form_purchase" model="ir.ui.view">
+        <field name="name">account.invoice.supplier.form.purchase</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="arch" type="xml">
+            <!-- MG commented code on 06/25/2020: Artisent wants supplier invoice number to be invisible as they are not using that field at all-->
+            <xpath expr="//field[@name='date_invoice']" position="before">
+                <field name="supplier_invoice_number" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='account_id']" position="before">
+                <field name="purchase_order_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="invoice_supplier_tree_purchase" model="ir.ui.view">
+        <field name="name">account.invoice.supplier.tree.purchase</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_supplier_tree"/>
+        <field name="arch" type="xml">
+            <!-- MG commented code on 06/25/2020: Artisent wants supplier invoice number to be invisible as they are not using that field at all-->
+            <xpath expr="//field[@name='reference']" position="after">
+                <field name="supplier_invoice_number" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Journal Items -->
+    <record id="view_move_line_form" model="ir.ui.view">
+       <field name="name">account.move.line.form.enhance</field>
+       <field name="model">account.move.line</field>
+       <field name="inherit_id" ref="account.view_move_line_form"/>
+       <field name="arch" type="xml">
+       <xpath expr="//field[@name='date']" position="before">
+           <field name="invoice_type" invisible="1"/>
+           <!-- MG commented code on 06/25/2020: Artisent wants supplier invoice number to be invisible as they are not using that field at all-->
+<!--           <field name="supplier_invoice_number" attrs="{'invisible':[('invoice_type','not in',('in_refund','in_invoice'))]}"/>-->
+           <field name="supplier_invoice_number" invisible="1"/>
+           <field name="purchase_ref" attrs="{'invisible':[('invoice_type','not in',('in_refund','in_invoice'))]}"/>
+       </xpath>
+       </field>
+    </record>
+
+    <record id="view_move_line_tree" model="ir.ui.view">
+       <field name="name">account.move.line.form.enhance</field>
+       <field name="model">account.move.line</field>
+       <field name="inherit_id" ref="account.view_move_line_tree"/>
+       <field name="arch" type="xml">
+           <xpath expr="//field[@name='ref']" position="after">
+               <field name="invoice_type" invisible="1"/>
+               <!-- MG commented code on 06/25/2020: Artisent wants supplier invoice number to be invisible as they are not using that field at all-->
+<!--               <field name="supplier_invoice_number" attrs="{'invisible':[('invoice_type','not in',('in_refund','in_invoice'))]}"/>-->
+               <field name="supplier_invoice_number" invisible="1"/>
+               <field name="purchase_ref" attrs="{'invisible':[('invoice_type','not in',('in_refund','in_invoice'))]}"/>
+           </xpath>
+       </field>
+    </record>
+
+    <record id="view_move_form" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+	        <xpath expr="//field[@name='line_ids']/tree//field[@name='company_currency_id']" position="before">
+                <!-- MG commented code on 06/25/2020: Artisent wants supplier invoice number to be invisible as they are not using that field at all-->
+		        <field name="supplier_invoice_number" invisible="1"/>
+		        <field name="purchase_ref"/>
+		    </xpath>
+	    </field>
+    </record>
+
+    <record id="view_move_line_purchase_tree" model="ir.ui.view">
+        <field name="name">account.move.line.tree</field>
+        <field name="model">account.move.line</field>
+        <field eval="1" name="priority"/>
+        <field name="arch" type="xml">
+            <tree string="Journal Items" create="false">
+                <field name="date"/>
+                <field name="move_id" required="0"/>
+                <field name="journal_id" options='{"no_open":True}'/>
+                <field name="name"/>
+                <field name="ref"/>
+                <!-- MG commented code on 06/25/2020: Artisent wants supplier invoice number to be invisible as they are not using that field at all-->
+                <field name="supplier_invoice_number" invisible="1"/>
+                <field name="purchase_ref"/>
+                <field name="statement_id" invisible="1"/>
+                <field name="partner_id"/>
+                <field name="account_id" options='{"no_open":True}' domain="[('company_id', '=', company_id)]"/>
+                <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
+                <field name="reconciled" invisible="1"/>
+                <field name="full_reconcile_id"/>
+                <field name="debit" sum="Total Debit"/>
+                <field name="credit" sum="Total Credit"/>
+                <field name="amount_currency" readonly="True" groups="base.group_multi_currency"/>
+                <field name="currency_id" readonly="True" invisible="1" />
+                <field name="date_maturity"/>
+                <field name="company_currency_id" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_account_moves_all_a_purchase" model="ir.actions.act_window">
+        <field name="context">{'journal_type':'general'}</field>
+        <field name="name">Journal Items</field>
+        <field name="res_model">account.move.line</field>
+        <field name="view_id" ref="view_move_line_purchase_tree"/>
+        <field name="view_mode">tree,form,pivot</field>
+    </record>
+
+    <record model="ir.ui.menu" id="account.menu_account_supplier">
+        <field name="groups_id" eval="[(6,0,[ref('osi_accounting_enhancements.group_accounting_suppliers')])]"/>
+    </record>
+</odoo>

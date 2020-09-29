@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- payment wizard -->
+    <record model="ir.ui.view" id="view_purchase_receipt_form">
+        <field name="name">account.voucher.receipt.dialog.form</field>
+        <field name="model">account.voucher</field>
+        <field name="priority">30</field>
+        <field name="inherit_id" ref="account_voucher.view_purchase_receipt_form"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <!-- MG commented code on 06/25/2020: Artisent wants supplier invoice number to be invisible as they are not using that field at all-->
+                <field name="supplier_invoice_number" invisible="1"/>
+                <field name="purchase_ref"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
