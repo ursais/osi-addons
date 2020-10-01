@@ -7,7 +7,7 @@
     'summary': 'This module is manage FSM mobile stages based on'
     ' configuration.',
     'license': 'AGPL-3',
-    'version': '12.0.1.0.0',
+    'version': '12.0.1.1.0',
     'category': 'Field Service',
     'author': 'Open Source Integrators',
     'website': 'https://github.com/ursais/osi-addons',
@@ -15,6 +15,7 @@
         'fieldservice_stage_server_action',
     ],
     'data': [
+        'security/partner_security.xml',
         'security/ir.model.access.csv',
         'data/base_automation.xml',
         'views/fsm_stage_view.xml',
