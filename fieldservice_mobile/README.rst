@@ -13,12 +13,6 @@ Configuration
 
 To configure this module, you need to:
 
-If you want to follow Field Service ISP Workflow:
-* Go to Field Service > Configuration > Settings > Field Service > Enable Field Service ISP Workflow.
-
-If you want to follow Field Service Dynamic Workflow:
-* Go to Field Service > Configuration > Settings > Field Service > Disable Field Service ISP Workflow.
-
 * Go to Field Service > Configuration > Stages.
 * Check Display in Mobile for display stage in FSM Mobile.
 * Check Display in Odoo for display stage in Odoo FSM Order.
