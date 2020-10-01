@@ -7,6 +7,7 @@ from odoo import fields, models
 
 class FsmStageHistory(models.Model):
     _name = 'fsm.stage.history'
+    _description = 'FSM Stage History'
 
     order_id = fields.Many2one(
         'fsm.order',
