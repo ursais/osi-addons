@@ -14,6 +14,7 @@ Configuration
 
 * Go to *Field Service > Configuration > Stages*
 * Check "Display in Mobile" to show orders in that stage on the FSM Mobile App.
+
 * Check Display in Odoo for display stage in Odoo FSM Order.
 
 Credits

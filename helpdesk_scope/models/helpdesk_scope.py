@@ -14,3 +14,4 @@ class HelpdeskScope(models.Model):
     sequence = fields.Integer(required=True, default=lambda self: self.env[
         "ir.sequence"].next_by_code("helpdesk.scope") or 0)
     team_ids = fields.Many2many('helpdesk.team', string="Teams")
+    active = fields.Boolean('Active', default=True)

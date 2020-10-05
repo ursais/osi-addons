@@ -9,3 +9,4 @@ class FSMStage(models.Model):
 
     is_display_in_mobile = fields.Boolean("Display in Mobile", default=False)
     is_display_in_odoo = fields.Boolean("Display in Odoo", default=True)
+
