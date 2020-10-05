@@ -7,13 +7,14 @@
         <field name="name">helpdesk.ticket.fieldservice.form</field>
         <field name="model">helpdesk.ticket</field>
         <field name="inherit_id"
-               ref="helpdesk_fieldservice.helpdesk_ticket_view_service_request_form"/>
+               ref="helpdesk_timesheet.helpdesk_ticket_view_form_inherit_helpdesk_timesheet"/>
         <field name="arch" type="xml">
-            <xpath expr="//notebook/page/field[@name='description']" position="attributes">
+            <field name="description" position="attributes">
                 <attribute name="placeholder">Description of the ticket...</attribute>
-            </xpath>
+            </field>
         </field>
     </record>
+
 
     <!-- Helpdesk Ticket Form View -->
     <record id="helpdesk_ticket_view_timesheet_form" model="ir.ui.view">
