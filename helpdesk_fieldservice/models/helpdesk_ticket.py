@@ -13,7 +13,17 @@ class HelpdeskTicket(models.Model):
 
     all_orders_closed = fields.Boolean(compute="_compute_all_closed", store=True)
 
-    @api.multi
+    @api.depends("fsm_order_ids", "stage_id", "fsm_order_ids.stage_id")
+    def _compute_all_closed(self):
+        for ticket in self:
+            ticket.all_orders_closed = True
+            if ticket.fsm_order_ids:
+                for order in ticket.fsm_order_ids:
+                    if order.stage_id.name not in ["Closed", "Cancelled"]:
+                        ticket.all_orders_closed = False
+            else:
+                ticket.all_orders_closed = False
+
     def write(self, vals):
         if "stage_id" in vals:
             ticket_stage = self.env["helpdesk.stage"].browse(vals.get("stage_id"))
@@ -66,7 +76,6 @@ class HelpdeskTicket(models.Model):
         if self.partner_id:
             self._location_contact_fill(False)
 
-    @api.multi
     def action_create_order(self):
         """
         This function returns an action that displays a full FSM Order
@@ -84,14 +93,3 @@ class HelpdeskTicket(models.Model):
         res = self.env.ref("fieldservice.fsm_order_form", False)
         result["views"] = [(res and res.id or False, "form")]
         return result
-
-    @api.depends("fsm_order_ids", "stage_id", "fsm_order_ids.stage_id")
-    def _compute_all_closed(self):
-        for ticket in self:
-            ticket.all_orders_closed = True
-            if ticket.fsm_order_ids:
-                for order in ticket.fsm_order_ids:
-                    if order.stage_id.name not in ["Closed", "Cancelled"]:
-                        ticket.all_orders_closed = False
-            else:
-                ticket.all_orders_closed = False
