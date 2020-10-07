@@ -3,7 +3,7 @@
 <odoo>
     <template id="shrink_tree_column" name="helpdesk assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
-            <link rel="stylesheet" href="/helpdesk_fieldservice/static/src/scss/helpdesk_column.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/helpdesk_fieldservice/static/src/scss/helpdesk_column.scss"/>
         </xpath>
     </template>
 

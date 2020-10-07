@@ -1,7 +1,7 @@
 # Copyright (C) 2019 - TODAY, Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class FSMLocation(models.Model):
@@ -9,14 +9,12 @@ class FSMLocation(models.Model):
 
     ticket_count = fields.Integer(compute="_compute_ticket_count", string="# Tickets")
 
-    @api.multi
     def _compute_ticket_count(self):
         for location in self:
             location.ticket_count = self.env["helpdesk.ticket"].search_count(
                 [("fsm_location_id", "=", location.id)]
             )
 
-    @api.multi
     def action_view_ticket(self):
         for location in self:
             ticket_ids = self.env["helpdesk.ticket"].search(
