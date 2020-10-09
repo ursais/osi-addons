@@ -52,9 +52,16 @@ odoo.define('osi_board_company.CompanyDashboardView', function (require) {
                         type: 'ir.actions.act_window',
                         name: "My Timesheet",
                         res_model: 'account.analytic.line',
-                        views: [[false, 'list'], [false, 'form']],
-                        domain: [['project_id', '!=', false]],
-                        context : {'search_default_mine':1},
+                        views: [
+                            [false, 'list'],
+                            [false, 'form']
+                        ],
+                        domain: [
+                            ['project_id', '!=', false]
+                        ],
+                        context: {
+                            'search_default_mine': 1
+                        },
                         target: 'current'
                     });
                 });
@@ -62,11 +69,11 @@ odoo.define('osi_board_company.CompanyDashboardView', function (require) {
         },
 
         formate_date: function (value) {
-            return field_utils.format.date(field_utils.parse.date(value))
+            return field_utils.format.date(field_utils.parse.date(value));
         },
         formate_float: function (value) {
-            value = value.toString()
-            return field_utils.format.float(field_utils.parse.float(value))
+            value = value.toString();
+            return field_utils.format.float(field_utils.parse.float(value));
         },
         float_time: function (number) {
             // Check sign of given number

@@ -1,1 +1,2 @@
 Voicent-Python
+numpy==1.18.5

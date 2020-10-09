@@ -18,8 +18,6 @@ class EmpData(models.Model):
     @api.model
     def get_company_data(self):
         vals = {}
-        hr_emp_obj = self.env["hr.employee"]
-        emp_id = hr_emp_obj.search([("user_id", "=", self.env.user.id)])
         date = fields.Date.context_today(self)
         mnth_start = datetime.datetime(date.year, date.month, 1)
         mnth_end = datetime.datetime(
@@ -40,10 +38,14 @@ class EmpData(models.Model):
         goals = self.get_monthly_goals(
             mnth_start, mnth_end, month_holidays_cnt, tot_mnth_leaves, date
         )
-        forecast_compliance = self.get_forecast_compliance(emp_id, wk_start, wk_end)
+        forecast_compliance = self.get_forecast_compliance(
+            wk_start, wk_end
+        )
         badges = self.get_badges()
         employee_data = self.get_employee_data(wk_start, wk_end)
-        department_employee_data = self.get_department_employee_data(wk_start, wk_end)
+        department_employee_data = self.get_department_employee_data(
+            wk_start, wk_end
+        )
         vals.update(
             {
                 "month_plan": goals.get("month_plan"),
@@ -52,10 +54,14 @@ class EmpData(models.Model):
                 ),
                 "remaining_hours": goals.get("remaining_hours"),
                 "daily_target": round(goals.get("daily_target"), 2),
-                "daily_target_actual": round(goals.get("daily_target_actual"), 2),
+                "daily_target_actual": round(
+                    goals.get("daily_target_actual"), 2
+                ),
                 "cumulative_target": round(goals.get("cumulative_target"), 2),
                 "daily_variance": round(goals.get("daily_variance"), 2),
-                "cumulative_variance": round(goals.get("cumulative_variance"), 2),
+                "cumulative_variance": round(
+                    goals.get("cumulative_variance"), 2
+                ),
                 "planned_billable_hours": forecast_compliance.get(
                     "planned_billable_hours"
                 ),
@@ -71,7 +77,9 @@ class EmpData(models.Model):
 
     def get_department_employee_data(self, wk_start, wk_end):
         sql_query = """select
-            sum(case when pp.partner_id = %s then unit_amount else 0 end) as non_billable,
+            sum(
+                case when pp.partner_id = %s then unit_amount else 0 end
+            ) as non_billable,
             sum(case when pp.partner_id != %s or pp.partner_id IS NULL
             then unit_amount else 0 end) as billable,
             sum(case when pp.partner_id != %s or pp.partner_id IS NULL
@@ -85,7 +93,8 @@ class EmpData(models.Model):
             (request_date_from>=%s AND request_date_from<=%s)
             AND (request_date_to>=%s AND request_date_to<=%s)
             AND state='validate' and employee_id = he.id) -
-            (SELECT count(id) from hr_holidays_public_line WHERE date>= %s AND date<= %s ))
+            (SELECT count(id) from hr_holidays_public_line WHERE date>= %s
+            AND date<= %s ))
             as working_day,
             hd.name as department_name , hd.id as hd_id,
             he.name as name from account_analytic_line as aal
@@ -133,42 +142,42 @@ class EmpData(models.Model):
                 )
         return category_detials
 
-    def get_holidays_and_leaves(
-        self, wk_start, wk_end, mnth_start, mnth_end, yr_start, yr_end
-    ):
+    def get_holidays_and_leaves(self, wk_start, wk_end,
+                                mnth_start, mnth_end, yr_start, yr_end):
         month_holidays_cnt = 0
         week_hoildays_cnt = 0
         year_holidays_cnt = 0
 
         # HOLIDAYS IN CURRENT MONTH
         holidays_query = """
-                    SELECT date from hr_holidays_public_line WHERE date>=%s AND date<=%s
-                """
+            SELECT date from hr_holidays_public_line
+            WHERE date>=%s AND date<=%s
+        """
         self.env.cr.execute(holidays_query, (mnth_start.date(), mnth_end))
         month_holidays = self.env.cr.fetchall()
         month_holiday_list = []
-        for h in month_holidays:
-            if h[0].weekday() not in [5, 6]:
+        for mh in month_holidays:
+            if mh[0].weekday() not in [5, 6]:
                 month_holidays_cnt += 1
-                month_holiday_list.append(h[0])
+                month_holiday_list.append(mh[0])
 
         # HOLIDAYS IN CURRENT WEEK
         self.env.cr.execute(holidays_query, (wk_start, wk_end))
         week_holidays = self.env.cr.fetchall()
         week_holiday_list = []
-        for h in week_holidays:
-            if h[0].weekday() not in [5, 6]:
+        for wh in week_holidays:
+            if wh[0].weekday() not in [5, 6]:
                 week_hoildays_cnt += 1
-                week_holiday_list.append(h[0])
+                week_holiday_list.append(wh[0])
 
         # HOLIDAYS IN CURRENT YEAR
         self.env.cr.execute(holidays_query, (yr_start, yr_end))
         year_holidays = self.env.cr.fetchall()
         year_holiday_list = []
-        for h in year_holidays:
-            if h[0].weekday() not in [5, 6]:
+        for yh in year_holidays:
+            if yh[0].weekday() not in [5, 6]:
                 year_holidays_cnt += 1
-                year_holiday_list.append(h[0])
+                year_holiday_list.append(yh[0])
 
         # LEAVES OF CURRENT MONTH
         leaves_query = """
@@ -179,7 +188,11 @@ class EmpData(models.Model):
                     AND state='validate'
                 """
         self.env.cr.execute(
-            leaves_query, (mnth_start.date(), mnth_end, mnth_start.date(), mnth_end)
+            leaves_query,
+            tuple([mnth_start.date(),
+                   mnth_end,
+                   mnth_start.date(),
+                   mnth_end])
         )
         month_leaves = self.env.cr.fetchall()
         tot_mnth_leaves = 0
@@ -235,7 +248,9 @@ class EmpData(models.Model):
 
     def get_employee_data(self, wk_start, wk_end):
         sql_query = """select
-             sum(case when pp.partner_id = %s then unit_amount else 0 end) as non_billable,
+            sum(
+                case when pp.partner_id = %s then unit_amount else 0 end
+            ) as non_billable,
             sum(case when pp.partner_id != %s or pp.partner_id IS NULL
             then unit_amount else 0 end) as billable,
             sum(case when pp.partner_id != %s or pp.partner_id IS NULL
@@ -249,7 +264,8 @@ class EmpData(models.Model):
             (request_date_from>=%s AND request_date_from<=%s)
             AND (request_date_to>=%s AND request_date_to<=%s)
             AND state='validate' and employee_id = he.id) -
-            (SELECT count(id) from hr_holidays_public_line WHERE date>= %s AND date<= %s ))
+            (SELECT count(id) from hr_holidays_public_line
+            WHERE date>= %s AND date<= %s ))
             as working_day,
             he.name as name from account_analytic_line as aal
             left join project_project as pp on (pp.id = aal.project_id)
@@ -281,48 +297,39 @@ class EmpData(models.Model):
         employee_data = self.env.cr.dictfetchall()
         return employee_data
 
-    def get_forecast_compliance(self, emp_id, wk_start, wk_end):
+    def get_forecast_compliance(self, wk_start, wk_end):
         # TOTAL FORECASTED HOURS OF THE WEEK
         query = """
             SELECT sum(t.resource_hours) FROM project_forecast as t
             WHERE  start_date >= '%s'
             AND end_date <= '%s'
-        """ % (
-            wk_start,
-            wk_end,
-        )
-        self.env.cr.execute(query)
+        """
+        self.env.cr.execute(query, tuple([wk_start, wk_end]))
         weekly_plan_hours = self.env.cr.fetchall()[0][0] or 0
 
         # TOTAL BILLABLE HOURS OF PLANNED TASKS
         query = """
-                    SELECT sum(l.unit_amount) FROM account_analytic_line as l
-                    LEFT JOIN project_task as p ON p.id = l.task_id
-                    WHERE l.date >= '%s' AND l.date <= '%s'
-                    AND(l.timesheet_invoice_type='billable_time'
-                    OR l.timesheet_invoice_type='billable_fixed')
-                    AND p.planned_hours > 0
-                """ % (
-            wk_start,
-            wk_end,
-        )
-        self.env.cr.execute(query)
+            SELECT sum(l.unit_amount) FROM account_analytic_line as l
+            LEFT JOIN project_task as p ON p.id = l.task_id
+            WHERE l.date >= '%s' AND l.date <= '%s'
+            AND(l.timesheet_invoice_type='billable_time'
+            OR l.timesheet_invoice_type='billable_fixed')
+            AND p.planned_hours > 0
+        """
+        self.env.cr.execute(query, tuple([wk_start, wk_end]))
         # self.planned_billable_hours = self.env.cr.fetchall()[0][0]
         planned_billable_hours = self.env.cr.fetchall()[0][0] or 0
 
         # TOTAL BILLABLE HOURS OF UNPLANNED TASKS
         query = """
-                            SELECT sum(l.unit_amount) FROM account_analytic_line as l
-                            LEFT JOIN project_task as p ON p.id=l.task_id
-                            WHERE l.date>='%s' AND l.date<='%s'
-                            AND (l.timesheet_invoice_type='billable_time'
-                            OR l.timesheet_invoice_type='billable_fixed')
-                            AND p.planned_hours<=0
-                        """ % (
-            wk_start,
-            wk_end,
-        )
-        self.env.cr.execute(query)
+            SELECT sum(l.unit_amount) FROM account_analytic_line as l
+            LEFT JOIN project_task as p ON p.id=l.task_id
+            WHERE l.date>='%s' AND l.date<='%s'
+            AND (l.timesheet_invoice_type='billable_time'
+            OR l.timesheet_invoice_type='billable_fixed')
+            AND p.planned_hours<=0
+        """
+        self.env.cr.execute(query, tuple([wk_start, wk_end]))
         unplanned_billable_hours = self.env.cr.fetchall()[0][0] or 0
 
         if weekly_plan_hours:
@@ -339,7 +346,8 @@ class EmpData(models.Model):
             "per_planned_billable_hrs": per_planned_billable_hrs,
         }
 
-    def get_leverage(self, emp_id, mnth_start, mnth_end, yr_start, yr_end, date):
+    def get_leverage(self, emp_id, mnth_start,
+                     mnth_end, yr_start, yr_end, date):
         monthly_leverage = 0
         yearly_leverage = 0
         # TOTAL MONTHLY BILLABLE HOURS OF PROJECTS AS PM
@@ -357,7 +365,9 @@ class EmpData(models.Model):
         my_proj_total_bill_hours_monthly = self.env.cr.fetchall()[0][0]
 
         # TOTAL YEARLY BILLABLE HOURS OF PROJECTS AS PM
-        self.env.cr.execute(billable_pm_query, (yr_start, yr_end, self.env.user.id))
+        self.env.cr.execute(
+            billable_pm_query, (yr_start, yr_end, self.env.user.id)
+        )
         my_proj_total_bill_hours_yearly = self.env.cr.fetchall()[0][0]
 
         # TOTAL MONTHLY HOURS WORKED IN THE PROJECT BY SELF
@@ -369,7 +379,9 @@ class EmpData(models.Model):
                     OR l.timesheet_invoice_type='billable_fixed')
                     AND p.user_id=%s
                 """
-        self.env.cr.execute(worked_query, (mnth_start.date(), date, self.env.user.id))
+        self.env.cr.execute(
+            worked_query, (mnth_start.date(), date, self.env.user.id)
+        )
         my_total_bill_hours_monthly = self.env.cr.fetchall()[0][0]
 
         if my_proj_total_bill_hours_monthly:
@@ -378,7 +390,9 @@ class EmpData(models.Model):
             ) * 100
 
         # TOTAL YEARLY HOURS WORKED IN THE PROJECT BY SELF
-        self.env.cr.execute(worked_query, (emp_id.id, yr_start, date, self.env.user.id))
+        self.env.cr.execute(
+            worked_query, (emp_id.id, yr_start, date, self.env.user.id)
+        )
         my_total_bill_hours_yearly = self.env.cr.fetchall()[0][0]
 
         if my_proj_total_bill_hours_yearly:
@@ -404,9 +418,9 @@ class EmpData(models.Model):
         badges = self.env.cr.dictfetchall()
         return {"badges": badges}
 
-    def get_monthly_goals(
-        self, mnth_start, mnth_end, month_holidays_cnt, tot_mnth_leaves, date
-    ):
+    def get_monthly_goals(self, mnth_start, mnth_end,
+                          month_holidays_cnt, tot_mnth_leaves, date
+                          ):
         daily_variance = 0
         cumulative_variance = 0
         working_days_month = numpy.busday_count(mnth_start.date(), mnth_end)
@@ -418,27 +432,21 @@ class EmpData(models.Model):
 
         # TOTAL FORECASTED HOURS OF THE MONTH
         query = """
-                    SELECT sum(t.resource_hours) FROM project_forecast as t
-                    WHERE start_date>='%s'
-                    AND end_date<='%s'
-                """ % (
-            mnth_start.date(),
-            mnth_end,
-        )
-        self.env.cr.execute(query)
+            SELECT sum(t.resource_hours) FROM project_forecast as t
+            WHERE start_date>='%s'
+            AND end_date<='%s'
+        """
+        self.env.cr.execute(query, tuple([mnth_start.date(), mnth_end]))
 
         month_plan = self.env.cr.fetchall()[0][0]
 
         # TOTAL HOURS WORKED IN THE MONTH
         query = """
-                    SELECT sum(t.effective_hours) FROM project_forecast as t
-                    WHERE start_date>='%s'
-                    AND end_date<='%s'
-                """ % (
-            mnth_start.date(),
-            mnth_end,
-        )
-        self.env.cr.execute(query)
+            SELECT sum(t.effective_hours) FROM project_forecast as t
+            WHERE start_date>='%s'
+            AND end_date<='%s'
+        """
+        self.env.cr.execute(query, tuple([mnth_start.date(), mnth_end]))
 
         cumulative_target_actual = self.env.cr.fetchall()[0][0]
 
@@ -447,11 +455,15 @@ class EmpData(models.Model):
         try:
             if days_passed and cumulative_target_actual:
                 daily_target = month_plan / (days_left + days_passed)
-                daily_target_actual = cumulative_target_actual / days_passed
+                daily_target_actual = \
+                    cumulative_target_actual / days_passed
                 cumulative_target = daily_target * days_passed
-                daily_variance = ((daily_target_actual - daily_target) / daily_target) * 100
+                daily_variance = (
+                    (daily_target_actual - daily_target) / daily_target
+                ) * 100
                 cumulative_variance = (
-                    (cumulative_target_actual - cumulative_target) / cumulative_target
+                    (cumulative_target_actual - cumulative_target
+                     ) / cumulative_target
                 ) * 100
             else:
                 daily_target = 0

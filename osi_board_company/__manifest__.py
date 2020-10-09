@@ -14,6 +14,9 @@
         "views/company_dashboard.xml",
         "views/company_template_views.xml",
     ],
+    "external_dependencies": {
+        'python': ["numpy"],
+    },
     "qweb": ["static/src/xml/company_dashboard_template.xml"],
     "installable": True,
     "application": True,
