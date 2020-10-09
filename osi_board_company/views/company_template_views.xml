@@ -1,0 +1,9 @@
+<odoo>
+    <data>
+        <template id="assets_backend" name="DSH assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/osi_board_company/static/src/js/company_dashboard.js"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

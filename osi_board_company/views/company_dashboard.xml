@@ -1,0 +1,14 @@
+<odoo>
+    <record id="company_dashboard" model="ir.actions.client">
+        <field name="name">Company Dashboard</field>
+        <field name="tag">company_dashboard</field>
+    </record>
+
+    <!-- Menu of DashBoard -->
+    <menuitem
+        id="menu_osi_company_dashboard"
+        name="Company Dashboard"
+        action="company_dashboard"
+        web_icon="osi_board_company,static/description/employee-dash.png"
+    />
+</odoo>

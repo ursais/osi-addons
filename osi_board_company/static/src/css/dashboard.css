@@ -1,0 +1,51 @@
+.company-chart-card {
+    margin-bottom: 20px;
+    background: #fff;
+    min-height: 50px;
+    transition: .5s;
+    border: 1px solid #f2f2f2;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, .1);
+    -webkit-box-shadow: 0 5px 20px rgba(0, 0, 0, .1);
+}
+
+.company-card-header {
+    border-radius: 10px 10px 0 0;
+    border-bottom: 1px dotted rgba(0, 0, 0, 0.2);
+    padding: 2px;
+    /* text-transform: uppercase; */
+    color: #3a405b;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 40px;
+    min-height: 40px;
+}
+
+.company-card-header header {
+    display: inline-block;
+    padding: 11px 20px;
+    vertical-align: middle;
+    line-height: 17px;
+    font-size: 17px;
+}
+
+.company-sales-chart-area {
+    background-color: #fff;
+}
+
+.company-sales-chart-area:hover {
+    -webkit-transform: translateY(0px) !important ;
+    transform: translateY(0px)!important;
+    -moz-box-shadow: 0 !important;
+    webkit-box-shadow: 0 !important;
+    box-shadow: 0 !important;
+}
+
+.company-card-body {
+    padding: 10px 24px 14px 24px;
+    position: relative;
+}
+
+.company-month-open-tree-view {
+    cursor: pointer;
+}

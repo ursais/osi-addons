@@ -1,0 +1,284 @@
+<templates>
+    <t t-name="company_dashboard">
+        <div class="container">
+            <div class="row mt32">
+                <div class="col-md-12">
+                    <div class="sales-chart-area chart-card mb-3">
+                        <div class="booking-card-header">
+                            <header>Monthly Goals</header>
+                        </div>
+                        <div class="booking-card-body">
+                            <div class="table-responsive">
+                                <table class="table display mb-30">
+                                    <thead>
+                                        <tr>
+                                           <th class="text-right">Plan</th>
+                                            <th class="text-right">Daily Target</th>
+                                            <th class="text-right">Cumulative Target</th>
+                                            <th class="text-right">Days</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-right">
+                                                <t t-esc="details.month_plan"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="details.daily_target"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="details.planned_billable_hours"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="details.total_days"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                    <thead>
+                                        <tr>
+                                            <th class="text-right">Actual</th>
+                                            <th class="text-right">Daily Actual</th>
+                                            <th class="text-right">Cumulative Actual</th>
+                                            <th class="text-right">Days Passed</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-right">
+                                                <t t-esc="details.cumulative_target_actual"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="details.daily_target_actual"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="details.cumulative_target_actual"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="details.days_passed"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                    <thead>
+                                        <tr>
+                                            <th class="text-right">Left</th>
+                                            <th class="text-right">Daily Variance</th>
+                                            <th class="text-right">Cumulative Variance</th>
+                                            <th class="text-right">Days Left</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-right">
+                                                <t t-esc="details.remaining_hours"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="details.daily_variance"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="details.cumulative_variance"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-esc="details.days_left"/>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt32">
+                <div class="col-md-12">
+                    <div class="sales-chart-area chart-card mb-3">
+                        <div class="booking-card-header">
+                            <header>Hall of Fame</header>
+                        </div>
+                        <div class="booking-card-body">
+                            <div class="table-responsive">
+                                <table class="table display mb-30">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th class="text-right">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="details.badges" t-as="bg">
+                                            <tr>
+                                                <td>
+                                                    <t t-esc="bg.name"/>
+                                                </td>
+                                                <td class="text-right">
+                                                    <t t-esc="bg.total"/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sales-chart-area chart-card">
+                <div class="booking-card-header">
+                    <header>Daily Reports</header>
+                </div>
+            </div>
+            <div class="sales-chart-area chart-card">
+                <div class="booking-card-header">
+                    <header>All employees</header>
+                </div>
+                <div class="booking-card-body">
+                    <div class="table-responsive">
+                        <table class="table display mb-30">
+                            <thead>
+                               <tr>
+                                    <th>
+                                        Employee
+                                    </th>
+
+                                    <th class="text-right">
+                                        Total
+                                    </th>
+                                    <th class="text-right">
+                                        Billable
+                                    </th>
+                                    <th class="text-right">
+                                        Non Billable
+                                    </th>
+                                    <th class="text-right">
+                                        Toal % Billable
+                                    </th>
+                                    <th class="text-right">
+                                        Average Billable / Day
+                                    </th>
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                <t t-foreach="details.employee_data" t-as="ed">
+                                     <tr class="month-open-tree-view">
+                                        <td>
+                                            <t t-if="ed.name">
+                                                <t t-esc="ed.name" />
+                                            </t>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-if="ed.total">
+                                                <t t-esc="widget.float_time(ed.total)" />
+                                            </t>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-if="ed.billable">
+                                                <t t-esc="widget.float_time(ed.billable)" />
+                                            </t>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-if="ed.non_billable">
+                                                <t t-esc="widget.float_time(ed.non_billable)" />
+                                            </t>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-if="ed.total_per">
+                                                <t t-esc="widget.formate_float(ed.total_per)" />%
+                                            </t>
+                                        </td>
+                                        <td class="text-right">
+                                            <t t-if="ed.total_per">
+                                                <t t-esc="widget.formate_float(ed.working_day)" />
+                                            </t>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <t t-foreach="details.department_employee_data" t-as="ded">
+               <div class="sales-chart-area chart-card">
+                    <div class="booking-card-header">
+                        <header><t t-esc="details.department_employee_data[ded].name" /></header>
+                    </div>
+                    <div class="booking-card-body">
+                        <div class="table-responsive">
+                            <table class="table display mb-30">
+                                <thead>
+                                <tr>
+                                        <th>
+                                            Employee
+                                        </th>
+
+                                        <th class="text-right">
+                                            Total
+                                        </th>
+                                        <th class="text-right">
+                                            Billable
+                                        </th>
+                                        <th class="text-right">
+                                            Non Billable
+                                        </th>
+                                        <th class="text-right">
+                                            Toal % Billable
+                                        </th>
+                                        <th class="text-right">
+                                            Average Billable / Day
+                                        </th>
+                                    </tr>
+
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="details.department_employee_data[ded].data" t-as="ed">
+                                        <tr class="month-open-tree-view">
+                                            <td>
+                                                <t t-if="ed.name">
+                                                    <t t-esc="ed.name" />
+                                                </t>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-if="ed.total">
+                                                    <t t-esc="widget.float_time(ed.total)" />
+                                                </t>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-if="ed.billable">
+                                                    <t t-esc="widget.float_time(ed.billable)" />
+                                                </t>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-if="ed.non_billable">
+                                                    <t t-esc="widget.float_time(ed.non_billable)" />
+                                                </t>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-if="ed.total_per">
+                                                    <t t-esc="widget.formate_float(ed.total_per)" />%
+                                                </t>
+                                            </td>
+                                            <td class="text-right">
+                                                <t t-if="ed.total_per">
+                                                    <t t-esc="widget.formate_float(ed.working_day)" />
+                                                </t>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <div class="sales-chart-area chart-card">
+                <div class="booking-card-body">
+                    <button id="open_employee_dashboard" class="btn">Open My Employee Dashboard</button>
+                    <button id="open_employee_timesheet" class="btn">Open My Timesheet</button>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
