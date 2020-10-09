@@ -6,7 +6,7 @@
     "name": "Field Service Signature",
     "summary": "This module will provide signature link from FSM order.",
     "license": "AGPL-3",
-    "version": "12.0.1.1.0",
+    "version": "13.0.1.0.0",
     "category": "Field Service",
     "author": "Open Source Integrators",
     "website": "https://github.com/ursais/osi-addons",
