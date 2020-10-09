@@ -9,7 +9,7 @@
                 <group>
                     <field name="fsm_order_id"/>
                     <field name="url_link" widget="url"/>
-                </group> 
+                </group>
             </field>
         </field>
     </record>

@@ -6,7 +6,8 @@ from odoo import fields, models
 
 
 class FSMOrder(models.Model):
-    _inherit = 'fsm.order'
+    _inherit = "fsm.order"
 
-    sign_request_ids = fields.One2many('sign.request', 'fsm_order_id',
-                                       string='Requested Signatures')
+    sign_request_ids = fields.One2many(
+        "sign.request", "fsm_order_id", string="Requested Signatures"
+    )
