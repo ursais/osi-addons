@@ -5,13 +5,10 @@ from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
 
-
 class FSMOrder(models.Model):
     _inherit = "fsm.order"
 
-    ticket_id = fields.Many2one(
-        "helpdesk.ticket", string="Ticket", tracking=True
-    )
+    ticket_id = fields.Many2one("helpdesk.ticket", string="Ticket", tracking=True)
 
     def action_complete(self):
         if not self.date_end:
