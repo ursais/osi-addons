@@ -17,5 +17,6 @@
         "views/res_partner.xml",
         "wizard/fsm_order_close_wizard.xml",
     ],
+    "maintainers": ["max3903", "osi-scampbell"],
     "installable": True,
 }
