@@ -15,7 +15,7 @@
         'fieldservice_stage_server_action',
     ],
     'data': [
-        'security/partner_security.xml',
+        'security/ir_rule.xml',
         'security/ir.model.access.csv',
         'data/base_automation.xml',
         'views/res_config_settings.xml',
