@@ -71,7 +71,8 @@ class HrExpenseSheet(models.Model):
     @api.multi
     def approve_expense_sheets(self):
         for expense in self:
-            supervisor = expense.employee_id.parent_id
+            supervisor = expense.employee_id.expense_manager_id or \
+                expense.employee_id.parent_id
             supervisor_ids = []
             while supervisor:
                 if supervisor.user_id:
