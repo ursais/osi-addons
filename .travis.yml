@@ -27,10 +27,10 @@ jobs:
       before_install:
     - stage: test
       env:
-        - TESTS="1" ODOO_REPO="odoo/odoo" MAKEPOT="1" EXCLUDE="sale_subscription_suspend"
+        - TESTS="1" ODOO_REPO="odoo/odoo" MAKEPOT="1" EXCLUDE="sale_subscription_suspend,helpdesk_fieldservice"
     - stage: test
       env:
-        - TESTS="1" ODOO_REPO="OCA/OCB" EXCLUDE="sale_subscription_suspend"
+        - TESTS="1" ODOO_REPO="OCA/OCB" EXCLUDE="sale_subscription_suspend,helpdesk_fieldservice"
 
 env:
   global:
