@@ -3,6 +3,7 @@
 
 from odoo import api, models
 import time
+from datetime import datetime
 
 
 class QueueJob(models.Model):
@@ -20,5 +21,8 @@ class QueueJob(models.Model):
             for job_id in job_ids:
                 if record_ids == job_id.record_ids:
                     found = True
-        if not found:
-            return super().create(vals)
+        if found:
+            eta = vals.get('eta')
+            eta = eta + datetime.timedelta(days=1)
+            vals.update({'eta': eta})
+        return super().create(vals)
