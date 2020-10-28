@@ -14,7 +14,7 @@
         <field name="inherit_id"
                ref="helpdesk.helpdesk_ticket_view_form"/>
         <field name="arch" type="xml">
-            <field name="description" position="replace">
+            <!-- <field name="description" position="replace">
                 <notebook position="inside">
                     <page string="Description">
                         <field name="description"
@@ -36,7 +36,7 @@
                         </field>
                     </page>
                 </notebook>
-            </field>
+            </field> -->
             <field name="partner_id" position="before">
                 <field name="fsm_location_id"/>
                 <field name="all_orders_closed" invisible="1"/>
