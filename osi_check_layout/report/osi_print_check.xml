@@ -51,7 +51,7 @@
                 <th class="text-left">PO Ref#</th>
                 <th class="text-left">Invoice Number</th>
                 <th class="text-right">Inv. Amount</th>
-                <th class="text-right">Past Payments</th>
+                <th class="text-right">Credits</th>
                 <th class="text-right">Discount</th>
                 <th class="text-right">Payment</th>
                 <th class="text-right">Balance Due</th>
@@ -102,7 +102,7 @@
                 <th class="text-left">PO Ref#</th>
                 <th class="text-left">Invoice Number</th>
                 <th class="text-right">Inv. Amount</th>
-                <th class="text-right">Past Payments</th>
+                <th class="text-right">Credits</th>
                 <th class="text-right">Discount</th>
                 <th class="text-right">Payment</th>
                 <th class="text-right">Balance Due</th>
