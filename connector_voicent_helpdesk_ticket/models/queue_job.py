@@ -3,7 +3,7 @@
 
 from odoo import api, models
 import time
-from datetime import datetime
+from datetime import timedelta
 
 
 class QueueJob(models.Model):
@@ -23,6 +23,6 @@ class QueueJob(models.Model):
                     found = True
         if found:
             eta = vals.get('eta')
-            eta = eta + datetime.timedelta(days=1)
+            eta = eta + timedelta(days=1)
             vals.update({'eta': eta})
         return super().create(vals)
