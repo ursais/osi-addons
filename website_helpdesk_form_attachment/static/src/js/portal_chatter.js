@@ -1,4 +1,4 @@
-odoo.define('website_helpdesk_search.portal_chatter', function(require) {
+odoo.define('website_helpdesk_form_attachment.portal_chatter', function(require) {
 'use strict';
 
 var ajax = require('web.ajax');
@@ -53,7 +53,7 @@ portal_chatter.include({
 
     _loadTemplates: function(){
         this._super();
-        ajax.loadXML('/website_helpdesk_search/static/src/xml/portal_chatter.xml', qweb);
+        ajax.loadXML('/website_helpdesk_form_attachment/static/src/xml/portal_chatter.xml', qweb);
     },
 
     /**
