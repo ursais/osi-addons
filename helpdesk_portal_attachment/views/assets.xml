@@ -3,7 +3,7 @@
 
     <template id="assets_frontend_portal" inherit_id="portal.assets_frontend" name="Portal Assets" priority="15">
         <xpath expr="//script[last()]" position="after">
-            <script type="text/javascript" src="/website_helpdesk_form_attachment/static/src/js/portal_chatter.js"></script>
+            <script type="text/javascript" src="/helpdesk_portal_attachment/static/src/js/portal_chatter.js"></script>
         </xpath>
     </template>
 

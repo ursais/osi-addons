@@ -2,17 +2,11 @@
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 
-=================
-OSI Helpdesk Form
-=================
+==================================
+Helpdesk Portal add Severity field
+==================================
 
-This module improve customer helpdesk experience.
-
-
-Installation
-============
-
-* No specific installation step required.
+Add severity field to Helpdesk Portal form.
 
 
 Credits
