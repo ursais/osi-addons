@@ -23,4 +23,3 @@ class FSMOrderCloseWizard(models.TransientModel):
             'type': 'ir.actions.client',
             'tag': 'reload',
         }
-
