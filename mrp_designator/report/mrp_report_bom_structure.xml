@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_mrp_bom_designator" inherit_id="mrp.report_mrp_bom">
+        <xpath expr="//thead/tr" position="inside">
+            <th class="text-center">Designator</th>
+        </xpath>
+    </template>
+
+    <template id="report_mrp_bom_line_designator" inherit_id="mrp.report_mrp_bom_line">
+        <xpath expr="//tr[@t-att-data-line]" position="inside">
+            <td class="text-center">
+                <span>
+                    <t t-esc="l['designator']" />
+                </span>
+            </td>
+        </xpath>
+    </template>
+
+    <template id="report_mrp_bom_pdf_line_designator" inherit_id="mrp.report_mrp_bom_pdf_line">
+        <xpath expr="//tr" position="inside">
+            <td class="text-left">
+                 <span>
+                    <t t-esc="l.get('designator')" />
+                </span>
+              </td>
+        </xpath>
+    </template>
+</odoo>
