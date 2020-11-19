@@ -14,13 +14,13 @@ class WebsiteSale(WebsiteSale):
         csrf=False,
     )
     def portal_create_user(self, **kw):
-        product_id = request.env["product.product"].search(
-            [("recurring_invoice", "=", True)], limit=1
-        )
-        if not product_id:
-            product_id = request.env["product.product"].search(
-                [("recurring_invoice", "=", True)], limit=1
+        product_id = (
+            request.env["product.product"]
+            .sudo()
+            .search(
+                [("recurring_invoice", "=", True), ("operator", "!=", False)], limit=1
             )
+        )
         sale_order = request.website.sale_get_order(force_create=True)
         prodcut_exits = sale_order.search(
             [("order_line.product_id", "=", product_id.id), ("id", "=", sale_order.id)]

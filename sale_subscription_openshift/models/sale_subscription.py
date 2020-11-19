@@ -42,8 +42,7 @@ class SaleSubscription(models.Model):
                             "https://" + line_rec.instance_name + "." + apps_domain
                         )
                         template = line_rec.env.ref(
-                            "sale_subscription_openshift.\
-                                email_kudu_instance_has_been_suspended",
+                            "sale_subscription_openshift.email_kudu_instance_has_been_suspended",
                             raise_if_not_found=False,
                         )
                         template.send_mail(line_rec.id, force_send=True)
@@ -92,8 +91,7 @@ class SaleSubscription(models.Model):
                             "https://" + line_rec.instance_name + "." + apps_domain
                         )
                         template = line_rec.env.ref(
-                            "sale_subscription_openshift.\
-                                email_kudu_instance_has_been_closed",
+                            "sale_subscription_openshift.email_kudu_instance_has_been_closed",
                             raise_if_not_found=False,
                         )
                         template.send_mail(line_rec.id, force_send=True)
