@@ -35,7 +35,7 @@ class SaleSubscriptionLine(models.Model):
                 )
                 if project_code:
                     os.system(str(project_code))
-                    self.instance_url = (
+                    vals["instance_url"] = (
                         "https://"
                         + vals.get("instance_name")
                         + "."

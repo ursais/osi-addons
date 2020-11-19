@@ -10,7 +10,12 @@
     "author": "Open Source Integrators",
     "website": "http://www.opensourceintegrators.com",
     "category": "Sales",
-    "depends": ["auth_signup", "connector_openshift", "sale_subscription_suspend"],
+    "depends": [
+        "auth_signup",
+        "connector_openshift",
+        "sale_subscription_suspend",
+        "website_sale",
+    ],
     "data": [
         "security/ir.model.access.csv",
         "views/product_template_views.xml",
