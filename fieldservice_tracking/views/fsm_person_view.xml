@@ -1,0 +1,32 @@
+<odoo>
+    <record id="fieldservice_fsm_person_form_inherit" model="ir.ui.view">
+        <field name="name">fieldservice.fsm.person.form.inherit</field>
+        <field name="model">fsm.person</field>
+        <field name="inherit_id" ref="fieldservice.fsm_person_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="/form/sheet/notebook" position="inside">
+                <page name="fsm_tracking" string="Field Service Tracking">
+                    <group string="Last Update">
+                        <group>
+                            <field name="worker_allow_tracking"/>
+                            <field name="loc_time"/>
+                            <field name="rad_uom"/>
+                            <!-- <field name="track_shape"/> -->
+                        </group>
+                        <group>
+                            <field name="track_lat"/>
+                            <field name="track_long"/>
+                            <field name="loc_rad"/>
+                        </group>
+                    </group>
+                    <group col="4" groups="fieldservice_tracking.group_fsm_tracking_dispatcher">
+                        <field name="match_rad"/>
+                        <field name="track_intv_coarse"/>
+                        <field name="fence_rad"/>
+                        <field name="route_stage"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
