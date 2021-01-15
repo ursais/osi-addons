@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Copyright 2019 Open Source Integrators
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+        <!-- BoM form view -->
+        <record id="view_std_price_mrp_bom" model="ir.ui.view">
+            <field name="name">view.std.price.mrp.bom</field>
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+            <field name="arch" type="xml">
+                    <field name="product_id" position="before">
+                        <field name="std_cost_update_date" readonly="0"/>
+            		</field>
+            </field>
+        </record>
+
+</odoo>
