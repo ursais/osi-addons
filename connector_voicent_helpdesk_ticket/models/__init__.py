@@ -4,3 +4,4 @@
 
 from . import backend_voicent_call_line
 from . import helpdesk_ticket
+from . import queue_job
