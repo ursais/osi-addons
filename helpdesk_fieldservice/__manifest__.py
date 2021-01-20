@@ -11,6 +11,7 @@
     'depends': [
         'helpdesk',
         'fieldservice',
+        'helpdesk_resolution',
     ],
     'data': [
         'security/ir.model.access.csv',
