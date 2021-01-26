@@ -1,4 +1,4 @@
-# Copyright (C) 2019 Open Source Integrators
+# Copyright (C) 2019-2020 Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, models
@@ -10,11 +10,10 @@ class AccountReconciliation(models.AbstractModel):
 
     @api.model
     def _domain_move_lines_for_reconciliation(
-        self, st_line, aml_accounts, partner_id, excluded_ids=None, search_str=False
+        self, account_id, partner_id, excluded_ids=None, search_str=False
     ):
         res = super(AccountReconciliation, self)._domain_move_lines_for_reconciliation(
-            st_line=st_line,
-            aml_accounts=aml_accounts,
+            account_id=account_id,
             partner_id=partner_id,
             excluded_ids=excluded_ids,
             search_str=search_str,
