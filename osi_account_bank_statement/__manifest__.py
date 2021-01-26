@@ -9,7 +9,7 @@
     "category": "Accounting & Finance",
     "maintainer": "Open Source Integrators",
     "website": "http://www.opensourceintegrators.com",
-    "depends": ["account_payment_credit_card"],
+    "depends": ["account_accountant"],
     "installable": True,
     "development_status": "Beta",
     "maintainers": ["mgosai"],
