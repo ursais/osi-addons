@@ -16,6 +16,12 @@ Account Bank Statement
 
 This module restricts the reconciliation entries shown against a bank statement line.
 
+Important:
+
+OSI employees, please refer to this document:
+https://docs.google.com/document/d/1CYHYCElDG4fg3UWdmCFGxG8gHMlo6A-158CI4XRGRLg/edit
+
+
 **Table of contents**
 
 .. contents::
