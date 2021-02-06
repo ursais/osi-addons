@@ -13,13 +13,12 @@ class Users(models.Model):
         params_dict = {}
         for config_param in config_parameters:
             if config_param in [
-                'fieldservice_mobile.fsm_allow_portal_view_move_qty',
-                'fieldservice_mobile.fsm_allow_portal_update_move_qty',
-                    'fieldservice_mobile.fsm_allow_portal_validate_move_qty',
-                    'fieldservice_sale_order_line.fsm_allow_portal_view_sol_qty',
-                    'fieldservice_sale_order_line.fsm_allow_portal_update_sol_qty'
+                "fieldservice_mobile.fsm_allow_portal_view_move_qty",
+                "fieldservice_mobile.fsm_allow_portal_update_move_qty",
+                "fieldservice_mobile.fsm_allow_portal_validate_move_qty",
+                "fieldservice_sale_order_line.fsm_allow_portal_view_sol_qty",
+                "fieldservice_sale_order_line.fsm_allow_portal_update_sol_qty",
             ]:
-                params = self.env['ir.config_parameter'].sudo()
-                params_dict.update(
-                    {config_param: bool(params.get_param(config_param))})
+                params = self.env["ir.config_parameter"].sudo()
+                params_dict.update({config_param: bool(params.get_param(config_param))})
         return params_dict
