@@ -10,7 +10,7 @@
                         name="action_suspend"
                         id="action_suspend"
                         type="object"
-                        attrs="{'invisible': [('in_progress', '=', False)]}"/>
+                         attrs="{'invisible':[('stage_category', '!=', 'progress')]}"/>
                 <button string="Re-Activate"
                         name="action_re_activate"
                         id="action_re_activate"

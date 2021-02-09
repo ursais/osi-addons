@@ -20,6 +20,6 @@ class SaleSubscription(models.Model):
 
     def action_re_activate(self):
         subscription_stage_obj = self.env["sale.subscription.stage"]
-        stage = subscription_stage_obj.search([("in_progress", "=", True)], limit=1)
+        stage = subscription_stage_obj.search([("category", "=", "progress")], limit=1)
         if stage:
             self.write({"stage_id": stage.id, "to_renew": False, "date": False})
