@@ -5,7 +5,7 @@
 {
     "name": "Sale Subscription Openshift",
     "summary": """Sale Subscription Openshift""",
-    "version": "13.0.1.0.0",
+    "version": "14.0.1.0.0",
     "license": "LGPL-3",
     "author": "Open Source Integrators",
     "website": "http://www.opensourceintegrators.com",
