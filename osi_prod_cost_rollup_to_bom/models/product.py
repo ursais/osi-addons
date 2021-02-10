@@ -1,7 +1,7 @@
 # Copyright (C) 2021, Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from odoo import api, fields, models, _
+from odoo import fields, models, _
 from odoo.exceptions import UserError
 from odoo.tools import float_is_zero
 from datetime import datetime
@@ -27,7 +27,9 @@ class ProductProduct(models.Model):
         if real_time_products:
             raise UserError(
                 _(
-                    "The costing method on some products %s is FIFO. The cost will be computed during manufacturing process. Use Standard Costing to update BOM cost manually."
+                    "The costing method on some products %s is FIFO.\
+                    The cost will be computed during manufacturing process.\
+                    Use Standard Costing to update BOM cost manually."
                 )
                 % (real_time_products.mapped("display_name"))
             )
@@ -39,7 +41,8 @@ class ProductProduct(models.Model):
                     ("product_id", "in", self.ids),
                     "&",
                     ("product_id", "=", False),
-                    ("product_tmpl_id", "in", self.mapped("product_tmpl_id").ids),
+                    ("product_tmpl_id", "in",
+                        self.mapped("product_tmpl_id").ids),
                 ]
             )
 
@@ -51,10 +54,12 @@ class ProductProduct(models.Model):
                 if product.cost_method == "standard":
 
                     if product.product_tmpl_id.product_variant_count == 1:
-                        new_price = product._get_price_from_bom(boms_to_recompute)
+                        new_price = \
+                            product._get_price_from_bom(boms_to_recompute)
 
                         if not float_is_zero(
-                            new_price - product.standard_price, precision_rounding=2
+                            new_price - product.standard_price,
+                            precision_rounding=2
                         ):
                             product._change_standard_price(new_price)
                             product.product_tmpl_id.std_cost_update_date = (
@@ -66,9 +71,11 @@ class ProductProduct(models.Model):
                                 str(product.product_tmpl_id.standard_price),
                             )
                     else:
-                        new_price = product._get_price_from_bom(boms_to_recompute)
+                        new_price = \
+                            product._get_price_from_bom(boms_to_recompute)
                         if type(new_price) == float and not float_is_zero(
-                            new_price - product.standard_price, precision_rounding=2
+                            new_price -
+                            product.standard_price, precision_rounding=2
                         ):
                             product._change_standard_price(new_price)
                             product.std_cost_update_date = datetime.now()
@@ -103,7 +110,8 @@ class ProductProduct(models.Model):
             if line._skip_bom_line(self):
                 continue
 
-            # Compute recursive if line has `child_line_ids` and the product has not been computed recently
+            # Compute recursive if line has `child_line_ids` and the  \
+            # product has not been computed recently
             if (
                 line.child_bom_id
                 and (
@@ -128,7 +136,8 @@ class ProductProduct(models.Model):
                 )
                 account_id = (
                     line.product_id.property_account_expense_id.id
-                    or line.product_id.categ_id.property_account_expense_categ_id.id
+                    or
+                    line.product_id.categ_id.property_account_expense_categ_id.id
                 )
 
                 if line.product_id.product_tmpl_id.product_variant_count == 1:
@@ -140,13 +149,12 @@ class ProductProduct(models.Model):
                             child_total
                         )
 
-                        line.product_id.product_tmpl_id.std_cost_update_date = (
-                            datetime.now()
-                        )
+                        line.product_id.product_tmpl_id.std_cost_update_date =\
+                            (datetime.now())
                         _logger.info(
                             "Product : %s Standard Price: %s ",
                             line.product_id.default_code,
-                            str(line.product_id.product_tmpl_id.standard_price),
+                            str(line.product_id.product_tmpl_id.standard_price)
                         )
                 else:
                     if not float_is_zero(
@@ -174,7 +182,8 @@ class ProductProduct(models.Model):
 
         bom.std_cost_update_date = datetime.now()
         if bom.product_qty > 0:
-            return bom.product_uom_id._compute_price(total / bom.product_qty, self.uom_id)
+            return bom.product_uom_id._compute_price(total / bom.product_qty,
+                                                     self.uom_id)
 
 
 class ProductTemplate(models.Model):

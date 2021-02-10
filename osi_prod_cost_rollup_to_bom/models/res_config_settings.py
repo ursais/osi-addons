@@ -8,27 +8,33 @@ class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
     bom_cost_email = fields.Char(
-        string='BoM cost rollup email',
-        related='company_id.bom_cost_email',
-        readonly = False,
-        help='BoM Cost rollup Email notification will be sent to this email address')
+        string="BoM cost rollup email",
+        related="company_id.bom_cost_email",
+        readonly=False,
+        help="BoM Cost rollup Email notification will be sent to this email address",
+    )
 
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
         res.update(
-            bom_cost_email=self.env['ir.config_parameter'].sudo().get_param('osi_prod_cost_rollup_to_bom.bom_cost_email')
+            bom_cost_email=self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("osi_prod_cost_rollup_to_bom.bom_cost_email")
         )
 
         return res
 
     def set_values(self):
         super(ResConfigSettings, self).set_values()
-        self.env['ir.config_parameter'].sudo().set_param('osi_prod_cost_rollup_to_bom.bom_cost_email', self.bom_cost_email)
+        self.env["ir.config_parameter"].sudo().set_param(
+            "osi_prod_cost_rollup_to_bom.bom_cost_email", self.bom_cost_email
+        )
 
 
 class ResCompany(models.Model):
     _inherit = "res.company"
 
     bom_cost_email = fields.Char(
-        string='BoM cost rollup email',
-        help='BoM Cost rollup Email notification will be sent to this email address')
+        string="BoM cost rollup email",
+        help="BoM Cost rollup Email notification will be sent to this email address",
+    )
