@@ -1,4 +1,4 @@
-# Copyright (C) 2019, Open Source Integrators
+# Copyright (C) 2021, Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo import fields, models, api, _
@@ -64,7 +64,6 @@ class MrpBom(models.Model):
                     product_variants = self.get_product_variants(bom.product_tmpl_id)
                     # update only if necessary
                     if bom._update_bom(bom.std_cost_update_date):
-                        
                         product_variants.action_bom_cost()
 
             _logger.info("BOM Cost Rollup Process Completed")

@@ -1,4 +1,4 @@
-# Copyright (C) 2019, Open Source Integrators
+# Copyright (C) 2021, Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo import api, fields, models, _
@@ -48,7 +48,6 @@ class ProductProduct(models.Model):
                     product.property_account_expense_id.id
                     or product.categ_id.property_account_expense_categ_id.id
                 )
-
                 if product.cost_method == "standard":
 
                     if product.product_tmpl_id.product_variant_count == 1:
@@ -57,7 +56,7 @@ class ProductProduct(models.Model):
                         if not float_is_zero(
                             new_price - product.standard_price, precision_rounding=2
                         ):
-                            product.do_change_standard_price(new_price, account_id)
+                            product._change_standard_price(new_price)
                             product.product_tmpl_id.std_cost_update_date = (
                                 datetime.now()
                             )
@@ -68,11 +67,10 @@ class ProductProduct(models.Model):
                             )
                     else:
                         new_price = product._get_price_from_bom(boms_to_recompute)
-
-                        if not float_is_zero(
+                        if type(new_price) == float and not float_is_zero(
                             new_price - product.standard_price, precision_rounding=2
                         ):
-                            product.do_change_standard_price(new_price, account_id)
+                            product._change_standard_price(new_price)
                             product.std_cost_update_date = datetime.now()
                             _logger.info(
                                 "Product : %s Standard Price: %s ",
@@ -128,7 +126,6 @@ class ProductProduct(models.Model):
                     )
                     * line.product_qty
                 )
-
                 account_id = (
                     line.product_id.property_account_expense_id.id
                     or line.product_id.categ_id.property_account_expense_categ_id.id
@@ -139,8 +136,8 @@ class ProductProduct(models.Model):
                         child_total - line.product_id.standard_price,
                         precision_rounding=2,
                     ):
-                        line.product_id.do_change_standard_price(
-                            child_total, account_id
+                        line.product_id._change_standard_price(
+                            child_total
                         )
 
                         line.product_id.product_tmpl_id.std_cost_update_date = (
@@ -156,8 +153,8 @@ class ProductProduct(models.Model):
                         child_total - line.product_id.standard_price,
                         precision_rounding=2,
                     ):
-                        line.product_id.do_change_standard_price(
-                            child_total, account_id
+                        line.product_id._change_standard_price(
+                            child_total
                         )
                         line.product_id.std_cost_update_date = datetime.now()
                         _logger.info(
@@ -174,5 +171,17 @@ class ProductProduct(models.Model):
                 )
 
                 total += ctotal
+
         bom.std_cost_update_date = datetime.now()
-        return bom.product_uom_id._compute_price(total / bom.product_qty, self.uom_id)
+        if bom.product_qty > 0:
+            return bom.product_uom_id._compute_price(total / bom.product_qty, self.uom_id)
+
+
+class ProductTemplate(models.Model):
+    _inherit = "product.template"
+
+    std_cost_update_date = fields.Datetime(
+        string="Standard Cost Update Date",
+        copy=False,
+        help="Last time the standard cost was performed on this product.",
+    )

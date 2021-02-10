@@ -1,4 +1,4 @@
-# Copyright (C) 2019, Open Source Integrators
+# Copyright (C) 2021, Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo import fields, models
@@ -18,7 +18,7 @@ class ResConfigSettings(models.TransientModel):
         res.update(
             bom_cost_email=self.env['ir.config_parameter'].sudo().get_param('osi_prod_cost_rollup_to_bom.bom_cost_email')
         )
-        
+
         return res
 
     def set_values(self):
