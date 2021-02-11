@@ -28,4 +28,18 @@
         </field>
     </record>
 
+    <record id="fsm_order_artisent_changes_inherit model" model="ir.ui.view">
+        <field name="name">fsm.order.artisent.changes.inherit</field>
+        <field name="model">fsm.order</field>
+        <field name="inherit_id" ref="artisent.fsm_order_artisent_changes"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sale_order_line_ids']/tree/field[@name='product_uom_qty']" position="after">
+                <field name="fsm_quantity"/>
+            </xpath>
+            <xpath expr="//field[@name='sale_order_line_ids']/tree" position="attributes">
+                <attribute name="decoration-danger">fsm_quantity != product_uom_qty</attribute>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
