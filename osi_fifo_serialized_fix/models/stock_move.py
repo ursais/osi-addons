@@ -41,32 +41,27 @@ class StockMove(models.Model):
                         val["value"] = val_obj.unit_cost * svl_id[1] * -1
                         val["company_id"] = self.env.user.company_id.id
                         val["lot_ids"] = [(6, 0, svl_id[2])]
+                        if line_id.product_id.tracking == 'lot':
+                            val["quantity"] = line_id.qty_done * -1
                         final_layers.append(val)
-                    final_layers = self.env["stock.valuation.layer"].create(
-                        final_layers
-                    )
+                    final_layers = self.env["stock.valuation.layer"].create(final_layers)
                     move.write(
                         {"stock_valuation_layer_ids": [(6, 0, final_layers.ids)]}
                     )
                 else:
-                    valuation_layer = self.env["stock.valuation.layer"].browse(
-                        svl_ids[0][0]
-                    )
                     if len(move.stock_valuation_layer_ids.ids) > 1:
+                        svl = self.env["stock.valuation.layer"].browse(svl_ids[0][0])
                         val = move.stock_valuation_layer_ids[0]
-                        val.unit_cost = -1 * valuation_layer.unit_cost
+                        val.unit_cost = -1 * svl.unit_cost
                         for layer in move.stock_valuation_layer_ids:
                             layer.sudo().unlink()
                         move.write({"stock_valuation_layer_ids": [6, 0, val.id]})
                     else:
-                        move.stock_valuation_layer_ids.unit_cost = (
-                            -1 * valuation_layer.unit_cost
-                        )
-                        move.stock_valuation_layer_ids.value = (
-                            -1
-                            * move.stock_valuation_layer_ids.quantity
+                        svl = self.env["stock.valuation.layer"].browse(svl_ids[0][0])
+                        move.stock_valuation_layer_ids.unit_cost = -1 * svl.unit_cost
+                        move.stock_valuation_layer_ids.value = -1 \
+                            * move.stock_valuation_layer_ids.quantity \
                             * move.stock_valuation_layer_ids.unit_cost
-                        )
         return res
 
     def increment_qty(self, id, svl_ids, lot_id):
