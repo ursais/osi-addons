@@ -13,7 +13,6 @@
     'website': 'https://github.com/ursais/osi-addons',
     'depends': [
         'fieldservice_stage_server_action',
-        'artisent',
     ],
     'data': [
         'security/ir.model.access.csv',
