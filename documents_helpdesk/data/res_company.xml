@@ -2,7 +2,7 @@
 <odoo noupdate="1">
 
     <record id="base.main_company" model="res.company">
-        <field name="documents_helpdesk" ref="documents_folder_helpdesk" />
+        <field name="helpdesk_folder" ref="documents_folder_helpdesk" />
     </record>
 
 </odoo>
