@@ -5,7 +5,7 @@
     "version": "14.0.1.0.0",
     "category": "Documents",
     "summary": """Manage Helpdesk documents""",
-    "website": "https://www.opensourceintegrators.com",
+    "website": "https://github.com/ursais/osi-addons",
     "author": "Open Source Integrators",
     "license": "LGPL-3",
     "depends": ["documents", "helpdesk"],
