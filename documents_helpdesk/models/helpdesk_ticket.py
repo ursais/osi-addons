@@ -6,3 +6,6 @@ from odoo import models
 class HelpdeskTicket(models.Model):
     _name = "helpdesk.ticket"
     _inherit = ["helpdesk.ticket", "documents.mixin"]
+
+    def _get_document_folder(self):
+        return self.company_id.helpdesk_folder
