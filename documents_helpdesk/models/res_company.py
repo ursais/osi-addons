@@ -16,7 +16,8 @@ class ResCompany(models.Model):
         string="Helpdesk Workspace",
         domain=_domain_company,
         default=lambda self: self.env.ref(
-            "documents_helpdesk.documents_folder_helpdesk", raise_if_not_found=False,
+            "documents_helpdesk.documents_folder_helpdesk",
+            raise_if_not_found=False,
         ),
     )
     document_helpdesk_tags = fields.Many2many(
