@@ -2,6 +2,7 @@ language: python
 cache:
     directories:
         - $HOME/.cache/pip
+        - $HOME/.cache/pre-commit
 
 python:
     - "3.6"
