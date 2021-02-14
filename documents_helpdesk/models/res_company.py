@@ -20,5 +20,5 @@ class ResCompany(models.Model):
         ),
     )
     document_helpdesk_tags = fields.Many2many(
-        "documents.tag", "helpdesk.tag", string="Helpdesk Tags"
+        "documents.tag", "document_helpdesk_tag", string="Helpdesk Tags"
     )
