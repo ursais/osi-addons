@@ -1,7 +1,11 @@
 <?xml version="1.0" ?>
 <odoo noupdate="1">
 
-    <record id="documents_facet_helpdesk" model="documents.facet" forcecreate="0">
+    <record
+        id="documents_facet_helpdesk"
+        model="documents.facet"
+        forcecreate="0"
+    >
         <field name="name">Helpdesk</field>
         <field name="sequence">6</field>
         <field name="folder_id" ref="documents_folder_helpdesk" />
