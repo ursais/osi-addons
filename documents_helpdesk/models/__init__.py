@@ -4,4 +4,5 @@ from . import (
     res_company,
     res_config_settings,
     helpdesk_ticket,
+    documents_workflow_rule,
 )

@@ -13,6 +13,7 @@
         "data/documents_folder.xml",
         "data/documents_facet.xml",
         "data/res_company.xml",
+        "data/documents_workflow_rule.xml",
         "views/res_config_settings.xml",
     ],
     "development_status": "Beta",
