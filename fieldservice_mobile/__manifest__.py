@@ -4,13 +4,13 @@
 
 {
     "name": "Field Service Mobile",
-    "summary": "This module is manage FSM mobile stages based on" " configuration.",
+    "summary": "Field Service Mobile backend support.",
     "license": "AGPL-3",
     "version": "12.0.1.1.0",
     "category": "Field Service",
     "author": "Open Source Integrators",
     "website": "https://github.com/ursais/osi-addons",
-    "depends": ["fieldservice_stage_server_action",],
+    "depends": ["fieldservice_stage_server_action"],
     "data": [
         "security/ir_rule.xml",
         "security/ir.model.access.csv",
@@ -20,5 +20,5 @@
         "views/fsm_order_view.xml",
     ],
     "development_status": "Beta",
-    "maintainers": ["wolfhall",],
+    "maintainers": ["wolfhall"],
 }
