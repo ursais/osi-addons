@@ -7,4 +7,5 @@ from odoo import fields, models
 class StockValuationLayer(models.Model):
     _inherit = "stock.valuation.layer"
 
-    lot_ids = fields.Many2many("stock.production.lot", string="Lot ID's", readonly=True)
+    lot_ids = fields.Many2many("stock.production.lot",
+                               string="Lot ID's", readonly=True)
