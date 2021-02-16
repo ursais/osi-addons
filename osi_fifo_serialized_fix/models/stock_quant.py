@@ -15,11 +15,14 @@ class StockQuant(models.Model):
         for quant in self:
             if quant.product_id.cost_method == 'fifo':
                 svl_ids = self.env['stock.valuation.layer'].\
-                    search([('product_id', '=', quant.product_id.id), ('value', '>', 0)])
+                    search([('product_id', '=', quant.product_id.id),
+                            ('value', '>', 0)])
                 for svl_id in svl_ids:
                     if quant.lot_id in svl_id.lot_ids:
                         if quant.product_id.tracking == 'lot':
-                            quant.value = svl_id.value
+                            quant.value = svl_id.value / svl_id.quantity \
+                                * quant.inventory_quantity * -1
                         else:
-                            quant.value = svl_id.value / svl_id.quantity
+                            quant.value = svl_id.value / svl_id.quantity \
+                                * quant.inventory_quantity
         return res
