@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<odoo noupdate="1">
+
+    <record
+        id="documents_folder_helpdesk"
+        model="documents.folder"
+        forcecreate="0"
+    >
+        <field name="name">Helpdesk</field>
+        <field name="group_ids" eval="[(4, ref('base.group_user'))]" />
+        <field name="read_group_ids" eval="[(4, ref('base.group_user'))]" />
+        <field name="user_specific">True</field>
+        <field name="sequence">12</field>
+    </record>
+
+</odoo>
