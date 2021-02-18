@@ -16,7 +16,7 @@ class StockMove(models.Model):
             new_standard_price = 0
             tmp_qty = 0
             tmp_value = 0
-            candidates = valued_move_line.product_id._get_fifo_candidates_in_move_with_company(move.company_id.id)
+            candidates = move.product_id._get_fifo_candidates_in_move_with_company(move.company_id.id)
             for valued_move_line in valued_move_lines:
                 valued_quantity = 0
                 valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
