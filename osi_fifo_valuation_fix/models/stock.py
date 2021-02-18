@@ -16,12 +16,12 @@ class StockMove(models.Model):
             new_standard_price = 0
             tmp_qty = 0
             tmp_value = 0
+            candidates = valued_move_line.product_id._get_fifo_candidates_in_move_with_company(move.company_id.id)
             for valued_move_line in valued_move_lines:
                 valued_quantity = 0
                 valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, move.product_id.uom_id)
                 # Find back incoming stock moves (called candidates here) to value this move.
                 qty_to_take_on_candidates = quantity or valued_quantity
-                candidates = valued_move_line.product_id._get_fifo_candidates_in_move_with_company(move.company_id.id)
                 for candidate in candidates:
                     # Check if the lot_id of the move line matches any lot_id for the candidate lines.
                     allowed_canditates_lines = self.env["stock.move.line"].search([("move_id", "=", candidate.id),("lot_id", "=", valued_move_line.lot_id.id)])
