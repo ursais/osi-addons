@@ -1,4 +1,3 @@
-
 <odoo>
     <record id="inventory_valuation_lot_ids" model="ir.ui.view">
         <field name="name">inventory.valuation.lot.ids</field>
