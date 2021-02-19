@@ -45,11 +45,15 @@ class StockMove(models.Model):
                             qty_taken_on_candidate = candidate.remaining_qty
                         else:
                             qty_taken_on_candidate = qty_to_take_on_candidates
-                        candidate_price_unit = candidate.remaining_value / candidate.remaining_qty
-                        value_taken_on_candidate = qty_taken_on_candidate * candidate_price_unit
+                        candidate_price_unit =\
+                            candidate.remaining_value / candidate.remaining_qty
+                        value_taken_on_candidate =\
+                            qty_taken_on_candidate * candidate_price_unit
                         candidate_vals = {
-                            "remaining_qty": candidate.remaining_qty - qty_taken_on_candidate,
-                            "remaining_value": candidate.remaining_value - value_taken_on_candidate,
+                            "remaining_qty":
+                                candidate.remaining_qty - qty_taken_on_candidate,
+                            "remaining_value":
+                                candidate.remaining_value - value_taken_on_candidate,
                         }
                         candidate.write(candidate_vals)
 
