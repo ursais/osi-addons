@@ -1,0 +1,1 @@
+Budgetary Positions: initial setup needs to be done on the GL Accounts for P&L. The budgetary position names must match the GL Accounts they will be compared to in Financial Reports. For Example "400000 Sales".

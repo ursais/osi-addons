@@ -60,28 +60,27 @@ class ReportAccountFinancialReport(models.Model):
             options, financial_line, groupby_id, display_name, results, groupby_keys
         )
         if self._context.get("id") == 1:
-            total_amount = []
+            amount_list = []
             if financial_line.groupby == "account_id":
                 domain = [
                     ("general_budget_id.account_ids", "in", [groupby_id]),
                     ("date_from", ">=", options.get("date").get("date_from")),
                     ("date_to", "<=", options.get("date").get("date_to")),
-                    ("crossovered_budget_id.state", "not in", ["draft", "cancel"]),
+                    ("crossovered_budget_id.state", "in", ["validate"]),
                 ]
                 if options.get("analytic_accounts"):
                     domain.append(
-                        ("analytic_account_id", "=", options.get("analytic_accounts"))
+                        ("analytic_account_id", "in", options.get("analytic_accounts"))
                     )
                 crossovered_lines = self.env["crossovered.budget.lines"].search(domain)
                 total_budget = 0
                 for rec in crossovered_lines:
-                    if rec.general_budget_id:
+                    if rec.general_budget_id.account_ids:
                         amount = rec.planned_amount / len(
                             rec.general_budget_id.account_ids
                         )
-                        total_amount.append(amount)
-                if total_amount:
-                    total_budget = sum(total_amount)
+                        amount_list.append(amount)
+                total_budget = sum(amount_list)
                 financial_line_account["columns"] = [
                     {
                         "name": self._format_cell_value(financial_line, total_budget),
