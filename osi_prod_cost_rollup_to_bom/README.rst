@@ -3,7 +3,7 @@
    :alt: License: LGPL-3
 
 =======================
-Product BOM Cost Rollup 
+Product BOM Cost Rollup
 =======================
 
 With Standard Cost Method, products that have bill of materials defined
