@@ -9,7 +9,7 @@
     "category": "Accounting/Accounting",
     "maintainer": "Open Source Integrators",
     "website": "https://github.com/ursais/osi-addons",
-    "depends": ["account_accountant", "account_budget"],
+    "depends": ["account_accountant", "account_budget", "account_reports"],
     "installable": True,
     "license": "LGPL-3",
     "development_status": "Beta",
