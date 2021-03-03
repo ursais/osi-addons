@@ -6,7 +6,7 @@ from odoo import fields, models
 
 
 class FSMStage(models.Model):
-    _inherit = 'fsm.stage'
+    _inherit = "fsm.stage"
 
-    is_display_in_mobile = fields.Boolean('Display in Mobile')
-    is_display_in_odoo = fields.Boolean('Display in Odoo')
+    is_display_in_mobile = fields.Boolean("Display in Mobile", default=False)
+    is_display_in_odoo = fields.Boolean("Display in Odoo", default=True)

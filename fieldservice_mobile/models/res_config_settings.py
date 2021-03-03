@@ -6,7 +6,17 @@ from odoo import fields, models
 
 
 class ResConfigSettings(models.TransientModel):
-    _inherit = 'res.config.settings'
+    _inherit = "res.config.settings"
 
-    module_fieldservice_isp_flow = fields.Boolean(
-        string='Enable Field Service ISP Workflow')
+    fsm_allow_portal_view_move_qty = fields.Boolean(
+        string="Allow portal user to view stock move quantities",
+        config_parameter="fieldservice_mobile.fsm_allow_portal_view_move_qty",
+    )
+    fsm_allow_portal_update_move_qty = fields.Boolean(
+        string="Allow portal user update of stock move quantities",
+        config_parameter="fieldservice_mobile.fsm_allow_portal_update_move_qty",
+    )
+    fsm_allow_portal_validate_move_qty = fields.Boolean(
+        string="Allow portal user validation of stock move quantities",
+        config_parameter="fieldservice_mobile.fsm_allow_portal_validate_move_qty",
+    )
