@@ -17,8 +17,15 @@ class FSMOrderCloseWizard(models.TransientModel):
     def action_close_ticket(self):
         for record in self:
             if not record.ticket_id.stage_id.is_close:
-                record.ticket_id.write({'resolution': record.resolution,
-                                        'stage_id': record.stage_id.id})
+                record.ticket_id.write({'resolution': record.resolution})
+                record.ticket_id.write({'stage_id': record.stage_id.id})
+                # Run the action that is on the ticket stage
+                ctx = dict({})
+                ctx.update({
+                    'active_id': record.ticket_id.id,
+                    'active_model': 'helpdesk.ticket'
+                })
+                record.stage_id.action_id.with_context(ctx).run()
         return {
             'type': 'ir.actions.client',
             'tag': 'reload',
