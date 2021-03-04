@@ -10,7 +10,7 @@
     "category": "Field Service",
     "author": "Open Source Integrators",
     "website": "https://github.com/ursais/osi-addons",
-    "depends": ["fieldservice_stage_server_action"],
+    "depends": ["fieldservice_stage_server_action", "stock"],
     "data": [
         "security/ir_rule.xml",
         "security/ir.model.access.csv",
