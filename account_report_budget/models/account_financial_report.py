@@ -15,7 +15,7 @@ class ReportAccountFinancialReport(models.Model):
         headers, sorted_groupby_keys = super(
             ReportAccountFinancialReport, self
         )._build_headers_hierarchy(options_list, groupby_keys)
-        if self._context.get("id") == 1:
+        if self._context.get("id") == 1 or self.id == 1:
             headers[0].insert(
                 1, {"name": "Budget Amount", "class": "number", "colspan": 1}
             )
@@ -36,7 +36,7 @@ class ReportAccountFinancialReport(models.Model):
         financial_report_line = super(
             ReportAccountFinancialReport, self
         )._get_financial_line_report_line(options, financial_line, solver, groupby_keys)
-        if self._context.get("id") == 1:
+        if self._context.get("id") == 1 or self.id == 1:
             financial_report_line["columns"] = [
                 {"name": "", "no_format": "", "class": "number"}
             ] + financial_report_line.get("columns")
@@ -59,7 +59,7 @@ class ReportAccountFinancialReport(models.Model):
         )._get_financial_aml_report_line(
             options, financial_line, groupby_id, display_name, results, groupby_keys
         )
-        if self._context.get("id") == 1:
+        if self._context.get("id") == 1 or self.id == 1:
             amount_list = []
             if financial_line.groupby == "account_id":
                 domain = [
@@ -108,4 +108,4 @@ class ReportAccountFinancialReport(models.Model):
                             "class": "number",
                         }
                     )
-            return financial_line_account
+        return financial_line_account
