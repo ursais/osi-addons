@@ -4,7 +4,7 @@
 {
     "name": "OSI FIFO Serialized Product Fix",
     "summary": """Properly handle Inventory Valuation with Serialized and Lot Tracked products""",
-    "version": "14.0.0.0.1",
+    "version": "13.0.1.0.0",
     "author": "Open Source Integrators",
     "category": "Accounting",
     "depends": ["stock_account"],
