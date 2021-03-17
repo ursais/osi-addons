@@ -113,7 +113,10 @@ class StockMove(models.Model):
     def _create_in_svl(self, forced_quantity=None):
         res = super()._create_in_svl(forced_quantity)
         for move in self:
+            lot_ids=[]
             for layer in res:
                 if layer.stock_move_id.id == move.id:
-                    layer.lot_ids = [(6, 0, move.lot_ids.ids)]
+                    for line_id in move.move_line_ids:
+                        lot_ids.append(line_id.lot_id.id)
+                    layer.lot_ids = [(6, 0, lot_ids)]
         return res
