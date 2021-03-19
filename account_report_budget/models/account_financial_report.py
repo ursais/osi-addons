@@ -1,7 +1,10 @@
 # Copyright (C) 2021 - TODAY, Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
+import ast
+
 from odoo import _, api, models
+from odoo.tools import ustr
 
 
 class ReportAccountFinancialReport(models.Model):
@@ -159,65 +162,173 @@ class ReportAccountFinancialReport(models.Model):
                 if options.get("comparison").get("filter") == "no_comparison":
                     period_range = 1
                 column_list = []
+                period = -1
+                financial_line_account_value = financial_report_line["columns"].copy()
                 for rec in range(0, period_range):
-
+                    domain = (
+                        financial_line.domain
+                        and ast.literal_eval(ustr(financial_line.domain))
+                        or []
+                    )
+                    total_budget = 0
+                    date_from = options.get("date").get("date_from")
+                    date_to = options.get("date").get("date_to")
+                    if period >= 0 and options.get("comparison").get("periods")[period]:
+                        date_from = (
+                            options.get("comparison")
+                            .get("periods")[period]
+                            .get("date_from")
+                        )
+                        date_to = (
+                            options.get("comparison")
+                            .get("periods")[period]
+                            .get("date_to")
+                        )
+                    period += 1
+                    variance = 0
+                    rem_budget = 0
+                    total_budget = 0
+                    if domain:
+                        lines_ids = self.env["account.move.line"].search(domain)
+                        account_ids = lines_ids.mapped("account_id")
+                        for rec_account in account_ids:
+                            amount_list = []
+                            domain = [
+                                (
+                                    "general_budget_id.account_ids",
+                                    "in",
+                                    [rec_account.id],
+                                ),
+                                ("date_from", "<=", date_from),
+                                ("date_to", ">=", date_to),
+                                (
+                                    "crossovered_budget_id.state",
+                                    "in",
+                                    ["validate", "done"],
+                                ),
+                            ]
+                            if options.get("analytic_accounts"):
+                                domain.append(
+                                    (
+                                        "analytic_account_id",
+                                        "in",
+                                        options.get("analytic_accounts"),
+                                    )
+                                )
+                            crossovered_lines = self.env[
+                                "crossovered.budget.lines"
+                            ].search(domain)
+                            for rec_lines in crossovered_lines:
+                                if rec_lines.general_budget_id.account_ids:
+                                    amount = rec_lines.planned_amount / len(
+                                        rec_lines.general_budget_id.account_ids
+                                    )
+                                    amount_list.append(amount)
+                            total_budget += sum(amount_list)
+                        rem_budget = total_budget - abs(
+                            financial_line_account_value[period].get("no_format")
+                        )
+                        variance = 0
+                        if total_budget:
+                            variance = round((rem_budget / total_budget) * 100, 2)
                     if self._display_growth_comparison(options):
                         financial_report_line["columns"].insert(
-                            -2 + rec, {"name": "", "no_format": "", "class": "number"}
+                            -2 + rec,
+                            {
+                                "name": domain
+                                and self._format_cell_value(
+                                    financial_line, total_budget
+                                )
+                                or "",
+                                "no_format": domain and total_budget or "",
+                                "class": "number",
+                            },
                         )
                         financial_report_line["columns"].insert(
-                            -2 + rec, {"name": "", "no_format": "", "class": "number"}
+                            -2 + rec,
+                            {
+                                "name": domain
+                                and self._format_cell_value(financial_line, rem_budget)
+                                or "",
+                                "no_format": domain and total_budget or "",
+                                "class": "number",
+                            },
                         )
                         financial_report_line["columns"].insert(
-                            -2 + rec, {"name": "", "no_format": "", "class": "number"}
+                            -2 + rec,
+                            domain
+                            and self._compute_growth_comparison_column_variance(
+                                variance
+                            )
+                            or {"name": "", "no_format": "", "class": "number"},
                         )
                         column_list = []
-                    else:
-                        if (
-                            options
-                            and options.get("comparison")
-                            and options.get("comparison").get("filter")
-                            == "no_comparison"
-                        ):
-                            financial_report_line["columns"].append(
-                                {"name": "", "no_format": "", "class": "number"}
+                    elif (
+                        options
+                        and options.get("comparison")
+                        and options.get("comparison").get("filter") == "no_comparison"
+                    ):
+                        financial_report_line["columns"].append(
+                            {
+                                "name": domain
+                                and self._format_cell_value(
+                                    financial_line, total_budget
+                                )
+                                or "",
+                                "no_format": domain and total_budget or "",
+                                "class": "number",
+                            }
+                        )
+                        financial_report_line["columns"].append(
+                            {
+                                "name": domain
+                                and self._format_cell_value(financial_line, rem_budget)
+                                or "",
+                                "no_format": domain and total_budget or "",
+                                "class": "number",
+                            }
+                        )
+                        financial_report_line["columns"].append(
+                            domain
+                            and self._compute_growth_comparison_column_variance(
+                                variance
                             )
-                            financial_report_line["columns"].append(
-                                {"name": "", "no_format": "", "class": "number"}
+                            or {"name": "", "no_format": "", "class": "number"},
+                        )
+                        column_list = []
+                    elif (
+                        options
+                        and options.get("comparison")
+                        and options.get("comparison").get("number_period")
+                    ):
+                        column_list.append(financial_report_line["columns"][rec])
+                        column_list.append(
+                            {
+                                "name": domain
+                                and self._format_cell_value(
+                                    financial_line, total_budget
+                                )
+                                or "",
+                                "no_format": domain and total_budget or "",
+                                "class": "number",
+                            }
+                        )
+                        column_list.append(
+                            {
+                                "name": domain
+                                and self._format_cell_value(financial_line, rem_budget)
+                                or "",
+                                "no_format": domain and total_budget or "",
+                                "class": "number",
+                            }
+                        )
+                        column_list.append(
+                            domain
+                            and self._compute_growth_comparison_column_variance(
+                                variance
                             )
-                            financial_report_line["columns"].append(
-                                {"name": "", "no_format": "", "class": "number"}
-                            )
-                            column_list = []
-                        else:
-                            if (
-                                options
-                                and options.get("comparison")
-                                and options.get("comparison").get("number_period")
-                            ):
-                                column_list.append(
-                                    financial_report_line["columns"][rec]
-                                )
-                                column_list.append(
-                                    {"name": "", "no_format": "", "class": "number"}
-                                )
-                                column_list.append(
-                                    {"name": "", "no_format": "", "class": "number"}
-                                )
-                                column_list.append(
-                                    {"name": "", "no_format": "", "class": "number"}
-                                )
-                            else:
-                                financial_report_line["columns"].insert(
-                                    -1, {"name": "", "no_format": "", "class": "number"}
-                                )
-                                financial_report_line["columns"].insert(
-                                    -1, {"name": "", "no_format": "", "class": "number"}
-                                )
-                                financial_report_line["columns"].insert(
-                                    -1, {"name": "", "no_format": "", "class": "number"}
-                                )
-                                column_list = []
+                            or {"name": "", "no_format": "", "class": "number"},
+                        )
                 if column_list:
                     financial_report_line["columns"] = column_list
         return financial_report_line
@@ -385,34 +496,6 @@ class ReportAccountFinancialReport(models.Model):
                                             variance
                                         )
                                     )
-                                else:
-                                    financial_line_account["columns"].insert(
-                                        -1,
-                                        {
-                                            "name": self._format_cell_value(
-                                                financial_line, total_budget
-                                            ),
-                                            "no_format": total_budget,
-                                            "class": "number",
-                                        },
-                                    )
-                                    financial_line_account["columns"].insert(
-                                        -1,
-                                        {
-                                            "name": self._format_cell_value(
-                                                financial_line, rem_budget
-                                            ),
-                                            "no_format": rem_budget,
-                                            "class": "number",
-                                        },
-                                    )
-                                    financial_line_account["columns"].insert(
-                                        -1,
-                                        self._compute_growth_comparison_column_variance(
-                                            variance
-                                        ),
-                                    )
-                                    column_list = []
                 if column_list:
                     financial_line_account["columns"] = column_list
         return financial_line_account
