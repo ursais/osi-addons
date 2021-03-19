@@ -36,7 +36,7 @@ env:
     global:
         - VERSION="14.0" TESTS="0" LINT_CHECK="0" MAKEPOT="0"
         - MQT_DEP=PIP
-        - EXCLUDE="documents_helpdesk"
+        - EXCLUDE="documents_helpdesk, account_budget, account_reports"
 
 install:
     - git clone --depth=1 https://github.com/ursais/maintainer-quality-tools.git
