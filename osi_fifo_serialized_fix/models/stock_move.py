@@ -22,7 +22,7 @@ class StockMove(models.Model):
                         # Filter so we only have the Layers we got from Incoming Moves
                         if line_id.lot_id in valuation.lot_ids and valuation.value > 0:
                             if not self.check_found_vals(valuation.id, svl_ids):
-                                svl_ids.append((valuation.id, 1, [line_id.lot_id.id]))
+                                svl_ids.append((valuation.id, 1, [line_id.lot_id.id],line_id))
                                 break
                             else:
                                 self.increment_qty(valuation.id,
@@ -45,8 +45,8 @@ class StockMove(models.Model):
                         val['lot_ids'] = [(6, 0, svl_id[2])]
                         val['account_move_id'] = ji_ids[0].move_id.id
                         # The qty of serial products is always 1, lots could be > 1
-                        if line_id.product_id.tracking == 'lot':
-                            val['quantity'] = line_id.qty_done * -1
+                        if svl_id[3].product_id.tracking == 'lot':
+                            val['quantity'] = svl_id[3].qty_done * -1
                         val['value'] = val_obj.unit_cost * val['quantity'] * -1
                         final_layers.append(val)
                     final_layers = self.env['stock.valuation.layer'].\
@@ -100,7 +100,7 @@ class StockMove(models.Model):
             if svl_id[0] == id:
                 if lot_id not in svl_id[2]:
                     svl_id[2].append(lot_id)
-                svl_ids[index] = (svl_id[0], svl_id[1] + 1, svl_id[2])
+                svl_ids[index] = (svl_id[0], svl_id[1] + 1, svl_id[2], svl_id[3])
             index += 1
 
     def check_found_vals(self, id, svl_ids):
@@ -112,11 +112,12 @@ class StockMove(models.Model):
     # Tag Incoming Valuation Layers with their lot_ids
     def _create_in_svl(self, forced_quantity=None):
         res = super()._create_in_svl(forced_quantity)
-        for move in self:
+        for move in self.filtered(lambda m: m.product_id.tracking != 'none'):
             lot_ids=[]
             for layer in res:
                 if layer.stock_move_id.id == move.id:
                     for line_id in move.move_line_ids:
-                        lot_ids.append(line_id.lot_id.id)
+                        if line_id.lot_id:
+                            lot_ids.append(line_id.lot_id.id)
                     layer.lot_ids = [(6, 0, lot_ids)]
         return res
