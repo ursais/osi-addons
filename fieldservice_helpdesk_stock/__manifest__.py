@@ -10,7 +10,7 @@
     'license': 'LGPL-3',
     'version': '12.0.1.1.0',
     'depends': [
-        'fieldservice_stock',
+        'fieldservice_stock_request',
         'helpdesk_fieldservice',
         'helpdesk_stock',
     ],
