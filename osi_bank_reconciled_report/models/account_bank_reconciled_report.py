@@ -294,7 +294,7 @@ class AccountBankReconciliationReport(models.AbstractModel):
                 report_data.get('not_reconciled_st_negative'):
             lines.append(self.
                          _add_title_line(options,
-                                         _("Unreconciled Bank \
+                                         _("Uneconciled Bank \
                                            Statement Lines"),
                                          level=2))
             for line in report_data.get('not_reconciled_st_positive', []):
