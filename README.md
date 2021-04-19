@@ -8,4 +8,3 @@ Odoo modules from Open Source Integrators.
 
 
 [//]: # (end addons)
-
