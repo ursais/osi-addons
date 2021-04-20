@@ -1,0 +1,15 @@
+<?xml version="1.0" ?>
+<odoo noupdate="1">
+
+    <record
+        id="documents_workflow_rule_helpdesk"
+        model="documents.workflow.rule"
+        forcecreate="0"
+    >
+        <field name="name">Create Ticket</field>
+        <field name="domain_folder_id" ref="documents_folder_helpdesk" />
+        <field name="condition_type">criteria</field>
+        <field name="create_model">helpdesk.ticket</field>
+    </record>
+
+</odoo>
