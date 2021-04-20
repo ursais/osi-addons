@@ -6,7 +6,7 @@
     "name": "Field Service Mobile",
     "summary": "Field Service Mobile backend support.",
     "license": "AGPL-3",
-    "version": "12.0.1.1.0",
+    "version": "14.0.1.1.0",
     "category": "Field Service",
     "author": "Open Source Integrators",
     "website": "https://github.com/ursais/osi-addons",

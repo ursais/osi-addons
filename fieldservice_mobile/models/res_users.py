@@ -9,18 +9,19 @@ class Users(models.Model):
     _inherit = "res.users"
 
     @api.model
-    def get_portal_config_values(self, config_parameters=[]):
+    def get_portal_config_values(self, config_parameters=False):
+        if not config_parameters:
+            config_parameters = []
         params_dict = {}
+        group_params = [
+            "fieldservice_mobile.fsm_allow_portal_view_move_qty",
+            "fieldservice_mobile.fsm_allow_portal_update_move_qty",
+            "fieldservice_mobile.fsm_allow_portal_validate_move_qty",
+            "fieldservice_sale_order_line.fsm_allow_portal_view_sol_qty",
+            "fieldservice_sale_order_line.fsm_allow_portal_update_sol_qty",
+        ]
         for config_param in config_parameters:
-            if config_param in [
-                "fieldservice_mobile.fsm_allow_portal_view_move_qty",
-                "fieldservice_mobile.fsm_allow_portal_update_move_qty",
-                "fieldservice_mobile.fsm_allow_portal_validate_move_qty",
-                "fieldservice_sale_order_line.fsm_allow_portal_view_sol_qty",
-                "fieldservice_sale_order_line.fsm_allow_portal_update_sol_qty",
-            ]:
+            if config_param in group_params:
                 params = self.env["ir.config_parameter"].sudo()
-                params_dict.update({
-                    config_param: bool(params.get_param(config_param))
-                    })
+                params_dict.update({config_param: bool(params.get_param(config_param))})
         return params_dict

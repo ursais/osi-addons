@@ -34,10 +34,16 @@ class FSMOrder(models.Model):
     @api.model
     def create_fsm_attachment(self, name, datas, res_model, res_id):
         if res_model == "fsm.order":
-            attachment = self.env["ir.attachment"].sudo().create({
-                "name": name,
-                "datas": datas,
-                "res_model": res_model,
-                "res_id": res_id,
-            })
+            attachment = (
+                self.env["ir.attachment"]
+                .sudo()
+                .create(
+                    {
+                        "name": name,
+                        "datas": datas,
+                        "res_model": res_model,
+                        "res_id": res_id,
+                    }
+                )
+            )
             return attachment.id
