@@ -14,6 +14,7 @@
     'depends': [
         'fieldservice_stage_server_action',
         'fieldservice_tracking',
+        'stock'
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -26,4 +27,6 @@
     'maintainers': [
         'wolfhall',
     ],
+    "development_status": "Beta",
+    "maintainers": ["wolfhall"],
 }
