@@ -2,7 +2,7 @@
     <record id="stock_request_fsm_location" model="ir.ui.view">
         <field name="name">stock.request.fsm.location</field>
         <field name="model">stock.request</field>
-        <field name="inherit_id" ref="fieldservice_stock.stock_request_fsm_order_form"/>
+        <field name="inherit_id" ref="fieldservice_stock_request.stock_request_fsm_order_form"/>
         <field name="arch" type="xml">
             <field name="fsm_order_id" position="after">
                 <field name="fsm_location_id"/>
