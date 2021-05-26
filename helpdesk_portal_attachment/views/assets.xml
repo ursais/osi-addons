@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_frontend_portal" inherit_id="portal.assets_frontend" name="Portal Assets" priority="15">
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/helpdesk_portal_attachment/static/src/js/portal_chatter.js"></script>
+        </xpath>
+    </template>
+
+</odoo>
