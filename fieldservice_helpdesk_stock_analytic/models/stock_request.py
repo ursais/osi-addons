@@ -5,19 +5,24 @@ from odoo import api, models
 
 
 class StockRequest(models.Model):
-    _inherit = 'stock.request'
+    _inherit = "stock.request"
 
     @api.model
     def create(self, vals):
-        # Get our ticket
-        if vals.get('helpdesk_ticket_id', False):
-            ticket_id = self.env['helpdesk.ticket'].\
-                browse(vals.get('helpdesk_ticket_id'))
-            # Check ticket for Location
-            if ticket_id.fsm_location_id:
-                # Check Location for Analytic Account
-                if ticket_id.fsm_location_id.analytic_account_id:
-                    vals.update({
-                        'analytic_account_id': ticket_id.
-                        fsm_location_id.analytic_account_id.id})
+        # Do nothing if analylic account is already set
+        if not vals.get("analytic_account_id", False):
+            # Get our ticket
+            if vals.get("helpdesk_ticket_id", False):
+                ticket_id = self.env["helpdesk.ticket"].browse(
+                    vals.get("helpdesk_ticket_id")
+                )
+                # Check ticket for Location
+                if ticket_id.fsm_location_id:
+                    # Check Location for Analytic Account
+                    if ticket_id.fsm_location_id.analytic_account_id:
+                        vals.update(
+                            {
+                                "analytic_account_id": ticket_id.fsm_location_id.analytic_account_id.id
+                            }
+                        )
         return super().create(vals)
