@@ -29,3 +29,4 @@ Contributors
 * Open Source Integrators <https://www.opensourceintegrators.com>
 
   * Steven Campbell <scampbell@opensourceintegrators.com>
+  * Freni Patel <fpatel@opensourceintegrators.com>
