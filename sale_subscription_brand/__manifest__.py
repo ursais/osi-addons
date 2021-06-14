@@ -3,21 +3,15 @@
 
 {
     "name": "Sale Subscription Brand",
-    "version": "12.0.1.0.0",
+    "version": "14.0.1.0.0",
     "category": "Sales Management",
-    "website": "https://github.com/OCA/sale-workflow",
-    "author": [
-        "Open Source Integrators",
-        "Odoo Community Association (OCA)",
-    ],
+    "website": "https://github.com/ursais/osi-addons",
+    "author": "Open Source Integrators",
     "license": "AGPL-3",
-    "depends": [ 
-        'sale_subscription',
-        'partner_brand',
-        'sale_brand'
-    ],
+    "depends": ["sale_subscription", "partner_brand", "sale_brand"],
     "data": [
         "views/sale_subscription_views.xml",
     ],
     "installable": True,
+    "maintainers": ["osi-scampbell"],
 }

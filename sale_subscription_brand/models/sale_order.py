@@ -5,12 +5,11 @@ from odoo import api, models
 
 
 class SaleOrder(models.Model):
-    _inherit = 'sale.order'
+    _inherit = "sale.order"
 
     @api.multi
     def create_subscriptions(self):
         res = super(SaleOrder, self).create_subscriptions()
         for sub_id in res:
-            subscription = self.env['sale.subscription'].search([('id', '=', sub_id)])
+            subscription = self.env["sale.subscription"].search([("id", "=", sub_id)])
             subscription.brand = self.brand
-

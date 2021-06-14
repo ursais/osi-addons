@@ -1,15 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-	<record id="sale_subscription_view_form_brand" model="ir.ui.view">
-		<field name="name">sale.subscription.form.view.brand</field>
-		<field name="model">sale.subscription</field>
-		<field name="inherit_id" ref="sale_subscription.sale_subscription_view_form"/>
-		<field name="arch" type="xml">
-			<xpath expr="//field[@name='partner_id']" position="after">
-				<field name="brand"/>
-			</xpath>
-		</field>
-	</record>
-
-	
+    <record id="sale_subscription_view_form_brand" model="ir.ui.view">
+        <field name="name">sale.subscription.form.view.brand</field>
+        <field name="model">sale.subscription</field>
+        <field
+            name="inherit_id"
+            ref="sale_subscription.sale_subscription_view_form"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="brand" />
+            </xpath>
+        </field>
+    </record>
 </odoo>
