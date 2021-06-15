@@ -14,13 +14,13 @@ class SaleOrderLine(models.Model):
         copy=False,
     )
 
-    @api.multi
-    def _prepare_invoice_line(self, qty):
-        res = super()._prepare_invoice_line(qty)
+    def _prepare_invoice_line(self, **optional_values):
+        res = super()._prepare_invoice_line()
         if "analytic_account_id" not in res or res.get("analytic_account_id") is False:
             default_analytic_account = self.env["account.analytic.default"].account_get(
                 self.product_id.id,
                 self.order_id.partner_id.id,
+                False,
                 self.order_id.user_id.id,
                 fields.Date.today(),
             )
@@ -36,6 +36,7 @@ class SaleOrderLine(models.Model):
             rec = self.env["account.analytic.default"].account_get(
                 self.product_id.id,
                 self.order_id.partner_id.id,
+                False,
                 self.env.uid,
                 fields.Date.today(),
                 company_id=self.company_id.id,

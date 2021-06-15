@@ -19,6 +19,7 @@ Credits
 * Mayank Gosai <mgosai@ursainfosystems.com>
 * Bhavesh Odedra <bodedra@opensourceintegrators.com>
 * Michael Allen <mallen@opensourceintegrators.com>
+* Freni Patel <fpatel@opensourceintegrators.com>
 
 Contributors
 ------------

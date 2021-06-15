@@ -10,7 +10,7 @@
     "maintainer": "Open Source Integrators",
     "website": "https://github.com/ursais/osi-addons",
     "category": "Analytic Accounting",
-    "depends": ["account_analytic_default", "sale"],
+    "depends": ["stock_account", "sale"],
     "data": [
         "views/sale_order_view.xml",
     ],
