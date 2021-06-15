@@ -3,17 +3,14 @@
 
 {
     "name": "OSI Analytic Sales Simple",
-    "version": "12.0.1.0.1",
+    "version": "14.0.1.0.0",
     "license": "LGPL-3",
     "summary": "Analytic Accounts for sale order lines",
     "author": "Open Source Integrators",
     "maintainer": "Open Source Integrators",
-    "website": "http://www.opensourceintegrators.com",
+    "website": "https://github.com/ursais/osi-addons",
     "category": "Analytic Accounting",
-    "depends": [
-        "account_analytic_default",
-        "sale"
-    ],
+    "depends": ["account_analytic_default", "sale"],
     "data": [
         "views/sale_order_view.xml",
     ],
