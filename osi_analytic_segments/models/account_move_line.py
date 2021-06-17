@@ -10,16 +10,20 @@ class AccountMoveLine(models.Model):
         return self.env["analytic.segment.one"].get_default_segment_one()
 
     analytic_segment_one_id = fields.Many2one(
-        'analytic.segment.one',
-        string='Analytic Segment One',
-        default=_get_default_segment_one)
+        "analytic.segment.one",
+        string="Analytic Segment One",
+        default=_get_default_segment_one,
+    )
     analytic_segment_two_id = fields.Many2one(
-        'analytic.segment.two',
-        string='Analytic Segment Two')
+        "analytic.segment.two", string="Analytic Segment Two"
+    )
 
     def _prepare_analytic_line(self):
         res = super()._prepare_analytic_line()
         res[0].update(
-            {'analytic_segment_one_id': self.analytic_segment_one_id.id,
-             'analytic_segment_two_id': self.analytic_segment_two_id.id})
+            {
+                "analytic_segment_one_id": self.analytic_segment_one_id.id,
+                "analytic_segment_two_id": self.analytic_segment_two_id.id,
+            }
+        )
         return res

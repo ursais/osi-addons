@@ -5,10 +5,11 @@
 
     <!-- Segments menu in settings -->
     <menuitem
-            name='Segments'
-            id='root_segment_menu'
-            parent='account.menu_finance_configuration'
-            groups="analytic.group_analytic_accounting"/>
+        name='Segments'
+        id='root_segment_menu'
+        parent='account.menu_finance_configuration'
+        groups="analytic.group_analytic_accounting"
+    />
 
     <!-- Tree View for Analytic Segment One-->
     <record id="analytic_segment_one_tree_view" model="ir.ui.view">
@@ -16,8 +17,8 @@
         <field name="model">analytic.segment.one</field>
         <field name="arch" type="xml">
             <tree string="Analytic Segment One">
-                <field name="code"/>
-                <field name="name"/>
+                <field name="code" />
+                <field name="name" />
             </tree>
         </field>
     </record>
@@ -30,10 +31,12 @@
             <form string="Analytic Segment One">
                 <sheet>
                     <group name="segment_one">
-                        <field name="code"/>
-                        <field name="name" required="1"/>
-                        <field name="description"
-                               placeholder="Description..."/>
+                        <field name="code" />
+                        <field name="name" required="1" />
+                        <field
+                            name="description"
+                            placeholder="Description..."
+                        />
                     </group>
                 </sheet>
             </form>
@@ -46,8 +49,8 @@
         <field name="model">analytic.segment.one</field>
         <field name="arch" type="xml">
             <search string="Search Analytic Segment One">
-                <field name="code" string="Code"/>
-                <field name="name" string="Name"/>
+                <field name="code" string="Code" />
+                <field name="name" string="Name" />
             </search>
         </field>
     </record>
@@ -62,11 +65,13 @@
     </record>
 
     <!-- Menu for Analytic Segment One-->
-    <menuitem id="menu_analytic_segment_one"
-              action="action_analytic_segment_one"
-              parent="root_segment_menu"
-              groups="analytic.group_analytic_accounting"
-              sequence="1"/>
+    <menuitem
+        id="menu_analytic_segment_one"
+        action="action_analytic_segment_one"
+        parent="root_segment_menu"
+        groups="analytic.group_analytic_accounting"
+        sequence="1"
+    />
 
     <!-- Tree View for Analytic Segment Two-->
     <record id="analytic_segment_two_tree_view" model="ir.ui.view">
@@ -74,8 +79,8 @@
         <field name="model">analytic.segment.two</field>
         <field name="arch" type="xml">
             <tree string="Analytic Segment Two">
-                <field name="code"/>
-                <field name="name"/>
+                <field name="code" />
+                <field name="name" />
             </tree>
         </field>
     </record>
@@ -88,10 +93,12 @@
             <form string="Analytic Segment Two">
                 <sheet>
                     <group name="segment_two">
-                        <field name="code"/>
-                        <field name="name" required="1"/>
-                        <field name="description"
-                               placeholder="Description..."/>
+                        <field name="code" />
+                        <field name="name" required="1" />
+                        <field
+                            name="description"
+                            placeholder="Description..."
+                        />
                     </group>
                 </sheet>
             </form>
@@ -104,8 +111,8 @@
         <field name="model">analytic.segment.two</field>
         <field name="arch" type="xml">
             <search string="Search Analytic Segment Two">
-                <field name="code" string="Code"/>
-                <field name="name" string="Name"/>
+                <field name="code" string="Code" />
+                <field name="name" string="Name" />
             </search>
         </field>
     </record>
@@ -121,10 +128,11 @@
 
     <!-- Menu for Analytic Segment Two-->
     <menuitem
-            id="menu_analytic_segment_two"
-            action="action_analytic_segment_two"
-            parent="root_segment_menu"
-            groups="analytic.group_analytic_accounting"
-            sequence="2"/>
+        id="menu_analytic_segment_two"
+        action="action_analytic_segment_two"
+        parent="root_segment_menu"
+        groups="analytic.group_analytic_accounting"
+        sequence="2"
+    />
 
 </odoo>

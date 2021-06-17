@@ -5,14 +5,16 @@ from odoo import fields, models
 
 
 class AccountAnalyticLine(models.Model):
-    _inherit = 'account.analytic.line'
+    _inherit = "account.analytic.line"
 
     def _get_default_segment_one(self):
         return self.env["analytic.segment.one"].get_default_segment_one()
 
     analytic_segment_one_id = fields.Many2one(
-        'analytic.segment.one',
-        string='Analytic Segment One', default=_get_default_segment_one)
+        "analytic.segment.one",
+        string="Analytic Segment One",
+        default=_get_default_segment_one,
+    )
     analytic_segment_two_id = fields.Many2one(
-        'analytic.segment.two',
-        string='Analytic Segment Two')
+        "analytic.segment.two", string="Analytic Segment Two"
+    )

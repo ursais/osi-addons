@@ -7,51 +7,74 @@
     <record id="analytic_view_invoice_line_form_ext" model="ir.ui.view">
         <field name="name">analytic.account.invoice.line.form.ext</field>
         <field name="model">account.invoice</field>
-        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="inherit_id" ref="account.invoice_form" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_analytic_id']"
-                   position="after">
-                <field name="analytic_segment_one_id"
-                       groups="analytic.group_analytic_accounting"/>
-                <field name="analytic_segment_two_id"
-                       groups="analytic.group_analytic_accounting"/>
+            <xpath
+                expr="//field[@name='invoice_line_ids']/tree/field[@name='account_analytic_id']"
+                position="after"
+            >
+                <field
+                    name="analytic_segment_one_id"
+                    groups="analytic.group_analytic_accounting"
+                />
+                <field
+                    name="analytic_segment_two_id"
+                    groups="analytic.group_analytic_accounting"
+                />
             </xpath>
         </field>
     </record>
 
     <!-- new field added to account Invoice Vendor Bills form -->
-    <record id="analytic_view_invoice_line_supplier_form_ext"
-            model="ir.ui.view">
+    <record
+        id="analytic_view_invoice_line_supplier_form_ext"
+        model="ir.ui.view"
+    >
         <field name="name">analytic.account.invoice.line.supplier.form.ext
         </field>
         <field name="model">account.invoice</field>
-        <field name="inherit_id" ref="account.invoice_supplier_form"/>
+        <field name="inherit_id" ref="account.invoice_supplier_form" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='account_analytic_id']"
-                   position="after">
-                <field name="analytic_segment_one_id"
-                       groups="analytic.group_analytic_accounting"/>
-                <field name="analytic_segment_two_id"
-                       groups="analytic.group_analytic_accounting"/>
+            <xpath
+                expr="//field[@name='invoice_line_ids']/tree/field[@name='account_analytic_id']"
+                position="after"
+            >
+                <field
+                    name="analytic_segment_one_id"
+                    groups="analytic.group_analytic_accounting"
+                />
+                <field
+                    name="analytic_segment_two_id"
+                    groups="analytic.group_analytic_accounting"
+                />
             </xpath>
 
-            <xpath expr="//field[@name='tax_line_ids']/tree/field[@name='account_analytic_id']" position="after">
-                <field name="analytic_segment_one_id"
-                       groups="analytic.group_analytic_accounting"/>
-                <field name="analytic_segment_two_id"
-                       groups="analytic.group_analytic_accounting"/>
+            <xpath
+                expr="//field[@name='tax_line_ids']/tree/field[@name='account_analytic_id']"
+                position="after"
+            >
+                <field
+                    name="analytic_segment_one_id"
+                    groups="analytic.group_analytic_accounting"
+                />
+                <field
+                    name="analytic_segment_two_id"
+                    groups="analytic.group_analytic_accounting"
+                />
             </xpath>
         </field>
     </record>
 
     <record id="analytic_account_invoice_line" model="ir.ui.view">
-        <field name="name">analytic.account.invoice.line.supplier.form.ext</field>
+        <field
+            name="name"
+        >analytic.account.invoice.line.supplier.form.ext</field>
         <field name="model">account.invoice.line</field>
-        <field name="inherit_id" ref="account.view_invoice_line_form"/>
+        <field name="inherit_id" ref="account.view_invoice_line_form" />
         <field name="arch" type="xml">
             <field name="account_analytic_id" position="after">
-                <field name="analytic_segment_one_id"/>
-                <field name="analytic_segment_two_id"/>
+                <field name="analytic_segment_one_id" />
+                <field name="analytic_segment_two_id" />
             </field>
         </field>
     </record>

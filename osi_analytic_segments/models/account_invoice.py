@@ -10,31 +10,35 @@ class AccountInvoice(models.Model):
     def invoice_line_move_line_get(self):
         res_temp = super(AccountInvoice, self).invoice_line_move_line_get()
         res = []
-        invoice_line = self.env['account.invoice.line']
+        invoice_line = self.env["account.invoice.line"]
         for move_line_dict in res_temp:
-            if move_line_dict['invl_id']:
-                move_line_dict['analytic_segment_one_id'] = invoice_line.\
-                    browse(move_line_dict['invl_id']
-                           ).analytic_segment_one_id.id
-                move_line_dict['analytic_segment_two_id'] = invoice_line.\
-                    browse(move_line_dict['invl_id']
-                           ).analytic_segment_two_id.id
+            if move_line_dict["invl_id"]:
+                move_line_dict["analytic_segment_one_id"] = invoice_line.browse(
+                    move_line_dict["invl_id"]
+                ).analytic_segment_one_id.id
+                move_line_dict["analytic_segment_two_id"] = invoice_line.browse(
+                    move_line_dict["invl_id"]
+                ).analytic_segment_two_id.id
             res.append(move_line_dict)
         return res
 
     @api.model
     def line_get_convert(self, line, part):
         res = super(AccountInvoice, self).line_get_convert(line, part)
-        account_analytic_id = line.get('account_analytic_id', False)
-        analytic_segment_one = line.get('analytic_segment_one_id', False)
-        analytic_segment_two = line.get('analytic_segment_two_id', False)
-        invl_id = line.get('invl_id', False)
+        account_analytic_id = line.get("account_analytic_id", False)
+        analytic_segment_one = line.get("analytic_segment_one_id", False)
+        analytic_segment_two = line.get("analytic_segment_two_id", False)
+        invl_id = line.get("invl_id", False)
         if invl_id:
-            invoice_line = self.env['account.invoice.line'].browse(invl_id)
+            invoice_line = self.env["account.invoice.line"].browse(invl_id)
             account_analytic_id = invoice_line.account_analytic_id.id
             analytic_segment_one = invoice_line.analytic_segment_one_id.id
             analytic_segment_two = invoice_line.analytic_segment_two_id.id
-        res.update({'analytic_account_id': account_analytic_id,
-                    'analytic_segment_one_id': analytic_segment_one,
-                    'analytic_segment_two_id': analytic_segment_two})
+        res.update(
+            {
+                "analytic_account_id": account_analytic_id,
+                "analytic_segment_one_id": analytic_segment_one,
+                "analytic_segment_two_id": analytic_segment_two,
+            }
+        )
         return res

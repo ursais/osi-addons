@@ -8,5 +8,5 @@ from . import (
     account_move_line,
     analytic_segment_one,
     analytic_segment_two,
-    account_invoice_tax
+    account_invoice_tax,
 )
