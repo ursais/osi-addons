@@ -13,7 +13,6 @@ class AnalyticSegmentTwo(models.Model):
     name = fields.Char("Name")
     description = fields.Text("Description")
 
-    @api.multi
     def name_get(self):
         result = []
         for segment in self:

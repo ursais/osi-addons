@@ -16,7 +16,6 @@
     "data": [
         "security/ir.model.access.csv",
         "views/analytic_segment.xml",
-        "views/account_invoice_view.xml",
         "views/account_analytic_line_view.xml",
         "views/account_move_view.xml",
     ],
