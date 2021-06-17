@@ -1,6 +1,6 @@
 # Copyright (C) 2019 Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class StockScrap(models.Model):
@@ -18,7 +18,6 @@ class StockScrap(models.Model):
         "analytic.segment.two", string="Analytic Segment Two"
     )
 
-    @api.multi
     def _prepare_move_values(self):
         res = super()._prepare_move_values()
         res.update(

@@ -10,7 +10,7 @@
     "website": "https://github.com/ursais/osi-addons",
     "category": "Analytic Accounting",
     "depends": [
-        "stock_account",
+        "stock_analytic",
         "osi_analytic_segments",
     ],
     "data": [

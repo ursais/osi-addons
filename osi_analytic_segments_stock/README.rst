@@ -30,3 +30,4 @@ Contributors
 * Open Source Integrators <https://www.opensourceintegrators.com>
 
   * Maxime Chambreuil <mchambreuil@opensourceintegrators.com>
+  * Freni Patel <fpatel@opensourceintergrators.com>
