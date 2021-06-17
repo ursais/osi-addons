@@ -2,5 +2,5 @@
 from . import (
     sale_order,
     sale_order_line,
-    account_invoice,
+    account_move,
 )

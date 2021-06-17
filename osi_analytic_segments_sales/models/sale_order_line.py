@@ -1,6 +1,6 @@
 # Copyright (C) 2019 - TODAY, Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class SaleOrderLine(models.Model):
@@ -25,9 +25,8 @@ class SaleOrderLine(models.Model):
         "analytic.segment.two", string="Analytic Segment Two", copy=False
     )
 
-    @api.multi
-    def _prepare_invoice_line(self, qty):
-        res = super()._prepare_invoice_line(qty)
+    def _prepare_invoice_line(self, **optional_values):
+        res = super()._prepare_invoice_line()
         res.update(
             {
                 "analytic_segment_one_id": self.order_id.analytic_segment_one_id.id,
