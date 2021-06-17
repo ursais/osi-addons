@@ -3,12 +3,12 @@
 
 {
     "name": "OSI Analytic Segments Sales",
-    "version": "12.0.1.0.1",
+    "version": "14.0.1.0.0",
     "license": "LGPL-3",
     "summary": "Additional segments for analytic accounts for Sales",
     "author": "Open Source Integrators",
     "maintainer": "Open Source Integrators",
-    "website": "http://www.opensourceintegrators.com",
+    "website": "https://github.com/ursais/osi-addons",
     "category": "Analytic Accounting",
     "depends": [
         "stock_account",
