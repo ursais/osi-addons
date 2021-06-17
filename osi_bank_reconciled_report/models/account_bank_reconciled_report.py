@@ -25,10 +25,11 @@ class AccountBankReconciliationReport(models.AbstractModel):
         ]
 
     def _add_title_line(self, options, title, amount=None, level=0, date=False):
-        self.line_number += 1
+        line_number = 0
+        line_number += 1
         line_currency = self.env.context.get("line_currency", False)
         return {
-            "id": "line_" + str(self.line_number),
+            "id": "line_" + str(line_number),
             "name": title,
             "columns": [
                 {"name": date and format_date(self.env, date) or "", "class": "date"},
@@ -40,7 +41,8 @@ class AccountBankReconciliationReport(models.AbstractModel):
         }
 
     def _add_total_line(self, amount):
-        self.line_number += 1
+        line_number = 0
+        line_number += 1
         line_currency = self.env.context.get("line_currency", False)
         return {
             "id": "line_" + str(self.line_number),
@@ -58,26 +60,6 @@ class AccountBankReconciliationReport(models.AbstractModel):
     def _add_bank_statement_line(self, line, amount):
         name = line.name
         line_currency = self.env.context.get("line_currency", False)
-        if line.journal_entry_ids:
-            for entry_id in line.journal_entry_ids:
-                if entry_id.payment_id:
-                    return {
-                        "id": str(line.id),
-                        "caret_options": "account.bank.statement.line",
-                        "model": "account.bank.statement.line",
-                        "name": len(name) >= 75 and name[0:70] + "..." or name,
-                        "columns": [
-                            {"name": format_date(self.env, line.date), "class": "date"},
-                            {"name": self.format_value(amount, line_currency)},
-                            {
-                                "name": line.journal_entry_ids[
-                                    0
-                                ].payment_id.communication
-                            },
-                            {"name": line.ref},
-                        ],
-                        "class": "o_account_reports_level3",
-                    }
         return {
             "id": str(line.id),
             "caret_options": "account.bank.statement.line",
@@ -108,9 +90,8 @@ class AccountBankReconciliationReport(models.AbstractModel):
         journal_id = self._context.get("active_id") or options.get("active_id")
         journal = self.env["account.journal"].browse(journal_id)
         selected_companies = self.env["res.company"].browse(
-            self.env.context["company_ids"]
+            self.env.context["allowed_company_ids"]
         )
-
         rslt["use_foreign_currency"] = (
             journal.currency_id != journal.company_id.currency_id
             if journal.currency_id
@@ -118,8 +99,8 @@ class AccountBankReconciliationReport(models.AbstractModel):
         )
         rslt["account_ids"] = list(
             {
-                journal.default_debit_account_id.id,
-                journal.default_credit_account_id.id,
+                journal.payment_debit_account_id.id,
+                journal.payment_credit_account_id.id,
             }
         )
         rslt["line_currency"] = (
@@ -129,8 +110,8 @@ class AccountBankReconciliationReport(models.AbstractModel):
         lines_already_accounted = self.env["account.move.line"].search(
             [
                 ("account_id", "in", rslt["account_ids"]),
-                ("date", "<=", self.env.context["date_to"]),
-                ("company_id", "in", self.env.context["company_ids"]),
+                ("date", "<=", options["date"]["date_to"]),
+                ("company_id", "in", self.env.context["allowed_company_ids"]),
             ]
         )
         rslt["odoo_balance"] = sum(
@@ -145,20 +126,17 @@ class AccountBankReconciliationReport(models.AbstractModel):
             ("account_id", "in", rslt["account_ids"]),
             "|",
             ("statement_line_id", "=", False),
-            ("statement_line_id.date", ">", self.env.context["date_to"]),
-            ("user_type_id.type", "=", "liquidity"),
+            ("statement_line_id.date", ">", options["date"]["date_to"]),
+            ("account_internal_type", "=", "liquidity"),
             ("full_reconcile_id", "!=", False),
-            ("date", "<=", self.env.context["date_to"]),
+            ("date", "<=", options["date"]["date_to"]),
         ]
         companies_unreconciled_selection_domain = []
         for company in selected_companies:
             company_domain = [("company_id", "=", company.id)]
-            if company.account_bank_reconciliation_start:
+            if company.tax_lock_date:
                 company_domain = expression.AND(
-                    [
-                        company_domain,
-                        [("date", ">=", company.account_bank_reconciliation_start)],
-                    ]
+                    [company_domain, [("date", ">=", company.tax_lock_date)]]
                 )
             companies_unreconciled_selection_domain = expression.OR(
                 [companies_unreconciled_selection_domain, company_domain]
@@ -175,21 +153,18 @@ class AccountBankReconciliationReport(models.AbstractModel):
             ("account_id", "in", rslt["account_ids"]),
             "|",
             ("statement_line_id", "=", False),
-            ("statement_line_id.date", ">", self.env.context["date_to"]),
-            ("user_type_id.type", "=", "liquidity"),
+            ("statement_line_id.date", ">", options["date"]["date_to"]),
+            ("account_internal_type", "=", "liquidity"),
             ("full_reconcile_id", "=", False),
-            ("date", "<=", self.env.context["date_to"]),
+            ("date", "<=", options["date"]["date_to"]),
         ]
 
         companies_unreconciled_selection_domain = []
         for company in selected_companies:
             company_domain = [("company_id", "=", company.id)]
-            if company.account_bank_reconciliation_start:
+            if company.tax_lock_date:
                 company_domain = expression.AND(
-                    [
-                        company_domain,
-                        [("date", ">=", company.account_bank_reconciliation_start)],
-                    ]
+                    [company_domain, [("date", ">=", company.tax_lock_date)]]
                 )
             companies_unreconciled_selection_domain = expression.OR(
                 [companies_unreconciled_selection_domain, company_domain]
@@ -205,20 +180,18 @@ class AccountBankReconciliationReport(models.AbstractModel):
         rslt["reconciled_st_positive"] = self.env["account.bank.statement.line"].search(
             [
                 ("statement_id.journal_id", "=", journal_id),
-                ("date", "<=", self.env.context["date_to"]),
-                ("journal_entry_ids", "!=", False),
+                ("date", "<=", options["date"]["date_to"]),
                 ("amount", ">", 0),
-                ("company_id", "in", self.env.context["company_ids"]),
+                ("company_id", "in", self.env.context["allowed_company_ids"]),
             ]
         )
 
         rslt["reconciled_st_negative"] = self.env["account.bank.statement.line"].search(
             [
                 ("statement_id.journal_id", "=", journal_id),
-                ("date", "<=", self.env.context["date_to"]),
-                ("journal_entry_ids", "!=", False),
+                ("date", "<=", options["date"]["date_to"]),
                 ("amount", "<", 0),
-                ("company_id", "in", self.env.context["company_ids"]),
+                ("company_id", "in", self.env.context["allowed_company_ids"]),
             ]
         )
 
@@ -228,10 +201,9 @@ class AccountBankReconciliationReport(models.AbstractModel):
         ].search(
             [
                 ("statement_id.journal_id", "=", journal_id),
-                ("date", "<=", self.env.context["date_to"]),
-                ("journal_entry_ids", "=", False),
+                ("date", "<=", options["date"]["date_to"]),
                 ("amount", ">", 0),
-                ("company_id", "in", self.env.context["company_ids"]),
+                ("company_id", "in", self.env.context["allowed_company_ids"]),
             ]
         )
 
@@ -240,10 +212,9 @@ class AccountBankReconciliationReport(models.AbstractModel):
         ].search(
             [
                 ("statement_id.journal_id", "=", journal_id),
-                ("date", "<=", self.env.context["date_to"]),
-                ("journal_entry_ids", "=", False),
+                ("date", "<=", options["date"]["date_to"]),
                 ("amount", "<", 0),
-                ("company_id", "in", self.env.context["company_ids"]),
+                ("company_id", "in", self.env.context["allowed_company_ids"]),
             ]
         )
 
@@ -251,8 +222,8 @@ class AccountBankReconciliationReport(models.AbstractModel):
         last_statement = self.env["account.bank.statement"].search(
             [
                 ("journal_id", "=", journal_id),
-                ("date", "<=", self.env.context["date_to"]),
-                ("company_id", "in", self.env.context["company_ids"]),
+                ("date", "<=", options["date"]["date_to"]),
+                ("company_id", "in", self.env.context["allowed_company_ids"]),
             ],
             order="date desc, id desc",
             limit=1,
@@ -282,7 +253,6 @@ class AccountBankReconciliationReport(models.AbstractModel):
         # Fetch data
         report_data = self._get_bank_rec_report_data(options, line_id)
         self = self.with_context(line_currency=report_data["line_currency"])
-
         # Compute totals
         unrec_tot = sum(
             [
@@ -336,7 +306,7 @@ class AccountBankReconciliationReport(models.AbstractModel):
                 gl_title % accounts_string,
                 level=1,
                 amount=report_data["odoo_balance"],
-                date=options["date"]["date"],
+                date=options["date"]["date_from"],
             )
         )
 
@@ -349,7 +319,7 @@ class AccountBankReconciliationReport(models.AbstractModel):
                 self._add_title_line(
                     options,
                     _(
-                        "Uneconciled Bank \
+                        "Unreconciled Bank \
                                            Statement Lines"
                     ),
                     level=2,
@@ -393,7 +363,8 @@ class AccountBankReconciliationReport(models.AbstractModel):
                 )
             )
             for line in report_data["not_reconciled_pmts"]:
-                self.line_number += 1
+                line_number = 0
+                line_number += 1
                 line_description = line_title = line.ref
                 if (
                     line_description
@@ -436,7 +407,8 @@ class AccountBankReconciliationReport(models.AbstractModel):
                 )
             )
             for line in report_data["reconciled_pmts"]:
-                self.line_number += 1
+                line_number = 0
+                line_number += 1
                 line_description = line_title = line.ref
                 if (
                     line_description
