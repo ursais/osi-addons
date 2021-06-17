@@ -19,7 +19,7 @@ class AccountBankReconciliationReport(models.AbstractModel):
         journal_id = self._context.get("active_id") or options.get("active_id")
         journal = self.env["account.journal"].browse(journal_id)
         selected_companies = self.env["res.company"].browse(
-            self.env.context["company_ids"]
+            self.env.context["allowed_company_ids"]
         )
 
         rslt["use_foreign_currency"] = (
@@ -29,8 +29,8 @@ class AccountBankReconciliationReport(models.AbstractModel):
         )
         rslt["account_ids"] = list(
             {
-                journal.default_debit_account_id.id,
-                journal.default_credit_account_id.id,
+                journal.payment_debit_account_id.id,
+                journal.payment_credit_account_id.id,
             }
         )
         rslt["line_currency"] = (
@@ -40,9 +40,9 @@ class AccountBankReconciliationReport(models.AbstractModel):
         lines_already_accounted = self.env["account.move.line"].search(
             [
                 ("account_id", "in", rslt["account_ids"]),
-                ("date", "<=", self.env.context["date_to"]),
-                ("date", ">=", self.env.context["date_from"]),
-                ("company_id", "in", self.env.context["company_ids"]),
+                ("date", "<=", options["date"]["date_to"]),
+                ("date", ">=", options["date"]["date_from"]),
+                ("company_id", "in", self.env.context["allowed_company_ids"]),
             ]
         )
         rslt["odoo_balance"] = sum(
@@ -57,21 +57,18 @@ class AccountBankReconciliationReport(models.AbstractModel):
             ("account_id", "in", rslt["account_ids"]),
             "|",
             ("statement_line_id", "=", False),
-            ("statement_line_id.date", ">", self.env.context["date_to"]),
-            ("user_type_id.type", "=", "liquidity"),
+            ("statement_line_id.date", ">", options["date"]["date_to"]),
+            ("account_internal_type", "=", "liquidity"),
             ("full_reconcile_id", "!=", False),
-            ("date", "<=", self.env.context["date_to"]),
-            ("date", ">=", self.env.context["date_from"]),
+            ("date", "<=", options["date"]["date_to"]),
+            ("date", ">=", options["date"]["date_from"]),
         ]
         companies_unreconciled_selection_domain = []
         for company in selected_companies:
             company_domain = [("company_id", "=", company.id)]
-            if company.account_bank_reconciliation_start:
+            if company.tax_lock_date:
                 company_domain = expression.AND(
-                    [
-                        company_domain,
-                        [("date", ">=", company.account_bank_reconciliation_start)],
-                    ]
+                    [company_domain, [("date", ">=", company.tax_lock_date)]]
                 )
             companies_unreconciled_selection_domain = expression.OR(
                 [companies_unreconciled_selection_domain, company_domain]
@@ -88,22 +85,19 @@ class AccountBankReconciliationReport(models.AbstractModel):
             ("account_id", "in", rslt["account_ids"]),
             "|",
             ("statement_line_id", "=", False),
-            ("statement_line_id.date", ">", self.env.context["date_to"]),
-            ("user_type_id.type", "=", "liquidity"),
+            ("statement_line_id.date", ">", options["date"]["date_to"]),
+            ("account_internal_type", "=", "liquidity"),
             ("full_reconcile_id", "=", False),
-            ("date", "<=", self.env.context["date_to"]),
-            ("date", ">=", self.env.context["date_from"]),
+            ("date", "<=", options["date"]["date_to"]),
+            ("date", ">=", options["date"]["date_from"]),
         ]
 
         companies_unreconciled_selection_domain = []
         for company in selected_companies:
             company_domain = [("company_id", "=", company.id)]
-            if company.account_bank_reconciliation_start:
+            if company.tax_lock_date:
                 company_domain = expression.AND(
-                    [
-                        company_domain,
-                        [("date", ">=", company.account_bank_reconciliation_start)],
-                    ]
+                    [company_domain, [("date", ">=", company.tax_lock_date)]]
                 )
             companies_unreconciled_selection_domain = expression.OR(
                 [companies_unreconciled_selection_domain, company_domain]
@@ -119,22 +113,20 @@ class AccountBankReconciliationReport(models.AbstractModel):
         rslt["reconciled_st_positive"] = self.env["account.bank.statement.line"].search(
             [
                 ("statement_id.journal_id", "=", journal_id),
-                ("date", "<=", self.env.context["date_to"]),
-                ("date", ">=", self.env.context["date_from"]),
-                ("journal_entry_ids", "!=", False),
+                ("date", "<=", options["date"]["date_to"]),
+                ("date", ">=", options["date"]["date_from"]),
                 ("amount", ">", 0),
-                ("company_id", "in", self.env.context["company_ids"]),
+                ("company_id", "in", self.env.context["allowed_company_ids"]),
             ]
         )
 
         rslt["reconciled_st_negative"] = self.env["account.bank.statement.line"].search(
             [
                 ("statement_id.journal_id", "=", journal_id),
-                ("date", "<=", self.env.context["date_to"]),
-                ("date", ">=", self.env.context["date_from"]),
-                ("journal_entry_ids", "!=", False),
+                ("date", "<=", options["date"]["date_to"]),
+                ("date", ">=", options["date"]["date_from"]),
                 ("amount", "<", 0),
-                ("company_id", "in", self.env.context["company_ids"]),
+                ("company_id", "in", self.env.context["allowed_company_ids"]),
             ]
         )
 
@@ -144,11 +136,10 @@ class AccountBankReconciliationReport(models.AbstractModel):
         ].search(
             [
                 ("statement_id.journal_id", "=", journal_id),
-                ("date", "<=", self.env.context["date_to"]),
-                ("date", ">=", self.env.context["date_from"]),
-                ("journal_entry_ids", "=", False),
+                ("date", "<=", options["date"]["date_to"]),
+                ("date", ">=", options["date"]["date_from"]),
                 ("amount", ">", 0),
-                ("company_id", "in", self.env.context["company_ids"]),
+                ("company_id", "in", self.env.context["allowed_company_ids"]),
             ]
         )
 
@@ -157,11 +148,10 @@ class AccountBankReconciliationReport(models.AbstractModel):
         ].search(
             [
                 ("statement_id.journal_id", "=", journal_id),
-                ("date", "<=", self.env.context["date_to"]),
-                ("date", ">=", self.env.context["date_from"]),
-                ("journal_entry_ids", "=", False),
+                ("date", "<=", options["date"]["date_to"]),
+                ("date", ">=", options["date"]["date_from"]),
                 ("amount", "<", 0),
-                ("company_id", "in", self.env.context["company_ids"]),
+                ("company_id", "in", self.env.context["allowed_company_ids"]),
             ]
         )
 
@@ -169,9 +159,9 @@ class AccountBankReconciliationReport(models.AbstractModel):
         last_statement = self.env["account.bank.statement"].search(
             [
                 ("journal_id", "=", journal_id),
-                ("date", "<=", self.env.context["date_to"]),
-                ("date", ">=", self.env.context["date_from"]),
-                ("company_id", "in", self.env.context["company_ids"]),
+                ("date", "<=", options["date"]["date_to"]),
+                ("date", ">=", options["date"]["date_from"]),
+                ("company_id", "in", self.env.context["allowed_company_ids"]),
             ],
             order="date desc, id desc",
             limit=1,
@@ -244,7 +234,13 @@ class AccountBankReconciliationReport(models.AbstractModel):
             )
         )
 
-        lines.append(self._add_title_line(options, _("Operations to Process"), level=1))
+        lines.append(
+            self._add_title_line(
+                options,
+                _("Operations to Process"),
+                level=1,
+            )
+        )
 
         if report_data.get("not_reconciled_st_positive") or report_data.get(
             "not_reconciled_st_negative"
@@ -387,7 +383,10 @@ class AccountBankReconciliationReport(models.AbstractModel):
             )
         )
         last_line = self._add_title_line(
-            options, _("Unexplained Difference"), level=0, amount=difference
+            options,
+            _("Unexplained Difference"),
+            level=0,
+            amount=difference,
         )
         last_line["title_hover"] = _(
             """Difference between Virtual \
