@@ -7,8 +7,6 @@ from operator import itemgetter
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
-from odoo.addons import decimal_precision as dp
-
 
 class CcRecStatement(models.Model):
     _name = "cc.rec.statement"
@@ -42,7 +40,6 @@ class CcRecStatement(models.Model):
                     )
         return True
 
-    @api.multi
     def copy(self, default=None):
         self.ensure_one()
         default = dict(default or {})
@@ -51,7 +48,6 @@ class CcRecStatement(models.Model):
         )
         return super().copy(default)
 
-    @api.multi
     def write(self, vals):
         for rec in self:
             # Check if the user is allowed to perform the action
@@ -84,7 +80,6 @@ class CcRecStatement(models.Model):
                 )
         return super(CcRecStatement, self).create(vals)
 
-    @api.multi
     def unlink(self):
         # Reset the related account.move.line to be re-assigned later to
         # statement.
@@ -119,14 +114,12 @@ class CcRecStatement(models.Model):
                     )
         return True
 
-    @api.multi
     def action_cancel(self):
         "Cancel the statement."
         for rec in self:
             rec.write({"state": "cancel"})
         return True
 
-    @api.multi
     def action_review(self):
         # Change the status of statement from 'draft' to 'to_be_reviewed'."
         # If difference balance not zero prevent further processing
@@ -135,7 +128,6 @@ class CcRecStatement(models.Model):
             rec.write({"state": "to_be_reviewed"})
         return True
 
-    @api.multi
     def action_process(self):
         # Set the account move lines as Cleared and Assign CC Acc Rec
         # Statement ID for the statement lines which are marked as Cleared.
@@ -163,7 +155,6 @@ class CcRecStatement(models.Model):
             )
         return True
 
-    @api.multi
     def action_cancel_draft(self):
         """Reset the statement to draft and perform resetting operations."""
         aml = self.env["account.move.line"]
@@ -187,7 +178,6 @@ class CcRecStatement(models.Model):
             )
         return True
 
-    @api.multi
     def action_select_all(self):
         """Mark all the statement lines as 'Cleared'."""
         line_ids = self.env["cc.rec.statement.line"]
@@ -197,7 +187,6 @@ class CcRecStatement(models.Model):
             line_ids.write({"cleared_cc_account": True})
         return True
 
-    @api.multi
     def action_unselect_all(self):
         """Reset 'Cleared' in all the statement lines."""
         line_ids = self.env["cc.rec.statement.line"]
@@ -208,7 +197,6 @@ class CcRecStatement(models.Model):
         return True
 
     # refresh data
-    @api.multi
     def refresh_record(self):
         retval = True
         refdict = {}
@@ -234,23 +222,24 @@ class CcRecStatement(models.Model):
                 # list of credit lines
                 outlist = []
                 for cr_item in vals["value"]["credit_move_line_ids"]:
-                    cr_item["cleared_cc_account"] = (
-                        refdict and refdict.get(cr_item["move_line_id"], False) or False
+                    cr_dict = cr_item[2]
+                    cr_dict["cleared_cc_account"] = (
+                        refdict and refdict.get(cr_dict["move_line_id"]) or False
                     )
-                    cr_item["research_required"] = False
-
-                    item = [0, False, cr_item]
+                    cr_dict["research_required"] = False
+                    item = [0, False, cr_dict]
                     outlist.append(item)
 
                 # list of debit lines
                 inlist = []
                 for dr_item in vals["value"]["debit_move_line_ids"]:
-                    dr_item["cleared_cc_account"] = (
-                        refdict and refdict.get(dr_item["move_line_id"], False) or False
+                    dr_dict = dr_item[2]
+                    dr_dict["cleared_cc_account"] = (
+                        refdict and refdict.get(dr_dict["move_line_id"], False) or False
                     )
-                    dr_item["research_required"] = False
+                    dr_dict["research_required"] = False
 
-                    item = [0, False, dr_item]
+                    item = [0, False, dr_dict]
                     inlist.append(item)
 
                 # write it to the record so it is visible on the form
@@ -299,7 +288,6 @@ class CcRecStatement(models.Model):
                 )
             self.account_id = self.journal_id.partner_id.property_account_payable_id
 
-    @api.multi
     def fetch_data(self, ending_date, suppress_ending_date_filter):
 
         aml = self.env["account.move.line"]
@@ -331,7 +319,6 @@ class CcRecStatement(models.Model):
                 if not suppress_ending_date_filter:
                     domain += [("date", "<=", ending_date)]
                 line_ids = aml.search(domain)
-
                 for line in line_ids:
                     amount_currency = (
                         (line.amount_currency < 0)
@@ -342,13 +329,12 @@ class CcRecStatement(models.Model):
                     # Get partner for the original transaction
                     counterpart_lines = line.move_id.line_ids.filtered(
                         lambda ids: ids.account_id.id
-                        == ids.journal_id.default_debit_account_id.id
+                        == ids.journal_id.payment_debit_account_id.id
                     )
                     if len(counterpart_lines) >= 2:
                         partner_id = counterpart_lines[1].partner_id
                     else:
                         partner_id = line.partner_id
-
                     res = {
                         "ref": line.ref,
                         "date": line.date,
@@ -356,15 +342,15 @@ class CcRecStatement(models.Model):
                         "currency_id": line.currency_id.id,
                         "amount": line.credit or line.debit,
                         "amountcur": amount_currency,
-                        "name": line.name,
+                        "name": line.ref,
                         "move_line_id": line.id,
                         "type": line.credit and "cr" or "dr",
                         "from_filter": True,
                     }
                     if res["type"] == "cr":
-                        val["value"]["credit_move_line_ids"].append(res)
+                        val["value"]["credit_move_line_ids"].append((0, 0, res))
                     else:
-                        val["value"]["debit_move_line_ids"].append(res)
+                        val["value"]["debit_move_line_ids"].append((0, 0, res))
 
                 # Look for previous statement for the account to pull ending
                 # balance as starting balance
@@ -409,14 +395,14 @@ class CcRecStatement(models.Model):
     starting_balance = fields.Float(
         string="Starting Balance (b/fwd)",
         required=True,
-        digits=dp.get_precision("Account"),
+        digits="Account",
         help="Starting Balance for the current credit card statement.",
         states={"done": [("readonly", True)]},
     )
     ending_balance = fields.Float(
         string="Statement Balance (due)",
         required=True,
-        digits=dp.get_precision("Account"),
+        digits="Account",
         help="Statement balance (due)",
         states={"done": [("readonly", True)]},
     )
@@ -460,49 +446,49 @@ class CcRecStatement(models.Model):
     cleared_balance = fields.Float(
         compute="_compute_balance",
         string="Cleared Total",
-        digits=dp.get_precision("Account"),
+        digits="Account",
         help="Total cleared amount",
     )
     cleared_balance_cur = fields.Float(
         compute="_compute_balance",
         string="Cleared Total(Cur)",
-        digits=dp.get_precision("Account"),
+        digits="Account",
         help="Cleared Total (Cur)",
     )
     difference = fields.Float(
         compute="_compute_balance",
         string="Difference",
-        digits=dp.get_precision("Account"),
+        digits="Account",
         help="(Statement Balance – Cleared Total)",
     )
     difference_cur = fields.Float(
         compute="_compute_balance",
         string="Difference (Cur)",
-        digits=dp.get_precision("Account"),
+        digits="Account",
         help="(Statement Balance – Cleared Total.)",
     )
     uncleared_balance = fields.Float(
         compute="_compute_balance",
         string="Uncleared Total",
-        digits=dp.get_precision("Account"),
+        digits="Account",
         help="Total Uncleared",
     )
     uncleared_balance_cur = fields.Float(
         compute="_compute_balance",
         string="Uncleared Total (Cur)",
-        digits=dp.get_precision("Account"),
+        digits="Account",
         help="Total Uncleared (Cur)",
     )
     sum_of_debits = fields.Float(
         compute="_compute_balance",
         string="Cleared Payments/Credits",
-        digits=dp.get_precision("Account"),
+        digits="Account",
         help="Cleared Credit Card Payments, credits",
     )
     sum_of_debits_cur = fields.Float(
         compute="_compute_balance",
         string="Cleared Payments (Cur)",
-        digits=dp.get_precision("Account"),
+        digits="Account",
         help="Cleared Credit Card Payments, Credits (Cur)",
     )
     sum_of_debits_lines = fields.Float(
@@ -513,13 +499,13 @@ class CcRecStatement(models.Model):
     sum_of_credits = fields.Float(
         compute="_compute_balance",
         string="Cleared Charges",
-        digits=dp.get_precision("Account"),
+        digits="Account",
         help="Cleared Credit Card Charges, Fees, Interest and Penalties",
     )
     sum_of_credits_cur = fields.Float(
         compute="_compute_balance",
         string="Cleared Charges (Cur)",
-        digits=dp.get_precision("Account"),
+        digits="Account",
         help="Credit Card Charges, Fees, Interest and Penalties (Cur)",
     )
     sum_of_credits_lines = fields.Float(
@@ -530,13 +516,13 @@ class CcRecStatement(models.Model):
     sum_of_udebits = fields.Float(
         compute="_compute_balance",
         string="Uncleared Payments/Credits",
-        digits=dp.get_precision("Account"),
+        digits="Account",
         help="Uncleared Credit Card Payments, credits",
     )
     sum_of_udebits_cur = fields.Float(
         compute="_compute_balance",
         string="Uncleared Payments/Credits (Cur)",
-        digits=dp.get_precision("Account"),
+        digits="Account",
         help="Uncleared Credit Card Payments, credits (Cur)",
     )
     sum_of_udebits_lines = fields.Float(
@@ -547,13 +533,13 @@ class CcRecStatement(models.Model):
     sum_of_ucredits = fields.Float(
         compute="_compute_balance",
         string="Uncleared Charges",
-        digits=dp.get_precision("Account"),
+        digits="Account",
         help="Uncleared Credit Card Charges, Fees, Interest and Penalties",
     )
     sum_of_ucredits_cur = fields.Float(
         compute="_compute_balance",
         string="Uncleared Charges (Cur)",
-        digits=dp.get_precision("Account"),
+        digits="Account",
         help="Uncleared Credit Card Charges, Fees, Interest and Penalties " "(Cur)",
     )
     sum_of_ucredits_lines = fields.Float(
@@ -595,7 +581,6 @@ class CcRecStatement(models.Model):
         )
     ]
 
-    @api.multi
     def _compute_balance(self):
         """Computed as following:
         A) Credit card payments/credits Amount:
@@ -626,11 +611,15 @@ class CcRecStatement(models.Model):
                 "uncleared_balance_cur": 0.0,
                 "difference": 0.0,
                 "difference_cur": 0.0,
+                "cleared_cc_account": 0.0,
                 "sum_of_credits_lines": 0.0,
                 "sum_of_debits_lines": 0.0,
                 "sum_of_ucredits_lines": 0.0,
                 "sum_of_udebits_lines": 0.0,
             }
+            statement.sum_of_debits_lines = 0.0
+            statement.sum_of_udebits_lines = 0.0
+            statement.sum_of_credits_lines = 0.0
             for line in statement.credit_move_line_ids:
                 statement.sum_of_credits += (
                     line.cleared_cc_account

@@ -10,7 +10,8 @@
         <field name="arch" type="xml">
             <tree
                 string="Credit Card Reconciliation Statements"
-                colors="grey:state=='cancel';blue:state in ('to_be_reviewed')"
+                decoration-muted="state=='cancel'"
+                decoration-info="state=='to_be_reviewed'"
             >
                 <field name="name" />
                 <field name="ending_date" />
@@ -121,7 +122,7 @@
                     <notebook colspan="5">
                         <page string="Journal Items">
                             <label
-                                for='account_label'
+                                for='debit_move_line_ids'
                                 string='Credit Card Payments, Credits'
                             />
                             <field
@@ -163,7 +164,7 @@
                                 </tree>
                             </field>
                             <label
-                                for='account_label2'
+                                for='credit_move_line_ids'
                                 string='Credit Card Charges, Interest, Penalties'
                             />
                             <field
@@ -342,7 +343,7 @@
                     string="Group By..."
                     colspan="11"
                     col="11"
-                    groups="base.group_extended"
+                    groups="base.group_no_one"
                 >
                     <filter
                         string="Account"
@@ -367,7 +368,6 @@
     <record id="action_cc_rec_statement" model="ir.actions.act_window">
         <field name="name">Credit Card Statements</field>
         <field name="res_model">cc.rec.statement</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_cc_rec_statement_tree" />
         <field name="search_view_id" ref="view_cc_rec_statement_filter" />
@@ -392,37 +392,44 @@
     />
 
     <menuitem
-        icon="STOCK_JUSTIFY_FILL"
         action="action_cc_rec_statement"
         id="cc_rec_statements_menu"
         parent="menu_finance_credit_card"
         groups="account.group_account_manager"
         sequence="6"
     />
+    <record id="act_account_move_line_to_add_cc" model="ir.actions.act_window">
+        <field name="name">Journal Items</field>
+        <field name="res_model">account.move.line</field>
+        <field
+            name="binding_model_id"
+            ref="osi_credit_card_reconciliation.model_cc_rec_statement"
+        />
+    </record>
 
-    <act_window
-        id="act_account_move_line_to_add_cc"
-        name="Journal Items"
-        res_model="account.move.line"
-        src_model="cc.rec.statement"
-    />
+    <record id="act_supplier_payment_to_add_cc" model="ir.actions.act_window">
+        <field name="name">Supplier Payment</field>
+        <field name="res_model">account.move</field>
+        <field name="context">{'type':'payment'}</field>
+        <field
+            name="domain"
+        >[('journal_id.type', 'in', ['bank', 'cash']), ('move_type','=','receipt')]</field>
+        <field
+            name="binding_model_id"
+            ref="osi_credit_card_reconciliation.model_cc_rec_statement"
+        />
+    </record>
 
-    <act_window
-        id="act_supplier_payment_to_add_cc"
-        name="Supplier Payment"
-        domain="[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt')]"
-        context="{'type':'payment'}"
-        res_model="account.voucher"
-        src_model="cc.rec.statement"
-    />
-
-    <act_window
-        id="act_customer_payment_to_add_cc"
-        name="Customer Payment"
-        domain="[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt')]"
-        context="{'type':'receipt'}"
-        res_model="account.voucher"
-        src_model="cc.rec.statement"
-    />
-
+    <record id="act_customer_payment_to_add_cc" model="ir.actions.act_window">
+        <field name="name">Customer Payment</field>
+        <field name="res_model">account.move</field>
+        <field name="context">{'type':'receipt'}</field>
+        <field
+            name="domain"
+        >[('journal_id.type', 'in', ['bank', 'cash']), ('move_type','=','receipt')]</field>
+        <field
+            name="binding_model_id"
+            ref="osi_credit_card_reconciliation.model_cc_rec_statement"
+        />
+    </record>
 </odoo>

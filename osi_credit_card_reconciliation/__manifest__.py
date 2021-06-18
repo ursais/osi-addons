@@ -10,7 +10,10 @@
     "maintainer": "Open Source Integrators",
     "website": "https://github.com/ursais/osi-addons",
     "category": "Accounting",
-    "depends": ["account_accountant", "account_payment_credit_card", "account_voucher"],
+    "depends": [
+        "account_accountant",
+        "account_payment_credit_card",
+    ],
     "data": [
         "security/credit_card_reconciliation_security.xml",
         "security/ir.model.access.csv",

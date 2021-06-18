@@ -4,8 +4,6 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
-from odoo.addons import decimal_precision as dp
-
 
 class CCRecStatementLine(models.Model):
     _name = "cc.rec.statement.line"
@@ -20,12 +18,12 @@ class CCRecStatementLine(models.Model):
     )
     amount = fields.Float(
         string="Amount",
-        digits=dp.get_precision("Account"),
+        digits="Account",
         help="Derived from the 'debit' amount from related Journal Item.",
     )
     amountcur = fields.Float(
         string="Amount in Currency",
-        digits=dp.get_precision("Account"),
+        digits="Account",
         help="Derived from the 'amount currency' amount from related Journal" " Item.",
     )
     date = fields.Date("Date", required=True, help="Derived from related Journal Item.")
@@ -65,7 +63,6 @@ class CCRecStatementLine(models.Model):
             )
         return super().create(vals)
 
-    @api.multi
     def unlink(self):
         for rec in self:
             # Reset field values in move lines to be added later
