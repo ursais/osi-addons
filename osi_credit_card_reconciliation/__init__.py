@@ -7,9 +7,7 @@ from odoo import api, SUPERUSER_ID
 
 def init_settings(env):
     """Activate the Multi Currency by default."""
-    curr_config_id = env['res.config.settings'].create({
-        'group_multi_currency': True
-    })
+    curr_config_id = env["res.config.settings"].create({"group_multi_currency": True})
     # We need to call execute, otherwise the "implied_group" in fields are not
     # processed.
     curr_config_id.execute()

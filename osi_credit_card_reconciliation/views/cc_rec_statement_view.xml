@@ -8,13 +8,15 @@
         <field name="name">cc.rec.statement.tree</field>
         <field name="model">cc.rec.statement</field>
         <field name="arch" type="xml">
-            <tree string="Credit Card Reconciliation Statements"
-                  colors="grey:state=='cancel';blue:state in ('to_be_reviewed')">
-                <field name="name"/>
-                <field name="ending_date"/>
-                <field name="account_id"/>
-                <field name="verified_by_user_id"/>
-                <field name="state"/>
+            <tree
+                string="Credit Card Reconciliation Statements"
+                colors="grey:state=='cancel';blue:state in ('to_be_reviewed')"
+            >
+                <field name="name" />
+                <field name="ending_date" />
+                <field name="account_id" />
+                <field name="verified_by_user_id" />
+                <field name="state" />
             </tree>
         </field>
     </record>
@@ -25,182 +27,270 @@
         <field name="arch" type="xml">
             <form string="Credit Card Reconciliation Statement">
                 <header>
-                    <button name="action_cancel" type="object"
-                            states="draft,to_be_reviewed" string="Cancel"/>
-                    <button name="action_review" type="object" states="draft"
-                            string="Ready for Review"/>
-                    <button name="action_process" type="object"
-                            states="to_be_reviewed" string="Process"/>
-                    <button name="action_cancel_draft" states="cancel,done"
-                            string="Set to Draft" type="object"/>
-                    <button name='refresh_record' string='Refresh'
-                            confirm="Current edits in statement will be lost. Do you want to refresh?"
-                            states="draft" type='object'/>
-                    <field name="state" widget="statusbar" nolabel="1"/>
+                    <button
+                        name="action_cancel"
+                        type="object"
+                        states="draft,to_be_reviewed"
+                        string="Cancel"
+                    />
+                    <button
+                        name="action_review"
+                        type="object"
+                        states="draft"
+                        string="Ready for Review"
+                    />
+                    <button
+                        name="action_process"
+                        type="object"
+                        states="to_be_reviewed"
+                        string="Process"
+                    />
+                    <button
+                        name="action_cancel_draft"
+                        states="cancel,done"
+                        string="Set to Draft"
+                        type="object"
+                    />
+                    <button
+                        name='refresh_record'
+                        string='Refresh'
+                        confirm="Current edits in statement will be lost. Do you want to refresh?"
+                        states="draft"
+                        type='object'
+                    />
+                    <field name="state" widget="statusbar" nolabel="1" />
                 </header>
                 <sheet>
                     <group col="4" colspan="4">
-                        <field name="journal_id"
-                               on_change="onchange_journal_id(journal_id)"/>
-                        <field name="account_id" readonly="1"/>
-                        <field name="name" placeholder="Enter Name"/>
-                        <field name="ending_date" placeholder="Statement Date"
-                               on_change="onchange_ending_date(ending_date, suppress_ending_date_filter)"/>
-                        <field name="starting_balance"
-                               placeholder="Starting Balance (b/fwd)"/>
-                        <field name="ending_balance"
-                               placeholder="Statement Balance"/>
-                        <field name="last_ending_date"
-                               placeholder="Last Statement Date" readonly="1"/>
-                        <field name="suppress_ending_date_filter"
-                               on_change="onchange_suppress_date(ending_date, suppress_ending_date_filter)"/>
-                        <field name="company_id"
-                               groups="base.group_multi_company"
-                               placeholder="Enter Company Name"/>
+                        <field
+                            name="journal_id"
+                            on_change="onchange_journal_id(journal_id)"
+                        />
+                        <field name="account_id" readonly="1" />
+                        <field name="name" placeholder="Enter Name" />
+                        <field
+                            name="ending_date"
+                            placeholder="Statement Date"
+                            on_change="onchange_ending_date(ending_date, suppress_ending_date_filter)"
+                        />
+                        <field
+                            name="starting_balance"
+                            placeholder="Starting Balance (b/fwd)"
+                        />
+                        <field
+                            name="ending_balance"
+                            placeholder="Statement Balance"
+                        />
+                        <field
+                            name="last_ending_date"
+                            placeholder="Last Statement Date"
+                            readonly="1"
+                        />
+                        <field
+                            name="suppress_ending_date_filter"
+                            on_change="onchange_suppress_date(ending_date, suppress_ending_date_filter)"
+                        />
+                        <field
+                            name="company_id"
+                            groups="base.group_multi_company"
+                            placeholder="Enter Company Name"
+                        />
                     </group>
-                    <separator string="Balances - Cleared and Uncleared"/>
+                    <separator string="Balances - Cleared and Uncleared" />
                     <group name="balances" col="4" colspan="4">
                         <group name="balance1" col="2" colspan="2">
-                            <field name="cleared_balance"/>
-                            <field name="cleared_balance_cur"
-                                   attrs="{'invisible':[('cleared_balance_cur','=', 0.0)]}"/>
-                            <field name="difference"/>
-                            <field name="difference_cur"
-                                   attrs="{'invisible':[('cleared_balance_cur','=', 0.0)]}"/>
+                            <field name="cleared_balance" />
+                            <field
+                                name="cleared_balance_cur"
+                                attrs="{'invisible':[('cleared_balance_cur','=', 0.0)]}"
+                            />
+                            <field name="difference" />
+                            <field
+                                name="difference_cur"
+                                attrs="{'invisible':[('cleared_balance_cur','=', 0.0)]}"
+                            />
                         </group>
                         <group name="balance2" col="2" colspan="2">
-                            <field name="uncleared_balance"/>
-                            <field name="uncleared_balance_cur"
-                                   attrs="{'invisible':[('uncleared_balance_cur','=', 0.0)]}"/>
+                            <field name="uncleared_balance" />
+                            <field
+                                name="uncleared_balance_cur"
+                                attrs="{'invisible':[('uncleared_balance_cur','=', 0.0)]}"
+                            />
                         </group>
                     </group>
                     <notebook colspan="5">
                         <page string="Journal Items">
-                            <label for='account_label'
-                                   string='Credit Card Payments, Credits'/>
-                            <field colspan="4" mode="tree"
-                                   name="debit_move_line_ids" nolabel="1"
-                                   widget="one2many_list" height="300">
+                            <label
+                                for='account_label'
+                                string='Credit Card Payments, Credits'
+                            />
+                            <field
+                                colspan="4"
+                                mode="tree"
+                                name="debit_move_line_ids"
+                                nolabel="1"
+                                widget="one2many_list"
+                                height="300"
+                            >
                                 <form string="Credit Card Payments, Credits">
-                                    <field name="cleared_cc_account"/>
-                                    <field name="date"/>
-                                    <field name="name"/>
-                                    <field name="ref"/>
-                                    <field name="partner_id"/>
-                                    <field name="amount"/>
-                                    <field name="amountcur"/>
-                                    <field name="currency_id"/>
-                                    <field name="research_required"/>
-                                    <field name="from_filter" invisible="1"/>
+                                    <field name="cleared_cc_account" />
+                                    <field name="date" />
+                                    <field name="name" />
+                                    <field name="ref" />
+                                    <field name="partner_id" />
+                                    <field name="amount" />
+                                    <field name="amountcur" />
+                                    <field name="currency_id" />
+                                    <field name="research_required" />
+                                    <field name="from_filter" invisible="1" />
                                 </form>
-                                <tree string="Credit Card Payments, Credits"
-                                      editable="top"
-                                      mute_additem="draft,to_be_reviewed,done, cancel">
-                                    <field name="cleared_cc_account"/>
-                                    <field name="date"/>
-                                    <field name="name"/>
-                                    <field name="ref"/>
-                                    <field name="partner_id"/>
-                                    <field name="amount"/>
-                                    <field name="amountcur"/>
-                                    <field name="currency_id"/>
-                                    <field name="research_required"/>
-                                    <field name="move_line_id"/>
-                                    <field name="from_filter" invisible="1"/>
+                                <tree
+                                    string="Credit Card Payments, Credits"
+                                    editable="top"
+                                    mute_additem="draft,to_be_reviewed,done, cancel"
+                                >
+                                    <field name="cleared_cc_account" />
+                                    <field name="date" />
+                                    <field name="name" />
+                                    <field name="ref" />
+                                    <field name="partner_id" />
+                                    <field name="amount" />
+                                    <field name="amountcur" />
+                                    <field name="currency_id" />
+                                    <field name="research_required" />
+                                    <field name="move_line_id" />
+                                    <field name="from_filter" invisible="1" />
                                 </tree>
                             </field>
-                            <label for='account_label2'
-                                   string='Credit Card Charges, Interest, Penalties'/>
-                            <field colspan="4" mode="tree"
-                                   name="credit_move_line_ids" nolabel="1"
-                                   widget="one2many_list" height="300">
-                                <form string="Credit Card Charges, Interest, Penalties">
-                                    <field name="cleared_cc_account"/>
-                                    <field name="date"/>
-                                    <field name="name"/>
-                                    <field name="ref"/>
-                                    <field name="partner_id"/>
-                                    <field name="amount"/>
-                                    <field name="amountcur"/>
-                                    <field name="currency_id"/>
-                                    <field name="research_required"/>
-                                    <field name="from_filter" invisible="1"/>
+                            <label
+                                for='account_label2'
+                                string='Credit Card Charges, Interest, Penalties'
+                            />
+                            <field
+                                colspan="4"
+                                mode="tree"
+                                name="credit_move_line_ids"
+                                nolabel="1"
+                                widget="one2many_list"
+                                height="300"
+                            >
+                                <form
+                                    string="Credit Card Charges, Interest, Penalties"
+                                >
+                                    <field name="cleared_cc_account" />
+                                    <field name="date" />
+                                    <field name="name" />
+                                    <field name="ref" />
+                                    <field name="partner_id" />
+                                    <field name="amount" />
+                                    <field name="amountcur" />
+                                    <field name="currency_id" />
+                                    <field name="research_required" />
+                                    <field name="from_filter" invisible="1" />
                                 </form>
-                                <tree string="Credit Card Charges, Interest, Penalties"
-                                      editable="top"
-                                      mute_additem="draft,to_be_reviewed,done, cancel">
-                                    <field name="cleared_cc_account"/>
-                                    <field name="date"/>
-                                    <field name="name"/>
-                                    <field name="ref"/>
-                                    <field name="partner_id"/>
-                                    <field name="amount"/>
-                                    <field name="amountcur"/>
-                                    <field name="currency_id"/>
-                                    <field name="research_required"/>
-                                    <field name="move_line_id"/>
-                                    <field name="from_filter" invisible="1"/>
+                                <tree
+                                    string="Credit Card Charges, Interest, Penalties"
+                                    editable="top"
+                                    mute_additem="draft,to_be_reviewed,done, cancel"
+                                >
+                                    <field name="cleared_cc_account" />
+                                    <field name="date" />
+                                    <field name="name" />
+                                    <field name="ref" />
+                                    <field name="partner_id" />
+                                    <field name="amount" />
+                                    <field name="amountcur" />
+                                    <field name="currency_id" />
+                                    <field name="research_required" />
+                                    <field name="move_line_id" />
+                                    <field name="from_filter" invisible="1" />
                                 </tree>
                             </field>
                         </page>
                         <page string="Totals - Cleared and Uncleared">
-                            <group col="2" colspan="1"
-                                   groups="osi_credit_card_reconciliation.group_cc_stmt_verifier">
-                                <button name="action_select_all"
-                                        class="oe_highlight"
-                                        confirm="Current edits in statement will be lost. Do you want to select all?"
-                                        type="object"
-                                        states="draft,to_be_reviewed"
-                                        string="Select All"/>
-                                <button name="action_unselect_all"
-                                        class="oe_highlight"
-                                        confirm="Current edits in statement will be lost. Do you want to unselect all?"
-                                        type="object"
-                                        states="draft,to_be_reviewed"
-                                        string="Unselect All"/>
+                            <group
+                                col="2"
+                                colspan="1"
+                                groups="osi_credit_card_reconciliation.group_cc_stmt_verifier"
+                            >
+                                <button
+                                    name="action_select_all"
+                                    class="oe_highlight"
+                                    confirm="Current edits in statement will be lost. Do you want to select all?"
+                                    type="object"
+                                    states="draft,to_be_reviewed"
+                                    string="Select All"
+                                />
+                                <button
+                                    name="action_unselect_all"
+                                    class="oe_highlight"
+                                    confirm="Current edits in statement will be lost. Do you want to unselect all?"
+                                    type="object"
+                                    states="draft,to_be_reviewed"
+                                    string="Unselect All"
+                                />
                             </group>
-                            <newline/>
-                            <separator string="Totals - Cleared and Uncleared"
-                                       colspan="2"/>
+                            <newline />
+                            <separator
+                                string="Totals - Cleared and Uncleared"
+                                colspan="2"
+                            />
                             <group name="totals" col="4" colspan="4">
 
                                 <group name="total1" col="2" colspan="2">
-                                    <field name="sum_of_debits_lines"/>
-                                    <field name="sum_of_debits"/>
-                                    <field name="sum_of_debits_cur"
-                                           attrs="{'invisible':[('sum_of_debits_cur','=', 0.0)]}"/>
-                                    <field name="sum_of_credits_lines"/>
-                                    <field name="sum_of_credits"/>
-                                    <field name="sum_of_credits_cur"
-                                           attrs="{'invisible':[('sum_of_credits_cur','=', 0.0)]}"/>
+                                    <field name="sum_of_debits_lines" />
+                                    <field name="sum_of_debits" />
+                                    <field
+                                        name="sum_of_debits_cur"
+                                        attrs="{'invisible':[('sum_of_debits_cur','=', 0.0)]}"
+                                    />
+                                    <field name="sum_of_credits_lines" />
+                                    <field name="sum_of_credits" />
+                                    <field
+                                        name="sum_of_credits_cur"
+                                        attrs="{'invisible':[('sum_of_credits_cur','=', 0.0)]}"
+                                    />
                                 </group>
                                 <group name="total2" col="2" colspan="2">
-                                    <field name="sum_of_udebits_lines"/>
-                                    <field name="sum_of_udebits"/>
-                                    <field name="sum_of_udebits_cur"
-                                           attrs="{'invisible':[('sum_of_udebits_cur','=', 0.0)]}"/>
-                                    <field name="sum_of_ucredits_lines"/>
-                                    <field name="sum_of_ucredits"/>
-                                    <field name="sum_of_ucredits_cur"
-                                           attrs="{'invisible':[('sum_of_ucredits_cur','=', 0.0)]}"/>
+                                    <field name="sum_of_udebits_lines" />
+                                    <field name="sum_of_udebits" />
+                                    <field
+                                        name="sum_of_udebits_cur"
+                                        attrs="{'invisible':[('sum_of_udebits_cur','=', 0.0)]}"
+                                    />
+                                    <field name="sum_of_ucredits_lines" />
+                                    <field name="sum_of_ucredits" />
+                                    <field
+                                        name="sum_of_ucredits_cur"
+                                        attrs="{'invisible':[('sum_of_ucredits_cur','=', 0.0)]}"
+                                    />
                                 </group>
                             </group>
                         </page>
                         <page string="Other Information">
-                            <separator string="Tracking Information"
-                                       colspan="4"/>
+                            <separator
+                                string="Tracking Information"
+                                colspan="4"
+                            />
                             <group colspan="2" col="2">
-                                <field name="verified_by_user_id"
-                                       placeholder="Verified By"/>
+                                <field
+                                    name="verified_by_user_id"
+                                    placeholder="Verified By"
+                                />
                             </group>
                             <group colspan="2" col="2">
-                                <field name="verified_date"
-                                       placeholder="Verification Date"/>
+                                <field
+                                    name="verified_date"
+                                    placeholder="Verification Date"
+                                />
                             </group>
                         </page>
                         <page string="Notes">
-                            <field name="notes" nolabel="1"
-                                   placeholder="Notes"/>
+                            <field
+                                name="notes"
+                                nolabel="1"
+                                placeholder="Notes"
+                            />
                         </page>
                     </notebook>
                 </sheet>
@@ -213,36 +303,62 @@
         <field name="model">cc.rec.statement</field>
         <field name="arch" type="xml">
             <search string="Search Credit Card Reconciliation Statements">
-                <filter icon="terp-document-new" string="Draft" name="draft_osi"
-                        domain="[('state','=','draft')]"
-                        help="Statements that haven't yet been confirmed"/>
-                <filter icon="terp-dolar" string="To be Reviewed"
-                        name="to_review_osi"
-                        domain="[('state','=','to_be_reviewed')]"
-                        help="Statements that are ready for review"/>
-                <filter icon="terp-check" string="Done"
-                        domain="[('state','=','done')]" name="done_osi"
-                        help="Statements that have been processed"/>
-                <separator orientation="vertical"/>
-                <field name="name" select="1"/>
-                <field name="ending_date" select="1" string="Ending Date"/>
-                <field name="account_id" select="1"/>
+                <filter
+                    icon="terp-document-new"
+                    string="Draft"
+                    name="draft_osi"
+                    domain="[('state','=','draft')]"
+                    help="Statements that haven't yet been confirmed"
+                />
+                <filter
+                    icon="terp-dolar"
+                    string="To be Reviewed"
+                    name="to_review_osi"
+                    domain="[('state','=','to_be_reviewed')]"
+                    help="Statements that are ready for review"
+                />
+                <filter
+                    icon="terp-check"
+                    string="Done"
+                    domain="[('state','=','done')]"
+                    name="done_osi"
+                    help="Statements that have been processed"
+                />
+                <separator orientation="vertical" />
+                <field name="name" select="1" />
+                <field name="ending_date" select="1" string="Ending Date" />
+                <field name="account_id" select="1" />
                 <field name="verified_by_user_id" select="1">
-                    <filter domain="[('verified_by_user_id','=',uid)]"
-                            name="verify_user_osi" help="Verified by me"
-                            icon="terp-personal"/>
+                    <filter
+                        domain="[('verified_by_user_id','=',uid)]"
+                        name="verify_user_osi"
+                        help="Verified by me"
+                        icon="terp-personal"
+                    />
                 </field>
-                <newline/>
-                <group expand="0" string="Group By..." colspan="11" col="11"
-                       groups="base.group_extended">
-                    <filter string="Account" icon="terp-personal"
-                            name="account_osi" domain="[]"
-                            context="{'group_by':'account_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="State"
-                            icon="terp-stock_effects-object-colorize"
-                            name="state_osi" domain="[]"
-                            context="{'group_by':'state'}"/>
+                <newline />
+                <group
+                    expand="0"
+                    string="Group By..."
+                    colspan="11"
+                    col="11"
+                    groups="base.group_extended"
+                >
+                    <filter
+                        string="Account"
+                        icon="terp-personal"
+                        name="account_osi"
+                        domain="[]"
+                        context="{'group_by':'account_id'}"
+                    />
+                    <separator orientation="vertical" />
+                    <filter
+                        string="State"
+                        icon="terp-stock_effects-object-colorize"
+                        name="state_osi"
+                        domain="[]"
+                        context="{'group_by':'state'}"
+                    />
                 </group>
             </search>
         </field>
@@ -253,54 +369,60 @@
         <field name="res_model">cc.rec.statement</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
-        <field name="view_id" ref="view_cc_rec_statement_tree"/>
-        <field name="search_view_id" ref="view_cc_rec_statement_filter"/>
+        <field name="view_id" ref="view_cc_rec_statement_tree" />
+        <field name="search_view_id" ref="view_cc_rec_statement_filter" />
     </record>
 
     <!-- Change Reporting menu sequence from 5 to 7 -->
     <menuitem
-            id="account.menu_finance_reports"
-            name="Reporting"
-            parent="account.menu_finance"
-            groups="account.group_account_manager"
-            sequence="7"/>
+        id="account.menu_finance_reports"
+        name="Reporting"
+        parent="account.menu_finance"
+        groups="account.group_account_manager"
+        sequence="7"
+    />
 
     <!-- Credit Card menu will be display "Accounting > Credit Card" -->
     <menuitem
-            id="menu_finance_credit_card"
-            name="Credit Card"
-            parent="account_accountant.menu_accounting"
-            groups="account.group_account_manager"
-            sequence="5"/>
+        id="menu_finance_credit_card"
+        name="Credit Card"
+        parent="account_accountant.menu_accounting"
+        groups="account.group_account_manager"
+        sequence="5"
+    />
 
     <menuitem
-            icon="STOCK_JUSTIFY_FILL"
-            action="action_cc_rec_statement"
-            id="cc_rec_statements_menu"
-            parent="menu_finance_credit_card"
-            groups="account.group_account_manager"
-            sequence="6"/>
+        icon="STOCK_JUSTIFY_FILL"
+        action="action_cc_rec_statement"
+        id="cc_rec_statements_menu"
+        parent="menu_finance_credit_card"
+        groups="account.group_account_manager"
+        sequence="6"
+    />
 
     <act_window
-            id="act_account_move_line_to_add_cc"
-            name="Journal Items"
-            res_model="account.move.line"
-            src_model="cc.rec.statement"/>
+        id="act_account_move_line_to_add_cc"
+        name="Journal Items"
+        res_model="account.move.line"
+        src_model="cc.rec.statement"
+    />
 
     <act_window
-            id="act_supplier_payment_to_add_cc"
-            name="Supplier Payment"
-            domain="[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt')]"
-            context="{'type':'payment'}"
-            res_model="account.voucher"
-            src_model="cc.rec.statement"/>
+        id="act_supplier_payment_to_add_cc"
+        name="Supplier Payment"
+        domain="[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt')]"
+        context="{'type':'payment'}"
+        res_model="account.voucher"
+        src_model="cc.rec.statement"
+    />
 
     <act_window
-            id="act_customer_payment_to_add_cc"
-            name="Customer Payment"
-            domain="[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt')]"
-            context="{'type':'receipt'}"
-            res_model="account.voucher"
-            src_model="cc.rec.statement"/>
+        id="act_customer_payment_to_add_cc"
+        name="Customer Payment"
+        domain="[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt')]"
+        context="{'type':'receipt'}"
+        res_model="account.voucher"
+        src_model="cc.rec.statement"
+    />
 
 </odoo>

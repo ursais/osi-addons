@@ -7,28 +7,30 @@
     <template id="credit_card_summary">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
-                <t t-set="company" t-value="o.company_id"/>
+                <t t-set="company" t-value="o.company_id" />
                 <t t-call="web.external_layout_standard">
                     <div class="page">
                         <div class="row">
-                            <br/>
+                            <br />
                             <h3 align="center">
                                 <b>Reconciliation Detail</b>
                             </h3>
                         </div>
                         <div>
-                            <br/>
+                            <br />
                             <h4 align="center">
                                 <b>Perioding Date
                                     <t t-if="o.ending_date">
-                                        <span t-field="o.ending_date"/>
+                                        <span t-field="o.ending_date" />
                                     </t>
                                 </b>
                             </h4>
                         </div>
 
-                        <table class="table table-condensed"
-                               name="move_line_ids_table">
+                        <table
+                            class="table table-condensed"
+                            name="move_line_ids_table"
+                        >
                             <thead>
                                 <tr>
                                     <th class="hidden">Column 1</th>
@@ -43,92 +45,124 @@
                                     <td>
                                         <b>Initial Balance</b>
                                     </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td />
+                                    <td />
+                                    <td />
                                     <td>
                                         <b>
-                                            <span t-field="o.starting_balance"
-                                                  t-field-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                            <span
+                                                t-field="o.starting_balance"
+                                                t-field-options='{"widget": "monetary", "display_currency": company.currency_id}'
+                                            />
                                         </b>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td></td>
+                                    <td />
                                     <td>
                                         <b>Cleared Transactions</b>
                                     </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td />
+                                    <td />
+                                    <td />
                                 </tr>
                                 <tr>
-                                    <td></td>
-                                    <td></td>
+                                    <td />
+                                    <td />
                                     <td>
                                         <b>Deposits &amp; Credits -
-                                            <t t-if="o.sum_of_debits_lines == 0.00"></t>
-                                            <t t-if="not o.sum_of_debits_lines == 0.00">
-                                                <span t-field="o.sum_of_debits_lines"/>
+                                            <t
+                                                t-if="o.sum_of_debits_lines == 0.00"
+                                            />
+                                            <t
+                                                t-if="not o.sum_of_debits_lines == 0.00"
+                                            >
+                                                <span
+                                                    t-field="o.sum_of_debits_lines"
+                                                />
                                             </t>
                                             items
                                         </b>
                                     </td>
                                     <td>
-                                        <t t-if="o.sum_of_debits == 0.00"></t>
+                                        <t t-if="o.sum_of_debits == 0.00" />
                                         <t t-if="not o.sum_of_debits == 0.00">
-                                            <span t-field="o.sum_of_debits"
-                                                  t-field-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                            <span
+                                                t-field="o.sum_of_debits"
+                                                t-field-options='{"widget": "monetary", "display_currency": company.currency_id}'
+                                            />
                                         </t>
                                     </td>
                                     <td>
-                                        <t t-if="o.sum_of_debits_cur == 0.00"></t>
-                                        <t t-if="not o.sum_of_debits_cur == 0.00">
-                                            <span t-field="o.sum_of_debits_cur"
-                                                  t-field-options='{"widget": "monetary", "display_currency": o.account_id.currency_id}'/>
+                                        <t t-if="o.sum_of_debits_cur == 0.00" />
+                                        <t
+                                            t-if="not o.sum_of_debits_cur == 0.00"
+                                        >
+                                            <span
+                                                t-field="o.sum_of_debits_cur"
+                                                t-field-options='{"widget": "monetary", "display_currency": o.account_id.currency_id}'
+                                            />
                                         </t>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td></td>
-                                    <td></td>
+                                    <td />
+                                    <td />
                                     <td>
                                         <b>Checks &amp; Payments -
-                                            <t t-if="o.sum_of_credits_lines == 0.00"></t>
-                                            <t t-if="not o.sum_of_credits_lines == 0.00">
-                                                <span t-field="o.sum_of_debits_lines"/>
+                                            <t
+                                                t-if="o.sum_of_credits_lines == 0.00"
+                                            />
+                                            <t
+                                                t-if="not o.sum_of_credits_lines == 0.00"
+                                            >
+                                                <span
+                                                    t-field="o.sum_of_debits_lines"
+                                                />
                                             </t>
                                             items
                                         </b>
                                     </td>
                                     <td>
-                                        <t t-if="o.sum_of_credits == 0.00"></t>
+                                        <t t-if="o.sum_of_credits == 0.00" />
                                         <t t-if="not o.sum_of_credits == 0.00">
-                                            <span t-field="o.sum_of_credits"
-                                                  t-field-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                            <span
+                                                t-field="o.sum_of_credits"
+                                                t-field-options='{"widget": "monetary", "display_currency": company.currency_id}'
+                                            />
                                         </t>
                                     </td>
                                     <td>
-                                        <t t-if="o.sum_of_credits_cur == 0.00"></t>
-                                        <t t-if="not o.sum_of_credits_cur == 0.00">
-                                            <span t-field="o.sum_of_credits_cur"
-                                                  t-field-options='{"widget": "monetary", "display_currency": o.account_id.currency_id}'/>
+                                        <t
+                                            t-if="o.sum_of_credits_cur == 0.00"
+                                        />
+                                        <t
+                                            t-if="not o.sum_of_credits_cur == 0.00"
+                                        >
+                                            <span
+                                                t-field="o.sum_of_credits_cur"
+                                                t-field-options='{"widget": "monetary", "display_currency": o.account_id.currency_id}'
+                                            />
                                         </t>
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td></td>
+                                    <td />
                                     <td>
                                         <b>Total Cleared Transactions</b>
                                     </td>
-                                    <td></td>
+                                    <td />
                                     <td>
-                                        <span t-esc="o.sum_of_debits - o.sum_of_credits"
-                                              t-esc-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                        <span
+                                            t-esc="o.sum_of_debits - o.sum_of_credits"
+                                            t-esc-options='{"widget": "monetary", "display_currency": company.currency_id}'
+                                        />
                                     </td>
                                     <td>
-                                        <span t-esc="o.sum_of_debits_cur - o.sum_of_credits_cur"
-                                              t-esc-options='{"widget": "monetary", "display_currency": o.account_id.currency_id}'/>
+                                        <span
+                                            t-esc="o.sum_of_debits_cur - o.sum_of_credits_cur"
+                                            t-esc-options='{"widget": "monetary", "display_currency": o.account_id.currency_id}'
+                                        />
                                     </td>
                                 </tr>
                                 <tr>
@@ -136,21 +170,33 @@
                                         <td>
                                             <b>Cleared Balance</b>
                                         </td>
-                                        <td></td>
-                                        <td></td>
+                                        <td />
+                                        <td />
                                         <td>
-                                            <t t-if="o.cleared_balance == 0.00"></t>
-                                            <t t-if="not o.cleared_balance == 0.00">
-                                                <span t-field="o.cleared_balance"
-                                                      t-field-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                            <t
+                                                t-if="o.cleared_balance == 0.00"
+                                            />
+                                            <t
+                                                t-if="not o.cleared_balance == 0.00"
+                                            >
+                                                <span
+                                                    t-field="o.cleared_balance"
+                                                    t-field-options='{"widget": "monetary", "display_currency": company.currency_id}'
+                                                />
                                             </t>
                                         </td>
                                         <td>
-                                            <t t-if="o.cleared_balance == 0.00"></t>
-                                            <t t-if="not o.cleared_balance == 0.00">
+                                            <t
+                                                t-if="o.cleared_balance == 0.00"
+                                            />
+                                            <t
+                                                t-if="not o.cleared_balance == 0.00"
+                                            >
                                                 <b>
-                                                    <span t-field="o.cleared_balance"
-                                                          t-field-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                                    <span
+                                                        t-field="o.cleared_balance"
+                                                        t-field-options='{"widget": "monetary", "display_currency": company.currency_id}'
+                                                    />
                                                 </b>
                                             </t>
                                         </td>
@@ -159,27 +205,45 @@
                                         <td>
                                             <b>Cleared Balance</b>
                                         </td>
-                                        <td></td>
+                                        <td />
                                         <td>
-                                            <t t-if="o.cleared_balance == 0.00"></t>
-                                            <t t-if="not o.cleared_balance == 0.00">
-                                                <span t-field="o.cleared_balance"
-                                                      t-field-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                            <t
+                                                t-if="o.cleared_balance == 0.00"
+                                            />
+                                            <t
+                                                t-if="not o.cleared_balance == 0.00"
+                                            >
+                                                <span
+                                                    t-field="o.cleared_balance"
+                                                    t-field-options='{"widget": "monetary", "display_currency": company.currency_id}'
+                                                />
                                             </t>
                                         </td>
                                         <td>
-                                            <t t-if="o.cleared_balance_cur == 0.00"></t>
-                                            <t t-if="not o.cleared_balance_cur == 0.00">
-                                                <span t-field="o.cleared_balance_cur"
-                                                      t-field-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                            <t
+                                                t-if="o.cleared_balance_cur == 0.00"
+                                            />
+                                            <t
+                                                t-if="not o.cleared_balance_cur == 0.00"
+                                            >
+                                                <span
+                                                    t-field="o.cleared_balance_cur"
+                                                    t-field-options='{"widget": "monetary", "display_currency": company.currency_id}'
+                                                />
                                             </t>
                                         </td>
                                         <td>
-                                            <t t-if="o.cleared_balance_cur == 0.00"></t>
-                                            <t t-if="not o.cleared_balance_cur == 0.00">
+                                            <t
+                                                t-if="o.cleared_balance_cur == 0.00"
+                                            />
+                                            <t
+                                                t-if="not o.cleared_balance_cur == 0.00"
+                                            >
                                                 <b>
-                                                    <span t-field="o.cleared_balance_cur"
-                                                          t-field-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                                    <span
+                                                        t-field="o.cleared_balance_cur"
+                                                        t-field-options='{"widget": "monetary", "display_currency": company.currency_id}'
+                                                    />
                                                 </b>
                                             </t>
                                         </td>
@@ -189,13 +253,15 @@
                                     <td>
                                         <b>Ending Balance</b>
                                     </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td />
+                                    <td />
+                                    <td />
                                     <td>
                                         <b>
-                                            <span t-field="o.ending_balance"
-                                                  t-field-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                            <span
+                                                t-field="o.ending_balance"
+                                                t-field-options='{"widget": "monetary", "display_currency": company.currency_id}'
+                                            />
                                         </b>
                                     </td>
                                 </tr>
