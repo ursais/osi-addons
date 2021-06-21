@@ -7,5 +7,4 @@ from odoo import fields, models
 class ResPartner(models.Model):
     _inherit = "res.partner"
 
-    payment_method = fields.Many2one("account.payment.method",
-                                     string="Payment Method")
+    payment_method = fields.Many2one("account.payment.method", string="Payment Method")
