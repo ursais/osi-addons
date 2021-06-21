@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
+from odoo.tools import frozendict
 
 
 class PurchaseOrder(models.Model):
@@ -14,17 +15,19 @@ class PurchaseOrder(models.Model):
         self.payment_method = self.partner_id.payment_method.id or False
         return {}
 
-    @api.multi
-    def action_view_invoice(self):
-        res = super().action_view_invoice()
-        res["context"]["default_payment_method"] = self.payment_method.id
+    # to-do #Remove(No-need as onchange changes value)
+    def action_view_invoie(self, invoices=False):
+        res = super().action_view_invoice(invoices)
+        ctx = dict(self._context)
+        ctx.update({"default_payment_method": self.payment_method.id})
+        self.env.args = frozendict(ctx)
+        res["context"] = ctx
         return res
 
 
 class StockRule(models.Model):
     _inherit = "stock.rule"
 
-    @api.multi
     def _prepare_purchase_order(
         self, product_id, product_qty, product_uom, origin, values, partner
     ):

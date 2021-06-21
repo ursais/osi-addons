@@ -5,5 +5,5 @@ from . import (
     res_partner,
     sale,
     purchase,
-    account_invoice,
+    account_move,
 )

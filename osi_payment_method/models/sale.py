@@ -14,7 +14,6 @@ class SaleOrder(models.Model):
         self.payment_method = self.partner_id.payment_method.id or False
         return {}
 
-    @api.multi
     def _prepare_invoice(self):
         invoice_vals = super()._prepare_invoice()
         invoice_vals.update({"payment_method": self.payment_method.id})

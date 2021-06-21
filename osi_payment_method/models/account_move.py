@@ -7,7 +7,7 @@ from odoo import api, fields, models
 
 
 class AccountInvoice(models.Model):
-    _inherit = "account.invoice"
+    _inherit = "account.move"
 
     payment_method = fields.Many2one("account.payment.method", string="Payment Method")
     current_date = fields.Date(

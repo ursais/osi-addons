@@ -12,6 +12,7 @@
     "license": "AGPL-3",
     "depends": [
         "sale",
+        "purchase_stock",
         "osi_vendor_reference",
     ],
     "data": [
@@ -19,7 +20,7 @@
         "views/res_partner_views.xml",
         "views/sale_views.xml",
         "views/purchase_views.xml",
-        "views/account_invoice_views.xml",
+        "views/account_move_views.xml",
     ],
     "installable": True,
     "development_status": "Beta",

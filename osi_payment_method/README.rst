@@ -52,6 +52,7 @@ Contributors
 
 * Michael Allen <mallen@opensourceintegrators.com>
 * Maxime Chambreuil <mchambreuil@opensourceintegrators.com>
+* Freni Patel <fpatel@opensourceintegrators.com>
 
 Maintainers
 -----------
