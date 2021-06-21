@@ -9,3 +9,4 @@ purchase-subscription https://gitlab.sudokeys.com/share/purchase/purchase_subscr
 sale-workflow
 stock-logistics-warehouse
 operating-unit
+multi-company
