@@ -1,6 +1,6 @@
 # Copyright (C) 2019 Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class HrExpense(models.Model):
@@ -19,7 +19,6 @@ class HrExpense(models.Model):
         string='Analytic Segment Two',
         copy=False)
 
-    @api.multi
     def _get_account_move_line_values(self):
         res = super(HrExpense, self)._get_account_move_line_values()
         for expense in self:

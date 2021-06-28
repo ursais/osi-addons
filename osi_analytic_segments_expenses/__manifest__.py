@@ -3,7 +3,7 @@
 
 {
     "name": "OSI Analytic Segments Expenses",
-    "version": "12.0.1.0.0",
+    "version": "14.0.1.0.0",
     "license": "LGPL-3",
     "summary": "Additional segments for analytic accounts for Expenses.",
     "author": "Open Source Integrators",
