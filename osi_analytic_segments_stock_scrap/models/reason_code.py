@@ -3,8 +3,8 @@
 from odoo import fields, models
 
 
-class ReasonCode(models.Model):
-    _inherit = "reason.code"
+class ScrapReasonCode(models.Model):
+    _inherit = "scrap.reason.code"
 
     def _get_default_segment_one(self):
         return self.env["analytic.segment.one"].get_default_segment_one()

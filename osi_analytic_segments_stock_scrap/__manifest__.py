@@ -4,7 +4,7 @@
 {
     "name": "Scrap Reason Code Analtyic",
     "summary": "Provide a user-defined list of scrapping reasons",
-    "version": "12.0.1.0.0",
+    "version": "14.0.1.0.0",
     "license": "AGPL-3",
     "author": "Open Source Integrators",
     "maintainer": "Open Source Integrators",
@@ -12,7 +12,7 @@
     "category": "Inventory",
     "depends": [
         "stock_analytic",
-        "osi_scrap_reason_code",
+        "scrap_reason_code",
         "osi_analytic_segments_stock"
     ],
     "data": [

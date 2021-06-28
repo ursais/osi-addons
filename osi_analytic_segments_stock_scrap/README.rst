@@ -9,8 +9,8 @@ Scrap Reason Code Analytic
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-ursais%2Fosi--addons-lightgray.png?logo=github
-    :target: https://github.com/ursais/osi-addons/tree/12.0/osi_scrap_reason_code
-    :alt: ursais/osi-addons
+    :target: https://github.com/OCA/stock-logistics-warehouse/tree/14.0/scrap_reason_code
+    :alt: OCA/stock-logistics-warehouse
 
 |badge1| |badge2| |badge3|
 

@@ -5,7 +5,7 @@
     <record id="stock_scrap_form_reason_code_required" model="ir.ui.view">
         <field name="name">stock.scrap.form.reason.code.required</field>
         <field name="model">stock.scrap</field>
-        <field name="inherit_id" ref="osi_scrap_reason_code.stock_scrap_form_reason_code"/>
+        <field name="inherit_id" ref="scrap_reason_code.stock_scrap_form_reason_code"/>
         <field name="arch" type="xml">
             <field name="reason_code_id" position='attributes'>
                 <attribute name="required">1</attribute>
