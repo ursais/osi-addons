@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Copyright 2019 Open Source Integrators
+    <!-- Copyright 2021 Open Source Integrators
          License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
 
     <!-- new field added to purchase order form -->
@@ -71,7 +71,6 @@
         <field name="name">Purchase Order Lines</field>
         <field name="res_model">purchase.order.line</field>
         <field name="view_id" ref="purchase.purchase_order_line_tree"/>
-        <field name='view_type'>form</field>
         <field name='view_mode'>tree,form</field>
         <field name="help" type="html">
             <p class="oe_view_nocontent_create">

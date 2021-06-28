@@ -18,3 +18,10 @@ class PurchaseOrderLine(models.Model):
         'analytic.segment.two',
         string='Analytic Segment Two',
         copy=False)
+
+    def _prepare_account_move_line(self, move=False):
+        res = super()._prepare_account_move_line(move)
+        res.update({
+            'analytic_segment_one_id': self.analytic_segment_one_id.id,
+            'analytic_segment_two_id': self.analytic_segment_two_id.id})
+        return res
