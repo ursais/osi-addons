@@ -13,7 +13,6 @@ class SaleOrderLine(models.Model):
         help="The analytic account related to a sales order Line.",
         copy=False)
 
-    @api.multi
     def _prepare_invoice_line(self, qty):
         res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
         default_analytic_account = self.env[

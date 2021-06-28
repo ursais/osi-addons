@@ -9,7 +9,7 @@
         <field name="name">account.analytic.default.tree.segments</field>
         <field name="model">account.analytic.default</field>
         <field name="inherit_id"
-               ref="account_analytic_default.view_account_analytic_default_tree"/>
+               ref="account.view_account_analytic_default_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='analytic_id']" position="after">
                 <field name="analytic_segment_one_id"
@@ -25,7 +25,7 @@
         <field name="name">account.analytic.default.form.segments</field>
         <field name="model">account.analytic.default</field>
         <field name="inherit_id"
-               ref="account_analytic_default.view_account_analytic_default_form"/>
+               ref="account.view_account_analytic_default_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='analytic_id']" position="attributes">
                 <attribute name='required'>0</attribute>
@@ -39,4 +39,4 @@
         </field>
     </record>
 
-</odoo>            
+</odoo>

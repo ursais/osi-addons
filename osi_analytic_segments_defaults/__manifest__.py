@@ -3,7 +3,7 @@
 
 {
     "name": "OSI Analytic Segments Defaults",
-    "version": "12.0.1.0.0",
+    "version": "14.0.1.0.0",
     "license": "LGPL-3",
     "summary": "Additional analytic segments for Analytic Defaults",
     "author": "Open Source Integrators",
@@ -11,8 +11,9 @@
     "website": "http://www.opensourceintegrators.com",
     "category": "Analytic Accounting",
     "depends": [
+        "sale",
         "purchase",
-        "account_analytic_default",
+        "account",
         "osi_analytic_segments",
     ],
     "data": [
