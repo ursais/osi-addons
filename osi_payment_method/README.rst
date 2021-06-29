@@ -27,7 +27,7 @@ Usage
 
 * Go to Contacts
 * Create or select a partner
-* Go to the "Sales & Purchase" tab
+* Go to the "Accounting" tab
 * Set the payment method
 * Create a sale order, purchase order, customer invoice or vendor bill
 * Select that same partner
