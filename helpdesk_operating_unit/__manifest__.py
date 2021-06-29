@@ -1,11 +1,11 @@
-# Copyright (C) 2019 Open Source Integrators
-# Copyright (C) 2019 Serpent Consulting Services
+# Copyright (C) 2021 Open Source Integrators
+# Copyright (C) 2021 Serpent Consulting Services
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 {
     "name": "Helpdesk Ticket with Operating Units",
     "summary": """
         This module adds operating unit information to Helpdesk tickets.""",
-    "version": "14.0.1.0.0",
+    "version": "12.0.1.0.0",
     "author": "Open Source Integrators, "
     "Serpent Consulting Services Pvt. Ltd.,"
     "Odoo Community Association (OCA)",

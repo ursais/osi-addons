@@ -1,5 +1,5 @@
-# Copyright (C) 2019 Open Source Integrators
-# Copyright (C) 2019 Serpent Consulting Services
+# Copyright (C) 2021 Open Source Integrators
+# Copyright (C) 2021 Serpent Consulting Services
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl).
 from odoo.tests import common
 
@@ -51,7 +51,7 @@ class TestHelpdeskTicketOperatingUnit(common.TransactionCase):
         return user
 
     def _create_helpdesk_ticket(self, uid, operating_unit):
-        helpdesk = self.helpdesk_obj.sudo(uid).create(
+        helpdesk = self.helpdesk_obj.with_user(uid).create(
             {
                 "name": "Demo helpdesk",
                 "operating_unit_id": operating_unit.id,
@@ -62,7 +62,7 @@ class TestHelpdeskTicketOperatingUnit(common.TransactionCase):
     def test_helpdesk(self):
         # User 2 is only assigned to B2C Operating Unit, and cannot
         # access Agreement for Main Operating Unit.
-        helpdesk_ticket_ids = self.helpdesk_obj.sudo(self.user2.id).search(
+        helpdesk_ticket_ids = self.helpdesk_obj.with_user(self.user2.id).search(
             [
                 ("id", "=", self.helpdesk_ticket2.id),
                 ("operating_unit_id", "=", self.main_OU.id),
