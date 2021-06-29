@@ -1,4 +1,4 @@
-# Copyright (C) 2019 - TODAY, Open Source Integrators
+# Copyright (C) 2021 - TODAY, Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo import _, fields, models
@@ -27,7 +27,6 @@ class FSMOrder(models.Model):
                     ("stage_id.is_closed", "=", False),
                 ]
             )
-
             if self.ticket_id.stage_id.is_close:
                 return res
             elif open_fsm_orders_count == 0:
