@@ -5,12 +5,13 @@ from odoo import api, fields, models
 
 
 class HelpdeskTicket(models.Model):
-    _inherit = 'helpdesk.ticket'
+    _inherit = "helpdesk.ticket"
 
     inventory_location_id = fields.Many2one(
-        related='fsm_location_id.inventory_location_id', store=True)
+        related="fsm_location_id.inventory_location_id", store=True
+    )
 
-    @api.onchange('fsm_location_id')
+    @api.onchange("fsm_location_id")
     def onchange_location_id(self):
         res = super()._onchange_fsm_location_id_partner()
         if self.fsm_location_id:

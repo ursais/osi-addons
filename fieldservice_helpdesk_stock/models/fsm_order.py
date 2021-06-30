@@ -5,7 +5,7 @@ from odoo import api, models
 
 
 class FSMOrder(models.Model):
-    _inherit = 'fsm.order'
+    _inherit = "fsm.order"
 
     @api.multi
     def action_request_confirm(self):
@@ -18,13 +18,13 @@ class FSMOrder(models.Model):
     @api.multi
     def write(self, vals):
         res = super(FSMOrder, self).write(vals)
-        if 'ticket_id' in vals:
+        if "ticket_id" in vals:
             for line in self.stock_request_ids:
-                if line.state in ('draft', 'cancelled'):
-                    line.ticket_id = vals.get('ticket_id')
+                if line.state in ("draft", "cancelled"):
+                    line.ticket_id = vals.get("ticket_id")
         return res
 
-    @api.onchange('location_id')
+    @api.onchange("location_id")
     def onchange_location_id(self):
         res = super().onchange_location_id()
         if self.location_id:

@@ -5,7 +5,8 @@ from odoo import fields, models
 
 
 class FSMLocation(models.Model):
-    _inherit = 'fsm.location'
+    _inherit = "fsm.location"
 
-    default_warehouse_id = fields.Many2one('stock.warehouse',
-                                           string="Default Warehouse")
+    default_warehouse_id = fields.Many2one(
+        "stock.warehouse", string="Default Warehouse"
+    )
