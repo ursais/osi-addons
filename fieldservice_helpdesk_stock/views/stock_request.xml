@@ -9,6 +9,7 @@
         <field name="arch" type="xml">
             <field name="fsm_order_id" position="after">
                 <field name="fsm_location_id" />
+                <field name="helpdesk_ticket_id" />
             </field>
         </field>
     </record>

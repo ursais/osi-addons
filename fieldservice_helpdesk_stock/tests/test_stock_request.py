@@ -1,4 +1,4 @@
-# Copyright (C) 2019 Open Source Integrators
+# Copyright (C) 2021 Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0).
 
 from datetime import datetime
@@ -41,7 +41,6 @@ class TestStockRequest(common.TransactionCase):
                 "expected_date": datetime.today(),
                 "direction": "outbound",
                 "location_id": self.test_location.id,
-                "picking_type_id": self.env.ref("stock.picking_type_in").id,
             }
         )
 
@@ -56,7 +55,6 @@ class TestStockRequest(common.TransactionCase):
             "expected_date": datetime.today(),
             "direction": "outbound",
             "location_id": self.test_location.id,
-            "picking_type_id": self.env.ref("stock.picking_type_in").id,
         }
         self.order.write(
             {"stock_request_ids": [(6, 0, self.env["stock.request"].create(vals).ids)]}
