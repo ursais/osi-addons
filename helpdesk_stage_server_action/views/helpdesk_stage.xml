@@ -1,14 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
     <!-- Fieldservice Stage Form View-->
     <record id="helpdesk_server_action_stage_form_view" model="ir.ui.view">
         <field name="name">helpdesk.server.action.stage.form</field>
         <field name="model">helpdesk.stage</field>
-        <field name="inherit_id" ref="helpdesk.helpdesk_stage_view_form"/>
+        <field name="inherit_id" ref="helpdesk.helpdesk_stage_view_form" />
         <field name="arch" type="xml">
             <field name="template_id" position="after">
-                <field name="action_id"/>
+                <field name="action_id" />
             </field>
         </field>
     </record>

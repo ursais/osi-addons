@@ -1,19 +1,19 @@
 <odoo>
 
     <record id="helpdesk.stage_new" model="helpdesk.stage">
-        <field name="action_id" ref="helpdesk_ticket_parent_new"/>
+        <field name="action_id" ref="helpdesk_ticket_parent_new" />
     </record>
 
     <record id="helpdesk.stage_in_progress" model="helpdesk.stage">
-        <field name="action_id" ref="helpdesk_ticket_parent_monitoring"/>
+        <field name="action_id" ref="helpdesk_ticket_parent_monitoring" />
     </record>
 
     <record id="helpdesk.stage_solved" model="helpdesk.stage">
-        <field name="action_id" ref="helpdesk_ticket_parent_solved"/>
+        <field name="action_id" ref="helpdesk_ticket_parent_solved" />
     </record>
 
     <record id="helpdesk.stage_cancelled" model="helpdesk.stage">
-        <field name="action_id" ref="helpdesk_ticket_parent_canceled"/>
+        <field name="action_id" ref="helpdesk_ticket_parent_canceled" />
     </record>
 
 </odoo>
