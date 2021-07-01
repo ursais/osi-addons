@@ -1,14 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
     <!-- Helpdesk Phone Form Extension-->
     <record id="helpdesk_phone_form_inherit_ticket" model="ir.ui.view">
         <field name="name">helpdesk.phone.form.ticket</field>
         <field name="model">helpdesk.ticket</field>
-        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form" />
         <field name="arch" type="xml">
             <field name="partner_email" position="after">
-                <field name="partner_phone" widget="phone" readonly="1"/>
+                <field name="partner_phone" widget="phone" readonly="1" />
             </field>
         </field>
     </record>
