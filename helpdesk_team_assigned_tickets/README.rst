@@ -25,6 +25,7 @@ Credits
 =======
 
 * Steven Campbell <scampbell@opensourceintegrators.com>
+* Freni Patel <fpatel@opensourceintegrators.com>
 
 Contributors
 ------------
