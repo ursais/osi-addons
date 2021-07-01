@@ -22,6 +22,7 @@ Credits
 =======
 
 * Maxime Chambreuil <mchambreuil@opensourceintegrators.com>
+* Freni Patel <fpatel@opensourceintegrators.com>
 
 Contributors
 ------------
