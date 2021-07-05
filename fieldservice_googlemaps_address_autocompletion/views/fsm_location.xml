@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
     <!-- Field Service Location Form View-->
     <record id="fsm_location_form_view_autocomplete" model="ir.ui.view">
         <field name="name">fsm.location.form.autocomplete</field>
         <field name="model">fsm.location</field>
-        <field name='inherit_id' ref='fieldservice.fsm_location_form_view'/>
+        <field name='inherit_id' ref='fieldservice.fsm_location_form_view' />
         <field name="arch" type="xml">
             <field name='name' position='attributes'>
                 <attribute name='widget'>gplaces_autocomplete</attribute>
@@ -13,9 +13,10 @@
                     {'lat':'partner_latitude','lng':'partner_longitude'}
                 </attribute>
             </field>
-            <field name="street"
-                   position='attributes'>
-                <attribute name='widget'>gplaces_address_autocomplete</attribute>
+            <field name="street" position='attributes'>
+                <attribute
+                    name='widget'
+                >gplaces_address_autocomplete</attribute>
                 <attribute name='options'>
                     {'lat':'partner_latitude','lng':'partner_longitude'}
                 </attribute>

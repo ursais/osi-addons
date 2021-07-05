@@ -2,24 +2,24 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    'name': 'Field Service - Google Maps Address Auto-completion',
-    'version': '12.0.1.0.0',
-    'license': 'AGPL-3',
-    'summary': 'Auto-complete addresses with Google Maps',
-    'author': 'Open Source Integrators',
-    'maintainer': 'Open Source Integrators',
-    'website': 'https://www.opensourceintegrators.com',
-    'depends': [
-        'web_view_google_map',
-        'fieldservice',
+    "name": "Field Service - Google Maps Address Auto-completion",
+    "version": "14.0.1.0.0",
+    "license": "AGPL-3",
+    "summary": "Auto-complete addresses with Google Maps",
+    "author": "Open Source Integrators",
+    "maintainer": "Open Source Integrators",
+    "website": "https://github.com/ursais/osi-addons",
+    "depends": [
+        "web_view_google_map",
+        "fieldservice",
     ],
-    'data': [
-        'views/fsm_location.xml',
-        'views/res_partner.xml',
+    "data": [
+        "views/fsm_location.xml",
+        "views/res_partner.xml",
     ],
-    'development_status': 'Beta',
-    'maintainers': [
-        'osimallen',
+    "development_status": "Beta",
+    "maintainers": [
+        "osimallen",
     ],
-    'installable': True,
+    "installable": True,
 }
