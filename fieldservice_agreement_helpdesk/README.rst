@@ -23,6 +23,7 @@ Credits
 =======
 
 * Steve Campbell <scampbell@opensourceintegrators.com>
+* Vimal Patel <vpatel@opensourceintegrators.com>
 
 Contributors
 ------------
