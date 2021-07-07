@@ -7,7 +7,7 @@
     "license": "LGPL-3",
     "summary": "Additional analytic segments for Analytic Defaults",
     "author": "Open Source Integrators",
-    "maintainer": "Open Source Integrators",
+    "maintainers": ["Open Source Integrators"],
     "website": "http://www.opensourceintegrators.com",
     "category": "Analytic Accounting",
     "depends": [
