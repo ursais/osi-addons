@@ -8,7 +8,7 @@
     "summary": "Additional analytic segments for Analytic Defaults",
     "author": "Open Source Integrators",
     "maintainers": ["Open Source Integrators"],
-    "website": "https://github.com/ursais/osi-addons",
+    "website": "http://www.opensourceintegrators.com",
     "category": "Analytic Accounting",
     "depends": [
         "sale",
