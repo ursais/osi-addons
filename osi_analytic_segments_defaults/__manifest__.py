@@ -7,8 +7,8 @@
     "license": "LGPL-3",
     "summary": "Additional analytic segments for Analytic Defaults",
     "author": "Open Source Integrators",
-    "maintainer": "Open Source Integrators",
-    "website": "http://www.opensourceintegrators.com",
+    "maintainers": ["Open Source Integrators"],
+    "website": "https://github.com/ursais/osi-addons",
     "category": "Analytic Accounting",
     "depends": [
         "sale",
