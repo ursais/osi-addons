@@ -81,8 +81,8 @@ class HrExpenseSheet(models.Model):
             if expense.employee_id.user_id == expense.env.user:
                 raise UserError(_("You are not allowed to approve your own "
                                   "expense!"))
-
-            if len(supervisor_ids) and expense.env.user not in supervisor_ids:
-                raise UserError(_("You are not allowed to approve expenses "
-                                  "outside of your department!"))
+            if expense.employee_id.expense_manager_id != expense.env.user:
+                if len(supervisor_ids) and expense.env.user not in supervisor_ids:
+                    raise UserError(_("You are not allowed to approve expenses "
+                                    "outside of your department!"))
         return super(HrExpenseSheet, self).approve_expense_sheets()
