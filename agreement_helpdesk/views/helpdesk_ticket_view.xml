@@ -1,0 +1,40 @@
+<odoo>
+
+    <!-- Helpdesk Ticket Form View -->
+    <record id="helpdesk_ticket_view_agreement_form" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.agreement.form</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form" />
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field
+                    name="agreement_id"
+                    domain="[('partner_id', '=', partner_id)]"
+                    widget="selection"
+                />
+                <field
+                    name="serviceprofile_id"
+                    domain="[('agreement_id', '=', agreement_id)]"
+                    widget="selection"
+                />
+            </field>
+        </field>
+    </record>
+
+    <!-- Inherit helpdesk.ticket search view-->
+    <record id="helpdesk_tickets_view_search_agreement" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.select.agreement</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="inside">
+                <filter
+                    string="Service Profile"
+                    name="serviceprofile_id"
+                    domain="[]"
+                    context="{'group_by':'serviceprofile_id'}"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

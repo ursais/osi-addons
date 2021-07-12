@@ -1,0 +1,44 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* osi_analytic_segments_expenses
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-01-01 16:32+0000\n"
+"PO-Revision-Date: 2019-01-01 16:32+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: osi_analytic_segments_expenses
+#: model:ir.model.fields,field_description:osi_analytic_segments_expenses.field_hr_expense_analytic_segment_one
+#: model:ir.model.fields,field_description:osi_analytic_segments_expenses.field_hr_expense_sheet_analytic_segment_one
+#: model:ir.model.fields,field_description:osi_analytic_segments_expenses.field_hr_expense_sheet_analytic_segment_two
+msgid "Analytic Segment One"
+msgstr "Analytic Segment One"
+
+#. module: osi_analytic_segments_expenses
+#: model:ir.model.fields,field_description:osi_analytic_segments_expenses.field_hr_expense_analytic_segment_two
+msgid "Analytic Segment Two"
+msgstr "Analytic Segment Two"
+
+#. module: osi_analytic_segments_expenses
+#: model:ir.model,name:osi_analytic_segments_expenses.model_hr_expense
+msgid "Expense"
+msgstr "Expense"
+
+#. module: osi_analytic_segments_expenses
+#: model:ir.model,name:osi_analytic_segments_expenses.model_hr_expense_sheet
+msgid "Expense Report"
+msgstr "Expense Report"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_analytic_account_id
+#: model:ir.ui.view,arch_db:hr_expense.view_hr_expense_filter
+msgid "Analytic Account"
+msgstr "Analytic Account"

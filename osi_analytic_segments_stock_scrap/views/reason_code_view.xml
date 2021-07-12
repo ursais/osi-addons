@@ -1,0 +1,21 @@
+<!-- Copyright 2018 Open Source Integrators
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <!-- Reason Code Type -->
+    <record id="view_reason_code_form_analytic" model="ir.ui.view">
+        <field name="name">reason.code.form</field>
+        <field name="model">scrap.reason.code</field>
+        <field name="inherit_id" ref="scrap_reason_code.view_scrap_reason_code_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/group[3]" position="after">
+                <group>
+                    <field name="analytic_account_id"/>
+                    <field name="analytic_segment_one_id"/>
+                    <field name="analytic_segment_two_id"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
