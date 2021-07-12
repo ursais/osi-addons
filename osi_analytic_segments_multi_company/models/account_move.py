@@ -1,5 +1,5 @@
-# Copyright (C) 2019 Open Source Integrators
-# Copyright (C) 2019 Serpent Consulting Services
+# Copyright (C) 2021 Open Source Integrators
+# Copyright (C) 2021 Serpent Consulting Services
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 from odoo import models
 
@@ -7,28 +7,29 @@ from odoo import models
 class AccountMove(models.Model):
     _inherit = "account.move"
 
-    def prepare_other_company_move_line_values(
-            self, line, account=False, partner=False, keep=False):
-        res = super().\
-            prepare_other_company_move_line_values(line, account,
-                                                   partner,
-                                                   keep)
-        if line.analytic_segment_one_id:
-            res['analytic_segment_one_id'] = line.analytic_segment_one_id.id
-        if line.analytic_segment_two_id:
-            res['analytic_segment_two_id'] = line.analytic_segment_two_id.id
-        return res
+    # Mutli-Company (account_bill_line_distribution)
 
-    def prepare_company_move_line_values(self, line, transfer_lines):
-        super().prepare_company_move_line_values(line, transfer_lines)
-        index = len(transfer_lines)
-        if line.analytic_segment_one_id:
-            transfer_lines[index-2][2]['analytic_segment_one_id'] = line.\
-                analytic_segment_one_id.id
-            transfer_lines[index-1][2]['analytic_segment_one_id'] = line.\
-                analytic_segment_one_id.id
-        if line.analytic_segment_two_id:
-            transfer_lines[index-2][2]['analytic_segment_two_id'] = line.\
-                analytic_segment_two_id.id
-            transfer_lines[index-1][2]['analytic_segment_two_id'] = line.\
-                analytic_segment_two_id.id
+    def get_from_lines(
+        self, from_lines, invoice_line_id, invoice_id, amount, distribution, is_invoice
+    ):
+        super().get_from_lines(
+            from_lines, invoice_line_id, invoice_id, amount, distribution, is_invoice
+        )
+        for line_id in from_lines:
+            line_id[2][
+                "analytic_segment_one_id"
+            ] = invoice_line_id.analytic_segment_one_id.id
+            line_id[2][
+                "analytic_segment_two_id"
+            ] = invoice_line_id.analytic_segment_two_id.id
+
+    # Mutli-Company (account_bill_line_distribution)
+    def get_to_lines(self, to_lines, line, company, invoice_id, is_invoice):
+        super().get_to_lines(to_lines, line, company, invoice_id, is_invoice)
+        for line_id in to_lines:
+            line_id[2][
+                "analytic_segment_one_id"
+            ] = line.get('analytic_segment_one_id')
+            line_id[2][
+                "analytic_segment_two_id"
+            ] = line.get('analytic_segment_two_id')
