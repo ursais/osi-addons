@@ -4,11 +4,11 @@
 {
     "name": "Tickets to multiple tasks relationships",
     "summary": "Tickets to multiple tasks relationships",
-    "version": "12.0.1.0.0",
+    "version": "14.0.1.0.0",
     "license": "LGPL-3",
     "author": "Open Source Integrators, Odoo Community Association (OCA)",
     "category": "Helpdesk",
-    "website": "http://www.opensourceintegrators.com",
+    "website": "https://github.com/ursais/osi-addons",
     "depends": [
         "helpdesk",
         "helpdesk_timesheet",
@@ -18,5 +18,6 @@
         "views/helpdesk_ticket_views.xml",
         "views/project_task_views.xml",
     ],
+    "maintainers": ["Open Source Integrators"],
     "installable": True,
 }
