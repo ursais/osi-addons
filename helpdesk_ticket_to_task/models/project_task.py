@@ -1,4 +1,4 @@
-# Copyright (C) 2019 - TODAY, Open Source Integrators
+# Copyright (C) 2021 - TODAY, Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo import fields, models
@@ -26,11 +26,5 @@ class ProjectTaskTicket(models.Model):
         "helpdesk.ticket",
         string="Ticket",
     )
-    project_id = fields.Many2one(
-        "project.project", string="Project", related="task_id.project_id"
-    )
-    user_id = fields.Many2one(
-        "res.users",
-        related="ticket_id.user_id",
-        string="Assigned to",
-    )
+    project_id = fields.Many2one(related="task_id.project_id", string="Project")
+    user_id = fields.Many2one(related="ticket_id.user_id", string="Assigned to")
