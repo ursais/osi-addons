@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+        <record id="helpdesk_ticket_parent_new" model="ir.actions.server">
+            <field name="name">Helpdesk Ticket Parent New</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket" />
+            <field name="state">multi</field>
+        </record>
+
+        <record
+        id="helpdesk_ticket_parent_monitoring"
+        model="ir.actions.server"
+    >
+            <field name="name">Helpdesk Ticket Parent Monitoring</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket" />
+            <field name="state">multi</field>
+        </record>
+
+        <record id="helpdesk_ticket_parent_solved" model="ir.actions.server">
+            <field name="name">Helpdesk Ticket Parent Solved</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket" />
+            <field name="state">multi</field>
+        </record>
+
+        <record id="helpdesk_ticket_parent_canceled" model="ir.actions.server">
+            <field name="name">Helpdesk Ticket Parent Canceled</field>
+            <field name="model_id" ref="helpdesk.model_helpdesk_ticket" />
+            <field name="state">multi</field>
+        </record>
+</odoo>
