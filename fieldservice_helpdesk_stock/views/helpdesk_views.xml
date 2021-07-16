@@ -1,0 +1,30 @@
+<odoo>
+
+    <!-- Copyright (C) 2021 - TODAY, Open Source Integrators
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+
+    <menuitem
+        id="menu_helpdesk_location"
+        name="Locations"
+        action="fieldservice.action_fsm_location"
+        parent="helpdesk.helpdesk_menu_config"
+        sequence="60"
+    />
+
+    <menuitem
+        id="menu_helpdesk_equipment"
+        name="Equipment"
+        action="fieldservice.action_fsm_equipment"
+        parent="helpdesk.helpdesk_menu_config"
+        sequence="70"
+    />
+
+    <menuitem
+        id="menu_helpdesk_contacts"
+        name="Contacts"
+        action="contacts.action_contacts"
+        parent="helpdesk.helpdesk_menu_config"
+        sequence="80"
+    />
+
+</odoo>
