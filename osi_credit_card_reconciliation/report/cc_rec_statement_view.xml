@@ -1,0 +1,34 @@
+<odoo>
+
+    <!-- Copyright (C) 2019 Open Source Integrators
+         License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+
+    <!-- Qweb Reports -->
+    <record id="report_credit_card_detail" model="ir.actions.report">
+        <field name="name">Credit Card-Detail</field>
+        <field name="model">cc.rec.statement</field>
+        <field name="report_type">qweb-pdf</field>
+        <field
+            name="report_name"
+        >osi_credit_card_reconciliation.credit_card_detail</field>
+        <field
+            name="report_file"
+        >osi_credit_card_reconciliation.credit_card_detail</field>
+        <field name="binding_model_id" ref="model_cc_rec_statement" />
+        <field name="attachment">'Detail Statement-' + (object.name)</field>
+    </record>
+    <record id="report_credit_card_summary" model="ir.actions.report">
+        <field name="name">Credit Card-Summary</field>
+        <field name="model">cc.rec.statement</field>
+        <field name="report_type">qweb-pdf</field>
+        <field
+            name="report_name"
+        >osi_credit_card_reconciliation.credit_card_summary</field>
+        <field
+            name="report_file"
+        >osi_credit_card_reconciliation.credit_card_summary</field>
+        <field name="binding_model_id" ref="model_cc_rec_statement" />
+        <field name="attachment">'Summary Statement-' + (object.name)</field>
+    </record>
+
+</odoo>
