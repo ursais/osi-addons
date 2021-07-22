@@ -1,4 +1,4 @@
-# Copyright (C) 2019 Open Source Integrators
+# Copyright (C) 2021 Open Source Integrators
 # <https://www.opensourceintegrators.com>
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
@@ -10,17 +10,16 @@ import time
 
 from voicent import voicent
 
-from odoo import _, api, fields, models
+from odoo import _, fields, models
 from odoo.tools import pycompat
 
 from ...queue_job.exception import RetryableJobError
-from ...queue_job.job import job
 
 
 class HelpdeskTicket(models.Model):
     _inherit = "helpdesk.ticket"
 
-    call_count = fields.Integer(string="Call count", default=0)
+    call_count = fields.Integer(string="Call count")
 
     def generate_identity(self):
         hasher = hashlib.sha1()
@@ -28,7 +27,6 @@ class HelpdeskTicket(models.Model):
         hasher.update(str(self.stage_id.id).encode("utf-8"))
         return hasher.hexdigest()
 
-    @api.multi
     def voicent_check_status(self, campaign, call_line):
         for rec in self:
             voicent_obj = voicent.Voicent(
@@ -83,8 +81,6 @@ class HelpdeskTicket(models.Model):
                     )
                     reply.action_id.with_context(ctx).run()
 
-    @job
-    @api.multi
     def voicent_start_campaign(self, call_line):
         for rec in self:
             if call_line.helpdesk_ticket_stage_id.id == rec.stage_id.id:
@@ -150,7 +146,6 @@ class HelpdeskTicket(models.Model):
                 message = _("Call has been cancelled because the stage has " "changed.")
                 rec.message_post(body=message)
 
-    @api.multi
     def write(self, vals):
         for rec in self:
             if (
