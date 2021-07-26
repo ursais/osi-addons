@@ -1,0 +1,26 @@
+<odoo>
+
+    <record id="stock_request_helpdesk_ticket" model="ir.ui.view">
+        <field name="model">stock.request</field>
+        <field name="inherit_id" ref="stock_request.view_stock_request_form"/>
+        <field name="arch" type="xml">
+            <field name="picking_policy" position="after">
+                <field name="helpdesk_ticket_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="stock_request_helpdesk_ticket_search" model="ir.ui.view">
+        <field name="model">stock.request</field>
+        <field name="inherit_id" ref="stock_request.stock_request_search"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="helpdesk_ticket_id"/>
+            </field>
+            <filter name="location" position="after">
+                <filter string="Helpdesk Ticket" name="helpdesk_ticket_id" domain="[]" context="{'group_by': 'helpdesk_ticket_id'}"/>
+            </filter>
+        </field>
+    </record>
+
+</odoo>
