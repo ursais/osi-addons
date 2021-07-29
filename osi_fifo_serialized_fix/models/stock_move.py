@@ -22,7 +22,7 @@ class StockMove(models.Model):
                         # Filter so we only have the Layers we got from Incoming Moves
                         if line_id.lot_id in valuation.lot_ids and valuation.value > 0:
                             if not self.check_found_vals(valuation.id, svl_ids):
-                                svl_ids.append((valuation.id, 1, [line_id.lot_id.id]))
+                                svl_ids.append((valuation.id, 1, [line_id.lot_id.id],line_id.qty_done))
                                 break
                             else:
                                 self.increment_qty(valuation.id,
@@ -47,8 +47,8 @@ class StockMove(models.Model):
                             val['account_move_id'] = ji_ids[0].move_id.id
                             # The qty of serial products is always 1, lots could be > 1
                             if line_id.product_id.tracking == 'lot':
-                                val['quantity'] = line_id.qty_done * -1
-                            val['value'] = val_obj.unit_cost * val['quantity'] * -1
+                                val['quantity'] = svl_id[3] * -1
+                            val['value'] = val_obj.unit_cost * val['quantity'] 
                             final_layers.append(val)
                         final_layers = self.env['stock.valuation.layer'].\
                             create(final_layers)
@@ -57,7 +57,7 @@ class StockMove(models.Model):
                         ji_val = 0
                         for sv_id in move.stock_valuation_layer_ids:
                             if sv_id.product_id == ji_ids[0].product_id:
-                                ji_val += sv_id.value
+                                ji_val += (sv_id.value * -1)
                         # The Valuation Layers have been made, now edit the STJ Entries
                         for ji_id in ji_ids:
                             if ji_id.credit != 0:
@@ -79,9 +79,9 @@ class StockMove(models.Model):
                             move.write({'stock_valuation_layer_ids': [6, 0, val.id]})
                         else:
                             svl = self.env['stock.valuation.layer'].browse(svl_ids[0][0])
-                            move.stock_valuation_layer_ids.unit_cost = -1 * svl.unit_cost
-                            move.stock_valuation_layer_ids.value = -1 \
-                                * move.stock_valuation_layer_ids.quantity \
+                            move.stock_valuation_layer_ids.lot_ids =[(6, 0, svl_ids[0][2])]
+                            move.stock_valuation_layer_ids.unit_cost = svl.unit_cost
+                            move.stock_valuation_layer_ids.value = move.stock_valuation_layer_ids.quantity \
                                 * move.stock_valuation_layer_ids.unit_cost
                         ji_ids[0].move_id.button_draft()
                         # The Valuation Layer has been changed, now we have to edit the STJ Entry
