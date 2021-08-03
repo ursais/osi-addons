@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="partner_credit_view" model="ir.ui.view">
+        <field name="name">partner.credit.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <group name="fiscal_information" position="before">
+                <field name="customer_rank" invisible="1"/>
+                <group string="Credit Management"
+                    attrs="{'invisible': [('customer_rank','=',0)]}">
+                    <field name="sales_hold" />
+                    <field name="credit_limit"
+                           groups="osi_partner_credit_limit.group_credit_hold"/>
+                    <field name="grace_period"
+                           groups="osi_partner_credit_limit.group_credit_hold"/>
+                    <field name="credit_hold"
+                           groups="osi_partner_credit_limit.group_credit_hold"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>
