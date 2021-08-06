@@ -13,20 +13,20 @@ class StockMoveLine(models.Model):
             if rec.exists():
                 for all_rec in rec.move_id.allocation_ids:
                     request = all_rec.stock_request_id
-                    if request.state == 'done' and request.helpdesk_ticket_id:
-                        request.helpdesk_ticket_id.request_stage = 'done'
+                    if request.state == "done" and request.helpdesk_ticket_id:
+                        request.helpdesk_ticket_id.request_stage = "done"
         return res
 
 
 class ProcurementGroup(models.Model):
-    _inherit = 'procurement.group'
+    _inherit = "procurement.group"
 
-    helpdesk_ticket_id = fields.Many2one('helpdesk.ticket', 'Helpdesk Ticket')
+    helpdesk_ticket_id = fields.Many2one("helpdesk.ticket", "Helpdesk Ticket")
 
 
 class StockPicking(models.Model):
-    _inherit = 'stock.picking'
+    _inherit = "stock.picking"
 
     helpdesk_ticket_id = fields.Many2one(
-        related="group_id.helpdesk_ticket_id", string="Helpdesk Ticket",
-        store=True)
+        related="group_id.helpdesk_ticket_id", string="Helpdesk Ticket", store=True
+    )
