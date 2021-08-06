@@ -8,7 +8,10 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_in_invoice_tree" />
         <field name="arch" type="xml">
-            <xpath expr="//tree/field[@name='invoice_date_due']" position="after">
+            <xpath
+                expr="//tree/field[@name='invoice_date_due']"
+                position="after"
+            >
                 <field name="payment_method" />
             </xpath>
         </field>
@@ -19,7 +22,10 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='invoice_payment_term_id']" position="after">
+            <xpath
+                expr="//field[@name='invoice_payment_term_id']"
+                position="after"
+            >
                 <field name="payment_method" widget="selection" />
             </xpath>
         </field>
