@@ -17,4 +17,5 @@
         "views/stock_move.xml",
         "views/stock_scrap.xml",
     ],
+    "maintainers": ["bodedra"],
 }
