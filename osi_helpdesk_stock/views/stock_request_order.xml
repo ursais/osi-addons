@@ -2,10 +2,10 @@
 
     <record id="stock_request_order_helpdesk_ticket_form" model="ir.ui.view">
         <field name="model">stock.request.order</field>
-        <field name="inherit_id" ref="stock_request.stock_request_order_form"/>
+        <field name="inherit_id" ref="stock_request.stock_request_order_form" />
         <field name="arch" type="xml">
             <field name="picking_policy" position="after">
-                <field name="helpdesk_ticket_id"/>
+                <field name="helpdesk_ticket_id" />
             </field>
             <field name="stock_request_ids" position="attributes">
                 <attribute name="context">{
@@ -19,31 +19,45 @@
                     'default_company_id': company_id,
                     'default_state': state}</attribute>
             </field>
-            <xpath expr="//field[@name='stock_request_ids']/tree/field[@name='route_id']" position="after">
-                <field name="helpdesk_ticket_id" invisible="1"/>
+            <xpath
+                expr="//field[@name='stock_request_ids']/tree/field[@name='route_id']"
+                position="after"
+            >
+                <field name="helpdesk_ticket_id" invisible="1" />
             </xpath>
         </field>
     </record>
 
     <record id="stock_request_order_helpdesk_ticket_tree" model="ir.ui.view">
         <field name="model">stock.request.order</field>
-        <field name="inherit_id" ref="stock_request.stock_request_order_tree"/>
+        <field name="inherit_id" ref="stock_request.stock_request_order_tree" />
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="helpdesk_ticket_id"/>
+                <field name="helpdesk_ticket_id" />
             </field>
         </field>
     </record>
 
     <record id="stock_request_order_helpdesk_ticket_search" model="ir.ui.view">
         <field name="model">stock.request.order</field>
-        <field name="inherit_id" ref="stock_request_picking_type.stock_request_order_search"/>
+        <field
+            name="inherit_id"
+            ref="stock_request_picking_type.stock_request_order_search"
+        />
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="helpdesk_ticket_id" filter_domain="['|', ('helpdesk_ticket_id.name', 'ilike', self), ('helpdesk_ticket_id.id', 'ilike', self)]"/>
+                <field
+                    name="helpdesk_ticket_id"
+                    filter_domain="['|', ('helpdesk_ticket_id.name', 'ilike', self), ('helpdesk_ticket_id.id', 'ilike', self)]"
+                />
             </field>
             <field name="state" position="after">
-                <filter string="Helpdesk Ticket" name="helpdesk_ticket_id" domain="[]" context="{'group_by': 'helpdesk_ticket_id'}"/>
+                <filter
+                    string="Helpdesk Ticket"
+                    name="helpdesk_ticket_id"
+                    domain="[]"
+                    context="{'group_by': 'helpdesk_ticket_id'}"
+                />
             </field>
         </field>
     </record>

@@ -1,7 +1,7 @@
 # Copyright (C) 2019 - 2021, Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models, _
+from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -20,7 +20,7 @@ class SaleOrder(models.Model):
     )
 
     def action_confirm(self):
-        state = self.partner_id.check_limit(self)
+        self.partner_id.check_limit(self)
         if self.sales_hold and not self.credit_override:
             message = _(
                 """Cannot confirm Order!The customer is on Customer Sales Hold."""

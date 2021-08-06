@@ -8,16 +8,14 @@
     "license": "AGPL-3",
     "author": "Open Source Integrators",
     "maintainer": "Open Source Integrators",
-    "website": "http://www.opensourceintegrators.com",
+    "website": "https://github.com/ursais/osi-addons",
     "category": "Inventory",
-    "depends": [
-        "stock_analytic",
-        "scrap_reason_code",
-        "osi_analytic_segments_stock"
-    ],
+    "depends": ["stock_analytic", "scrap_reason_code", "osi_analytic_segments_stock"],
     "data": [
         "views/reason_code_view.xml",
         "views/stock_scrap_views.xml",
     ],
     "application": False,
+    "development_status": "Beta",
+    "maintainers": ["bodedra"],
 }

@@ -14,4 +14,5 @@
     "website": "https://github.com/ursais/osi-addons",
     "depends": ["purchase"],
     "installable": True,
+    "maintainers": ["bodedra"],
 }

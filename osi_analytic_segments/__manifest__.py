@@ -20,4 +20,5 @@
         "views/account_move_view.xml",
     ],
     "installable": True,
+    "maintainers": ["bodedra"],
 }
