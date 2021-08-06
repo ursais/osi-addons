@@ -27,9 +27,5 @@ class AccountMove(models.Model):
     def get_to_lines(self, to_lines, line, company, invoice_id, is_invoice):
         super().get_to_lines(to_lines, line, company, invoice_id, is_invoice)
         for line_id in to_lines:
-            line_id[2][
-                "analytic_segment_one_id"
-            ] = line.get('analytic_segment_one_id')
-            line_id[2][
-                "analytic_segment_two_id"
-            ] = line.get('analytic_segment_two_id')
+            line_id[2]["analytic_segment_one_id"] = line.get("analytic_segment_one_id")
+            line_id[2]["analytic_segment_two_id"] = line.get("analytic_segment_two_id")
