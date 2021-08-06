@@ -1,0 +1,7 @@
+<odoo noupdate="1">
+
+    <record id="base.main_company" model="res.company">
+        <field name="purchase_folder" ref="documents_purchase_folder" />
+    </record>
+
+</odoo>

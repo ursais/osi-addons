@@ -8,7 +8,7 @@
     "summary": "Additional segments for analytic accounts for Expenses.",
     "author": "Open Source Integrators",
     "maintainer": "Open Source Integrators",
-    "website": "http://www.opensourceintegrators.com",
+    "website": "https://github.com/ursais/osi-addons",
     "category": "Analytic Accounting",
     "depends": [
         "osi_analytic_segments",
@@ -18,4 +18,5 @@
         "views/hr_expense_views.xml",
     ],
     "installable": True,
+    "maintainers": ["bodedra"],
 }
