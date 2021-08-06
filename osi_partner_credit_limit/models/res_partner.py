@@ -1,8 +1,9 @@
 # Copyright (C) 2019 - 2021, Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models
 from datetime import datetime, timedelta
+
+from odoo import fields, models
 
 
 class Partner(models.Model):
@@ -17,7 +18,8 @@ class Partner(models.Model):
     grace_period = fields.Integer(
         string="Grace Period",
         help="Grace period added on top of the customer \
-        payment term " "(in days)",
+        payment term "
+        "(in days)",
     )
     credit_hold = fields.Boolean(
         string="Credit Hold",
@@ -64,8 +66,7 @@ class Partner(models.Model):
         existing_invoice_balance = 0.0
         # Confirmed orders - invoiced - draft or open / not invoiced
         for order in order_ids:
-            existing_order_balance = existing_order_balance \
-                + order.amount_total
+            existing_order_balance = existing_order_balance + order.amount_total
         # Invoices that are open (also shows up as part of partner.
         # Credit, so must be deducted
         for invoice in invoice_ids:
