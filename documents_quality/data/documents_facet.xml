@@ -1,0 +1,21 @@
+<odoo noupdate="1">
+
+    <record id="documents_quality_point_facet" model="documents.facet">
+        <field name="name">Documents</field>
+        <field name="sequence">5</field>
+        <field name="folder_id" ref="documents_quality_point_folder" />
+    </record>
+
+        <record id="documents_quality_check_facet" model="documents.facet">
+        <field name="name">Documents</field>
+        <field name="sequence">5</field>
+        <field name="folder_id" ref="documents_quality_check_folder" />
+    </record>
+
+        <record id="documents_quality_alert_facet" model="documents.facet">
+        <field name="name">Documents</field>
+        <field name="sequence">5</field>
+        <field name="folder_id" ref="documents_quality_alert_folder" />
+    </record>
+
+</odoo>
