@@ -7,7 +7,7 @@ class ResCompany(models.Model):
     _inherit = "res.company"
 
     def _domain_company(self):
-        company = self.env.company
+        company = self.env.company or self.env.user.company_id.id
         return ["|", ("company_id", "=", False), ("company_id", "=", company)]
 
     # Quality Control Points
