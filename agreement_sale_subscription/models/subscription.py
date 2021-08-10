@@ -1,10 +1,10 @@
-# Copyright (C) 2019 - TODAY, Open Source Integrators
+# Copyright (C) 2021 - TODAY, Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo import fields, models
 
 
 class Subscription(models.Model):
-    _inherit = 'sale.subscription'
+    _inherit = "sale.subscription"
 
-    agreement_id = fields.Many2one('agreement', string="Agreement")
+    agreement_id = fields.Many2one("agreement", string="Agreement")
