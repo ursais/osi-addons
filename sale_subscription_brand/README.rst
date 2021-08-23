@@ -9,7 +9,7 @@ Sale Subscription Brand
     :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
     :alt: License: LGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-ursais%2Fosi--addons-lightgray.png?logo=github
-    :target: https://github.com/ursais/osi-addons/tree/12.0/sale_subscription_brand
+    :target: https://github.com/ursais/osi-addons/tree/14.0/sale_subscription_brand
     :alt: ursais/osi-addons
 
 |badge1| |badge2| |badge3|
@@ -25,7 +25,7 @@ Configuration
 =============
 
 To configure this module, please refer to the documentation of
-`partner_brand <https://github.com/OCA/partner-contact/blob/12.0/partner_brand/README.rst>`_.
+`partner_brand <https://github.com/OCA/partner-contact/blob/14.0/partner_brand/README.rst>`_.
 
 Usage
 =====
@@ -51,7 +51,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/ursais/osi-addons/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us smashing it by providing a detailed and welcomed
-`feedback <https://github.com/ursais/osi-addons/issues/new?body=module:%20sale_subscription_brand%0Aversion:%2012.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/ursais/osi-addons/issues/new?body=module:%20sale_subscription_brand%0Aversion:%2014.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Credits
 =======
@@ -67,6 +67,7 @@ Contributors
 * Raphael Lee <rlee@opensourceintegrators.com>
 * Steve Campbell <scampbell@opensourceintegrators.com>
 * Maxime Chambreuil <mchambreuil@opensourceintegrators.com>
+* Freni Patel <fpatel@opensourceintegrators.com>
 
 Other credits
 ~~~~~~~~~~~~~
@@ -95,6 +96,6 @@ Current `maintainer <https://odoo-community.org/page/maintainer-role>`__:
 
 |maintainer-osi-scampbell|
 
-This module is part of the `OSI Odoo Addons <https://github.com/ursais/osi-addons/tree/12.0/sale_subscription_brand>`_ project on GitHub.
+This module is part of the `OSI Odoo Addons <https://github.com/ursais/osi-addons/tree/14.0/sale_subscription_brand>`_ project on GitHub.
 
 You are welcome to contribute. To learn how, please visit https://odoo-community.org/page/Contribute.
