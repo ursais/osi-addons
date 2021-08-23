@@ -1,13 +1,12 @@
-# Copyright (C) 2019 - TODAY, Open Source Integrators
-# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+# Copyright (C) 2021 Open Source Integrators
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from odoo import api, models
+from odoo import models
 
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
-    @api.multi
     def create_subscriptions(self):
         for order in self:
             res = super(SaleOrder, order).create_subscriptions()
