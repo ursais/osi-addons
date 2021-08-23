@@ -4,14 +4,14 @@
 {
     "name": "Sale Subscription Brand",
     "summary": "Brand your subscription invoices",
-    "version": "12.0.1.0.0",
+    "version": "14.0.1.0.0",
     "category": "Sales Management",
     "website": "https://github.com/ursais/osi-addons",
     "author": "Open Source Integrators",
     "license": "LGPL-3",
     "depends": [
-        'sale_subscription',
-        'sale_brand',
+        "sale_subscription",
+        "sale_brand",
     ],
     "data": [
         "views/sale_subscription_views.xml",
@@ -20,4 +20,3 @@
     "development_status": "Beta",
     "maintainers": ["osi-scampbell"],
 }
-
