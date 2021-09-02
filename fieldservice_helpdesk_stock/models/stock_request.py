@@ -13,14 +13,17 @@ class StockRequest(models.Model):
     @api.onchange("direction", "fsm_order_id", "helpdesk_ticket_id")
     def _onchange_location_id(self):
         super()._onchange_location_id()
-        # FSM Order takes priority over Helpdesk Ticket
-        if self.direction == "outbound":
-            # Inventory location of the FSM location of the order
-            self.location_id = self.fsm_order_id.location_id.inventory_location_id.id
-        else:
-            # Otherwise the stock location of the warehouse
-            self.location_id = self.fsm_order_id.warehouse_id.lot_stock_id.id
-        self.fsm_location_id = self.fsm_order_id.location_id.id
+        if self.fsm_order_id:
+            # FSM Order takes priority over Helpdesk Ticket
+            if self.direction == "outbound":
+                # Inventory location of the FSM location of the order
+                self.location_id = (
+                    self.fsm_order_id.location_id.inventory_location_id.id
+                )
+            else:
+                # Otherwise the stock location of the warehouse
+                self.location_id = self.fsm_order_id.warehouse_id.lot_stock_id.id
+            self.fsm_location_id = self.fsm_order_id.location_id.id
 
     @api.model
     def create(self, vals):
