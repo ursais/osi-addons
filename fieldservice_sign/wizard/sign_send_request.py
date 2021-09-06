@@ -13,6 +13,7 @@ class SignSendRequest(models.TransientModel):
 
     def send_request(self):
         res = super(SignSendRequest, self).send_request()
-        request = self.env["sign.request"].browse(res.get("res_id"))
-        request.fsm_order_id = self.fsm_order_id
+        if res.get("context") and self.fsm_order_id:
+            request = self.env["sign.request"].browse(res.get("context").get("id"))
+            request.fsm_order_id = self.fsm_order_id.id
         return res
