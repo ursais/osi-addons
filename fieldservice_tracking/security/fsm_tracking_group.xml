@@ -1,0 +1,7 @@
+<odoo>
+
+    <record id="group_fsm_tracking_dispatcher" model="res.groups">
+        <field name="name">FSM Tracking Dispatcher</field>
+    </record>
+
+</odoo>
