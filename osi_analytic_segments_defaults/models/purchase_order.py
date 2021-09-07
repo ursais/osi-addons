@@ -11,10 +11,10 @@ class PurchaseOrderLine(models.Model):
     def _onchange_product_id(self):
         if self.product_id:
             rec = self.env["account.analytic.default"].account_get(
-                self.product_id.id,
-                self.order_id.partner_id.id,
-                self.env.uid,
-                fields.Date.today(),
+                product_id=self.product_id.id,
+                partner_id=self.order_id.partner_id.id,
+                user_id=self.env.uid,
+                date=fields.Date.today(),
                 company_id=self.company_id.id,
             )
             self.account_analytic_id = rec.analytic_id.id
