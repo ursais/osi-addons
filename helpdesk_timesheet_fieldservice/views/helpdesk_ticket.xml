@@ -22,8 +22,9 @@
         </field>
     </record>
 
+    <!-- PVM: This field has been added in helpdesk_fieldservice.helpdesk_ticket_view_service_request_form -->
     <!-- Helpdesk Ticket Form View -->
-    <record id="helpdesk_ticket_view_timesheet_form" model="ir.ui.view">
+    <!-- <record id="helpdesk_ticket_view_timesheet_form" model="ir.ui.view">
         <field name="name">helpdesk.ticket.fieldservice.form</field>
         <field name="model">helpdesk.ticket</field>
         <field
@@ -77,6 +78,6 @@
                 </page>
             </notebook>
         </field>
-    </record>
+    </record> -->
 
 </odoo>
