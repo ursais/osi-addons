@@ -36,14 +36,15 @@ class StockRequest(models.Model):
                 [("code", "=", "stock_request_order")], limit=1
             )
         helpdesk_ticket = self.env["helpdesk.ticket"].browse(vals["helpdesk_ticket_id"])
-        res = {
-            "expected_date": vals["expected_date"],
-            "picking_policy": vals["picking_policy"],
-            "warehouse_id": vals["warehouse_id"],
-            "direction": vals["direction"],
-            "picking_type_id": picking_type_id.id,
-            "location_id": helpdesk_ticket.warehouse_id.lot_stock_id.id,
-        }
+        # super call the fieldservice_stock_request module method
+        res = super().prepare_order_values(vals)
+        if helpdesk_ticket:
+            res.update(
+                {
+                    "picking_type_id": picking_type_id.id,
+                    "location_id": helpdesk_ticket.warehouse_id.lot_stock_id.id,
+                }
+            )
         if "helpdesk_ticket_id" in vals and vals["helpdesk_ticket_id"]:
             res.update({"helpdesk_ticket_id": vals["helpdesk_ticket_id"]})
         return res
