@@ -22,15 +22,12 @@
         <field name="model">helpdesk.ticket</field>
         <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form" />
         <field name="arch" type="xml">
-            <field name="description" position="replace">
-                <notebook position="inside">
-                    <page string="Description">
-                        <field
-                            name="description"
-                            placeholder="Description of the ticket..."
-                        />
-                    </page>
-                    <page string="Service Orders">
+            <field name="description" position="after">
+                <notebook name="helpdesk_fieldservice_book">
+                    <page
+                        name="helpdesk_service_order_page"
+                        string="Service Orders"
+                    >
                         <button
                             name="action_create_order"
                             string="Create FSM Order"
