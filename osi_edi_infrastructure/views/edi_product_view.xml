@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<odoo>
+
+	<!-- Copyright 2021 Open Source Integrators License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+	<record id="view_product_product_form_extended" model="ir.ui.view">
+        <field name="name">product.product.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page" position="after">
+                <page string="EDI Product Configuration" name="edi_prod_config">
+                    <group>
+                        <group>
+                            <field name="edi_prod_config_ids" nolabel="1"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

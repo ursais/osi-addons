@@ -1,0 +1,45 @@
+External ID,Code,Name,Model,EDI Provider,Active,EDI Document Structure/Sequence,EDI Document Structure/Line Prefix,EDI Document Structure/Column,EDI Document Structure/Mapped Field,EDI Document Structure/Action,EDI Document Structure/Lookup Domain,EDI Document Structure/Lookup Model/Model Description,EDI Document Structure/Automatically Create?
+850_tc_csv,850,850 CSV,Sale Order,TrueCommerce,TRUE,1,TRANSACTION ID,0,,,,,FALSE
+,,,,,,2,ACCOUNTING ID,1,partner_id,Header Field,"[('edi_code', '=', '%(partner_id)s') ]",Contact,FALSE
+,,,,,,3,PURCHASE ORDER NUMBER,2,client_order_ref,Header Field,,,FALSE
+,,,,,,4,PO DATE,3,date_order,Header Field,,,FALSE
+,,,,,,5,SHIP TO NAME,4,attn,Header Field,,,FALSE
+,,,,,,6,SHIP TO ADDRESS 1,5,street1,Header Field,,,FALSE
+,,,,,,7,SHIP TO ADDRESS 2,6,street2,Header Field,,,FALSE
+,,,,,,8,SHIP TO CITY,7,city,Header Field,,,FALSE
+,,,,,,9,SHIP TO STATE,8,state_id,Header Field,,,FALSE
+,,,,,,10,SHIP TO ZIP,9,zip,Header Field,,,FALSE
+,,,,,,11,SHIP TO COUNTRY,10,country_id,Header Field,,,FALSE
+,,,,,,12,STORE NUMBER,11,,,,,FALSE
+,,,,,,13,BILL TO NAME,12,partner_invoice_id,Header Field,"[('name', '=', '%(partner_invoice_id)s') ]",Contact,FALSE
+,,,,,,14,BILL TO ADDRESS 1,13,,,,,FALSE
+,,,,,,15,BILL TO ADDRESS 2,14,,,,,FALSE
+,,,,,,16,BILL TO CITY,15,,,,,FALSE
+,,,,,,17,BILL TO STATE,16,,,,,FALSE
+,,,,,,18,BILL TO ZIP,17,,,,,FALSE
+,,,,,,19,BILL TO COUNTRY,18,country_id,Header Field,,,FALSE
+,,,,,,20,BILL TO CODE,19,,,,,FALSE
+,,,,,,21,SHIP VIA,20,carrier_id,,,,FALSE
+,,,,,,22,SHIP DATE,21,commitment_date,Header Field,,,FALSE
+,,,,,,23,TERMS,22,note,Header Field,,,FALSE
+,,,,,,24,NOTE,23,note,Header Field,,,FALSE
+,,,,,,25,DEPARTMENT NUMBER,24,,,,,FALSE
+,,,,,,26,CANCEL DATE,25,validity_date,Header Field,,,FALSE
+,,,,,,27,DO NOT SHIP BEFORE,26,edi_requested_delivery_date,Header Field,,,FALSE
+,,,,,,28,DO NOT SHIP AFTER,27,edi_requested_delivery_date,Header Field,,,FALSE
+,,,,,,29,ALLOWANCE PERCENT 1,28,,,,,FALSE
+,,,,,,30,ALLOWANCE AMOUNT 1,29,,,,,FALSE
+,,,,,,31,ALLOWANCE PERCENT 2,30,,,,,FALSE
+,,,,,,32,ALLOWANCE AMOUNT 2,31,,,,,FALSE
+,,,,,,33,LINE #,32,po_line_num,Line Field,,,FALSE
+,,,,,,34,VENDOR PART #,33,product_id,Line Field,,,FALSE
+,,,,,,35,BUYERS PART #,34,edi_product_code,Line Field,,,FALSE
+,,,,,,36,UPC #,35,barcode,Line Field,,,FALSE
+,,,,,,37,DESCRIPTION,36,name,Line Field,,,FALSE
+,,,,,,38,QUANTITY,37,product_uom_qty,Line Field,,,FALSE
+,,,,,,39,UOM,38,product_uom,Line Field,,,FALSE
+,,,,,,40,UNIT PRICE,39,price_unit,Line Field,,,FALSE
+,,,,,,41,PACK SIZE,40,,,,,FALSE
+,,,,,,42,# OF INNER PACKS,41,,,,,FALSE
+,,,,,,43,ITEM ALLOWANCE PERCENT,42,,,,,FALSE
+,,,,,,44,ITEM ALLOWANCE AMOUNT,43,,,,,FALSE

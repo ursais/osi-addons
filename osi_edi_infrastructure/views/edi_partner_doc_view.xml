@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<odoo>
+
+	<!-- Copyright 2021 Open Source Integrators License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+	<!-- EDI Partner Doc List view -->
+	<record id="view_edi_partner_doc_list" model="ir.ui.view">
+		<field name="name">edi.partner.doc.list</field>
+		<field name="model">edi.partner.doc</field>
+		<field name="arch" type="xml">
+			<tree string="EDI Partner Doc">
+				<field name="partner_id" invisible="1"/>
+				<field name="edi_supported_doc_id" />
+				<field name="code" />
+			</tree>
+		</field>
+	</record>
+
+	<!-- EDI Partner Doc Form view -->
+	<record id="view_edi_partner_doc_form" model="ir.ui.view">
+		<field name="name">edi.partner.doc.form</field>
+		<field name="model">edi.partner.doc</field>
+		<field name="arch" type="xml">
+			<form string="EDI Partner Doc">
+				<sheet>
+					<group>
+						<group>
+							<field name="partner_id" invisible="1"/>
+							<field name="edi_supported_doc_id" />
+							<field name="code" />
+						</group>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+
+	<!-- Action of EDI Partner Doc -->
+	<record id="action_edi_partner_doc" model="ir.actions.act_window">
+		<field name="name">EDI Partner Documents</field>
+		<field name="res_model">edi.partner.doc</field>
+		<field name="view_mode">tree,form</field>
+		<field name="view_id" ref="view_edi_partner_doc_list" />
+	</record>
+
+	<!-- Menu for EDI Partner Doc -->
+	<menuitem action="action_edi_partner_doc" id="menu_action_edi_partner_doc"
+		parent="menu_edi" />
+</odoo>

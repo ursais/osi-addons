@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<odoo>
+
+	<!-- Copyright 2021 Open Source Integrators License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+	<!-- EdiSupportedDoc List view -->
+	<record id="view_edit_supported_doc_list" model="ir.ui.view">
+		<field name="name">edi.supported.doc.list</field>
+		<field name="model">edi.supported.doc</field>
+		<field name="arch" type="xml">
+			<tree string="EDI Supported Doc">
+				<field name="name" />
+				<field name="code" />
+                <field name="confirm_record"/>
+				<field name="edi_provider_id" />
+				<field name="edi_model_id" />
+			</tree>
+		</field>
+	</record>
+
+	<!-- EdiSupportedDoc Form view -->
+	<record id="view_edit_supported_doc_form" model="ir.ui.view">
+		<field name="name">edi.supported.doc.form</field>
+		<field name="model">edi.supported.doc</field>
+		<field name="arch" type="xml">
+			<form string="EDI Supported Doc">
+				<sheet>
+                       <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>                
+					<group>
+						<group>
+							<field name="name" required="1"/>
+							<field name="edi_provider_id" />
+						</group>
+						<group>
+							<field name="edi_model_id" />
+							<field name="code" required="1"/>
+                            <field name="confirm_record"/>
+						</group>
+					</group>
+					<group name='edi_sup_doc_struct'>
+						<field name='edi_sup_doc_struct_ids'>
+							<tree>
+								<field name="sequence"/>
+								<field name="line_prefix"/>
+								<field name="column"/>
+								<field name="mapped_field"/>
+								<field name="lookup_model"/>
+								<field name="lookup_domain"/>
+								<field name="action"/>
+								<field name="automatic_create"/>
+							</tree>
+						</field>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+
+	<!-- Action of EdiSupportedDoc -->
+	<record id="action_edit_supported_doc" model="ir.actions.act_window">
+		<field name="name">EDI Supported Documents</field>
+		<field name="res_model">edi.supported.doc</field>
+		<field name="view_mode">tree,form</field>
+		<field name="view_id" ref="view_edit_supported_doc_list" />
+	</record>
+
+	<!-- Menu for EDI Supported Doc -->
+	<menuitem action="action_edit_supported_doc" id="menu_action_edit_supported_doc"
+		parent="menu_edi" />
+
+
+	<!-- EdiSupportedDocStructure List view -->
+	<record id="view_edit_supported_doc_structure_list" model="ir.ui.view">
+		<field name="name">edi.supported.doc.structure.list</field>
+		<field name="model">edi.supported.doc.structure</field>
+		<field name="arch" type="xml">
+			<tree string="EDI Supported Doc Structure">
+				<field name="sequence"/>
+				<field name="line_prefix"/>
+				<field name="column"/>
+				<field name="mapped_field"/>
+				<field name="lookup_model"/>
+				<field name="lookup_domain"/>
+				<field name="action"/>
+				<field name="automatic_create"/>
+			</tree>
+		</field>
+	</record>
+
+	<!-- EdiSupportedDocStructure Form view -->
+	<record id="view_edit_supported_doc_structure_form" model="ir.ui.view">
+		<field name="name">edi.supported.doc.structure.form</field>
+		<field name="model">edi.supported.doc.structure</field>
+		<field name="arch" type="xml">
+			<form string="EDI Supported Doc Structure">
+				<sheet>
+					<group>
+						<group id='header_group'>
+							<field name="sequence"/>
+							<field name="line_prefix"/>
+							<field name="column"/>
+							<field name="edi_doc_id"/>
+						</group>
+						<group>
+							<field name="mapped_field"/>
+						</group>
+						<group id='lookup_details'>
+							<field name="lookup_model"/>
+							<field name="lookup_domain"/>
+							<field name="action"/>
+							<field name="automatic_create"/>
+						</group>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+
+</odoo>
