@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0+e\n"
+"Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-01 16:32+0000\n"
 "PO-Revision-Date: 2019-01-01 16:32+0000\n"
@@ -22,9 +22,8 @@ msgstr "Analytic Line"
 
 #. module: osi_analytic_segments
 #: model:ir.actions.act_window,name:osi_analytic_segments.action_analytic_segment_one
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_account_analytic_line_analytic_segment_one
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_account_invoice_line_analytic_segment_one
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_account_move_line_analytic_segment_one
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_account_analytic_line__analytic_segment_one_id
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_account_move_line__analytic_segment_one_id
 #: model:ir.ui.menu,name:osi_analytic_segments.menu_analytic_segment_one
 #: model:ir.ui.view,arch_db:osi_analytic_segments.analytic_segment_one_tree_view
 #: model:ir.ui.view,arch_db:osi_analytic_segments.analytic_segment_one_view_form
@@ -33,9 +32,8 @@ msgstr "Analytic Segment One"
 
 #. module: osi_analytic_segments
 #: model:ir.actions.act_window,name:osi_analytic_segments.action_analytic_segment_two
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_account_analytic_line_analytic_segment_two
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_account_invoice_line_analytic_segment_two
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_account_move_line_analytic_segment_two
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_account_analytic_line__analytic_segment_two_id
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_account_move_line__analytic_segment_two_id
 #: model:ir.ui.menu,name:osi_analytic_segments.menu_analytic_segment_two
 #: model:ir.ui.view,arch_db:osi_analytic_segments.analytic_segment_two_tree_view
 #: model:ir.ui.view,arch_db:osi_analytic_segments.analytic_segment_two_view_form
@@ -43,28 +41,28 @@ msgid "Analytic Segment Two"
 msgstr "Analytic Segment Two"
 
 #. module: osi_analytic_segments
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_one_code
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_two_code
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_one__code
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_two__code
 #: model:ir.ui.view,arch_db:osi_analytic_segments.analytic_segment_one_view_search
 #: model:ir.ui.view,arch_db:osi_analytic_segments.analytic_segment_two_view_search
 msgid "Code"
 msgstr "Code"
 
 #. module: osi_analytic_segments
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_one_create_uid
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_two_create_uid
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_one__create_uid
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_two__create_uid
 msgid "Created by"
 msgstr "Created by"
 
 #. module: osi_analytic_segments
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_one_create_date
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_two_create_date
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_one__create_date
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_two__create_date
 msgid "Created on"
 msgstr "Created on"
 
 #. module: osi_analytic_segments
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_one_description
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_two_description
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_one__description
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_two__description
 msgid "Description"
 msgstr "Description"
 
@@ -75,26 +73,27 @@ msgid "Description..."
 msgstr "Description..."
 
 #. module: osi_analytic_segments
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_one_display_name
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_two_display_name
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_one__display_name
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_two__display_name
 msgid "Display Name"
 msgstr "Display Name"
 
 #. module: osi_analytic_segments
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_one_id
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_two_id
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_account_move_line__display_name
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_account_analytic_line__display_name
+msgid "Display Name"
+msgstr "Display Name"
+
+#. module: osi_analytic_segments
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_one__id
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_two__id
 msgid "ID"
 msgstr "ID"
 
 #. module: osi_analytic_segments
-#: model:ir.model,name:osi_analytic_segments.model_account_invoice
-msgid "Invoice"
-msgstr "Invoice"
-
-#. module: osi_analytic_segments
-#: model:ir.model,name:osi_analytic_segments.model_account_invoice_line
-msgid "Invoice Line"
-msgstr "Invoice Line"
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_account_move_line__id
+msgid "ID"
+msgstr "ID"
 
 #. module: osi_analytic_segments
 #: model:ir.model,name:osi_analytic_segments.model_account_move_line
@@ -102,26 +101,26 @@ msgid "Journal Item"
 msgstr "Journal Item"
 
 #. module: osi_analytic_segments
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_one___last_update
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_two___last_update
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_one____last_update
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_two____last_update
 msgid "Last Modified on"
 msgstr "Last Modified on"
 
 #. module: osi_analytic_segments
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_one_write_uid
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_two_write_uid
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_one__write_uid
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_two__write_uid
 msgid "Last Updated by"
 msgstr "Last Updated by"
 
 #. module: osi_analytic_segments
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_one_write_date
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_two_write_date
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_one__write_date
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_two__write_date
 msgid "Last Updated on"
 msgstr "Last Updated on"
 
 #. module: osi_analytic_segments
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_one_name
-#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_two_name
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_one__name
+#: model:ir.model.fields,field_description:osi_analytic_segments.field_analytic_segment_two__name
 #: model:ir.ui.view,arch_db:osi_analytic_segments.analytic_segment_one_view_search
 #: model:ir.ui.view,arch_db:osi_analytic_segments.analytic_segment_two_view_search
 msgid "Name"
@@ -144,27 +143,29 @@ msgstr "Segments"
 
 #. module: osi_analytic_segments
 #: model:ir.model,name:osi_analytic_segments.model_analytic_segment_one
-msgid "analytic.segment.one"
-msgstr "analytic.segment.one"
+msgid "Analytic Segment One"
+msgstr "Analytic Segment One"
 
 #. module: osi_analytic_segments
 #: model:ir.model,name:osi_analytic_segments.model_analytic_segment_two
-msgid "analytic.segment.two"
-msgstr "analytic.segment.two"
+msgid "Analytic Segment Two"
+msgstr "Analytic Segment Two"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_account
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account_name
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line_account_id
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__name
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution__account_id
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_line__account_id
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Analytic Account"
 msgstr "Analytic Account"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_account_analytic_account_form
-#: model:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_tag__analytic_distribution_ids
+#: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Analytic Accounts"
 msgstr "Analytic Accounts"
 
