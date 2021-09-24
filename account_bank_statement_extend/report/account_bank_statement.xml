@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_statement_inherit" inherit_id="account.report_statement">
+        <xpath expr="//div[hasclass('page')]" position="inside">
+            <table class="table table-condensed" style="border: 1px solid black;">
+                <thead>
+                    <tr>
+                        <th>Count</th>
+                        <th>Date</th>
+                        <th>Partner</th>
+                        <th>Amount</th>
+                        <th>Account</th>
+                        <th>Matching</th>
+                    </tr>
+                </thead>
+                <tbody >
+                    <t t-foreach="docs" t-as="o">
+                    <t t-set="i" t-value="1" />
+                        <tr t-foreach="o.get_base_reconcile_entries()" t-as="line">
+                            <t t-if="len(line) != 1">
+                                <td style="border: 1px solid black;"><span t-esc="i"/> </td>
+                                <td style="border: 1px solid black;"><h2>Date</h2></td>
+                                <td style="border: 1px solid black;"><h2>Date</h2></td>
+                                <td style="border: 1px solid black;"><h2>Date</h2></td>
+                                <td style="border: 1px solid black;"><h2>Date</h2></td>
+                                <td style="border: 1px solid black;"><h2>Date</h2></td>
+                            </t>
+                            <t t-set="i" t-value="i+1"/>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </xpath>
+    </template>
+</odoo>
