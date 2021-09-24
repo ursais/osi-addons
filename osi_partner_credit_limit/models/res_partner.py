@@ -28,16 +28,23 @@ class Partner(models.Model):
     )
 
     def write(self, vals):
-
         res = super(Partner, self).write(vals)
-        if "credit_limit" in vals:
+        if "credit_limit" or "credit_hold" in vals:
             for partner in self:
                 order_ids = self.env["sale.order"].search(
-                    [("partner_id", "=", partner.id), ("ship_hold", "=", True)]
+                    [("partner_id", "=", partner.id)]
                 )
+                # only if partner is on credit hold, set sale orders on ship hold immediately
+                ship_hold = partner.credit_hold
+
+                # check for credit_limit
                 if partner.credit_limit > 0 and order_ids:
-                    if not self.check_limit(order_ids[0]):
-                        order_ids.write({"ship_hold": False})
+                    if not ship_hold and not self.check_limit(order_ids[0]):
+                        ship_hold = False
+                    else:
+                        ship_hold = True
+
+                order_ids.write({"ship_hold": ship_hold})
         return res
 
     def check_limit(self, sale_id):
@@ -74,7 +81,7 @@ class Partner(models.Model):
                 fields.Datetime.to_string(
                     (
                         invoice.invoice_date_due
-                        or invoice.invoice_date
+                        or invoice.date_invoice
                         or invoice.create_date
                     )
                     + timedelta(days=partner_id.grace_period)

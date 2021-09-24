@@ -1,7 +1,7 @@
 # Copyright (C) 2019 - 2021, Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import _, fields, models
+from odoo import fields, models, _
 from odoo.exceptions import ValidationError
 
 
@@ -14,22 +14,20 @@ class SaleOrder(models.Model):
     credit_hold = fields.Boolean(
         related="partner_id.credit_hold", string="Customer Credit Hold"
     )
-    ship_hold = fields.Boolean(string="Order Sales/Ship Hold", copy=False)
+    ship_hold = fields.Boolean(string="Delivery Hold", copy=False)
     credit_override = fields.Boolean(
-        string="Override Sales/Credit/Ship Hold", tracking=True, default=False
+        string="Override Hold", tracking=True, default=False
     )
 
     def action_confirm(self):
-        self.partner_id.check_limit(self)
+        state = self.partner_id.check_limit(self)
         if self.sales_hold and not self.credit_override:
-            message = _(
-                """Cannot confirm Order!The customer is on Customer Sales Hold."""
-            )
+            message = _("""Cannot confirm Order! The customer is on sales hold.""")
             # Display that the customer is on sales hold
             raise ValidationError(message)
         elif self.ship_hold and not self.credit_override:
             message = _(
-                """Cannot confirm Order! The customer is on Order Sales Hold."""
+                """Cannot confirm Order! The customer exceed available credit limit and is on ship hold."""
             )
             raise ValidationError(message)
         else:
@@ -44,8 +42,8 @@ class SaleOrder(models.Model):
                 self._cr.commit()
                 message = _(
                     """Cannot confirm Order!
-                        This will put Customer over Credit Limit.
-                        To Override, check Override Sales/Credit/Ship Hold"""
+                        This will exceed allowed Credit Limit.
+                        To Override, check Override Sales/Credit/Delivery Hold"""
                 )
                 raise ValidationError(message)
 
