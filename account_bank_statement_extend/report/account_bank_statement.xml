@@ -1,35 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_statement_inherit" inherit_id="account.report_statement">
-        <xpath expr="//div[hasclass('page')]" position="inside">
-            <table class="table table-condensed" style="border: 1px solid black;">
-                <thead>
-                    <tr>
-                        <th>Count</th>
-                        <th>Date</th>
-                        <th>Partner</th>
-                        <th>Amount</th>
-                        <th>Account</th>
-                        <th>Matching</th>
-                    </tr>
-                </thead>
-                <tbody >
-                    <t t-foreach="docs" t-as="o">
-                    <t t-set="i" t-value="1" />
-                        <tr t-foreach="o.get_base_reconcile_entries()" t-as="line">
-                            <t t-if="len(line) != 1">
-                                <td style="border: 1px solid black;"><span t-esc="i"/> </td>
-                                <td style="border: 1px solid black;"><h2>Date</h2></td>
-                                <td style="border: 1px solid black;"><h2>Date</h2></td>
-                                <td style="border: 1px solid black;"><h2>Date</h2></td>
-                                <td style="border: 1px solid black;"><h2>Date</h2></td>
-                                <td style="border: 1px solid black;"><h2>Date</h2></td>
-                            </t>
-                            <t t-set="i" t-value="i+1"/>
-                        </tr>
-                    </t>
-                </tbody>
-            </table>
+        <xpath expr="//div[hasclass('page')]/table[2]/tbody/tr/td/table" position="inside">
+
+        <tr t-foreach="o.get_base_reconcile_entries()" t-as="datas">
+            <td class="p-0 w-25">
+                <span class="d-block font-weight-bold" t-esc="datas.get('date')"/>
+            </td>
+            <td class="p-0">
+                <span class="d-block font-weight-bold" t-if="datas.get('partner_id')" t-esc="datas.get('partner_id')"/>
+                <span class="d-block" t-if="datas.get('matching_number')" t-esc="datas.get('matching_number')"/>
+                <span class="d-block" t-if="datas.get('account_id')" t-esc="datas.get('account_id')"/>
+                <span class="d-block" t-if="datas.get('move_id')" t-esc="datas.get('move_id')"/>
+                <span class="d-block" t-if="datas.get('ref')" t-esc="datas.get('ref')"/>
+            </td>
+            <td class="text-right p-0">
+                <t t-if="datas.get('credit')!=0.0">
+                    <span class="d-block font-weight-bold" t-esc="datas.get('credit')" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                </t>
+                <t t-else="">
+                    <span class="d-block font-weight-bold" t-esc="datas.get('debit')" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                </t>
+            </td>
+        </tr>
         </xpath>
     </template>
 </odoo>

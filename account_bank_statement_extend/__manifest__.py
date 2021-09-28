@@ -16,7 +16,7 @@
     ],
     'data': [
         'security/ir.model.access.csv',
-        # 'report/account_bank_statement.xml',
+        'report/account_bank_statement.xml',
         'report/bank_statement_lines_report.xml',
         'wizard/parser_report_bank_statement.xml',
     ],
