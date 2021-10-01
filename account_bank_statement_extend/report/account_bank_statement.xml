@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_statement_inherit" inherit_id="account.report_statement">
+        <xpath expr="//div[hasclass('page')]/table[2]/tbody/tr/td/table" position="inside">
+
+        <tr t-foreach="o.get_base_reconcile_entries()" t-as="datas">
+            <td class="p-0 w-25">
+                <span class="d-block font-weight-bold" t-esc="datas.get('date')"/>
+            </td>
+            <td class="p-0">
+                <span class="d-block font-weight-bold" t-if="datas.get('partner_id')" t-esc="datas.get('partner_id')"/>
+                <span class="d-block" t-if="datas.get('matching_number')" t-esc="datas.get('matching_number')"/>
+                <span class="d-block" t-if="datas.get('account_id')" t-esc="datas.get('account_id')"/>
+                <span class="d-block" t-if="datas.get('move_id')" t-esc="datas.get('move_id')"/>
+                <span class="d-block" t-if="datas.get('ref')" t-esc="datas.get('ref')"/>
+            </td>
+            <td class="text-right p-0">
+                <t t-if="datas.get('credit')!=0.0">
+                    <span class="d-block font-weight-bold" t-esc="datas.get('credit')" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                </t>
+                <t t-else="">
+                    <span class="d-block font-weight-bold" t-esc="datas.get('debit')" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                </t>
+            </td>
+        </tr>
+        </xpath>
+    </template>
+</odoo>
