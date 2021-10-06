@@ -20,7 +20,7 @@ class SaleOrder(models.Model):
     )
 
     def action_confirm(self):
-        state = self.partner_id.check_limit(self)
+        state = self.partner_id.with_context(from_sale_order=True).check_limit(self)
         if self.sales_hold and not self.credit_override:
             message = _("""Cannot confirm Order! The customer is on sales hold.""")
             # Display that the customer is on sales hold
@@ -35,15 +35,15 @@ class SaleOrder(models.Model):
             #  the computation for check_limit function
             prev_state = self.state
             self.state = "sale"
-            if self.partner_id.check_limit(self) and not self.credit_override:
+            if self.partner_id.with_context(from_sale_order=True).check_limit(self) and not self.credit_override:
                 self.state = prev_state
                 self.ship_hold = True
                 # commit changes above before ORM rollback any changes.
                 self._cr.commit()
                 message = _(
                     """Cannot confirm Order!
-                        This will exceed allowed Credit Limit.
-                        To Override, check Override Sales/Credit/Delivery Hold"""
+This will exceed allowed Credit Limit.
+To Override, check Override Sales/Credit/Delivery Hold"""
                 )
                 raise ValidationError(message)
 
