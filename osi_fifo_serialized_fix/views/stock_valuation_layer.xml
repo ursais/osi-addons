@@ -1,0 +1,12 @@
+<odoo>
+    <record id="inventory_valuation_lot_ids" model="ir.ui.view">
+        <field name="name">inventory.valuation.lot.ids</field>
+        <field name="model">stock.valuation.layer</field>
+        <field name="inherit_id" ref="stock_account.stock_valuation_layer_form"/>
+        <field name="arch" type="xml">
+            <field name="stock_move_id" position="after">
+                <field name="lot_ids" widget="many2many_tags"/>
+            </field>
+        </field>
+    </record>
+</odoo>
