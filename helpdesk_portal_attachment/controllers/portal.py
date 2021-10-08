@@ -62,7 +62,7 @@ class CustomerPortal(CustomerPortal):
         # Avoid using sudo or creating access_token when not necessary:
         # internal
         # users can create attachments, as opposed to public and portal users.
-        if not request.env.user.has_group('base.group_user'):
+        if not request.env.user.has_group('base.group_user') and not request.env.user.has_group('base.group_portal'):
             ir_attachment = ir_attachment.sudo().with_context(
                 binary_field_real_user=ir_attachment.env.user)
             access_token = ir_attachment._generate_access_token()
@@ -71,7 +71,7 @@ class CustomerPortal(CustomerPortal):
         # those specific res_model and res_is. They will be correctly set
         # when the message is created: see `portal_chatter_post`,
         # or garbage collected otherwise: see  `_garbage_collect_attachments`.
-        attachment = ir_attachment.create({
+        attachment = ir_attachment.sudo().create({
             'name': name,
             'datas': base64.b64encode(file.read()),
             'res_model': 'mail.compose.message',

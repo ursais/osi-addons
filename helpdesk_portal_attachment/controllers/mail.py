@@ -59,6 +59,7 @@ def _message_post_helper(res_model, res_id, message,
         The rest of the kwargs are passed on to message_post()
     """
     record = request.env[res_model].browse(res_id)
+    record = record.sudo()
 
     # check if user can post with special token/signed token. The "else" will
     # try to post message with the
