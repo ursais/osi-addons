@@ -1,28 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_statement_inherit" inherit_id="account.report_statement">
-        <xpath expr="//div[hasclass('page')]/table[2]/tbody/tr/td/table" position="inside">
-
-        <tr t-foreach="o.get_base_reconcile_entries()" t-as="datas">
-            <td class="p-0 w-25">
-                <span class="d-block font-weight-bold" t-esc="datas.get('date')"/>
-            </td>
-            <td class="p-0">
-                <span class="d-block font-weight-bold" t-if="datas.get('partner_id')" t-esc="datas.get('partner_id')"/>
-                <span class="d-block" t-if="datas.get('matching_number')" t-esc="datas.get('matching_number')"/>
-                <span class="d-block" t-if="datas.get('account_id')" t-esc="datas.get('account_id')"/>
-                <span class="d-block" t-if="datas.get('move_id')" t-esc="datas.get('move_id')"/>
-                <span class="d-block" t-if="datas.get('ref')" t-esc="datas.get('ref')"/>
-            </td>
-            <td class="text-right p-0">
-                <t t-if="datas.get('credit')!=0.0">
-                    <span class="d-block font-weight-bold" t-esc="datas.get('credit')" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                </t>
-                <t t-else="">
-                    <span class="d-block font-weight-bold" t-esc="datas.get('debit')" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                </t>
-            </td>
-        </tr>
+        <xpath expr="//div[hasclass('page')]/table[2]" position="replace">
+            <table class="table table-borderless m-0">
+                <thead>
+                    <tr>
+                        <table class="table table-borderless">
+                            <tr>
+                                <th name="th_date" class="text-left">Date</th>
+                                <th name="th_partner" class="text-left">Partner</th>
+                                <th name="th_bank" class="text-left">Bank</th>
+                                <th name="th_stmt" class="text-left">Stmt</th>
+                                <th name="th_doc" class="text-left">Doc</th>
+                                <th name="th_account" class="text-left">Account</th>
+                                <th name="th_ref" class="text-left">Ref</th>
+                                <th name="th_note" class="text-left">Note</th>
+                                <th name="th_match" class="text-left">#</th>
+                                <th name="th_debit" class="text-left">Debit</th>
+                                <th name="th_credit" class="text-left">Credit</th>
+                            </tr>
+                        </table>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="o.get_statement_entries()" t-as="datas" class="pb-2">
+                        <td class="pl-0 pr-0">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td class="p-0 w-25">
+                                        <span class="d-block font-weight-bold" t-esc="datas.get('date')"/>
+                                    </td>
+                                    <td class="p-0">
+                                        <span class="d-block font-weight-bold" t-if="datas.get('partner_id')" t-esc="datas.get('partner_id')"/>
+                                    </td>
+                                    <td class="p-0">
+                                        <span class="d-block" t-if="datas.get('partner_bank_id')" t-esc="datas.get('partner_bank_id')"/>
+                                    </td>
+                                    <td class="p-0">
+                                        <span class="d-block" t-if="datas.get('statement_id')" t-esc="datas.get('statement_id')"/>
+                                    </td>
+                                    <td class="p-0">
+                                        <span class="d-block" t-if="datas.get('move_id')" t-esc="datas.get('move_id')"/>
+                                    </td>
+                                    <td class="p-0">
+                                        <span class="d-block" t-if="datas.get('account_id')" t-esc="datas.get('account_id')"/>
+                                    </td>
+                                    <td class="p-0">
+                                        <span class="d-block" t-if="datas.get('ref')" t-esc="datas.get('ref')"/>
+                                    </td>
+                                    <td class="p-0">
+                                        <span class="d-block" t-if="datas.get('note')" t-esc="datas.get('note')"/>
+                                    </td>
+                                    <td class="p-0">
+                                        <span class="d-block" t-if="datas.get('matching_number')" t-esc="datas.get('matching_number')"/>
+                                    </td>
+                                    <td class="text-right p-0">
+                                        <span class="d-block" t-if="datas.get('debit')" t-esc="datas.get('debit')"/>
+                                    </td>
+                                    <td class="text-right p-0">
+                                        <span class="d-block" t-if="datas.get('credit')" t-esc="datas.get('credit')"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </xpath>
     </template>
 </odoo>
