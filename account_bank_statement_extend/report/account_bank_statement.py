@@ -46,7 +46,7 @@ class AccountBankStatement(models.Model):
                     rl.append(
                         {
                             "date": format_date(self.env, stmt_line.date),
-                            "account_id": payment.account_id.name,
+                            "account_id": payment.account_id.code,
                             "partner_id": payment.partner_id.name,
                             "partner_bank_id": "      ",
                             "statement_id": stmt_line.name,
@@ -85,7 +85,7 @@ class AccountBankStatement(models.Model):
                         rl.append(
                             {
                                 "date": format_date(self.env, stmt_line.date),
-                                "account_id": payment.account_id.name,
+                                "account_id": payment.account_id.code,
                                 "partner_id": payment.partner_id.name,
                                 "partner_bank_id": "      ",
                                 "statement_id": stmt_line.name,
