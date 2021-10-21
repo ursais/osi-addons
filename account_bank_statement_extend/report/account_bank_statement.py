@@ -55,52 +55,50 @@ class AccountBankStatement(models.Model):
                             "note": "      ",
                             "matching_number": payment.full_reconcile_id.name,
                             "debit": stmt_line.amount > 0
-                            and stmt_line.amount
+                            and abs(stmt_line.amount)
                             or payment.debit,
                             "credit": stmt_line.amount < 0
-                            and stmt_line.amount
+                            and abs(stmt_line.amount)
                             or payment.credit,
                         }
                     )
 
                 outstanding_line = suspense_line.move_id.line_ids.filtered(
-                    lambda l: l.id != suspense_line.id
+                    lambda l: l.id not in (suspense_line + payment_line).ids
                     and l.account_id.internal_type not in ("receivable", "payable")
                 )
                 reconcile_ids = outstanding_line.full_reconcile_id
-                partner_line = self.env["account.move.line"].search(
-                    [
-                        ("full_reconcile_id", "=", reconcile_ids.id),
-                        ("id", "not in", outstanding_line.ids),
-                    ]
-                )
-                payment_line = partner_line.move_id.line_ids.filtered(
-                    lambda l: l.id != partner_line.id
-                    and l.account_id.internal_type in ("receivable", "payable")
-                )
 
-                for payment in payment_line:
-                    rl.append(
-                        {
-                            "date": format_date(self.env, stmt_line.date),
-                            "account_id": payment.account_id.name,
-                            "partner_id": payment.partner_id.name,
-                            "partner_bank_id": "      ",
-                            "statement_id": stmt_line.name,
-                            "move_id": payment.move_id.name,
-                            "ref": payment.ref,
-                            "note": "      ",
-                            "matching_number": payment.full_reconcile_id.name,
-                            "debit": stmt_line.amount > 0
-                            and stmt_line.amount
-                            or payment.debit,
-                            "credit": stmt_line.amount < 0
-                            and stmt_line.amount
-                            or payment.credit,
-                        }
+                if len(reconcile_ids) and len(outstanding_line):
+                    partner_line = self.env["account.move.line"].search(
+                        [
+                            ("full_reconcile_id", "=", reconcile_ids.id),
+                            ("id", "not in", outstanding_line.ids),
+                        ]
                     )
-                outstanding_line = outstanding_line.move_id.line_ids.filtered(
-                    lambda l: l.id != outstanding_line.id
-                    and l.account_id.internal_type not in ("receivable", "payable")
-                )
+                    payment_line = partner_line.move_id.line_ids.filtered(
+                        lambda l: l.id != partner_line.id
+                        and l.account_id.internal_type in ("receivable", "payable")
+                    )
+
+                    for payment in payment_line:
+                        rl.append(
+                            {
+                                "date": format_date(self.env, stmt_line.date),
+                                "account_id": payment.account_id.name,
+                                "partner_id": payment.partner_id.name,
+                                "partner_bank_id": "      ",
+                                "statement_id": stmt_line.name,
+                                "move_id": payment.move_id.name,
+                                "ref": payment.ref,
+                                "note": "      ",
+                                "matching_number": payment.full_reconcile_id.name,
+                                "debit": stmt_line.amount > 0
+                                and abs(stmt_line.amount)
+                                or payment.debit,
+                                "credit": stmt_line.amount < 0
+                                and abs(stmt_line.amount)
+                                or payment.credit,
+                            }
+                        )
         return rl

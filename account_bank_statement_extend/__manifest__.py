@@ -2,23 +2,24 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 {
-    'name': 'OSI Account Bank Statement Report Extend',
-    'version': '14.0.1.0.0',
-    'license': 'AGPL-3',
-    'author': 'Open Source Integrators',
-    'category': 'account',
-    'maintainer': 'Open Source Integrators',
-    'summary': """OSI Account Bank Statement Report
+    "name": "OSI Account Bank Statement Report Extend",
+    "version": "14.0.1.0.0",
+    "license": "AGPL-3",
+    "author": "Open Source Integrators",
+    "category": "account",
+    "maintainer": "Open Source Integrators",
+    "summary": """OSI Account Bank Statement Report
                 Extend Get More Details in Statement Report""",
-    'website': 'http://www.opensourceintegrators.com',
-    'depends': [
-        'account',
+    "website": "http://www.opensourceintegrators.com",
+    "depends": [
+        "account",
     ],
-    'data': [
-        'security/ir.model.access.csv',
-        'report/account_bank_statement.xml',
-        'report/bank_statement_lines_report.xml',
-        'wizard/parser_report_bank_statement.xml',
+    "data": [
+        "security/ir.model.access.csv",
+        "data/report_format.xml",
+        "report/account_bank_statement.xml",
+        "report/bank_statement_lines_report.xml",
+        "wizard/parser_report_bank_statement.xml",
     ],
-    'installable': True,
+    "installable": True,
 }
