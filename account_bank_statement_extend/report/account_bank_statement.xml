@@ -7,14 +7,13 @@
                     <tr>
                         <table class="table table-borderless">
                             <tr>
-                                <th name="th_date" class="text-left">Date</th>
-                                <th name="th_partner" class="text-left">Partner</th>
-                                <th name="th_stmt" class="text-left">Stmt</th>
-                                <th name="th_doc" class="text-left">Doc</th>
-                                <th name="th_account" class="text-left">Account</th>
-                                <th name="th_match" class="text-left">#</th>
-                                <th name="th_debit" class="text-left">Debit</th>
-                                <th name="th_credit" class="text-left">Credit</th>
+                                <th name="th_date" class="text-left p-0">Date</th>
+                                <th name="th_partner" class="text-left p-0">Partner</th>
+                                <th name="th_stmt" class="text-left p-0">Stmt</th>
+                                <th name="th_doc" class="text-left p-0">Doc</th>
+                                <th name="th_account" class="text-left p-0">Account</th>
+                                <th name="th_match" class="text-left p-0">#</th>
+                                <th name="th_amount" class="text-right p-0">Amount</th>
                             </tr>
                         </table>
                     </tr>
@@ -25,10 +24,10 @@
                             <table class="table table-borderless">
                                 <tr>
                                     <td class="p-0">
-                                        <span class="d-block font-weight-bold" t-esc="datas.get('date')"/>
+                                        <span class="d-block" t-esc="datas.get('date')"/>
                                     </td>
                                     <td class="p-0">
-                                        <span class="d-block font-weight-bold" t-if="datas.get('partner_id')" t-esc="datas.get('partner_id')"/>
+                                        <span class="d-block" t-if="datas.get('partner_id')" t-esc="datas.get('partner_id')"/>
                                     </td>
                                     <td class="p-0">
                                         <span class="d-block" t-if="datas.get('statement_id')" t-esc="datas.get('statement_id')"/>
@@ -43,10 +42,7 @@
                                         <span class="d-block" t-if="datas.get('matching_number')" t-esc="datas.get('matching_number')"/>
                                     </td>
                                     <td class="text-right p-0">
-                                        <span class="d-block" t-if="datas.get('debit')" t-esc="datas.get('debit')"/>
-                                    </td>
-                                    <td class="text-right p-0">
-                                        <span class="d-block" t-if="datas.get('credit')" t-esc="datas.get('credit')"/>
+                                        <span class="d-block" t-if="datas.get('debit')" t-esc="datas.get('amount')"/>
                                     </td>
                                 </tr>
                             </table>
