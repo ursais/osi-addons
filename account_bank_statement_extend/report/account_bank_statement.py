@@ -25,6 +25,7 @@ class AccountBankStatement(models.Model):
                         "ref": stmt_line.payment_ref,
                         "note": stmt_line.narration,
                         "matching_number": "      ",
+                        "amount": stmt_line.amount,
                         "debit": stmt_line.amount > 0 and abs(stmt_line.amount) or 0.0,
                         "credit": stmt_line.amount < 0 and abs(stmt_line.amount) or 0.0,
                     }
@@ -54,6 +55,7 @@ class AccountBankStatement(models.Model):
                             "ref": payment.ref,
                             "note": "      ",
                             "matching_number": payment.full_reconcile_id.name,
+                            "amount": stmt_line.amount,
                             "debit": stmt_line.amount > 0
                             and abs(stmt_line.amount)
                             or payment.debit,
@@ -93,6 +95,7 @@ class AccountBankStatement(models.Model):
                                 "ref": payment.ref,
                                 "note": "      ",
                                 "matching_number": payment.full_reconcile_id.name,
+                                "amount": stmt_line.amount,
                                 "debit": stmt_line.amount > 0
                                 and abs(stmt_line.amount)
                                 or payment.debit,
