@@ -30,7 +30,7 @@ class StockMove(models.Model):
                                                    line_id.lot_id.id)
                 ji_ids = self.env['account.move.line'].\
                     search([('name', 'ilike', move.picking_id.name),
-                            ('name', 'ilike', move.product_id.name)])
+                            ('name', '=ilike', move.product_id.name)])
                 if ji_ids:
                     if len(svl_ids) > 1:
                         final_layers = []
