@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/ursais/osi-addons.svg?branch=13.0)](https://travis-ci.org/ursais/osi-addons)
+[![Build Status](https://travis-ci.org/ursais/osi-addons.svg?branch=15.0)](https://travis-ci.org/ursais/osi-addons)
 
 # OSI Addons
 

@@ -8,7 +8,7 @@ include_wkhtmltopdf: false
 odoo_version: 15.0
 rebel_module_groups: []
 repo_description: 'TODO: add repo description.'
-repo_name: partner-contact
-repo_slug: partner-contact
+repo_name: osi-addons
+repo_slug: osi-addons
 travis_apt_packages: []
 travis_apt_sources: []
