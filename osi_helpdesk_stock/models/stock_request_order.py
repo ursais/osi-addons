@@ -29,25 +29,25 @@ class StockRequestOrder(models.Model):
             for line in self.stock_request_ids:
                 line.helpdesk_ticket_id = self.helpdesk_ticket_id.id
 
-    def _prepare_procurement_group_values(self):
+    def _prepare_procurement_group_values_helpdesk(self):
+        res = {}
         if self.helpdesk_ticket_id:
-            ticket = self.env["helpdesk.ticket"].browse(self.helpdesk_ticket_id.id)
-            return {
-                "name": ("#" + str(ticket.id)),
-                "helpdesk_ticket_id": ticket.id,
+            res.update({
+                "name": ("#" + str(self.helpdesk_ticket_id.id)),
+                "helpdesk_ticket_id": self.helpdesk_ticket_id.id,
                 "move_type": "direct",
-            }
+            })
+            return res
         else:
-            return {}
+            return res
 
     def action_confirm(self):
         if self.helpdesk_ticket_id and not self.procurement_group_id:
-            ticket = self.env["helpdesk.ticket"].browse(self.helpdesk_ticket_id.id)
             group = self.env["procurement.group"].search(
-                [("helpdesk_ticket_id", "=", ticket.id)]
+                [("helpdesk_ticket_id", "=", self.helpdesk_ticket_id.id)]
             )
             if not group:
-                values = self._prepare_procurement_group_values()
+                values = self._prepare_procurement_group_values_helpdesk()
                 group = self.env["procurement.group"].create(values)
             self.procurement_group_id = group.id
             self.change_childs()
