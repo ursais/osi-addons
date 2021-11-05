@@ -1,7 +1,6 @@
 # Copyright (C) 2019 - TODAY, Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
-from odoo import fields, models, api
+from odoo import fields, models
 
 
 class BankStatementReport(models.TransientModel):
@@ -125,13 +124,18 @@ class BankStatementReport(models.TransientModel):
                                             lines
                                         )
                                         for line_move in line_rec:
-                                            if line_move.account_id.user_type_id.type in [
-                                                "payable",
-                                                "receivable",
-                                            ] and line_move.move_id.move_type in [
-                                                "in_invoice",
-                                                "out_invoice",
-                                            ]:
+                                            if (
+                                                line_move.account_id.user_type_id.type
+                                                in [
+                                                    "payable",
+                                                    "receivable",
+                                                ]
+                                                and line_move.move_id.move_type
+                                                in [
+                                                    "in_invoice",
+                                                    "out_invoice",
+                                                ]
+                                            ):
                                                 bank_state_dict = self.get_bank_statement_dict(
                                                     line_move,
                                                     line_move.account_id.user_type_id.type,
@@ -186,13 +190,18 @@ class BankStatementReport(models.TransientModel):
                                             lines
                                         )
                                         for line_move in line_rec:
-                                            if line_move.account_id.user_type_id.type in [
-                                                "payable",
-                                                "receivable",
-                                            ] and line_move.move_id.move_type in [
-                                                "in_invoice",
-                                                "out_invoice",
-                                            ]:
+                                            if (
+                                                line_move.account_id.user_type_id.type
+                                                in [
+                                                    "payable",
+                                                    "receivable",
+                                                ]
+                                                and line_move.move_id.move_type
+                                                in [
+                                                    "in_invoice",
+                                                    "out_invoice",
+                                                ]
+                                            ):
                                                 bank_state_dict = self.get_bank_statement_dict(
                                                     line_move,
                                                     line_move.account_id.user_type_id.type,
