@@ -18,7 +18,11 @@ class AccountBankStatement(models.Model):
                     if lines.full_reconcile_id:
                         move_line = self.env["account.move.line"].search(
                             [
-                                ("full_reconcile_id", "=", lines.full_reconcile_id.id,),
+                                (
+                                    "full_reconcile_id",
+                                    "=",
+                                    lines.full_reconcile_id.id,
+                                ),
                                 ("debit", "=", 0.0),
                             ]
                         )
@@ -38,11 +42,13 @@ class AccountBankStatement(models.Model):
                                         in ["in_invoice", "out_invoice", "entry"]
                                         and len(rl) < 1
                                     ):
-                                        bank_state_dict = self.get_bank_statement_lines_dict(
-                                            l,
-                                            l.account_id.user_type_id.type,
-                                            lines_ids_journal,
-                                            b_state,
+                                        bank_state_dict = (
+                                            self.get_bank_statement_lines_dict(
+                                                l,
+                                                l.account_id.user_type_id.type,
+                                                lines_ids_journal,
+                                                b_state,
+                                            )
                                         )
                                         if bank_state_dict:
                                             rl.append(bank_state_dict)
@@ -68,9 +74,16 @@ class AccountBankStatement(models.Model):
                                         for line in line_rec:
                                             if (
                                                 line.account_id.user_type_id.type
-                                                in ["payable", "receivable",]
+                                                in [
+                                                    "payable",
+                                                    "receivable",
+                                                ]
                                                 and line.move_id.move_type
-                                                in ["in_invoice", "out_invoice", "entry"]
+                                                in [
+                                                    "in_invoice",
+                                                    "out_invoice",
+                                                    "entry",
+                                                ]
                                                 and len(rl) < 1
                                             ):
                                                 rl.append(
@@ -92,7 +105,11 @@ class AccountBankStatement(models.Model):
                     if lines.full_reconcile_id:
                         move_line = self.env["account.move.line"].search(
                             [
-                                ("full_reconcile_id", "=", lines.full_reconcile_id.id,),
+                                (
+                                    "full_reconcile_id",
+                                    "=",
+                                    lines.full_reconcile_id.id,
+                                ),
                                 ("debit", "!=", 0.0),
                             ]
                         )
@@ -106,7 +123,10 @@ class AccountBankStatement(models.Model):
                                 for l in line_rec:
                                     if (
                                         l.account_id.user_type_id.type
-                                        in ["payable", "receivable",]
+                                        in [
+                                            "payable",
+                                            "receivable",
+                                        ]
                                         and l.move_id.move_type
                                         in ["in_invoice", "out_invoice", "entry"]
                                         and len(rl) < 1
@@ -132,9 +152,16 @@ class AccountBankStatement(models.Model):
                                         for line in line_rec:
                                             if (
                                                 line.account_id.user_type_id.type
-                                                in ["payable", "receivable",]
+                                                in [
+                                                    "payable",
+                                                    "receivable",
+                                                ]
                                                 and line.move_id.move_type
-                                                in ["in_invoice", "out_invoice", "entry"]
+                                                in [
+                                                    "in_invoice",
+                                                    "out_invoice",
+                                                    "entry",
+                                                ]
                                                 and len(rl) < 1
                                             ):
                                                 rl.append(
