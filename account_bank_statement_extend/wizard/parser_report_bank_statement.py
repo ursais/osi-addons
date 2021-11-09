@@ -59,6 +59,45 @@ class BankStatementReport(models.TransientModel):
             }
         return None
 
+    def get_bank_state_dict_rec(self, line_rec, lines_ids_journal, rl, b_state):
+        for aml in line_rec:
+            if aml.account_id.user_type_id.type in [
+                "payable",
+                "receivable",
+            ] and aml.move_id.move_type in [
+                "in_invoice",
+                "out_invoice",
+            ]:
+                bank_state_dict = self.get_bank_statement_dict(
+                    aml,
+                    aml.account_id.user_type_id.type,
+                    lines_ids_journal,
+                    b_state,
+                )
+                if bank_state_dict:
+                    rl.append(bank_state_dict)
+                    lines_ids_journal.append(aml.id)
+            else:
+                lines = aml.move_id.line_ids._reconciled_lines()
+                line_rec = self.env["account.move.line"].browse(lines)
+                for line_move in line_rec:
+                    if line_move.account_id.user_type_id.type in [
+                        "payable",
+                        "receivable",
+                    ] and line_move.move_id.move_type in [
+                        "in_invoice",
+                        "out_invoice",
+                    ]:
+                        bank_state_dict = self.get_bank_statement_dict(
+                            line_move,
+                            line_move.account_id.user_type_id.type,
+                            lines_ids_journal,
+                            b_state,
+                        )
+                        if bank_state_dict:
+                            rl.append(bank_state_dict)
+                            lines_ids_journal.append(line_move.id)
+
     def get_bank_statement_report_data(self):
         bank_state_ids = self.env["account.bank.statement.line"].search(
             [("date", ">=", self.date_from), ("date", "<=", self.date_to)]
@@ -102,52 +141,9 @@ class BankStatementReport(models.TransientModel):
                             for line in move_line:
                                 lines = line.move_id.line_ids._reconciled_lines()
                                 line_rec = self.env["account.move.line"].browse(lines)
-                                for aml in line_rec:
-                                    if aml.account_id.user_type_id.type in [
-                                        "payable",
-                                        "receivable",
-                                    ] and aml.move_id.move_type in [
-                                        "in_invoice",
-                                        "out_invoice",
-                                    ]:
-                                        bank_state_dict = self.get_bank_statement_dict(
-                                            aml,
-                                            aml.account_id.user_type_id.type,
-                                            lines_ids_journal,
-                                            b_state,
-                                        )
-                                        if bank_state_dict:
-                                            rl.append(bank_state_dict)
-                                            lines_ids_journal.append(aml.id)
-                                    else:
-                                        lines = aml.move_id.line_ids._reconciled_lines()
-                                        line_rec = self.env["account.move.line"].browse(
-                                            lines
-                                        )
-                                        for line_move in line_rec:
-                                            if (
-                                                line_move.account_id.user_type_id.type
-                                                in [
-                                                    "payable",
-                                                    "receivable",
-                                                ]
-                                                and line_move.move_id.move_type
-                                                in [
-                                                    "in_invoice",
-                                                    "out_invoice",
-                                                ]
-                                            ):
-                                                bank_state_dict = self.get_bank_statement_dict(
-                                                    line_move,
-                                                    line_move.account_id.user_type_id.type,
-                                                    lines_ids_journal,
-                                                    b_state,
-                                                )
-                                                if bank_state_dict:
-                                                    rl.append(bank_state_dict)
-                                                    lines_ids_journal.append(
-                                                        line_move.id
-                                                    )
+                                self.get_bank_state_dict_rec(
+                                    line_rec, lines_ids_journal, rl, b_state
+                                )
 
                 else:
                     if move_line.full_reconcile_id:
@@ -168,51 +164,8 @@ class BankStatementReport(models.TransientModel):
                             for line in move_line:
                                 lines = line.move_id.line_ids._reconciled_lines()
                                 line_rec = self.env["account.move.line"].browse(lines)
-                                for aml in line_rec:
-                                    if aml.account_id.user_type_id.type in [
-                                        "payable",
-                                        "receivable",
-                                    ] and aml.move_id.move_type in [
-                                        "in_invoice",
-                                        "out_invoice",
-                                    ]:
-                                        bank_state_dict = self.get_bank_statement_dict(
-                                            aml,
-                                            aml.account_id.user_type_id.type,
-                                            lines_ids_journal,
-                                            b_state,
-                                        )
-                                        if bank_state_dict:
-                                            rl.append(bank_state_dict)
-                                            lines_ids_journal.append(aml.id)
-                                    else:
-                                        lines = aml.move_id.line_ids._reconciled_lines()
-                                        line_rec = self.env["account.move.line"].browse(
-                                            lines
-                                        )
-                                        for line_move in line_rec:
-                                            if (
-                                                line_move.account_id.user_type_id.type
-                                                in [
-                                                    "payable",
-                                                    "receivable",
-                                                ]
-                                                and line_move.move_id.move_type
-                                                in [
-                                                    "in_invoice",
-                                                    "out_invoice",
-                                                ]
-                                            ):
-                                                bank_state_dict = self.get_bank_statement_dict(
-                                                    line_move,
-                                                    line_move.account_id.user_type_id.type,
-                                                    lines_ids_journal,
-                                                    b_state,
-                                                )
-                                                if bank_state_dict:
-                                                    rl.append(bank_state_dict)
-                                                    lines_ids_journal.append(
-                                                        line_move.id
-                                                    )
+                                self.get_bank_state_dict_rec(
+                                    line_rec, lines_ids_journal, rl, b_state
+                                )
             b_line_dict.append(rl)
         return b_line_dict
