@@ -32,6 +32,7 @@ class IrAttachment(models.Model):
             self._cr.execute(
                 """SELECT res_model, res_id, create_uid, public, res_field
                   FROM ir_attachment WHERE id IN %s""",
+
                 [tuple(self.ids)],
             )
             for (

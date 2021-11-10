@@ -103,4 +103,5 @@ class AccountBankStatement(models.Model):
                                 or payment.credit,
                             }
                         )
+
         return rl

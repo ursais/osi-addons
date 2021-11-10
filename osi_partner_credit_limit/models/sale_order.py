@@ -29,6 +29,7 @@ class SaleOrder(models.Model):
             message = _(
                 """Cannot confirm Order! The customer exceed available
                    credit limit and is on ship hold."""
+
             )
             raise ValidationError(message)
         else:
@@ -39,12 +40,10 @@ class SaleOrder(models.Model):
             if self.partner_id.check_limit(self) and not self.credit_override:
                 self.state = prev_state
                 self.ship_hold = True
-                # commit changes above before ORM rollback any changes.
                 message = _(
                     """Cannot confirm Order!
                         This will exceed allowed Credit Limit.
                         To Override, check Override Sales/Credit/Delivery Hold"""
                 )
                 raise ValidationError(message)
-
             return super(SaleOrder, self).action_confirm()

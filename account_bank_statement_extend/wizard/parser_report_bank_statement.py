@@ -144,7 +144,6 @@ class BankStatementReport(models.TransientModel):
                                 self.get_bank_state_dict_rec(
                                     line_rec, lines_ids_journal, rl, b_state
                                 )
-
                 else:
                     if move_line.full_reconcile_id:
                         move_line = self.env["account.move.line"].search(
@@ -167,5 +166,6 @@ class BankStatementReport(models.TransientModel):
                                 self.get_bank_state_dict_rec(
                                     line_rec, lines_ids_journal, rl, b_state
                                 )
+
             b_line_dict.append(rl)
         return b_line_dict
