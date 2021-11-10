@@ -30,13 +30,13 @@ class StockRequestOrder(models.Model):
         super()._onchange_location_id()
         # FSM Order takes priority over Helpdesk Ticket
         order = self.fsm_order_id or self.helpdesk_ticket_id
-        if self.direction == "outbound":
-            self.location_id = order.inventory_location_id.id
-        else:
-            self.location_id = order.warehouse_id.lot_stock_id.id
-
-        self.fsm_location_id = self.fsm_order_id.location_id.id
-        self.change_childs()
+        if order:
+            if self.direction == "outbound":
+                self.location_id = order.inventory_location_id.id
+            else:
+                self.location_id = order.warehouse_id.lot_stock_id.id
+            self.fsm_location_id = self.fsm_order_id.location_id.id
+            self.change_childs()
 
     def change_childs(self):
         super().change_childs()
