@@ -29,7 +29,6 @@ class SaleOrder(models.Model):
             message = _(
                 """Cannot confirm Order! The customer exceed available
                    credit limit and is on ship hold."""
-
             )
             raise ValidationError(message)
         else:

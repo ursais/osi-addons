@@ -55,12 +55,6 @@ Authors
 
 * Open Source Integrators
 
-Contributors
-~~~~~~~~~~~~
-
-* `Open Source Integrators <https://opensourceintegrators.com>`:
-
-    * Hardik <hsuthar@opensourceintegrators.com>
 
 Maintainers
 ~~~~~~~~~~~
