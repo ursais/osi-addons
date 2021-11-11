@@ -1,7 +1,7 @@
 # Copyright (C) 2019 - 2021, Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models, _
+from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -35,7 +35,10 @@ class SaleOrder(models.Model):
             #  the computation for check_limit function
             prev_state = self.state
             self.state = "sale"
-            if self.partner_id.with_context(from_sale_order=True).check_limit(self) and not self.credit_override:
+            if (
+                self.partner_id.with_context(from_sale_order=True).check_limit(self)
+                and not self.credit_override
+            ):
                 self.state = prev_state
                 self.ship_hold = True
                 # commit changes above before ORM rollback any changes.
