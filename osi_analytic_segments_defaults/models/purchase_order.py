@@ -13,6 +13,7 @@ class PurchaseOrderLine(models.Model):
             rec = self.env["account.analytic.default"].account_get(
                 self.product_id.id,
                 self.order_id.partner_id.id,
+                False,
                 self.env.uid,
                 fields.Date.today(),
                 company_id=self.company_id.id,

@@ -7,7 +7,7 @@
     "license": "AGPL-3",
     "author": "Open Source Integrators",
     "category": "account",
-    "maintainer": "Open Source Integrators",
+    "maintainers": "Open Source Integrators",
     "summary": """OSI Account Bank Statement Report
                 Extend Get More Details in Statement Report""",
     "website": "https://github.com/ursais/osi-addons",
@@ -21,5 +21,4 @@
         "wizard/parser_report_bank_statement.xml",
     ],
     "installable": True,
-    "maintainers": ["Hardik-OSI"],
 }

@@ -19,8 +19,12 @@ Account Bank Statement Extend
 .. contents::
    :local:
 
-Usage
-=====
+To use this module, you need to:
+
+* Go to Accounting Dashboard
+* Bank journal Open
+* View Bank Statement and From tree View select multiple statement and print report.
+* In Statement Get Report with source Account from main Move.
 
 
 Bug Tracker
@@ -36,17 +40,21 @@ Do not contact contributors directly about support or help with technical issues
 Credits
 =======
 
+* Balaji Kannan <bkannan@opensourceintegrators.com>
+* Hardik Suthar <hsuthar@opensourceintegrators.com>
+
+
+Contributors
+------------
+
+* Open Source Integrators <contact@opensourceintegrators.com>
+* Serpent Consulting Services Pvt. Ltd. <support@serpentcs.com>
+
 Authors
 ~~~~~~~
 
 * Open Source Integrators
 
-Contributors
-~~~~~~~~~~~~
-
-* `Open Source Integrators <https://opensourceintegrators.com>`:
-
-    * Hardik <???@opensourceintegrators.com>
 
 Maintainers
 ~~~~~~~~~~~
@@ -61,14 +69,9 @@ OCA, or the Odoo Community Association, is a nonprofit organization whose
 mission is to support the collaborative development of Odoo features and
 promote its widespread use.
 
-.. |maintainer-hardik-osi| image:: https://github.com/hardik-osi.png?size=40px
-    :target: https://github.com/hardik-osi
-    :alt: hardik-osi
-
 Current `maintainer <https://odoo-community.org/page/maintainer-role>`__:
-
-|maintainer-hardik-osi|
 
 This module is part of the `OCA/osi-addons <https://github.com/OCA/osi-addons/tree/14.0/account_bank_statement_extend>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.
+
