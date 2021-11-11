@@ -32,11 +32,13 @@ class StockRequestOrder(models.Model):
     def _prepare_procurement_group_values_helpdesk(self):
         res = {}
         if self.helpdesk_ticket_id:
-            res.update({
-                "name": ("#" + str(self.helpdesk_ticket_id.id)),
-                "helpdesk_ticket_id": self.helpdesk_ticket_id.id,
-                "move_type": "direct",
-            })
+            res.update(
+                {
+                    "name": ("#" + str(self.helpdesk_ticket_id.id)),
+                    "helpdesk_ticket_id": self.helpdesk_ticket_id.id,
+                    "move_type": "direct",
+                }
+            )
             return res
         else:
             return res
