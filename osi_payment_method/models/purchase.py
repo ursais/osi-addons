@@ -29,12 +29,10 @@ class StockRule(models.Model):
     _inherit = "stock.rule"
 
     def _prepare_purchase_order(self, company_id, origins, values):
-        res = super()._prepare_purchase_order(
-            company_id, origins, values
-        )
+        res = super()._prepare_purchase_order(company_id, origins, values)
         values = values[0]
         partner = values["supplier"].name
-        if res and  partner and "payment_method" not in res:
+        if res and partner and "payment_method" not in res:
             res.update(
                 {
                     "payment_method": partner.payment_method
