@@ -30,8 +30,8 @@ class IrAttachment(models.Model):
                 ["res_model", "res_id", "public", "res_field"]
             )
             self._cr.execute(
-                "SELECT res_model, res_id, public, res_field "
-                "FROM ir_attachment WHERE id IN %s",
+                """SELECT res_model, res_id, create_uid, public, res_field
+                  FROM ir_attachment WHERE id IN %s""",
                 [tuple(self.ids)],
             )
             for res_model, res_id, public, res_field in self._cr.fetchall():
