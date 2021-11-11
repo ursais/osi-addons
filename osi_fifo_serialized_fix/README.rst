@@ -2,9 +2,9 @@
    :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
    :alt: License: LGPL-3
 
-========================
+===============================
 OSI FIFO Serialized Product Fix
-========================
+===============================
 
 Properly handle Inventory Valuation
 with Serialized and Lot Tracked products
