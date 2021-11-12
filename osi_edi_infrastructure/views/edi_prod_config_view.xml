@@ -1,47 +1,50 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <odoo>
 
-	<!-- Copyright 2021 Open Source Integrators License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+    <!-- Copyright 2021 Open Source Integrators License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 
-	<!-- EDI Product Config. List view -->
-	<record id="view_edi_product_config_list" model="ir.ui.view">
-		<field name="name">edi.product.config.list</field>
-		<field name="model">edi.product.config</field>
-		<field name="arch" type="xml">
-			<tree string="EDI Supported Doc">
-				<field name="product_id" />
-				<field name="edi_supported_doc_id" />
-			</tree>
-		</field>
-	</record>
+    <!-- EDI Product Config. List view -->
+    <record id="view_edi_product_config_list" model="ir.ui.view">
+        <field name="name">edi.product.config.list</field>
+        <field name="model">edi.product.config</field>
+        <field name="arch" type="xml">
+            <tree string="EDI Supported Doc">
+                <field name="product_id" />
+                <field name="edi_supported_doc_id" />
+            </tree>
+        </field>
+    </record>
 
-	<!-- EDI Product Config. Form view -->
-	<record id="view_edi_product_config_form" model="ir.ui.view">
-		<field name="name">edi.product.config.form</field>
-		<field name="model">edi.product.config</field>
-		<field name="arch" type="xml">
-			<form string="EDI Supported Doc">
-				<sheet>
-					<group>
-						<group>
-							<field name="product_id" />
-							<field name="edi_supported_doc_id" />
-						</group>
-					</group>
-				</sheet>
-			</form>
-		</field>
-	</record>
+    <!-- EDI Product Config. Form view -->
+    <record id="view_edi_product_config_form" model="ir.ui.view">
+        <field name="name">edi.product.config.form</field>
+        <field name="model">edi.product.config</field>
+        <field name="arch" type="xml">
+            <form string="EDI Supported Doc">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="product_id" />
+                            <field name="edi_supported_doc_id" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
-	<!-- Action of EDI Product Config. -->
-	<record id="action_edit_product_config" model="ir.actions.act_window">
-		<field name="name">EDI Product Configuration</field>
-		<field name="res_model">edi.product.config</field>
-		<field name="view_mode">tree,form</field>
-		<field name="view_id" ref="view_edi_product_config_list" />
-	</record>
+    <!-- Action of EDI Product Config. -->
+    <record id="action_edit_product_config" model="ir.actions.act_window">
+        <field name="name">EDI Product Configuration</field>
+        <field name="res_model">edi.product.config</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_edi_product_config_list" />
+    </record>
 
-	<!-- Menu for EDI Supported Doc -->
-	<menuitem action="action_edit_product_config" id="menu_action_edit_product_config"
-		parent="menu_edi" />
+    <!-- Menu for EDI Supported Doc -->
+    <menuitem
+        action="action_edit_product_config"
+        id="menu_action_edit_product_config"
+        parent="menu_edi"
+    />
 </odoo>

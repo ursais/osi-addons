@@ -1,101 +1,129 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <odoo>
 
-	<!-- Copyright 2021 Open Source Integrators License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+    <!-- Copyright 2021 Open Source Integrators License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 
-	<!-- Edi Message Queue List view -->
-	<record id="view_edi_message_queue_list" model="ir.ui.view">
-		<field name="name">edi.message.queue.list</field>
-		<field name="model">edi.message.queue</field>
-		<field name="arch" type="xml">
-			<tree string="EDI Message Queue">
-				<field name="direction" />
-				<field name="edi_provider_id" />
-                <field name="file_name"/>
-				<field name="edi_model_id" />
-				<field name="edi_supported_doc_id" />
-				<field name="partner_id" />
-				<field name="received_date"/>
-				<field name="rec_created"/>
-				<field name="state"/>
-			</tree>
-		</field>
-	</record>
-    
+    <!-- Edi Message Queue List view -->
+    <record id="view_edi_message_queue_list" model="ir.ui.view">
+        <field name="name">edi.message.queue.list</field>
+        <field name="model">edi.message.queue</field>
+        <field name="arch" type="xml">
+            <tree string="EDI Message Queue">
+                <field name="direction" />
+                <field name="edi_provider_id" />
+                <field name="file_name" />
+                <field name="edi_model_id" />
+                <field name="edi_supported_doc_id" />
+                <field name="partner_id" />
+                <field name="received_date" />
+                <field name="rec_created" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
     <!-- Action confirm_payments for multi -->
     <record id="action_process_queue" model="ir.actions.server">
         <field name="name">Process EDI 850 Documents</field>
         <field name="type">ir.actions.server</field>
         <field name="state">code</field>
-        <field name="model_id" ref="osi_edi_infrastructure.model_edi_message_queue"/>
+        <field
+            name="model_id"
+            ref="osi_edi_infrastructure.model_edi_message_queue"
+        />
         <field name="code">records.parse_csv_message()</field>
     </record>
-    
 
-	<!-- Edi Message Queue Form view -->
-	<record id="view_edi_message_queue_form" model="ir.ui.view">
-		<field name="name">edi.message.queue.form</field>
-		<field name="model">edi.message.queue</field>
-		<field name="arch" type="xml">
-			<form string="EDI Message Queue">
+
+    <!-- Edi Message Queue Form view -->
+    <record id="view_edi_message_queue_form" model="ir.ui.view">
+        <field name="name">edi.message.queue.form</field>
+        <field name="model">edi.message.queue</field>
+        <field name="arch" type="xml">
+            <form string="EDI Message Queue">
                 <header>
-                    <button name="checkin_csv_inbound_message" string="Get Documents" type="object" class="oe_highlight"/>
-                    <button name="parse_csv_message" string="Process" type="object" class="oe_highlight"/>
-                    <button name="checkout_inbound_message" string="Mark Done" type="object" class="oe_highlight"/>
+                    <button
+                        name="checkin_csv_inbound_message"
+                        string="Get Documents"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    <button
+                        name="parse_csv_message"
+                        string="Process"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    <button
+                        name="checkout_inbound_message"
+                        string="Mark Done"
+                        type="object"
+                        class="oe_highlight"
+                    />
                     <field name="state" widget="statusbar" clickable="True" />
                 </header>
-				<sheet>
-					<group>
-						<group>
-							<field name="direction" />
-							<field name="edi_model_id" />
-							<field name="rec_created" invisible="1"/>
-							<button id="new_record" name="get_record" string="View EDI Document" type="object" class="oe_highlight" attrs="{'invisible':[('rec_created','=', 0)]}"/>
-						</group>
-						<group>
-							<field name="edi_provider_id" />
-							<field name="edi_supported_doc_id" />
-						</group>
-						<group>
-							<field name="partner_id" />
-							<field name="log_message" />
-						</group>
-						<group>
-							<field name="received_date"/>
-							<field name="file_name"/>
-						</group>
-					</group>
-					<group>
-						<field name="raw_message" />
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="direction" />
+                            <field name="edi_model_id" />
+                            <field name="rec_created" invisible="1" />
+                            <button
+                                id="new_record"
+                                name="get_record"
+                                string="View EDI Document"
+                                type="object"
+                                class="oe_highlight"
+                                attrs="{'invisible':[('rec_created','=', 0)]}"
+                            />
+                        </group>
+                        <group>
+                            <field name="edi_provider_id" />
+                            <field name="edi_supported_doc_id" />
+                        </group>
+                        <group>
+                            <field name="partner_id" />
+                            <field name="log_message" />
+                        </group>
+                        <group>
+                            <field name="received_date" />
+                            <field name="file_name" />
+                        </group>
+                    </group>
+                    <group>
+                        <field name="raw_message" />
                         <field name="parsed_data" />
-					</group>
-				</sheet>
-			</form>
-		</field>
-	</record>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
-	<!-- Action of Edi Message Queue -->
-	<record id="action_edi_message_queue" model="ir.actions.act_window">
-		<field name="name">EDI Message Queue</field>
-		<field name="res_model">edi.message.queue</field>
-		<field name="view_mode">tree,form</field>
-		<field name="view_id" ref="view_edi_message_queue_list" />
-	</record>
+    <!-- Action of Edi Message Queue -->
+    <record id="action_edi_message_queue" model="ir.actions.act_window">
+        <field name="name">EDI Message Queue</field>
+        <field name="res_model">edi.message.queue</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_edi_message_queue_list" />
+    </record>
 
     <!-- Crons -->
     <record id="cron_csv_inbound" model="ir.cron">
         <field name="name">EDI Inbound Processing</field>
-        <field eval="False" name="active"/>
-        <field name="user_id" ref="base.user_root"/>
+        <field eval="False" name="active" />
+        <field name="user_id" ref="base.user_root" />
         <field name="interval_number">90</field>
         <field name="interval_type">minutes</field>
         <field name="numbercall">-1</field>
-        <field name="model_id" ref="model_edi_message_queue"/>
+        <field name="model_id" ref="model_edi_message_queue" />
         <field name="state">code</field>
         <field name="code">model.cron_csv_inbound()</field>
     </record>
-    
-	<!-- Menu for Edi Message Queue -->
-	<menuitem action="action_edi_message_queue" id="menu_action_edi_message_queue"
-		parent="menu_edi" />
+
+    <!-- Menu for Edi Message Queue -->
+    <menuitem
+        action="action_edi_message_queue"
+        id="menu_action_edi_message_queue"
+        parent="menu_edi"
+    />
 </odoo>

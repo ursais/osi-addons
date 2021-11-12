@@ -5,7 +5,7 @@ import ast
 import logging
 from datetime import datetime, timedelta
 
-from odoo import api, exceptions, fields, models
+from odoo import _, api, exceptions, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -57,7 +57,7 @@ class EdiSupportedDoc(models.Model):
         if not lookup_id:
             if not struct_id.automatic_create:
                 raise exceptions.ValidationError(
-                    "Lookup failed for element {}".format(struct_id.line_prefix)
+                    _("Lookup failed for element {}".format(struct_id.line_prefix))
                 )
             else:
                 # Automatically create related record
@@ -66,6 +66,98 @@ class EdiSupportedDoc(models.Model):
                 vals = {k.split(".")[-1]: v for k, v in result.items()}
                 lookup_id = model.create(vals)
         return lookup_id
+
+    def get_parse_new_message_by_line(
+        self,
+        line,
+        col_separator,
+        result_line,
+        edi_supported_doc_id,
+        result,
+        shipping_dict,
+    ):
+        cols = line.split(col_separator)
+        prefix = cols[0] if not cols[1] else cols[0] + "*" + cols[1]
+        # Get all Doc Structure definition that match the current line
+        prefix = cols[0] + "*" + cols[1]
+        matched_struct_ids = edi_supported_doc_id.edi_sup_doc_struct_ids.filtered(
+            lambda s: s.line_prefix == prefix
+        )
+        # Support case where line is a child of a parent section
+        if not matched_struct_ids:
+            prefix = cols[0]
+            matched_struct_ids = edi_supported_doc_id.edi_sup_doc_struct_ids.filtered(
+                lambda s: s.line_prefix == prefix
+            )
+
+        for struct_id in matched_struct_ids:
+            if struct_id.action == "newline":
+                # Make buyer edi_code available in lines, to use in
+                # domain expressions
+                result_line = {
+                    "partner_id.edi_code": result.get("partner_id.edi_code"),
+                    "partner_id.id": result.get("partner_id.id"),
+                }
+                field = struct_id.mapped_field
+                lines = result.setdefault(field, [])
+                lines.append(result_line)
+            else:
+                # Update shipping values into separate dict
+                if cols[0] + "*" + cols[1] == "N1*ST":
+                    if struct_id.mapped_field not in shipping_dict:
+                        shipping_dict.update(
+                            {struct_id.mapped_field: cols[struct_id.column]}
+                        )
+                if cols[0] == "N3":
+                    if struct_id.mapped_field not in shipping_dict:
+                        shipping_dict.update(
+                            {struct_id.mapped_field: cols[struct_id.column]}
+                        )
+                if cols[0] == "N4":
+                    if struct_id.mapped_field not in shipping_dict:
+                        shipping_dict.update(
+                            {struct_id.mapped_field: cols[struct_id.column]}
+                        )
+
+                if struct_id.mapped_field not in shipping_dict:
+                    field = struct_id.mapped_field
+                    value = cols[struct_id.column]
+
+                    # Make value as datetime format for date_order
+                    # and commitment_date to fetch right datetime
+                    if (
+                        struct_id.mapped_field == "date_order"
+                        or struct_id.mapped_field == "commitment_date"
+                    ):
+                        if value:
+                            if len(value) == 6:
+                                dt_str = value[:2] + "-" + value[2:4] + "-" + value[4:6]
+                                dt = datetime.strptime(dt_str, "%y-%m-%d")
+                            else:
+                                dt_str = value[:4] + "-" + value[4:6] + "-" + value[6:8]
+                                dt = datetime.strptime(dt_str, "%Y-%m-%d")
+                            value = (dt + timedelta(hours=8)).strftime(
+                                "%Y-%m-%d %H:%M:%S"
+                            )
+                    # dt_str = value[:4]+'-'+value[4:6]+'-'+value[6:8]+' 08:00:00'
+                    # value=datetime.strptime(dt_str, '%y-%m-%d %H:%M:%S')
+
+                    target = result_line if struct_id.action == "line" else result
+                    if field in target:
+                        target[field] = value
+                    else:
+                        target.update({field: value})
+
+                    # Check for lookup model and domain
+                    if struct_id.lookup_model and struct_id.lookup_domain:
+                        lookup_id = self._parse_raw_message_lookup(
+                            field, struct_id, target
+                        )
+                        # Example: {'parent_id.ref': 'XX'} is used for the lookup,
+                        # and the resulting id is written as {'parent_id.id': 999}
+                        lookup_field_parent = field.split(".")[:-1]
+                        lookup_field = ".".join(lookup_field_parent + ["id"])
+                        target[lookup_field] = lookup_id
 
     @api.model
     def parse_raw_message(self, raw_message, edi_supported_doc_id):
@@ -78,8 +170,10 @@ class EdiSupportedDoc(models.Model):
         Returns a dict with the valies parsed from the message.
         May raise an exceptions, if the parsing ids not completed correctly.
         """
-        # TODO: try .. except removed -> should be handled by the caller, in the Message Queue Model.
-        # TODO: replace the raw_message, edi_supported_doc_id arguments with just one, "message_queue_id"
+        # TODO: try .. except removed -> should be handled by the caller,
+        # in the Message Queue Model.
+        # TODO: replace the raw_message, edi_supported_doc_id arguments
+        # with just one, "message_queue_id"
         # raw_message = .raw_message
         # edi_supported_doc_id= message_queue_id.edi_supported_doc_id
         if not (raw_message and edi_supported_doc_id):
@@ -96,106 +190,14 @@ class EdiSupportedDoc(models.Model):
 
         for line in lines:
             if line:
-                cols = line.split(col_separator)
-                prefix = cols[0] if not cols[1] else cols[0] + "*" + cols[1]
-                # Get all Doc Structure definition that match the current line
-                prefix = cols[0] + "*" + cols[1]
-                matched_struct_ids = (
-                    edi_supported_doc_id.edi_sup_doc_struct_ids.filtered(
-                        lambda s: s.line_prefix == prefix
-                    )
+                self.get_parse_new_message_by_line(
+                    line,
+                    col_separator,
+                    result_line,
+                    edi_supported_doc_id,
+                    result,
+                    shipping_dict,
                 )
-                # Support case where line is a child of a parent section
-                if not matched_struct_ids:
-                    prefix = cols[0]
-                    matched_struct_ids = (
-                        edi_supported_doc_id.edi_sup_doc_struct_ids.filtered(
-                            lambda s: s.line_prefix == prefix
-                        )
-                    )
-
-                for struct_id in matched_struct_ids:
-                    if struct_id.action == "newline":
-                        # Make buyer edi_code available in lines, to use in
-                        # domain expressions
-                        result_line = {
-                            "partner_id.edi_code": result.get("partner_id.edi_code"),
-                            "partner_id.id": result.get("partner_id.id"),
-                        }
-                        field = struct_id.mapped_field
-                        lines = result.setdefault(field, [])
-                        lines.append(result_line)
-                    else:
-                        # Update shipping values into separate dict
-                        if cols[0] + "*" + cols[1] == "N1*ST":
-                            if struct_id.mapped_field not in shipping_dict:
-                                shipping_dict.update(
-                                    {struct_id.mapped_field: cols[struct_id.column]}
-                                )
-                        if cols[0] == "N3":
-                            if struct_id.mapped_field not in shipping_dict:
-                                shipping_dict.update(
-                                    {struct_id.mapped_field: cols[struct_id.column]}
-                                )
-                        if cols[0] == "N4":
-                            if struct_id.mapped_field not in shipping_dict:
-                                shipping_dict.update(
-                                    {struct_id.mapped_field: cols[struct_id.column]}
-                                )
-
-                        if struct_id.mapped_field not in shipping_dict:
-                            field = struct_id.mapped_field
-                            value = cols[struct_id.column]
-
-                            # Make value as datetime format for date_order
-                            # and commitment_date to fetch right datetime
-                            if (
-                                struct_id.mapped_field == "date_order"
-                                or struct_id.mapped_field == "commitment_date"
-                            ):
-                                if value:
-                                    if len(value) == 6:
-                                        dt_str = (
-                                            value[:2]
-                                            + "-"
-                                            + value[2:4]
-                                            + "-"
-                                            + value[4:6]
-                                        )
-                                        dt = datetime.strptime(dt_str, "%y-%m-%d")
-                                    else:
-                                        dt_str = (
-                                            value[:4]
-                                            + "-"
-                                            + value[4:6]
-                                            + "-"
-                                            + value[6:8]
-                                        )
-                                        dt = datetime.strptime(dt_str, "%Y-%m-%d")
-                                    value = (dt + timedelta(hours=8)).strftime(
-                                        "%Y-%m-%d %H:%M:%S"
-                                    )
-                            #                                     dt_str = value[:4]+'-'+value[4:6]+'-'+value[6:8]+' 08:00:00'
-                            #                                     value=datetime.strptime(dt_str, '%y-%m-%d %H:%M:%S')
-
-                            target = (
-                                result_line if struct_id.action == "line" else result
-                            )
-                            if field in target:
-                                target[field] = value
-                            else:
-                                target.update({field: value})
-
-                            # Check for lookup model and domain
-                            if struct_id.lookup_model and struct_id.lookup_domain:
-                                lookup_id = self._parse_raw_message_lookup(
-                                    field, struct_id, target
-                                )
-                                # Example: {'parent_id.ref': 'XX'} is used for the lookup,
-                                # and the resulting id is written as {'parent_id.id': 999}
-                                lookup_field_parent = field.split(".")[:-1]
-                                lookup_field = ".".join(lookup_field_parent + ["id"])
-                                target[lookup_field] = lookup_id
 
         # Check if partner is drop to ship
         if "partner_id.id" in result:

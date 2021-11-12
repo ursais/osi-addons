@@ -1,21 +1,21 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <odoo>
 
-	<!-- Copyright 2021 Open Source Integrators License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+    <!-- Copyright 2021 Open Source Integrators License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 
-	<record id="view_res_partner_form_extended" model="ir.ui.view">
+    <record id="view_res_partner_form_extended" model="ir.ui.view">
         <field name="name">res.partner.form</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="arch" type="xml">
             <xpath expr="//notebook/page" position="after">
                 <page string="EDI Partner Documents" name="edi_partner_doc">
-	                <group>
-	                    <field name='edi_vendor_reference'/>
-	                </group>
-	                <group>             			
-	                    <field name="edi_partner_document_ids" nolabel="1"/>
-	                </group>
+                    <group>
+                        <field name='edi_vendor_reference' />
+                    </group>
+                    <group>
+                        <field name="edi_partner_document_ids" nolabel="1" />
+                    </group>
                 </page>
             </xpath>
         </field>

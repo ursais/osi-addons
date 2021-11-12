@@ -1,29 +1,37 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <odoo>
 
-	<!-- Copyright 2021 Open Source Integrators License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+    <!-- Copyright 2021 Open Source Integrators License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 
-	<record id="view_res_company_form_extended" model="ir.ui.view">
-		<field name="name">res.company.form</field>
-		<field name="model">res.company</field>
-		<field name="inherit_id" ref="base.view_company_form" />
-		<field name="arch" type="xml">
-			<xpath expr="//notebook/page" position="after">
-				<page string="EDI Active Documents" name="edi_comp_doc">
-					<group>
-						<group string='EDI Provider'>
-							<field name="edi_provider_id"/>
-						</group>
-						<group>
-							<field name="edi_comp_doc_ids" string="EDI Active Documents" nolabel="1" context="{'edi_provider_id':edi_provider_id}">
-								<tree editable="top">
-									<field name="edi_supported_doc_id" domain="[('edi_provider_id','=',context.get('edi_provider_id'))]"/>
-								</tree>
-							</field>
-						</group>
-					</group>
-				</page>
-			</xpath>
-		</field>
-	</record>
+    <record id="view_res_company_form_extended" model="ir.ui.view">
+        <field name="name">res.company.form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook/page" position="after">
+                <page string="EDI Active Documents" name="edi_comp_doc">
+                    <group>
+                        <group string='EDI Provider'>
+                            <field name="edi_provider_id" />
+                        </group>
+                        <group>
+                            <field
+                                name="edi_comp_doc_ids"
+                                string="EDI Active Documents"
+                                nolabel="1"
+                                context="{'edi_provider_id':edi_provider_id}"
+                            >
+                                <tree editable="top">
+                                    <field
+                                        name="edi_supported_doc_id"
+                                        domain="[('edi_provider_id','=',context.get('edi_provider_id'))]"
+                                    />
+                                </tree>
+                            </field>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
 </odoo>

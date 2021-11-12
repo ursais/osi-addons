@@ -6,14 +6,17 @@
     "version": "14.0.1.0.0",
     "license": "AGPL-3",
     "sequence": 25,
-    "description": "EDI Basic Infrastructure setup",
+    "summery": "EDI Basic Infrastructure setup",
     "author": "Open Source Integrators",
-    "maintainer": "Open Source Integrators",
-    "website": "http://www.opensourceintegrators.com",
+    "maintainers": "Open Source Integrators",
+    "website": "https://github.com/ursais/osi-addons",
     "category": "",
-    "depends": ["product", "mail",
-                # "osi_customer_warehouse"
-                ],
+    "depends": [
+        "product",
+        "mail",
+        # "osi_customer_warehouse"
+    ],
+    "external_dependencies": {"python": ["unidecode"]},
     "data": [
         "security/edi_security.xml",
         "security/ir.model.access.csv",

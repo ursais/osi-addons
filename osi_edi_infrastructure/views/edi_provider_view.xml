@@ -1,131 +1,169 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <odoo>
 
-	<!-- Copyright 2021 Open Source Integrators License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+    <!-- Copyright 2021 Open Source Integrators License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 
-	<!-- Top menu item -->
-	<menuitem name="EDI" id="menu_edi"
-		groups="osi_edi_infrastructure.group_edi_provider_user,osi_edi_infrastructure.group_edi_provider_manager"
-		sequence="60" />
+    <!-- Top menu item -->
+    <menuitem
+        name="EDI"
+        id="menu_edi"
+        groups="osi_edi_infrastructure.group_edi_provider_user,osi_edi_infrastructure.group_edi_provider_manager"
+        sequence="60"
+    />
 
-	<!-- EDI Provider List view -->
-	<record id="view_edi_provider_list" model="ir.ui.view">
-		<field name="name">edi.provider.list</field>
-		<field name="model">edi.provider</field>
-		<field name="arch" type="xml">
-			<tree string="EDI Provider">
-				<field name="name" />
-				<field name="com_method" />
-				<field name="host" />
-				<field name="user" />
-				<field name="active" />
-			</tree>
-		</field>
-	</record>
-	<!-- EDI Provider Form view -->
-	<record id="view_edi_provider_form" model="ir.ui.view">
-		<field name="name">edi.provider.form</field>
-		<field name="model">edi.provider</field>
-		<field name="arch" type="xml">
-			<form string="EDI Provider">
-				<sheet>
-					<div class="oe_button_box" name="button_box">
-                        <button name="toggle_mode" type="object" class="oe_stat_button" icon="fa-check-square">
-                            <field name="mode" widget="boolean_button" options='{"terminology": {
+    <!-- EDI Provider List view -->
+    <record id="view_edi_provider_list" model="ir.ui.view">
+        <field name="name">edi.provider.list</field>
+        <field name="model">edi.provider</field>
+        <field name="arch" type="xml">
+            <tree string="EDI Provider">
+                <field name="name" />
+                <field name="com_method" />
+                <field name="host" />
+                <field name="user" />
+                <field name="active" />
+            </tree>
+        </field>
+    </record>
+    <!-- EDI Provider Form view -->
+    <record id="view_edi_provider_form" model="ir.ui.view">
+        <field name="name">edi.provider.form</field>
+        <field name="model">edi.provider</field>
+        <field name="arch" type="xml">
+            <form string="EDI Provider">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="toggle_mode"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-check-square"
+                        >
+                            <field
+                                name="mode"
+                                widget="boolean_button"
+                                options='{"terminology": {
                                 "string_true": "Production Environment",
                                 "hover_true": "Switch to test environment",
                                 "string_false": "Test Environment",
                                 "hover_false": "Switch to production environment"
-                            }}'/>
+                            }}'
+                            />
                         </button>
-                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                        </button>                        
+                        <button
+                            name="toggle_active"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-archive"
+                        >
+                            <field
+                                name="active"
+                                widget="boolean_button"
+                                options='{"terminology": "archive"}'
+                            />
+                        </button>
                     </div>
-					<group>
-						<group>
-							<field name="name" required="1"/>
-							<field name="com_method" />
-						</group>
-					</group>
-					<notebook>
+                    <group>
+                        <group>
+                            <field name="name" required="1" />
+                            <field name="com_method" />
+                        </group>
+                    </group>
+                    <notebook>
                         <page string="Path Details" name="path">
                             <group>
                                 <group>
-                                    <field name="archive_local" 
-									       attrs="{'invisible': 1}"/>
+                                    <field
+                                        name="archive_local"
+                                        attrs="{'invisible': 1}"
+                                    />
                                 </group>
                                 <group>
-									<field name="new_inbound_messages" />
-									<field name="archived_inbound_messages" />
-							   </group>
-							   <group>
-									<field name="new_outbound_messages" />
-									<field name="archived_outbound_messages" />
-								</group>
+                                    <field name="new_inbound_messages" />
+                                    <field name="archived_inbound_messages" />
+                               </group>
+                               <group>
+                                    <field name="new_outbound_messages" />
+                                    <field name="archived_outbound_messages" />
+                                </group>
                             </group>
                         </page>
                         <page string="FTP Details" name="ftp">
                             <group>
                                 <group>
-									<field name="host" />
-									<field name="user" />
-									<field name="password" password="True" />
-							   </group>
-							   <group>
-							   		<button name="import_data" string="Import Data" type="object" class="oe_highlight"/>
-                                    <button name="export_data" string="Export Data" type="object" class="oe_highlight"/>
-							   </group>
-							   <group>
-									<field name="remote_export" />
-									<field name="remote_archive" />
-									<field name="remote_import" />
-							   </group>
-							   <group>
-									<field name="archive_remote" 
-									       attrs="{'invisible': 1}"/>
-								</group>
+                                    <field name="host" />
+                                    <field name="user" />
+                                    <field name="password" password="True" />
+                               </group>
+                               <group>
+                                       <button
+                                        name="import_data"
+                                        string="Import Data"
+                                        type="object"
+                                        class="oe_highlight"
+                                    />
+                                    <button
+                                        name="export_data"
+                                        string="Export Data"
+                                        type="object"
+                                        class="oe_highlight"
+                                    />
+                               </group>
+                               <group>
+                                    <field name="remote_export" />
+                                    <field name="remote_archive" />
+                                    <field name="remote_import" />
+                               </group>
+                               <group>
+                                    <field name="archive_remote" attrs="{'invisible': 1}" />
+                                </group>
                             </group>
                         </page>
                     </notebook>
-				</sheet>
-			</form>
-		</field>
-	</record>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
-	<!-- Action import data for multi -->
+    <!-- Action import data for multi -->
     <record id="action_import_data_850_edi" model="ir.actions.server">
         <field name="name">Import Data 850</field>
         <field name="type">ir.actions.server</field>
         <field name="state">code</field>
-        <field name="model_id" ref="osi_edi_infrastructure.model_edi_provider"/>
+        <field
+            name="model_id"
+            ref="osi_edi_infrastructure.model_edi_provider"
+        />
         <field name="code">
 records.import_data()
-		</field>
+        </field>
     </record>
 
-	<!-- Action of EDI Provider -->
-	<record id="action_edi_provider" model="ir.actions.act_window">
-		<field name="name">EDI Provider</field>
-		<field name="res_model">edi.provider</field>
-		<field name="view_mode">tree,form</field>
-		<field name="view_id" ref="view_edi_provider_list" />
-	</record>
-    
+    <!-- Action of EDI Provider -->
+    <record id="action_edi_provider" model="ir.actions.act_window">
+        <field name="name">EDI Provider</field>
+        <field name="res_model">edi.provider</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_edi_provider_list" />
+    </record>
+
     <!-- Crons -->
     <record id="cron_ftp_import_export" model="ir.cron">
         <field name="name">EDI FTP Processing</field>
-        <field eval="False" name="active"/>
-        <field name="user_id" ref="base.user_root"/>
+        <field eval="False" name="active" />
+        <field name="user_id" ref="base.user_root" />
         <field name="interval_number">90</field>
         <field name="interval_type">minutes</field>
         <field name="numbercall">-1</field>
-        <field name="model_id" ref="model_edi_provider"/>
+        <field name="model_id" ref="model_edi_provider" />
         <field name="state">code</field>
         <field name="code">model.cron_import_data()</field>
     </record>
 
-	<!-- Menu for EDI Provider -->
-	<menuitem action="action_edi_provider" id="menu_action_edi_provider"
-		parent="menu_edi" />
+    <!-- Menu for EDI Provider -->
+    <menuitem
+        action="action_edi_provider"
+        id="menu_action_edi_provider"
+        parent="menu_edi"
+    />
 </odoo>

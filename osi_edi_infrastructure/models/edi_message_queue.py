@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 from pyparsing import commaSeparatedList
 from unidecode import unidecode
 
-from odoo import api, exceptions, fields, models
+from odoo import _, api, exceptions, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -57,6 +57,84 @@ class EdiMessageQueue(models.Model):
         # I can't even
         return name == "tracking" or super()._valid_field_parameter(field, name)
 
+    def create_new_queue(self, in_path, company_id, archive_path):
+        # Get all files from Inbound Location
+        inbound_files = os.listdir(in_path)
+        if inbound_files:
+            partner_obj = self.env["res.partner"]
+            for file in inbound_files:
+                try:
+                    # Copy file data in raw message
+                    src_file_path = os.path.join(in_path, file)
+                    str_msg = open(src_file_path, "r").read()
+
+                    # Get Type of Document from raw_message
+                    # split raw message into lines
+                    lines = str_msg.split("\n")
+                    document_code = partner_code = ""
+                    doc_id = False
+                    rec_dt = False
+
+                    for line in lines:
+                        cols = line.split("*")
+                        if line and cols[0] == "ST":
+                            document_code = cols[1]
+                        if line and cols[0] == "GS" and cols[1] == "PO":
+                            partner_code = cols[2]
+                            dt = cols[4] + cols[5]
+                            # Get datetime format from raw_message file
+                            dt_str = (
+                                dt[:4]
+                                + "-"
+                                + dt[4:6]
+                                + "-"
+                                + dt[6:8]
+                                + " "
+                                + dt[8:10]
+                                + ":"
+                                + dt[10:12]
+                                + ":00"
+                            )
+                            rec_dt = datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S")
+
+                    if document_code and partner_code:
+                        # Get document type from partner
+                        partner_rec = partner_obj.search(
+                            [("edi_code", "=", partner_code)]
+                        )
+                        if partner_rec:
+                            for rec in partner_rec:
+                                for doc in rec.edi_partner_document_ids:
+                                    if doc.code == document_code:
+                                        doc_id = doc.edi_supported_doc_id.id
+
+                    vals = {
+                        "direction": "in",
+                        "edi_provider_id": company_id.edi_provider_id.id,
+                        "raw_message": str_msg,
+                        "edi_supported_doc_id": doc_id or False,
+                        "state": "new",
+                        "received_date": rec_dt,
+                        "file_name": file,
+                    }
+                    # Create new queue for each file
+                    self.create(vals)
+
+                    # Move current file to Archived directory
+                    if company_id.edi_provider_id.archive_local:
+                        archive_file_path = os.path.join(archive_path, file)
+                        shutil.move(src_file_path, archive_file_path)
+                    else:
+                        _logger.error("Local Archive not setup !!!")
+
+                except Exception as e:
+                    _logger.error(
+                        """Exception while while executing Inbound Message File: %s.\n
+                        Original Traceback:\n%s""",
+                        e,
+                        Exception,
+                    )
+
     def checkin_inbound_message(self):
         # Get company and check EDI Providers used
         company_id = self.env.user.company_id
@@ -95,82 +173,7 @@ class EdiMessageQueue(models.Model):
                         "Path not defined for Archived Inbound Message for provider %s",
                         company_id.edi_provider_id.name,
                     )
-
-            # Get all files from Inbound Location
-            inbound_files = os.listdir(in_path)
-            if inbound_files:
-                partner_obj = self.env["res.partner"]
-                for file in inbound_files:
-                    try:
-                        # Copy file data in raw message
-                        src_file_path = os.path.join(in_path, file)
-                        str_msg = open(src_file_path, "r").read()
-
-                        # Get Type of Document from raw_message
-                        # split raw message into lines
-                        lines = str_msg.split("\n")
-                        document_code = partner_code = ""
-                        doc_id = False
-                        rec_dt = False
-
-                        for line in lines:
-                            cols = line.split("*")
-                            if line and cols[0] == "ST":
-                                document_code = cols[1]
-                            if line and cols[0] == "GS" and cols[1] == "PO":
-                                partner_code = cols[2]
-                                dt = cols[4] + cols[5]
-                                # Get datetime format from raw_message file
-                                dt_str = (
-                                    dt[:4]
-                                    + "-"
-                                    + dt[4:6]
-                                    + "-"
-                                    + dt[6:8]
-                                    + " "
-                                    + dt[8:10]
-                                    + ":"
-                                    + dt[10:12]
-                                    + ":00"
-                                )
-                                rec_dt = datetime.strptime(dt_str, "%Y-%m-%d %H:%M:%S")
-
-                        if document_code and partner_code:
-                            # Get document type from partner
-                            partner_rec = partner_obj.search(
-                                [("edi_code", "=", partner_code)]
-                            )
-                            if partner_rec:
-                                for rec in partner_rec:
-                                    for doc in rec.edi_partner_document_ids:
-                                        if doc.code == document_code:
-                                            doc_id = doc.edi_supported_doc_id.id
-
-                        vals = {
-                            "direction": "in",
-                            "edi_provider_id": company_id.edi_provider_id.id,
-                            "raw_message": str_msg,
-                            "edi_supported_doc_id": doc_id or False,
-                            "state": "new",
-                            "received_date": rec_dt,
-                            "file_name": file,
-                        }
-                        # Create new queue for each file
-                        self.create(vals)
-
-                        # Move current file to Archived directory
-                        if company_id.edi_provider_id.archive_local:
-                            archive_file_path = os.path.join(archive_path, file)
-                            shutil.move(src_file_path, archive_file_path)
-                        else:
-                            _logger.error("Local Archive not setup !!!")
-
-                    except Exception as e:
-                        _logger.error(
-                            "Exception while while executing Inbound Message File: %s.\n Original Traceback:\n%s",
-                            e,
-                            Exception,
-                        )
+            self.create_new_queue(in_path, company_id, archive_path)
         return
 
     def _preparse_raw_message(self):
@@ -194,7 +197,7 @@ class EdiMessageQueue(models.Model):
             ]
             if not ST_lines or not BEG_lines:
                 raise exceptions.UserError(
-                    "Incorrect file format. BEG and ST sections must be present."
+                    _("Incorrect file format. BEG and ST sections must be present.")
                 )
             # Find the buyer Partner record
             #             buyer_code = BEG_lines[0][3]
@@ -202,14 +205,18 @@ class EdiMessageQueue(models.Model):
             buyer = Partner.search([("edi_code", "=", buyer_code)])
             if not buyer:
                 raise exceptions.UserError(
-                    "Partner for buyer code %s could not be found. "
-                    "Configure the EDI Code field in the appropriate Partner."
+                    _(
+                        "Partner for buyer code %s could not be found. "
+                        "Configure the EDI Code field in the appropriate Partner."
+                    )
                     % (buyer_code,)
                 )
             if len(buyer) > 1:
                 raise exceptions.UserError(
-                    'Found too many Partners for buyer code "%s". '
-                    "Ensure that there is only one Partner with this EDI Code."
+                    _(
+                        'Found too many Partners for buyer code "%s". '
+                        "Ensure that there is only one Partner with this EDI Code."
+                    )
                     % (buyer_code,)
                 )
             self.partner_id = buyer
@@ -220,14 +227,19 @@ class EdiMessageQueue(models.Model):
             )
             if not doc_struct:
                 raise exceptions.UserError(
-                    'Partner %s has no Document Structure defined for code "%s". '
-                    "Configure the EDI Documents for this Partner."
+                    _(
+                        'Partner %s has no Document Structure defined for code "%s". '
+                        "Configure the EDI Documents for this Partner."
+                    )
                     % (buyer_code, doc_code)
                 )
             if len(doc_struct) > 1:
                 raise exceptions.UserError(
-                    'Partner %s has too many Document Structures for code "%s". '
-                    "Ensure that the Partner has only one Document Structure with this EDI Code."
+                    _(
+                        'Partner %s has too many Document Structures for code "%s". '
+                        "Ensure that the Partner has only one Document"
+                        "Structure with this EDI Code."
+                    )
                     % (buyer_code, doc_code)
                 )
             self.edi_supported_doc_id = doc_struct.edi_supported_doc_id
@@ -276,11 +288,87 @@ class EdiMessageQueue(models.Model):
                 inbound.state = "error"
                 inbound.log_message = str(Exception) + str(e)
                 _logger.error(
-                    "Exception while while executing parsing raw message: %s.\n Original Traceback:\n%s",
+                    "Exception while while executing parsing raw message: %s.\n"
+                    "Original Traceback:\n%s",
                     e,
                     Exception,
                 )
         return True
+
+    def create_checkin_csn_new_queue(self, company_id, in_path, archive_path):
+        # Get all files from Inbound Location
+        inbound_files = os.listdir(in_path)
+        if inbound_files:
+            partner_obj = self.env["res.partner"]
+            for file in inbound_files:
+                try:
+                    # Copy file data in raw message
+                    src_file_path = os.path.join(in_path, file)
+                    str_msg = open(src_file_path, "r").read()
+
+                    # Get Type of Document from raw_message
+                    # split raw message into lines
+                    lines = str_msg.split("\n")
+                    document_code = partner_code = ""
+                    doc_id = False
+                    rec_dt = fields.Date.today()
+
+                    linecount = 0
+
+                    for line in lines:
+
+                        linecount += 1
+                        cols = commaSeparatedList.parseString(unidecode(line)).asList()
+
+                        # Header Line, skip
+                        if cols[0] == "TRANSACTION ID":
+                            continue
+
+                        # 2 - n lines contain header and detail
+                        # read header fields from line 2, skip for the rest
+                        if linecount == 2:
+                            document_code = cols[0]
+                            partner_code = cols[1]
+                            break
+
+                    if document_code and partner_code:
+                        # Get document type from partner
+                        partner_rec = partner_obj.search(
+                            [("edi_code", "=", partner_code)]
+                        )
+                        if partner_rec:
+                            for rec in partner_rec:
+                                for doc in rec.edi_partner_document_ids:
+                                    if doc.code == document_code:
+                                        doc_id = doc.edi_supported_doc_id.id
+
+                    vals = {
+                        "direction": "in",
+                        "edi_provider_id": company_id.edi_provider_id.id,
+                        "raw_message": str_msg,
+                        "edi_supported_doc_id": doc_id or False,
+                        "state": "new",
+                        "received_date": rec_dt,
+                        "file_name": file,
+                        "partner_id": partner_rec.id,
+                    }
+                    # Create new queue for each file
+                    self.create(vals)
+
+                    # Move current file to Archived directory
+                    if company_id.edi_provider_id.archive_local:
+                        archive_file_path = os.path.join(archive_path, file)
+                        shutil.move(src_file_path, archive_file_path)
+                    else:
+                        _logger.error("Local Archive not setup !!!")
+
+                except Exception as e:
+                    _logger.error(
+                        "Exception while while executing Inbound Message File: %s.\n"
+                        "Original Traceback:\n%s",
+                        e,
+                        Exception,
+                    )
 
     def checkin_csv_inbound_message(self):
         # Get company and check EDI Providers used
@@ -320,82 +408,200 @@ class EdiMessageQueue(models.Model):
                         "Path not defined for Archived Inbound Message for provider %s",
                         company_id.edi_provider_id.name,
                     )
+            self.create_checkin_csn_new_queue(company_id, in_path, archive_path)
 
-            # Get all files from Inbound Location
-            inbound_files = os.listdir(in_path)
-            if inbound_files:
-                partner_obj = self.env["res.partner"]
-                for file in inbound_files:
-                    try:
-                        # Copy file data in raw message
-                        src_file_path = os.path.join(in_path, file)
-                        str_msg = open(src_file_path, "r").read()
-
-                        # Get Type of Document from raw_message
-                        # split raw message into lines
-                        lines = str_msg.split("\n")
-                        document_code = partner_code = ""
-                        doc_id = False
-                        rec_dt = fields.Date.today()
-
-                        linecount = 0
-
-                        for line in lines:
-
-                            linecount += 1
-                            cols = commaSeparatedList.parseString(
-                                unidecode(line)
-                            ).asList()
-
-                            # Header Line, skip
-                            if cols[0] == "TRANSACTION ID":
-                                continue
-
-                            # 2 - n lines contain header and detail
-                            # read header fields from line 2, skip for the rest
-                            if linecount == 2:
-                                document_code = cols[0]
-                                partner_code = cols[1]
-                                break
-
-                        if document_code and partner_code:
-                            # Get document type from partner
-                            partner_rec = partner_obj.search(
-                                [("edi_code", "=", partner_code)]
-                            )
-                            if partner_rec:
-                                for rec in partner_rec:
-                                    for doc in rec.edi_partner_document_ids:
-                                        if doc.code == document_code:
-                                            doc_id = doc.edi_supported_doc_id.id
-
-                        vals = {
-                            "direction": "in",
-                            "edi_provider_id": company_id.edi_provider_id.id,
-                            "raw_message": str_msg,
-                            "edi_supported_doc_id": doc_id or False,
-                            "state": "new",
-                            "received_date": rec_dt,
-                            "file_name": file,
-                            "partner_id": partner_rec.id,
-                        }
-                        # Create new queue for each file
-                        self.create(vals)
-
-                        # Move current file to Archived directory
-                        if company_id.edi_provider_id.archive_local:
-                            archive_file_path = os.path.join(archive_path, file)
-                            shutil.move(src_file_path, archive_file_path)
-                        else:
-                            _logger.error("Local Archive not setup !!!")
-
-                    except Exception as e:
-                        _logger.error(
-                            "Exception while while executing Inbound Message File: %s.\n Original Traceback:\n%s",
-                            e,
-                            Exception,
-                        )
         return
+
+    def get_order_line_dict(self, order_dict, line_dict, lines_list):
+        if order_dict.get("partner_id", False):
+            line_dict["partner_id"] = order_dict.get("partner_id")
+        model = self.env["ir.model"].search([("model", "=", "product.product")])
+        product_id = line_dict.get("product_id", False)
+        edi_product_code = line_dict.get("edi_product_code", False)
+        barcode = line_dict.get("barcode", False)
+        partner_id = line_dict.get("partner_id", False)
+        if not partner_id:
+            raise Exception("Partner ID is not resolved in Line Dict")
+        if not edi_product_code:
+            line_dict["edi_product_code"] = product_id
+        if not barcode:
+            line_dict["barcode"] = product_id
+        domain = """[
+            "|",
+            "|",
+            ("default_code", "ilike", "%(product_id)s"),
+            ("product_tmpl_id.barcode", "=", "%(barcode)s"),
+            "&",
+            (
+                "product_tmpl_id.product_customer_code_ids.partner_id.id",
+                "=",
+                "%(partner_id)d",
+            ),
+            (
+                "product_tmpl_id.product_customer_code_ids.product_code",
+                "=",
+                "%(edi_product_code)s",
+            ),
+        ]"""
+        lookup_id = self._parse_raw_csv_lookup("product_id", model, domain, line_dict)
+        line_dict["product_id"] = lookup_id.id
+        name = line_dict.get("name", False)
+        line_dict["name"] = not name and lookup_id.name or name
+        line_dict.pop("barcode")
+        line_dict.pop("partner_id")
+        line_dict.pop("product_uom")
+
+        if line_dict.get("product_id") is False:
+            self.log_message = "Product ID could not be found!"
+            raise Exception("Product ID could not be found!")
+
+        lines_list.append((0, 0, line_dict))
+
+    def get_details_line_skip_header(self, order_dict, line_dict, lines_list):
+        if order_dict.get("partner_id", False):
+            line_dict["partner_id"] = order_dict.get("partner_id")
+        model = self.env["ir.model"].search([("model", "=", "product.product")])
+        product_id = line_dict.get("product_id", False)
+        edi_product_code = line_dict.get("edi_product_code", False)
+        barcode = line_dict.get("barcode", False)
+        partner_id = line_dict.get("partner_id", False)
+        if not partner_id:
+            raise Exception("Partner ID is not resolved in Line Dict")
+        if not edi_product_code:
+            line_dict["edi_product_code"] = product_id
+        if not barcode:
+            line_dict["barcode"] = product_id
+        domain = """[
+            "|",
+            "|",
+            ("default_code", "ilike", "%(product_id)s"),
+            ("product_tmpl_id.barcode", "=", "%(barcode)s"),
+            "&",
+            (
+                "product_tmpl_id.product_customer_code_ids.partner_id.id",
+                "=",
+                "%(partner_id)d",
+            ),
+            (
+                "product_tmpl_id.product_customer_code_ids.product_code",
+                "=",
+                "%(edi_product_code)s",
+            ),
+        ]"""
+        lookup_id = self._parse_raw_csv_lookup("product_id", model, domain, line_dict)
+        line_dict["product_id"] = lookup_id.id
+        name = line_dict.get("name", False)
+        line_dict["name"] = not name and lookup_id.name or name
+        line_dict.pop("barcode")
+        line_dict.pop("partner_id")
+        line_dict.pop("product_uom")
+
+        if line_dict.get("product_id") is False:
+            self.log_message = "Product ID could not be found!"
+            raise Exception("Product ID could not be found!")
+
+        lines_list.append((0, 0, line_dict))
+
+    def read_data_lines(self, cols, header_dict, order_dict, line_dict):
+        for idx, col in enumerate(cols):
+            item = header_dict.get(idx, False)
+
+            # if it is a header field
+            if item and item[2] == "head":
+                order_dict[header_dict[idx][1]] = col or False
+
+                # lookup
+                if item[3] and item[4]:
+                    lookup_id = self._parse_raw_csv_lookup(
+                        item[1], item[3], item[4], order_dict
+                    )
+                    order_dict[header_dict[idx][1]] = (
+                        lookup_id and lookup_id.id or False
+                    )
+
+            elif item and item[2] == "line":
+                line_dict[header_dict[idx][1]] = col or False
+
+                # lookup
+                if item[3] and item[4]:
+                    lookup_id = self._parse_raw_csv_lookup(
+                        item[1], item[3], item[4], line_dict
+                    )
+                    if lookup_id:
+                        line_dict[header_dict[idx][1]] = (
+                            lookup_id and lookup_id.id or False
+                        )
+
+    def get_lines_to_add_order_dict(self, raw_dict):
+        for record in self:
+            line_count = 0
+            lines_list = []
+            header_dict = {}
+            order_dict = {}
+
+            for line in record.raw_message.split("\n"):
+
+                if not line:
+                    continue
+                line_dict = {}
+                line_count += 1
+                cols = commaSeparatedList.parseString(unidecode(line)).asList()
+
+                # column header line
+                if line_count == 1:
+                    header_cols = cols
+                    for idx, name in enumerate(header_cols):
+                        if raw_dict.get(name, False):
+                            header_dict[idx] = raw_dict[name]
+
+                # reading data lines
+                elif line_count == 2:
+                    self.read_data_lines(cols, header_dict, order_dict, line_dict)
+                    if line_dict:
+                        self.get_order_line_dict(order_dict, line_dict, lines_list)
+
+                # only detail lines, skip header columns
+                else:
+                    for idx, col in enumerate(cols):
+                        item = header_dict.get(idx, False)
+
+                        # if it is a header field
+                        if item and item[2] == "head":
+                            continue
+
+                        elif item and item[2] == "line":
+                            line_dict[header_dict[idx][1]] = col or False
+
+                            # lookup
+                            if item[3] and item[4]:
+                                lookup_id = self._parse_raw_csv_lookup(
+                                    item[1], item[3], item[4], line_dict
+                                )
+                                if lookup_id:
+                                    line_dict[header_dict[idx][1]] = (
+                                        lookup_id and lookup_id.id
+                                    )
+
+                    if line_dict:
+                        self.get_details_line_skip_header(
+                            order_dict, line_dict, lines_list
+                        )
+
+            # add the lines list to the order_dict
+            order_dict["order_line"] = lines_list
+
+            self.pre_validate(order_dict)
+
+            self.rec_created = self.env[self.edi_model_id.model].create(order_dict)
+
+            # For model specific validations
+            self.validate_document(self.env["sale.order"].browse(self.rec_created))
+
+            # Update state
+            self.state = "processed"
+
+            # Clear logs
+            self.log_message = False
 
     def create_850(self):
         """Initial raw message parse, to find the Document Structure to use
@@ -417,183 +623,146 @@ class EdiMessageQueue(models.Model):
                     item.lookup_domain,
                     item.line_prefix,
                 )
-
-            for record in self:
-
-                line_count = 0
-                lines_list = []
-                header_dict = {}
-                order_dict = {}
-
-                for line in record.raw_message.split("\n"):
-
-                    if not line:
-                        continue
-                    line_dict = {}
-                    line_count += 1
-                    cols = commaSeparatedList.parseString(unidecode(line)).asList()
-
-                    # column header line
-                    if line_count == 1:
-                        header_cols = cols
-                        for idx, name in enumerate(header_cols):
-                            if raw_dict.get(name, False):
-                                header_dict[idx] = raw_dict[name]
-
-                    # reading data lines
-                    elif line_count == 2:
-
-                        for idx, col in enumerate(cols):
-                            item = header_dict.get(idx, False)
-
-                            # if it is a header field
-                            if item and item[2] == "head":
-                                order_dict[header_dict[idx][1]] = col or False
-
-                                # lookup
-                                if item[3] and item[4]:
-                                    lookup_id = self._parse_raw_csv_lookup(
-                                        item[1], item[3], item[4], order_dict
-                                    )
-                                    order_dict[header_dict[idx][1]] = (
-                                        lookup_id and lookup_id.id or False
-                                    )
-
-                            elif item and item[2] == "line":
-                                line_dict[header_dict[idx][1]] = col or False
-
-                                # lookup
-                                if item[3] and item[4]:
-                                    lookup_id = self._parse_raw_csv_lookup(
-                                        item[1], item[3], item[4], line_dict
-                                    )
-                                    if lookup_id:
-                                        line_dict[header_dict[idx][1]] = (
-                                            lookup_id and lookup_id.id or False
-                                        )
-
-                        if line_dict:
-                            if order_dict.get("partner_id", False):
-                                line_dict["partner_id"] = order_dict.get("partner_id")
-                            model = self.env["ir.model"].search(
-                                [("model", "=", "product.product")]
-                            )
-                            product_id = line_dict.get("product_id", False)
-                            edi_product_code = line_dict.get("edi_product_code", False)
-                            barcode = line_dict.get("barcode", False)
-                            partner_id = line_dict.get("partner_id", False)
-                            if not partner_id:
-                                raise Exception(
-                                    "Partner ID is not resolved in Line Dict"
-                                )
-                            if not edi_product_code:
-                                line_dict["edi_product_code"] = product_id
-                            if not barcode:
-                                line_dict["barcode"] = product_id
-                            domain = "['|', '|', ('default_code', 'ilike', '%(product_id)s'), ('product_tmpl_id.barcode', '=', '%(barcode)s'), '&', ('product_tmpl_id.product_customer_code_ids.partner_id.id', '=', '%(partner_id)d'), ('product_tmpl_id.product_customer_code_ids.product_code', '=', '%(edi_product_code)s')]"
-                            lookup_id = self._parse_raw_csv_lookup(
-                                "product_id", model, domain, line_dict
-                            )
-                            line_dict["product_id"] = lookup_id.id
-                            name = line_dict.get("name", False)
-                            line_dict["name"] = not name and lookup_id.name or name
-                            line_dict.pop("barcode")
-                            line_dict.pop("partner_id")
-                            line_dict.pop("product_uom")
-
-                            if line_dict.get("product_id") is False:
-                                self.log_message = "Product ID could not be found!"
-                                raise Exception("Product ID could not be found!")
-
-                            lines_list.append((0, 0, line_dict))
-
-                    # only detail lines, skip header columns
-                    else:
-                        for idx, col in enumerate(cols):
-                            item = header_dict.get(idx, False)
-
-                            # if it is a header field
-                            if item and item[2] == "head":
-                                continue
-
-                            elif item and item[2] == "line":
-                                line_dict[header_dict[idx][1]] = col or False
-
-                                # lookup
-                                if item[3] and item[4]:
-                                    lookup_id = self._parse_raw_csv_lookup(
-                                        item[1], item[3], item[4], line_dict
-                                    )
-                                    if lookup_id:
-                                        line_dict[header_dict[idx][1]] = (
-                                            lookup_id and lookup_id.id
-                                        )
-
-                        if line_dict:
-                            if order_dict.get("partner_id", False):
-                                line_dict["partner_id"] = order_dict.get("partner_id")
-                            model = self.env["ir.model"].search(
-                                [("model", "=", "product.product")]
-                            )
-                            product_id = line_dict.get("product_id", False)
-                            edi_product_code = line_dict.get("edi_product_code", False)
-                            barcode = line_dict.get("barcode", False)
-                            partner_id = line_dict.get("partner_id", False)
-                            if not partner_id:
-                                raise Exception(
-                                    "Partner ID is not resolved in Line Dict"
-                                )
-                            if not edi_product_code:
-                                line_dict["edi_product_code"] = product_id
-                            if not barcode:
-                                line_dict["barcode"] = product_id
-                            domain = "['|', '|', ('default_code', 'ilike', '%(product_id)s'), ('product_tmpl_id.barcode', '=', '%(barcode)s'), '&', ('product_tmpl_id.product_customer_code_ids.partner_id.id', '=', '%(partner_id)d'), ('product_tmpl_id.product_customer_code_ids.product_code', '=', '%(edi_product_code)s')]"
-                            lookup_id = self._parse_raw_csv_lookup(
-                                "product_id", model, domain, line_dict
-                            )
-                            line_dict["product_id"] = lookup_id.id
-                            name = line_dict.get("name", False)
-                            line_dict["name"] = not name and lookup_id.name or name
-                            line_dict.pop("barcode")
-                            line_dict.pop("partner_id")
-                            line_dict.pop("product_uom")
-
-                            if line_dict.get("product_id") is False:
-                                self.log_message = "Product ID could not be found!"
-                                raise Exception("Product ID could not be found!")
-
-                            lines_list.append((0, 0, line_dict))
-
-                # add the lines list to the order_dict
-                order_dict["order_line"] = lines_list
-
-                self.pre_validate(order_dict)
-
-                self.rec_created = self.env[self.edi_model_id.model].create(order_dict)
-
-                # For model specific validations
-                self.validate_document(self.env["sale.order"].browse(self.rec_created))
-
-                # Update state
-                self.state = "processed"
-
-                # Clear logs
-                self.log_message = False
+            self.get_lines_to_add_order_dict(raw_dict)
 
         except Exception as e:
             self.state = "error"
             self.log_message = str(Exception) + str(e)
             _logger.error(
-                "Exception while while executing parsing raw message: %s.\n Original Traceback:\n%s",
+                """Exception while while executing parsing
+                   raw message: %s.\n Original Traceback:\n%s""",
                 e,
                 Exception,
             )
 
         return True
 
+    def get_partner_shipping_address(self, partner_rec, order_dict):
+        partner_ship = partner_rec.is_drop_third_party
+        if partner_ship:
+            order_dict["third_party_exists"] = True
+            if not order_dict["country_id"]:
+                order_dict["country_id"] = partner_rec.country_id.code
+            if "country_id" in order_dict:
+                country = self.env["res.country"].search(
+                    [("code", "=", order_dict.get("country_id"))], limit=1
+                )
+                order_dict["country_id"] = country.id
+            if "state_id" in order_dict:
+                state = self.env["res.country.state"].search(
+                    [
+                        ("code", "=", order_dict.get("state_id")),
+                        ("country_id", "=", order_dict.get("country_id")),
+                    ],
+                    limit=1,
+                )
+                order_dict["state_id"] = state.id
+        else:
+
+            model = self.env["ir.model"].search([("model", "=", "res.partner")])
+            # find shipping partner from the shipping address
+            if order_dict.get("attn", False):
+                partner_shipping_id = self._parse_raw_csv_lookup(
+                    "name",
+                    model,
+                    "[('name', 'ilike', '%(attn)s')]",
+                    {"attn": order_dict.get("attn", False)},
+                )
+
+            if order_dict.get("store_number", False):
+                partner_shipping_id = self._parse_raw_csv_lookup(
+                    "name",
+                    model,
+                    "[('store_number', 'ilike', '%(store_number)s')]",
+                    {"store_number": order_dict.get("store_number", False)},
+                )
+
+            if not partner_shipping_id:
+                partner_shipping_id = partner_rec
+
+            order_dict["partner_shipping_id"] = partner_shipping_id.id
+
+            # clear third party fields
+            order_dict.pop("attn")
+            order_dict.pop("street1")
+            order_dict.pop("street2")
+            order_dict.pop("city")
+            order_dict.pop("state_id")
+            order_dict.pop("country_id")
+            order_dict.pop("zip")
+            order_dict.pop("phone")
+        return order_dict
+
+    def get_warehouse_details(self, partner_rec, order_dict):
+        # warehouse_id = partner_rec.warehouse_id.id or False
+        # carrier_id = False
+        # route_id = False
+
+        result = self.env["partner.shipping.method"].get_warehouse_details(
+            partner_id=partner_rec.id, rule="fixed", mode="edi"
+        )
+
+        if not result[0]:
+            result = self.env["partner.shipping.method"].get_warehouse_details(
+                partner_id=partner_rec.id,
+                rule="address",
+                zipcode=order_dict["third_party_exists"]
+                and order_dict["zip"]
+                or partner_rec.zip,
+                mode="edi",
+            )
+
+        if result[0]:
+            order_dict["warehouse_id"] = result[1]
+            order_dict["route_id"] = result[2]
+            order_dict["carrier_id"] = result[3]
+            if result[4]:
+                order_dict["ups_carrier_account"] = result[4][0]
+                order_dict["fedex_bill_my_account"] = result[4][1]
+                order_dict["fedex_carrier_account_retail"] = result[4][2]
+                order_dict["fedex_carrier_account_dropship"] = result[4][3]
+        return order_dict
+
+    def get_delivery_account_details(
+        self, warehouse, partner_rec, ship_method, order_dict
+    ):
+        warehouse_id = self.env["stock.warehouse"].search(
+            [("ship_from_code", "=", warehouse)]
+        )
+        # model = self.env["ir.model"].search([("model", "=", "partner.shipping.method")])
+        result = self.env["partner.shipping.method"].get_warehouse_details(
+            partner_id=partner_rec.id,
+            warehouse=warehouse_id.id,
+            rule="edi",
+            code=ship_method,
+        )
+        order_dict["ship_method_id"] = result[0]
+        order_dict["warehouse_id"] = result[1]
+        order_dict["route_id"] = result[2]
+        order_dict["carrier_id"] = result[3]
+
+        # validate for billing account on the delivery method
+        if partner_rec.fedex_bill_my_account:
+            if result[4][1]:
+                order_dict["fedex_bill_my_account"] = partner_rec.fedex_bill_my_account
+                order_dict["fedex_carrier_account_retail"] = result[4][2]
+                order_dict["fedex_carrier_account_dropship"] = result[4][3]
+            else:
+                raise Exception(
+                    "FedEx Carrier Account needed to bill to Customer for shipping!"
+                )
+        else:
+            if result[4][0]:
+                order_dict["ups_carrier_account"] = result[4][0]
+
+            else:
+                raise Exception(
+                    "UPS Carrier Account needed to bill to Customer for shipping!"
+                )
+        return order_dict
+
     @api.model
     def pre_validate(self, order_dict):
-
         try:
             if order_dict:
 
@@ -648,64 +817,8 @@ class EdiMessageQueue(models.Model):
 
                 # Check if partner is drop ship
                 if order_dict.get("partner_id", False):
-                    partner_ship = partner_rec.is_drop_third_party
-
                     # validate shipping address
-                    if partner_ship:
-                        order_dict["third_party_exists"] = True
-                        if not order_dict["country_id"]:
-                            order_dict["country_id"] = partner_rec.country_id.code
-                        if "country_id" in order_dict:
-                            country = self.env["res.country"].search(
-                                [("code", "=", order_dict.get("country_id"))], limit=1
-                            )
-                            order_dict["country_id"] = country.id
-                        if "state_id" in order_dict:
-                            state = self.env["res.country.state"].search(
-                                [
-                                    ("code", "=", order_dict.get("state_id")),
-                                    ("country_id", "=", order_dict.get("country_id")),
-                                ],
-                                limit=1,
-                            )
-                            order_dict["state_id"] = state.id
-                    else:
-
-                        model = self.env["ir.model"].search(
-                            [("model", "=", "res.partner")]
-                        )
-                        # find shipping partner from the shipping address
-                        if order_dict.get("attn", False):
-                            partner_shipping_id = self._parse_raw_csv_lookup(
-                                "name",
-                                model,
-                                "[('name', 'ilike', '%(attn)s')]",
-                                {"attn": order_dict.get("attn", False)},
-                            )
-
-                        if order_dict.get("store_number", False):
-                            partner_shipping_id = self._parse_raw_csv_lookup(
-                                "name",
-                                model,
-                                "[('store_number', 'ilike', '%(store_number)s')]",
-                                {"store_number": order_dict.get("store_number", False)},
-                            )
-
-                        if not partner_shipping_id:
-                            partner_shipping_id = partner_rec
-
-                        order_dict["partner_shipping_id"] = partner_shipping_id.id
-
-                        # clear third party fields
-                        order_dict.pop("attn")
-                        order_dict.pop("street1")
-                        order_dict.pop("street2")
-                        order_dict.pop("city")
-                        order_dict.pop("state_id")
-                        order_dict.pop("country_id")
-                        order_dict.pop("zip")
-                        order_dict.pop("phone")
-
+                    self.get_partner_shipping_address(partner_rec, order_dict)
                     order_dict["partner_invoice_id"] = partner_rec.id
 
                 # ship method resolution
@@ -717,75 +830,11 @@ class EdiMessageQueue(models.Model):
                     )
 
                 if not warehouse:
-                    warehouse_id = partner_rec.warehouse_id.id or False
-                    carrier_id = False
-                    route_id = False
-
-                    result = self.env["partner.shipping.method"].get_warehouse_details(
-                        partner_id=partner_rec.id, rule="fixed", mode="edi"
-                    )
-
-                    if not result[0]:
-                        result = self.env[
-                            "partner.shipping.method"
-                        ].get_warehouse_details(
-                            partner_id=partner_rec.id,
-                            rule="address",
-                            zipcode=order_dict["third_party_exists"]
-                            and order_dict["zip"]
-                            or partner_rec.zip,
-                            mode="edi",
-                        )
-
-                    if result[0]:
-                        order_dict["warehouse_id"] = result[1]
-                        order_dict["route_id"] = result[2]
-                        order_dict["carrier_id"] = result[3]
-                        if result[4]:
-                            order_dict["ups_carrier_account"] = result[4][0]
-                            order_dict["fedex_bill_my_account"] = result[4][1]
-                            order_dict["fedex_carrier_account_retail"] = result[4][2]
-                            order_dict["fedex_carrier_account_dropship"] = result[4][3]
-
+                    self.get_warehouse_details(partner_rec, order_dict)
                 if ship_method and warehouse:
-                    warehouse_id = self.env["stock.warehouse"].search(
-                        [("ship_from_code", "=", warehouse)]
+                    self.get_delivery_account_details(
+                        warehouse, partner_rec, ship_method, order_dict
                     )
-                    model = self.env["ir.model"].search(
-                        [("model", "=", "partner.shipping.method")]
-                    )
-                    result = self.env["partner.shipping.method"].get_warehouse_details(
-                        partner_id=partner_rec.id,
-                        warehouse=warehouse_id.id,
-                        rule="edi",
-                        code=ship_method,
-                    )
-                    order_dict["ship_method_id"] = result[0]
-                    order_dict["warehouse_id"] = result[1]
-                    order_dict["route_id"] = result[2]
-                    order_dict["carrier_id"] = result[3]
-
-                    # validate for billing account on the delivery method
-                    if partner_rec.fedex_bill_my_account:
-                        if result[4][1]:
-                            order_dict[
-                                "fedex_bill_my_account"
-                            ] = partner_rec.fedex_bill_my_account
-                            order_dict["fedex_carrier_account_retail"] = result[4][2]
-                            order_dict["fedex_carrier_account_dropship"] = result[4][3]
-                        else:
-                            raise Exception(
-                                "FedEx Carrier Account needed to bill to Customer for shipping!"
-                            )
-                    else:
-                        if result[4][0]:
-                            order_dict["ups_carrier_account"] = result[4][0]
-
-                        else:
-                            raise Exception(
-                                "UPS Carrier Account needed to bill to Customer for shipping!"
-                            )
-
                 # Make value as datetime format for date_order
                 # and commitment_date to fetch right datetime
                 if order_dict.get("date_order", False):
@@ -806,7 +855,8 @@ class EdiMessageQueue(models.Model):
             self.state = "error"
             self.log_message = str(Exception) + str(e)
             _logger.error(
-                "Exception while while executing parsing raw message: %s.\n Original Traceback:\n%s",
+                """Exception while while executing parsing
+                raw message: %s.\n Original Traceback:\n%s""",
                 e,
                 Exception,
             )
@@ -824,9 +874,9 @@ class EdiMessageQueue(models.Model):
             )
 
             if not record.ship_from_code:
-                warehouse_id = record.partner_id.warehouse_id.id or False
-                carrier_id = False
-                route_id = False
+                # warehouse_id = record.partner_id.warehouse_id.id or False
+                # carrier_id = False
+                # route_id = False
 
                 result = self.env["partner.shipping.method"].get_warehouse_details(
                     partner_id=record.partner_id.id,
@@ -905,7 +955,8 @@ class EdiMessageQueue(models.Model):
                 inbound.state = "error"
                 inbound.log_message = str(Exception) + str(e)
                 _logger.error(
-                    "Exception while while executing parsing raw message: %s.\n Original Traceback:\n%s",
+                    """Exception while while executing parsing
+                    raw message: %s.\n Original Traceback:\n%s""",
                     e,
                     Exception,
                 )
@@ -931,7 +982,8 @@ class EdiMessageQueue(models.Model):
                 inbound.state = "error"
                 inbound.log_message = str(Exception) + str(e)
                 _logger.error(
-                    "Exception while while executing parsing raw message: %s.\n Original Traceback:\n%s",
+                    """Exception while while executing parsing
+                     raw message: %s.\n Original Traceback:\n%s""",
                     e,
                     Exception,
                 )
@@ -975,7 +1027,8 @@ class EdiMessageQueue(models.Model):
 
                 except Exception as e:
                     _logger.error(
-                        "Exception while while executing Checkout Inbound Message File: %s.\n Original Traceback:\n%s",
+                        """Exception while while executing Checkout
+                        Inbound Message File: %s.\n Original Traceback:\n%s""",
                         e,
                         Exception,
                     )

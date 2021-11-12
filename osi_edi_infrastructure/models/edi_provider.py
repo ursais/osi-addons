@@ -5,7 +5,7 @@ import logging
 
 from odoo import api, fields, models
 
-from odoo.addons.osi_edi_infrastructure.models.ftp import Ftp
+from . import Ftp
 
 _logger = logging.getLogger(__name__)
 
@@ -69,7 +69,7 @@ class EdiProvider(models.Model):
                 )
                 # download_files
                 if not ftp.download_files(srcpath=REMOTE_EXPORT, dstpath=INBOUND_DIR):
-                    print("Error downloading files")
+                    _logger.error("Error downloading files")
 
                 # clear remote folder for downloaded files
                 if MODE and ftp.archive_remote:

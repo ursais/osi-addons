@@ -1,47 +1,50 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <odoo>
 
-	<!-- Copyright 2021 Open Source Integrators License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+    <!-- Copyright 2021 Open Source Integrators License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 
-	<!-- EDI Company Doc List view -->
-	<record id="view_edi_company_doc_list" model="ir.ui.view">
-		<field name="name">edi.company.doc.list</field>
-		<field name="model">edi.company.doc</field>
-		<field name="arch" type="xml">
-			<tree string="EDI Company Doc">
-				<field name="company_id" invisible="1"/>
-				<field name="edi_supported_doc_id" />
-			</tree>
-		</field>
-	</record>
+    <!-- EDI Company Doc List view -->
+    <record id="view_edi_company_doc_list" model="ir.ui.view">
+        <field name="name">edi.company.doc.list</field>
+        <field name="model">edi.company.doc</field>
+        <field name="arch" type="xml">
+            <tree string="EDI Company Doc">
+                <field name="company_id" invisible="1" />
+                <field name="edi_supported_doc_id" />
+            </tree>
+        </field>
+    </record>
 
-	<!-- EDI Company Doc Form view -->
-	<record id="view_edi_company_doc_form" model="ir.ui.view">
-		<field name="name">edi.company.doc.form</field>
-		<field name="model">edi.company.doc</field>
-		<field name="arch" type="xml">
-			<form string="EDI Company Doc">
-				<sheet>
-					<group>
-						<group>
-							<field name="company_id" />
-							<field name="edi_supported_doc_id" />
-						</group>
-					</group>
-				</sheet>
-			</form>
-		</field>
-	</record>
+    <!-- EDI Company Doc Form view -->
+    <record id="view_edi_company_doc_form" model="ir.ui.view">
+        <field name="name">edi.company.doc.form</field>
+        <field name="model">edi.company.doc</field>
+        <field name="arch" type="xml">
+            <form string="EDI Company Doc">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="company_id" />
+                            <field name="edi_supported_doc_id" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
 
-	<!-- Action of EDI Company Doc -->
-	<record id="action_edi_company_doc" model="ir.actions.act_window">
-		<field name="name">EDI Company Documents</field>
-		<field name="res_model">edi.company.doc</field>
-		<field name="view_mode">tree,form</field>
-		<field name="view_id" ref="view_edi_company_doc_list" />
-	</record>
+    <!-- Action of EDI Company Doc -->
+    <record id="action_edi_company_doc" model="ir.actions.act_window">
+        <field name="name">EDI Company Documents</field>
+        <field name="res_model">edi.company.doc</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_edi_company_doc_list" />
+    </record>
 
-	<!-- Menu for EDI Company Doc -->
-	<menuitem action="action_edi_company_doc" id="menu_action_edi_company_doc"
-		parent="menu_edi" />
+    <!-- Menu for EDI Company Doc -->
+    <menuitem
+        action="action_edi_company_doc"
+        id="menu_action_edi_company_doc"
+        parent="menu_edi"
+    />
 </odoo>
