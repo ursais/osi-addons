@@ -1,8 +1,11 @@
 import ftplib
+import logging
 import os
 import shutil
 from os import chdir, listdir
 from os.path import isfile, join
+
+_logger = logging.getLogger(__name__)
 
 # pylint: disable=R0201
 # pylint: disable=R0913
@@ -64,7 +67,7 @@ class Ftp:
             return ftp
 
         except ftplib.error_perm:
-            print("Error connecting to FTP server.")
+            _logger.debug("Error connecting to FTP server.")
 
     def disconnect(self):
         """
@@ -93,7 +96,7 @@ class Ftp:
             files = [" ".join(item.split()[8:]) for item in items if item[0] == "-"]
 
         # process files
-        for idx, file in enumerate(files):
+        for _idx, file in enumerate(files):
             host_file = join(dstpath, file)
             remote_file = join(srcpath, file)
             try:
@@ -110,7 +113,7 @@ class Ftp:
                         )
 
             except ftplib.error_perm:
-                print("Error downloading files")
+                _logger.debug("Error downloading files")
 
         return True
 
@@ -120,7 +123,7 @@ class Ftp:
         """
 
         if not self.archive_remote:
-            print("Archive not set for remote. Cannot delete.")
+            _logger.debug("Archive not set for remote. Cannot delete.")
 
         files = False
 
@@ -142,7 +145,7 @@ class Ftp:
             try:
                 self.connection.delete(file)
             except ftplib.error_perm:
-                print("Error deleting files")
+                _logger.debug("Error deleting files")
 
         return True
 
@@ -152,7 +155,7 @@ class Ftp:
         """
 
         if not self.archive_local:
-            print("Archive not set for Local. Cannot Archive.")
+            _logger.debug("Archive not set for Local. Cannot Archive.")
             return False
 
         files = False
@@ -172,7 +175,7 @@ class Ftp:
             try:
                 shutil.move(src_file, archive_file_path)
             except ftplib.error_perm:
-                print("Error Moving files")
+                _logger.debug("Error Moving files")
 
         return True
 
@@ -183,7 +186,7 @@ class Ftp:
         try:
             shutil.move(src_file, archive_file_path)
         except ftplib.error_perm:
-            print("Error Moving files")
+            _logger.debug("Error Moving files")
 
         return True
 
@@ -225,7 +228,7 @@ class Ftp:
                     self.archive_local_file(host_file, arcpath)
 
             except ftplib.error_perm:
-                print("Error uploading files")
+                _logger.debug("Error uploading files")
 
         return True
 
@@ -240,13 +243,13 @@ class Ftp:
             ftype = self.default_type
 
         if not self.archive_remote:
-            print("Archive not set for local or remote. Cannot move.")
+            _logger.debug("Archive not set for local or remote. Cannot move.")
 
         if not self.delete_remote_files(delpath):
-            print("Error deleting remote files")
+            _logger.debug("Error deleting remote files")
 
         if not self.upload_files(srcpath, arcpath, ftype=ftype):
-            print("Error uploading files")
+            _logger.debug("Error uploading files")
 
     def move_local_files(self, dstpath, delpath, arcpath, ftype=False):
         """
@@ -256,8 +259,8 @@ class Ftp:
             ftype = self.default_type
 
         if not self.upload_files(delpath, dstpath, arcpath, ftype=ftype):
-            print("Error uploading files")
+            _logger.debug("Error uploading files")
 
         # archive immediately after uploading and don't use this.
         # if not self.archive_local_files(delpath, arcpath):
-        #    print("Error archiving local files")
+        #    _logger.debug("Error archiving local files")

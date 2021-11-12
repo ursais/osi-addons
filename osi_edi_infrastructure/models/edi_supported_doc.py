@@ -141,7 +141,6 @@ class EdiSupportedDoc(models.Model):
                             )
                     # dt_str = value[:4]+'-'+value[4:6]+'-'+value[6:8]+' 08:00:00'
                     # value=datetime.strptime(dt_str, '%y-%m-%d %H:%M:%S')
-
                     target = result_line if struct_id.action == "line" else result
                     if field in target:
                         target[field] = value

@@ -13,7 +13,10 @@
             <field name="name">EDI Provider User</field>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
             <field name="users" eval="[(4, ref('base.user_root'))]" />
-            <field name="category_id" ref="osi_edi_infrastructure.edi_provider_module" />
+            <field
+                name="category_id"
+                ref="osi_edi_infrastructure.edi_provider_module"
+            />
         </record>
 
         <record id="group_edi_provider_manager" model="res.groups">

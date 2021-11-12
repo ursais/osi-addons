@@ -115,7 +115,10 @@
                                     <field name="remote_import" />
                                </group>
                                <group>
-                                    <field name="archive_remote" attrs="{'invisible': 1}" />
+                                    <field
+                                        name="archive_remote"
+                                        attrs="{'invisible': 1}"
+                                    />
                                 </group>
                             </group>
                         </page>
