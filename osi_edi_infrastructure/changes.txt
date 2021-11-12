@@ -2,9 +2,9 @@ Algorithm and Integrations
     12.0.3.0.0
 Editor: Balaji Kannan <bkannan@opensourceintegrators.com>
 Release Tag:12.18
-Task Ref: 
+Task Ref:
 Description:
-    * Algorithm improvement for zipcode based fetch of warehouse and route 
+    * Algorithm improvement for zipcode based fetch of warehouse and route
     * Integration with multiple shipping method searches (EDI/Fixed/Address) on manual/edi/portal orders
 Vendor Reference added for EDI
     12.0.2.0.0
