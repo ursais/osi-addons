@@ -3,12 +3,14 @@
     <record id="backend_voicent_form_view_inherit" model="ir.ui.view">
         <field name="name">backend.voicent.form.view.inherit</field>
         <field name="model">backend.voicent</field>
-        <field name="inherit_id"
-               ref="connector_voicent.backend_voicent_form_view"/>
+        <field
+            name="inherit_id"
+            ref="connector_voicent.backend_voicent_form_view"
+        />
         <field name="arch" type="xml">
             <field name="applies_on" position="after">
-                <field name="helpdesk_ticket_stage_id"/>
-                <field name="has_parent"/>
+                <field name="helpdesk_ticket_stage_id" />
+                <field name="has_parent" />
             </field>
         </field>
     </record>
