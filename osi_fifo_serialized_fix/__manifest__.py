@@ -3,9 +3,12 @@
 
 {
     "name": "OSI FIFO Serialized Product Fix",
-    "summary": """Properly handle Inventory Valuation with Serialized and Lot Tracked products""",
+    "summary": """Properly handle Inventory Valuation
+     with Serialized and Lot Tracked products""",
     "version": "14.0.0.0.1",
+    "license": "LGPL-3",
     "author": "Open Source Integrators",
+    "website": "https://github.com/ursais/osi-addons",
     "category": "Accounting",
     "depends": ["stock_account"],
     "data": ["views/stock_valuation_layer.xml"],
