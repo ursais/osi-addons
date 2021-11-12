@@ -8,7 +8,7 @@
     "summary": "Bank Reconciliation Entries restricted to specific accounts",
     "category": "Accounting & Finance",
     "maintainer": "Open Source Integrators",
-    "website": "http://www.opensourceintegrators.com",
+    "website": "https://github.com/ursais/osi-addons",
     "depends": ["account_accountant"],
     "installable": True,
     "development_status": "Alpha",

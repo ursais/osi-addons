@@ -17,14 +17,14 @@ class AccountReconciliation(models.AbstractModel):
         search_str=False,
         mode="rp",
     ):
-        """ Return the domain for account.move.line records which can be used
-            for bank statement reconciliation.
+        """Return the domain for account.move.line records which can be used
+        for bank statement reconciliation.
 
-            :param aml_accounts:
-            :param partner_id:
-            :param excluded_ids:
-            :param search_str:
-            :param mode: 'rp' for receivable/payable or 'other'
+        :param aml_accounts:
+        :param partner_id:
+        :param excluded_ids:
+        :param search_str:
+        :param mode: 'rp' for receivable/payable or 'other'
         """
         domain = super()._domain_move_lines_for_reconciliation(
             account_id,
