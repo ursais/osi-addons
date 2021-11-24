@@ -28,18 +28,19 @@ class PurchaseOrder(models.Model):
 class StockRule(models.Model):
     _inherit = "stock.rule"
 
-    def _prepare_purchase_order(
-        self, product_id, product_qty, product_uom, origin, values, partner
-    ):
-        res = super()._prepare_purchase_order(
-            product_id, product_qty, product_uom, origin, values, partner
-        )
-        if res and "payment_method" not in res:
-            res.update(
-                {
-                    "payment_method": partner.payment_method
-                    and partner.payment_method.id
-                    or False
-                }
-            )
-        return res
+    # Method Changed in v14, throws error when submitting SRO's on FSO's
+    # def _prepare_purchase_order(
+    #     self, product_id, product_qty, product_uom, origin, values, partner
+    # ):
+    #     res = super()._prepare_purchase_order(
+    #         product_id, product_qty, product_uom, origin, values, partner
+    #     )
+    #     if res and "payment_method" not in res:
+    #         res.update(
+    #             {
+    #                 "payment_method": partner.payment_method
+    #                 and partner.payment_method.id
+    #                 or False
+    #             }
+    #         )
+    #     return res
