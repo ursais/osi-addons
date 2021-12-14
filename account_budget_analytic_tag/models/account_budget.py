@@ -1,7 +1,8 @@
 # Copyright (c) 2021 Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class CrossoveredBudgetLines(models.Model):
@@ -54,3 +55,18 @@ class CrossoveredBudgetLines(models.Model):
 
             self.env.cr.execute(select, where_clause_params)
             line.practical_amount = self.env.cr.fetchone()[0] or 0.0
+
+    @api.constrains("general_budget_id", "analytic_account_id", "analytic_tag_id")
+    def _must_have_analytical_or_budgetary_or_both(self):
+        for record in self:
+            if (
+                not record.analytic_account_id
+                and not record.general_budget_id
+                and not record.analytic_tag_id
+            ):
+                raise ValidationError(
+                    _(
+                        "You have to enter at least a budgetary position or analytic account"
+                        " or analytic tag on a budget line."
+                    )
+                )
