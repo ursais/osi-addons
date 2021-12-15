@@ -20,8 +20,8 @@
                     'default_state': state,
                     'default_analytic_account_id': default_analytic_account_id
                     }</attribute>
-                    
-                    
+
+
             </field>
             <xpath
                 expr="//field[@name='stock_request_ids']/tree/field[@name='route_id']"
