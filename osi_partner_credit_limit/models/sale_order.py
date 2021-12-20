@@ -1,7 +1,7 @@
 # Copyright (C) 2019 - 2021, Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models, _
+from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -20,14 +20,15 @@ class SaleOrder(models.Model):
     )
 
     def action_confirm(self):
-        state = self.partner_id.check_limit(self)
+        self.partner_id.check_limit(self)
         if self.sales_hold and not self.credit_override:
             message = _("""Cannot confirm Order! The customer is on sales hold.""")
             # Display that the customer is on sales hold
             raise ValidationError(message)
         elif self.ship_hold and not self.credit_override:
             message = _(
-                """Cannot confirm Order! The customer exceed available credit limit and is on ship hold."""
+                """Cannot confirm Order! The customer exceed available
+                   credit limit and is on ship hold."""
             )
             raise ValidationError(message)
         else:
@@ -38,13 +39,10 @@ class SaleOrder(models.Model):
             if self.partner_id.check_limit(self) and not self.credit_override:
                 self.state = prev_state
                 self.ship_hold = True
-                # commit changes above before ORM rollback any changes.
-                self._cr.commit()
                 message = _(
                     """Cannot confirm Order!
                         This will exceed allowed Credit Limit.
                         To Override, check Override Sales/Credit/Delivery Hold"""
                 )
                 raise ValidationError(message)
-
             return super(SaleOrder, self).action_confirm()

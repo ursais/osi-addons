@@ -34,7 +34,7 @@ class TestHelpdeskTicketOperatingUnit(common.TransactionCase):
         self.helpdesk_ticket2 = self._create_helpdesk_ticket(self.user2.id, self.b2c_OU)
 
     def _create_user(self, login, groups, company, operating_units):
-        """ Create a user. """
+        """Create a user."""
         group_ids = [group.id for group in groups]
         user = self.res_users_model.create(
             {

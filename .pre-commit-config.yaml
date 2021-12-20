@@ -40,7 +40,7 @@ repos:
           - id: autoflake
             args: ["-i", "--ignore-init-module-imports"]
     - repo: https://github.com/psf/black
-      rev: 20.8b1
+      rev: 21.10b0
       hooks:
           - id: black
     - repo: https://github.com/pre-commit/mirrors-prettier
@@ -96,7 +96,7 @@ repos:
                 - --settings=.
             exclude: /__init__\.py$
     - repo: https://github.com/acsone/setuptools-odoo
-      rev: 2.6.0
+      rev: 3.0.3
       hooks:
           - id: setuptools-odoo-make-default
           - id: setuptools-odoo-get-requirements

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
 
     <!--From to To Date CS Production Report -->
@@ -7,13 +7,20 @@
         <field name="model">report.bank.statement</field>
         <field name="arch" type="xml">
             <form>
-                <separator string="Please Choose an Appropriate Option to Get Bank Statement Report" />
+                <separator
+                    string="Please Choose an Appropriate Option to Get Bank Statement Report"
+                />
                 <group row='2'>
-                    <field name="date_from" required="1"/>
-                    <field name="date_to" required="1"/>
+                    <field name="date_from" required="1" />
+                    <field name="date_to" required="1" />
                 </group>
                 <footer>
-                    <button name="get_bank_statement_report" type="object" string="Get Bank Statement Report" class="btn-primary"/>
+                    <button
+                        name="get_bank_statement_report"
+                        type="object"
+                        string="Get Bank Statement Report"
+                        class="btn-primary"
+                    />
                     <button string="Cancel" class="oe_link" special="cancel" />
                 </footer>
             </form>
@@ -27,11 +34,13 @@
         <field name="res_model">report.bank.statement</field>
         <field name="type">ir.actions.act_window</field>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="view_bank_statement_report_wizard"/>
+        <field name="view_id" ref="view_bank_statement_report_wizard" />
         <field name="target">new</field>
     </record>
 
-    <menuitem id="menu_action_bank_statement_report_wiz"
-              parent="account.menu_finance_payables"
-              action="action_bank_statement_report_wiz"/>
+    <menuitem
+        id="menu_action_bank_statement_report_wiz"
+        parent="account.menu_finance_payables"
+        action="action_bank_statement_report_wiz"
+    />
 </odoo>

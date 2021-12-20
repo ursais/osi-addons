@@ -370,7 +370,7 @@ class TestAccountMove(common.TransactionCase):
         payroll_move.action_post()
 
     def test_distribution_segments(self):
-        """ Returns an open invoice """
+        """Returns an open invoice"""
         lines = [
             (
                 0,
