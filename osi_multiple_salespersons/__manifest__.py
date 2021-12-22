@@ -9,7 +9,7 @@
     "author": "Open Source Integrators",
     "maintainers": "Open Source Integrators",
     "website": "https://github.com/ursais/osi-addons",
-    "depends": ["sale_stock", "osi_analytic_segments", "web_many2many_groupby"],
+    "depends": ["sale_stock", "web_many2many_groupby"],
     "data": [
         "views/sale_order_view.xml",
         "views/res_partner_view.xml",
