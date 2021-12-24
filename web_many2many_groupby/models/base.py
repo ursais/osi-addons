@@ -37,13 +37,12 @@ class Base(models.AbstractModel):
 
     def _read_progress_bar(self, domain, group_by, progress_bar):
         records_values = super()._read_progress_bar(domain, group_by, progress_bar)
-        # Todo 15169 Ticket ORR
-#         group_by_name = group_by.partition(":")[0]
-#         field_type = self._fields[group_by_name].type
-#         for record_values in records_values:
-#             group_by_value = record_values.pop(group_by_name)
-#             if field_type == "many2many" and isinstance(group_by_value, list):
-#                 record_values[group_by] = str(tuple(group_by_value)) or False
+        group_by_name = group_by.partition(":")[0]
+        field_type = self._fields[group_by_name].type
+        for record_values in records_values:
+            if field_type == "many2many" and isinstance(record_values[group_by_name], list):
+                group_by_value = record_values.pop(group_by_name)
+                record_values[group_by] = str(tuple(group_by_value)) or False
         return records_values
 
     @api.model
