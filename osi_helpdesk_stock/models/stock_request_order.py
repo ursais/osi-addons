@@ -44,7 +44,7 @@ class StockRequestOrder(models.Model):
         if self.helpdesk_ticket_id and not self.procurement_group_id:
             ticket = self.env["helpdesk.ticket"].browse(self.helpdesk_ticket_id.id)
             group = self.env["procurement.group"].search(
-                [("helpdesk_ticket_id", "=", ticket.id)]
+                [("helpdesk_ticket_id", "=", ticket.id)], limit=1
             )
             if not group:
                 values = self._prepare_procurement_group_values()

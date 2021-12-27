@@ -28,13 +28,11 @@ class PurchaseOrder(models.Model):
 class StockRule(models.Model):
     _inherit = "stock.rule"
 
-    def _prepare_purchase_order(
-        self, product_id, product_qty, product_uom, origin, values, partner
-    ):
-        res = super()._prepare_purchase_order(
-            product_id, product_qty, product_uom, origin, values, partner
-        )
-        if res and "payment_method" not in res:
+    def _prepare_purchase_order(self, company_id, origins, values):
+        res = super()._prepare_purchase_order(company_id, origins, values)
+        values = values[0]
+        partner = self.env["res.partner"].browse(values["partner_id"])
+        if partner and partner.payment_method:
             res.update(
                 {
                     "payment_method": partner.payment_method
