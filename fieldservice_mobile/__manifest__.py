@@ -18,7 +18,6 @@
         "fieldservice_sign",
         "fieldservice_stock_request",
         "fieldservice_account_analytic",
-        "fieldservice_isp_account",
         "fieldservice_project",
         "fieldservice_equipment_stock",
         "fieldservice_maintenance",
