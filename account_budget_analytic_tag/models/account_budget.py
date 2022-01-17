@@ -18,39 +18,42 @@ class CrossoveredBudgetLines(models.Model):
             date_to = line.date_to
             date_from = line.date_from
             if line.analytic_account_id.id:
-                analytic_line_obj = self.env["account.analytic.line"]
-                domain = [
-                    ("account_id", "=", line.analytic_account_id.id),
-                    ("date", ">=", date_from),
-                    ("date", "<=", date_to),
-                ]
-                if acc_ids:
-                    domain += [("general_account_id", "in", acc_ids)]
-
-                where_query = analytic_line_obj._where_calc(domain)
-                analytic_line_obj._apply_ir_rules(where_query, "read")
-                from_clause, where_clause, where_clause_params = where_query.get_sql()
-                select = """SELECT SUM(amount) from {from1} where {where1}""".format(
-                    from1=from_clause, where1=where_clause
+                self.env.cr.execute(
+                    """
+                    SELECT SUM(amount)
+                    FROM account_analytic_line
+                    WHERE account_id=%s
+                        AND (date between %s
+                        AND %s)
+                        AND general_account_id=ANY(%s)""",
+                    (line.analytic_account_id.id, date_from, date_to, acc_ids),
                 )
+                result = self.env.cr.fetchone()[0] or 0.0
 
             else:
-                aml_obj = self.env["account.move.line"]
-                domain = [
-                    ("analytic_tag_ids", "in", line.analytic_tag_id.id),
-                    ("account_id", "in", line.general_budget_id.account_ids.ids),
-                    ("date", ">=", date_from),
-                    ("date", "<=", date_to),
-                    ("move_id.state", "=", "posted"),
-                ]
-                where_query = aml_obj._where_calc(domain)
-                aml_obj._apply_ir_rules(where_query, "read")
-                from_clause, where_clause, where_clause_params = where_query.get_sql()
-                select = """SELECT sum(credit)-sum(debit) from {from1} where {where1}""".format(
-                    from1=from_clause, where1=where_clause
+                self.env.cr.execute(
+                    """
+                    SELECT SUM(credit) - SUM(debit)
+                    FROM account_move_line aml
+                    LEFT JOIN account_move am ON aml.move_id = am.id
+                    LEFT JOIN
+                        account_account_tag_account_move_line_rel aat
+                        ON aat.account_move_line_id = aml.id
+                    WHERE state=%s
+                    AND account_id in %s
+                        AND (aml.date between %s
+                        AND %s)
+                        AND aat.account_account_tag_id=%s""",
+                    (
+                        "posted",
+                        tuple(line.general_budget_id.account_ids.ids),
+                        date_from,
+                        date_to,
+                        line.analytic_tag_id.id or 0.0,
+                    ),
                 )
-            self.env.cr.execute(select, where_clause_params)
-            line.practical_amount = self.env.cr.fetchone()[0] or 0.0
+                result = self.env.cr.fetchone()[0]
+            line.practical_amount = result
 
     @api.constrains("general_budget_id", "analytic_account_id", "analytic_tag_id")
     def _must_have_analytical_or_budgetary_or_both(self):
