@@ -10,7 +10,7 @@ from odoo.exceptions import AccessError
 class IrAttachment(models.Model):
     _inherit = "ir.attachment"
 
-    """Overwrite check method for allow portal user to read attachment"""
+    """Overwrite the check method to allow a portal user to read attachments."""
 
     @api.model
     def check(self, mode, values=None):
@@ -19,6 +19,7 @@ class IrAttachment(models.Model):
             return True
         # Always require an internal user (aka, employee) to access to a attachment
 
+        # Commented code to allow a portal user to read attachments.
         # if not (self.env.is_admin() or self.env.user.has_group('base.group_user')):
         #     raise AccessError(_("Sorry, you are not allowed to access this document."))
 
@@ -27,14 +28,13 @@ class IrAttachment(models.Model):
         if self:
             # DLE P173: `test_01_portal_attachment`
             self.env["ir.attachment"].flush(
-                ["res_model", "res_id", "public", "res_field"]
+                ["res_model", "res_id", "create_uid", "public", "res_field"]
             )
             self._cr.execute(
-                """SELECT res_model, res_id, create_uid, public, res_field
-                  FROM ir_attachment WHERE id IN %s""",
+                "SELECT res_model, res_id, create_uid, public, res_field FROM ir_attachment WHERE id IN %s",
                 [tuple(self.ids)],
             )
-            for res_model, res_id, public, res_field in self._cr.fetchall():
+            for res_model, res_id, create_uid, public, res_field in self._cr.fetchall():
                 if not self.env.is_system() and res_field:
                     raise AccessError(
                         _("Sorry, you are not allowed to access this document.")

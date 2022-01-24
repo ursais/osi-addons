@@ -8,6 +8,10 @@ from odoo import api, fields, models
 class FSMOrder(models.Model):
     _inherit = "fsm.order"
 
+    employee_timesheet_ids = fields.One2many(
+        "account.analytic.line", "fsm_order_id", string="Employee Timesheets"
+    )
+
     @api.depends("date_start", "date_end")
     def _compute_duration(self):
         res = super()._compute_duration()
