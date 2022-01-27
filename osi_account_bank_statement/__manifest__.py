@@ -1,4 +1,4 @@
-# Copyright (C) 2019-2021 Open Source Integrators
+# Copyright (C) 2022 Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
     "name": "Account Bank Reconciliation Extended",
@@ -12,5 +12,5 @@
     "depends": ["account_accountant"],
     "installable": True,
     "development_status": "Alpha",
-    "maintainers": ["mgosai"],
+    "maintainers": ["mgosai","smangukiya"],
 }

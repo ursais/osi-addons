@@ -48,6 +48,7 @@ Contributors
 
 * Balaji Kannan <bkannan@opensourceintegrators.com>
 * Mayank Gosai <mgosai@opensourceintegrators.com>
+* Sandip Mangukiya <smangukiya@opensourceintegrators.com>
 
 Maintainers
 -----------
