@@ -8,7 +8,16 @@ class AccountReconciliation(models.AbstractModel):
     _inherit = "account.reconciliation.widget"
 
     @api.model
-    def get_move_lines_for_bank_statement_line(self, st_line_id, partner_id=None, excluded_ids=None, search_str=False, offset=0, limit=None, mode=None):
+    def get_move_lines_for_bank_statement_line(
+        self,
+        st_line_id,
+        partner_id=None,
+        excluded_ids=None,
+        search_str=False,
+        offset=0,
+        limit=None,
+        mode=None,
+    ):
         js_vals_list = super().get_move_lines_for_bank_statement_line(
             st_line_id=st_line_id,
             partner_id=partner_id,
@@ -16,7 +25,7 @@ class AccountReconciliation(models.AbstractModel):
             search_str=search_str,
             offset=offset,
             limit=limit,
-            mode=mode
+            mode=mode,
         )
         # Browse journal
         if self._context.get("journal_id", False):
@@ -31,6 +40,9 @@ class AccountReconciliation(models.AbstractModel):
             # Get journal's default outstanding receipts account
             if journal.payment_debit_account_id:
                 acc_ids.append(journal.payment_debit_account_id.id)
+            # Get journal's default account (backward compatibility for migrated DB)
+            if journal.default_account_id:
+                acc_ids.append(journal.default_account_id.id)
             expected_move_lines_ids = acc_move_obj.search(
                 [("account_id", "in", acc_ids), ("statement_id", "=", False)]
             ).ids
@@ -38,6 +50,6 @@ class AccountReconciliation(models.AbstractModel):
         # filter out move lines and return only which fits in expected_move_lines_ids
         expected_move_lines_list = []
         for js_vals in js_vals_list:
-            if js_vals['id'] in expected_move_lines_ids:
+            if js_vals["id"] in expected_move_lines_ids:
                 expected_move_lines_list.append(js_vals)
         return expected_move_lines_list
