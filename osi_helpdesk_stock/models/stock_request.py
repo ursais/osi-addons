@@ -59,9 +59,6 @@ class StockRequest(models.Model):
             ticket = self.env["helpdesk.ticket"].browse(vals["helpdesk_ticket_id"])
             ticket.request_stage = "draft"
             vals["warehouse_id"] = ticket.warehouse_id.id
-            vals["location_id"] = (
-                ticket.warehouse_id.lot_stock_id.id or ticket.inventory_location_id.id
-            )
             picking_type_id = self.env["stock.picking.type"].search(
                 [
                     ("code", "=", "stock_request_order"),
