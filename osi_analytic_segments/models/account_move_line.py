@@ -22,8 +22,8 @@ class AccountMoveLine(models.Model):
         res = super()._prepare_analytic_line()
         res[0].update(
             {
-                "analytic_segment_one_id": self.analytic_segment_one_id.id,
-                "analytic_segment_two_id": self.analytic_segment_two_id.id,
+                "analytic_segment_one_id": self[0].analytic_segment_one_id.id,
+                "analytic_segment_two_id": self[0].analytic_segment_two_id.id,
             }
         )
         return res
