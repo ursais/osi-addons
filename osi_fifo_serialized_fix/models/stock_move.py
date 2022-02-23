@@ -31,7 +31,7 @@ class StockMove(models.Model):
                     val["account_move_id"] = ji_ids[0].move_id.id
                     # The qty of serial products is always 1, lots could be > 1
                     if svl_id[3].product_id.tracking == "lot":
-                        val["quantity"] = svl_id[3] * -1
+                        val["quantity"] = svl_id[3].qty_done * -1
                     val["value"] = val_obj.unit_cost * val["quantity"]
                     final_layers.append(val)
                 final_layers = self.env["stock.valuation.layer"].create(final_layers)
@@ -103,7 +103,7 @@ class StockMove(models.Model):
                                 valuation.id,
                                 1,
                                 [line_id.lot_id.id],
-                                line_id.qty_done,
+                                line_id,
                             )
                         )
                         break
