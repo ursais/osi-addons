@@ -2,6 +2,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
 from odoo import _, fields, models
+from odoo.exceptions import ValidationError
 
 
 class HelpdeskTicket(models.Model):
@@ -32,6 +33,13 @@ class HelpdeskTicket(models.Model):
 
     def create_sale_order(self):
         self.ensure_one()
+        if self.partner_id.sale_warn == "block":
+            raise ValidationError(
+                _(
+                    "Warning for Partner %s\n\n%s"
+                    % (self.partner_id.name, self.partner_id.sale_warn_msg)
+                )
+            )
         order_id = self.env["sale.order"].create(
             {
                 "partner_id": self.partner_id.id,
