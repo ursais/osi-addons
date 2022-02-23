@@ -1,3 +1,6 @@
+# Copyright (C) 2021 - TODAY, Open Source Integrators
+# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+
 from odoo import api, models
 
 
@@ -20,7 +23,6 @@ class StockLocation(models.Model):
                 [
                     ("product_id", "=", context.get("product_id")),
                     ("lot_id", "=", context.get("lot_id")),
-                    ("location_id.name", "like", "stock"),
                 ]
             )
             locations = quants.mapped("location_id")
