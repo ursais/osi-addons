@@ -1,0 +1,9 @@
+<odoo noupdate="1">
+
+    <record id="documents_facet_lot" model="documents.facet" forcecreate="0">
+        <field name="name">Lot</field>
+        <field name="sequence">6</field>
+        <field name="folder_id" ref="documents_folder_lot" />
+    </record>
+
+</odoo>

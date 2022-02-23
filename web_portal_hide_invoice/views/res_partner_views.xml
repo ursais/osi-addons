@@ -1,0 +1,16 @@
+<odoo>
+
+    <record id="view_res_partner_form_hide_invoice" model="ir.ui.view">
+        <field name="name">res.partner.form.hide.invoice</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='banks']" position="after">
+                <group string="Customer Portal" name="customer_portal">
+                    <field name="portal_show_invoice" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

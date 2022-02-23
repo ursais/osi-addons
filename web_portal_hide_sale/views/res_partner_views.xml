@@ -1,0 +1,14 @@
+<odoo>
+
+    <record id="view_res_partner_form_hide_sale" model="ir.ui.view">
+        <field name="name">res.partner.form.hide.sale</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sale']" position="inside">
+                <field name="portal_show_sale" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

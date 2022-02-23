@@ -1,0 +1,22 @@
+<odoo>
+
+    <template
+        id="account.portal_my_home_invoice"
+        name="Show Invoices &amp; Bills"
+        customize_show="True"
+        inherit_id="portal.portal_my_home"
+        priority="30"
+    >
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-set="partner" t-value="request.env.user.partner_id" />
+            <t t-if="partner.portal_show_invoice">
+                <t t-call="portal.portal_docs_entry">
+                    <t t-set="title">Invoices &amp; Bills</t>
+                    <t t-set="url" t-value="'/my/invoices'" />
+                    <t t-set="placeholder_count" t-value="'invoice_count'" />
+                </t>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>
