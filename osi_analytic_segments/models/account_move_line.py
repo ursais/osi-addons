@@ -29,4 +29,3 @@ class AccountMoveLine(models.Model):
                 }
             )
         return res
-
