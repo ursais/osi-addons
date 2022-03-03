@@ -90,6 +90,7 @@ class HelpdeskTicket(models.Model):
             "default_priority": self.priority,
             "default_location_id": self.fsm_location_id.id,
             "default_origin": self.name,
+            "default_scheduled_date_start": fields.Datetime.today(),
         }
         res = self.env.ref("fieldservice.fsm_order_form", False)
         result["views"] = [(res and res.id or False, "form")]
