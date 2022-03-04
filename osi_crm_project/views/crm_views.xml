@@ -1,0 +1,49 @@
+<odoo>
+    <record id="action_view_task_id" model="ir.actions.act_window">
+        <field name="name">Tasks</field>
+        <field name="res_model">project.task</field>
+        <field name="view_mode">kanban,tree,form,calendar,pivot,graph</field>
+         <field name="domain">[('opportunity_id', '=', active_id)]</field>
+        <field
+            name="context"
+        >{'search_default_opportunity_id': active_id, 'default_opportunity_id': active_id}</field>
+        <field name="help" type="html">
+            <p>
+                Odoo's project management allows you to manage the pipeline of your tasks efficiently. You can track progress, discuss on tasks, attach documents, etc.
+            </p>
+        </field>
+    </record>
+
+    <record id="crm_lead_view_form_view_inherit_ska" model="ir.ui.view">
+        <field name="name">crm.lead.form.inherit.ska</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form" />
+        <field name="arch" type="xml">
+            <button name="action_set_lost" position="after">
+                <button
+                    name="open_task_wiz"
+                    string="Create Task"
+                    class="oe_highlight"
+                    attrs="{'invisible':[('type','=','lead')]}"
+                    type="object"
+                />
+            </button>
+            <div name="button_box" position="inside">
+                <button
+                    class="oe_stat_button"
+                    type="action"
+                    name="%(action_view_task_id)d"
+                    context="{'default_partner_id': partner_id}"
+                    icon="fa-tasks"
+                >
+                    <field
+                        string="Tasks"
+                        name="task_number"
+                        widget="statinfo"
+                    />
+                </button>
+            </div>
+        </field>
+    </record>
+
+</odoo>
