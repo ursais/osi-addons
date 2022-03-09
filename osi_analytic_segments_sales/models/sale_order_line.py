@@ -26,7 +26,7 @@ class SaleOrderLine(models.Model):
     )
 
     def _prepare_invoice_line(self, **optional_values):
-        res = super()._prepare_invoice_line()
+        res = super()._prepare_invoice_line(**optional_values)
         res.update(
             {
                 "analytic_segment_one_id": self.order_id.analytic_segment_one_id.id,
