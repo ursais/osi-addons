@@ -14,6 +14,7 @@
         "helpdesk_sale",
     ],
     "data": [
+        "security/ir.model.access.csv",
         "views/helpdesk_team_view.xml",
         "views/helpdesk_ticket_view.xml",
         "views/sale_order_view.xml",
