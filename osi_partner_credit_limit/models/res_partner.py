@@ -39,11 +39,12 @@ class Partner(models.Model):
 
                 # check for credit_limit
                 if partner.credit_limit > 0 and order_ids:
-                    if not ship_hold and not self.check_limit(order_ids[0]):
+                    if not ship_hold and not self.with_context(
+                        from_sale_order=False
+                    ).check_limit(order_ids[0]):
                         ship_hold = False
                     else:
                         ship_hold = True
-
                 order_ids.write({"ship_hold": ship_hold})
         return res
 
