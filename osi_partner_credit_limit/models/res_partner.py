@@ -14,7 +14,9 @@ class Partner(models.Model):
         default=False,
         help="If checked, new quotations cannot be confirmed",
     )
-    credit_limit = fields.Monetary(string="Credit Limit")
+    credit_limit = fields.Monetary(
+        string="Credit Limit", default=lambda self: self.env.company.credit_limit_amount
+    )
     grace_period = fields.Integer(
         string="Grace Period",
         help="Grace period added on top of the customer \
@@ -45,6 +47,14 @@ class Partner(models.Model):
                         ship_hold = True
 
                 order_ids.write({"ship_hold": ship_hold})
+        return res
+
+    def _increase_rank(self, field, n=1):
+        # Set credit_limit in existing partner when Invoice is Post
+        res = super()._increase_rank(field=field, n=n)
+        for rec in self:
+            if rec.id and field in ["customer_rank"] and not rec.credit_limit:
+                rec.credit_limit = self.env.company.credit_limit_amount
         return res
 
     def check_limit(self, sale_id):

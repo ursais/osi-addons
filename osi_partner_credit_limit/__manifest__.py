@@ -10,16 +10,13 @@
     "maintainer": "Open Source Integrators",
     "summary": "Enforce Partner Credit Limit",
     "website": "https://github.com/ursais/osi-addons",
-    "depends": [
-        "sale",
-        "sale_stock",
-        "stock",
-    ],
+    "depends": ["sale_stock"],
     "data": [
         "security/osi_partner_credit_limit.xml",
         "views/res_partner.xml",
         "views/sale.xml",
         "views/stock.xml",
+        "views/res_config_setting.xml",
     ],
     "installable": True,
     "maintainers": ["bodedra"],
