@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_payment_order_form_view_inherit_reconcile" model="ir.ui.view">
+        <field name="name">account.payment.order.form.inherit.reconcile</field>
+        <field name="model">account.payment.order</field>
+        <field name="inherit_id" ref="account_payment_order.account_payment_order_form"/>
+        <field name="arch" type="xml">
+            <field name="description" position="after">
+                <field name="bank_statement_id" readonly="1" attrs="{'invisible': [('state','not in',('uploaded','done'))]}"/>
+            </field>
+        </field>
+    </record>
+</odoo>
