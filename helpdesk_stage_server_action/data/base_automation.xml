@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-        <record
-        id="helpdesk_ticket_email_sender_create"
-        model="base.automation"
-    >
+        <record id="helpdesk_ticket_email_sender_create" model="base.automation">
             <field name="name">Helpdesk Ticket Email Sender Create</field>
             <field name="model_id" ref="helpdesk.model_helpdesk_ticket" />
             <field name="trigger">on_create</field>
@@ -17,10 +14,7 @@
         />
         </record>
 
-        <record
-        id="helpdesk_ticket_email_sender_update"
-        model="base.automation"
-    >
+        <record id="helpdesk_ticket_email_sender_update" model="base.automation">
             <field name="name">Helpdesk Ticket Email Sender Update</field>
             <field name="model_id" ref="helpdesk.model_helpdesk_ticket" />
             <field name="trigger">on_change</field>

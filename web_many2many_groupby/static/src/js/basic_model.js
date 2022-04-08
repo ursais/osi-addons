@@ -27,8 +27,8 @@ odoo.define("web_many2many_groupby.BasicModel", function (require) {
             });
             return prom;
         },
-        _updateDuplicateRecords(recordID, updateFn) {
-            const { model, res_id } = this.localData[recordID];
+        _updateDuplicateRecords (recordID, updateFn) {
+            const {model, res_id} = this.localData[recordID];
             // Get the topmost groupedby m2m list
             const getTopmostID = () => {
                 let element = this.localData[recordID];
@@ -54,8 +54,7 @@ odoo.define("web_many2many_groupby.BasicModel", function (require) {
             });
         },
         _makeDataPoint: function (params) {
-            var type =
-                params.type || ("domain" in params && "list") || "record";
+            var type = params.type || "domain" in params && "list" || "record";
             var dataPoint = this._super(params);
             const groupedBy = params.groupedBy || [];
             let isM2MGrouped = false;
@@ -63,10 +62,10 @@ odoo.define("web_many2many_groupby.BasicModel", function (require) {
             if (type != "record") {
                 var fields = _.extend(
                     {
-                        display_name: { type: "char" },
-                        id: { type: "integer" },
+                        display_name: {type: "char"},
+                        id: {type: "integer"},
                     },
-                    params.fields
+                    params.fields,
                 );
                 isM2MGrouped = groupedBy.some((group) => {
                     const [fieldName] = group.split(":");

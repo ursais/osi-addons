@@ -4,14 +4,9 @@
         id="crossovered_budget_view_form_inherit_account_budget_analytic_tag"
         model="ir.ui.view"
     >
-        <field
-            name="name"
-        >crossovered.budget.view.form.inherit.analytic_tag</field>
+        <field name="name">crossovered.budget.view.form.inherit.analytic_tag</field>
         <field name="model">crossovered.budget</field>
-        <field
-            name="inherit_id"
-            ref="account_budget.crossovered_budget_view_form"
-        />
+        <field name="inherit_id" ref="account_budget.crossovered_budget_view_form" />
         <field name="arch" type="xml">
             <xpath
                 expr="//page//tree//field[@name='analytic_account_id']"

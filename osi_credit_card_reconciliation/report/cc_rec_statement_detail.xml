@@ -27,10 +27,7 @@
                             </h4>
                         </div>
 
-                        <table
-                            class="table table-condensed"
-                            name="move_line_ids_table"
-                        >
+                        <table class="table table-condensed" name="move_line_ids_table">
                             <thead>
                                 <tr>
                                     <th class="hidden">Source Document</th>
@@ -49,9 +46,7 @@
                                         Cleared
                                     </th>
                                     <th align="right" class="text-right">Amount(
-                                        <span
-                                            t-field="company.currency_id.symbol"
-                                        />
+                                        <span t-field="company.currency_id.symbol" />
                                         )
                                     </th>
                                     <t t-if="o.account_id.currency_id">
@@ -96,15 +91,9 @@
                                 <tr>
                                     <td>
                                         <b>Deposits &amp; Credits -
-                                            <t
-                                                t-if="o.sum_of_debits_lines == 0.00"
-                                            />
-                                            <t
-                                                t-if="not o.sum_of_debits_lines == 0.00"
-                                            >
-                                                <span
-                                                    t-field="o.sum_of_debits_lines"
-                                                />
+                                            <t t-if="o.sum_of_debits_lines == 0.00" />
+                                            <t t-if="not o.sum_of_debits_lines == 0.00">
+                                                <span t-field="o.sum_of_debits_lines" />
                                             </t>
                                             items
                                         </b>
@@ -136,10 +125,7 @@
                                     </td>
                                     <td>
                                         <t t-if="l.cleared_cc_account">
-                                            <input
-                                                type="checkbox"
-                                                checked="checked"
-                                            />
+                                            <input type="checkbox" checked="checked" />
                                         </t>
                                     </td>
                                     <td>
@@ -177,15 +163,11 @@
                                 <tr>
                                     <td>
                                         <b>Checks &amp; Payments -
-                                            <t
-                                                t-if="o.sum_of_credits_lines == 0.00"
-                                            />
+                                            <t t-if="o.sum_of_credits_lines == 0.00" />
                                             <t
                                                 t-if="not o.sum_of_credits_lines == 0.00"
                                             >
-                                                <span
-                                                    t-field="o.sum_of_debits_lines"
-                                                />
+                                                <span t-field="o.sum_of_debits_lines" />
                                             </t>
                                             items
                                         </b>
@@ -217,10 +199,7 @@
                                     </td>
                                     <td>
                                         <t t-if="l.cleared_cc_account">
-                                            <input
-                                                type="checkbox"
-                                                checked="checked"
-                                            />
+                                            <input type="checkbox" checked="checked" />
                                         </t>
                                     </td>
                                     <td>

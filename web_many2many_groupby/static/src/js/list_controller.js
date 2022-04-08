@@ -18,7 +18,7 @@ odoo.define("web_many2many_groupby.ListController", function (require) {
             if (!this.hasActionMenus || !this.selectedRecords.length) {
                 return null;
             }
-            const { isM2MGrouped } = state;
+            const {isM2MGrouped} = state;
             const props = this._super(...arguments);
             const otherActionItems = [];
             if (this.isExportEnable && !isM2MGrouped) {
@@ -36,19 +36,19 @@ odoo.define("web_many2many_groupby.ListController", function (require) {
                                 this,
                                 _t(
                                     "Are you sure that you want to archive \
-                                    all the selected records?"
+                                    all the selected records?",
                                 ),
                                 {
                                     confirm_callback: () =>
                                         this._toggleArchiveState(true),
-                                }
+                                },
                             );
                         },
                     },
                     {
                         description: _t("Unarchive"),
                         callback: () => this._toggleArchiveState(false),
-                    }
+                    },
                 );
             }
             if (this.activeActions.delete) {
@@ -63,8 +63,8 @@ odoo.define("web_many2many_groupby.ListController", function (require) {
                 }),
             });
         },
-        _onReload(ev) {
-            const { isM2MGrouped } = this.model.get(this.handle);
+        _onReload (ev) {
+            const {isM2MGrouped} = this.model.get(this.handle);
             if (isM2MGrouped) {
                 // Ask for the main record to be reloaded.
                 ev.data.db_id = this.handle;

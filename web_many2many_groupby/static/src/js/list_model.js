@@ -7,7 +7,7 @@ odoo.define("web_many2many_groupby.ListModel", function (require) {
             listDatapointId,
             referenceRecordId,
             recordIds,
-            fieldName
+            fieldName,
         ) {
             var self = this;
             var referenceRecord = this.localData[referenceRecordId];
@@ -59,7 +59,7 @@ odoo.define("web_many2many_groupby.ListModel", function (require) {
 
                         // Also update same resId records
                         self._updateDuplicateRecords(record.id, (id) =>
-                            updateLocalRecord(id, data)
+                            updateLocalRecord(id, data),
                         );
                     });
                 })
@@ -70,11 +70,10 @@ odoo.define("web_many2many_groupby.ListModel", function (require) {
                             self._fetchReferencesBatched(list),
                         ]);
                     }
-                        return Promise.all([
-                            self._fetchX2ManysSingleBatch(list),
-                            self._fetchReferencesSingleBatch(list),
-                        ]);
-
+                    return Promise.all([
+                        self._fetchX2ManysSingleBatch(list),
+                        self._fetchReferencesSingleBatch(list),
+                    ]);
                 });
         },
     });

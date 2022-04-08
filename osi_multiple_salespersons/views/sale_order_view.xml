@@ -1,9 +1,6 @@
 <odoo>
 
-    <record
-        id="view_order_form_inherit_osi_multiple_salespersons"
-        model="ir.ui.view"
-    >
+    <record id="view_order_form_inherit_osi_multiple_salespersons" model="ir.ui.view">
         <field name="name">sale.order.form</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form" />
@@ -30,11 +27,7 @@
         <field name="inherit_id" ref="sale.view_quotation_tree" />
         <field name="arch" type="xml">
             <field name="user_id" position="after">
-                <field
-                    name="sale_user_ids"
-                    widget="many2many_tags"
-                    optional="show"
-                />
+                <field name="sale_user_ids" widget="many2many_tags" optional="show" />
             </field>
         </field>
     </record>

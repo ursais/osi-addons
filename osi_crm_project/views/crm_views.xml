@@ -36,11 +36,7 @@
                     context="{'default_partner_id': partner_id}"
                     icon="fa-tasks"
                 >
-                    <field
-                        string="Tasks"
-                        name="task_number"
-                        widget="statinfo"
-                    />
+                    <field string="Tasks" name="task_number" widget="statinfo" />
                 </button>
             </div>
         </field>

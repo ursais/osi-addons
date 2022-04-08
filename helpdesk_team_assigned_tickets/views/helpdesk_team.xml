@@ -8,10 +8,7 @@
         <field name="context">{'search_default_team_id': active_id,
             'search_default_assigned': True}
         </field>
-        <field
-            name="search_view_id"
-            ref="helpdesk.helpdesk_tickets_view_search"
-        />
+        <field name="search_view_id" ref="helpdesk.helpdesk_tickets_view_search" />
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new ticket

@@ -95,14 +95,17 @@ class AccountPayment(models.Model):
                     sequence = rec.journal_id.check_sequence_id
                     sequence.next_by_id()
                     message = (
-                        """<ul class="o_mail_thread_message_tracking">
+                        (
+                            """<ul class="o_mail_thread_message_tracking">
                         <li>(_(Check Updated Date:)) %s</li>
                         <li>(_(Check Number:)) %s (Generated)</li>
                         <li>(_(State:)) %s</li></ul>"""
-                    ) % (
-                        fields.Date.to_string(fields.Date.context_today(self)),
-                        rec.check_number,
-                        rec.state.title(),
+                        )
+                        % (
+                            fields.Date.to_string(fields.Date.context_today(self)),
+                            rec.check_number,
+                            rec.state.title(),
+                        )
                     )
                     rec.message_post(body=message)
         result = super(AccountPayment, self).print_checks()
@@ -190,13 +193,16 @@ class AccountPayment(models.Model):
 
             # Set Messages....
             message = (
-                """<ul class="o_mail_thread_message_tracking"><li>(_(Updated On:)) %s</li>
+                (
+                    """<ul class="o_mail_thread_message_tracking"><li>(_(Updated On:)) %s</li>
                 <li>(_(Check Number:)) %s (Cancelled)</li>
                 <li>(_(State:)) %s</li></ul>"""
-            ) % (
-                fields.Date.to_string(fields.Date.context_today(rec)),
-                rec.check_number,
-                rec.state,
+                )
+                % (
+                    fields.Date.to_string(fields.Date.context_today(rec)),
+                    rec.check_number,
+                    rec.state,
+                )
             )
             rec.message_post(body=message)
             rec.write({"is_hide_check": True})

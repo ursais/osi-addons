@@ -1,18 +1,9 @@
 <odoo noupdate="1">
 
     <record id="base.main_company" model="res.company">
-        <field
-            name="quality_point_folder"
-            ref="documents_quality_point_folder"
-        />
-        <field
-            name="quality_check_folder"
-            ref="documents_quality_check_folder"
-        />
-        <field
-            name="quality_alert_folder"
-            ref="documents_quality_alert_folder"
-        />
+        <field name="quality_point_folder" ref="documents_quality_point_folder" />
+        <field name="quality_check_folder" ref="documents_quality_check_folder" />
+        <field name="quality_alert_folder" ref="documents_quality_alert_folder" />
     </record>
 
 </odoo>
