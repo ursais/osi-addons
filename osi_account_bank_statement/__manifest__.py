@@ -12,5 +12,5 @@
     "depends": ["account_accountant"],
     "installable": True,
     "development_status": "Alpha",
-    "maintainers": ["mgosai","smangukiya"],
+    "maintainers": ["mgosai", "smangukiya"],
 }

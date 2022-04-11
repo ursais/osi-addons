@@ -23,11 +23,7 @@
                     attrs="{'invisible': [('ticket_count', '=', 0)]}"
                     groups="helpdesk.group_helpdesk_user"
                 >
-                    <field
-                        name="ticket_count"
-                        widget="statinfo"
-                        string="Tickets"
-                    />
+                    <field name="ticket_count" widget="statinfo" string="Tickets" />
                 </button>
             </button>
         </field>

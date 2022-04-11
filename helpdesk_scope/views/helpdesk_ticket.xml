@@ -11,9 +11,7 @@
                 <field name="scope_id" domain="[('team_ids', '=', team_id)]" />
             </field>
             <field name="ticket_type_id" position="attributes">
-                <attribute
-                    name="domain"
-                >[('scope_ids', '=', scope_id)]</attribute>
+                <attribute name="domain">[('scope_ids', '=', scope_id)]</attribute>
             </field>
         </field>
     </record>

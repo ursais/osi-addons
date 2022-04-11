@@ -3,10 +3,7 @@
     <record id="res_partner_form_ticket_context" model="ir.ui.view">
         <field name="name">res.partner.form.ticket.context</field>
         <field name="model">res.partner</field>
-        <field
-            name="inherit_id"
-            ref="helpdesk.view_partner_form_inherit_helpdesk"
-        />
+        <field name="inherit_id" ref="helpdesk.view_partner_form_inherit_helpdesk" />
         <field name="arch" type="xml">
             <button name="action_open_helpdesk_ticket" position="attributes">
                 <attribute
