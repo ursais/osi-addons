@@ -1,6 +1,5 @@
-# Copyright (C) 2021 - TODAY, Open Source Integrators
+# Copyright (c) 2021 Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-
 import operator
 import re
 
@@ -281,7 +280,7 @@ class Base(models.AbstractModel):
         :return: qualified name of field, to be used in SELECT clause
         """
         # INVARIANT: alias is the SQL alias of model._table in query
-        model, field = self, self._fields[fname]
+        field = self._fields[fname]
         if field.type == "many2many":
             while field.inherited:
                 # retrieve the parent model where field is inherited from
@@ -292,7 +291,7 @@ class Base(models.AbstractModel):
                 parent_alias = query.left_join(
                     alias, parent_fname, parent_model._table, "id", parent_fname
                 )
-                model, alias, field = parent_model, parent_alias, field.related_field
+                alias, field = parent_alias, field.related_field
             # special case for many2many fields: prepare a query on the comodel
             # in order to reuse the mechanism _apply_ir_rules, then inject the
             # query as an extra condition of the left join
@@ -302,7 +301,6 @@ class Base(models.AbstractModel):
             # add the extra join condition only if there is an actual subquery
             extra, extra_params = None, ()
             if subquery.where_clause:
-
                 subquery_str, extra_params = subquery.select()
                 extra = '"{{rhs}}"."{}" IN ({})'.format(field.column2, subquery_str)
             # LEFT JOIN field_relation ON

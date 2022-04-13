@@ -89,6 +89,7 @@
         <field name="name">helpdesk.ticket.service.form.logic</field>
         <field name="model">helpdesk.ticket</field>
         <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form" />
+        <field name="priority">100</field>
         <field name="arch" type="xml">
             <field name="partner_name" position="attributes">
                 <attribute name="invisible">True</attribute>
