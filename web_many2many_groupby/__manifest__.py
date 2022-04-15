@@ -7,7 +7,7 @@
     "version": "14.0.1.0.0",
     "license": "AGPL-3",
     "author": "Open Source Integrators",
-    "maintainer": "Open Source Integrators",
+    "maintainers": "Open Source Integrators",
     "website": "https://github.com/ursais/osi-addons",
     "depends": ["web"],
     "data": ["views/assets.xml"],
