@@ -6,10 +6,7 @@
     <record id="view_reason_code_form_analytic" model="ir.ui.view">
         <field name="name">reason.code.form</field>
         <field name="model">scrap.reason.code</field>
-        <field
-            name="inherit_id"
-            ref="scrap_reason_code.view_scrap_reason_code_form"
-        />
+        <field name="inherit_id" ref="scrap_reason_code.view_scrap_reason_code_form" />
         <field name="arch" type="xml">
             <xpath expr="//form/group[3]" position="after">
                 <group>

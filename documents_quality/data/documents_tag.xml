@@ -1,0 +1,21 @@
+<odoo noupdate="1">
+
+    <record id="documents_tag_point_new" model="documents.tag">
+        <field name="name">New</field>
+        <field name="facet_id" ref="documents_quality_point_facet" />
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="documents_tag_check_new" model="documents.tag">
+        <field name="name">New</field>
+        <field name="facet_id" ref="documents_quality_check_facet" />
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="documents_tag_alert_new" model="documents.tag">
+        <field name="name">New</field>
+        <field name="facet_id" ref="documents_quality_alert_facet" />
+        <field name="sequence">10</field>
+    </record>
+
+</odoo>
