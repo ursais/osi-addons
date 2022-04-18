@@ -24,6 +24,7 @@
             name="inherit_id"
             ref="account_check_printing.view_account_payment_form_inherited"
         />
+        <field name="priority">100</field>
         <field name="arch" type="xml">
             <button name="print_checks" position="attributes">
                 <attribute
