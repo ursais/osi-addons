@@ -20,6 +20,7 @@
         "views/res_partner.xml",
         "views/sale.xml",
         "views/stock.xml",
+        "views/res_config_settings.xml",
     ],
     "installable": True,
     "maintainers": ["bodedra"],
