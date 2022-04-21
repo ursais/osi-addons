@@ -1,7 +1,8 @@
 # Copyright (C) 2021, Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from odoo import models
+from odoo import _, models
+from odoo.exceptions import UserError
 
 
 class StockMove(models.Model):
@@ -109,6 +110,13 @@ class StockMove(models.Model):
                         break
                     else:
                         self.increment_qty(valuation.id, svl_ids, line_id.lot_id.id)
+        if len(svl_ids) == 0:
+            raise UserError(
+                _(
+                    "Need Check Stock Valution Layer For this Product :- %s"
+                    % (move.product_id.name)
+                )
+            )
         self.get_ji_ids(move, svl_ids)
 
     def _action_done(self, cancel_backorder=False):
