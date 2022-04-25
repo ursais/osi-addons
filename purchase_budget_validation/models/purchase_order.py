@@ -53,6 +53,8 @@ class PurchaseOrder(models.Model):
                         "Please check the chatter for more details."
                     )
                 )
+            else:
+                rec.super().button_confirm()
 
     @api.model
     def create(self, vals):
