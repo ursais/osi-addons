@@ -35,9 +35,9 @@ class PurchaseOrder(models.Model):
                             abs(b_line.practical_amount),
                             abs(b_line.committed_amount),
                             abs(b_line.uncommitted_amount),
-                            abs(b_line.practical_amount) + abs(
-                                b_line.committed_amount) + abs(
-                                b_line.uncommitted_amount),
+                            abs(b_line.practical_amount)
+                            + abs(b_line.committed_amount)
+                            + abs(b_line.uncommitted_amount),
                             abs(b_line.planned_amount),
                         )
                     )
