@@ -54,7 +54,7 @@ class PurchaseOrder(models.Model):
                     )
                 )
             else:
-                rec.super().button_confirm()
+                super(PurchaseOrder, rec).button_confirm()
 
     @api.model
     def create(self, vals):
