@@ -37,10 +37,9 @@ class CrossoveredBudgetLines(models.Model):
                 ),
             ]
             po_lines_commimt = purchase_line_obj.search(commit_domain)
-            budget_line.committed_amount = sum(
+            budget_line.committed_amount = -sum(
                 [
                     line.price_unit * (line.product_qty - line.qty_invoiced)
-                    + line.price_tax
                     for line in po_lines_commimt
                 ]
             )
@@ -64,7 +63,7 @@ class CrossoveredBudgetLines(models.Model):
                 ),
             ]
             po_lines_uncommit = purchase_line_obj.search(uncommit_domain)
-            budget_line.uncommitted_amount = sum(
+            budget_line.uncommitted_amount = -sum(
                 [line.price_subtotal for line in po_lines_uncommit]
             )
 
@@ -72,6 +71,8 @@ class CrossoveredBudgetLines(models.Model):
         for rec in self:
             rec.over_budget = False
             if (
-                rec.practical_amount + rec.committed_amount + rec.uncommitted_amount
-            ) > rec.planned_amount:
+                abs(rec.practical_amount)
+                + abs(rec.committed_amount)
+                + abs(rec.uncommitted_amount)
+            ) > abs(rec.planned_amount):
                 rec.over_budget = True

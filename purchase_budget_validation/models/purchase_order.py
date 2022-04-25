@@ -27,10 +27,17 @@ class PurchaseOrder(models.Model):
                         "<br/>This order is over budget."
                         "<br/>Budget Name: %s"
                         "<br/>Budget Line: %s"
-                        "<br/>Practical + Committed + Uncommitted > Planned Amount.<br/>"
+                        "<br/>%s + %s + %s = %s > %s.<br/>"
                         % (
                             b_line.crossovered_budget_id.name,
                             b_line.name,
+                            abs(b_line.practical_amount),
+                            abs(b_line.committed_amount),
+                            abs(b_line.uncommitted_amount),
+                            abs(b_line.practical_amount) + abs(
+                                b_line.committed_amount) + abs(
+                                b_line.uncommitted_amount),
+                            abs(b_line.planned_amount),
                         )
                     )
         if message:
