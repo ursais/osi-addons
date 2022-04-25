@@ -11,7 +11,7 @@ class PurchaseOrderLine(models.Model):
             [
                 ("date_from", "<=", self.date_order),
                 ("date_to", ">=", self.date_order),
-                ("crossovered_budget_state", "=", "confirm"),
+                ("crossovered_budget_state", "=", "validate"),
                 "|",
                 ("analytic_account_id", "=", self.account_analytic_id.id),
                 ("analytic_tag_id", "in", self.analytic_tag_ids.ids),
