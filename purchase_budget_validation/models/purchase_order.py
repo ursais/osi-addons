@@ -18,7 +18,7 @@ class PurchaseOrder(models.Model):
 
     def check_budget(self, notify=False):
         message = ""
-        users = None
+        users = self.env["res.users"]
         over_budget = False
         for po_line in self.order_line:
             budget_lines = po_line._get_budget_lines()
@@ -32,9 +32,9 @@ class PurchaseOrder(models.Model):
                             b_line.crossovered_budget_id.name,
                             b_line.name,
                             b_line.crossovered_budget_id.user_id.name,
-                            abs(b_line.practical_amount),
-                            abs(b_line.committed_amount),
                             abs(b_line.uncommitted_amount),
+                            abs(b_line.committed_amount),
+                            abs(b_line.practical_amount),
                             abs(b_line.practical_amount)
                             + abs(b_line.committed_amount)
                             + abs(b_line.uncommitted_amount),
@@ -44,8 +44,7 @@ class PurchaseOrder(models.Model):
         if message:
             over_budget = True
         if notify:
-            for user in users:
-                self.message_subscribe(partner_ids=user.partner_id.ids)
+            self.message_subscribe(partner_ids=users.partner_id.ids)
             self.message_post(body=message)
         return over_budget
 

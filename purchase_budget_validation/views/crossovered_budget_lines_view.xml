@@ -4,6 +4,9 @@
         <field name="model">crossovered.budget</field>
         <field name="inherit_id" ref="account_budget.crossovered_budget_view_form" />
         <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="amount_include_tax" />
+            </field>
             <xpath
                 expr="//sheet/notebook/page[@name='budget_lines']/field/tree/field[@name='theoritical_amount']"
                 position="after"
