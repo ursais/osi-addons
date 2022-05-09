@@ -1,0 +1,35 @@
+<odoo>
+
+    <record id="helpdesk_team_sale_view_form" model="ir.ui.view">
+        <field name="name">helpdesk.team.sale.form</field>
+        <field name="model">helpdesk.team</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_team_view_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//div[@id='after-sales']/div[hasclass('o_setting_box')][2]"
+                position="after"
+            >
+                <div class="col-lg-6 o_setting_box">
+                    <div class="o_setting_left_pane">
+                        <field name="use_sale_orders" />
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="use_sale_orders" />
+                        <div class="text-muted">
+                            Create Sales Orders from Tickets
+                        </div>
+                        <div
+                            id="use_sale_orders"
+                            attrs="{'invisible': [('use_sale_orders', '=', False)]}"
+                        >
+                            <div class="text-warning mb4 mt16">
+                                Save this page and refresh to activate the feature.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
