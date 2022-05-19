@@ -11,7 +11,7 @@ class AccountBankReconciliationReport(models.AbstractModel):
     _description = "Bank Reconciled Report"
     _inherit = "account.report"
 
-    filter_date = {"date": "", "filter": "today"}
+    filter_date = {'mode': 'single', 'filter': 'today'}
 
     line_number = 0
 
