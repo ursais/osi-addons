@@ -9,10 +9,7 @@
         <field name="arch" type="xml">
             <group name="fiscal_information" position="before">
                 <field name="customer_rank" invisible="1" />
-                <group
-                    string="Credit Management"
-                    attrs="{'invisible': [('customer_rank','=',0)]}"
-                >
+                <group string="Credit Management" name="credit_limit_management" >
                     <field name="sales_hold" />
                     <field
                         name="credit_limit"
