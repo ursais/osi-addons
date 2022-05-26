@@ -20,10 +20,12 @@ class AccountMoveLine(models.Model):
 
     def _prepare_analytic_line(self):
         res = super()._prepare_analytic_line()
-        res[0].update(
-            {
-                "analytic_segment_one_id": self.analytic_segment_one_id.id,
-                "analytic_segment_two_id": self.analytic_segment_two_id.id,
-            }
-        )
+        for line_dict in res:
+            rec = self.filtered(lambda l: l.id == line_dict.get("move_id"))
+            line_dict.update(
+                {
+                    "analytic_segment_one_id": rec.analytic_segment_one_id.id,
+                    "analytic_segment_two_id": rec.analytic_segment_two_id.id
+                }
+            )
         return res
