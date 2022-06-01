@@ -53,7 +53,7 @@ class StockMove(models.Model):
                             {"debit": ji_val}
                         )
                 ji_ids[0].move_id.action_post()
-            else:
+            elif len(svl_ids) == 1:
                 # Only 1 Valuation Layer, we can just change values
                 if len(move.stock_valuation_layer_ids.ids) > 1:
                     svl = self.env["stock.valuation.layer"].browse(svl_ids[0][0])
