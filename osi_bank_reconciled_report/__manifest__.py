@@ -13,6 +13,7 @@
     "data": [
         "data/account_financial_report_data.xml",
         "views/account_journal_dashboard_view.xml",
+        "views/report_financial.xml",
     ],
     "installable": True,
     "maintainers": ["osi-scampbell"],
