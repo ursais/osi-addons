@@ -1,0 +1,27 @@
+<odoo>
+    <record id="view_fleet_vehicle_inherit_form_helpdesk" model="ir.ui.view">
+        <field name="name">view.fleet.vehicle.inherit.form.helpdesk</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form" />
+        <field
+            name="groups_id"
+            eval="[(4, ref('helpdesk.group_helpdesk_user'))]"
+        />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    name="open_fleet_helpdesk"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-list-alt"
+                >
+                    <field
+                        name="ticket_count"
+                        widget="statinfo"
+                        string="Tickets"
+                    />
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>
