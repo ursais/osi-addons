@@ -28,31 +28,44 @@ class Partner(models.Model):
     )
 
     def write(self, vals):
+
         res = super(Partner, self).write(vals)
-        if "credit_limit" or "credit_hold" in vals:
+
+        if "credit_limit" in vals:
+            domain = [("ship_hold", "=", True)]
             for partner in self:
-                order_ids = self.env["sale.order"].search(
-                    [("partner_id", "=", partner.id)]
-                )
-                # only if partner is on credit hold, set sale orders on ship hold immediately
-                ship_hold = partner.credit_hold
-
-                # check for credit_limit
-                if partner.credit_limit > 0 and order_ids:
-                    if not ship_hold and not self.check_limit(order_ids[0]):
-                        ship_hold = False
-                    else:
-                        ship_hold = True
-
-                order_ids.write({"ship_hold": ship_hold})
+                is_credit_limit = False
+                if self.env.company.is_company_credit_limit:
+                    domain.append(
+                        ("partner_id", "child_of", partner.parent_id.id or partner.id)
+                    )
+                    if partner.parent_id and partner.parent_id.credit_limit > 0:
+                        is_credit_limit = True
+                    elif partner.credit_limit > 0:
+                        is_credit_limit = True
+                else:
+                    domain.append(("partner_id", "=", partner.id))
+                    if partner.credit_limit > 0:
+                        is_credit_limit = True
+                order_ids = self.env["sale.order"].search(domain)
+                if is_credit_limit and order_ids:
+                    if not partner.check_limit(order_ids[0]):
+                        order_ids.write({"ship_hold": False})
         return res
 
     def check_limit(self, sale_id):
         partner_id = sale_id.partner_id
         # Other orders for this partner
+        domain = []
+        if self.env.company.is_company_credit_limit:
+            domain.append(
+                ("partner_id", "child_of", partner_id.parent_id.id or partner_id.id)
+            )
+        else:
+            domain.append(("partner_id", "=", partner_id.id))
         order_ids = self.env["sale.order"].search(
-            [
-                ("partner_id", "=", partner_id.id),
+            domain
+            + [
                 ("state", "=", "sale"),
                 ("invoice_status", "!=", "invoiced"),
             ]
@@ -60,9 +73,8 @@ class Partner(models.Model):
         # Open invoices (unpaid or partially paid invoices --
         # It is already included in partner.credit
         invoice_ids = self.env["account.move"].search(
-            [
-                ("partner_id", "=", partner_id.id),
-                # ('state', '=', 'draft'),
+            domain
+            + [
                 ("state", "in", ["open", "posted"]),
                 ("payment_state", "in", ["not_paid", "partial"]),
                 ("move_type", "in", ["out_invoice", "out_refund"]),
@@ -81,7 +93,7 @@ class Partner(models.Model):
                 fields.Datetime.to_string(
                     (
                         invoice.invoice_date_due
-                        or invoice.date_invoice
+                        or invoice.invoice_date
                         or invoice.create_date
                     )
                     + timedelta(days=partner_id.grace_period)
@@ -94,10 +106,13 @@ class Partner(models.Model):
                 )
         # All open sale orders + partner credit (AR balance) -
         # Open invoices (already included in partner credit)
+        partner_id = sale_id.partner_id
+        if self.env.company.is_company_credit_limit:
+            partner_id = sale_id.partner_id.parent_id or sale_id.partner_id
         if (
-            sale_id.partner_id.credit_limit
+            partner_id.credit_limit
             and (existing_invoice_balance + existing_order_balance)
-            > sale_id.partner_id.credit_limit
+            > partner_id.credit_limit
         ):
             return True
         else:

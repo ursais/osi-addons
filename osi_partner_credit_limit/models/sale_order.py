@@ -14,21 +14,22 @@ class SaleOrder(models.Model):
     credit_hold = fields.Boolean(
         related="partner_id.credit_hold", string="Customer Credit Hold"
     )
-    ship_hold = fields.Boolean(string="Delivery Hold", copy=False)
+    ship_hold = fields.Boolean(string="Order Sales/Ship Hold", copy=False)
     credit_override = fields.Boolean(
-        string="Override Hold", tracking=True, default=False
+        string="Override Sales/Credit/Ship Hold", tracking=True, default=False
     )
 
     def action_confirm(self):
         self.partner_id.check_limit(self)
         if self.sales_hold and not self.credit_override:
-            message = _("""Cannot confirm Order! The customer is on sales hold.""")
+            message = _(
+                """Cannot confirm Order!The customer is on Customer Sales Hold."""
+            )
             # Display that the customer is on sales hold
             raise ValidationError(message)
         elif self.ship_hold and not self.credit_override:
             message = _(
-                """Cannot confirm Order! The customer exceed available
-                   credit limit and is on ship hold."""
+                """Cannot confirm Order! The customer is on Order Sales Hold."""
             )
             raise ValidationError(message)
         else:
@@ -39,10 +40,13 @@ class SaleOrder(models.Model):
             if self.partner_id.check_limit(self) and not self.credit_override:
                 self.state = prev_state
                 self.ship_hold = True
+                # commit changes above before ORM rollback any changes.
+                self._cr.commit()
                 message = _(
                     """Cannot confirm Order!
-                        This will exceed allowed Credit Limit.
-                        To Override, check Override Sales/Credit/Delivery Hold"""
+                        This will put Customer over Credit Limit.
+                        To Override, check Override Sales/Credit/Ship Hold"""
                 )
                 raise ValidationError(message)
+
             return super(SaleOrder, self).action_confirm()
