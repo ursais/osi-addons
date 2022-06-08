@@ -45,11 +45,11 @@ class Partner(models.Model):
                         is_credit_limit = True
                 else:
                     domain.append(("partner_id", "=", partner.id))
-                    if self.credit_limit > 0:
+                    if partner.credit_limit > 0:
                         is_credit_limit = True
                 order_ids = self.env["sale.order"].search(domain)
                 if is_credit_limit and order_ids:
-                    if not self.check_limit(order_ids[0]):
+                    if not partner.check_limit(order_ids[0]):
                         order_ids.write({"ship_hold": False})
         return res
 
