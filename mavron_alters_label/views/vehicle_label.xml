@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="paperformat_label_mavron" model="report.paperformat">
+        <field name="name">Mavron Vehicle Label Report Format</field>
+        <field eval="True" name="default"/>
+        <field name="format">custom</field>
+        <field name="page_height">51</field>
+        <field name="page_width">102</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">1</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">1</field>
+        <field name="margin_right">1</field>
+        <field eval="False" name="header_line"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+    <template id="vehicle_label_template">
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <div class="row" style="float: left;">
+                        <div class="col-5 text-left" style="font-size: 14px;">
+                            <strong><span>MANUFACTURED BY:</span></strong>
+                        </div>
+                        <div class="col-5 text-left">
+                            <strong><span style="font-size: 18px;" t-esc="o.company_id.name"/></strong><br/>
+                            <span style="font-size: 12px;" t-esc="o.company_id.city"/>,<span style="font-size:12px;" t-esc="o.company_id.state_id.name"/>
+                        </div>
+                        <div class="col-3 text-right" style="font-size: 12px;">
+                            <img src="/mavron_alters_label/static/src/img/Logo2.JPG" width="90" height="80"/>
+                        </div>
+                    </div>
+                    <div class="row" style="font-size: 8px;" >
+                        <div class="col-4 text-left">
+                            <span style="text-align:left;">
+                            <t t-esc="o.vehicle_certification" />
+                            </span>
+                        </div>
+                    <div class="col-4 text-center">
+                        <span style="text-align:center;">Vehicle manufactured by: <span t-esc="o.model_id.brand_id.name" ></span></span>
+                    </div>
+                     <div class="col-4 text-center">
+                        <span t-esc="o.acquisition_date.strftime('%m/%Y')"/>
+                    </div>
+                </div>
+                    <div class="row">
+                        <p style="font-size: 7px;margin-bottom:0px;">
+                            IN CONFORMITY TO FEDERAL MOTOR VEHICLE SAFETY STANDARDS, WHICH HAVE BEEN PREVIOUSLY FULLY CERTIFIED BY THE COMPLETED VEHICLE MANUFACTURER, HAS NOT BEEN AFFECTED BY MAVRON, INC. THE VEHICLE HAS BEEN COMPLETED IN ACCORDANCE WITH PRIOR MANUFACTURER'S INSTRUCTIONS, WHERE APPLICABLE THIS VEHICLE CONFORMS TO ALL OTHER FEDERAL MOTOR VEHICLE SAFETY STANDARDS IN EFFECT AT THE TIME OF MANUFACTURE
+                        </p>
+                    </div>
+                    <div class="row" style="font-size: 6px; padding-top:1px">
+                        <div class="col-4 text-center">
+                            <strong>GVWR</strong>
+                        </div>
+                        <div class="col-4 text-center">
+                            <strong>GAWR FRONT</strong>
+                        </div>
+                        <div class="col-4 text-center">
+                            <strong>GVWR REAR</strong>
+                        </div>
+                    </div>
+                    <div class="row" style="font-size: 6px;padding-top:1px;padding-bottom:0.5px;">
+                        <div class="col-4 text-center">
+                            <span t-esc="o.gvwr_kg"/><span> kg / </span><span t-esc="o.gvwr_lbs"/><span> lbs</span>
+                        </div>
+                        <div class="col-4 text-center">
+                            <span t-esc="o.gawr_front_kg"/><span> kg / </span><span t-esc="o.gawr_front_lbs"/><span> lbs</span>
+                        </div>
+                        <div class="col-4 text-center">
+                            <span t-esc="o.gawr_rear_kg"/><span> kg / </span><span t-esc="o.gawr_rear_lbs"/><span> lbs</span>
+                        </div>
+                    </div>
+                    <table class="table table-borderless" style="font-size: 6px;padding: 0.1rem;padding-bottom:0.1px; margin-bottom:0.1rem;">
+                        <thead style="padding: 0.1rem;">
+                        <tr>
+                          <th scope="col" style="padding: 0.1rem;">CPDB</th>
+                          <th scope="col" style="padding: 0.1rem;">TIRE SIZE</th>
+                          <th scope="col" style="padding: 0.1rem;">RIM</th>
+                          <th scope="col" style="padding: 0.1rem;">COLD TIRE PRESSURE</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                          <th scope="row" style="padding: 0.1rem;">FRONT</th>
+                          <td style="padding: 0.1rem;"><t t-esc="o.front_tier_size"/></td>
+                          <td style="padding: 0.1rem;"><t t-esc="o.front_rim"/></td>
+                          <td style="padding: 0.1rem;"><t t-esc="o.front_cold_tier_pressure_kpa"/><strong> kPa/ </strong><t t-esc="o.front_cold_tier_pressure_psi"/><strong> PSI</strong></td>
+                        </tr>
+                        <tr>
+                          <th scope="row" style="padding: 0.1rem;">REAR</th>
+                          <td style="padding: 0.1rem;"><t t-esc="o.rear_tier_size"/></td>
+                          <td style="padding: 0.1rem;"><t t-esc="o.rear_rim"/></td>
+                          <td style="padding: 0.1rem;"><t t-esc="o.rear_cold_tier_pressure_kpa"/><strong> kPa/ </strong><t t-esc="o.rear_cold_tier_pressure_psi"/><strong> PSI</strong></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="row" style="font-size: 6px;padding-top:0.1px;padding-bottom:0.1px;">
+                        <div class="col-2"/>
+                        <div class="col-8 text-center">
+                            <strong>VIN: </strong><span t-esc="o.vin_sn"/>
+                        </div>
+                        <div class="col-2"/>
+                    </div>
+                    <div class="row" style="font-size: 6px;padding-top:1px;padding-bottom:0.1px;">
+                        <div class="col-6 text-left">
+                            <span>MAVRON MODEL: </span><span t-esc="o.model_id.name"/><br/>
+                            <span>CUSTOMER NAME: </span><span t-esc="o.driver_id.name"/>
+                        </div>
+                        <div class="col-6 text-left">
+                            <span>TYPE: </span><span t-esc="o.vehicle_type"/><br/>
+                            <span>SERIAL NUMBER: </span><span t-esc="o.name"/>
+                        </div>
+                    </div>
+                <div style="page-break-after: always;"></div>
+            </div>
+            <div class="page">
+                <div class="row">
+                    <div class="col-6 text-left" style="font-size: 14px;">
+                        <strong><span>MANUFACTURED BY:</span></strong><br/>
+                        <strong><span style="font-size: 20px;" t-esc="o.company_id.name"/></strong><br/>
+                        <strong><span style="font-size: 18px;" t-esc="o.company_id.city"/>,<span style="font-size:18px;" t-esc="o.company_id.state_id.name"/></strong><br/>
+                        <strong><span>Phone:</span><span t-esc="o.company_id.phone"/></strong>
+                    </div>
+                    <div class="col-6 text-right" style="font-size: 14px;">
+                        <img src="/mavron_alters_label/static/src/img/Logo2.JPG" width="90" height="90"/>
+                    </div>
+                </div>
+                <hr width="100%" style="margin-top:0.3rem;border-top:10px solid;line-height:5;"/>
+                <div class="row" style="font-size: 6px;padding-top:1px;padding-bottom:0.1px;">
+                    <div class="col-8 text-left" style="font-size: 14px;">
+                        <strong>MODEL: </strong><strong t-esc="o.model_id.name"/><br/>
+                        <strong>SERIAL NUMBER: </strong><strong t-esc="o.name"/><br/>
+                        <strong>VIN: </strong><strong t-esc="o.vin_sn"/><br/>
+                        <strong>BUILT BY: </strong><strong t-esc="o.driver_id.name"/>
+                    </div>
+                    <div class="col-4"/>   
+                </div>
+            </div>
+            </t>
+        </t>
+    </template>
+    
+    <record id="action_report_vehicle_label" model="ir.actions.report">
+        <field name="name">Vehicle Label</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="binding_model_id" ref="model_fleet_vehicle"/>
+        <field name="binding_type">report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">mavron_alters_label.vehicle_label_template</field>
+        <field name="report_file">mavron_alters_label.vehicle_label</field>
+        <field name="paperformat_id" ref="mavron_alters_label.paperformat_label_mavron"/>
+    </record>
+</odoo>

@@ -1,0 +1,53 @@
+<odoo>
+
+    <record id="fleet_vehicle_view_form_mavron" model="ir.ui.view">
+        <field name="name">fleet.vehicle.view.form.mavron</field>
+        <field name="model">fleet.vehicle</field>
+        <field name="inherit_id" ref="fleet.fleet_vehicle_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Alters label">
+                    <group>
+                        <group string="Weight">
+                            <label for="gvwr_kg" string="GVWR:"/>
+                            <div class="o_row">
+                                <field name="gvwr_kg" string=""/><strong>kg/</strong>
+                                <field name="gvwr_kg" string=""/><strong>lbs</strong>
+                            </div>
+                            <label for="gawr_front_kg" string="GAWR Front:"/>
+                            <div class="o_row">
+                                <field name="gawr_front_kg" string=""/><strong>kg/</strong>
+                                <field name="gawr_front_lbs" string=""/><strong>lbs</strong>
+                            </div>
+                            <label for="gawr_rear_kg" string="GAWR Rear:"/>
+                            <div class="o_row">
+                                <field name="gawr_rear_kg" string=""/><strong>kg/</strong>
+                                <field name="gawr_rear_lbs" string=""/><strong>lbs</strong>
+                            </div>
+                        </group>
+                        <group string="Tire">
+                            <label for="front_cold_tier_pressure_kpa" string="Front Cold Tire Pressure:"/>
+                            <div class="o_row">
+                                <field name="front_cold_tier_pressure_kpa" string=""/><strong>kPa/</strong>
+                                <field name="front_cold_tier_pressure_psi" string=""/><strong>PSI</strong>
+                            </div>
+                            <label for="rear_cold_tier_pressure_kpa" string="Rear Cold Tire Pressure:"/>
+                            <div class="o_row">
+                                <field name="rear_cold_tier_pressure_kpa" string=""/><strong>kPa/</strong>
+                                <field name="rear_cold_tier_pressure_psi" string=""/><strong>PSI</strong>
+                            </div>
+                            <field name="front_tier_size"/>
+                            <field name="rear_tier_size"/>
+                            <field name="front_rim"/>
+                            <field name="rear_rim"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <field name="location" position="after">
+                <field name="vehicle_certification" widget="radio" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

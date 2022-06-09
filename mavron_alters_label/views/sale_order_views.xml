@@ -1,0 +1,13 @@
+<odoo>
+    <record id="view_sale_order_form_inherited" model="ir.ui.view">
+        <field name="name">view.sale.order.form.inherited</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="mavron_model_id" options="{'no_create': True}" />
+                <field name="vehicle_certification" widget="radio" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
