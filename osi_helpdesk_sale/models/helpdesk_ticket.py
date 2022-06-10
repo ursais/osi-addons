@@ -47,6 +47,7 @@ class HelpdeskTicket(models.Model):
                 "note": self.description,
             }
         )
+        order_id.onchange_user_id()
         order_id.helpdesk_ticket_ids = [(6, 0, self.ids)]
         return {
             "name": _("Create Sales Order"),
