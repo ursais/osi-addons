@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<template id="osi_bank_reconciled_report" inherit_id="account_reports.line_caret_options">
+	    <xpath expr="//li[last()]" position="after">
+	        <li t-if="line['caret_options'] == 'account.bank.statement.line' and line.get('display_move')">
+	        	<a role="menuitem" tabindex="-1" t-att-data-id="line['move_id']" t-att-data-model="line.get('move_model', 'account.move')" data-object="account.move" action="open_document" class="dropdown-item">View Journal Entries</a>
+	       	</li>
+	    </xpath>
+	    <xpath expr="//li[contains(@t-if, 'account.bank.statement')]" position="attributes">
+	    	<attribute name="t-if">line['caret_options'] == 'account.bank.statement.line' and not line.get('hide_bank_statement')</attribute>
+	    </xpath>
+	</template>
+
+</odoo>

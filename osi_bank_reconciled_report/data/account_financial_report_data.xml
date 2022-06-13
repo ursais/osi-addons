@@ -5,9 +5,6 @@
     >
         <field name="name">Bank Reconciled</field>
         <field name="tag">account_report</field>
-        <field
-            name="context"
-            eval="{'model': 'account.bank.reconciled.report'}"
-        />
+        <field name="context" eval="{'model': 'account.bank.reconciled.report'}" />
     </record>
 </odoo>
