@@ -37,13 +37,13 @@ class CrossoveredBudgetLines(models.Model):
                     FROM account_move_line aml
                     LEFT JOIN account_move am ON aml.move_id = am.id
                     LEFT JOIN
-                        account_account_tag_account_move_line_rel aat
+                        account_analytic_tag_account_move_line_rel aat
                         ON aat.account_move_line_id = aml.id
                     WHERE state=%s
                     AND account_id in %s
                         AND (aml.date between %s
                         AND %s)
-                        AND aat.account_account_tag_id=%s""",
+                        AND aat.account_analytic_tag_id=%s""",
                     (
                         "posted",
                         tuple(line.general_budget_id.account_ids.ids),
