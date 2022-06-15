@@ -1,27 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record
-        model="ir.ui.view"
-        id="account_reports_journal_dashboard_kanban_view_reconciled"
-    >
-        <field name="name">account.journal.dashboard.kanban.reports</field>
-        <field name="model">account.journal</field>
-        <field
-            name="inherit_id"
-            ref="account_reports.account_reports_journal_dashboard_kanban_view"
-        />
-        <field name="arch" type="xml">
-            <xpath
-                expr="//div[hasclass('o_kanban_manage_reconciliation')]"
-                position="inside"
-            >
-                <div groups="account.group_account_manager">
-                    <a
-                        type="action"
-                        name="%(action_account_report_bank_reconciled_with_journal)d"
-                    >Reconciled Report</a>
-                </div>
-            </xpath>
-        </field>
-    </record>
+	<template id="osi_bank_reconciled_report" inherit_id="account_reports.line_caret_options">
+	    <xpath expr="//li[last()]" position="after">
+	        <li t-if="line['caret_options'] == 'account.bank.statement.line' and line.get('display_move')">
+	        	<a role="menuitem" tabindex="-1" t-att-data-id="line['move_id']" t-att-data-model="line.get('move_model', 'account.move')" data-object="account.move" action="open_document" class="dropdown-item">View Journal Entries</a>
+	       	</li>
+	    </xpath>
+	    <xpath expr="//li[contains(@t-if, 'account.bank.statement')]" position="attributes">
+	    	<attribute name="t-if">line['caret_options'] == 'account.bank.statement.line' and not line.get('hide_bank_statement')</attribute>
+	    </xpath>
+	</template>
 
 </odoo>
