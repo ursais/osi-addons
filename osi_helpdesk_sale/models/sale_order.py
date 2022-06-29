@@ -50,7 +50,9 @@ class SaleOrder(models.Model):
             ticket_ids = self.env["helpdesk.ticket"].search(
                 [("sale_ids", "in", order.ids)]
             )
-            action = self.env.ref("helpdesk.helpdesk_ticket_action_main_tree").read()[0]
+            action = self.env["ir.actions.act_window"]._for_xml_id(
+                "helpdesk.helpdesk_ticket_action_main_tree"
+            )
             action["context"] = {}
             if len(ticket_ids) == 1:
                 action["views"] = [
