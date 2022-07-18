@@ -1,7 +1,7 @@
 # Copyright (C) 2020 Open Source Integrators
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html).
 
-from odoo import _, api, models
+from odoo import _, api, fields, models
 from odoo.osv import expression
 from odoo.tools.misc import format_date
 
@@ -12,8 +12,8 @@ class AccountBankReconciliationReport(models.AbstractModel):
     _inherit = "account.report"
 
     filter_date = {'mode': 'single', "date": "", "filter": "today"}
-
-    line_number = 0
+    
+    line_number = fields.Integer("Line Number")
 
     def _get_columns_name(self, options):
         return [
@@ -41,8 +41,6 @@ class AccountBankReconciliationReport(models.AbstractModel):
         }
 
     def _add_total_line(self, amount):
-        line_number = 0
-        line_number += 1
         line_currency = self.env.context.get("line_currency", False)
         return {
             "id": "line_" + str(self.line_number),
@@ -127,9 +125,9 @@ class AccountBankReconciliationReport(models.AbstractModel):
         self = self.with_context(line_currency=rslt['line_currency'])
         lines_already_accounted = self.env['account.move.line'].\
             search([('account_id', 'in', rslt['account_ids']),
-                    ('date', '<=', self.env.context['date_to']),
-                    ('date', '>=', self.env.context['date_from']),
-                    ('company_id', 'in', self.env.context['allowed_company_ids'])])
+                    ('date', '<=', options["date"]["date_to"]),
+                    ('date', '>=', options["date"]['date_from']),
+                    ('company_id', 'in', self.env.context["allowed_company_ids"] or options.get['allowed_company_ids'])])
         rslt['odoo_balance'] = sum([line.amount_currency
                                     if rslt['use_foreign_currency'] else
                                     line.balance for line
@@ -139,11 +137,11 @@ class AccountBankReconciliationReport(models.AbstractModel):
         aml_domain = [('account_id', 'in', rslt['account_ids']),
                       '|', ('statement_line_id', '=', False),
                       ('statement_line_id.date', '>',
-                       self.env.context['date_to']),
+                       options["date"]["date_to"]),
                       ('account_internal_type', '=', 'liquidity'),
                       ('full_reconcile_id', '!=', False),
-                      ('date', '<=', self.env.context['date_to']),
-                      ('date', '>=', self.env.context['date_from'])]
+                      ('date', '<=', options["date"]["date_to"]),
+                      ('date', '>=', options["date"]['date_from'])]
         companies_unreconciled_selection_domain = []
         for company in selected_companies:
             company_domain = [('company_id', '=', company.id)]
@@ -166,11 +164,11 @@ class AccountBankReconciliationReport(models.AbstractModel):
         aml_domain2 = [('account_id', 'in', rslt['account_ids']),
                        '|', ('statement_line_id', '=', False),
                        ('statement_line_id.date', '>',
-                        self.env.context['date_to']),
+                        options["date"]["date_to"]),
                        ('account_internal_type', '=', 'liquidity'),
                        ('full_reconcile_id', '=', False),
-                       ('date', '<=', self.env.context['date_to']),
-                       ('date', '>=', self.env.context['date_from'])]
+                       ('date', '<=', options["date"]["date_to"]),
+                       ('date', '>=', options["date"]['date_from'])]
 
         companies_unreconciled_selection_domain = []
         for company in selected_companies:
@@ -193,8 +191,8 @@ class AccountBankReconciliationReport(models.AbstractModel):
         rslt['reconciled_st_positive'] = self.\
             env['account.bank.statement.line'].\
             search([('statement_id.journal_id', '=', journal_id),
-                    ('date', '<=', self.env.context['date_to']),
-                    ('date', '>=', self.env.context['date_from']),
+                    ('date', '<=', options["date"]["date_to"]),
+                    ('date', '>=', options["date"]['date_from']),
                     ('is_reconciled', '=', True),
                     ('amount', '>', 0),
                     ('company_id', 'in',
@@ -203,8 +201,8 @@ class AccountBankReconciliationReport(models.AbstractModel):
         rslt['reconciled_st_negative'] = self.\
             env['account.bank.statement.line'].\
             search([('statement_id.journal_id', '=', journal_id),
-                    ('date', '<=', self.env.context['date_to']),
-                    ('date', '>=', self.env.context['date_from']),
+                    ('date', '<=', options["date"]["date_to"]),
+                    ('date', '>=', options["date"]['date_from']),
                     ('is_reconciled', '=', True),
                     ('amount', '<', 0),
                     ('company_id', 'in',
@@ -214,8 +212,8 @@ class AccountBankReconciliationReport(models.AbstractModel):
         rslt['not_reconciled_st_positive'] = self.\
             env['account.bank.statement.line'].\
             search([('statement_id.journal_id', '=', journal_id),
-                    ('date', '<=', self.env.context['date_to']),
-                    ('date', '>=', self.env.context['date_from']),
+                    ('date', '<=', options["date"]['date_to']),
+                    ('date', '>=', options["date"]['date_from']),
                     ('is_reconciled', '!=', True),
                     ('amount', '>', 0),
                     ('company_id', 'in',
@@ -224,8 +222,8 @@ class AccountBankReconciliationReport(models.AbstractModel):
         rslt['not_reconciled_st_negative'] = self.\
             env['account.bank.statement.line'].\
             search([('statement_id.journal_id', '=', journal_id),
-                    ('date', '<=', self.env.context['date_to']),
-                    ('date', '>=', self.env.context['date_from']),
+                    ('date', '<=', options["date"]['date_to']),
+                    ('date', '>=', options["date"]['date_from']),
                     ('is_reconciled', '!=', True),
                     ('amount', '<', 0),
                     ('company_id', 'in',
@@ -234,8 +232,8 @@ class AccountBankReconciliationReport(models.AbstractModel):
         # Final
         last_statement = self.env['account.bank.statement'].\
             search([('journal_id', '=', journal_id),
-                    ('date', '<=', self.env.context['date_to']),
-                    ('date', '>=', self.env.context['date_from']),
+                    ('date', '<=', options["date"]['date_to']),
+                    ('date', '>=', options["date"]['date_from']),
                     ('company_id', 'in', self.env.context['allowed_company_ids'])],
                    order="date desc, id desc", limit=1)
         rslt['last_st_balance'] = last_statement.balance_end
