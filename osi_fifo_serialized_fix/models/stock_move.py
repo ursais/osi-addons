@@ -9,12 +9,22 @@ class StockMove(models.Model):
     _inherit = "stock.move"
 
     def get_ji_ids(self, move, svl_ids):
-        ji_ids = self.env["account.move.line"].search(
-            [
-                ("name", "ilike", move.picking_id.name),
-                ("name", "ilike", move.product_id.name),
-            ]
-        )
+        if move.raw_material_production_id:
+            ji_ids = self.env["account.move.line"].search(
+                [
+                    '|', ("name", "ilike", move.reference),
+                    ("name", "ilike", move.origin),
+                    ("reconciled", '=', False)
+                ]
+            )
+        else:
+            ji_ids = self.env["account.move.line"].search(
+                [
+                    ("name", "ilike", move.picking_id.name),
+                    ("name", "ilike", move.product_id.name),
+                    ("reconciled", '=', False)
+                ]
+            )
         if ji_ids:
             if len(svl_ids) > 1:
                 final_layers = []

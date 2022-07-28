@@ -19,9 +19,9 @@ class StockQuant(models.Model):
                 )
                 for svl_id in svl_ids:
                     if quant.lot_id in svl_id.lot_ids:
-                        if quant.product_id.tracking == "lot":
+                        if quant.product_id.tracking == "lot" and svl_id.quantity:
                             quant.value = svl_id.value / svl_id.quantity
-                        elif quant.product_id.tracking == "serial":
+                        elif quant.product_id.tracking == "serial" and svl_id.quantity and quant.inventory_quantity:
                             quant.value = (
                                 svl_id.value
                                 / svl_id.quantity
