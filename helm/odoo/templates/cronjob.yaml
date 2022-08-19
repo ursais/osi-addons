@@ -1,0 +1,259 @@
+{{- if eq .Values.environment "production" }}
+kind: CronJob
+apiVersion: batch/v1beta1
+metadata:
+  name: {{ print .Values.name "-backup" | quote }}
+  annotations:
+    description: Backup the production database and filestore everyday
+spec:
+  schedule: '50 6 * * *'
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      parallelism: 1
+      template:
+        metadata:
+          labels:
+            parent: {{ print .Values.name "-backup" | quote }}
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: odoo-backup
+              image: {{ .Values.backup.image }}
+              args:
+                - backup
+                - odoo
+              env:
+                - name: RUNNING_ENV
+                  value: {{ .Values.environment }}
+                - name: PGHOST
+                  value: {{ ternary "odoo-postgresql" .Values.externalDatabase.host .Values.postgresql.enabled | quote }}
+                - name: PGPORT
+                  value: {{ ternary "5432" .Values.externalDatabase.port .Values.postgresql.enabled | quote }}
+                - name: PGDATABASE
+                  value: master
+                - name: PGUSER
+                  value: {{ ternary .Values.postgresql.postgresqlUsername .Values.externalDatabase.user .Values.postgresql.enabled | quote }}
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ ternary (include "odoo.postgresql.fullname" .) (printf "%s-%s" .Release.Name "externaldb") .Values.postgresql.enabled | quote }}
+                      key: {{ ternary "postgresql-password" "db-password" .Values.postgresql.enabled | quote }}
+                - name: PGDEFAULTDB
+                  value: {{ ternary .Values.postgresql.defaultdb .Values.externalDatabase.defaultdb .Values.postgresql.enabled | quote }}
+                - name: PGSSLMODE
+                  value: {{ ternary .Values.postgresql.sslmode .Values.externalDatabase.sslmode .Values.postgresql.enabled | quote }}
+                - name: FILESTORE_PLATFORM
+                  value: {{ .Values.platform }}
+                {{- if .Values.s3.enabled }}
+                - name: FILESTORE_AWS_HOST
+                  value: {{ .Values.s3.aws_host }}
+                - name: FILESTORE_AWS_REGION
+                  value: {{ .Values.s3.aws_region }}
+                - name: FILESTORE_AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ ternary .Values.name "" .Values.s3.enabled | quote }}
+                      key: {{ ternary "aws-access-key-id" "" .Values.s3.enabled | quote }}
+                - name: FILESTORE_AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ ternary .Values.name "" .Values.s3.enabled | quote }}
+                      key: {{ ternary "aws-secret-access-key" "" .Values.s3.enabled | quote }}
+                - name: FILESTORE_AWS_BUCKETNAME
+                  value: {{ .Values.environment }}
+                {{- end }}
+                {{- if .Values.azure.enabled }}
+                - name: FILESTORE_AZURE_STORAGE_ACCOUNT_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ ternary .Values.name "" .Values.azure.enabled | quote }}
+                      key: {{ ternary "azure-storage-account-url" "" .Values.azure.enabled | quote }}
+                {{- end }}
+                - name: BACKUP_PLATFORM
+                  value: {{ .Values.backup.platform }}
+                {{- if or (eq .Values.backup.platform "aws") (eq .Values.backup.platform "do") }}
+                - name: BACKUP_AWS_HOST
+                  value: {{ .Values.backup.aws_host }}
+                - name: BACKUP_AWS_REGION
+                  value: {{ .Values.backup.aws_region }}
+                - name: BACKUP_AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: "backup-credentials"
+                      key: "aws-access-key-id"
+                - name: BACKUP_AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: "backup-credentials"
+                      key: "aws-secret-access-key"
+                - name: BACKUP_AWS_BUCKETNAME
+                  value: {{ .Values.backup.aws_bucketname }}
+                {{- end }}
+                {{- if eq .Values.backup.platform "azure" }}
+                - name: BACKUP_AZURE_STORAGE_ACCOUNT_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: "backup-credentials"
+                      key: "azure-storage-account-url"
+                {{- end }}
+                - name: REMOTE_PLATFORM
+                  value: {{ .Values.remote.platform }}
+                {{- if .Values.remote.enabled }}
+                {{- if or (eq .Values.remote.platform "aws") (eq .Values.remote.platform "do") }}
+                - name: REMOTE_AWS_HOST
+                  value: {{ .Values.remote.aws_host }}
+                - name: REMOTE_AWS_REGION
+                  value: {{ .Values.remote.aws_region }}
+                - name: REMOTE_AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: "remote-credentials"
+                      key: "aws-access-key-id"
+                - name: REMOTE_AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: "remote-credentials"
+                      key: "aws-secret-access-key"
+                - name: REMOTE_AWS_BUCKETNAME
+                  value: {{ .Values.remote.aws_bucketname }}
+                {{- end }}
+                {{- if eq .Values.remote.platform "azure" }}
+                - name: REMOTE_AZURE_STORAGE_ACCOUNT_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: "remote-credentials"
+                      key: "azure-storage-account-url"
+                {{- end }}
+                {{- end }}
+{{- end }}
+---
+{{- if or (eq .Values.environment "qa") (eq .Values.environment "test") }}
+kind: CronJob
+apiVersion: batch/v1beta1
+metadata:
+  name: {{ print .Values.name "-restore" | quote }}
+  annotations:
+    description: Restore the production database and filestore every week in BACKUP
+spec:
+  schedule: '0 12 * * *'
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      parallelism: 1
+      template:
+        metadata:
+          labels:
+            parent: {{ print .Values.name "-restore" | quote }}
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: odoo-restore
+              image: {{ .Values.backup.image }}
+              args:
+                - restore
+                - odoo
+              env:
+                - name: RUNNING_ENV
+                  value: {{ .Values.environment }}
+                - name: PGHOST
+                  value: {{ ternary "odoo-postgresql" .Values.externalDatabase.host .Values.postgresql.enabled | quote }}
+                - name: PGPORT
+                  value: {{ ternary "5432" .Values.externalDatabase.port .Values.postgresql.enabled | quote }}
+                - name: PGDATABASE
+                  value: backup
+                - name: PGUSER
+                  value: {{ ternary .Values.postgresql.postgresqlUsername .Values.externalDatabase.user .Values.postgresql.enabled | quote }}
+                - name: PGPASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ ternary (include "odoo.postgresql.fullname" .) (printf "%s-%s" .Release.Name "externaldb") .Values.postgresql.enabled | quote }}
+                      key: {{ ternary "postgresql-password" "db-password" .Values.postgresql.enabled | quote }}
+                - name: PGDEFAULTDB
+                  value: {{ ternary .Values.postgresql.defaultdb .Values.externalDatabase.defaultdb .Values.postgresql.enabled | quote }}
+                - name: PGSSLMODE
+                  value: {{ ternary .Values.postgresql.sslmode .Values.externalDatabase.sslmode .Values.postgresql.enabled | quote }}
+                - name: FILESTORE_PLATFORM
+                  value: {{ .Values.platform }}
+                {{- if .Values.s3.enabled }}
+                - name: FILESTORE_AWS_HOST
+                  value: {{ .Values.s3.aws_host }}
+                - name: FILESTORE_AWS_REGION
+                  value: {{ .Values.s3.aws_region }}
+                - name: FILESTORE_AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ ternary (.Values.name) "" .Values.s3.enabled | quote }}
+                      key: {{ ternary "aws-access-key-id" "" .Values.s3.enabled | quote }}
+                - name: FILESTORE_AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ ternary (.Values.name) "" .Values.s3.enabled | quote }}
+                      key: {{ ternary "aws-secret-access-key" "" .Values.s3.enabled | quote }}
+                - name: FILESTORE_AWS_BUCKETNAME
+                  value: {{ .Values.environment }}
+                {{- end }}
+                {{- if .Values.azure.enabled }}
+                - name: FILESTORE_AZURE_STORAGE_ACCOUNT_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ ternary .Values.name "" .Values.azure.enabled | quote }}
+                      key: {{ ternary "azure-storage-account-url" "" .Values.azure.enabled | quote }}
+                {{- end }}
+                - name: BACKUP_PLATFORM
+                  value: {{ .Values.backup.platform }}
+                {{- if or (eq .Values.backup.platform "aws") (eq .Values.backup.platform "do") }}
+                - name: BACKUP_AWS_HOST
+                  value: {{ .Values.backup.aws_host }}
+                - name: BACKUP_AWS_REGION
+                  value: {{ .Values.backup.aws_region }}
+                - name: BACKUP_AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: "backup-credentials"
+                      key: "aws-access-key-id"
+                - name: BACKUP_AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: "backup-credentials"
+                      key: "aws-secret-access-key"
+                - name: BACKUP_AWS_BUCKETNAME
+                  value: {{ .Values.backup.aws_bucketname }}
+                {{- end }}
+                {{- if eq .Values.backup.platform "azure" }}
+                - name: BACKUP_AZURE_STORAGE_ACCOUNT_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: "backup-credentials"
+                      key: "azure-storage-account-url"
+                {{- end }}
+                - name: REMOTE_PLATFORM
+                  value: {{ .Values.remote.platform }}
+                {{- if .Values.remote.enabled }}
+                {{- if or (eq .Values.remote.platform "aws") (eq .Values.remote.platform "do") }}
+                - name: REMOTE_AWS_HOST
+                  value: {{ .Values.remote.aws_host }}
+                - name: REMOTE_AWS_REGION
+                  value: {{ .Values.remote.aws_region }}
+                - name: REMOTE_AWS_ACCESS_KEY_ID
+                  valueFrom:
+                    secretKeyRef:
+                      name: "remote-credentials"
+                      key: "aws-access-key-id"
+                - name: REMOTE_AWS_SECRET_ACCESS_KEY
+                  valueFrom:
+                    secretKeyRef:
+                      name: "remote-credentials"
+                      key: "aws-secret-access-key"
+                - name: REMOTE_AWS_BUCKETNAME
+                  value: {{ .Values.remote.aws_bucketname }}
+                {{- end }}
+                {{- if eq .Values.remote.platform "azure" }}
+                - name: REMOTE_AZURE_STORAGE_ACCOUNT_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: "remote-credentials"
+                      key: "azure-storage-account-url"
+                {{- end }}
+                {{- end }}
+{{- end }}

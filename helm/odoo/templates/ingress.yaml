@@ -1,0 +1,49 @@
+{{ if eq .Values.distribution "kubernetes" }}
+kind: Ingress
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ .Values.name | quote }}
+  annotations:
+    kubernetes.io/ingress.class: {{ .Values.ingress.class }}
+    {{ if eq .Values.ingress.class "alb" }}
+    alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig":
+      { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
+    alb.ingress.kubernetes.io/certificate-arn: {{ .Values.ingress.cert }}
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}, {"HTTP":80}]'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/subnets: {{ .Values.ingress.subnets }}
+    alb.ingress.kubernetes.io/target-type: instance
+    external-dns.alpha.kubernetes.io/hostname: {{ .Values.application_domain }}
+    {{ end }}
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  tls:
+  - hosts:
+    - {{ .Values.application_domain | quote }}
+    secretName: aks-ingress-tls
+  rules:
+  - host: {{ .Values.application_domain | quote }}
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ssl-redirect
+            port:
+              name: use-annotation
+      - path: /longpolling
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Values.name | quote }}
+            port:
+              number: 8072
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: {{ .Values.name | quote }}
+            port:
+              number: 8069
+{{- end }}

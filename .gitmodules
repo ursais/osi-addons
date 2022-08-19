@@ -1,0 +1,8 @@
+[submodule "odoo"]
+	path = odoo/odoo
+	url = https://github.com/ursais/odoo.git
+	branch = 15.0
+[submodule "osi-addons"]
+	path = odoo/src/osi-addons
+	url = https://github.com/ursais/osi-addons.git
+	branch = 15.0

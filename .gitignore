@@ -1,0 +1,16 @@
+# Created by .ignore support plugin (hsz.mobi)
+.idea/
+/env/
+/*.conf
+__pycache__
+
+# Locust
+/tests/locust/env
+/tests/locust/locust.log
+
+# Selenium
+/tests/selenium/env
+
+# Helm
+/helm/odoo/charts
+/helm/odoo/requirements.lock

@@ -1,0 +1,11 @@
+
+** Please be patient while the chart is being deployed **
+
+1. Go to the Odoo URL:
+
+  https://{{ .Values.application_domain }}/
+
+2. Login with the following credentials:
+
+  Email: {{ .Values.odooUsername }}
+  echo Password: $(kubectl get secret --namespace {{ .Release.Namespace }} {{ template "odoo.fullname" . }} -o jsonpath="{.data.odoo-admin-user-password}" | base64 --decode)

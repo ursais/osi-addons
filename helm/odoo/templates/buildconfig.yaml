@@ -1,0 +1,30 @@
+{{ if eq .Values.distribution "openshift" }}
+{{- if .Values.build.enabled }}
+kind: BuildConfig
+apiVersion: build.openshift.io/v1
+metadata:
+  name: {{ .Values.name | quote }}
+  annotations:
+    description: Defines how to build the application
+spec:
+  source:
+    type: Git
+    git:
+      uri: {{ .Values.build.source_repository_url | quote }}
+      ref: {{ .Values.build.source_repository_ref | quote }}
+    contextDir: {{ .Values.build.context_dir | quote }}
+  strategy:
+    type: Docker
+    dockerStrategy: {}
+  output:
+    to:
+      kind: ImageStreamTag
+      name: {{ print .Values.name ":latest" | quote }}
+  triggers:
+    - type: GitHub
+      github:
+        secretReference:
+          name: {{ print .Values.name "-github-webhook" | quote }}
+    - type: ConfigChange
+{{- end }}
+{{- end }}

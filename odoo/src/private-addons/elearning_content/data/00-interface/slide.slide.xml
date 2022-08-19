@@ -1,0 +1,227 @@
+<odoo noupdate="1">
+
+    <!-- Log in -->
+    <record id="slide_odoo_interface_navigation_login" model="slide.slide">
+        <field name="name">Log in</field>
+        <field name="sequence">110</field>
+        <field name="slide_type">webpage</field>
+        <field name="channel_id" ref="elearning_content.slide_channel_odoo_interface"/>
+        <field name="category_id" ref="elearning_content.slide_slide_odoo_interface_navigation"/>
+        <field name="is_category">0</field>
+        <field name="html_content" type="html">
+            <section class="s_text_block o_colored_level pt0 pb0">
+                <div class="container s_allow_columns">
+                    <h1>Log In</h1>
+                </div>
+            </section>
+        </field>
+    </record>
+
+    <!-- Browse the menu -->
+    <record id="slide_odoo_interface_navigation_menu" model="slide.slide">
+        <field name="name">Browse the menu</field>
+        <field name="sequence">120</field>
+        <field name="slide_type">webpage</field>
+        <field name="channel_id" ref="elearning_content.slide_channel_odoo_interface"/>
+        <field name="category_id" ref="elearning_content.slide_slide_odoo_interface_navigation"/>
+        <field name="is_category">0</field>
+        <field name="html_content" type="html">
+            <section class="s_text_block o_colored_level pt0 pb0">
+                <div class="container s_allow_columns">
+                    <h1>Browse the menu</h1>
+                </div>
+            </section>
+        </field>
+    </record>
+
+    <!-- Search, filter and group -->
+    <record id="slide_odoo_interface_navigation_search" model="slide.slide">
+        <field name="name">Search, filter and group</field>
+        <field name="sequence">130</field>
+        <field name="slide_type">webpage</field>
+        <field name="channel_id" ref="elearning_content.slide_channel_odoo_interface"/>
+        <field name="category_id" ref="elearning_content.slide_slide_odoo_interface_navigation"/>
+        <field name="is_category">0</field>
+        <field name="html_content" type="html">
+            <section class="s_text_block o_colored_level pt0 pb0">
+                <div class="container s_allow_columns">
+                    <h1>Search, filter and group</h1>
+                </div>
+            </section>
+        </field>
+    </record>
+
+    <!-- Favorites and Dashboard -->
+    <record id="slide_odoo_interface_navigation_favorites" model="slide.slide">
+        <field name="name">Favorites and Dashboard</field>
+        <field name="sequence">140</field>
+        <field name="slide_type">webpage</field>
+        <field name="channel_id" ref="elearning_content.slide_channel_odoo_interface"/>
+        <field name="category_id" ref="elearning_content.slide_slide_odoo_interface_navigation"/>
+        <field name="is_category">0</field>
+        <field name="html_content" type="html">
+            <section class="s_text_block o_colored_level pt0 pb0">
+                <div class="container s_allow_columns">
+                    <h1>Favorites and Dashboard</h1>
+                </div>
+            </section>
+        </field>
+    </record>
+
+    <!-- Import/Export -->
+    <record id="slide_odoo_interface_navigation_import" model="slide.slide">
+        <field name="name">Import/Export</field>
+        <field name="sequence">150</field>
+        <field name="slide_type">webpage</field>
+        <field name="channel_id" ref="elearning_content.slide_channel_odoo_interface"/>
+        <field name="category_id" ref="elearning_content.slide_slide_odoo_interface_navigation"/>
+        <field name="is_category">0</field>
+        <field name="html_content" type="html">
+            <section class="s_text_block o_colored_level pt0 pb0">
+                <div class="container s_allow_columns">
+                    <h1>Import/Export</h1>
+                </div>
+            </section>
+        </field>
+    </record>
+
+    <!-- List -->
+    <record id="slide_odoo_interface_views_list" model="slide.slide">
+        <field name="name">List</field>
+        <field name="sequence">210</field>
+        <field name="slide_type">webpage</field>
+        <field name="channel_id" ref="elearning_content.slide_channel_odoo_interface"/>
+        <field name="category_id" ref="elearning_content.slide_slide_odoo_interface_views"/>
+        <field name="is_category">0</field>
+        <field name="html_content" type="html">
+            <section class="s_text_block o_colored_level pt0 pb0">
+                <div class="container s_allow_columns">
+                    <h1>List</h1>
+                </div>
+            </section>
+        </field>
+    </record>
+
+    <!-- Form -->
+    <record id="slide_odoo_interface_views_form" model="slide.slide">
+        <field name="name">Form</field>
+        <field name="sequence">220</field>
+        <field name="slide_type">webpage</field>
+        <field name="channel_id" ref="elearning_content.slide_channel_odoo_interface"/>
+        <field name="category_id" ref="elearning_content.slide_slide_odoo_interface_views"/>
+        <field name="is_category">0</field>
+        <field name="html_content" type="html">
+            <section class="s_text_block o_colored_level pt0 pb0">
+                <div class="container s_allow_columns">
+                    <h1>Form</h1>
+                </div>
+            </section>
+        </field>
+    </record>
+
+    <!-- Kanban -->
+    <record id="slide_odoo_interface_views_kanban" model="slide.slide">
+        <field name="name">Kanban</field>
+        <field name="sequence">230</field>
+        <field name="slide_type">webpage</field>
+        <field name="channel_id" ref="elearning_content.slide_channel_odoo_interface"/>
+        <field name="category_id" ref="elearning_content.slide_slide_odoo_interface_views"/>
+        <field name="is_category">0</field>
+        <field name="html_content" type="html">
+            <section class="s_text_block o_colored_level pt0 pb0">
+                <div class="container s_allow_columns">
+                    <h1>Kanban</h1>
+                </div>
+            </section>
+        </field>
+    </record>
+
+    <!-- Calendar -->
+    <record id="slide_odoo_interface_views_calendar" model="slide.slide">
+        <field name="name">Calendar</field>
+        <field name="sequence">240</field>
+        <field name="slide_type">webpage</field>
+        <field name="channel_id" ref="elearning_content.slide_channel_odoo_interface"/>
+        <field name="category_id" ref="elearning_content.slide_slide_odoo_interface_views"/>
+        <field name="is_category">0</field>
+        <field name="html_content" type="html">
+            <section class="s_text_block o_colored_level pt0 pb0">
+                <div class="container s_allow_columns">
+                    <h1>Calendar</h1>
+                </div>
+            </section>
+        </field>
+    </record>
+
+    <!-- Map -->
+    <record id="slide_odoo_interface_views_map" model="slide.slide">
+        <field name="name">Map</field>
+        <field name="sequence">250</field>
+        <field name="slide_type">webpage</field>
+        <field name="channel_id" ref="elearning_content.slide_channel_odoo_interface"/>
+        <field name="category_id" ref="elearning_content.slide_slide_odoo_interface_views"/>
+        <field name="is_category">0</field>
+        <field name="html_content" type="html">
+            <section class="s_text_block o_colored_level pt0 pb0">
+                <div class="container s_allow_columns">
+                    <h1>Map</h1>
+                </div>
+            </section>
+        </field>
+    </record>
+
+    <!-- Report an issue -->
+    <record id="slide_odoo_interface_support_report_issue" model="slide.slide">
+        <field name="name">Report an issue</field>
+        <field name="sequence">310</field>
+        <field name="slide_type">webpage</field>
+        <field name="channel_id" ref="elearning_content.slide_channel_odoo_interface"/>
+        <field name="category_id" ref="elearning_content.slide_slide_odoo_interface_support"/>
+        <field name="is_category">0</field>
+        <field name="html_content" type="html">
+            <section class="s_text_block o_colored_level pt0 pb0">
+                <div class="container s_allow_columns">
+                    <h1>Methods</h1>
+                    <ul>
+                        <li>By email to support@opensourceintegrators.com</li>
+                        <li>Through the portal at
+                            <a href="https://pm.opensourceintegrators.com/helpdesk/support-1/submit"
+                               target="_blank">
+                                https://pm.opensourceintegrators.com/helpdesk/support-1/submit
+                            </a>
+                        </li>
+                    </ul>
+                    <h1>Subject</h1>
+                    <p>Please enter a meaningful subject including the severity of the
+                        issue (low, medium, high, critical)
+                    </p>
+                    <h2>Description</h2>
+                    <p>Make sure to answer the following questions:</p>
+                    <pre>
+Environment
+
+* What server and database was used for testing?
+* What company (in multi-company setup) and user (or role) was used?
+
+Steps to reproduce
+
+* What is the high level process used? Please provide steps, for example:
+
+  * Go to Accounting/Vendors/Bills
+  * Create new Vendor Bill or open vendor bill 123
+  * Problem when adding product line manually
+
+Result
+
+* What is the current result? If necessary, provide screenshot or complete error message
+
+Expected Result
+
+* What is the expected result?
+                    </pre>
+                </div>
+            </section>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,53 @@
+{{- if eq .Values.distribution "openshift" }}
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: odoo-http
+  annotations:
+    haproxy.router.openshift.io/timeout: 1800s
+spec:
+  host: {{ .Values.application_domain | quote }}
+  path: "/"
+  to:
+    kind: Service
+    name: {{ .Values.name | quote }}
+  port:
+    targetPort: http
+  tls:
+      termination: edge
+      insecureEdgeTerminationPolicy: Redirect
+---
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: odoo-im
+spec:
+  host: {{ .Values.application_domain | quote }}
+  path: "/longpolling"
+  to:
+    kind: Service
+    name: {{ .Values.name | quote }}
+  port:
+    targetPort: im
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+---
+{{- if .Values.mailhog.enabled }}
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: mailhog
+spec:
+  host: {{ printf "%s-%s" "mailhog" .Values.application_domain | quote }}
+  path: "/"
+  to:
+    kind: Service
+    name: {{ printf "%s-%s" .Values.name "mailhog" | quote }}
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+{{- end }}
+{{- end }}

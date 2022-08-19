@@ -1,0 +1,17 @@
+dependencies:
+- name: mailhog
+  condition: mailhog.enabled
+  version: 3.x.x
+  repository: https://codecentric.github.io/helm-charts
+- name: postfix
+  condition: postfix.enabled
+  version: 0.x.x
+  repository: https://rasooll.github.io/helm-charts
+- name: postgresql
+  condition: postgresql.enabled
+  version: 8.x.x
+  repository: https://charts.bitnami.com/bitnami
+- name: redis
+  condition: redis.enabled
+  version: 12.x.x
+  repository: https://charts.bitnami.com/bitnami

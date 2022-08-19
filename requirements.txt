@@ -1,0 +1,3 @@
+git-aggregator==1.7.2
+markdown-toc==1.2.6
+pre-commit==2.2.0

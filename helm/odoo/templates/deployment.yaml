@@ -1,0 +1,205 @@
+{{ if eq .Values.distribution "kubernetes" }}
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: {{ .Values.name | quote }}
+  annotations:
+    description: Defines how to deploy the application server
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  minReadySeconds: 120
+  selector:
+    matchLabels:
+      name: {{ .Values.name | quote }}
+      app: {{ .Values.name | quote }}
+      release: {{ .Values.name | quote }}
+  template:
+    metadata:
+      name: {{ .Values.name | quote }}
+      labels:
+        name: {{ .Values.name | quote }}
+        app: {{ .Values.name | quote }}
+        release: {{ .Values.name | quote }}
+    spec:
+      imagePullSecrets:
+        - name: github-packages
+      volumes:
+        - name: odoo-data
+        {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "odoo.fullname" .) }}
+        {{- else }}
+          emptyDir: {}
+        {{- end }}
+      containers:
+      - name: {{ .Values.name | quote }}
+        image: {{ .Values.image | quote }}
+        env:
+          - name: PGHOST
+            value: {{ ternary "odoo-postgresql" .Values.externalDatabase.host .Values.postgresql.enabled | quote }}
+          - name: PGPORT
+            value: {{ ternary "5432" .Values.externalDatabase.port .Values.postgresql.enabled | quote }}
+          - name: PGUSER
+            value: {{ ternary .Values.postgresql.postgresqlUsername .Values.externalDatabase.user .Values.postgresql.enabled | quote }}
+          - name: PGPASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ ternary (include "odoo.postgresql.fullname" .) (printf "%s-%s" .Release.Name "externaldb") .Values.postgresql.enabled | quote }}
+                key: {{ ternary "postgresql-password" "db-password" .Values.postgresql.enabled | quote }}
+          - name: PGSSLMODE
+            value: {{ ternary .Values.postgresql.sslmode .Values.externalDatabase.sslmode .Values.postgresql.enabled | quote }}
+          - name: DEFAULTDB
+            value: {{ ternary .Values.postgresql.defaultdb .Values.externalDatabase.defaultdb .Values.postgresql.enabled | quote }}
+          - name: MARABUNTA_MODE
+            value: {{ .Values.marabunta.mode | quote }}
+          - name: MARABUNTA_ALLOW_SERIE
+            value: {{ .Values.marabunta.allow_serie | quote }}
+          - name: ODOO_ADMIN_PASSWD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.name | quote }}
+                key: "odoo-admin-passwd"
+          - name: ODOO_ADMIN_USER_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.name | quote }}
+                key: "odoo-admin-user-password"
+          - name: ODOO_ADMIN_USER_TIMEZONE
+            value: {{ .Values.timezone | quote }}
+          - name: RUNNING_ENV
+            value: {{ .Values.environment }}
+          - name: PLATFORM
+            value: {{ .Values.platform }}
+          - name: ODOO_SMTP_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.name | quote }}
+                key: "odoo-smtp-password"
+          {{- if .Values.postfix.enabled }}
+          - name: ODOO_SMTP_PORT
+            value: "25"
+          - name: ODOO_SMTP_SERVER
+            value: {{ printf "%s-%s" .Values.name "postfix" | quote }}
+          {{- else if .Values.mailhog.enabled }}
+          - name: ODOO_SMTP_PORT
+            value: "1025"
+          - name: ODOO_SMTP_SERVER
+            value: {{ printf "%s-%s" .Values.name "mailhog" | quote }}
+          {{- else }}
+          - name: ODOO_SMTP_PORT
+            value: {{ .Values.smtp.port | quote }}
+          - name: ODOO_SMTP_SERVER
+            value: {{ .Values.smtp.server | quote }}
+          {{- end }}
+          - name: ODOO_SMTP_SSL
+            value: {{ .Values.smtp.ssl | quote }}
+          - name: ODOO_SMTP_USER
+            value: {{ .Values.smtp.user | quote }}
+          {{- if .Values.s3.enabled }}
+          - name: AWS_HOST
+            value: {{ .Values.s3.aws_host }}
+          - name: AWS_REGION
+            value: {{ .Values.s3.aws_region }}
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: {{ ternary .Values.name "" .Values.s3.enabled | quote }}
+                key: {{ ternary "aws-access-key-id" "" .Values.s3.enabled | quote }}
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ ternary .Values.name "" .Values.s3.enabled | quote }}
+                key: {{ ternary "aws-secret-access-key" "" .Values.s3.enabled | quote }}
+          - name: AWS_BUCKETNAME
+            value: {{ .Values.s3.aws_bucketname | quote }}
+          - name: AWS_DUPLICATE
+            value: "true"
+          - name: AWS_EMPTY_ON_DBDROP
+            value: "true"
+          {{- end }}
+          {{- if .Values.azure.enabled }}
+          - name: AZURE_STORAGE_ACCOUNT_URL
+            valueFrom:
+              secretKeyRef:
+                name: {{ ternary .Values.name "" .Values.azure.enabled | quote }}
+                key: {{ ternary "azure-storage-account-url" "" .Values.azure.enabled | quote }}
+          - name: AZURE_STORAGE_CONNECTION_STRING
+            valueFrom:
+              secretKeyRef:
+                name: {{ ternary .Values.name "" .Values.azure.enabled | quote }}
+                key: {{ ternary "azure-storage-connection-string" "" .Values.azure.enabled | quote }}
+          {{- end }}
+          {{- if .Values.redis.enabled }}
+          - name: ODOO_SESSION_REDIS
+            value: {{ .Values.redis.enabled | quote }}
+          - name: ODOO_SESSION_REDIS_HOST
+            value: {{ .Values.redis.host }}
+          - name: ODOO_SESSION_REDIS_PORT
+            value: {{ .Values.redis.port | quote }}
+          - name: ODOO_SESSION_REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ ternary (include "odoo.redis.fullname" .) (printf "%s-%s" .Release.Name "password") .Values.redis.enabled | quote }}
+                key: {{ ternary "redis-password" "redis-password" .Values.redis.enabled | quote }}
+          - name: ODOO_SESSION_REDIS_PREFIX
+            value: {{ .Values.redis.prefix }}
+          - name: ODOO_SESSION_REDIS_EXPIRATION
+            value: {{ .Values.redis.expiration | quote }}
+          - name: ODOO_SESSION_REDIS_EXPIRATION_ANONYMOUS
+            value: {{ .Values.redis.expiration_anonymous | quote }}
+          - name: ODOO_SESSION_REDIS_COPY_EXISTING_FS_SESSIONS
+            value: {{ .Values.redis.copy_existing_fs_sessions | quote }}
+          - name: ODOO_SESSION_REDIS_PURGE_EXISTING_FS_SESSIONS
+            value: {{ .Values.redis.purge_existing_fs_sessions | quote }}
+          {{- end }}
+          - name: ODOO_LIST_DB
+            value: {{ .Values.odooListDB | quote }}
+          - name: ODOO_DBFILTER
+            value: {{ .Values.odooDBFilter | quote }}
+          - name: ODOO_SERVER_WIDE_MODULES
+            value: {{ .Values.odooServerWideModules | quote }}
+        ports:
+        - name: tcp-odoo-http
+          containerPort: 8069
+        - name: tcp-odoo-im
+          containerPort: 8072
+        {{- if .Values.livenessProbe.enabled }}
+        livenessProbe:
+          httpGet:
+            path: /monitoring/status
+            port: tcp-odoo-http
+          initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.livenessProbe.successThreshold }}
+          failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+        {{- end }}
+        {{- if .Values.readinessProbe.enabled }}
+        readinessProbe:
+          httpGet:
+            path: /monitoring/status
+            port: tcp-odoo-http
+          initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+          periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+          timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+          successThreshold: {{ .Values.readinessProbe.successThreshold }}
+          failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+        {{- end }}
+        resources:
+{{ toYaml .Values.resources | indent 10 }}
+      {{- if .Values.persistence.enabled }}
+        volumeMounts:
+        - name: odoo-data
+          mountPath: /odoo/data
+      volumes:
+      - name: odoo-data
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.existingClaim | default (include "odoo.fullname" .) }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+      {{- end }}
+{{- end }}

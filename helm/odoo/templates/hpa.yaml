@@ -1,0 +1,20 @@
+{{- if or (eq .Values.environment "qa") (eq .Values.environment "production") }}
+kind: HorizontalPodAutoscaler
+apiVersion: autoscaling/v2beta2
+metadata:
+  name: {{ .Values.name | quote }}
+spec:
+  scaleTargetRef:
+    kind: Deployment
+    name: {{ .Values.name | quote }}
+    apiVersion: apps/v1
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
+{{- end }}

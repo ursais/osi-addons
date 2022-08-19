@@ -1,0 +1,134 @@
+## Database external to the cluster
+externalDatabase:
+  host: false
+#  user: odoo
+#  port: 5432
+#  defaultdb: postgres
+#  sslmode: prefer
+
+## Database in the cluster
+postgresql:
+  enabled: true
+  postgresqlUsername: odoo
+  defaultdb: postgres
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: 2Gi
+  sslmode: prefer
+
+ingress:
+  class: alb
+  cert: arn:aws:acm:us-east-2:123456789:certificate/abc123
+  subnets: subnet-abc123,subnet-abc123
+
+service:
+  type: NodePort
+  externalTrafficPolicy: Cluster
+
+build:
+  enabled: false
+#  source_repository_url: https://github.com/ursais/odoo-template.git
+#  source_repository_ref: 14.0
+#  context_dir: odoo
+
+persistence:
+  enabled: false
+#  storageClass: nfs
+#  accessMode: ReadWriteMany
+#  size: 4Gi
+
+azure:
+  enabled: false
+
+s3:
+  enabled: true
+  aws_host: s3.us-east-2.amazonaws.com
+  aws_region: us-east-2
+  aws_bucketname: dev-{db}-template
+
+backup:
+  enabled: false
+#  image: ursa/backup:latest
+#  platform: aws
+#  aws_host: s3.us-east-2.amazonaws.com
+#  aws_region: us-east-2
+#  aws_bucketname: odoo-backup-template
+
+remote:
+  enabled: false
+#  platform:
+#  aws_host: s3.us-east-2.amazonaws.com
+#  aws_region: us-east-2
+#  aws_bucketname: odoobackup-template
+
+redis:
+  enabled: true
+  host: odoo-redis-master
+  port: 6379
+  prefix: template-odoo-dev
+  expiration: 604800
+  expiration_anonymous: 10800
+  copy_existing_fs_sessions: 0
+  purge_existing_fs_sessions: 1
+  cluster:
+    enabled: false
+  master:
+    persistence:
+      storageClass: gp2
+      size: 2Gi
+
+mailhog:
+  enabled: true
+
+postfix:
+  enabled: false
+
+smtp:
+  enabled: true
+  ssl: false
+  user: false
+
+marabunta:
+  allow_serie: true
+  mode: external
+
+resources:
+  limits:
+    cpu: "1"
+    memory: 2Gi
+  requests:
+    cpu: 300m
+    memory: 512Mi
+
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 600
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 6
+  successThreshold: 1
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+  successThreshold: 1
+
+affinity: {}
+
+name: odoo
+fullname: "Template Odoo Dev"
+project: template-odoo-dev
+environment: dev
+platform: aws
+distribution: kubernetes
+application_domain: dev-odoo.apps.cluster.example.com
+timezone: America/Phoenix
+image: docker.pkg.github.com/ursais/odoo-template/odoo-template:latest
+odooUsername: admin
+odooEmail: support@example.com
+odooServerWideModules: web,monitoring_status,session_redis
+odooListDB: true

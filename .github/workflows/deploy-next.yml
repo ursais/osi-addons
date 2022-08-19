@@ -1,0 +1,48 @@
+name: Deploy (next)
+on:
+  push:
+    branches:
+      - master
+
+env:
+  DOCKER_BUILDKIT: 1
+  IMAGE_NAME: template-odoo
+  TAG: latest
+  REGISTRY: ????.dkr.ecr.us-east-1.amazonaws.com
+  REGION: us-east-1
+  CLUSTER_NAME: EKS-Template
+  EKS_ROLE_ARN: arn:aws:iam::????:role/eks-deploy-role
+  NAMESPACE: template-odoo-next-dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: 'Build image'
+        run: docker build -t $IMAGE_NAME:$TAG odoo
+
+      - name: 'Push to registry'
+        uses: jwalton/gh-ecr-push@v1
+        with:
+          access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region: ${{ env.REGION }}
+          image: ${{ env.IMAGE_NAME }}:${{ env.TAG }}
+
+      - name: 'Deploy image'
+        uses: ianbelcher/eks-kubectl-action@master
+        with:
+          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_region: ${{ env.REGION }}
+          cluster_name: ${{ env.CLUSTER_NAME }}
+          eks_role_arn: ${{ env.EKS_ROLE_ARN }}
+          args: rollout restart deploy odoo -n ${{ env.NAMESPACE }}

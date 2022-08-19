@@ -1,0 +1,19 @@
+apiVersion: v1
+name: odoo
+version: 15.0
+appVersion: 15.0
+description: Odoo instance
+home: https://www.opensourceintegrators.com
+icon: https://github.com/ursais.png
+keywords:
+- odoo
+- crm
+- www
+- http
+- web
+sources:
+- https://github.com/ursais/odoo-template
+maintainers:
+- name: Open Source Integrators
+  email: support@opensourceintegrators.com
+engine: gotpl

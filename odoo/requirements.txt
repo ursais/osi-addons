@@ -1,0 +1,5 @@
+./odoo
+-e . # Install the songs
+
+# Add project specific packages below
+num2words

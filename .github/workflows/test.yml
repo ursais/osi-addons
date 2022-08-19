@@ -1,0 +1,25 @@
+name: Test
+on:
+  pull_request:
+
+env:
+  DOCKER_BUILDKIT: 1
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+          token: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: 'Build'
+        uses: sudo-bot/action-docker-compose@latest
+        with:
+          cli-args: "build"
+
+      - name: "Run tests"
+        uses: sudo-bot/action-docker-compose@latest
+        with:
+          cli-args: "run app --test-enable --workers=0 --stop-after-init -d test -i customer"
