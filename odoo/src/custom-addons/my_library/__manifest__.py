@@ -10,6 +10,9 @@ Description related to library
     'category': 'Uncategorized',
     'version': '15.0',
     'depends': ['base'],
-    'data': ['views/library_book.xml'],
+    'data': [
+        'security/groups.xml',
+        'security/ir.model.access.csv',
+        'views/library_book.xml'],
     'demo': ['demo.xml']
 }
