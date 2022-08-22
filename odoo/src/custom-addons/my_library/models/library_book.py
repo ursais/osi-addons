@@ -35,3 +35,17 @@ class LibraryBook(models.Model):
         'res,partner',
         string='Authors'
     )
+
+    retail_price = fields.Monetary(
+        'Retail Price',
+        # optional: currency_field='currency_id',
+    )
+
+    publisher_id = fields.Many2one(
+        'res_partner', string='Publisher'
+    )
+
+
+class ResPartner(models.Model):
+    _inherit = 'res.partner'
+    published_book_ids = fields.One2many('library.book', 'publisher_id', string='Published Books')
