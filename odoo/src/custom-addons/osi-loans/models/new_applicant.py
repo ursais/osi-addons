@@ -2,7 +2,7 @@ from odoo import  models, fields, api
 
 class applicant:
     _name = 'new.applicant'
-    _description = 'applicant'
+    _description = 'create a new applicant in the system'
 
     fname = fields.Char('First name', required=True)
     lname = fields.Char('Last name', required=True)
