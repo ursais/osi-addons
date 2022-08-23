@@ -4,7 +4,7 @@
 
         <record model="ir.ui.view" id="osi-loans.list">
             <field name="name">OSI-Loans list</field>
-            <field name="model">osi-loans.osi-loans</field>
+            <field name="model">osi-loans.new_applicant</field>
             <field name="arch" type="xml">
                 <tree>
                     <field name="name"/>
@@ -19,7 +19,7 @@
 
         <record model="ir.actions.act_window" id="osi-loans.action_window">
             <field name="name">OSI-Loans window</field>
-            <field name="res_model">osi-loans.osi-loans</field>
+            <field name="res_model">osi-loans.new_applicant</field>
             <field name="view_mode">tree,form</field>
         </record>
 
