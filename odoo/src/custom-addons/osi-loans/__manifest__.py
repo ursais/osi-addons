@@ -3,21 +3,24 @@
     'name': "OSI-Loans",
 
     'summary': """
-        Short (1 phrase/line) summary of the module's purpose, used as
-        subtitle on modules listing or apps.openerp.com""",
+        Add new clients, create new applications and run bank statement reviews using the plaid API""",
 
     'description': """
-        Long description of module's purpose
+        This app uses the plaid api for the verification of income and spending of the new loan applicant.
+        The user is able to create a new applicant and process the loan application, eventually sending it for
+        underwriting where a decision will be made. The funds will then either be direct deposited into the applicant's
+        account, or a check will be mailed depending on the option selected at the time of application. An email will be
+        sent out to the applicant letting the applicant know the decision made by the underwriter.
     """,
 
-    'author': "My Company",
-    'website': "http://www.yourcompany.com",
+    'author': "OSI Financing",
+    'website': "http://richard.ursasys.net:8069/web",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
     # for the full list
     'category': 'Uncategorized',
-    'version': '0.1',
+    'version': '15.0.0',
 
     # any module necessary for this one to work correctly
     'depends': ['base'],
