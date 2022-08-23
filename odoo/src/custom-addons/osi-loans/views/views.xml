@@ -1,60 +1,67 @@
 <odoo>
-  <data>
-    <!-- explicit list view definition -->
-<!--
-    <record model="ir.ui.view" id="osi-loans.list">
-      <field name="name">OSI-Loans list</field>
-      <field name="model">osi-loans.osi-loans</field>
-      <field name="arch" type="xml">
-        <tree>
-          <field name="name"/>
-          <field name="value"/>
-          <field name="value2"/>
-        </tree>
-      </field>
-    </record>
--->
+    <data>
+        <!-- explicit list view definition -->
 
-    <!-- actions opening views on models -->
-<!--
-    <record model="ir.actions.act_window" id="osi-loans.action_window">
-      <field name="name">OSI-Loans window</field>
-      <field name="res_model">osi-loans.osi-loans</field>
-      <field name="view_mode">tree,form</field>
-    </record>
--->
+        <record model="ir.ui.view" id="osi-loans.list">
+            <field name="name">OSI-Loans list</field>
+            <field name="model">osi-loans.osi-loans</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="value"/>
+                    <field name="value2"/>
+                </tree>
+            </field>
+        </record>
 
-    <!-- server action to the one above -->
-<!--
-    <record model="ir.actions.server" id="osi-loans.action_server">
-      <field name="name">OSI-Loans server</field>
-      <field name="model_id" ref="model_osi-loans_osi-loans"/>
-      <field name="state">code</field>
-      <field name="code">
-        action = {
-          "type": "ir.actions.act_window",
-          "view_mode": "tree,form",
-          "res_model": model._name,
-        }
-      </field>
-    </record>
--->
 
-    <!-- Top menu item -->
-<!--
-    <menuitem name="OSI-Loans" id="osi-loans.menu_root"/>
--->
-    <!-- menu categories -->
-<!--
-    <menuitem name="Menu 1" id="osi-loans.menu_1" parent="osi-loans.menu_root"/>
-    <menuitem name="Menu 2" id="osi-loans.menu_2" parent="osi-loans.menu_root"/>
--->
-    <!-- actions -->
-<!--
-    <menuitem name="List" id="osi-loans.menu_1_list" parent="osi-loans.menu_1"
-              action="osi-loans.action_window"/>
-    <menuitem name="Server to list" id="osi-loans" parent="osi-loans.menu_2"
-              action="osi-loans.action_server"/>
--->
-  </data>
+        <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="osi-loans.action_window">
+            <field name="name">OSI-Loans window</field>
+            <field name="res_model">osi-loans.osi-loans</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <!-- server action to the one above -->
+
+        <record model="ir.actions.server" id="osi-loans.action_server">
+            <field name="name">OSI-Loans server</field>
+            <field name="model_id" ref="model_osi-loans_osi-loans"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = {
+                "type": "ir.actions.act_window",
+                "view_mode": "tree,form",
+                "res_model": model._name,
+                }
+            </field>
+        </record>
+
+
+        <!-- Top menu item -->
+
+        <menuitem name="OSI-Loans" id="osi-loans.menu_root"/>
+
+        <!-- menu categories -->
+
+        <menuitem name="Applications" id="osi-loans.menu_1" parent="osi-loans.menu_root"/>
+        <menuitem name="Loans" id="osi-loans.menu_2" parent="osi-loans.menu_root"/>
+
+        <!-- actions -->
+
+        <menuitem name="Create Applicant" id="osi-loans.menu_1_list" parent="osi-loans.menu_1"
+                  action="osi-loans.action_window"/>
+        <menuitem name="New Application" id="osi-loans.menu_1_list" parent="osi-loans.menu_1"
+                  action="osi-loans.action_window"/>
+        <menuitem name="Open Applications" id="osi-loans.menu_1_list" parent="osi-loans.menu_1"
+                  action="osi-loans.action_window"/>
+
+        <menuitem name="Loan Options" id="osi-loans.menu_1_list" parent="osi-loans.menu_2"
+                  action="osi-loans.action_window"/>
+        <!--    <menuitem name="Server to list" id="osi-loans" parent="osi-loans.menu_2"-->
+        <!--              action="osi-loans.action_server"/>-->
+
+    </data>
 </odoo>
