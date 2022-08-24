@@ -12,14 +12,23 @@ class NewApplicant(models.Model):
     email = fields.Char('Email', required=True)
     street_address = fields.Text('Street Address', required=True)
     street_address2 = fields.Text('Street Address Line 2 (Optional)', required=False)
-    # state = fields.Selection([
-    #     'AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 'DE', 'DC', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY',
-    #     'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE', 'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH',
-    #     'OK', 'OR', 'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VA', 'WA', 'WV', 'WI', 'WY'], string="State")
+    state = fields.Selection([
+        ('AL', 'AL'), ('AK', 'AK'), ('AZ', 'AZ'), ('AR', 'AR'), ('CA', 'CA'), ('CO', 'CO'), ('CT', 'CT'), ('DE', 'DE'),
+        ('DC', 'DC'), ('FL', 'FL'), ('GA', 'GA'), ('HI', 'HI'), ('ID', 'ID'), ('IL', 'IL'), ('IN', 'IN'), ('IA', 'IA'),
+        ('KS', 'KS'), ('KY', 'KY'), ('LA', 'LA'), ('ME', 'ME'), ('MD', 'MD'), ('MA', 'MA'), ('MI', 'MI'), ('MN', 'MN'),
+        ('MS', 'MS'), ('MO', 'MO'), ('MT', 'MT'), ('NE', 'NE'), ('NV', 'NV'), ('NH', 'NH'), ('NJ', 'NJ'), ('NM', 'NM'),
+        ('NY', 'NY'), ('NC', 'NC'), ('ND', 'ND'), ('OH', 'OH'), ('OK', 'OK'), ('OR', 'OR'), ('PA', 'PA'), ('RI', 'RI'),
+        ('SC', 'SC'), ('SD', 'SD'), ('TN', 'TN'), ('TX', 'TX'), ('UT', 'UT'), ('VT', 'VT'), ('VA', 'VA'), ('WA', 'WA'),
+        ('WV', 'WV'), ('WI', 'WI'), ('WY', 'WY'),
+
+    ], string="State")
 
     zip = fields.Integer('Zip code')
     ssn = fields.Integer('SSN #')
-    employment_status = fields.Selection(['Employed', 'Unemployed', 'Fixed Income (SSI, Retirement Income)'], string='Employment Status')
+    employment_status = fields.Selection([('Employed', 'Employed'), ('Unemployed', 'Unemployed'),
+                                          ('Fixed Income (SSI, Retirement Income)',
+                                           'Fixed Income (SSI, Retirement Income)')
+                                          ], string='Employment Status')
     monthly_income = fields.Integer('Monthly income')
     employer = fields.Char('Employer')
     employer_number = fields.Char('Employer contact number')
