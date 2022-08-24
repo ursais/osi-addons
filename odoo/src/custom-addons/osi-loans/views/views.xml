@@ -53,13 +53,13 @@
 
         <menuitem name="Create Applicant" id="osi-loans.menu_1_list" parent="osi-loans.menu_1"
                   action="osi-loans.action_window"/>
-        <menuitem name="New Application" id="osi-loans.menu_2_list" parent="osi-loans.menu_1"
-                  action="osi-loans.action_window"/>
-        <menuitem name="Open Applications" id="osi-loans.menu_3_list" parent="osi-loans.menu_1"
-                  action="osi-loans.action_window"/>
+<!--        <menuitem name="New Application" id="osi-loans.menu_2_list" parent="osi-loans.menu_1"-->
+<!--                  action="osi-loans.action_window"/>-->
+<!--        <menuitem name="Open Applications" id="osi-loans.menu_3_list" parent="osi-loans.menu_1"-->
+<!--                  action="osi-loans.action_window"/>-->
 
-        <menuitem name="Loan Options" id="osi-loans.menu_4_list" parent="osi-loans.menu_2"
-                  action="osi-loans.action_window"/>
+<!--        <menuitem name="Loan Options" id="osi-loans.menu_4_list" parent="osi-loans.menu_2"-->
+<!--                  action="osi-loans.action_window"/>-->
             <menuitem name="Server to list" id="osi-loans" parent="osi-loans.menu_2"
                       action="osi-loans.action_server"/>
 
