@@ -1,6 +1,7 @@
-from odoo import  models, fields, api
+from odoo import models, fields
 
-class applicant:
+
+class NewApplicant(models.Model):
     _name = 'new.applicant'
     _description = 'create a new applicant in the system'
 
