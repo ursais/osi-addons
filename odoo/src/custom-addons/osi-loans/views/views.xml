@@ -2,17 +2,17 @@
     <data>
         <!-- explicit list view definition -->
 
-        <record model="ir.ui.view" id="osi-loans.list">
-            <field name="name">OSI-Loans list</field>
-            <field name="model">new.applicant</field>
-            <field name="arch" type="xml">
-                <tree>
-                    <field name="name"/>
-                    <field name="value"/>
-                    <field name="value2"/>
-                </tree>
-            </field>
-        </record>
+<!--        <record model="ir.ui.view" id="osi-loans.list">-->
+<!--            <field name="name">OSI-Loans list</field>-->
+<!--            <field name="model">new.applicant</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <tree>-->
+<!--                    <field name="name"/>-->
+<!--                    <field name="value"/>-->
+<!--                    <field name="value2"/>-->
+<!--                </tree>-->
+<!--            </field>-->
+<!--        </record>-->
 
 
         <!-- actions opening views on models -->
