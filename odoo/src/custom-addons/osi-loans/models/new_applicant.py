@@ -19,8 +19,7 @@ class NewApplicant(models.Model):
         ('MS', 'MS'), ('MO', 'MO'), ('MT', 'MT'), ('NE', 'NE'), ('NV', 'NV'), ('NH', 'NH'), ('NJ', 'NJ'), ('NM', 'NM'),
         ('NY', 'NY'), ('NC', 'NC'), ('ND', 'ND'), ('OH', 'OH'), ('OK', 'OK'), ('OR', 'OR'), ('PA', 'PA'), ('RI', 'RI'),
         ('SC', 'SC'), ('SD', 'SD'), ('TN', 'TN'), ('TX', 'TX'), ('UT', 'UT'), ('VT', 'VT'), ('VA', 'VA'), ('WA', 'WA'),
-        ('WV', 'WV'), ('WI', 'WI'), ('WY', 'WY'),
-
+        ('WV', 'WV'), ('WI', 'WI'), ('WY', 'WY')
     ], string="State")
 
     zip = fields.Integer('Zip code')
