@@ -19,7 +19,7 @@ class NewApplicant(models.Model):
 
     zip = fields.Integer('Zip code')
     ssn = fields.Integer('SSN #')
-    employment_status = fields.Selection(['Employed', 'Unemployed', 'Fixed Income (SSI, Retirement Income)'])
+    employment_status = fields.Selection(['Employed', 'Unemployed', 'Fixed Income (SSI, Retirement Income)'], string='Employment Status')
     monthly_income = fields.Integer('Monthly income')
     employer = fields.Char('Employer')
     employer_number = fields.Char('Employer contact number')
