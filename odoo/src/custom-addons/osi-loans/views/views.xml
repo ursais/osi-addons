@@ -60,8 +60,8 @@
 
         <menuitem name="Loan Options" id="osi-loans.menu_4_list" parent="osi-loans.menu_2"
                   action="osi-loans.action_window"/>
-        <!--    <menuitem name="Server to list" id="osi-loans" parent="osi-loans.menu_2"-->
-        <!--              action="osi-loans.action_server"/>-->
+            <menuitem name="Server to list" id="osi-loans" parent="osi-loans.menu_2"
+                      action="osi-loans.action_server"/>
 
     </data>
 </odoo>
