@@ -11,8 +11,8 @@ class NewApplicant(models.Model):
     phone = fields.Char('Phone number', required=True)
     email = fields.Char('Email', required=True)
     street_address = fields.Text('Street Address', required=True)
-    street_address2 = fields.Text('Street Address Line 2 (Optional)', required=False)
-    city = fields.Text('City', required=True)
+    street_address2 = fields.Text('Street 2', required=False)
+    city = fields.Char('City', required=True)
     state = fields.Selection([
         ('AL', 'AL'), ('AK', 'AK'), ('AZ', 'AZ'), ('AR', 'AR'), ('CA', 'CA'), ('CO', 'CO'), ('CT', 'CT'), ('DE', 'DE'),
         ('DC', 'DC'), ('FL', 'FL'), ('GA', 'GA'), ('HI', 'HI'), ('ID', 'ID'), ('IL', 'IL'), ('IN', 'IN'), ('IA', 'IA'),
