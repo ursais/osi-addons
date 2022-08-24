@@ -44,7 +44,7 @@
         <!-- actions opening views on models -->
 
         <record model="ir.actions.act_window" id="osi-loans.action_window">
-            <field name="name">OSI-Loans window</field>
+            <field name="name">Applicants</field>
             <field name="res_model">new.applicant</field>
             <field name="view_mode">tree,form</field>
         </record>
@@ -52,18 +52,6 @@
 
         <!-- server action to the one above -->
 
-        <!--        <record model="ir.actions.server" id="osi-loans.action_server">-->
-        <!--            <field name="name">OSI-Loans server</field>-->
-        <!--            <field name="model_id" ref="model_osi-loans_osi-loans"/>-->
-        <!--            <field name="state">code</field>-->
-        <!--            <field name="code">-->
-        <!--                action = {-->
-        <!--                "type": "ir.actions.act_window",-->
-        <!--                "view_mode": "tree,form",-->
-        <!--                "res_model": model._name,-->
-        <!--                }-->
-        <!--            </field>-->
-        <!--        </record>-->
 
 
         <!-- Top menu item -->
