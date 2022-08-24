@@ -28,8 +28,9 @@
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
-        'views/views.xml',
-        'views/templates.xml',
+        'views/create_applicant.xml',
+        'views/create_application.xml',
+        'views/loan_options.xml'
     ],
     # only loaded in demonstration mode
     'demo': [

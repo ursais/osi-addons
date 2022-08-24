@@ -29,6 +29,7 @@
                     <field name="street_address"/>
                     <field name="street_address2"/>
                     <field name="state"/>
+                    <field name="city"/>
                     <field name="zip"/>
                     <field name="ssn"/>
                     <field name="employment_status"/>
