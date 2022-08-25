@@ -53,7 +53,7 @@
                     <field name="applicant" />
                     <field name="loan_type" />
                     <field name="loan_term"/>
-                    <field name="loan_term"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
