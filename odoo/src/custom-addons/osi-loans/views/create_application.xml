@@ -40,7 +40,6 @@
                     <field name="applicant" widget="selection"/>
                     <field name="loan_type" widget="selection"/>
                     <field name="loan_term"/>
-                    <field name="progress_state"/>
                 </form>
             </field>
         </record>
