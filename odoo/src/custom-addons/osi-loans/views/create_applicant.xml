@@ -42,7 +42,7 @@
         <record id="applicant.action_window" model="ir.actions.act_window">
             <field name="name">Applicants</field>
             <field name="res_model">new.applicant</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">form</field>
         </record>
 
         <!-- actions opening views on models -->
