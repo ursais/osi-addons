@@ -7,7 +7,8 @@ class NewApplicant(models.Model):
 
     fname = fields.Char('First name', required=True)
     lname = fields.Char('Last name', required=True)
-    dob = fields.Date('Date of Birth')
+    dob = fields.Date('Date of Birth', required=True)
+    age = fields.Integer('Age')
     phone = fields.Char('Phone number', required=True)
     email = fields.Char('Email', required=True)
     street_address = fields.Text('Street Address', required=True)

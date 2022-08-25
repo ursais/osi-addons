@@ -17,8 +17,6 @@
                     <header>
                         <field name="state" widget="statusbar" statusbar_visible="Draft,Submitted,Reviewed"/>
                     </header>
-
-
                     <field name="applicant"/>
                     <field name="loan_type"/>
                     <field name="loan_term"/>

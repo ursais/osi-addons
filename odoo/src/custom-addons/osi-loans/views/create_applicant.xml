@@ -10,7 +10,7 @@
                 <tree>
                     <field name="fname"/>
                     <field name="lname"/>
-                    <field name="dob"/>
+                    <field name="dob" />
                     <field name="phone"/>
                     <field name="email"/>
                     <field name="street_address"/>
