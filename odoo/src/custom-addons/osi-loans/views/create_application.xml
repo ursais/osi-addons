@@ -25,6 +25,6 @@
             </field>
         </record>
 
-        <!-- actions opening views on models
+        <!-- actions opening views on models -->
     </data>
 </odoo>
