@@ -50,9 +50,9 @@
             <field name="model">new.application</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="applicant"/>
+                    <field name="applicant" widget="selection"/>
+                    <field name="loan_type" widget="selection"/>
                     <field name="loan_term"/>
-                    <field name="loan_type"/>
                     <field name="loan_term"/>
                 </tree>
             </field>
