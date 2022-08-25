@@ -9,3 +9,4 @@ class LoanOptions(models.Model):
     loan_apr = fields.Float('APR', digits=(2, 2))
     minimum_credit = fields.Integer('Minimum Credit')
 
+

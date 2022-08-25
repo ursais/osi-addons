@@ -10,3 +10,6 @@ class NewApplication(models.Model):
 
     loan_term = fields.Selection([('2', '2 years'), ('5', '5 years'),
                                   ('10', '10 years')])
+
+    state = fields.Selection([('Draft', 'Draft'), ('Submitted', 'Submitted'),
+                              ('Reviewed', 'Reviewed')], required=True, default='Draft')
