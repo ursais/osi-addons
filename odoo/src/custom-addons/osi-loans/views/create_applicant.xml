@@ -47,7 +47,7 @@
 
         <!-- actions opening views on models -->
         <record id="loan.action_window" model="ir.actions.act_window">
-            <field name="name">Applicants</field>
+            <field name="name">Loans</field>
             <field name="res_model">loan.options</field>
             <field name="view_mode">tree,form</field>
         </record>
