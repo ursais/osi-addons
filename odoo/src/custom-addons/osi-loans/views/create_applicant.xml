@@ -2,14 +2,14 @@
     <data>
 
             <!-- actions opening views on models -->
-        <record id="applicant.action_window" model="ir.actions.act_window">
+        <record id="applicant_action" model="ir.actions.act_window">
             <field name="name">Applicants</field>
             <field name="res_model">new.applicant</field>
             <field name="view_mode">tree,form</field>
         </record>
 
         <!-- actions opening views on models -->
-        <record id="loan.action_window" model="ir.actions.act_window">
+        <record id="loan_action" model="ir.actions.act_window">
             <field name="name">Loans</field>
             <field name="res_model">loan.options</field>
             <field name="view_mode">tree,form</field>
@@ -19,12 +19,12 @@
         <menuitem name="OSI-Loans" id="osi-loans.menu_root"/>
 
         <!-- menu categories -->
-        <menuitem name="Applications" id="osi-loans.applications" parent="osi-loans.menu_root" action="applicant.action_window"/>
-        <menuitem name="Loans" id="osi-loans.loans" parent="osi-loans.menu_root" action="loan.action_window"/>
+        <menuitem name="Applications" id="osi-loans.applications" parent="osi-loans.menu_root" action="applicant_action"/>
+        <menuitem name="Loans" id="osi-loans.loans" parent="osi-loans.menu_root" action="loan_action"/>
         <!--    adds custom tree list/view to this file-->
 
         <record id="osi_loans_view_form" model="ir.ui.view">
-            <field name="name">Applicants</field>
+            <field name="name">New Applicant Form</field>
             <field name="model">new.applicant</field>
             <field name="arch" type="xml">
                 <tree>
