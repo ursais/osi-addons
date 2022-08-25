@@ -5,13 +5,13 @@
 
         <record model="ir.actions.act_window" id="osi-loans.action_window">
             <field name="name">Loan Application</field>
-            <field name="res_model">new.applicant</field>
+            <field name="res_model">new.application</field>
             <field name="view_mode">tree,form</field>
         </record>
 
         <record id="new_application_view_tree" model="ir.ui.view">
             <field name="name">Loan Application</field>
-            <field name="model">new.applicant</field>
+            <field name="model">new.application</field>
             <field name="arch" type="xml">
                 <form>
                     <header>
