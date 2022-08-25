@@ -24,6 +24,26 @@
                 </form>
             </field>
         </record>
+
+       <!-- actions opening views on models -->
+        <record id="applicant.action_window" model="ir.actions.act_window">
+            <field name="name">Applicants</field>
+            <field name="res_model">new.applicant</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
         <!-- actions opening views on models -->
+        <record id="loan.action_window" model="ir.actions.act_window">
+            <field name="name">Applicants</field>
+            <field name="res_model">new.applicant</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Top menu item -->
+        <menuitem name="OSI-Loans" id="osi-loans.menu_root"/>
+
+        <!-- menu categories -->
+        <menuitem name="Applications" id="osi-loans.applications" parent="osi-loans.menu_root" action="applicant.action_window"/>
+        <menuitem name="Loans" id="osi-loans.loans" parent="osi-loans.menu_root" action="loan.action_window"/>
     </data>
 </odoo>

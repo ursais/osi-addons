@@ -10,7 +10,7 @@
                 <tree>
                     <field name="fname"/>
                     <field name="lname"/>
-                    <field name="dob" />
+                    <field name="dob"/>
                     <field name="phone"/>
                     <field name="email"/>
                     <field name="street_address"/>
@@ -28,35 +28,35 @@
         </record>
 
 
-        <!-- actions opening views on models -->
+<!--        <record id='library_book_action' model='ir.actions.act_window'>-->
+<!--            <field name="name">Library Books</field>-->
+<!--            <field name="res_model">library.book</field>-->
+<!--            <field name="view_mode">tree,form</field>-->
+<!--        </record>-->
+<!--      -->
+<!--        <menuitem name="My Library" id="library_base_menu"/>-->
+<!--        <menuitem name="Books" id="library_book_menu"-->
+<!--                  parent="library_base_menu" action="library_book_action"/>-->
 
-        <record model="ir.actions.act_window" id="osi-loans.action_window">
+        <!-- actions opening views on models -->
+        <record id="applicant.action_window" model="ir.actions.act_window">
             <field name="name">Applicants</field>
             <field name="res_model">new.applicant</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-
-        <!-- server action to the one above -->
-
-
+        <!-- actions opening views on models -->
+        <record id="loan.action_window" model="ir.actions.act_window">
+            <field name="name">Applicants</field>
+            <field name="res_model">new.applicant</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 
         <!-- Top menu item -->
-
         <menuitem name="OSI-Loans" id="osi-loans.menu_root"/>
 
         <!-- menu categories -->
-
-        <menuitem name="Applications" id="osi-loans.menu_1" parent="osi-loans.menu_root"/>
-        <menuitem name="Loans" id="osi-loans.menu_2" parent="osi-loans.menu_root"/>
-
-        <!-- actions -->
-        <menuitem name="New Application" id="osi-loans.menu_2_list" parent="osi-loans.menu_1"
-                  action="osi-loans.action_window"/>
-        <menuitem name="Open Applications" id="osi-loans.menu_3_list" parent="osi-loans.menu_1"
-                  action="osi-loans.action_window"/>
-
-        <menuitem name="Loan Options" id="osi-loans.menu_4_list" parent="osi-loans.menu_2"
-                  action="osi-loans.action_window"/>
+        <menuitem name="Applications" id="osi-loans.applications" parent="osi-loans.menu_root" action="applicant.action_window"/>
+        <menuitem name="Loans" id="osi-loans.loans" parent="osi-loans.menu_root" action="loan.action_window"/>
     </data>
 </odoo>
