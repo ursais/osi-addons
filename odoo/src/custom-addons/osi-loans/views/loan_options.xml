@@ -1,22 +1,10 @@
 <odoo>
     <data>
-        <record id="loan_options_view_tree" model="ir.ui.view">
-            <field name="name">Loan Options</field>
-            <field name="model">loan.options</field>
-            <field name="arch" type="xml">
-                <tree>
-                    <field name="loan_name"/>
-                    <field name="loan_apr"/>
-                    <field name="minimum_credit"/>
-                </tree>
-            </field>
-        </record>
-
         <!-- actions opening views on models -->
         <record id="applicant.action_window" model="ir.actions.act_window">
             <field name="name">Applicants</field>
             <field name="res_model">new.applicant</field>
-            <field name="view_mode">form</field>
+            <field name="view_mode">tree,form</field>
         </record>
 
         <!-- actions opening views on models -->
@@ -32,5 +20,18 @@
         <!-- menu categories -->
         <menuitem name="Applications" id="osi-loans.applications" parent="osi-loans.menu_root" action="applicant.action_window"/>
         <menuitem name="Loans" id="osi-loans.loans" parent="osi-loans.menu_root" action="loan.action_window"/>
+
+        <record id="loan_options_view_tree" model="ir.ui.view">
+            <field name="name">Loan Options</field>
+            <field name="model">loan.options</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="loan_name"/>
+                    <field name="loan_apr"/>
+                    <field name="minimum_credit"/>
+                </tree>
+            </field>
+        </record>
+
     </data>
 </odoo>

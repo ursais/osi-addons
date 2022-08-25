@@ -1,22 +1,6 @@
 <odoo>
     <data>
-        <record id="new_application_view_tree" model="ir.ui.view">
-            <field name="name">Loan Application</field>
-            <field name="model">new.application</field>
-            <field name="arch" type="xml">
-                <form>
-                    <header>
-                        <field name="state" widget="statusbar" statusbar_visible="Draft,Submitted,Reviewed"/>
-                    </header>
-                    <field name="applicant"/>
-                    <field name="loan_type"/>
-                    <field name="loan_term"/>
-                    <field name="state"/>
-                </form>
-            </field>
-        </record>
-
-       <!-- actions opening views on models -->
+         <!-- actions opening views on models -->
         <record id="applicant.action_window" model="ir.actions.act_window">
             <field name="name">Applicants</field>
             <field name="res_model">new.applicant</field>
@@ -36,5 +20,22 @@
         <!-- menu categories -->
         <menuitem name="Applications" id="osi-loans.applications" parent="osi-loans.menu_root" action="applicant.action_window"/>
         <menuitem name="Loans" id="osi-loans.loans" parent="osi-loans.menu_root" action="loan.action_window"/>
+
+        <record id="new_application_view_tree" model="ir.ui.view">
+            <field name="name">Loan Application</field>
+            <field name="model">new.application</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="Draft,Submitted,Reviewed"/>
+                    </header>
+                    <field name="applicant"/>
+                    <field name="loan_type"/>
+                    <field name="loan_term"/>
+                    <field name="state"/>
+                </form>
+            </field>
+        </record>
+
     </data>
 </odoo>
