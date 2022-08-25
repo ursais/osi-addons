@@ -36,8 +36,7 @@
             <field name="model">new.applicant</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="fname"/>
-                    <field name="lname"/>
+                    <field name="name"/>
                     <field name="dob"/>
                     <field name="phone"/>
                     <field name="email"/>

@@ -5,8 +5,7 @@ class NewApplicant(models.Model):
     _name = 'new.applicant'
     _description = 'create a new applicant in the system'
 
-    fname = fields.Char('First name', required=True)
-    lname = fields.Char('Last name', required=True)
+    name = fields.Char('Name', required=True)
     dob = fields.Date('Date of Birth', required=True)
     age = fields.Integer('Age')
     phone = fields.Char('Phone number', required=True)
