@@ -13,9 +13,12 @@
             <field name="name">Loan Application</field>
             <field name="model">new.applicant</field>
             <field name="arch" type="xml">
-                <header>
-                    <field name="state" widget="statusbar" statusbar_visible="Draft,Submitted,Reviewed"/>
-                </header>
+                <form>
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="Draft,Submitted,Reviewed"/>
+                    </header>
+                </form>
+
                 <tree>
                     <field name="applicant"/>
                     <field name="loan_type"/>
