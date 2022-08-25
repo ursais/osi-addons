@@ -1,7 +1,7 @@
 <odoo>
     <data>
-         <!--    adds custom tree list/view to this file-->
-         <!-- actions opening views on models -->
+        <!--    adds custom tree list/view to this file-->
+        <!-- actions opening views on models -->
 
         <record model="ir.actions.act_window" id="osi-loans.action_window">
             <field name="name">Loan Application</field>
@@ -13,6 +13,9 @@
             <field name="name">Loan Application</field>
             <field name="model">new.applicant</field>
             <field name="arch" type="xml">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="Draft,Submitted,Reviewed"/>
+                </header>
                 <tree>
                     <field name="applicant"/>
                     <field name="loan_type"/>
@@ -22,15 +25,6 @@
             </field>
         </record>
 
-        <!-- actions opening views on models -->
-
-        <record model="ir.actions.act_window" id="osi-loans.action_window">
-            <field name="name">Applicants</field>
-            <field name="res_model">new.applicant</field>
-            <field name="view_mode">tree,form</field>
-            <header>
-                <field name="state" widget="statusbar" statusbar_visible="Draft,Submitted,Reviewed"/>
-            </header>
-        </record>
+        <!-- actions opening views on models
     </data>
 </odoo>
