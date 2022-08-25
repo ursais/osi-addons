@@ -17,17 +17,15 @@
                     <header>
                         <field name="state" widget="statusbar" statusbar_visible="Draft,Submitted,Reviewed"/>
                     </header>
-                </form>
 
-                <tree>
+
                     <field name="applicant"/>
                     <field name="loan_type"/>
                     <field name="loan_term"/>
                     <field name="state"/>
-                </tree>
+                </form>
             </field>
         </record>
-
         <!-- actions opening views on models -->
     </data>
 </odoo>
