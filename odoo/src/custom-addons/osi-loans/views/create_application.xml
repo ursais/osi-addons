@@ -14,11 +14,19 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+        <!-- actions opening views on models -->
+        <record id="application_action" model="ir.actions.act_window">
+            <field name="name">Applications</field>
+            <field name="res_model">new.application</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
         <!-- Top menu item -->
         <menuitem name="OSI-Loans" id="osi-loans.menu_root"/>
 
         <!-- menu categories -->
-        <menuitem name="Applications" id="osi-loans.applications" parent="osi-loans.menu_root" action="applicant_action"/>
+        <menuitem name="Applicants" id="osi-loans.applicants" parent="osi-loans.menu_root" action="applicant_action"/>
+        <menuitem name="Applications" id="osi-loans.applications" parent="osi-loans.menu_root" action="application_action"/>
         <menuitem name="Loans" id="osi-loans.loans" parent="osi-loans.menu_root" action="loan_action"/>
 
         <record id="new_application_view_tree" model="ir.ui.view">
