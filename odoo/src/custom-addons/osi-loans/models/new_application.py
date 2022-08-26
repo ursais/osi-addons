@@ -18,9 +18,6 @@ class NewApplication(models.Model):
                                        ], required=True, default='Draft',
                                       string="Progress")
 
-
-    @api.multi
-
-
+    @api
     def submit(self):
-        self.progress_state = 'submitted'
+        self.write({'progress_state': 'submitted'})
