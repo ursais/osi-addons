@@ -15,8 +15,7 @@ class NewApplication(models.Model):
                                        ('submitted', 'Submitted'),
                                        ('approved', 'Approved'),
                                        ('rejected', 'Rejected'),
-                                       ], required=True, default='draft',
-                                      string="Progress")
+                                       ], default='draft')
 
     def button_submit(self):
         self.progress_state = 'submitted'
