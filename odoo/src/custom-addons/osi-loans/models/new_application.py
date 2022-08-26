@@ -1,4 +1,4 @@
-from odoo import models, fields, api
+from odoo import models, fields
 
 
 class NewApplication(models.Model):
@@ -18,6 +18,5 @@ class NewApplication(models.Model):
                                        ], required=True, default='Draft',
                                       string="Progress")
 
-    @api
     def submit(self):
         self.write({'progress_state': 'submitted'})
