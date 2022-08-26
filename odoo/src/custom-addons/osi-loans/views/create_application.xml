@@ -58,9 +58,9 @@
             <field name="model">new.application</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="applicant" attrs="{'readonly':[('progress_state','=','submitted')]}"/>
-                    <field name="loan_type" attrs="{'readonly':[('progress_state','=','submitted')]}"/>
-                    <field name="loan_term" attrs="{'readonly':[('progress_state','=','submitted')]}"/>
+                    <field name="applicant"/>
+                    <field name="loan_type"/>
+                    <field name="loan_term"/>
                 </tree>
             </field>
         </record>
