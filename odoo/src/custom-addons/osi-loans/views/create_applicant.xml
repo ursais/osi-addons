@@ -1,7 +1,7 @@
 <odoo>
     <data>
 
-             <!-- actions opening views on models -->
+        <!-- actions opening views on models -->
         <record id="applicant_action" model="ir.actions.act_window">
             <field name="name">Applicants</field>
             <field name="res_model">new.applicant</field>
@@ -27,7 +27,8 @@
 
         <!-- menu categories -->
         <menuitem name="Applicants" id="osi-loans.applicants" parent="osi-loans.menu_root" action="applicant_action"/>
-        <menuitem name="Applications" id="osi-loans.applications" parent="osi-loans.menu_root" action="application_action"/>
+        <menuitem name="Applications" id="osi-loans.applications" parent="osi-loans.menu_root"
+                  action="application_action"/>
         <menuitem name="Loans" id="osi-loans.loans" parent="osi-loans.menu_root" action="loan_action"/>
 
 
@@ -51,6 +52,40 @@
                     <field name="employer"/>
                     <field name="employer_number"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="osi_loans_view_form" model="ir.ui.view">
+            <field name="name">New Applicant Form</field>
+            <field name="model">new.applicant</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="dob"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                        </group>
+
+                        <group>
+                            <field name="street_address"/>
+                            <field name="street_address2"/>
+                            <field name="state"/>
+                            <field name="city"/>
+                            <field name="zip"/>
+                        </group>
+
+                        <group>
+                            <field name="ssn"/>
+                            <field name="employment_status"/>
+                            <field name="monthly_income"/>
+                            <field name="employer"/>
+                            <field name="employer_number"/>
+                        </group>
+
+                    </sheet>
+                </form>
             </field>
         </record>
 

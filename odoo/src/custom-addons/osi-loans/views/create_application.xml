@@ -1,6 +1,6 @@
 <odoo>
     <data>
-           <!-- actions opening views on models -->
+        <!-- actions opening views on models -->
         <record id="applicant_action" model="ir.actions.act_window">
             <field name="name">Applicants</field>
             <field name="res_model">new.applicant</field>
@@ -26,7 +26,8 @@
 
         <!-- menu categories -->
         <menuitem name="Applicants" id="osi-loans.applicants" parent="osi-loans.menu_root" action="applicant_action"/>
-        <menuitem name="Applications" id="osi-loans.applications" parent="osi-loans.menu_root" action="application_action"/>
+        <menuitem name="Applications" id="osi-loans.applications" parent="osi-loans.menu_root"
+                  action="application_action"/>
         <menuitem name="Loans" id="osi-loans.loans" parent="osi-loans.menu_root" action="loan_action"/>
 
         <record id="new_application_view_form" model="ir.ui.view">
@@ -35,11 +36,19 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                         <field name="progress_state" widget="statusbar" clickable="True"/>
+                        <button string="Submit" type="object" name="submit"
+                                attrs="{'invisible':[('progress_state','=','submitted')]}"/>
+                        <field name="progress_state" widget="statusbar" clickable="True"/>
                     </header>
-                    <field name="applicant" widget="selection"/>
-                    <field name="loan_type" widget="selection"/>
-                    <field name="loan_term"/>
+                    <sheet>
+                        <group>
+                            <field name="applicant" widget="selection"
+                                   attrs="{'readonly':[('progress_state','=','submitted')]}"/>
+                            <field name="loan_type" widget="selection"
+                                   attrs="{'readonly':[('progress_state','=','submitted')]}"/>
+                            <field name="loan_term" attrs="{'readonly':[('progress_state','=','submitted')]}"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -49,9 +58,9 @@
             <field name="model">new.application</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="applicant" />
-                    <field name="loan_type" />
-                    <field name="loan_term"/>
+                    <field name="applicant" attrs="{'readonly':[('progress_state','=','submitted')]}"/>
+                    <field name="loan_type" attrs="{'readonly':[('progress_state','=','submitted')]}"/>
+                    <field name="loan_term" attrs="{'readonly':[('progress_state','=','submitted')]}"/>
                 </tree>
             </field>
         </record>

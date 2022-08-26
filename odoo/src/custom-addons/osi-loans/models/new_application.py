@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class NewApplication(models.Model):
@@ -11,6 +11,16 @@ class NewApplication(models.Model):
     loan_term = fields.Selection([('2', '2 years'), ('5', '5 years'),
                                   ('10', '10 years')], string='Loan term')
 
-    progress_state = fields.Selection([('Draft', 'Draft'), ('Submitted', 'Submitted'),
-                              ('Reviewed', 'Reviewed')], required=True, default='Draft',
-                             string="Progress")
+    progress_state = fields.Selection([('draft', 'Draft'),
+                                       ('submitted', 'Submitted'),
+                                       ('approved', 'Approved'),
+                                       ('rejected', 'Rejected'),
+                                       ], required=True, default='Draft',
+                                      string="Progress")
+
+
+    @api.multi
+
+
+    def submit(self):
+        self.progress_state = 'submitted'
