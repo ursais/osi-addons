@@ -37,16 +37,18 @@
                 <form>
                     <header>
                         <button string="Submit" type="object" name="button_submit"
-                                attrs="{'invisible':[('progress_state','=','submitted')]}"/>
+                                attrs="{'invisible':[('progress_state','=','submit')]}
+
+                        "/>
                         <field name="progress_state" widget="statusbar" clickable="False"/>
                     </header>
                     <sheet>
                         <group>
                             <field name="applicant" widget="selection"
-                                   attrs="{'readonly':[('progress_state','=','submitted')]}"/>
+                                   attrs="{'readonly':[('progress_state','=','submit')]}"/>
                             <field name="loan_type" widget="selection"
-                                   attrs="{'readonly':[('progress_state','=','submitted')]}"/>
-                            <field name="loan_term" attrs="{'readonly':[('progress_state','=','submitted')]}"/>
+                                   attrs="{'readonly':[('progress_state','=','submit')]}"/>
+                            <field name="loan_term" attrs="{'readonly':[('progress_state','=','submit)]}"/>
                         </group>
                     </sheet>
                 </form>

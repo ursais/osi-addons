@@ -11,11 +11,11 @@ class NewApplication(models.Model):
     loan_term = fields.Selection([('2', '2 years'), ('5', '5 years'),
                                   ('10', '10 years')], string='Loan term')
 
-    progress_state = fields.Selection([('draft', 'Draft'),
-                                       ('submitted', 'Submitted'),
+    progress_state = fields.Selection([('dft', 'Draft')
+                                       ('submit', 'Submitted')
                                        ('approved', 'Approved'),
-                                       ('rejected', 'Rejected'),
-                                       ], default='draft')
+                                       ('rejected', 'Rejected')
+                                       ])
 
     def button_submit(self):
-        self.progress_state = 'submitted'
+        self.progress_state = 'submit'
