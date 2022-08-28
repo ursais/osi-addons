@@ -38,8 +38,7 @@
                     <header>
                         <button string="Submit" type="object" name="button_submit"
                                 attrs="{'invisible':[('progress_state','=','submitted')]}"/>
-                        <field name="progress_state" widget="statusbar" clickable="True"
-                        statusbar_visible="draft, submitted,approved, rejected"/>
+                        <field name="progress_state" widget="statusbar" clickable="False"/>
                     </header>
                     <sheet>
                         <group>
