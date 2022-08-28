@@ -11,8 +11,8 @@ class NewApplication(models.Model):
     loan_term = fields.Selection([('2', '2 years'), ('5', '5 years'),
                                   ('10', '10 years')], string='Loan term')
 
-    progress_state = fields.Selection([('dft', 'Draft')
-                                       ('submit', 'Submitted')
+    progress_state = fields.Selection([('dft', 'Draft'),
+                                       ('submit', 'Submitted'),
                                        ('approved', 'Approved'),
                                        ('rejected', 'Rejected')
                                        ])

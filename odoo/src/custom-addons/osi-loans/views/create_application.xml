@@ -48,7 +48,7 @@
                                    attrs="{'readonly':[('progress_state','=','submit')]}"/>
                             <field name="loan_type" widget="selection"
                                    attrs="{'readonly':[('progress_state','=','submit')]}"/>
-                            <field name="loan_term" attrs="{'readonly':[('progress_state','=','submit)]}"/>
+                            <field name="loan_term" attrs="{'readonly':[('progress_state','=','submit')]}"/>
                         </group>
                     </sheet>
                 </form>
