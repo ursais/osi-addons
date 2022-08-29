@@ -62,7 +62,8 @@
                         </group>
 
                         <group>
-                            <
+                            <field name="determined_status"
+                                   attrs="{'invisible':[('progress_state','not in','submit')]}"/>
                         </group>
                     </sheet>
                 </form>
