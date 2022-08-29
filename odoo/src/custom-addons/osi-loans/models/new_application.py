@@ -1,6 +1,6 @@
 import random
 
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class NewApplication(models.Model):
@@ -11,7 +11,7 @@ class NewApplication(models.Model):
 
     loan_term = fields.Selection([('2', '2 years'), ('5', '5 years'),
                                   ('10', '10 years')], string='Loan term')
-
+    applicant_credit = fields.Integer('Applicant Credit')
     progress_state = fields.Selection([('dft', 'Draft'),
                                        ('submit', 'Submitted'),
                                        ('approved', 'Approved'),
@@ -25,13 +25,11 @@ class NewApplication(models.Model):
 
         get_min_credit = fields.Many2one('loan.options')
         # simulate using credit API to get credit score
-        applicant_credit = random.randint(300, 850)
 
         # get credit requirements from loan options model
-        credit_score = fields.Integer(related='get_min_credit.minimum_credit')
-        credit_score.to
+        credit_score = self.loan_type.minimum_credit
 
-        if int(credit_score) < applicant_credit:
+        if credit_score < self.applicant_credit:
             self.determined_status = "Approved"
         else:
             self.determined_status = "Rejected"
@@ -41,3 +39,9 @@ class NewApplication(models.Model):
 
     def button_reject(self):
         self.progress_state = 'rejected'
+
+    @api.model
+    def create(self, vals):
+        res = super(NewApplication, self).create(vals)
+        res.applicant_credit = random.randint(350, 800)
+        return res
