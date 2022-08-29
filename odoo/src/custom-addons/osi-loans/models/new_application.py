@@ -11,7 +11,7 @@ class NewApplication(models.Model):
 
     loan_term = fields.Selection([('2', '2 years'), ('5', '5 years'),
                                   ('10', '10 years')], string='Loan term')
-    applicant_credit = fields.Integer(related = 'new.applicant.applicant_credit')
+    applicant_credit = fields.Integer(related='new.applicant.applicant_credit')
     progress_state = fields.Selection([('dft', 'Draft'),
                                        ('submit', 'Submitted'),
                                        ('approved', 'Approved'),
@@ -35,13 +35,12 @@ class NewApplication(models.Model):
             self.determined_status = "Rejected"
 
     def button_approve(self):
+        # TODO
+        # search for other loan apps and if approved throw error
+
+        # TODO
+        # create a contact in odoo if approved use (res partners)
         self.progress_state = 'approved'
 
     def button_reject(self):
         self.progress_state = 'rejected'
-
-    # @api.model
-    # def create(self, vals):
-    #     res = super(NewApplication, self).create(vals)
-    #     res.applicant_credit = random.randint(350, 800)
-    #     return res
