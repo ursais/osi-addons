@@ -29,11 +29,12 @@ class NewApplication(models.Model):
 
         # get credit requirements from loan options model
         credit_score = fields.Integer(related='get_min_credit.minimum_credit')
+        credit_score.to
 
-        if credit_score < applicant_credit:
-            determined_status = "Approved"
+        if int(credit_score) < applicant_credit:
+            self.determined_status = "Approved"
         else:
-            determined_status = "Rejected"
+            self.determined_status = "Rejected"
 
     def button_approve(self):
         self.progress_state = 'approved'
