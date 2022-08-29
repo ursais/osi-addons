@@ -4,7 +4,6 @@ from odoo import models, fields
 class NewApplication(models.Model):
     _name = 'new.application'
     _description = 'create a new loan application in the system'
-
     applicant = fields.Many2one('new.applicant', string='Applicant')
     loan_type = fields.Many2one('loan.options', string='Loan type')
 
