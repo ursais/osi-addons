@@ -11,7 +11,7 @@ class NewApplication(models.Model):
 
     loan_term = fields.Selection([('2', '2 years'), ('5', '5 years'),
                                   ('10', '10 years')], string='Loan term')
-    applicant_credit = fields.Integer('Applicant Credit')
+    applicant_credit = fields.Integer(related = 'new.applicant.applicant_credit')
     progress_state = fields.Selection([('dft', 'Draft'),
                                        ('submit', 'Submitted'),
                                        ('approved', 'Approved'),
@@ -40,8 +40,8 @@ class NewApplication(models.Model):
     def button_reject(self):
         self.progress_state = 'rejected'
 
-    @api.model
-    def create(self, vals):
-        res = super(NewApplication, self).create(vals)
-        res.applicant_credit = random.randint(350, 800)
-        return res
+    # @api.model
+    # def create(self, vals):
+    #     res = super(NewApplication, self).create(vals)
+    #     res.applicant_credit = random.randint(350, 800)
+    #     return res

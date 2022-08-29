@@ -84,6 +84,10 @@
                             <field name="employer_number"/>
                         </group>
 
+                        <group>
+                            <field name="applicant_credit"/>
+                        </group>
+
                     </sheet>
                 </form>
             </field>

@@ -1,3 +1,5 @@
+import random
+
 from odoo import models, fields, api
 
 
@@ -26,7 +28,14 @@ class NewApplicant(models.Model):
     ssn = fields.Integer('SSN #')
     employment_status = fields.Selection([('Employed', 'Employed'), ('Unemployed', 'Unemployed'),
                                           ('Fixed', 'Fixed Income (SSI, Retirement Income)')],
-                                           string='Employment Status')
+                                         string='Employment Status')
     monthly_income = fields.Integer('Monthly income')
     employer = fields.Char('Employer')
     employer_number = fields.Char('Employer contact number')
+    applicant_credit = fields.Integer("Applicant Credit", readonly=True)
+
+    @api.model
+    def create(self, vals):
+        res = super(NewApplicant, self).create(vals)
+        res.applicant_credit = random.randint(350, 800)
+        return res
