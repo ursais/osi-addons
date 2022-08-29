@@ -9,12 +9,22 @@ class StockMove(models.Model):
     _inherit = "stock.move"
 
     def get_ji_ids(self, move, svl_ids):
-        ji_ids = self.env["account.move.line"].search(
-            [
-                ("name", "ilike", move.picking_id.name),
-                ("name", "ilike", move.product_id.name),
-            ]
-        )
+        if move.raw_material_production_id:
+            ji_ids = self.env["account.move.line"].search(
+                [
+                    '|', ("name", "ilike", move.reference),
+                    ("name", "ilike", move.origin),
+                    ("reconciled", '=', False)
+                ]
+            )
+        else:
+            ji_ids = self.env["account.move.line"].search(
+                [
+                    ("name", "ilike", move.picking_id.name),
+                    ("name", "ilike", move.product_id.name),
+                    ("reconciled", '=', False)
+                ]
+            )
         if ji_ids:
             if len(svl_ids) > 1:
                 final_layers = []
@@ -123,9 +133,10 @@ class StockMove(models.Model):
         res = super()._action_done(cancel_backorder)
         for move in res:
             # Only run code on outgoing moves with serial or lot products
-            if (
-                move.product_id.tracking in ["serial", "lot"]
-                and move.picking_id.picking_type_id.code == "outgoing"
+            if move.product_id.tracking in ["serial", "lot"] and (
+                move.picking_id.picking_type_id.code == "outgoing"
+                or move.raw_material_production_id.picking_type_id.code
+                == "mrp_operation"
             ):
                 self.get_svl_ids(move)
         return res
