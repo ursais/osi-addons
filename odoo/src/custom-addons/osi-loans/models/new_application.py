@@ -14,7 +14,15 @@ class NewApplication(models.Model):
                                        ('submit', 'Submitted'),
                                        ('approved', 'Approved'),
                                        ('rejected', 'Rejected')
-                                       ])
+                                       ], default='dft')
 
     def button_submit(self):
         self.progress_state = 'submit'
+
+    def button_approve(self):
+        self.progress_state = 'approved'
+
+    def button_reject(self):
+        self.progress_state = 'rejected'
+
+

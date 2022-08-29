@@ -37,7 +37,19 @@
                 <form>
                     <header>
                         <button string="Submit" type="object" name="button_submit"
-                                attrs="{'invisible':[('progress_state','=','submit')]}"/>
+                                attrs="{'invisible':[('progress_state','=','submit')]}"
+                                class="btn-primary"
+                        />
+
+                        <button string="Approve" type="object" name="button_approve"
+                                attrs="{'invisible':[('progress_state','not in','submit')]}"
+                                class="btn-primary"
+                        />
+
+                        <button string="Reject" type="object" name="button_reject"
+                                attrs="{'invisible':[('progress_state','not in','submit')]}"
+                                class="btn-default"
+                        />
                         <field name="progress_state" widget="statusbar" statusbar_visible="dft,submit,approved,rejected"/>
                     </header>
                     <sheet>
