@@ -11,7 +11,7 @@ class NewApplication(models.Model):
 
     loan_term = fields.Selection([('2', '2 years'), ('5', '5 years'),
                                   ('10', '10 years')], string='Loan term')
-    applicant_credit = fields.Integer(related='new.applicant.applicant_credit')
+    applicant_credit = fields.Integer(related='applicant.applicant_credit')
     progress_state = fields.Selection([('dft', 'Draft'),
                                        ('submit', 'Submitted'),
                                        ('approved', 'Approved'),
