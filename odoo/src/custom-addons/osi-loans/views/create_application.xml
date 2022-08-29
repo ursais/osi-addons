@@ -37,7 +37,7 @@
                 <form>
                     <header>
                         <button string="Submit" type="object" name="button_submit"
-                                attrs="{'invisible':[('progress_state','=','submit')]}"
+                                attrs="{'invisible':[('progress_state','not in','dft')]}"
                                 class="btn-primary"
                         />
 
@@ -55,10 +55,14 @@
                     <sheet>
                         <group>
                             <field name="applicant" widget="selection"
-                                   attrs="{'readonly':[('progress_state','=','submit')]}"/>
+                                   attrs="{'readonly':[('progress_state','not in','dft')]}"/>
                             <field name="loan_type" widget="selection"
-                                   attrs="{'readonly':[('progress_state','=','submit')]}"/>
-                            <field name="loan_term" attrs="{'readonly':[('progress_state','=','submit')]}"/>
+                                   attrs="{'readonly':[('progress_state','not in','dft')]}"/>
+                            <field name="loan_term" attrs="{'readonly':[('progress_state','not in','dft')]}"/>
+                        </group>
+
+                        <group>
+                            <
                         </group>
                     </sheet>
                 </form>
