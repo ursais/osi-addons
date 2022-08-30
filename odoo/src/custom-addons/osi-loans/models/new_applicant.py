@@ -10,6 +10,9 @@ class NewApplicant(models.Model):
     name = fields.Char('Name', required=True)
     dob = fields.Date('Date of Birth', required=True)
     age = fields.Integer('Age')
+
+    #TODO
+    #Create onchange method for age so that it updates when date selected
     phone = fields.Char('Phone number', required=True)
     email = fields.Char('Email', required=True)
     street_address = fields.Text('Street Address', required=True)
@@ -39,3 +42,6 @@ class NewApplicant(models.Model):
         res = super(NewApplicant, self).create(vals)
         res.applicant_credit = random.randint(350, 800)
         return res
+
+    # @api.onchange('')
+

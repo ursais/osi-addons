@@ -50,19 +50,24 @@
                                 attrs="{'invisible':[('progress_state','not in','submit')]}"
                                 class="btn-default"
                         />
-                        <field name="progress_state" widget="statusbar" statusbar_visible="dft,submit,approved,rejected"/>
+                        <field name="progress_state" widget="statusbar"
+                               statusbar_visible="dft,submit,approved,rejected"/>
                     </header>
                     <sheet>
                         <group>
                             <field name="applicant" widget="selection"
                                    attrs="{'readonly':[('progress_state','not in','dft')]}"/>
+                            <field name="applicant_credit"/>
+                            <field name="applicant_income"/>
+                        </group>
+
+                        <group>
                             <field name="loan_type" widget="selection"
                                    attrs="{'readonly':[('progress_state','not in','dft')]}"/>
                             <field name="loan_term" attrs="{'readonly':[('progress_state','not in','dft')]}"/>
                         </group>
 
                         <group>
-                            <field name="applicant_credit"/>
                             <field name="determined_status"
                                    attrs="{'invisible':[('progress_state','not in','submit')]}"/>
                         </group>
