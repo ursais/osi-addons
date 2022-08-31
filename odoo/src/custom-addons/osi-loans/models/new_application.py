@@ -40,7 +40,7 @@ class NewApplication(models.Model):
         # save contact id in a new field
         # create smart button for contact
 
-        if self.env['res.partner'].search(['vat', '=', self.applicant.ssn]):
+        if self.env['res.partner'].search([('vat', '=', self.applicant.ssn)]):
             raise UserError("Approved application already exists")
         else:
             self.progress_state = 'approved'
