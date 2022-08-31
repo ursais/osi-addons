@@ -9,6 +9,7 @@ class NewApplication(models.Model):
     _description = 'create a new loan application in the system'
     applicant = fields.Many2one('new.applicant', string='Applicant')
     loan_type = fields.Many2one('loan.options', string='Loan type')
+    _rec_name = applicant
 
     loan_term = fields.Selection([('2', '2 years'), ('5', '5 years'),
                                   ('10', '10 years')], string='Loan term')
@@ -33,7 +34,7 @@ class NewApplication(models.Model):
         else:
             self.determined_status = "Rejected"
 
-    def button_approve(self, vals):
+    def button_approve(self):
 
         # TODO
         # save contact id in a new field

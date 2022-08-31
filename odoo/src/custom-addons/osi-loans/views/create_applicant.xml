@@ -66,6 +66,7 @@
                             <field name="dob"/>
                             <field name="phone"/>
                             <field name="email"/>
+                            <field name="age"/>
                         </group>
 
                         <group>

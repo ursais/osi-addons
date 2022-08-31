@@ -47,7 +47,7 @@ class NewApplicant(models.Model):
 
     @api.onchange('dob')
     def write(self, vals):
-        res = super(NewApplicant, self).write(vals)
+        res_a = super(NewApplicant, self).write(vals)
         date = datetime.strptime(self.dob, "%Y-%m-%d")
         today_date = date.today()
         calculated_age = today_date.year - date.year
@@ -55,6 +55,5 @@ class NewApplicant(models.Model):
         if calculated_age < 18:
             raise UserError("Applicant age under 18")
         else:
-            res.age = 34
-
-        return res
+            res_a.age = 34
+        return res_a
