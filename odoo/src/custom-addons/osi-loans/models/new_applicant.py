@@ -46,7 +46,7 @@ class NewApplicant(models.Model):
 
     def write(self, values):
         res = super(NewApplicant, self).write(values)
-        if res.age < self.MINIMUM_AGE:
+        if self.age < self.MINIMUM_AGE:
             raise UserError("Applicant age under 18")
         return res
 
