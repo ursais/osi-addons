@@ -55,7 +55,7 @@ class NewApplicant(models.Model):
         date = datetime.strptime(str(self.dob), "%Y-%m-%d")
         today_date = date.today()
         calculated_age = today_date.year - date.year
-        res.age = calculated_age
+        self.age = calculated_age
         return res
 
     @api.onchange('age')
