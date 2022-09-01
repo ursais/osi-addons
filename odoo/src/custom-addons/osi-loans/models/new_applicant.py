@@ -43,27 +43,16 @@ class NewApplicant(models.Model):
         res = super(NewApplicant, self).create(vals)
         res.applicant_credit = random.randint(350, 800)
         return res
-    # @api.multi
-    # def write(self):
-    #     date = datetime.strptime(str(self.dob), "%Y-%m-%d")
-    #     today_date = date.today()
-    #     calculated_age = today_date.year - date.year
-    #     self.age = calculated_age
 
     def write(self, values):
         res = super(NewApplicant, self).write(values)
-        date = datetime.strptime(str(self.dob), "%Y-%m-%d")
-        today_date = date.today()
-        calculated_age = today_date.year - date.year
-        self.age = calculated_age
+        if res.age < self.MINIMUM_AGE:
+            raise UserError("Applicant age under 18")
         return res
 
-    @api.onchange('age')
+    @api.onchange('dob')
     def check_valid_age(self):
         date = datetime.strptime(str(self.dob), "%Y-%m-%d")
         today_date = date.today()
         calculated_age = today_date.year - date.year
-        if calculated_age < self.MINIMUM_AGE:
-            raise UserError("Applicant age under 18")
-        else:
-            pass
+        self.age = calculated_age
