@@ -43,13 +43,21 @@ class NewApplicant(models.Model):
         res = super(NewApplicant, self).create(vals)
         res.applicant_credit = random.randint(350, 800)
         return res
+    # @api.multi
+    # def write(self):
+    #     date = datetime.strptime(str(self.dob), "%Y-%m-%d")
+    #     today_date = date.today()
+    #     calculated_age = today_date.year - date.year
+    #     self.age = calculated_age
 
-    @api.one
-    def write(self):
+    @api.multi
+    def write(self, values):
+        res = super(NewApplicant, self).write(values)
         date = datetime.strptime(str(self.dob), "%Y-%m-%d")
         today_date = date.today()
         calculated_age = today_date.year - date.year
-        self.age = calculated_age
+        res.age = calculated_age
+        return res
 
     @api.onchange('age')
     def check_valid_age(self):
