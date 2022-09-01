@@ -46,6 +46,7 @@ class NewApplicant(models.Model):
         res.applicant_credit = random.randint(350, 800)
         return res
 
+    @api.model
     def write(self, vals):
         res_a = super(NewApplicant, self).write(vals)
         date = datetime.strptime(str(self.dob), "%Y-%m-%d")
