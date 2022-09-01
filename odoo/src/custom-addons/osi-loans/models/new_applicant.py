@@ -50,7 +50,6 @@ class NewApplicant(models.Model):
     #     calculated_age = today_date.year - date.year
     #     self.age = calculated_age
 
-    @api.multi
     def write(self, values):
         res = super(NewApplicant, self).write(values)
         date = datetime.strptime(str(self.dob), "%Y-%m-%d")
