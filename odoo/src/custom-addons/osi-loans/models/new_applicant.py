@@ -48,7 +48,7 @@ class NewApplicant(models.Model):
 
     def write(self, vals):
         res_a = super(NewApplicant, self).write(vals)
-        date = datetime.strptime(self.dob, "%Y-%m-%d")
+        date = datetime.strptime(str(self.dob), "%Y-%m-%d")
         today_date = date.today()
         calculated_age = today_date.year - date.year
         res_a.age = calculated_age
@@ -56,7 +56,7 @@ class NewApplicant(models.Model):
 
     @api.onchange('age')
     def check_valid_age(self):
-        date = datetime.strptime(self.dob, "%Y-%m-%d")
+        date = datetime.strptime(str(self.dob), "%Y-%m-%d")
         today_date = date.today()
         calculated_age = today_date.year - date.year
         if calculated_age < self.MINIMUM_AGE:
