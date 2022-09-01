@@ -12,6 +12,7 @@ class NewApplicant(models.Model):
     name = fields.Char('Name', required=True)
     dob = fields.Date('Date of Birth', required=True)
     age = fields.Integer('Age')
+    MINIMUM_AGE = 18
 
     # TODO
     # Create onchange method for age so that it updates when date selected
@@ -45,15 +46,20 @@ class NewApplicant(models.Model):
         res.applicant_credit = random.randint(350, 800)
         return res
 
-    @api.onchange('dob')
     def write(self, vals):
         res_a = super(NewApplicant, self).write(vals)
         date = datetime.strptime(self.dob, "%Y-%m-%d")
         today_date = date.today()
         calculated_age = today_date.year - date.year
+        res_a.age = calculated_age
+        return res_a
 
-        if calculated_age < 18:
+    @api.onchange('age')
+    def check_valid_age(self):
+        date = datetime.strptime(self.dob, "%Y-%m-%d")
+        today_date = date.today()
+        calculated_age = today_date.year - date.year
+        if calculated_age < self.MINIMUM_AGE:
             raise UserError("Applicant age under 18")
         else:
-            res_a.age = 34
-        return res_a
+            pass
