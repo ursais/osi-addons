@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import random
 from odoo.exceptions import UserError
 
