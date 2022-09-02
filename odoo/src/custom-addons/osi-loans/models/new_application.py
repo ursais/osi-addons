@@ -47,6 +47,7 @@ class NewApplication(models.Model):
 
         contact = {'name': self.applicant.name,
                    'company_type': 'person',
+                   'city': self.applicant.city,
                    'street': self.applicant.street_address,
                    'street2': self.applicant.street_address2,
                    'zip': self.applicant.zip,
