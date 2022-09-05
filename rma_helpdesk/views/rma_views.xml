@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="rma_view_form_helpdesk" model="ir.ui.view">
+        <field name="name">rma.view.form</field>
+        <field name="model">rma</field>
+        <field name="inherit_id" ref="rma.rma_view_form" />
+        <field name="arch" type="xml">
+            <field name="partner_invoice_id" position="after">
+                <field
+                    name="ticket_id"
+                    options="{'no_create': True}"
+                    groups="helpdesk.group_helpdesk_user"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>
