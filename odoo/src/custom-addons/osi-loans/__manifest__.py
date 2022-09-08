@@ -23,11 +23,11 @@
     'version': '15.0.0',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['base','contacts'],
 
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'views/create_applicant.xml',
         'views/create_application.xml',
         'views/loan_options.xml'
