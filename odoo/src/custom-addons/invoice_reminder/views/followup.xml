@@ -1,0 +1,25 @@
+<odoo>
+    <data>
+        <record id="followup_line_custom" model="ir.ui.view">
+            <field name="name">account_followup.followup.line.tree.customization</field>
+            <field name="model">account_followup.followup</field>
+            <field name="inherit_id" ref="account_reports_followup.view_account_followup_followup_form"/>
+            <field name="arch" type="xml">
+                    <data>
+                        <xpath expr="//field[@name='followup_line_ids']" position="inside">
+                            <tree string="Follow-up Steps">
+                                <field name="name"/>
+                                <field name="delay"/>
+                                <field name="end_limit"/>
+                                <field name="recurrence_interval"/>
+                                <field name="send_email"/>
+                                <field name="print_letter"/>
+                                <!-- <field name="send_letter"/> -->
+                                <field name="manual_action_type_id"/>
+                            </tree>
+                        </xpath>
+                    </data>
+            </field>
+        </record>
+    </data>
+</odoo>
