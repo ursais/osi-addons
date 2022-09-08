@@ -6,14 +6,16 @@
             <field name="inherit_id" ref="res.partner.form"/>
             <field name="arch" type="xml">
 
+                <data>
+                    <xpath expr="//field[@name='email']" position="after">
+                        <field name="employment_status"/>
+                    </xpath>
 
-                <xpath expr="//field[@name='email']" position="after">
-                <field name="employment_status"/>
-                </xpath>
+                    <xpath expr="//field[@name='email']" position="attributes">
+                        <attribute name="attrs">{'invisible': 1}</attribute>
+                    </xpath>
+                </data>
 
-                <xpath expr="//field[@name='email']" position="attributes">
-                <attribute name="attrs">{'invisible': 1}</attribute>
-                </xpath>
 
             </field>
         </record>
