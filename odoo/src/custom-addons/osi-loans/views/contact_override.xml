@@ -8,7 +8,10 @@
 
                 <data>
 <!--                    <xpath expr="//field[@name='email']" position="after">-->
-                        <field name="employment_status" position="after"/>
+                    <field name="email" position="after">
+                        <field name="employment_status"/>
+                    </field>
+
 <!--                    </xpath>-->
 
                     <xpath expr="//field[@name='email']" position="attributes">
