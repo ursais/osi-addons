@@ -7,12 +7,12 @@
             <field name="arch" type="xml">
 
                 <data>
-                    <xpath expr="//field[@name='email']" position="after">
-                        <field name="employment_status"/>
-                    </xpath>
+<!--                    <xpath expr="//field[@name='email']" position="after">-->
+                        <field name="employment_status" position="after"/>
+<!--                    </xpath>-->
 
                     <xpath expr="//field[@name='email']" position="attributes">
-                        <attribute name="attrs">{'invisible': 1}</attribute>
+                        <attribute name="attrs">{'invisible': True}</attribute>
                     </xpath>
                 </data>
 
