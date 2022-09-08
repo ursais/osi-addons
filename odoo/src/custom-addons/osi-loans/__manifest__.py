@@ -23,14 +23,16 @@
     'version': '15.0.0',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','contacts'],
+    'depends': ['contacts'],
 
     # always loaded
     'data': [
         'security/ir.model.access.csv',
         'views/create_applicant.xml',
         'views/create_application.xml',
-        'views/loan_options.xml'
+        'views/loan_options.xml',
+        'views/contact_override.xml'
+
     ],
     # only loaded in demonstration mode
     'demo': [
