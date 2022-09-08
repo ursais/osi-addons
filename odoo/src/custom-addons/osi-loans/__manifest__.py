@@ -23,7 +23,7 @@
     'version': '15.0.0',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','contacts'],
+    'depends': ['base','contacts', 'mail'],
 
     # always loaded
     'data': [
@@ -37,4 +37,5 @@
     'demo': [
         'demo/demo.xml',
     ],
+    'installable': True
 }
