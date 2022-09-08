@@ -23,7 +23,7 @@
     'version': '15.0.0',
 
     # any module necessary for this one to work correctly
-    'depends': ['contacts'],
+    'depends': ['base','contacts'],
 
     # always loaded
     'data': [
