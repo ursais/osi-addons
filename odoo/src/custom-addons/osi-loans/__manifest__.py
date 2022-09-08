@@ -31,7 +31,7 @@
         'views/create_applicant.xml',
         'views/create_application.xml',
         'views/loan_options.xml',
-        # 'views/contact_override.xml'
+        'views/contact_override.xml'
     ],
     # only loaded in demonstration mode
     'demo': [
