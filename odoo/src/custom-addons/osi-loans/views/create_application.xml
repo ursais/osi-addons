@@ -40,10 +40,9 @@
                                 attrs="{'invisible':[('progress_state','not in','dft')]}"
                                 class="btn-primary"
                         />
-
                         <button string="Approve" type="object" name="button_approve"
                                 attrs="{'invisible':[('progress_state','not in','submit')]}"
-                                class="btn-primary"
+                                class="btn-primary" groups="group_user_level1"
                         />
 
                         <button string="Reject" type="object" name="button_reject"

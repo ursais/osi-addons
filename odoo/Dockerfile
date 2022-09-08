@@ -8,7 +8,7 @@ COPY --chown=odoo requirements.txt /odoo/
 COPY --chown=odoo songs /odoo/songs
 
 # Copy Odoo
-COPY --chown=odoo odoo /odoo/odoo/
+COPY --chown=odoo odoo /odoo/odoo-base/odoo
 # Copy Addons
 # COPY src/paid-addons /odoo/addons/
 COPY --chown=odoo src/private-addons /odoo/addons/

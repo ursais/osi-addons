@@ -75,6 +75,7 @@
                             <field name="state"/>
                             <field name="city"/>
                             <field name="zip"/>
+                            <field name="country"/>
                         </group>
 
                         <group>
