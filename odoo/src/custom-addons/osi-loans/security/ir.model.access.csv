@@ -1,2 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_osi-loans_osi-loans,osi-loans.osi-loans,model_osi-loans_osi-loans,base.group_user,1,1,1,1
+osi-loans.access_new_applicant,access_new_applicant,osi-loans.model_new_applicant,base.group_user,1,0,0,0
+osi-loans.access_new_application,access_new_application,osi-loans.model_new_application,base.group_user,1,0,0,0
+osi-loans.access_loan_options,access_loan_options,osi-loans.model_loan_options,base.group_user,1,0,0,0
