@@ -1,0 +1,50 @@
+<templates id="template" xml:space="preserve">
+
+    <t t-extend="portal.chatter_composer">
+        <t t-jquery="input[name='sha_time']" t-operation="after">
+            <input type="hidden" name="redirect" t-att-value="discussion_url"/>
+            <input type="hidden" name="attachment_ids" class="o_portal_chatter_attachment_ids"/>
+            <input type="hidden" name="attachment_tokens" class="o_portal_chatter_attachment_tokens"/>
+        </t>
+        <t t-jquery="div.o_portal_chatter_composer_error" t-operation="after">
+            <div class="o_portal_chatter_attachments mt-3"/>
+        </t>
+        <t t-jquery="button" t-operation="after">
+            <button class="o_portal_chatter_attachment_btn btn btn-secondary" type="button" title="Add attachment" style="margin-top: 7px;">
+                <i class="fa fa-paperclip"/>
+            </button>
+        </t>
+        <t t-jquery="form.o_portal_chatter_composer_form" t-operation="after">
+            <form class="d-none">
+                <input type="file" class="o_portal_chatter_file_input" multiple="multiple"/>
+            </form>
+        </t>
+    </t>
+
+    <t t-name="Chatter.Attachments">
+        <div t-if="attachments.length" class="row">
+            <div t-foreach="attachments" t-as="attachment" class="col-lg-2 col-md-3 col-sm-6">
+                <div class="o_portal_chatter_attachment mb-2 position-relative text-center" t-att-data-id="attachment.id">
+                    <button t-if="showDelete and attachment.state == 'pending'" class="o_portal_chatter_attachment_delete btn btn-sm btn-outline-danger" style="position: absolute;left: 10px;" title="Delete">
+                        <i class="fa fa-times"/>
+                    </button>
+                    <a t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.access_token}" target="_blank">
+                        <div class='oe_attachment_embedded o_image' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype"/>
+                        <div class='o_portal_chatter_attachment_name'><t t-esc='attachment.name'/></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-extend="portal.chatter_messages">
+        <t t-jquery="div.o_portal_chatter_attachments" t-operation="replace">
+            <div class="o_portal_chatter_attachments">
+                <t t-call="Chatter.Attachments">
+                    <t t-set="attachments" t-value="message.attachment_ids"/>
+                </t>
+            </div>
+        </t>
+    </t>
+
+</templates>
