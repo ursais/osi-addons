@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
 
                 <data>
-                    <xpath expr="//field[@name='email']" position="replace">
+                    <xpath expr="//field[@name='category_id']" position="replace">
                         <group>
                              <field name="employment_status"/>
                         </group>
