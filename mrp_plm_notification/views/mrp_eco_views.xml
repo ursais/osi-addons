@@ -1,0 +1,25 @@
+<odoo>
+
+    <record id="mrp_eco_notification_stage_list" model="ir.ui.view">
+        <field name="name">mrp.eco.stage.list</field>
+        <field name="model">mrp.eco.stage</field>
+        <field name="inherit_id" ref="mrp_plm.mrp_eco_stage_view_tree" />
+        <field name="arch" type="xml">
+            <field name="approval_roles" position="after">
+                <field name="template_id" />
+            </field>
+        </field>
+    </record>
+
+    <record id="mrp_eco_notification_stage_form" model="ir.ui.view">
+        <field name="name">mrp.eco.stage.form</field>
+        <field name="model">mrp.eco.stage</field>
+        <field name="inherit_id" ref="mrp_plm.mrp_eco_stage_view_form" />
+        <field name="arch" type="xml">
+            <field name="type_id" position="after">
+                <field name="template_id" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

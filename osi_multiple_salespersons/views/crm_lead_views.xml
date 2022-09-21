@@ -1,0 +1,22 @@
+<odoo>
+    <record
+        id="crm_lead_view_form_inherit_osi_multiple_salespersons"
+        model="ir.ui.view"
+    >
+        <field name="name">crm.lead.form</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form" />
+        <field name="arch" type="xml">
+            <field name="user_id" position="attributes">
+                <attribute name="string">Primary Salesperson</attribute>
+            </field>
+            <field name="user_id" position="after">
+                <field
+                    name="sale_user_ids"
+                    widget="many2many_tags"
+                    domain="[('id', '!=', user_id)]"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>

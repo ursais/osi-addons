@@ -1,0 +1,57 @@
+<odoo>
+
+    <record id="view_order_form_inherit_osi_multiple_salespersons" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <field name="user_id" position="attributes">
+                <attribute name="string">Primary Salesperson</attribute>
+            </field>
+            <field name="user_id" position="after">
+                <field
+                    name="sale_user_ids"
+                    widget="many2many_tags"
+                    domain="[('id', '!=', user_id)]"
+                />
+            </field>
+        </field>
+    </record>
+
+    <record
+        id="view_quotation_tree_inherit_osi_multiple_salespersons"
+        model="ir.ui.view"
+    >
+        <field name="name">sale.order.tree</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree" />
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="sale_user_ids" widget="many2many_tags" optional="show" />
+            </field>
+        </field>
+    </record>
+
+    <record
+        id="view_sales_order_filter_inherit_osi_multiple_salespersons"
+        model="ir.ui.view"
+    >
+        <field name="name">sale.order.list.select</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter" />
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="sale_user_ids" />
+            </field>
+            <filter name="customer" position="after">
+                <filter
+                    string="Additional Salesperson"
+                    name="group_by_sale_user_ids"
+                    domain="[]"
+                    context="{'group_by':'sale_user_ids'}"
+                />
+            </filter>
+        </field>
+    </record>
+
+</odoo>

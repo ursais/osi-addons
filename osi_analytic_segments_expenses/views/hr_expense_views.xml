@@ -35,10 +35,7 @@
         <field name="model">hr.expense.sheet</field>
         <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_form" />
         <field name="arch" type="xml">
-            <xpath
-                expr="//tree/field[@name='analytic_account_id']"
-                position='after'
-            >
+            <xpath expr="//tree/field[@name='analytic_account_id']" position='after'>
                 <field name="analytic_segment_one_id" />
                 <field name="analytic_segment_two_id" />
             </xpath>

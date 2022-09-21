@@ -1,0 +1,25 @@
+<odoo>
+    <record id="view_task_form2_inherit_ska" model="ir.ui.view">
+        <field name="name">project.task.form.inherit.ska</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_form2" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="opportunity_id" />
+            </xpath>
+            <div name="button_box" position="inside">
+                <field name="opportunity_count" invisible="1" />
+                <button
+                    type="object"
+                    name="action_view_opportunity"
+                    class="oe_stat_button"
+                    string="Opportunity"
+                    attrs="{'invisible': [('opportunity_count', '=', 0)]}"
+                    icon="fa-handshake-o"
+                    groups="base.group_user"
+                >
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>
