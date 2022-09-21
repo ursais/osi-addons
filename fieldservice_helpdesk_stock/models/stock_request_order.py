@@ -52,7 +52,7 @@ class StockRequestOrder(models.Model):
             vals.update(
                 {
                     "helpdesk_ticket_id": order.ticket_id.id or False,
-                    "fsm_location_id": order.fsm_location_id.id or False,
+                    "fsm_location_id": order.location_id.id or False,
                 }
             )
         return super().write(vals)
