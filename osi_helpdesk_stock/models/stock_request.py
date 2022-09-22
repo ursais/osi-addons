@@ -90,7 +90,10 @@ class StockRequest(models.Model):
                     % helpdesk_ticket[0].name
                 )
             # Made from an HT for the first time, create the SRO here
-            elif not helpdesk_ticket and vals.get("helpdesk_ticket_id"):
+            elif (
+                  not helpdesk_ticket and vals.get("helpdesk_ticket_id")
+                  and not vals.get("fsm_order_id", False)
+            ):
                 values = self.prepare_order_values(vals)
                 vals["order_id"] = self.env["stock.request.order"].create(values).id
             # There is an SRO made from HT, assign here
