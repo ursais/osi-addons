@@ -35,7 +35,6 @@ class StockRequestOrder(models.Model):
                 self.location_id = order.inventory_location_id.id
             else:
                 self.location_id = order.warehouse_id.lot_stock_id.id
-            self.fsm_location_id = self.fsm_order_id.location_id.id
             self.change_childs()
 
     def change_childs(self):
@@ -53,7 +52,7 @@ class StockRequestOrder(models.Model):
             vals.update(
                 {
                     "helpdesk_ticket_id": order.ticket_id.id or False,
-                    "fsm_location_id": order.fsm_location_id.id or False,
+                    "fsm_location_id": order.location_id.id or False,
                 }
             )
         return super().write(vals)
