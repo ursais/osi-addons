@@ -3,7 +3,7 @@
         <record model="ir.ui.view" id="second_id_for_the_form">
             <field name="name">second_name_for_the_form</field>
             <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+            <field name="inherit_id" ref="my_sale_orders_filter"/>
             <field name="arch" type="xml">
 <!--                <field string="my_quotation" position="after">-->
 <!--                    <field string="Today" name="created_today"-->
