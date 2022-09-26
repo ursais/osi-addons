@@ -5,10 +5,10 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
             <field name="arch" type="xml">
-                <field string="my_quotation" position="after">
-                    <field string="Today" name="created_today"
-                           domain="[('created_date','=',time.strftime('%Y-%m-%d 23:59:59')),('date','gigit =',time.strftime('%Y-%m-%d 00:00:00')))]"/>
-                </field>
+<!--                <field string="my_quotation" position="after">-->
+<!--                    <field string="Today" name="created_today"-->
+<!--                           domain="[('created_date','=',time.strftime('%Y-%m-%d 23:59:59')),('date','gigit =',time.strftime('%Y-%m-%d 00:00:00')))]"/>-->
+<!--                </field>-->
 
                 <xpath expr="//field[@name='my_quotation']" position="after">
                         <field string="Today" name="created_today"
