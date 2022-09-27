@@ -17,7 +17,7 @@
 
                     <xpath expr="//filter[@name='my_quotation']" position="replace">
 
-                    <filter string="Today" name="today_ov" domain="[('created_date','=',context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Today" name="today_ov" domain="[('create_date','=',context_today().strftime('%Y-%m-%d'))]"/>
 
                 </xpath>
                 </data>
