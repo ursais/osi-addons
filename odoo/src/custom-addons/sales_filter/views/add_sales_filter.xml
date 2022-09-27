@@ -5,18 +5,21 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
             <field name="arch" type="xml">
-                <!--                <field string="my_quotation" position="after">-->
-                <!--                    <field string="Today" name="created_today"-->
-                <!--                           domain="[('created_date','=',time.strftime('%Y-%m-%d 23:59:59')),('date','gigit =',time.strftime('%Y-%m-%d 00:00:00')))]"/>-->
-                <!--                </field>-->
-                <data>
-                    <xpath expr="//field[@name='sales']" position="replace">
-                        <!--                        <field string="Today" name="created_today"-->
-                        <!--                               domain="[('created_date','=',context_today().strftime('%Y-%m-%d'))]"/>-->
 
-                        <field string="Today" name="created_today"
-                               domain="[('amount_total','=>','50']"/>
-                    </xpath>
+                <data>
+<!--                    <xpath expr="//field[@name='sales']" position="replace">-->
+<!--                        &lt;!&ndash;                        <field string="Today" name="created_today"&ndash;&gt;-->
+<!--                        &lt;!&ndash;                               domain="[('created_date','=',context_today().strftime('%Y-%m-%d'))]"/>&ndash;&gt;-->
+
+<!--                        <field string="Today" name="created_today"-->
+<!--                               domain="[('amount_total','=>','50']"/>-->
+<!--                    </xpath>-->
+
+                    <xpath expr="//filter[@name='my_sale_orders_filter']" position="replace">
+
+                    <filter string="Today" name="today_ov" domain="[('created_date','=',context_today().strftime('%Y-%m-%d'))]"/>
+
+                </xpath>
                 </data>
             </field>
         </record>
