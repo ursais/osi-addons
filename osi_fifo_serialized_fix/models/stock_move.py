@@ -133,10 +133,9 @@ class StockMove(models.Model):
         res = super()._action_done(cancel_backorder)
         for move in res:
             # Only run code on outgoing moves with serial or lot products
-            if move.product_id.tracking in ["serial", "lot"] and (
-                move.picking_id.picking_type_id.code == "outgoing"
-                or move.raw_material_production_id.picking_type_id.code
-                == "mrp_operation"
+            if (
+                move.product_id.tracking in ["serial", "lot"]
+                and move.picking_id.picking_type_id.code == "outgoing"
             ):
                 self.get_svl_ids(move)
         return res
