@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//filter[@name='my_quotation']" position="replace">
-                    <filter string="Today" name="today_ov" domain="[('create_date','=',context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Today" name="today_ov" domain="[('create_date','=',Date.today())]"/>
                 </xpath>
                 </data>
             </field>
