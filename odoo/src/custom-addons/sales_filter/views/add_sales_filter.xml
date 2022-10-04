@@ -6,14 +6,15 @@
             <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//filter[@name='my_quotation']" position="replace">
-                    <filter string="Today" name="today_ov" domain="[('create_date','>=',context_today().strftime('%Y-%m-%d'))]"/>
-                        <field string="Company" domain="[]" context="{'group_by':'company_id'}"/>
-                </xpath>
+                    <xpath expr="//filter[@name='my_quotation']" position="before">
+                        <filter string="Today" name="today_ov"
+                                domain="[('create_date','>=',context_today().strftime('%Y-%m-%d'))]"/>
+                    </xpath>
 
-                    <xpath expr="//field @name='customer_id']" position="replace">
-                        <field string="Company" domain="[]" context="{'group_by':'company_id'}"/>
-                </xpath>
+                    <xpath expr="//filter[@name='salesperson']" position="before">
+                        <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}"/>
+                    </xpath>
+
                 </data>
             </field>
         </record>
