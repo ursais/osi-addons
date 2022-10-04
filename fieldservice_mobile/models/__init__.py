@@ -6,3 +6,5 @@ from . import fsm_stage_history
 from . import res_config_settings
 from . import res_users
 from . import ir_attachment
+from . import fsm_mobile_feature_mapping
+from . import fsm_mobile_feature_line
