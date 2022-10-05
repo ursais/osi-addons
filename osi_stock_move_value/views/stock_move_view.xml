@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <odoo>
 
     <!-- Copyright 2020 Open Source Integrators
@@ -8,16 +8,16 @@
     <record id="view_move_qty_needed_form" model="ir.ui.view">
         <field name="name">view.move.qty.needed.form</field>
         <field name="model">stock.move</field>
-        <field name="inherit_id" ref="stock.view_move_form"/>
+        <field name="inherit_id" ref="stock.view_move_form" />
         <field name="arch" type="xml">
             <xpath expr="//group[@name='main_grp_col2']" position="inside">
-                <label for="price_unit"/>
+                <label for="price_unit" />
                 <div class="o_row">
-                    <field name="price_unit"/>
+                    <field name="price_unit" />
                 </div>
-                <label for="stock_value" string="Stock Value"/>
+                <label for="stock_value" string="Stock Value" />
                 <div class="o_row">
-                    <field name="stock_value"/>
+                    <field name="stock_value" />
                 </div>
             </xpath>
         </field>
@@ -26,11 +26,11 @@
     <record id="view_move_qty_needed_tree" model="ir.ui.view">
         <field name="name">view.move.qty.needed.tree</field>
         <field name="model">stock.move</field>
-        <field name="inherit_id" ref="stock.view_move_tree"/>
+        <field name="inherit_id" ref="stock.view_move_tree" />
         <field name="arch" type="xml">
             <field name="product_uom_qty" position="after">
-                <field name="price_unit"/>
-                <field name="stock_value"/>
+                <field name="price_unit" />
+                <field name="stock_value" />
             </field>
         </field>
     </record>

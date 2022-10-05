@@ -95,7 +95,8 @@ rules:
   no-lone-blocks: warn
   no-lonely-if: error
   no-mixed-requires: error
-  no-multi-str: warn
+  no-mixed-operators: off
+  no-multi-str: off
   no-native-reassign: error
   no-negated-condition: warn
   no-negated-in-lhs: error

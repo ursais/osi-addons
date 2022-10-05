@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
         <template id="inventory_valuation_ondate_report">
             <t t-call="web.html_container">
@@ -7,28 +7,41 @@
                 <t t-set="data_report_dpi" t-value="110" />
                 <t t-call="web.internal_layout">
                     <div class="page">
-                        <h2 class="text-center">Inventory Valuation by Location and Date Report</h2>
-                        <t t-foreach="get_company(data['form']['company_id'])"
-                            t-as="obj_company">
+                        <h2
+                        class="text-center"
+                    >Inventory Valuation by Location and Date Report</h2>
+                        <t
+                        t-foreach="get_company(data['form']['company_id'])"
+                        t-as="obj_company"
+                    >
                             <div class="row">
-                                <div class="col-xs-3 text-center"
-                                    style="border-width:1px;border-style:ridge;">
+                                <div
+                                class="col-xs-3 text-center"
+                                style="border-width:1px;border-style:ridge;"
+                            >
                                     <strong>Company</strong>
                                     <p t-esc="obj_company['name']" />
                                 </div>
-                                <div class="col-xs-3 text-center"
-                                    style="border-width:1px;border-style:ridge;">
+                                <div
+                                class="col-xs-3 text-center"
+                                style="border-width:1px;border-style:ridge;"
+                            >
                                     <strong>Warehouse</strong>
                                     <p
-                                        t-esc="get_warehouses_block(data['form']['warehouse_ids'], data['form']['company_id'])" />
+                                    t-esc="get_warehouses_block(data['form']['warehouse_ids'], data['form']['company_id'])"
+                                />
                                 </div>
-                                <div class="col-xs-3 text-center"
-                                    style="border-width:1px;border-style:ridge;">
+                                <div
+                                class="col-xs-3 text-center"
+                                style="border-width:1px;border-style:ridge;"
+                            >
                                     <strong>Valuation Date</strong>
                                     <p t-esc="data['form']['valuation_date']" />
                                 </div>
-                                <div class="col-xs-3 text-center"
-                                    style="border-width:1px;border-style:ridge;">
+                                <div
+                                class="col-xs-3 text-center"
+                                style="border-width:1px;border-style:ridge;"
+                            >
                                     <strong>Amount In Currency</strong>
                                     <p t-esc="obj_company['currency_id'][1]" />
                                 </div>
@@ -36,46 +49,67 @@
                             <table class="table table-condensed">
                                 <thead>
                                     <tr>
-                                        <th class="text-left"
-                                            style="color:#0F33C6;font-size: 17px;">
+                                        <th
+                                        class="text-left"
+                                        style="color:#0F33C6;font-size: 17px;"
+                                    >
                                             <strong>Location</strong>
                                         </th>
-                                        <th class="text-left"
-                                            style="color:#0F33C6;font-size: 17px;">
+                                        <th
+                                        class="text-left"
+                                        style="color:#0F33C6;font-size: 17px;"
+                                    >
                                             <strong>Category</strong>
                                         </th>
-                                        <th class="text-left"
-                                            style="color:#0F33C6;font-size: 17px;">
+                                        <th
+                                        class="text-left"
+                                        style="color:#0F33C6;font-size: 17px;"
+                                    >
                                             <strong>Account</strong>
                                         </th>
-                                        <th class="text-left"
-                                            style="color:#0F33C6;font-size: 17px;">
+                                        <th
+                                        class="text-left"
+                                        style="color:#0F33C6;font-size: 17px;"
+                                    >
                                             <strong>Product</strong>
                                         </th>
-                                        <th class="text-left"
-                                            style="color:#0F33C6;font-size: 17px;">
+                                        <th
+                                        class="text-left"
+                                        style="color:#0F33C6;font-size: 17px;"
+                                    >
                                             <strong>Barcode</strong>
                                         </th>
-                                        <th class="text-left"
-                                            style="color:#0F33C6;font-size: 17px;">
+                                        <th
+                                        class="text-left"
+                                        style="color:#0F33C6;font-size: 17px;"
+                                    >
                                             <strong>SKU</strong>
                                         </th>
-                                        <th class="text-left"
-                                            style="color:#0F33C6;font-size: 17px;">
+                                        <th
+                                        class="text-left"
+                                        style="color:#0F33C6;font-size: 17px;"
+                                    >
                                             <strong>Quantity</strong>
                                         </th>
-                                        <th class="text-left"
-                                            style="color:#0F33C6;font-size: 17px;">
+                                        <th
+                                        class="text-left"
+                                        style="color:#0F33C6;font-size: 17px;"
+                                    >
                                             <strong>Cost</strong>
                                         </th>
-                                        <th class="text-left"
-                                            style="color:#0F33C6;font-size: 17px;">
+                                        <th
+                                        class="text-left"
+                                        style="color:#0F33C6;font-size: 17px;"
+                                    >
                                             <strong>Value</strong>
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-foreach="get_valuation_data(data, obj_company['id'])" t-as="line">
+                                    <t
+                                    t-foreach="get_valuation_data(data, obj_company['id'])"
+                                    t-as="line"
+                                >
                                         <tr class="border-black">
                                             <td class="text-left" style="color:#9D5389">
                                                 <span t-esc="line['location']" />
@@ -89,19 +123,34 @@
                                             <td class="text-left" style="color:#9D5389">
                                                 <span t-esc="line['product']" />
                                             </td>
-                                            <td class="text-center" style="color:#9D5389">
+                                            <td
+                                            class="text-center"
+                                            style="color:#9D5389"
+                                        >
                                                 <span t-esc="line['barcode']" />
                                             </td>
-                                            <td class="text-center" style="color:#9D5389">
+                                            <td
+                                            class="text-center"
+                                            style="color:#9D5389"
+                                        >
                                                 <span t-esc="line['sku']" />
                                             </td>
-                                            <td class="text-right" style="color:#9D5389">
+                                            <td
+                                            class="text-right"
+                                            style="color:#9D5389"
+                                        >
                                                 <span t-esc="line['qty']" />
                                             </td>
-                                            <td class="text-right" style="color:#9D5389">
+                                            <td
+                                            class="text-right"
+                                            style="color:#9D5389"
+                                        >
                                                 <span t-esc="line['cost']" />
                                             </td>
-                                            <td class="text-right" style="color:#9D5389">
+                                            <td
+                                            class="text-right"
+                                            style="color:#9D5389"
+                                        >
                                                 <span t-esc="line['value']" />
                                             </td>
                                         </tr>
