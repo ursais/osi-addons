@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="advanced_check_void_account_payment_list_inherited" model="ir.ui.view">
+        <field name="name">account.payment.list.inherited</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_supplier_payment_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state']" position="before">
+                <field
+                    name="payment_state"
+                    widget="badge"
+                    decoration-danger="payment_state == 'reversed'"
+                    decoration-info="payment_state in ('not_paid', 'in_payment', 'partial', 'invoicing_legacy')"
+                    decoration-success="payment_state == 'paid'"
+                />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="advanced_check_void_account_payment_form_inherited" model="ir.ui.view">
+        <field name="name">account.payment.form.inherited</field>
+        <field name="model">account.payment</field>
+        <field
+            name="inherit_id"
+            ref="account_check_printing.view_account_payment_form_inherited"
+        />
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <button name="print_checks" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'invisible': ['|', '|', '|',  '|', ('payment_state', '=', 'reversed'), ('payment_method_code', '!=', 'check_printing'), ('state', '!=', 'posted'), ('payment_type', '=', 'inbound'), ('is_move_sent', '!=', False)]}</attribute>
+            </button>
+            <button name="action_draft" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'invisible': ['|', '|', ('payment_state', '=', 'reversed'), ('payment_method_code', 'in', ('check_printing', 'ACH-Out', 'manual')), ('state', 'not in', ('posted', 'cancel'))]}</attribute>
+            </button>
+            <button name="mark_as_sent" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'invisible': ['|', '|', '|', ('payment_state', '=', 'reversed'), ('state', '!=', 'posted'), ('is_move_sent', '=', True), ('payment_method_code', '!=', 'manual')]}</attribute>
+            </button>
+            <button name="unmark_as_sent" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'invisible': ['|', '|', '|', ('can_be_voided', '!=', False), ('state', '!=', 'posted'), ('is_move_sent', '=', False), ('payment_method_code', '!=', 'manual')]}</attribute>
+            </button>
+            <button name="action_unmark_sent" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'invisible': ['|', '|', '|', ('can_be_voided', '!=', False), ('state', '!=', 'posted'), ('is_move_sent', '=', False), ('payment_method_code', '!=', 'manual')]}</attribute>
+            </button>
+            <button name="action_void_check" position="replace" />
+            <xpath expr="//field[@name='check_number']" position="after">
+                <field name="payment_state" invisible="1" />
+                <field name="is_hide_check" invisible="1" />
+                <field name="is_visible_check" invisible="1" />
+                <field name="is_readonly_check" invisible="1" />
+                <field name="can_be_voided" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='check_number']" position="attributes">
+                <attribute
+                    name="attrs"
+                >{'invisible': ['|', '|', ('payment_state', '=', 'reversed'), ('payment_method_code', '!=','check_printing'), ('is_visible_check', '=', False)], 'readonly': ['|', ('is_readonly_check', '=', True), ('state', '!=', 'draft')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="before">
+                <widget
+                    name="web_ribbon"
+                    title="Reversed"
+                    attrs="{'invisible': [('payment_state', '!=', 'reversed')]}"
+                />
+            </xpath>
+
+            <field name="ref" position="after">
+                <field
+                    name="void_reason"
+                    attrs="{'invisible': [('payment_state', '!=', 'reversed')]}"
+                />
+            </field>
+
+        </field>
+    </record>
+
+    <record id="advanced_check_void_account_payment_form_inherit2" model="ir.ui.view">
+        <field name="name">account.payment.form.inherited</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form" />
+        <field name="arch" type="xml">
+            <button name="action_post" position="after">
+                <button
+                    name="void_check_reversal_payment"
+                    type="object"
+                    string="Void Payment and Reverse Entries"
+                    attrs="{'invisible': [('can_be_voided', '=', False)]}"
+                />
+            </button>
+            <button name="action_post" position="after">
+                <button
+                    name="void_check_button"
+                    string="Void Check"
+                    type="object"
+                    attrs="{'invisible': ['|', ('payment_method_code', '!=','check_printing'), ('can_be_voided', '=', False)]}"
+                />
+            </button>
+            <button name="button_open_bills" position="before">
+                <button
+                    class="oe_stat_button"
+                    name="button_void_checks"
+                    type="object"
+                    icon="fa-bars"
+                    attrs="{'invisible': ['|', '|', '|', '|', ('voided_count', '=', 0), ('state', '!=', 'posted'), ('state', '=', 'draft'), ('payment_method_code', 'not in', ('check_printing', 'ACH-Out', 'manual')), ('payment_type', '!=', 'outbound')]}"
+                >
+                    <field
+                        string="Void History"
+                        name="voided_count"
+                        widget="statinfo"
+                    />
+                </button>
+            </button>
+        </field>
+    </record>
+
+    <record id="view_payment_check_void_tree" model="ir.ui.view">
+        <field name="name">payment.check.void.tree</field>
+        <field name="model">payment.check.void</field>
+        <field name="arch" type="xml">
+            <tree string="Payment Check Void">
+                <field name="bill_ref" />
+                <field name="create_date" />
+                <field name="check_number" options="{'format': 0}" />
+                <field name="state" />
+                <field name="void_reason" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_payment_check_void_form" model="ir.ui.view">
+        <field name="name">payment.check.void.form</field>
+        <field name="model">payment.check.void</field>
+        <field name="arch" type="xml">
+            <form string="Payment Check Void">
+                <sheet>
+                    <group col="4">
+                        <field name="payment_id" />
+                        <field name="create_date" />
+                        <field name="bill_ref" />
+                        <field name="check_number" options="{'format': 0}" />
+                        <field name="state" />
+                        <field name="void_reason" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
