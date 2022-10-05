@@ -78,12 +78,12 @@
 <!--                />-->
 <!--            </field>-->
 
-            <xpath expr="//field[@name='move_id']" position="after">
-                <field
-                    name="void_reason"
-                    attrs="{'invisible': [('payment_state', '!=', 'reversed')]}"
-                />
-            </xpath>
+<!--            <xpath expr="//field[@name='move_id']" position="after">-->
+<!--                <field-->
+<!--                    name="void_reason"-->
+<!--                    attrs="{'invisible': [('payment_state', '!=', 'reversed')]}"-->
+<!--                />-->
+<!--            </xpath>-->
         </field>
     </record>
 
