@@ -29,5 +29,6 @@ access_mobile_feature_mapping_user,mobile.feature.user,fieldservice_mobile.model
 access_mobile_feature_mapping_manager,mobile.feature.manager,fieldservice_mobile.model_fsm_mobile_feature_mapping,fieldservice.group_fsm_manager,1,1,1,1
 access_mobile_feature_line_user,mobile.feature.line.user,fieldservice_mobile.model_fsm_mobile_feature_line,base.group_user,1,0,0,0
 access_mobile_feature_line_manager,mobile.feature.line.manager,fieldservice_mobile.model_fsm_mobile_feature_line,fieldservice.group_fsm_manager,1,1,1,1
+access_mobile_feature_line_portal,mobile.feature.line.portal,fieldservice_mobile.model_fsm_mobile_feature_line,base.group_portal,1,0,0,0
 access_mobile_feature_mapping_user_portal,mobile.feature.user.portal,fieldservice_mobile.model_fsm_mobile_feature_mapping,base.group_portal,1,0,0,0
 access_mobile_feature_mapping_manager_portal,mobile.feature.manager.portal,fieldservice_mobile.model_fsm_mobile_feature_mapping,base.group_portal,1,0,0,0
