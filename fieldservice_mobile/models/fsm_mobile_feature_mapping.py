@@ -65,7 +65,7 @@ class FSMMobileFeatureMapping(models.Model):
         return super(FSMMobileFeatureMapping, self).unlink()
 
     @api.model
-    def get_fsm_mobile_feature_mapping_values(self):
+    def get_fsm_mobile_feature_mapping_values(self, user_id):
         fsm_feature_mapping_obj = self.env["fsm.mobile.feature.mapping"]
         fsm_feature_mapping_rec = fsm_feature_mapping_obj.search(
             [("state", "=", "active")], limit=1
@@ -74,14 +74,18 @@ class FSMMobileFeatureMapping(models.Model):
         feature_mapping_list = []
         installed_modules_list = []
         for f_line_rec in fsm_feature_mapping_rec.feature_line_ids:
-            feature_mapping_list.append(
-                {
-                    "id": f_line_rec.id,
-                    "name": f_line_rec.name,
-                    "group_ids": f_line_rec.group_ids.ids,
-                    "code": f_line_rec.code,
-                }
+            group_ids = f_line_rec.group_ids.sudo().filtered(
+                lambda line: user_id in line.users.ids
             )
+            if group_ids:
+                feature_mapping_list.append(
+                    {
+                        "id": f_line_rec.id,
+                        "name": f_line_rec.name,
+                        "group_ids": group_ids.ids,
+                        "code": f_line_rec.code,
+                    }
+                )
         for inst_module in fsm_feature_mapping_rec.sudo().installed_module_ids:
             installed_modules_list.append(
                 {"id": inst_module.id, "name": inst_module.name}
