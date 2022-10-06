@@ -1,0 +1,12 @@
+<odoo>
+    <record id="stock_move_line_bin_location_tree_2" model="ir.ui.view">
+        <field name="name">Bin Location</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="osi_manual_qty_reserve.view_stock_move_operations" />
+        <field name="arch" type="xml">
+            <field name="lot_id" position="before">
+                <field name="bin_location" />
+            </field>
+        </field>
+    </record>
+</odoo>
