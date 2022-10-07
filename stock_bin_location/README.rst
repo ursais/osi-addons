@@ -26,7 +26,7 @@ Usage
 
 Inventory App:
 
-1) Click on 'Operations' menu and then click on 'Transfers'. Select a Transfer on the list, then select the 'Operations' tab and click on the line level Detail Icon.
+Click on 'Operations' menu and then click on 'Transfers'. Select a Transfer on the list, then select the 'Operations' tab and click on the line level Detail Icon.
 
 * The user can read the Bin Location value on the column
 
@@ -34,7 +34,7 @@ Select the item on the list.
 
 * The user can edit the Bin Location field.
 
-2) Click on 'Products' menu and then click on 'Lots/Serial Numbers'.
+Click on 'Products' menu and then click on 'Lots/Serial Numbers'.
 
 * The user can read the Bin Location of the items.
 * The user can Group By Bin Location
@@ -43,7 +43,9 @@ Select an item on the list and then Edit.
 
 * The user can edit the Bin Location on the form.
 
-3) Click on 'Reporting' menu and then click on ''Inventory Report:
+Click on 'Reporting' menu and then click on ''Inventory Report:
+
+* The user can read the Bin Location of the items.
 
 
 Bug Tracker

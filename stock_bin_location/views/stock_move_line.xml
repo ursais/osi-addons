@@ -5,7 +5,16 @@
         <field name="inherit_id" ref="stock.view_stock_move_line_operation_tree" />
         <field name="arch" type="xml">
             <field name="lot_id" position="after">
-                <field name="bin_location" />
+                <field
+                    name="bin_location"
+                    attrs="{'readonly':[('picking_code','!=','incoming')]}"
+                    invisible="not context.get('show_lots_m2o')"
+                />
+                <field
+                    name="get_bin_location"
+                    string="Bin Location"
+                    invisible="not context.get('show_lots_text')"
+                />
             </field>
         </field>
     </record>

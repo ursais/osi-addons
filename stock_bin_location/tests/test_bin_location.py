@@ -1,7 +1,3 @@
-import unittest
-from odoo.tests.common import TransactionCase
-from odoo.tests import tagged
-
 """
 @tagged('post_install')
 class TestBinLocation(TransactionCase):

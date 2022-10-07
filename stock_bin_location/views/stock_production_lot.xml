@@ -2,7 +2,7 @@
     <record id="stock_production_lot_bin_location_form" model="ir.ui.view">
         <field name="name">Bin Location</field>
         <field name="model">stock.production.lot</field>
-        <field name="inherit_id" ref="stock.view_production_lot_form"/>
+        <field name="inherit_id" ref="stock.view_production_lot_form" />
         <field name="arch" type="xml">
             <field name="company_id" position="after">
                 <field name="bin_location" />
@@ -12,29 +12,28 @@
     <record id="stock_production_lot_bin_location_tree" model="ir.ui.view">
         <field name="name">Bin Location</field>
         <field name="model">stock.production.lot</field>
-        <field name="inherit_id" ref="stock.view_production_lot_tree"/>
+        <field name="inherit_id" ref="stock.view_production_lot_tree" />
         <field name="arch" type="xml">
             <xpath expr="//tree" position="attributes">
                 <attribute name="editable">bottom</attribute>
             </xpath>
             <xpath expr="//tree" position="inside">
-                <button name="open_form_view" type="object" string="Open" icon="fa-edit"/>
+                <button
+                    name="open_form_view"
+                    type="object"
+                    string="Open"
+                    icon="fa-edit"
+                />
             </xpath>
             <field name="ref" position="before">
-                <field name="bin_location" readonly="0"/>
-            </field>
-            <field name="ref" position="attributes">
-                <attribute name="readonly">1</attribute>
-            </field>
-            <field name="dye_lot" position="attributes">
-                <attribute name="readonly">1</attribute>
+                <field name="bin_location" readonly="0" />
             </field>
         </field>
     </record>
     <record id="stock_production_lot_bin_location_search" model="ir.ui.view">
         <field name="name">Bin Location</field>
         <field name="model">stock.production.lot</field>
-        <field name="inherit_id" ref="stock.search_product_lot_filter"/>
+        <field name="inherit_id" ref="stock.search_product_lot_filter" />
         <field name="arch" type="xml">
             <filter name="group_by_product" position="after">
                 <filter
