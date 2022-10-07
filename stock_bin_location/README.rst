@@ -45,7 +45,6 @@ Select an item on the list and then Edit.
 
 3) Click on 'Reporting' menu and then click on ''Inventory Report:
 
-* The user can read the Bin Location of the items in the column.
 
 Bug Tracker
 ===========

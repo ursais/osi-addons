@@ -6,9 +6,7 @@ from odoo import api, fields, models
 class StockQuant(models.Model):
     _inherit = "stock.quant"
 
-    bin_location = fields.Char(
-        compute="_compute_bin_location", string="Bin Location", store=True
-    )
+    bin_location = fields.Char(compute="_compute_bin_location", string="Bin Location", store=True)
 
     @api.depends("lot_id", "lot_id.bin_location")
     def _compute_bin_location(self):
