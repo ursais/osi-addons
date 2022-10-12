@@ -136,7 +136,7 @@ class StockMove(models.Model):
             if svl_id[0] == value_id:
                 if lot_id not in svl_id[2]:
                     svl_id[2].append(lot_id)
-                svl_ids[index] = (svl_id[0], svl_id[1] + 1, svl_id[2])
+                svl_ids[index] = (svl_id[0], svl_id[1] + 1, svl_id[2], svl_id[3])
             index += 1
 
     def check_found_vals(self, value_id, svl_ids):
