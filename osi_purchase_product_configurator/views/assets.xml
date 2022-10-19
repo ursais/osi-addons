@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_backend" name="Product Configurator Assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/osi_purchase_product_configurator/static/src/js/product_configurator.js"/>
+            <script type="text/javascript" src="/osi_purchase_product_configurator/static/src/js/product_configurator_widget.js"/>
+        </xpath>
+    </template>
+
+</odoo>
