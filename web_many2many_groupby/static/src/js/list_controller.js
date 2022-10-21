@@ -36,19 +36,19 @@ odoo.define("web_many2many_groupby.ListController", function (require) {
                                 this,
                                 _t(
                                     "Are you sure that you want to archive all the \
-                                    selected records?"
+                                    selected records?",
                                 ),
                                 {
                                     confirm_callback: () =>
                                         this._toggleArchiveState(true),
-                                }
+                                },
                             );
                         },
                     },
                     {
                         description: _t("Unarchive"),
                         callback: () => this._toggleArchiveState(false),
-                    }
+                    },
                 );
             }
             if (this.activeActions.delete) {
@@ -63,7 +63,7 @@ odoo.define("web_many2many_groupby.ListController", function (require) {
                 }),
             });
         },
-        _onReload(ev) {
+        _onReload (ev) {
             const {isM2MGrouped} = this.model.get(this.handle);
             if (isM2MGrouped) {
                 // Ask for the main record to be reloaded.
