@@ -7,7 +7,7 @@
     "author": "Open Source Integrators",
     "category": "Stock",
     "maintainer": "Open Source Integrators",
-    "website": "http://www.opensourceintegrators.com",
+    "website": "https://github.com/ursais/osi-addons",
     "depends": ["stock"],
     "data": [
         "views/stock_move_view.xml",
