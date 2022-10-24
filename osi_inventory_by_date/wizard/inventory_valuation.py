@@ -4,7 +4,7 @@ from io import BytesIO
 import xlwt
 
 from odoo import _, api, fields, models
-from odoo.exceptions import Warning
+from odoo.exceptions import UserError
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 
 from ..report.inventory_valuation import InventoryValuationCategory
@@ -17,12 +17,8 @@ class InventoryValuationDateReport(models.TransientModel, InventoryValuationCate
     company_id = fields.Many2one("res.company", string="Company")
     warehouse_ids = fields.Many2many("stock.warehouse", string="warehouse")
     location_id = fields.Many2one("stock.location", string="Location")
-    valuation_date = fields.Date(
-        string="Valuation Date", required=True, default=fields.Date.context_today
-    )
-    start_date = fields.Datetime(
-        string="Start Date", required=True, default=fields.Datetime.now
-    )
+    valuation_date = fields.Date(required=True, default=fields.Date.context_today)
+    start_date = fields.Datetime(required=True, default=fields.Datetime.now)
     filter_product_ids = fields.Many2many("product.product", string="Products")
     filter_product_categ_ids = fields.Many2many("product.category", string="Categories")
 
@@ -156,9 +152,10 @@ class InventoryValuationDateReport(models.TransientModel, InventoryValuationCate
 
         if [y.id for y in self.warehouse_ids] and (not self.company_id):
             self.warehouse_ids = []
-            raise Warning(
+            raise UserError(
                 _(
-                    "Please select company of those warehouses to get correct view.\nYou should remove all warehouses first from selection field."
+                    "Please select company of those warehouses to get correct view.\n"
+                    "You should remove all warehouses first from selection field."
                 )
             )
 
@@ -203,9 +200,9 @@ class InventoryValuationDateReport(models.TransientModel, InventoryValuationCate
             font_height=180,
             color="grey",
         )
-        other_tstyle_r = xls_format.font_style(
-            position="right", fontos="purple_ega", bold=1, font_height=180, color="grey"
-        )
+        # other_tstyle_r = xls_format.font_style(
+        #     position="right", fontos="purple_ega", bold=1, font_height=180, color="grey"
+        # )
         other_tstyle_grandc = xls_format.font_style(
             position="center",
             fontos="purple_ega",
@@ -360,17 +357,9 @@ class InventoryValuationDateReport(models.TransientModel, InventoryValuationCate
         )
         return {
             "type": "ir.actions.act_url",
-            "url": "/web/binary/download_document?model=inventory.valuation.success.box&field=file&id=%s&filename=Inventory Valuation by Location and Date Report.xls"
+            "url": "/web/binary/download_document?model="
+            "inventory.valuation.success.box&field=file&id=%s&"
+            "filename=Inventory Valuation by Location and Date Report.xls"
             % (res_id.id),
             "target": "new",
         }
-
-
-class InventoryValuationSuccessBox(models.TransientModel):
-    _name = "inventory.valuation.success.box"
-
-    file = fields.Binary("File", readonly=True)
-    fname = fields.Char("Text")
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
