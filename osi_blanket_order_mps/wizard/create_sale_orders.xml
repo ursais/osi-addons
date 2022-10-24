@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="view_create_sale_order_mrp" model="ir.ui.view">
+        <field name="name">Create Sale Order</field>
+        <field name="model">sale.blanket.order.wizard</field>
+        <field name="priority">100</field>
+        <field name="inherit_id" ref="sale_blanket_order.view_create_sale_order" />
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="replace">
+                <group>
+                    <field name="order_option" widget="radio" />
+                </group>
+                <group>
+                    <field
+                        name="dup_sale_order_id"
+                        string="Duplicate Sale Order"
+                        attrs="{'invisible': [('order_option', '!=', 'no_line')]}"
+                        help="Enter a sale order if you want the new order to be copied from this sale order."
+                    />
+                </group>
+                <group string="Select Lines">
+                    <field name="line_ids" nolabel="1">
+                        <tree create="false" editable="bottom" class="custom__tree">
+                            <field
+                                name="blanket_line_id"
+                                force_save="1"
+                                invisible="1"
+                            />
+                            <field name="product_id" />
+                            <field name="partner_id" string="Customer" />
+                            <field name="date_schedule" string="Scheduled" />
+                            <field name="price_unit" sum="Total Amount" />
+                            <field name="product_uom" groups="uom.group_uom" />
+                            <field
+                                name="original_uom_qty"
+                                attrs="{'column_invisible': [('parent.order_option', '!=', 'update_only')]}"
+                                sum="Total Original Qty"
+                            />
+                            <field
+                                name="ordered_uom_qty"
+                                attrs="{'column_invisible': [('parent.order_option', '=', 'update_only')]}"
+                                sum="Total Ordered Qty"
+                            />
+                            <field
+                                name="empty_ordered_uom_qty"
+                                attrs="{'column_invisible': [('parent.order_option', '=', 'update_only')]}"
+                                sum="Total Empty Qty"
+                            />
+                            <field
+                                name="remaining_uom_qty"
+                                string="Remaining"
+                                sum="Total Remaining Qty"
+                            />
+                            <field
+                                name="qty"
+                                attrs="{'column_invisible': [('parent.order_option', '=', 'update_only')]}"
+                                sum="Total Qty"
+                            />
+                            <field
+                                name="new_qty"
+                                attrs="{'column_invisible': [('parent.order_option', '!=', 'update_only')]}"
+                                sum="Total New Qty"
+                            />
+                        </tree>
+                    </field>
+                </group>
+            </xpath>
+            <xpath expr="//button[@name='create_sale_order']" position="attributes">
+                <attribute name="name">mrp_create_sale_order</attribute>
+                <attribute
+                    name="attrs"
+                >{'invisible': [('order_option', '!=', 'line')]}</attribute>
+            </xpath>
+            <xpath expr="//button[hasclass('btn-default')]" position="before">
+                <button
+                    name="mrp_create_sale_order"
+                    string="Update Blanket Order"
+                    type="object"
+                    class="btn-primary"
+                    attrs="{'invisible': [('order_option', '!=', 'update_only')]}"
+                />
+            </xpath>
+            <xpath expr="//button[hasclass('btn-default')]" position="before">
+                <button
+                    name="mrp_create_sale_order"
+                    string="Update BO and Create SO"
+                    type="object"
+                    class="btn-primary"
+                    attrs="{'invisible': [('order_option', '!=', 'no_line')]}"
+                />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
