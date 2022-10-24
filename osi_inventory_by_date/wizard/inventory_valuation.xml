@@ -44,7 +44,7 @@
                         nolabel="1"
                         placeholder="All Categories"
                     >
-                            <tree string="Products">
+                            <tree>
                                 <field name="name" />
                             </tree>
                         </field>

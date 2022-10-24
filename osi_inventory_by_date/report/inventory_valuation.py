@@ -4,7 +4,7 @@ from datetime import datetime
 import pytz
 
 from odoo import _, api, models
-from odoo.exceptions import Warning
+from odoo.exceptions import UserError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
@@ -14,7 +14,9 @@ class InventoryValuationCategory(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         if not data.get("form"):
-            raise Warning(_("Form content is missing, this report cannot be printed."))
+            raise UserError(
+                _("Form content is missing, this report cannot be printed.")
+            )
 
         return {
             "doc_ids": self._ids,
@@ -87,10 +89,11 @@ class InventoryValuationCategory(models.AbstractModel):
         stock_ids = []
         for warehouse in warehouses:
             stock_ids.append(warehouse_obj.sudo().browse(warehouse).view_location_id.id)
-        # stock_ids = [x['view_location_id'] and x['view_location_id'][0] for x in warehouse_obj.sudo().read(self.cr, 1, warehouses, ['view_location_id'])]
+        # stock_ids = [x['view_location_id'] and x['view_location_id'][0]
+        # for x in warehouse_obj.sudo().read(self.cr, 1, warehouses, ['view_location_id'])]
         return [
-            l.id
-            for l in location_obj.search(
+            location.id
+            for location in location_obj.search(
                 [("location_id", "child_of", stock_ids), ("usage", "=", "internal")]
             )
         ]
@@ -148,9 +151,14 @@ class InventoryValuationCategory(models.AbstractModel):
                     ((
                     /* internal going out */
                     SELECT
-                        pp.id as id, l.complete_name as location, pc.name as category, pt.name as product, acc1.code as code1, acc2.code as code2, pp.default_code as sku, pp.barcode as barcode, m.date,
-                        coalesce(sum(-abs(m.qty_done*uom2.factor/uom.factor))::decimal, 0.0) AS qty,
-                        coalesce(sum(-abs(m.qty_done*uom2.factor/uom.factor) * cost.value_float)::decimal, 0.0) AS value
+                        pp.id as id, l.complete_name as location,
+                        pc.name as category, pt.name as product,
+                        acc1.code as code1, acc2.code as code2,
+                        pp.default_code as sku, pp.barcode as barcode, m.date,
+                        coalesce(sum(-abs(m.qty_done*uom2.factor/uom.factor))::
+                        decimal, 0.0) AS qty,
+                        coalesce(sum(-abs(m.qty_done*uom2.factor/uom.factor) *
+                        cost.value_float)::decimal, 0.0) AS value
                     FROM product_product pp
                     LEFT JOIN stock_move_line m ON (m.product_id=pp.id)
                     LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
@@ -158,21 +166,44 @@ class InventoryValuationCategory(models.AbstractModel):
                     LEFT JOIN stock_location l ON (m.location_id=l.id)
                     LEFT JOIN uom_uom uom ON (m.product_uom_id=uom.id)
                     LEFT JOIN uom_uom uom2 ON (pt.uom_id=uom2.id)
-                    LEFT JOIN ir_property irp1 on (irp1.res_id = concat('product.category,',pc.id) and irp1.name='property_stock_valuation_account_id')
-                    LEFT JOIN account_account acc1 on (acc1.id = substr(irp1.value_reference,strpos(irp1.value_reference, ',')+1, length(irp1.value_reference)-strpos(irp1.value_reference,','))::int)
-                    LEFT JOIN ir_property irp2 on (irp2.res_id is null and irp2.name='property_stock_valuation_account_id')
-                    LEFT JOIN account_account acc2 on (acc2.id = substr(irp2.value_reference,strpos(irp2.value_reference, ',')+1, length(irp2.value_reference)-strpos(irp2.value_reference,','))::int)
-                    LEFT JOIN ir_property cost on (cost.res_id = concat('product.product,', pp.id) and cost.name='standard_price')
-                    WHERE  m.date > %s AND m.date < %s AND (m.location_id in %s) AND (m.location_dest_id in %s) AND m.state='done' AND pp.active=True AND pt.type = 'product' and l.usage = 'internal'
-                    GROUP BY  pp.id, l.complete_name, pc.name,pt.name,acc1.code,acc2.code, pp.default_code,m.date,uom.factor,uom2.factor
+                    LEFT JOIN ir_property irp1 on (irp1.res_id =
+                        concat('product.category,',pc.id) and
+                        irp1.name='property_stock_valuation_account_id')
+                    LEFT JOIN account_account acc1 on (acc1.id =
+                        substr(irp1.value_reference, strpos(
+                        irp1.value_reference, ',') + 1,
+                        length(irp1.value_reference) - strpos(
+                        irp1.value_reference,','))::int)
+                    LEFT JOIN ir_property irp2 on (irp2.res_id is null and
+                        irp2.name='property_stock_valuation_account_id')
+                    LEFT JOIN account_account acc2 on (acc2.id =
+                        substr(irp2.value_reference,strpos(
+                        irp2.value_reference, ',') + 1,
+                        length(irp2.value_reference) - strpos(
+                        irp2.value_reference,','))::int)
+                    LEFT JOIN ir_property cost on (cost.res_id =
+                        concat('product.product,', pp.id) AND
+                        cost.name='standard_price')
+                    WHERE  m.date > %s AND m.date < %s AND
+                        (m.location_id in %s) AND (m.location_dest_id in %s) AND
+                        m.state='done' AND pp.active=True AND
+                        pt.type = 'product' AND l.usage = 'internal'
+                    GROUP BY pp.id, l.complete_name, pc.name, pt.name,
+                        acc1.code, acc2.code, pp.default_code, m.date,
+                        uom.factor, uom2.factor
                     )
                     UNION ALL
                     (
                     /* going out */
                     SELECT
-                        pp.id as id, l.complete_name as location, pc.name as category, pt.name as product, acc1.code as code1, acc2.code as code2, pp.default_code as sku,pp.barcode as barcode,m.date,
-                        coalesce(sum(-abs(m.qty_done*uom2.factor/uom.factor))::decimal, 0.0) AS qty,
-                        coalesce(sum(-abs(m.qty_done*uom2.factor/uom.factor) * cost.value_float)::decimal, 0.0) AS value
+                        pp.id as id, l.complete_name as location,
+                        pc.name as category, pt.name as product,
+                        acc1.code as code1, acc2.code as code2,
+                        pp.default_code as sku,pp.barcode as barcode,m.date,
+                        coalesce(sum(-abs(m.qty_done*uom2.factor/uom.factor))::
+                        decimal, 0.0) AS qty,
+                        coalesce(sum(-abs(m.qty_done*uom2.factor/uom.factor) *
+                        cost.value_float)::decimal, 0.0) AS value
                     FROM product_product pp
                     LEFT JOIN stock_move_line m ON (m.product_id=pp.id)
                     LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
@@ -180,21 +211,43 @@ class InventoryValuationCategory(models.AbstractModel):
                     LEFT JOIN stock_location l ON (m.location_id=l.id)
                     LEFT JOIN uom_uom uom ON (m.product_uom_id=uom.id)
                     LEFT JOIN uom_uom uom2 ON (pt.uom_id=uom2.id)
-                    LEFT JOIN ir_property irp1 on (irp1.res_id = concat('product.category,',pc.id) and irp1.name='property_stock_valuation_account_id')
-                    LEFT JOIN account_account acc1 on (acc1.id = substr(irp1.value_reference,strpos(irp1.value_reference, ',')+1, length(irp1.value_reference)-strpos(irp1.value_reference,','))::int)
-                    LEFT JOIN ir_property irp2 on (irp2.res_id is null and irp2.name='property_stock_valuation_account_id')
-                    LEFT JOIN account_account acc2 on (acc2.id = substr(irp2.value_reference,strpos(irp2.value_reference, ',')+1, length(irp2.value_reference)-strpos(irp2.value_reference,','))::int)
-                    LEFT JOIN ir_property cost on (cost.res_id = concat('product.product,', pp.id) and cost.name='standard_price')
-                    WHERE  m.date > %s AND m.date < %s AND (m.location_id in %s) AND (m.location_dest_id not in %s) AND m.state='done' AND pp.active=True AND pt.type = 'product' and l.usage = 'internal'
-                    GROUP BY  pp.id, l.complete_name, pc.name,pt.name,acc1.code,acc2.code, pp.default_code,m.date,uom.factor,uom2.factor
+                    LEFT JOIN ir_property irp1 on (irp1.res_id =
+                        concat('product.category,', pc.id) AND
+                        irp1.name='property_stock_valuation_account_id')
+                    LEFT JOIN account_account acc1 ON (acc1.id = substr(
+                        irp1.value_reference, strpos(irp1.value_reference, ',
+                        ') + 1, length(irp1.value_reference) - strpos(
+                        irp1.value_reference, ','))::int)
+                    LEFT JOIN ir_property irp2 on (irp2.res_id is null AND
+                        irp2.name='property_stock_valuation_account_id')
+                    LEFT JOIN account_account acc2 on (acc2.id =
+                        substr(irp2.value_reference, strpos(
+                        irp2.value_reference, ',') + 1, length(
+                        irp2.value_reference) - strpos(irp2.value_reference,',
+                        '))::int)
+                    LEFT JOIN ir_property cost on (cost.res_id =
+                        concat('product.product,', pp.id) AND
+                        cost.name='standard_price')
+                    WHERE  m.date > %s AND m.date < %s AND (m.location_id in %s) AND
+                        (m.location_dest_id not in %s) AND m.state='done' AND
+                        pp.active=True AND pt.type = 'product' AND
+                         l.usage = 'internal'
+                    GROUP BY pp.id, l.complete_name, pc.name, pt.name,
+                        acc1.code, acc2.code, pp.default_code, m.date,
+                        uom.factor, uom2.factor
                     )
                     UNION ALL
                     (
                     /* coming in */
                     SELECT
-                        pp.id, l.complete_name as location, pc.name as pc_name, pt.name as product, acc1.code as code1, acc2.code as code2, pp.default_code,pp.barcode as barcode,m.date,
-                        coalesce(sum(abs(m.qty_done*uom2.factor/uom.factor))::decimal, 0.0) AS qty,
-                        coalesce(sum(abs(m.qty_done*uom2.factor/uom.factor) * cost.value_float)::decimal, 0.0) AS value
+                        pp.id, l.complete_name as location, pc.name as pc_name,
+                        pt.name as product, acc1.code as code1,
+                        acc2.code as code2, pp.default_code,
+                        pp.barcode as barcode,m.date,
+                        coalesce(sum(abs(m.qty_done*uom2.factor/uom.factor))::
+                        decimal, 0.0) AS qty,
+                        coalesce(sum(abs(m.qty_done*uom2.factor/uom.factor) *
+                        cost.value_float)::decimal, 0.0) AS value
                     FROM product_product pp
                     LEFT JOIN stock_move_line m ON (m.product_id=pp.id)
                     LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
@@ -202,21 +255,45 @@ class InventoryValuationCategory(models.AbstractModel):
                     LEFT JOIN stock_location l ON (m.location_dest_id=l.id)
                     LEFT JOIN uom_uom uom ON (m.product_uom_id=uom.id)
                     LEFT JOIN uom_uom uom2 ON (pt.uom_id=uom2.id)
-                    LEFT JOIN ir_property irp1 on (irp1.res_id = concat('product.category,',pc.id) and irp1.name='property_stock_valuation_account_id')
-                    LEFT JOIN account_account acc1 on (acc1.id = substr(irp1.value_reference,strpos(irp1.value_reference, ',')+1, length(irp1.value_reference)-strpos(irp1.value_reference,','))::int)
-                    LEFT JOIN ir_property irp2 on (irp2.res_id is null and irp2.name='property_stock_valuation_account_id')
-                    LEFT JOIN account_account acc2 on (acc2.id = substr(irp2.value_reference,strpos(irp2.value_reference, ',')+1, length(irp2.value_reference)-strpos(irp2.value_reference,','))::int)
-                    LEFT JOIN ir_property cost on (cost.res_id = concat('product.product,', pp.id) and cost.name='standard_price')
-                    WHERE  m.date > %s AND m.date < %s AND (m.location_dest_id in %s) AND (m.location_id not in %s) AND m.state='done' AND pp.active=True AND pt.type = 'product' and l.usage = 'internal'
-                    GROUP BY  pp.id,l.complete_name, pc.name,pt.name,acc1.code,acc2.code,pp.default_code,m.date,uom.factor,uom2.factor
+                    LEFT JOIN ir_property irp1 on (irp1.res_id =
+                        concat('product.category,',pc.id) AND
+                        irp1.name='property_stock_valuation_account_id')
+                    LEFT JOIN account_account acc1 on (acc1.id =
+                        substr(irp1.value_reference,strpos(
+                        irp1.value_reference, ',') + 1, length(
+                        irp1.value_reference) - strpos(irp1.value_reference, ',
+                        '))::int)
+                    LEFT JOIN ir_property irp2 on (irp2.res_id is null AND
+                        irp2.name='property_stock_valuation_account_id')
+                    LEFT JOIN account_account acc2 on (acc2.id =
+                        substr(irp2.value_reference, strpos(
+                        irp2.value_reference, ',') + 1, length(
+                        irp2.value_reference) - strpos(irp2.value_reference,',
+                        '))::int)
+                    LEFT JOIN ir_property cost on (cost.res_id =
+                        concat('product.product,', pp.id) AND
+                        cost.name='standard_price')
+                    WHERE  m.date > %s AND m.date < %s AND
+                        (m.location_dest_id in %s) AND
+                        (m.location_id not in %s) AND m.state='done' AND
+                        pp.active=True AND pt.type = 'product' AND
+                        l.usage = 'internal'
+                    GROUP BY pp.id, l.complete_name, pc.name, pt.name,
+                    acc1.code, acc2.code, pp.default_code, m.date, uom.factor,
+                    uom2.factor
                     )
                     UNION ALL
                     (
                     /* internal coming in */
                     SELECT
-                        pp.id, l.complete_name as location, pc.name as pc_name, pt.name as product, acc1.code as code1, acc2.code as code2, pp.default_code,pp.barcode as barcode,m.date,
-                        coalesce(sum(abs(m.qty_done*uom2.factor/uom.factor))::decimal, 0.0) AS qty,
-                        coalesce(sum(abs(m.qty_done*uom2.factor/uom.factor) * cost.value_float)::decimal, 0.0) AS value
+                        pp.id, l.complete_name as location, pc.name as pc_name,
+                        pt.name as product, acc1.code as code1,
+                        acc2.code as code2, pp.default_code,
+                        pp.barcode as barcode, m.date,
+                        coalesce(sum(abs(m.qty_done*uom2.factor/uom.factor))::
+                        decimal, 0.0) AS qty,
+                        coalesce(sum(abs(m.qty_done*uom2.factor/uom.factor) *
+                        cost.value_float)::decimal, 0.0) AS value
                     FROM product_product pp
                     LEFT JOIN stock_move_line m ON (m.product_id=pp.id)
                     LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
@@ -224,17 +301,35 @@ class InventoryValuationCategory(models.AbstractModel):
                     LEFT JOIN stock_location l ON (m.location_dest_id=l.id)
                     LEFT JOIN uom_uom uom ON (m.product_uom_id=uom.id)
                     LEFT JOIN uom_uom uom2 ON (pt.uom_id=uom2.id)
-                    LEFT JOIN ir_property irp1 on (irp1.res_id = concat('product.category,',pc.id) and irp1.name='property_stock_valuation_account_id')
-                    LEFT JOIN account_account acc1 on (acc1.id = substr(irp1.value_reference,strpos(irp1.value_reference, ',')+1, length(irp1.value_reference)-strpos(irp1.value_reference,','))::int)
-                    LEFT JOIN ir_property irp2 on (irp2.res_id is null and irp2.name='property_stock_valuation_account_id')
-                    LEFT JOIN account_account acc2 on (acc2.id = substr(irp2.value_reference,strpos(irp2.value_reference, ',')+1, length(irp2.value_reference)-strpos(irp2.value_reference,','))::int)
-                    LEFT JOIN ir_property cost on (cost.res_id = concat('product.product,', pp.id) and cost.name='standard_price')
-                    WHERE  m.date > %s AND m.date < %s AND (m.location_dest_id in %s) AND (m.location_id in %s) AND m.state='done' AND pp.active=True AND pt.type = 'product' and l.usage = 'internal'
-                    GROUP BY  pp.id,l.complete_name, pc.name,pt.name,acc1.code,acc2.code,pp.default_code,m.date,uom.factor,uom2.factor
+                    LEFT JOIN ir_property irp1 on (irp1.res_id =
+                        concat('product.category,',pc.id) AND
+                        irp1.name='property_stock_valuation_account_id')
+                    LEFT JOIN account_account acc1 on (acc1.id =
+                        substr(irp1.value_reference, strpos(
+                        irp1.value_reference, ',') + 1, length(
+                        irp1.value_reference) - strpos(irp1.value_reference,',
+                        '))::int)
+                    LEFT JOIN ir_property irp2 on (irp2.res_id is null AND
+                        irp2.name='property_stock_valuation_account_id')
+                    LEFT JOIN account_account acc2 on (acc2.id =
+                        substr(irp2.value_reference, strpos(
+                        irp2.value_reference, ',') + 1, length(
+                        irp2.value_reference) - strpos(irp2.value_reference,',
+                        '))::int)
+                    LEFT JOIN ir_property cost on (cost.res_id =
+                        concat('product.product,', pp.id) AND
+                        cost.name='standard_price')
+                    WHERE  m.date > %s AND m.date < %s AND
+                        (m.location_dest_id in %s) AND (m.location_id in %s) AND
+                        m.state='done' AND pp.active=True AND
+                        pt.type = 'product' AND l.usage = 'internal'
+                    GROUP BY pp.id, l.complete_name, pc.name,pt.name,
+                       acc1.code, acc2.code, pp.default_code, m.date,
+                       uom.factor, uom2.factor
                     ))
                 AS foo
                 WHERE qty !=  0.0
-                GROUP BY id,location,category,product,barcode,sku,account
+                GROUP BY id, location, category, product, barcode, sku, account
             """,
             (
                 start_date,
@@ -255,9 +350,5 @@ class InventoryValuationCategory(models.AbstractModel):
                 tuple(locations),
             ),
         )
-
         res = self._cr.dictfetchall()
         return res
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
