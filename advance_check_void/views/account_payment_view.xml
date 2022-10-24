@@ -137,7 +137,7 @@
         <field name="name">payment.check.void.tree</field>
         <field name="model">payment.check.void</field>
         <field name="arch" type="xml">
-            <tree string="Payment Check Void">
+            <tree>
                 <field name="bill_ref" />
                 <field name="create_date" />
                 <field name="check_number" options="{'format': 0}" />

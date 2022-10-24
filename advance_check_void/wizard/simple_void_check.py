@@ -8,7 +8,7 @@ class SimpleVoidCheck(models.TransientModel):
     _name = "simple.void.check"
     _description = "Void Check"
 
-    void_reason = fields.Char(string="Void Reason")
+    void_reason = fields.Char()
     payment_id = fields.Many2one("account.payment", string="Payment")
 
     def simple_void_check(self):
