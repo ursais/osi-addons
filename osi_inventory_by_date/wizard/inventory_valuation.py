@@ -1,15 +1,14 @@
-import xlwt
-from io import StringIO, BytesIO
 import base64
-from . import xls_format
-import time
+from io import BytesIO
 
-from odoo import models, api, fields, _
+import xlwt
+
+from odoo import _, api, fields, models
 from odoo.exceptions import Warning
-from dateutil.relativedelta import relativedelta
-from datetime import datetime, timedelta
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
+
 from ..report.inventory_valuation import InventoryValuationCategory
+from . import xls_format
 
 
 class InventoryValuationDateReport(models.TransientModel, InventoryValuationCategory):

@@ -1,13 +1,13 @@
-# -*- encoding: utf-8 -*-
-
 import xlwt
 
 
-def font_style(position='left',bold=0, fontos=0, font_height=200,border=0,color=False):
+def font_style(
+    position="left", bold=0, fontos=0, font_height=200, border=0, color=False
+):
     font = xlwt.Font()
-    font.name = 'Verdana'
+    font.name = "Verdana"
     font.bold = bold
-    font.height=font_height
+    font.height = font_height
     center = xlwt.Alignment()
     center.horz = xlwt.Alignment.HORZ_CENTER
     center.vert = xlwt.Alignment.VERT_CENTER
@@ -25,52 +25,53 @@ def font_style(position='left',bold=0, fontos=0, font_height=200,border=0,color=
 
     borders = xlwt.Borders()
     borders.right = 1
-    borders.left=1
+    borders.left = 1
     borders.top = 1
     borders.bottom = 1
-    
+
     orient = xlwt.Alignment()
     orient.orie = xlwt.Alignment.ORIENTATION_90_CC
-    
+
     style = xlwt.XFStyle()
-    
+
     if border == 1:
         style.borders = borders
-    
-    if fontos == 'red' :
+
+    if fontos == "red":
         font.colour_index = 2
         style.font = font
-    if fontos == 'purple_ega' :
+    if fontos == "purple_ega":
         font.colour_index = 0x14
         style.font = font
-    else: style.font = font
+    else:
+        style.font = font
 
-    if position == 'center' :
+    if position == "center":
         style.alignment = center
-    elif position == 'right':
+    elif position == "right":
         style.alignment = right
-    else : 
+    else:
         style.alignment = left
-    if color =='grey':
+    if color == "grey":
         badBG = xlwt.Pattern()
-        badBG.pattern = badBG.SOLID_PATTERN 
+        badBG.pattern = badBG.SOLID_PATTERN
         badBG.pattern_fore_colour = 22
         style.pattern = badBG
-    if color =='red':
+    if color == "red":
         badBG = xlwt.Pattern()
-        badBG.pattern = badBG.SOLID_PATTERN 
+        badBG.pattern = badBG.SOLID_PATTERN
         badBG.pattern_fore_colour = 5
         style.pattern = badBG
-        
-    if color =='yellow':
+
+    if color == "yellow":
         badBG = xlwt.Pattern()
-        badBG.pattern = badBG.SOLID_PATTERN 
+        badBG.pattern = badBG.SOLID_PATTERN
         badBG.pattern_fore_colour = 0x0D
         style.pattern = badBG
 
-    if color =='purple':
+    if color == "purple":
         badBG = xlwt.Pattern()
-        badBG.pattern = badBG.SOLID_PATTERN 
+        badBG.pattern = badBG.SOLID_PATTERN
         badBG.pattern_fore_colour = 0x14
         style.pattern = badBG
 
