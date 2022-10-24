@@ -7,7 +7,7 @@
     "category": "Accounting",
     "summary": "Void History for Check Payments",
     "author": "Open Source Integrators",
-    "website": "https://github.com/ursais/osi-addons",
+    "website": "https://github.com/OCA/partner-contact",
     "license": "AGPL-3",
     "depends": [
         "account_check_printing",
