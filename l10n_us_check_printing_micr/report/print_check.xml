@@ -53,7 +53,10 @@
                 />
                 <div class="col-1" />
                 <div class="col-5 text-left">
-                            <t t-esc="o.journal_id.bank_id.name" style="font-size: 10px;"/><br />
+                            <t
+                        t-esc="o.journal_id.bank_id.name"
+                        style="font-size: 10px;"
+                    /><br />
                             <t t-esc="o.journal_id.bank_id.street" />,
                             <t t-esc="o.journal_id.bank_id.city" /><br />
                             <t t-esc="o.journal_id.bank_id.state.name" />
@@ -64,10 +67,7 @@
                 <div class="col-2" />
             </div>
             <div class="ckus_amount_in_word" t-esc="page['amount_in_word']" />
-            <div class="ckus_amount_line"><hr
-                    class="first"
-                    color="black"
-                /></div>
+            <div class="ckus_amount_line"><hr class="first" color="black" /></div>
             <div class="ckus_text"><span>US Dollar</span></div>
             <div class="ckus_pay"><span>PAY TO THE ORDER OF</span></div>
             <div class="row ckus_payee_addr">
@@ -87,13 +87,11 @@
                 <hr class="last" color="black" />
             </div>
             <div class="ckus_number_micr">
-                <span>c</span><span t-esc="page['sequence_number']" /><span
-                >c</span>
+                <span>c</span><span t-esc="page['sequence_number']" /><span>c</span>
                 <span>a</span><span
                     t-esc="o.journal_id.bank_account_id.aba_routing"
                 /><span>a</span>
-                <span t-field="o.journal_id.bank_account_id.acc_number" /><span
-                >c</span>
+                <span t-field="o.journal_id.bank_account_id.acc_number" /><span>c</span>
             </div>
         </div>
     </template>
