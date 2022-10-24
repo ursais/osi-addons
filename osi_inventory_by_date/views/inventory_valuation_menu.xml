@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
         <report
-            id="action_inventory_valuation_ondate"
-            model="stock.move"
-            string="Stock Valuation Report"
-            report_type="qweb-pdf"
-            name="osi_inventory_by_date.inventory_valuation_ondate_report"
-            file="osi_inventory_by_date.inventory_valuation_ondate_report"
-            menu="False"
-        />
+        id="action_inventory_valuation_ondate"
+        model="stock.move"
+        string="Stock Valuation Report"
+        report_type="qweb-pdf"
+        name="osi_inventory_by_date.inventory_valuation_ondate_report"
+        file="osi_inventory_by_date.inventory_valuation_ondate_report"
+        menu="False"
+    />
 </odoo>

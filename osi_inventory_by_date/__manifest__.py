@@ -1,15 +1,10 @@
-# -*- coding: utf-8 -*-
 {
     "name": "OSI Inventory Valuation by Location and Date",
     "version": "15.0.1.0.0",
     "category": "stock",
     "summary": "Stock Inventory Valuation by Location and Date export to Excel and PDF",
-    "description": """
-Stock Inventory Valuation by Location and Date export to Excel and PDF,
-----------------------------------
-""",
     "author": "Open Source Integrators",
-    "website": "http://www.opensourceintegrators.com",
+    "website": "https://github.com/OCA/partner-contact",
     "depends": ["stock", "osi_stock_move_value"],
     "data": [
         "security/inventory_valuation_security.xml",
@@ -24,4 +19,3 @@ Stock Inventory Valuation by Location and Date export to Excel and PDF,
     "license": "LGPL-3",
     "maintainers": ["b-kannan"],
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

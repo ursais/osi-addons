@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <record id="advanced_check_void_account_payment_list_inherited" model="ir.ui.view">
+    <record
+        id="advanced_check_void_account_payment_list_inherited"
+        model="ir.ui.view"
+    >
         <field name="name">account.payment.list.inherited</field>
         <field name="model">account.payment</field>
-        <field name="inherit_id" ref="account.view_account_supplier_payment_tree" />
+        <field
+            name="inherit_id"
+            ref="account.view_account_supplier_payment_tree"
+        />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='state']" position="before">
                 <field
@@ -17,7 +23,10 @@
         </field>
     </record>
 
-    <record id="advanced_check_void_account_payment_form_inherited" model="ir.ui.view">
+    <record
+        id="advanced_check_void_account_payment_form_inherited"
+        model="ir.ui.view"
+    >
         <field name="name">account.payment.form.inherited</field>
         <field name="model">account.payment</field>
         <field
@@ -82,7 +91,10 @@
         </field>
     </record>
 
-    <record id="advanced_check_void_account_payment_form_inherit2" model="ir.ui.view">
+    <record
+        id="advanced_check_void_account_payment_form_inherit2"
+        model="ir.ui.view"
+    >
         <field name="name">account.payment.form.inherited</field>
         <field name="model">account.payment</field>
         <field name="inherit_id" ref="account.view_account_payment_form" />
@@ -125,7 +137,7 @@
         <field name="name">payment.check.void.tree</field>
         <field name="model">payment.check.void</field>
         <field name="arch" type="xml">
-            <tree string="Payment Check Void">
+            <tree>
                 <field name="bill_ref" />
                 <field name="create_date" />
                 <field name="check_number" options="{'format': 0}" />
