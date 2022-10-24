@@ -102,7 +102,7 @@ class AccountPayment(models.Model):
                         <li>(_(State:)) %s</li></ul>"""
                         )
                         % (
-                            fields.Date.to_string(fields.Date.context_today(self)),
+                            fields.Date.to_string(fields.Datetime.now()),
                             rec.check_number,
                             rec.state.title(),
                         )
@@ -142,7 +142,7 @@ class AccountPayment(models.Model):
                     "journal_id": res.journal_id.id,
                     "date": fields.Datetime.now(),
                     "create_date": fields.Datetime.now(),
-                    "write_date": fields.Date.context_today(res),
+                    "write_date": fields.Datetime.now(),
                     "create_uid": res.create_uid.id,
                     "state": res.state,
                     "is_visible_check": not res.check_number,
@@ -199,7 +199,7 @@ class AccountPayment(models.Model):
                 <li>(_(State:)) %s</li></ul>"""
                 )
                 % (
-                    fields.Date.to_string(fields.Date.context_today(rec)),
+                    fields.Date.to_string(fields.Datetime.now()),
                     rec.check_number,
                     rec.state,
                 )
