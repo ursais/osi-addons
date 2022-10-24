@@ -10,12 +10,12 @@ class AccountPayment(models.Model):
 
     is_hide_check = fields.Boolean("Hide Check Number?")
     is_visible_check = fields.Boolean(
-        "Is Visible Check", help="Use for the visible or invisible check number."
+        help="Use for the visible or invisible check number."
     )
     is_readonly_check = fields.Boolean(
-        "Is Readonly Check", help="Use for the readonly or editable check number."
+        help="Use for the readonly or editable check number.",
     )
-    void_reason = fields.Char(string="Void Reason")
+    void_reason = fields.Char()
     voided_count = fields.Integer(
         string="# Voids", compute="_compute_stat_buttons_voided_count"
     )
@@ -283,105 +283,4 @@ class AccountPayment(models.Model):
                 and record.check_number <= 0
             ):
                 raise ValidationError(_("Please Enter Check Number"))
-        return res
-
-
-class PaymentCheckHistory(models.Model):
-    _name = "payment.check.history"
-    _description = "Payment Info for the check Payment Feature"
-    _order = "id desc"
-
-    name = fields.Char("Name", readonly=True)
-    payment_id = fields.Many2one(
-        "account.payment", string="Payment Info", readonly=True
-    )
-    partner_id = fields.Many2one("res.partner", string="Partner", readonly=True)
-    amount = fields.Float("Gross Amount", readonly=True)
-    check_number = fields.Integer("Check Number", readonly=True)
-    check_amount = fields.Float("Check Amount", readonly=True)
-    journal_id = fields.Many2one("account.journal", "Journal", readonly=True)
-    date = fields.Date(string="Date", readonly=True)
-    create_date = fields.Datetime(string="Create Date", readonly=True)
-    write_date = fields.Datetime(string="Write Date", readonly=True)
-    create_uid = fields.Many2one(
-        comodel_name="res.users", string="Created By", readonly=True
-    )
-    write_uid = fields.Many2one(
-        comodel_name="res.users", string="Updated By", readonly=True
-    )
-    state = fields.Selection(
-        [
-            ("draft", "Draft"),
-            ("posted", "Posted"),
-            ("sent", "Sent"),
-            ("void", "Void"),
-            ("cancelled", "Cancelled"),
-            ("reconciled", "Reconciled"),
-        ],
-        readonly=True,
-        default="draft",
-        copy=False,
-        string="Status",
-        tracking=True,
-    )
-    currency_id = fields.Many2one(
-        related="payment_id.currency_id", string="Currency", readonly=True, store=True
-    )
-    is_visible_check = fields.Boolean(
-        "Is Visible Check", help="Use for the visible or invisible check number."
-    )
-
-    def _valid_field_parameter(self, field, name):
-        # I can't even
-        return name == "tracking" or super()._valid_field_parameter(field, name)
-
-
-class PaymentCheckVoid(models.Model):
-    _name = "payment.check.void"
-    _description = "Payment Check Void"
-    _order = "check_number"
-
-    bill_ref = fields.Char("Bill Number")
-    create_date = fields.Date("Check Void Date")
-    check_number = fields.Integer("Check Number")
-    state = fields.Selection([("void", "Void")], string="State", default="void")
-    payment_id = fields.Many2one("account.payment", "Payment")
-    void_reason = fields.Char(string="Void Reason")
-
-
-class AccountRegisterPayments(models.TransientModel):
-    _inherit = "account.payment.register"
-
-    def _prepare_payment_vals(self, invoices):
-        res = super(AccountRegisterPayments, self)._prepare_payment_vals(invoices)
-        if (
-            self.multi
-            and self.payment_type == "inbound"
-            and self.payment_method_code in ("check_printing", "ACH-Out", "manual")
-            and self.check_number
-        ):
-            raise ValidationError(
-                _(
-                    "In order to receive multiple invoices\
-                    payment from same check number, you must use the same\
-                    Partner."
-                )
-            )
-        if (
-            self.payment_type == "inbound"
-            and self.payment_method_code in ("check_printing", "ACH-Out", "manual")
-            and self.check_number <= 0
-        ):
-            raise ValidationError(_("Please Enter Check Number"))
-        else:
-            if self.payment_type == "inbound" and self.payment_method_code in (
-                "check_printing",
-                "ACH-Out",
-            ):
-                res.update(
-                    {
-                        "check_number": self.check_number,
-                        "is_visible_check": True if self.check_number > 0 else False,
-                    }
-                )
         return res

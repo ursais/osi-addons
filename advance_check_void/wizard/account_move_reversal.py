@@ -17,7 +17,7 @@ class AccountMoveReversal(models.TransientModel):
         string="Action",
         default="void_check",
     )
-    void_reason = fields.Char(string="Void Reason")
+    void_reason = fields.Char()
 
     def reverse_moves(self):
         res = super(AccountMoveReversal, self).reverse_moves()
