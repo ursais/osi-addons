@@ -21,7 +21,7 @@ class StockMove(models.Model):
             if product_id:
                 qty = val.get("qty_done") or val.get("product_uom_qty") or 0
                 product = self.env["product.product"].browse(product_id)
-                cost_method = product.product_tmpl_id.categ_id
+                product.product_tmpl_id.categ_id
                 if product.cost_method not in ("fifo"):
                     val["price_unit"] = product.standard_price
                     val["stock_value"] = product.standard_price * qty
