@@ -23,7 +23,7 @@ class AccountMoveReversal(models.TransientModel):
         res = super(AccountMoveReversal, self).reverse_moves()
         payment_check_void_obj = self.env["payment.check.void"]
         payment_check_history_obj = self.env["payment.check.history"]
-        today_date = fields.Date.to_string(fields.Date.context_today(self))
+        today_date = fields.Datetime.now()
         if self._context.get("is_void_button") and self._context.get("payment_id"):
             payment_id = self.env["account.payment"].browse(
                 self._context.get("payment_id")
