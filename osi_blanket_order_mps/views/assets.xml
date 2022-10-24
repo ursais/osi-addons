@@ -1,0 +1,15 @@
+<odoo>
+    <template
+        id="assets_backend"
+        name="custom table assets"
+        inherit_id="web.assets_backend"
+    >
+        <xpath expr="//script[last()]" position="after">
+            <link
+                rel="stylesheet"
+                type="text/scss"
+                href="/osi_blanket_order_mps/static/src/scss/custom_tree.scss"
+            />
+        </xpath>
+    </template>
+</odoo>
