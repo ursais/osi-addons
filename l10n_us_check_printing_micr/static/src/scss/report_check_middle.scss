@@ -1,0 +1,125 @@
+.ckus_middle_page {
+    .ckus_stub_1 {
+        top: 0.24in;
+    }
+    .ckus_check {
+        top: 3.98in;
+        left: 0.22in;
+    }
+    .ckus_stub_2 {
+        top: 7.1in;
+    }
+    .ckus_number_micr {
+        top: 2.7in;
+        left: 0.25in;
+        width: 6in;
+        text-align: center;
+        font-size: 0.2in;
+        font-family: "MICR Encoding";
+    }
+    .ckus_payee_addr_top {
+        top: 0.3in;
+        left: 0.35in;
+        width: 8in;
+        text-align: left;
+    }
+    .ckus_payee_addr_top_right {
+        top: 0.3in;
+        right: 0.85in;
+        width: 4in;
+        text-align: right;
+    }
+    .ckus_check .sequence_number {
+        top: 0.3in;
+        left: 7.03in;
+        width: 0.76in;
+        text-align: center;
+    }
+    .ckus_payee_name {
+        top: 0.6in;
+        left: 0.63in;
+        width: 4.5in;
+        text-align: left;
+    }
+    .ckus_date {
+        top: 0.6in;
+        left: 7.1in;
+        width: 0.98in;
+        text-align: center;
+    }
+    .ckus_amount {
+        top: 1.1in;
+        left: 6.9in;
+        width: 1.07in;
+        text-align: center;
+        border: 2px solid black;
+        box-sizing: border-box;
+        font-weight: bold;
+    }
+    .ckus_amount_line {
+        top: 1.2in;
+        left: 0.1in;
+        width: 5.7in;
+        text-align: left;
+        overflow: hidden;
+    }
+    .ckus_sign_line {
+        top: 2.5in;
+        left: 6.2in;
+        width: 2in;
+        text-align: left;
+        float: right;
+    }
+    hr.first {
+        margin-top: 0rem;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        border-width: 2px 0px 0px;
+    }
+    hr.last {
+        margin-top: 0.1in;
+        margin-bottom: 1rem;
+        border: 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        border-width: 2px 0px 0px;
+    }
+    .ckus_text {
+        top: 1.1in;
+        left: 5.95in;
+        width: 1.08in;
+        text-align: left;
+        font-weight: bold;
+    }
+    .ckus_amount_in_word {
+        top: 1in;
+        left: 0.05in;
+        width: 6.5in;
+        text-align: left;
+        font-weight: bold;
+        overflow: hidden;
+    }
+    .ckus_pay {
+        top: 1.25in;
+        left: 0.4in;
+        width: 5.5in;
+        text-align: left;
+        overflow: hidden;
+        font-size: 12px;
+        font-weight: BOLD;
+    }
+    .ckus_payee_addr {
+        top: 1.45in;
+        left: 0.4in;
+        width: 8in;
+        line-height: 1.1em;
+    }
+    .ckus_memo {
+        top: 1.98in;
+        left: 0.43in;
+        width: 4.3in;
+        text-align: left;
+        font-size: 0.9em;
+        overflow: hidden;
+    }
+}

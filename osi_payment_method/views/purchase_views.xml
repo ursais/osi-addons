@@ -29,10 +29,7 @@
         />
         <field name="arch" type="xml">
             <data>
-                <xpath
-                    expr="//field[@name='payment_method']"
-                    position="attributes"
-                >
+                <xpath expr="//field[@name='payment_method']" position="attributes">
                     <attribute name="readonly">False</attribute>
                 </xpath>
             </data>

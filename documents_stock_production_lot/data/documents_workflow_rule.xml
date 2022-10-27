@@ -1,0 +1,14 @@
+<odoo noupdate="1">
+
+    <record
+        id="documents_workflow_rule_lot"
+        model="documents.workflow.rule"
+        forcecreate="0"
+    >
+        <field name="name">Attach to Lot/Tracking Number</field>
+        <field name="domain_folder_id" ref="documents_folder_lot" />
+        <field name="condition_type">criteria</field>
+        <field name="create_model">stock.production.lot</field>
+    </record>
+
+</odoo>

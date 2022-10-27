@@ -1,0 +1,8 @@
+<odoo noupdate="1">
+
+    <record id="documents_mrp_folder" model="documents.folder">
+        <field name="name">Manufacturing</field>
+        <field name="sequence">14</field>
+    </record>
+
+</odoo>

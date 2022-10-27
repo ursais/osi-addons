@@ -78,10 +78,7 @@
                             name="starting_balance"
                             placeholder="Starting Balance (b/fwd)"
                         />
-                        <field
-                            name="ending_balance"
-                            placeholder="Statement Balance"
-                        />
+                        <field name="ending_balance" placeholder="Statement Balance" />
                         <field
                             name="last_ending_date"
                             placeholder="Last Statement Date"
@@ -175,9 +172,7 @@
                                 widget="one2many_list"
                                 height="300"
                             >
-                                <form
-                                    string="Credit Card Charges, Interest, Penalties"
-                                >
+                                <form string="Credit Card Charges, Interest, Penalties">
                                     <field name="cleared_cc_account" />
                                     <field name="date" />
                                     <field name="name" />
@@ -269,10 +264,7 @@
                             </group>
                         </page>
                         <page string="Other Information">
-                            <separator
-                                string="Tracking Information"
-                                colspan="4"
-                            />
+                            <separator string="Tracking Information" colspan="4" />
                             <group colspan="2" col="2">
                                 <field
                                     name="verified_by_user_id"
@@ -287,11 +279,7 @@
                             </group>
                         </page>
                         <page string="Notes">
-                            <field
-                                name="notes"
-                                nolabel="1"
-                                placeholder="Notes"
-                            />
+                            <field name="notes" nolabel="1" placeholder="Notes" />
                         </page>
                     </notebook>
                 </sheet>

@@ -1,0 +1,12 @@
+<odoo>
+    <record id="view_purchase_order_form_inherit_budget" model="ir.ui.view">
+        <field name="name">purchase.order.form.inherit.budget</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form" />
+        <field name="arch" type="xml">
+            <field name="partner_ref" position="after">
+                <field name="over_budget" />
+            </field>
+        </field>
+    </record>
+</odoo>

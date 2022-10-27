@@ -1,0 +1,24 @@
+<odoo>
+    <record id="select_production_lot_view_form" model="ir.ui.view">
+        <field name="name">select.production.lot.view.form</field>
+        <field name="model">select.production.lot</field>
+        <field name="arch" type="xml">
+           <form>
+               <group>
+                   <group>
+                       <field name="lot_id" required="1" />
+                   </group>
+               </group>
+               <footer>
+                   <button special="cancel" string="Cancel" />
+                   <button
+                        name="action_select_lot_number"
+                        string="Select Lot Number"
+                        class="oe_highlight"
+                        type="object"
+                    />
+               </footer>
+           </form>
+        </field>
+    </record>
+</odoo>
