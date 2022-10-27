@@ -7,10 +7,7 @@
     <record id="subscription_agreement_form_view" model="ir.ui.view">
         <field name="name">subscription.agreement.form.view</field>
         <field name="model">sale.subscription</field>
-        <field
-            name="inherit_id"
-            ref="sale_subscription.sale_subscription_view_form"
-        />
+        <field name="inherit_id" ref="sale_subscription.sale_subscription_view_form" />
         <field name="arch" type="xml">
             <field name="template_id" position="before">
                 <field name="agreement_id" readonly="1" />
