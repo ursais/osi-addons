@@ -14,12 +14,12 @@ class SaleOrderLine(models.Model):
         copy=False,
     )
 
-    def _prepare_invoice_line(self, qty):
-        res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
+    def _prepare_invoice_line(self, **optional_values):
+        res = super(SaleOrderLine, self)._prepare_invoice_line(**optional_values)
         default_analytic_account = self.env["account.analytic.default"].account_get(
             product_id=self.product_id.id,
             partner_id=self.order_id.partner_id.id,
-            account_id=self.account_id.id,
+            # account_id=self.account_id.id,
             user_id=self.order_id.user_id.id,
             date=fields.Date.today(),
             company_id=self.company_id.id,
@@ -41,7 +41,7 @@ class SaleOrderLine(models.Model):
             rec = self.env["account.analytic.default"].account_get(
                 product_id=self.product_id.id,
                 partner_id=self.order_id.partner_id.id,
-                account_id=self.account_id.id or False,
+                # account_id=self.account_id.id or False,
                 user_id=self.env.uid,
                 date=fields.Date.today(),
                 company_id=self.company_id.id,

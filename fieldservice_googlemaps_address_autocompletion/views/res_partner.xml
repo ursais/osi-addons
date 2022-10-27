@@ -12,9 +12,7 @@
                 </attribute>
             </field>
             <field name="street" position='attributes'>
-                <attribute
-                    name='widget'
-                >gplaces_address_autocomplete</attribute>
+                <attribute name='widget'>gplaces_address_autocomplete</attribute>
                 <attribute name='options'>
                     {'lat':'partner_latitude','lng':'partner_longitude'}
                 </attribute>

@@ -1,0 +1,9 @@
+<odoo noupdate="1">
+
+    <record id="documents_tag_new" model="documents.tag">
+        <field name="name">New</field>
+        <field name="facet_id" ref="documents_vendor_facet" />
+        <field name="sequence">10</field>
+    </record>
+
+</odoo>

@@ -7,6 +7,7 @@
         <field name="name">helpdesk.ticket.fieldservice.form</field>
         <field name="model">helpdesk.ticket</field>
         <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form" />
+        <field name="priority">100</field>
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
                  <page name="helpdesk_service_order_page" position="move" />

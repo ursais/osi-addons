@@ -1,0 +1,170 @@
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.documents.purchase</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="70" />
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_documents_block')]" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('o_documents_block')]" position="inside">
+                <!-- Quality Control Points -->
+                <div class="row mt16 o_settings_container">
+                    <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="documents_quality_point_settings" />
+                        </div>
+                        <div class="o_setting_right_pane o_documents_right_pane">
+                            <label for="documents_quality_point_settings" />
+                            <span
+                                class="fa fa-lg fa-building-o"
+                                title="Values set here are company-specific."
+                                aria-label="Values set here are company-specific."
+                                groups="base.group_multi_company"
+                                role="img"
+                            />
+                            <div class="row">
+                                <div class="text-muted col-md-12">
+                                    Centralize files attached to quality control points
+                                </div>
+                            </div>
+                            <div
+                                class="content-group"
+                                attrs="{'invisible' : [('documents_quality_point_settings', '=', False)]}"
+                            >
+                                <div class="row mt16">
+                                    <label
+                                        class="o_form_label col-lg-3"
+                                        for="quality_point_folder"
+                                        string="Workspace"
+                                    />
+                                    <field
+                                        name="quality_point_folder"
+                                        attrs="{'required' : [('documents_quality_point_settings', '=', True)]}"
+                                    />
+                                </div>
+                                <div class="row">
+                                    <label
+                                        class="o_form_label col-lg-3"
+                                        for="quality_point_tags"
+                                        string="Default Tags"
+                                    />
+                                    <field
+                                        name="quality_point_tags"
+                                        widget="many2many_tags"
+                                        domain="[('folder_id','=', quality_point_folder)]"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Quality Checks -->
+                <div class="row mt16 o_settings_container">
+                    <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="documents_quality_check_settings" />
+                        </div>
+                        <div class="o_setting_right_pane o_documents_right_pane">
+                            <label for="documents_quality_check_settings" />
+                            <span
+                                class="fa fa-lg fa-building-o"
+                                title="Values set here are company-specific."
+                                aria-label="Values set here are company-specific."
+                                groups="base.group_multi_company"
+                                role="img"
+                            />
+                            <div class="row">
+                                <div class="text-muted col-md-12">
+                                    Centralize files attached to quality checks
+                                </div>
+                            </div>
+                            <div
+                                class="content-group"
+                                attrs="{'invisible' : [('documents_quality_check_settings', '=', False)]}"
+                            >
+                                <div class="row mt16">
+                                    <label
+                                        class="o_form_label col-lg-3"
+                                        for="quality_check_folder"
+                                        string="Workspace"
+                                    />
+                                    <field
+                                        name="quality_check_folder"
+                                        attrs="{'required' : [('documents_quality_check_settings', '=', True)]}"
+                                    />
+                                </div>
+                                <div class="row">
+                                    <label
+                                        class="o_form_label col-lg-3"
+                                        for="quality_check_tags"
+                                        string="Default Tags"
+                                    />
+                                    <field
+                                        name="quality_check_tags"
+                                        widget="many2many_tags"
+                                        domain="[('folder_id','=', quality_check_folder)]"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Quality Alerts -->
+                <div class="row mt16 o_settings_container">
+                    <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="documents_quality_alert_settings" />
+                        </div>
+                        <div class="o_setting_right_pane o_documents_right_pane">
+                            <label for="documents_quality_alert_settings" />
+                            <span
+                                class="fa fa-lg fa-building-o"
+                                title="Values set here are company-specific."
+                                aria-label="Values set here are company-specific."
+                                groups="base.group_multi_company"
+                                role="img"
+                            />
+                            <div class="row">
+                                <div class="text-muted col-md-12">
+                                    Centralize files attached to quality alerts
+                                </div>
+                            </div>
+                            <div
+                                class="content-group"
+                                attrs="{'invisible' : [('documents_quality_alert_settings', '=', False)]}"
+                            >
+                                <div class="row mt16">
+                                    <label
+                                        class="o_form_label col-lg-3"
+                                        for="quality_alert_folder"
+                                        string="Workspace"
+                                    />
+                                    <field
+                                        name="quality_alert_folder"
+                                        attrs="{'required' : [('documents_quality_alert_settings', '=', True)]}"
+                                    />
+                                </div>
+                                <div class="row">
+                                    <label
+                                        class="o_form_label col-lg-3"
+                                        for="quality_alert_tags"
+                                        string="Default Tags"
+                                    />
+                                    <field
+                                        name="quality_alert_tags"
+                                        widget="many2many_tags"
+                                        domain="[('folder_id','=', quality_alert_folder)]"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

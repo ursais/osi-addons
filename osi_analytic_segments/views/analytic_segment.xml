@@ -33,10 +33,7 @@
                     <group name="segment_one">
                         <field name="code" />
                         <field name="name" required="1" />
-                        <field
-                            name="description"
-                            placeholder="Description..."
-                        />
+                        <field name="description" placeholder="Description..." />
                     </group>
                 </sheet>
             </form>
@@ -94,10 +91,7 @@
                     <group name="segment_two">
                         <field name="code" />
                         <field name="name" required="1" />
-                        <field
-                            name="description"
-                            placeholder="Description..."
-                        />
+                        <field name="description" placeholder="Description..." />
                     </group>
                 </sheet>
             </form>

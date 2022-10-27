@@ -27,10 +27,7 @@
                             </h4>
                         </div>
 
-                        <table
-                            class="table table-condensed"
-                            name="move_line_ids_table"
-                        >
+                        <table class="table table-condensed" name="move_line_ids_table">
                             <thead>
                                 <tr>
                                     <th class="hidden">Column 1</th>
@@ -71,15 +68,9 @@
                                     <td />
                                     <td>
                                         <b>Deposits &amp; Credits -
-                                            <t
-                                                t-if="o.sum_of_debits_lines == 0.00"
-                                            />
-                                            <t
-                                                t-if="not o.sum_of_debits_lines == 0.00"
-                                            >
-                                                <span
-                                                    t-field="o.sum_of_debits_lines"
-                                                />
+                                            <t t-if="o.sum_of_debits_lines == 0.00" />
+                                            <t t-if="not o.sum_of_debits_lines == 0.00">
+                                                <span t-field="o.sum_of_debits_lines" />
                                             </t>
                                             items
                                         </b>
@@ -95,9 +86,7 @@
                                     </td>
                                     <td>
                                         <t t-if="o.sum_of_debits_cur == 0.00" />
-                                        <t
-                                            t-if="not o.sum_of_debits_cur == 0.00"
-                                        >
+                                        <t t-if="not o.sum_of_debits_cur == 0.00">
                                             <span
                                                 t-field="o.sum_of_debits_cur"
                                                 t-field-options='{"widget": "monetary", "display_currency": o.account_id.currency_id}'
@@ -110,15 +99,11 @@
                                     <td />
                                     <td>
                                         <b>Checks &amp; Payments -
-                                            <t
-                                                t-if="o.sum_of_credits_lines == 0.00"
-                                            />
+                                            <t t-if="o.sum_of_credits_lines == 0.00" />
                                             <t
                                                 t-if="not o.sum_of_credits_lines == 0.00"
                                             >
-                                                <span
-                                                    t-field="o.sum_of_debits_lines"
-                                                />
+                                                <span t-field="o.sum_of_debits_lines" />
                                             </t>
                                             items
                                         </b>
@@ -133,12 +118,8 @@
                                         </t>
                                     </td>
                                     <td>
-                                        <t
-                                            t-if="o.sum_of_credits_cur == 0.00"
-                                        />
-                                        <t
-                                            t-if="not o.sum_of_credits_cur == 0.00"
-                                        >
+                                        <t t-if="o.sum_of_credits_cur == 0.00" />
+                                        <t t-if="not o.sum_of_credits_cur == 0.00">
                                             <span
                                                 t-field="o.sum_of_credits_cur"
                                                 t-field-options='{"widget": "monetary", "display_currency": o.account_id.currency_id}'
@@ -173,12 +154,8 @@
                                         <td />
                                         <td />
                                         <td>
-                                            <t
-                                                t-if="o.cleared_balance == 0.00"
-                                            />
-                                            <t
-                                                t-if="not o.cleared_balance == 0.00"
-                                            >
+                                            <t t-if="o.cleared_balance == 0.00" />
+                                            <t t-if="not o.cleared_balance == 0.00">
                                                 <span
                                                     t-field="o.cleared_balance"
                                                     t-field-options='{"widget": "monetary", "display_currency": company.currency_id}'
@@ -186,12 +163,8 @@
                                             </t>
                                         </td>
                                         <td>
-                                            <t
-                                                t-if="o.cleared_balance == 0.00"
-                                            />
-                                            <t
-                                                t-if="not o.cleared_balance == 0.00"
-                                            >
+                                            <t t-if="o.cleared_balance == 0.00" />
+                                            <t t-if="not o.cleared_balance == 0.00">
                                                 <b>
                                                     <span
                                                         t-field="o.cleared_balance"
@@ -207,12 +180,8 @@
                                         </td>
                                         <td />
                                         <td>
-                                            <t
-                                                t-if="o.cleared_balance == 0.00"
-                                            />
-                                            <t
-                                                t-if="not o.cleared_balance == 0.00"
-                                            >
+                                            <t t-if="o.cleared_balance == 0.00" />
+                                            <t t-if="not o.cleared_balance == 0.00">
                                                 <span
                                                     t-field="o.cleared_balance"
                                                     t-field-options='{"widget": "monetary", "display_currency": company.currency_id}'
@@ -220,12 +189,8 @@
                                             </t>
                                         </td>
                                         <td>
-                                            <t
-                                                t-if="o.cleared_balance_cur == 0.00"
-                                            />
-                                            <t
-                                                t-if="not o.cleared_balance_cur == 0.00"
-                                            >
+                                            <t t-if="o.cleared_balance_cur == 0.00" />
+                                            <t t-if="not o.cleared_balance_cur == 0.00">
                                                 <span
                                                     t-field="o.cleared_balance_cur"
                                                     t-field-options='{"widget": "monetary", "display_currency": company.currency_id}'
@@ -233,12 +198,8 @@
                                             </t>
                                         </td>
                                         <td>
-                                            <t
-                                                t-if="o.cleared_balance_cur == 0.00"
-                                            />
-                                            <t
-                                                t-if="not o.cleared_balance_cur == 0.00"
-                                            >
+                                            <t t-if="o.cleared_balance_cur == 0.00" />
+                                            <t t-if="not o.cleared_balance_cur == 0.00">
                                                 <b>
                                                     <span
                                                         t-field="o.cleared_balance_cur"
