@@ -4,10 +4,7 @@
     <record id="agreement_tickets_form_view" model="ir.ui.view">
         <field name="name">agreement.form.view</field>
         <field name="model">agreement</field>
-        <field
-            name="inherit_id"
-            ref="agreement_legal.partner_agreement_form_view"
-        />
+        <field name="inherit_id" ref="agreement_legal.partner_agreement_form_view" />
         <field name="arch" type="xml">
             <div class="oe_button_box" position="inside">
                 <button
@@ -16,11 +13,7 @@
                     class="oe_stat_button"
                     icon="fa-pencil-square-o"
                 >
-                    <field
-                        name="ticket_count"
-                        widget="statinfo"
-                        string="Tickets"
-                    />
+                    <field name="ticket_count" widget="statinfo" string="Tickets" />
                 </button>
             </div>
         </field>

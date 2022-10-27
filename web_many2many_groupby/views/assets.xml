@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template
+        id="assets_backend"
+        name="web_many2many_groupby assets"
+        inherit_id="web.assets_backend"
+    >
+        <xpath expr="." position="inside">
+            <script
+                type="text/javascript"
+                src="/web_many2many_groupby/static/src/js/web_groupby.js"
+            />
+            <script
+                type="text/javascript"
+                src="/web_many2many_groupby/static/src/js/basic_model.js"
+            />
+            <script
+                type="text/javascript"
+                src="/web_many2many_groupby/static/src/js/kanban_cloumn.js"
+            />
+            <script
+                type="text/javascript"
+                src="/web_many2many_groupby/static/src/js/kanaban_render.js"
+            />
+            <script
+                type="text/javascript"
+                src="/web_many2many_groupby/static/src/js/list_controller.js"
+            />
+             <script
+                type="text/javascript"
+                src="/web_many2many_groupby/static/src/js/list_model.js"
+            />
+        </xpath>
+    </template>
+</odoo>

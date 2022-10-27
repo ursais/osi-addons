@@ -65,9 +65,9 @@ class HelpdeskTicket(models.Model):
             for line in rec.stock_request_ids:
                 if line.state == "draft":
                     if line.order_id:
-                        line.order_id.action_confirm()
+                        line.order_id.action_submit()
                     else:
-                        line.action_confirm()
+                        line.action_submit()
             rec.request_stage = "submitted"
 
     def action_request_cancel(self):

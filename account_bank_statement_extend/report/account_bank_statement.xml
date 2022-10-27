@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <template
-        id="report_statement_inherit"
-        inherit_id="account.report_statement"
-    >
+    <template id="report_statement_inherit" inherit_id="account.report_statement">
         <xpath
             expr="//div[hasclass('page')]/table[2]/tbody/tr/td/table"
             position="inside"
@@ -11,10 +8,7 @@
 
         <tr t-foreach="o.get_base_reconcile_entries()" t-as="datas">
             <td class="p-0 w-25">
-                <span
-                        class="d-block font-weight-bold"
-                        t-esc="datas.get('date')"
-                    />
+                <span class="d-block font-weight-bold" t-esc="datas.get('date')" />
             </td>
             <td class="p-0">
                 <span

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Copyright 2021 Open Source Integrators
+         License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+
+    <!-- Agreement Form View -->
+    <record id="agreement_subscription_form_view" model="ir.ui.view">
+        <field name="name">agreement.subscription.form.view</field>
+        <field name="model">agreement</field>
+        <field name="inherit_id" ref="agreement_legal_sale.agreement_sale_form_view" />
+        <field name="arch" type="xml">
+            <group id="sale_right" position="inside">
+                <field name="subscription_id" readonly="1" />
+            </group>
+        </field>
+    </record>
+
+</odoo>
