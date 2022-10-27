@@ -21,8 +21,8 @@
     },
     "data": [
         "security/ir.model.access.csv",
-        "view/backend_voicent_call_line.xml",
-        "view/backend_voicent.xml",
+        "views/backend_voicent_call_line.xml",
+        "views/backend_voicent.xml",
     ],
     "development_status": "Beta",
     "maintainers": [
