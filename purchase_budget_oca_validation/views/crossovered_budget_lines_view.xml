@@ -1,0 +1,28 @@
+<odoo>
+    <record id="view_account_budget_lines_form_inherit" model="ir.ui.view">
+        <field name="name">account.budget.lines.form.inherit</field>
+        <field name="model">crossovered.budget</field>
+        <field name="inherit_id" ref="account_budget_oca.crossovered_budget_view_form" />
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="amount_include_tax" />
+            </field>
+            <xpath
+                expr="//page//tree/field[@name='theoretical_amount']"
+                position="after"
+            >
+                <field name="committed_amount" sum="Committed Amount" />
+                <field name="uncommitted_amount" sum="Uncommitted Amount" />
+                <field name="over_budget" />
+            </xpath>
+            <xpath
+                expr="//page//form/group/group/field[@name='planned_amount']"
+                position="after"
+            >
+                <field name="committed_amount" />
+                <field name="uncommitted_amount" />
+                <field name="over_budget" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

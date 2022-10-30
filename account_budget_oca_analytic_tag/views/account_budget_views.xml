@@ -1,0 +1,38 @@
+<odoo>
+
+    <record
+        id="crossovered_budget_view_form_inherit_account_budget_analytic_tag"
+        model="ir.ui.view"
+    >
+        <field name="name">crossovered.budget.view.form.inherit.analytic_tag</field>
+        <field name="model">crossovered.budget</field>
+        <field name="inherit_id" ref="account_budget_oca.crossovered_budget_view_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//page//tree//field[@name='analytic_account_id']"
+                position="attributes"
+            >
+                <attribute name="required">0</attribute>
+            </xpath>
+            <xpath
+                expr="//page//form//field[@name='analytic_account_id']"
+                position="attributes"
+            >
+                <attribute name="required">0</attribute>
+            </xpath>
+            <xpath
+                expr="//page//tree//field[@name='analytic_account_id']"
+                position="after"
+            >
+                <field name="analytic_tag_id" />
+            </xpath>
+            <xpath
+                expr="//page//form//field[@name='analytic_account_id']"
+                position="after"
+            >
+                <field name="analytic_tag_id" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
