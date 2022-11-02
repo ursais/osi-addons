@@ -9,12 +9,50 @@ class StockMove(models.Model):
     _inherit = "stock.move"
 
     def get_ji_ids(self, move, svl_ids):
-        ji_ids = self.env["account.move.line"].search(
-            [
-                ("name", "ilike", move.picking_id.name),
-                ("name", "ilike", move.product_id.name),
-            ]
-        )
+        if move.raw_material_production_id:
+            ji_ids = self.env["account.move.line"].search(
+                [
+                    '|', ("name", "ilike", move.reference),
+                    ("name", "ilike", move.origin),
+                    ("reconciled", '=', False)
+                ]
+            )
+        else:
+            ji_ids = self.env["account.move.line"].search(
+                [
+                    ("name", "ilike", move.picking_id.name),
+                    ("name", "ilike", move.product_id.name),
+                    ("reconciled", '=', False)
+                ]
+            )
+        repair_svls = [svl[0] for svl in svl_ids]
+        repair_svls = self.env['stock.valuation.layer'].browse(repair_svls)
+        if ji_ids and any(svl for svl in repair_svls if svl.stock_move_id.repair_id) and move.raw_material_production_id:
+            total_value = sum(repair_svls.mapped('value'))
+            ji_ids[0].move_id.button_draft()
+            # The Valuation Layer has been changed,
+            # now we have to edit the STJ Entry
+            for ji_id in ji_ids:
+                amount = (
+                    total_value
+                    * move.stock_valuation_layer_ids.stock_move_id.product_uom_qty
+                )
+                if ji_id.credit != 0:
+                    ji_id.with_context(check_move_validity=False).write(
+                        {"credit": amount}
+                    )
+                else:
+                    ji_id.with_context(check_move_validity=False).write(
+                        {"debit": amount}
+                    )
+
+                related_svl = self.env['stock.valuation.layer'].search([
+                    ('account_move_id', '=', ji_id.move_id.id)
+                ])
+                related_svl.write({'unit_cost': amount})
+            ji_ids[0].move_id.action_post()
+            return ji_ids[0].move_id
+
         if ji_ids:
             if len(svl_ids) > 1:
                 final_layers = []
@@ -96,8 +134,21 @@ class StockMove(models.Model):
         )
         for line_id in move.move_line_ids:
             for valuation in test_vals:
-                # Filter so we only have the Layers we got from Incoming Moves
-                if line_id.lot_id in valuation.lot_ids and valuation.value > 0:
+                if move.raw_material_production_id.picking_type_id.code == "mrp_operation":
+                    if line_id.lot_id in valuation.lot_ids or (valuation.stock_move_id.repair_id and valuation.stock_move_id.product_id.id == valuation.stock_move_id.repair_id.product_id.id):
+                        if not self.check_found_vals(valuation.id, svl_ids):
+                            svl_ids.append(
+                                (
+                                    valuation.id,
+                                    1,
+                                    [line_id.lot_id.id],
+                                    line_id,
+                                )
+                            )
+                        else:
+                            self.increment_qty(valuation.id, svl_ids, line_id.lot_id.id)
+                elif line_id.lot_id in valuation.lot_ids and valuation.value > 0:
+                    # Filter so we only have the Layers we got from Incoming Moves
                     if not self.check_found_vals(valuation.id, svl_ids):
                         svl_ids.append(
                             (
@@ -117,17 +168,26 @@ class StockMove(models.Model):
                     % (move.product_id.name)
                 )
             )
-        self.get_ji_ids(move, svl_ids)
+        return self.get_ji_ids(move, svl_ids)
 
     def _action_done(self, cancel_backorder=False):
         res = super()._action_done(cancel_backorder)
         for move in res:
             # Only run code on outgoing moves with serial or lot products
-            if (
-                move.product_id.tracking in ["serial", "lot"]
-                and move.picking_id.picking_type_id.code == "outgoing"
+            if move.product_id.tracking in ["serial", "lot"] and (
+                move.picking_id.picking_type_id.code == "outgoing"
+                or move.raw_material_production_id.picking_type_id.code
+                == "mrp_operation"
             ):
-                self.get_svl_ids(move)
+                svl_acc_move = self.get_svl_ids(move)
+                related_svl = self.env['stock.valuation.layer'].search([
+                    ('product_id', '=', move.product_id.id)
+                ])
+                related_svl = related_svl.filtered(
+                    lambda l: not l.lot_ids and not l.stock_move_id.repair_id
+                )
+                if svl_acc_move:
+                    related_svl.write({'unit_cost': svl_acc_move.amount_total_signed, 'value': related_svl.quantity * svl_acc_move.amount_total_signed})
         return res
 
     def increment_qty(self, value_id, svl_ids, lot_id):
