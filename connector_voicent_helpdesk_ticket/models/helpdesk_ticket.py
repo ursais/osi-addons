@@ -98,7 +98,7 @@ class HelpdeskTicket(models.Model):
                     value = MailTemplate.with_context(lang=lang)._render_template(
                         "${object." + field.field_domain + "}",
                         "helpdesk.ticket",
-                        rec.id,
+                        [rec.id],
                     )
                     if not value:
                         value = field.default_value
