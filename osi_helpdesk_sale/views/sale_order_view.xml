@@ -12,6 +12,7 @@
                     type="object"
                     class="btn btn-primary"
                     groups="helpdesk.group_helpdesk_user"
+                    confirm="Please confirm that you want to create a helpdesk ticket."
                 />
             </button>
             <button name="preview_sale_order" position="before">
