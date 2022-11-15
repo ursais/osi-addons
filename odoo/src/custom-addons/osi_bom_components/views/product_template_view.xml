@@ -1,0 +1,13 @@
+<odoo>
+    <data>
+        <record id="bom_components_form" model="ir.ui.view">
+            <field name="name">bom_component_avail</field>
+            <field name="inherit_id" ref="product.template"/>
+                <field name="arch" type="xml">
+                    <field name="packinging_ids" position="after">
+                        <field name="bom_components"/>
+                    </field>
+                </field>
+        </record>
+    </data>
+</odoo>
