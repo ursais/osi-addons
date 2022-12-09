@@ -1,0 +1,19 @@
+<odoo>
+
+    <record id="stock_cycle_count_rule_form_view_inherit_add_notify_before" model="ir.ui.view">
+        <field name="name">stock.cycle.count.rule.form.view.inherit.add.notify.before</field>
+        <field name="model">stock.cycle.count.rule</field>
+        <field name="inherit_id" ref="stock_cycle_count.stock_cycle_count_rule_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='periodic_count_period']" position="after">
+                <field name="notify_before"/>
+            </xpath>
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" options="{'open_attachments': True}"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
