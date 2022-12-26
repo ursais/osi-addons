@@ -9,7 +9,7 @@
     tickets from sales orders without the need of Project/Timesheet modules.""",
     "author": "Open Source Integrators",
     "maintainers": ["opensourceintegrators"],
-    "website": "https://github.com/OCA/partner-contact",
+    "website": "https://github.com/ursais/osi-addons",
     "depends": [
         "helpdesk_sale",
     ],
