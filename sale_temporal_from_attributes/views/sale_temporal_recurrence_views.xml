@@ -1,0 +1,31 @@
+<odoo>
+
+    <record id="sale_temporal_recurrence_view_form_inherit" model="ir.ui.view">
+        <field name="name">sale.temporal.recurrence.form</field>
+        <field name="model">sale.temporal.recurrence</field>
+        <field
+            name="inherit_id"
+            ref="sale_temporal.sale_temporal_recurrence_view_form"
+        />
+        <field name="arch" type="xml">
+            <field name="unit" position="after">
+                <field name="factor" />
+            </field>
+        </field>
+    </record>
+
+    <record id="sale_temporal_recurrence_view_tree_inherit" model="ir.ui.view">
+        <field name="name">sale.temporal.recurrence.tree</field>
+        <field name="model">sale.temporal.recurrence</field>
+        <field
+            name="inherit_id"
+            ref="sale_temporal.sale_temporal_recurrence_view_tree"
+        />
+        <field name="arch" type="xml">
+            <field name="unit" position="after">
+                <field name="factor" />
+            </field>
+        </field>
+    </record>
+
+</odoo>
