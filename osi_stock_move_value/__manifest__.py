@@ -7,7 +7,7 @@
     "author": "Open Source Integrators",
     "category": "Stock",
     "maintainer": "Open Source Integrators",
-    "website": "https://github.com/OCA/partner-contact",
+    "website": "https://github.com/ursais/osi-addons",
     "depends": ["stock"],
     "data": [
         "views/stock_move_view.xml",
