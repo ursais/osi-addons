@@ -7,7 +7,7 @@
     "summary": "Fleet Sales Customization",
     "author": "Open Source Integrators",
     "maintainer": "Open Source Integrators",
-    "website": "https://github.com/OCA/partner-contact",
+    "website": "https://github.com/ursais/osi-addons",
     "depends": ["fleet", "sale_management"],
     "data": [
         "views/view_fleet_vehicle.xml",
