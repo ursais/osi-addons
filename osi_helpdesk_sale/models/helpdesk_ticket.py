@@ -58,7 +58,7 @@ class HelpdeskTicket(models.Model):
             sale_order_ids = self.env["sale.order"].search(
                 [("helpdesk_ticket_ids", "in", helpdesk_ticket_id.ids)]
             )
-            action = self.env.ref("sale.action_orders").read()[0]
+            action = self.env["ir.actions.act_window"]._for_xml_id("sale.action_orders")
             action["context"] = {}
             if len(sale_order_ids) == 1:
                 action["views"] = [(self.env.ref("sale.view_order_form").id, "form")]
