@@ -1,16 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <template id="ticket_submit" inherit_id="website_helpdesk_form.ticket_submit">
+    <template id="ticket_submit" inherit_id="website_helpdesk.ticket_submit_form">
         <xpath expr="//div[3]" position="after">
             <div class="form-group row form-field">
                 <div class="col-lg-3 col-md-4 text-right">
-                    <label class="col-form-label" for="ticket_type_id">Ticket Type</label>
+                    <label
+                        class="col-form-label"
+                        for="ticket_type_id"
+                    >Ticket Type</label>
                 </div>
-                <t t-set="tickets" t-value="request.env['helpdesk.ticket.type'].sudo().search([])"/>
+                <t
+                    t-set="tickets"
+                    t-value="request.env['helpdesk.ticket.type'].sudo().search([])"
+                />
                 <div class="col-lg-7 col-md-8">
                     <select id="ticket" class="form-control" name="ticket">
                     <t t-foreach="tickets" t-as="ticket">
-                        <option t-att-value="ticket.id" t-esc="ticket.name"/>
+                        <option t-att-value="ticket.id" t-esc="ticket.name" />
                     </t>
                     </select>
                 </div>
@@ -20,7 +26,11 @@
                     <label class="col-form-label" for="priority">Priority</label>
                 </div>
                 <div class="col-lg-7 col-md-8">
-                <select class="form-control o_website_form_input" name="priority" id="priority">
+                <select
+                        class="form-control o_website_form_input"
+                        name="priority"
+                        id="priority"
+                    >
                     <option t-attf-value="0">All</option>
                     <option t-attf-value="1">Low priority</option>
                     <option t-attf-value="2">High priority</option>
