@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <report
+            id="action_inventory_valuation_ondate"
+            model="stock.move"
+            string="Stock Valuation Report"
+            report_type="qweb-pdf"
+            name="osi_inv_fifo.inventory_valuation_ondate_report"
+            file="osi_inv_fifo.inventory_valuation_ondate_report"
+            menu="False"
+        />
+</odoo>
