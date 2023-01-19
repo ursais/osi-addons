@@ -164,7 +164,13 @@ class AccountPayment(models.Model):
                 )
             if check_ids:
                 for chk in check_ids:
-                    if res.state != "sent":
+                    if res.state == "posted":
+                        chk.write({"state": "sent"})
+                    elif res.state == "draft":
+                        chk.write({"state": "draft"})
+                    elif res.state == "cancelled":
+                        chk.write({"state": "cancelled"})
+                    else:
                         chk.write({"state": "void"})
         return result
 
