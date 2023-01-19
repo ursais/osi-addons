@@ -14,7 +14,8 @@ class StockValuationLayer(models.Model):
     _inherit = "stock.valuation.layer"
 
     lot_ids = fields.Many2many("stock.production.lot", string="Lot ID's", readonly=True)
-
+    repair_type = fields.Selection([('add', 'ADD'), ('remove', 'Remove')], string="Repair Type")
+    
     @api.model
     def create(self, vals):
         res = super().create(vals)
