@@ -9,6 +9,6 @@
     "category": "Tools",
     "author": "Open Source Integrators",
     "maintainer": "Open Source Integrators",
-    "depends": ["auth_oauth"],
+    "depends": ["base", "web", "auth_signup", "auth_oauth"],
     "data": [],
 }
