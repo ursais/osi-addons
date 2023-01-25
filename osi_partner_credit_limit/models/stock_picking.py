@@ -15,7 +15,8 @@ class StockPicking(models.Model):
             record.dont_allow_transfer = False
             # Only outgoing picking
             if record.picking_type_code == "outgoing" and record.state not in (
-                "done", "cancel",
+                "done",
+                "cancel",
             ):
                 # Sales person has a hold
                 if (
@@ -38,8 +39,7 @@ class StockPicking(models.Model):
                 record.sale_id.write({"ship_hold": hold_value})
 
     dont_allow_transfer = fields.Boolean(
-        string="Credit Hold",
-        compute="_compute_allow_transfer"
+        string="Credit Hold", compute="_compute_allow_transfer"
     )
 
     def button_validate(self):

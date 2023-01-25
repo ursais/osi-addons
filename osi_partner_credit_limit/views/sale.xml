@@ -18,7 +18,12 @@
                 </group>
             </group>
             <xpath expr="//sheet/div" position="before">
-                <widget name="web_ribbon" title="Sales Hold" bg_color="bg-danger" attrs="{'invisible': [('sales_hold', '=', False)]}"/>
+                <widget
+                    name="web_ribbon"
+                    title="Sales Hold"
+                    bg_color="bg-danger"
+                    attrs="{'invisible': [('sales_hold', '=', False)]}"
+                />
             </xpath>
         </field>
     </record>
