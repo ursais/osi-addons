@@ -10,16 +10,13 @@ class Partner(models.Model):
     _inherit = "res.partner"
 
     sales_hold = fields.Boolean(
-        string="Sales Hold",
         help="If checked, new quotations cannot be confirmed",
     )
-    credit_limit = fields.Monetary(string="Credit Limit")
+    credit_limit = fields.Monetary()
     grace_period = fields.Integer(
-        string="Grace Period",
         help="Grace period added on top of the customer payment term (in days)",
     )
     credit_hold = fields.Boolean(
-        string="Credit Hold",
         help="Place the customer on credit hold to prevent from shipping goods",
     )
 

@@ -27,7 +27,8 @@ class SaleOrder(models.Model):
             raise ValidationError(message)
         elif self.ship_hold and not self.credit_override:
             message = _(
-                """Cannot confirm Order! \nThe customer exceed available credit limit and is on ship hold."""
+                """Cannot confirm Order! \nThe customer exceed available
+                 credit limit and is on ship hold."""
             )
             raise ValidationError(message)
         else:
@@ -42,7 +43,8 @@ class SaleOrder(models.Model):
                 self.state = prev_state
                 self.ship_hold = True
                 message = _(
-                    """Cannot confirm Order! \nThis will exceed allowed Credit Limit.\nTo Override, check Override Sales/Credit/Delivery Hold"""
+                    """Cannot confirm Order! \nThis will exceed allowed Credit
+                    Limit.\nTo Override, check Override Sales/Credit/Delivery Hold"""
                 )
                 raise ValidationError(message)
             return super(SaleOrder, self).action_confirm()
