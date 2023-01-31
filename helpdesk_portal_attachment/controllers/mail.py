@@ -99,7 +99,7 @@ def _message_post_helper(res_model, res_id, message,
     message_post_args = dict(
         body=message,
         message_type=kw.pop('message_type', "comment"),
-        subtype=kw.pop('subtype', "mt_comment"),
+        subtype_xmlid='mail.mt_comment',
         author_id=author_id,
         **kw
     )
@@ -153,10 +153,9 @@ class PortalChatter(PortalChatter):
         res_id = int(res_id)
 
         attachment_ids = [int(attachment_id) for attachment_id in
-                          attachment_ids.split(',') if attachment_id]
+                          attachment_ids if attachment_id]
         attachment_tokens = [attachment_token for attachment_token in
-                             attachment_tokens.split(
-                                 ',') if attachment_token]
+                             attachment_tokens if attachment_token]
         self._portal_post_check_attachments(attachment_ids, attachment_tokens)
 
         if message or attachment_ids:
