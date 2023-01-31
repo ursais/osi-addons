@@ -19,14 +19,14 @@ portal_chatter.include({
 
     init: function(parent, options){
         this._super.apply(this, arguments);
-        this.options = _.defaults(options || {}, {
-            'allow_composer': true,
-            'display_composer': false,
-            'csrf_token': odoo.csrf_token,
-            'token': false,
-            'res_model': false,
-            'res_id': false,
-        });
+//        this.options = _.defaults(options || {}, {
+//            'allow_composer': true,
+//            'display_composer': false,
+//            'csrf_token': odoo.csrf_token,
+//            'token': false,
+//            'res_model': false,
+//            'res_id': false,
+//        });
         this.attachments = [];
     },
 

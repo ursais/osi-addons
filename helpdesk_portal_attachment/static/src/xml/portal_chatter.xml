@@ -1,11 +1,11 @@
 <templates id="template" xml:space="preserve">
 
-    <t t-extend="portal.chatter_composer">
-        <t t-jquery="input[name='sha_time']" t-operation="after">
+    <t t-extend="portal.Composer">
+        <!-- <t t-jquery="input[name='sha_time']" t-operation="after">
             <input type="hidden" name="redirect" t-att-value="discussion_url"/>
             <input type="hidden" name="attachment_ids" class="o_portal_chatter_attachment_ids"/>
             <input type="hidden" name="attachment_tokens" class="o_portal_chatter_attachment_tokens"/>
-        </t>
+        </t> -->
         <t t-jquery="div.o_portal_chatter_composer_error" t-operation="after">
             <div class="o_portal_chatter_attachments mt-3"/>
         </t>
