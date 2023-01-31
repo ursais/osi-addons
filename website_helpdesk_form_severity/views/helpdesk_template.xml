@@ -1,46 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="ticket_submit" inherit_id="website_helpdesk_form.ticket_submit_form">
-        <xpath expr="//div[3]" position="after">
-            <div class="form-group row form-field">
-                <div class="col-lg-3 col-md-4 text-right">
-                    <label class="col-form-label" for="ticket_type_id">Ticket Type</label>
-                </div>
-                <t t-set="tickets" t-value="request.env['helpdesk.ticket.type'].sudo().search([])"/>
-                <div class="col-lg-7 col-md-8">
-                    <select id="ticket" class="form-control" name="ticket">
-                    <t t-foreach="tickets" t-as="ticket">
-                        <option t-att-value="ticket.id" t-esc="ticket.name"/>
-                    </t>
-                    </select>
-                </div>
+
+    <template id="website_helpdesk_form.ticket_submit_form" name="Helpdesk: Submit a Ticket Form">
+        <div class="container">
+            <h2 class="text-muted">
+                Submit a Ticket
+            </h2>
+            <span class="hidden" data-for="helpdesk_ticket_form" t-att-data-values="{'team_id': team and team.id or False}" />
+            <div id="helpdesk_section">
+                <section id="forms" class="s_website_form" data-vcss="001" data-snippet="s_website_form">
+                    <div class="container">
+                        <form id="helpdesk_ticket_form" action="/website/form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="helpdesk.ticket" data-success-mode="redirect" data-success-page="/your-ticket-has-been-submitted" data-editable-form="false"  hide-change-model="true">
+                            <div class="s_website_form_rows row s_col_no_bgcolor">
+                                <div class="form-group col-12 s_website_form_field s_website_form_model_required" data-type="char" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-auto s_website_form_label" style="width: 200px" for="helpdesk1">
+                                            <span class="s_website_form_label_content">Your Name</span>
+                                            <span class="s_website_form_mark"> *</span>
+                                        </label>
+                                        <div class="col-sm col-xs-12">
+                                            <input id="helpdesk1" type="text" class="form-control s_website_form_input" name="partner_name" required="1" data-fill-with="name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field s_website_form_model_required" data-type="email" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-auto s_website_form_label" style="width: 200px" for="helpdesk2">
+                                            <span class="s_website_form_label_content">Your Email</span>
+                                            <span class="s_website_form_mark"> *</span>
+                                        </label>
+                                        <div class="col-sm col-xs-12">
+                                            <input id="helpdesk2" type='email' class='form-control s_website_form_input' name="partner_email" required="1" data-fill-with="email"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field s_website_form_model_required" data-type="char" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-auto s_website_form_label" style="width: 200px" for="helpdesk3">
+                                            <span class="s_website_form_label_content">Subject</span>
+                                            <span class="s_website_form_mark"> *</span>
+                                        </label>
+                                        <div class="col-sm col-xs-12">
+                                            <input id="helpdesk3" type="text" class="form-control s_website_form_input" name="name" required="1"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Add Ticket Type & Priority & Severity -->
+                                <div class="form-group col-12 s_website_form_field" data-type="char" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-auto s_website_form_label" style="width: 200px" for="helpdesk8">
+                                            <span class="s_website_form_label_content">Ticket Type</span>
+                                        </label>
+                                        <div class="col-sm col-xs-12">
+                                           <t t-set="tickets" t-value="request.env['helpdesk.ticket.type'].sudo().search([])"/>
+                                            <select id="ticket" class="form-control" name="ticket">
+                                                <t t-foreach="tickets" t-as="ticket">
+                                                    <option t-att-value="ticket.id" t-esc="ticket.name"/>
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field" data-type="char" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-auto s_website_form_label" style="width: 200px" for="helpdesk9">
+                                            <span class="s_website_form_label_content">Priority</span>
+                                        </label>
+                                        <div class="col-sm col-xs-12">
+                                           <select class="form-control o_website_form_input" name="priority" id="priority">
+                                                <option t-attf-value="0">All</option>
+                                                <option t-attf-value="1">Low priority</option>
+                                                <option t-attf-value="2">High priority</option>
+                                                <option t-attf-value="3">Urgent</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field" data-type="char" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-auto s_website_form_label" style="width: 200px" for="helpdesk10">
+                                            <span class="s_website_form_label_content">Severity</span>
+                                        </label>
+                                        <div class="col-sm col-xs-12">
+                                           <select class="form-control" name="severity">
+                                                <option t-attf-value="0">Informational</option>
+                                                <option t-attf-value="1">Minor</option>
+                                                <option t-attf-value="2">Significant</option>
+                                                <option t-attf-value="3">Critical</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-12 s_website_form_field" data-type="text" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-auto s_website_form_label" style="width: 200px" for="helpdesk4">
+                                            <span class="s_website_form_label_content">Description</span>
+                                        </label>
+                                        <div class="col-sm col-xs-12">
+                                            <textarea id="helpdesk4" class="form-control s_website_form_input" name="description"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="binary" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-auto s_website_form_label" style="width: 200px" for="helpdesk5">
+                                            <span class="s_website_form_label_content">Attachment(s)</span>
+                                        </label>
+                                        <div class="col-sm col-xs-12">
+                                            <input id="helpdesk5" type="file" name="attachments" class="form-control s_website_form_input" multiple="true" accept="image/*,application/pdf,video/*"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field s_website_form_dnone">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-auto s_website_form_label" style="width: 200px" for="helpdesk6">
+                                            <span class="s_website_form_label_content">Team</span>
+                                        </label>
+                                        <div class="col-sm col-xs-12">
+                                            <input id="helpdesk6" type="hidden" class="form-control s_website_form_input" name="team_id"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_submit" data-name="Submit Button">
+                                    <div style="width: 200px;" class="s_website_form_label"/>
+                                    <a href="#" role="button" class="btn btn-primary btn-lg s_website_form_send">Submit</a>
+                                    <span id="s_website_form_result"></span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
             </div>
-            <div class="form-group row form-field">
-                <div class="col-lg-3 col-md-4 text-right">
-                    <label class="col-form-label" for="priority">Priority</label>
-                </div>
-                <div class="col-lg-7 col-md-8">
-                <select class="form-control o_website_form_input" name="priority" id="priority">
-                    <option t-attf-value="0">All</option>
-                    <option t-attf-value="1">Low priority</option>
-                    <option t-attf-value="2">High priority</option>
-                    <option t-attf-value="3">Urgent</option>
-                </select>
-                </div>
-            </div>
-            <div class="form-group row form-field">
-                <div class="col-lg-3 col-md-4 text-right">
-                    <label class="col-form-label" for="severity">Severity</label>
-                </div>
-                <div class="col-lg-7 col-md-8">
-                <select class="form-control" name="severity">
-                    <option t-attf-value="0">Informational</option>
-                    <option t-attf-value="1">Minor</option>
-                    <option t-attf-value="2">Significant</option>
-                    <option t-attf-value="3">Critical</option>
-                </select>
-                </div>
-            </div>
-        </xpath>
+        </div>
     </template>
+
 </odoo>
