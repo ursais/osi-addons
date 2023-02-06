@@ -1,6 +1,6 @@
 {
     "name": "OSI Inventory Valuation by Location and Date",
-    "version": "15.0.1.0.0",
+    "version": "16.0.1.0.0",
     "category": "stock",
     "summary": "Stock Inventory Valuation by Location and Date export to Excel and PDF",
     "author": "Open Source Integrators",

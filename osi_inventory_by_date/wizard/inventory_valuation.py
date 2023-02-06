@@ -13,6 +13,7 @@ from . import xls_format
 
 class InventoryValuationDateReport(models.TransientModel, InventoryValuationCategory):
     _name = "inventory.valuation.ondate.report"
+    _description = "Inventory Valuation Report by Date"
 
     company_id = fields.Many2one("res.company", string="Company")
     warehouse_ids = fields.Many2many("stock.warehouse", string="warehouse")
@@ -332,7 +333,7 @@ class InventoryValuationDateReport(models.TransientModel, InventoryValuationCate
                     sheet.write(row, 0, line.get("location", ""), other_tstyle_c)
                     sheet.write(row, 1, line.get("category", ""), other_tstyle_c)
                     sheet.write(row, 2, line.get("account", ""), other_tstyle_c)
-                    sheet.write(row, 3, line.get("product", ""), other_tstyle_c)
+                    sheet.write(row, 3, list(line.get("product").values())[0], other_tstyle_c)
                     sheet.write(row, 4, line.get("barcode", ""), other_tstyle_c)
                     sheet.write(row, 5, line.get("sku", ""), other_tstyle_c)
                     sheet.write(row, 6, line.get("qty", ""), other_tstyle_c)
@@ -357,9 +358,7 @@ class InventoryValuationDateReport(models.TransientModel, InventoryValuationCate
         )
         return {
             "type": "ir.actions.act_url",
-            "url": "/web/binary/download_document?model="
-            "inventory.valuation.success.box&field=file&id=%s&"
-            "filename=Inventory Valuation by Location and Date Report.xls"
+            "url": "/web/binary/download_document?model=inventory.valuation.success.box&field=file&record_id=%s&filename=Inventory Valuation by Location and Date Report.xls"
             % (res_id.id),
             "target": "new",
         }

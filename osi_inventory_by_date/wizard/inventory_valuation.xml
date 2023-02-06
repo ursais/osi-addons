@@ -38,28 +38,25 @@
                             <field name="valuation_date" />
                         </group>
                     </group>
-                    <group string="Select Categories">
                         <field
                         name="filter_product_categ_ids"
-                        nolabel="1"
                         placeholder="All Categories"
                     >
                             <tree>
                                 <field name="name" />
                             </tree>
                         </field>
-                    </group>
                     <footer>
                         <button
                         name="print_report"
-                        string="_PDF"
+                        string="PDF"
                         type="object"
                         class="oe_highlight"
                     />
                         or
                         <button
                         name="print_xls_report"
-                        string="_XLS"
+                        string="XLS"
                         type="object"
                         class="oe_highlight"
                     />

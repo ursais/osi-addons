@@ -10,6 +10,7 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 class InventoryValuationCategory(models.AbstractModel):
     _name = "report.osi_inventory_by_date.inventory_valuation_ondate_report"
+    _description = "Report Inventory Valuation : By Date"
 
     @api.model
     def _get_report_values(self, docids, data=None):

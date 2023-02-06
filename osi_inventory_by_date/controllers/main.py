@@ -9,12 +9,11 @@ import base64
 from odoo import http
 from odoo.http import request
 
-from odoo.addons.web.controllers.main import content_disposition, serialize_exception
+from odoo.addons.web.controllers.main import content_disposition
 
 
 class Binary(http.Controller):
     @http.route("/web/binary/download_document", type="http", auth="public")
-    @serialize_exception
     def download_document(self, model, field, record_id, filename=None, **kw):
         """Download link for files stored as binary fields.
         :param str model: name of the model to fetch the binary from
