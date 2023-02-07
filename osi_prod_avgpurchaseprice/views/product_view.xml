@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<odoo>
+    <!-- Copyright 2018 Open Source Integrators
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+
+    <!-- product variant form view -->
+    <record id="view_avg_price_product_variant" model="ir.ui.view">
+        <field name="name">view.avg.price.product.variant</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view" />
+        <field name="arch" type="xml">
+            <field name="standard_price" position="after">
+                <field name="valuation" invisible="1" />
+                <field name="cost_method" invisible="1" />
+                <field
+                    name="reset_date"
+                    attrs="{'readonly': True, 'invisible':['|',('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard', 'average'])]}"
+                />
+            </field>
+
+            <group name="pricing" position="after">
+                <group name="avg_pricing">
+                    <field name="avg_price" readonly="True" />
+                    <field name="calculate_from_date" />
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <!-- product product form -->
+    <record id="view_avg_price_product_product" model="ir.ui.view">
+        <field name="name">view.avg.price.product.product</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view" />
+        <field name="arch" type="xml">
+            <field name="uom_id" position="before">
+                <field name="valuation" invisible="1" />
+                <field name="cost_method" invisible="1" />
+                <field
+                    name="reset_date"
+                    attrs="{'readonly': True, 'invisible':['|',('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard', 'average'])]}"
+                />
+                <field name="avg_price" widget="monetary" />
+                <field name="calculate_from_date" />
+            </field>
+        </field>
+    </record>
+
+    <!-- product template form view -->
+    <record id="view_avg_price_product_template" model="ir.ui.view">
+        <field name="name">view.avg.price.product.template</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view" />
+        <field name="arch" type="xml">
+            <field name="uom_id" position="before">
+                <field name="valuation" invisible="1" />
+                <field name="cost_method" invisible="1" />
+                <field
+                    name="reset_date"
+                    attrs="{'readonly': True, 'invisible':['|',('valuation','!=', 'real_time'), ('cost_method', 'not in', ['standard', 'average'])]}"
+                />
+                <field name="avg_price" readonly="True" />
+                <field name="calculate_from_date" />
+            </field>
+        </field>
+    </record>
+
+</odoo>
