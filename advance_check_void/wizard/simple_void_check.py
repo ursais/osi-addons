@@ -37,4 +37,3 @@ class SimpleVoidCheck(models.TransientModel):
         self.payment_id.action_unmark_sent()
         if check_ids:
             check_ids.write({"state": "void"})
-        
