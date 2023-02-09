@@ -125,6 +125,7 @@ class AccountPayment(models.Model):
         }
 
     def write(self, vals):
+        #import pdb; pdb.set_trace()
         if vals.get("check_number") and not str(vals.get("check_number")).isdigit():
             raise ValidationError(_("Check number must be integer."))
         result = super(AccountPayment, self).write(vals)
@@ -144,10 +145,12 @@ class AccountPayment(models.Model):
                     "create_date": fields.Datetime.now(),
                     "write_date": fields.Datetime.now(),
                     "create_uid": res.create_uid.id,
-                    "state": res.state,
+                    #"state": res.state,
+                    "state": "sent",
                     "is_visible_check": not res.check_number,
                 }
                 new_chk = check_hist_obj.create(check_hist)
+            check_ids = False
             if new_chk:
                 check_ids = check_hist_obj.search(
                     [
@@ -157,11 +160,11 @@ class AccountPayment(models.Model):
                     ],
                     limit=1,
                 )
-            else:
-                check_ids = check_hist_obj.search(
-                    [("payment_id", "=", res.id), ("write_date", "<=", res.write_date)],
-                    limit=1,
-                )
+            # else:
+            #     check_ids = check_hist_obj.search(
+            #         [("payment_id", "=", res.id), ("write_date", "<=", res.write_date)],
+            #         limit=1,
+            #     )
             if check_ids:
                 for chk in check_ids:
                     if res.state != "sent":
