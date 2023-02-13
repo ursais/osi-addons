@@ -5,7 +5,7 @@
     "summary": "Stock Inventory Valuation by Location and Date export to Excel and PDF",
     "author": "Open Source Integrators",
     "website": "https://github.com/ursais/osi-addons",
-    "depends": ["stock", "osi_stock_move_value"],
+    "depends": ["stock", "osi_stock_move_value", "account"],
     "data": [
         "security/inventory_valuation_security.xml",
         "security/ir.model.access.csv",
