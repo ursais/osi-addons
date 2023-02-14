@@ -11,10 +11,10 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@id='mrp_byproduct']" position="after">
                 <div
-                class="col-lg-6 col-12 o_setting_box"
-                id="bom_rollup"
-                title="BoM Cost rollup Email notification will be sent to this email address."
-            >
+                    class="col-lg-6 col-12 o_setting_box"
+                    id="bom_rollup"
+                    title="BoM Cost rollup Email notification will be sent to this email address."
+                >
                     <div class="o_setting_left_pane">
                         <label for="bom_cost_email" string="Email" />
                     </div>
@@ -22,7 +22,7 @@
                         <field name="bom_cost_email" widget="email" />
                         <div class="text-muted">
                             BoM Cost rollup Email notification will be sent to this email address<br
-                        />
+                            />
                         </div>
                     </div>
                 </div>
