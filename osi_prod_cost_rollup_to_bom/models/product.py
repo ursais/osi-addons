@@ -48,7 +48,6 @@ class ProductProduct(models.Model):
 
             for product in self:
                 if product.cost_method == "standard":
-
                     if product.product_tmpl_id.product_variant_count == 1:
                         new_price = product._get_price_from_bom(boms_to_recompute)
 
