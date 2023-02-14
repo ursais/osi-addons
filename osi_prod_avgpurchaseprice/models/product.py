@@ -325,7 +325,7 @@ class ProductTemplate(models.Model):
     standard_price = fields.Float(
         compute="_compute_standard_price",
         string="Cost",
-        inverse="_set_standard_price",
+        inverse="_inverse_set_standard_price",
         search="_search_standard_price",
         digits=("Product Cost"),
         groups="base.group_user",
@@ -348,3 +348,8 @@ class ProductTemplate(models.Model):
             product.write({"reset_date": dt2day})
 
         return res
+
+    def _inverse_set_standard_price(self):
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.product_variant_ids.standard_price = template.standard_price

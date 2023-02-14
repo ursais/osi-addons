@@ -3,26 +3,27 @@
     <!-- Copyright 2021 Open Source Integrators
      License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
 
-        <!-- product product form view -->
-        <record id="view_std_price_product_product" model="ir.ui.view">
-            <field name="name">view.std.price.product.product</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view" />
-            <field name="arch" type="xml">
-                    <field name="company_id" position="before">
-                        <field name="std_cost_update_date" readonly="1" />
-            		</field>
+    <!-- product product form view -->
+    <record id="view_std_price_product_product" model="ir.ui.view">
+        <field name="name">view.std.price.product.product</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view" />
+        <field name="arch" type="xml">
+            <field name="company_id" position="before">
+                <field name="std_cost_update_date" readonly="1" />
             </field>
-        </record>
+        </field>
+    </record>
 
-        <record id="view_std_price_product_template" model="ir.ui.view">
-            <field name="name">view.std.price.product.template</field>
-            <field name="model">product.template</field>
-            <field name="inherit_id" ref="product.product_template_only_form_view" />
-            <field name="arch" type="xml">
-                    <field name="company_id" position="before">
-                        <field name="std_cost_update_date" readonly="1" />
-            		</field>
+    <record id="view_std_price_product_template" model="ir.ui.view">
+        <field name="name">view.std.price.product.template</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view" />
+        <field name="arch" type="xml">
+            <field name="company_id" position="before">
+                <field name="std_cost_update_date" readonly="1" />
             </field>
-        </record>
+        </field>
+    </record>
+
 </odoo>

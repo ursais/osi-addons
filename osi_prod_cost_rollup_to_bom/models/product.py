@@ -47,10 +47,6 @@ class ProductProduct(models.Model):
             )
 
             for product in self:
-                account_id = (
-                    product.property_account_expense_id.id
-                    or product.categ_id.property_account_expense_categ_id.id
-                )
                 if product.cost_method == "standard":
 
                     if product.product_tmpl_id.product_variant_count == 1:
@@ -130,11 +126,6 @@ class ProductProduct(models.Model):
                     )
                     * line.product_qty
                 )
-                account_id = (
-                    line.product_id.property_account_expense_id.id
-                    or line.product_id.categ_id.property_account_expense_categ_id.id
-                )
-
                 if line.product_id.product_tmpl_id.product_variant_count == 1:
                     if not float_is_zero(
                         child_total - line.product_id.standard_price,
