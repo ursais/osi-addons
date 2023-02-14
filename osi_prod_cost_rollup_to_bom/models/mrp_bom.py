@@ -1,9 +1,10 @@
 # Copyright (C) 2021, Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 
-from odoo import fields, models, api, _
-from datetime import datetime
 import logging
+from datetime import datetime
+
+from odoo import _, api, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -25,14 +26,13 @@ class MrpBom(models.Model):
         self.ensure_one()
         for line in self.bom_line_ids:
             if line.child_bom_id:
-                result = \
-                    line.child_bom_id._update_bom(self.std_cost_update_date)
+                result = line.child_bom_id._update_bom(self.std_cost_update_date)
                 if result:
                     return True
             elif (
                 not line.product_id.std_cost_update_date
                 or not self.std_cost_update_date
-                or line.product_id.std_cost_update_date >self.std_cost_update_date
+                or line.product_id.std_cost_update_date > self.std_cost_update_date
                 or line.product_id.write_date > self.std_cost_update_date
                 or line.product_id.product_tmpl_id.write_date
                 > self.std_cost_update_date
@@ -51,7 +51,7 @@ class MrpBom(models.Model):
             current_time = datetime.now()
 
             bom_ids = self.sudo().search(
-            [("product_tmpl_id.categ_id.property_cost_method", "=", "standard")]
+                [("product_tmpl_id.categ_id.property_cost_method", "=", "standard")]
             )
 
             for bom in bom_ids:
@@ -59,13 +59,10 @@ class MrpBom(models.Model):
 
                 if (
                     bom.product_tmpl_id.categ_id.property_cost_method
-                    and
-                    bom.product_tmpl_id.categ_id.property_cost_method
-                    == "standard"
+                    and bom.product_tmpl_id.categ_id.property_cost_method == "standard"
                 ):
                     # Get all product variants for BoM product template
-                    product_variants = \
-                        self.get_product_variants(bom.product_tmpl_id)
+                    product_variants = self.get_product_variants(bom.product_tmpl_id)
                     # update only if necessary
                     if bom._update_bom(bom.std_cost_update_date):
                         product_variants.action_bom_cost()
@@ -73,16 +70,13 @@ class MrpBom(models.Model):
             _logger.info("BOM Cost Rollup Process Completed")
 
             product_list = {}
-            bom_ids = self.sudo().search(
-                [("std_cost_update_date", ">=", current_time)])
+            bom_ids = self.sudo().search([("std_cost_update_date", ">=", current_time)])
             if bom_ids:
                 _logger.info("BOM Cost Rollup Email Process Started")
                 for bom in bom_ids:
-                    product_variants = \
-                         self.get_product_variants(bom.product_tmpl_id)
+                    product_variants = self.get_product_variants(bom.product_tmpl_id)
                     for variant in product_variants:
-                        product_list[variant.default_code] \
-                            = variant.standard_price
+                        product_list[variant.default_code] = variant.standard_price
 
                 # Log if no user email to notify
                 if not self.env.user.company_id.bom_cost_email:
@@ -90,12 +84,13 @@ class MrpBom(models.Model):
                         "Exception while executing BoM Cost Rollup: \
                         Please configure email to notify from Company."
                     )
-                    pass
 
                 # Final step to notify
                 # send email notification about completion
-                subject = _("Event Scheduler Notification for event:\
-                     BoM Cost Rollup")
+                subject = _(
+                    "Event Scheduler Notification for event:\
+                     BoM Cost Rollup"
+                )
                 body = _(
                     """Event Scheduler for BoM Cost Rollup was completed:
                                             - Date: %s
@@ -110,7 +105,7 @@ class MrpBom(models.Model):
                     msg = "Product %s Standard Cost: %8.2f\n" % (key, value)
                     body += msg
 
-                email_to = list(set([self.env.user.company_id.bom_cost_email]))
+                email_to = list({self.env.user.company_id.bom_cost_email})
 
                 email = self.env["ir.mail_server"].build_email(
                     email_from=self.env.user.partner_id.email,
@@ -124,8 +119,10 @@ class MrpBom(models.Model):
                 _logger.info("No changes to BOM Cost Rollup. No Email.")
 
         except Exception as e:
-            _logger.error("Exception while executing BoM Cost Rollup: \
-                 %s.", str(e))
-            pass
+            _logger.error(
+                "Exception while executing BoM Cost Rollup: \
+                 %s.",
+                str(e),
+            )
 
         return True

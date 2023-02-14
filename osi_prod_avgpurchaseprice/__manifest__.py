@@ -8,7 +8,7 @@
     "author": "Open Source Integrators",
     "category": "Product",
     "maintainer": "Open Source Integrators",
-    "website": "http://www.opensourceintegrators.com",
+    "website": "https://github.com/ursais/osi-addons",
     "depends": ["product", "purchase", "stock_account"],
     "data": ["views/product_view.xml"],
     "qweb": [],

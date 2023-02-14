@@ -1,10 +1,11 @@
 # Copyright (C) 2018 - 2021, Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+from datetime import datetime
+
 import pytz
 
 from odoo import fields, models
-from datetime import datetime
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT
 
 
@@ -128,8 +129,7 @@ class ProductProduct(models.Model):
                 )
 
             else:
-                avg_price = incoming_qty \
-                    and incoming_price_qty / incoming_qty or 0
+                avg_price = incoming_qty and incoming_price_qty / incoming_qty or 0
         return avg_price
 
     # Get average purchase price of the given product
@@ -320,8 +320,7 @@ class ProductTemplate(models.Model):
                         ) / (incoming_qty + returns_qty)
 
                 else:
-                    product_template.avg_price = \
-                         incoming_price_qty / incoming_qty
+                    product_template.avg_price = incoming_price_qty / incoming_qty
 
     standard_price = fields.Float(
         compute="_compute_standard_price",
@@ -335,8 +334,7 @@ class ProductTemplate(models.Model):
         "pricelists. Expressed in the default uom the product.",
     )
     avg_price = fields.Float(
-        compute="_compute_avg_price",
-        string="Avg Price", digits=("Product Cost")
+        compute="_compute_avg_price", string="Avg Price", digits=("Product Cost")
     )
     reset_date = fields.Date(string="Reset Date", copy=False)
     calculate_from_date = fields.Date(string="Calculate From", copy=False)
