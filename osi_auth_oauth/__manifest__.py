@@ -9,6 +9,7 @@
     "category": "Tools",
     "author": "Open Source Integrators",
     "maintainer": "Open Source Integrators",
+    "website": "https://github.com/ursais/osi-addons",
     "depends": ["base", "web", "auth_signup", "auth_oauth"],
     "data": [],
 }
