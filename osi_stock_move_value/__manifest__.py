@@ -6,6 +6,7 @@
     "version": "16.0.1.0.0",
     "author": "Open Source Integrators",
     "category": "Stock",
+    "summary": "Compute Stock Move Value",
     "maintainer": "Open Source Integrators",
     "website": "https://github.com/ursais/osi-addons",
     "depends": ["stock", "stock_account"],
