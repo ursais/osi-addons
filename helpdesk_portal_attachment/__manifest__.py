@@ -13,13 +13,13 @@
     "depends": [
         "helpdesk",
     ],
-    'assets': {
-        'web.assets_frontend': [
-            'helpdesk_portal_attachment/static/src/js/portal_chatter.js'
-        ],
-        'web.assets_qweb': [
-            'helpdesk_portal_attachment/static/src/xml/portal_chatter.xml',
-        ],
-    },
+    # 'assets': {
+    #     'web.assets_frontend': [
+    #         'helpdesk_portal_attachment/static/src/js/portal_chatter.js'
+    #     ],
+    #     'web.assets_qweb': [
+    #         'helpdesk_portal_attachment/static/src/xml/portal_chatter.xml',
+    #     ],
+    # },
     "installable": True,
 }
