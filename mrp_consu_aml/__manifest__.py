@@ -5,7 +5,7 @@
 {
     "name": "Manufacturing Consumable Accounting",
     "summary": """This module will add the costing of consumable
-        products onto the corresponding journal entry""",
+        products onto the corresponding journal entry.""",
     "license": "AGPL-3",
     "version": "16.0.1.0.0",
     "category": "Manufacturing",
