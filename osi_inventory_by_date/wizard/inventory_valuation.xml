@@ -39,9 +39,9 @@
                         </group>
                     </group>
                         <field
-                        name="filter_product_categ_ids"
-                        placeholder="All Categories"
-                    >
+                    name="filter_product_categ_ids"
+                    placeholder="All Categories"
+                >
                             <tree>
                                 <field name="name" />
                             </tree>
@@ -61,27 +61,17 @@
                         class="oe_highlight"
                     />
                         or
-                        <button
-                        string="Cancel"
-                        class="oe_link"
-                        special="cancel"
-                    />
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </footer>
                 </form>
             </field>
         </record>
 
-        <record
-        model="ir.actions.act_window"
-        id="action_inventory_valuation_report"
-    >
+        <record model="ir.actions.act_window" id="action_inventory_valuation_report">
             <field name="name">Inventory Valuation by Location and Date</field>
             <field name="res_model">inventory.valuation.ondate.report</field>
             <field name="view_mode">tree,form</field>
-            <field
-            name="view_id"
-            ref="view_inventory_valuation_ondate_report"
-        />
+            <field name="view_id" ref="view_inventory_valuation_ondate_report" />
             <field name="target">new</field>
         </record>
 

@@ -111,32 +111,16 @@
                                     t-as="line"
                                 >
                                         <tr class="border-black">
-                                            <td
-                                            class="text-left"
-                                            style="color:#9D5389"
-                                        >
-                                                <span
-                                                t-esc="line['location']"
-                                            />
+                                            <td class="text-left" style="color:#9D5389">
+                                                <span t-esc="line['location']" />
                                             </td>
-                                            <td
-                                            class="text-left"
-                                            style="color:#9D5389"
-                                        >
-                                                <span
-                                                t-esc="line['category']"
-                                            />
+                                            <td class="text-left" style="color:#9D5389">
+                                                <span t-esc="line['category']" />
                                             </td>
-                                            <td
-                                            class="text-left"
-                                            style="color:#9D5389"
-                                        >
+                                            <td class="text-left" style="color:#9D5389">
                                                 <span t-esc="line['account']" />
                                             </td>
-                                            <td
-                                            class="text-left"
-                                            style="color:#9D5389"
-                                        >
+                                            <td class="text-left" style="color:#9D5389">
                                                 <span t-esc="line['product']" />
                                             </td>
                                             <td

@@ -119,7 +119,6 @@ class InventoryValuationCategory(models.AbstractModel):
         View to get inventory value as of a date from the stock moves
         """
         # find all warehouses and get data for that product
-        whr_qty = ""
         warehouse_ids = data["form"] and data["form"].get("warehouse_ids", []) or []
         if not warehouse_ids:
             warehouse_ids = self.find_warehouses(company_id)
@@ -189,7 +188,7 @@ class InventoryValuationCategory(models.AbstractModel):
                     WHERE  m.date > %s AND m.date < %s AND
                         (m.location_id in %s) AND (m.location_dest_id in %s) AND
                         m.state='done' AND pp.active=True AND
-                        pt.type = 'product' AND l.usage = 'internal' AND 
+                        pt.type = 'product' AND l.usage = 'internal' AND
                         (acc2.company_id = m.company_id or acc1.company_id = m.company_id)
                     GROUP BY pp.id, l.complete_name, pc.name, pt.name,
                         acc1.code, acc2.code, pp.default_code, m.date,
@@ -234,7 +233,7 @@ class InventoryValuationCategory(models.AbstractModel):
                     WHERE  m.date > %s AND m.date < %s AND (m.location_id in %s) AND
                         (m.location_dest_id not in %s) AND m.state='done' AND
                         pp.active=True AND pt.type = 'product' AND
-                         l.usage = 'internal' AND 
+                         l.usage = 'internal' AND
                          (acc2.company_id = m.company_id or acc1.company_id = m.company_id)
                     GROUP BY pp.id, l.complete_name, pc.name, pt.name,
                         acc1.code, acc2.code, pp.default_code, m.date,
@@ -281,7 +280,7 @@ class InventoryValuationCategory(models.AbstractModel):
                         (m.location_dest_id in %s) AND
                         (m.location_id not in %s) AND m.state='done' AND
                         pp.active=True AND pt.type = 'product' AND
-                        l.usage = 'internal' AND 
+                        l.usage = 'internal' AND
                         (acc2.company_id = m.company_id or acc1.company_id = m.company_id)
                     GROUP BY pp.id, l.complete_name, pc.name, pt.name,
                     acc1.code, acc2.code, pp.default_code, m.date, uom.factor,
@@ -327,7 +326,7 @@ class InventoryValuationCategory(models.AbstractModel):
                     WHERE  m.date > %s AND m.date < %s AND
                         (m.location_dest_id in %s) AND (m.location_id in %s) AND
                         m.state='done' AND pp.active=True AND
-                        pt.type = 'product' AND l.usage = 'internal' AND 
+                        pt.type = 'product' AND l.usage = 'internal' AND
                         (acc2.company_id = m.company_id or acc1.company_id = m.company_id)
                     GROUP BY pp.id, l.complete_name, pc.name,pt.name,
                        acc1.code, acc2.code, pp.default_code, m.date,
