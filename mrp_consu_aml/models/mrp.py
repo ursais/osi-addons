@@ -10,37 +10,8 @@ from odoo.exceptions import UserError
 class MrpProduction(models.Model):
     _inherit = "mrp.production"
 
-    def run_consu_aml(self):
-        pc_array = self.env[
-            "report.mrp_account_enterprise.mrp_cost_structure"
-        ].get_lines(self)
-        if self._context.get("from_unbuild"):
-            je = self.env["account.move"].search(
-                [
-                    ("ref", "ilike", self._context.get("unbuild_name")),
-                    ("state", "=", "posted"),
-                ],
-                limit=1,
-                order="id desc",
-            )
-            move_line_ids = je.mapped("line_ids")
-        else:
-            je = self.env["account.move"].search(
-                [("ref", "ilike", self.name), ("state", "=", "posted")],
-                limit=1,
-                order="id",
-            )
-            move_line_ids = je.mapped("line_ids").filtered(
-                lambda x: x["osi_is_consu"]
-            )
-        if not je:
-            return False
-        # sum(x["total_cost"] for x in pc_array)
+    def get_account_move_lines(self, pc_array, move_line_ids, je):
         to_make = []
-        if len(pc_array) >= 1:
-            pc_array = pc_array[0]
-        else:
-            return False
         for pc in pc_array["raw_material_moves"]:
             product = pc["product_id"]
             if product["type"] == "consu":
@@ -137,31 +108,61 @@ class MrpProduction(models.Model):
                         }
                     )
                 else:
-                    out_line = move_line_ids.filtered(
-                        lambda x: x["debit"] and x["product_id"]["id"] == product["id"]
-                    )
-                    if len(out_line):
-                        out_line.write({"debit": cost / len(out_line)})
-                    else:
-                        if self.production_location_id.valuation_out_account_id:
-                            account = (
-                                self.production_location_id.valuation_out_account_id.id
-                            )
-                        else:
-                            account = (
-                                product.categ_id.property_stock_account_output_categ_id.id
-                            )
-                        to_make.append(
-                            {
-                                "account_id": account,
-                                "debit": cost,
-                                "product_id": product["id"],
-                                "move_id": je.id,
-                                "osi_is_consu": True,
-                                "company_id": self.company_id.id,
-                                "name": self.name + " - " + product["name"],
-                            }
-                        )
+                    self.get_from_unbuild(product, je, to_make, move_line_ids, cost)
+        return to_make
+
+    def get_from_unbuild(self, product, je, to_make, move_line_ids, cost):
+        out_line = move_line_ids.filtered(
+            lambda x: x["debit"] and x["product_id"]["id"] == product["id"]
+        )
+        if len(out_line):
+            out_line.write({"debit": cost / len(out_line)})
+        else:
+            if self.production_location_id.valuation_out_account_id:
+                account = self.production_location_id.valuation_out_account_id.id
+            else:
+                account = product.categ_id.property_stock_account_output_categ_id.id
+            to_make.append(
+                {
+                    "account_id": account,
+                    "debit": cost,
+                    "product_id": product["id"],
+                    "move_id": je.id,
+                    "osi_is_consu": True,
+                    "company_id": self.company_id.id,
+                    "name": self.name + " - " + product["name"],
+                }
+            )
+
+    def run_consu_aml(self):
+        pc_array = self.env[
+            "report.mrp_account_enterprise.mrp_cost_structure"
+        ].get_lines(self)
+        if self._context.get("from_unbuild"):
+            je = self.env["account.move"].search(
+                [
+                    ("ref", "ilike", self._context.get("unbuild_name")),
+                    ("state", "=", "posted"),
+                ],
+                limit=1,
+                order="id desc",
+            )
+            move_line_ids = je.mapped("line_ids")
+        else:
+            je = self.env["account.move"].search(
+                [("ref", "ilike", self.name), ("state", "=", "posted")],
+                limit=1,
+                order="id",
+            )
+            move_line_ids = je.mapped("line_ids").filtered(lambda x: x["osi_is_consu"])
+        if not je:
+            return False
+        # sum(x["total_cost"] for x in pc_array)
+        if len(pc_array) >= 1:
+            pc_array = pc_array[0]
+        else:
+            return False
+        to_make = self.get_account_move_lines(pc_array, move_line_ids, je)
         je.button_draft()
         self.env["account.move.line"].with_context(check_move_validity=False).create(
             to_make

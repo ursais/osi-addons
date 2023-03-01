@@ -4,13 +4,14 @@
 
 {
     "name": "Manufacturing Consumable Accounting",
-    "summary": "This module will add the costing of consumable products onto the corresponding journal entry",
+    "summary": """This module will add the costing of consumable
+        products onto the corresponding journal entry""",
     "license": "AGPL-3",
     "version": "16.0.1.0.0",
     "category": "Manufacturing",
     "author": "Open Source Integrators",
     "website": "https://github.com/ursais/osi-addons",
-    "depends": ["mrp"],
+    "depends": ["mrp", "account"],
     "data": [],
     "development_status": "Alpha",
     "maintainers": ["ckolobow"],
