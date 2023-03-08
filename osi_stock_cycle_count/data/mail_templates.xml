@@ -1,0 +1,20 @@
+<odoo noupdate="1">
+
+    <record id="stock_adjustment_notify_template" model="mail.template">
+            <field name="name">Inventory Adjustment: Notification</field>
+            <field name="model_id" ref="stock_inventory.model_stock_inventory"/>
+            <field name="subject">Inventory Adjustment: {{ctx['inv_name']}} scheduled</field>
+            <field name="email_from">{{ (object.company_id.email_formatted or '') }}</field>
+            <field name="body_html" type="html">
+<div>
+    Dear <t t-out="ctx['name'] or ''"/>,<br/>
+    Inventory Adjustment <t t-out="ctx['inv_name']"/> is scheduled on <t t-out="ctx['sch_date']"/>
+    <br/><br/>
+    Thank you
+</div>
+            </field>
+            <field name="lang">ctx['lang']</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+</odoo>
