@@ -1,0 +1,85 @@
+<odoo>
+
+    <record id="sale_order_credit_view" model="ir.ui.view">
+        <field name="name">sale.order.credit.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <group name="sales_person" position="after">
+                <group name="credit" string="Credit Holds">
+                    <field name="sales_hold" />
+                    <field name="credit_hold" />
+                    <field name="ship_hold" readonly="1" />
+                    <field
+                        name="credit_override"
+                        groups="osi_partner_credit_limit.group_credit_hold"
+                    />
+                </group>
+            </group>
+            <xpath expr="//sheet/div" position="before">
+                <widget
+                    name="web_ribbon"
+                    title="Sales Hold"
+                    bg_color="bg-danger"
+                    attrs="{'invisible': [('sales_hold', '=', False)]}"
+                />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_order_credit_view_security" model="ir.ui.view">
+        <field name="name">sale.order.credit.view.security</field>
+        <field name="model">sale.order</field>
+        <field
+            name="inherit_id"
+            ref="osi_partner_credit_limit.sale_order_credit_view"
+        />
+        <field name="mode">primary</field>
+        <field
+            name="groups_id"
+            eval="[(6, 0, [ref('osi_partner_credit_limit.group_credit_hold') ])]"
+        />
+        <field name="arch" type="xml">
+            <field name='ship_hold' position="attributes">
+                <attribute name="attrs">{'readonly': [
+                    ('state', 'not in', ('draft', 'sent', 'sale'))]}</attribute>
+            </field>
+            <field name='credit_override' position="attributes">
+                <attribute
+                    name="attrs"
+                >{'readonly': [('state', 'in', ('cancel', 'done'))]}</attribute>
+            </field>
+        </field>
+    </record>
+
+    <!-- Quotation Tree View with Hold fields -->
+    <record id="view_quotation_tree_credit_hold" model="ir.ui.view">
+        <field name="name">sale.order.credit.hold.tree</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree" />
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="sales_hold" string="Cust. Sales Hold" />
+                <field name="credit_hold" string="Cust. Credit Hold" />
+                <field name="ship_hold" string="Order Sales Hold" />
+                <field name="credit_override" string="Hold Override" />
+            </field>
+        </field>
+    </record>
+
+    <!-- Sale Orders tree view with Warehouse field -->
+    <record id="view_order_tree_credit_hold" model="ir.ui.view">
+        <field name="name">sale.order.credit.holdtree</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree" />
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="credit_hold" string="Cust. Credit Hold" />
+                <field name="ship_hold" string="Order Ship Hold" />
+                <field name="credit_override" string="Hold Override" />
+            </field>
+        </field>
+    </record>
+
+</odoo>
