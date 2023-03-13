@@ -12,4 +12,4 @@ class FSMMobileFeatureLine(models.Model):
     feature_id = fields.Many2one("fsm.mobile.feature.mapping", string="Feature Mapping")
     name = fields.Char(string="Feature Name")
     group_ids = fields.Many2many("res.groups", string="Groups")
-    code = fields.Char(string="Code")
+    code = fields.Char()

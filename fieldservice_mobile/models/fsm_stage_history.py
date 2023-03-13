@@ -11,10 +11,6 @@ class FsmStageHistory(models.Model):
 
     order_id = fields.Many2one("fsm.order", string="FSM Order")
     start_datetime = fields.Datetime("Start Date&time")
-    stage_id = fields.Many2one("fsm.stage", string="Stage")
-    duration = fields.Float(
-        string="Duration",
-    )
-    total_duration = fields.Float(
-        string="Total Duration",
-    )
+    stage_id = fields.Many2one("fsm.stage")
+    duration = fields.Float()
+    total_duration = fields.Float()
