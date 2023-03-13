@@ -25,7 +25,6 @@ class FSMMobileFeatureMapping(models.Model):
     )
     state = fields.Selection(
         [("draft", "Draft"), ("active", "Active")],
-        string="State",
         readonly=True,
         default="draft",
     )
