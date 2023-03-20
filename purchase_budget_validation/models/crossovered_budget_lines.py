@@ -16,6 +16,7 @@ class CrossoveredBudgetLines(models.Model):
 
     def _compute_committ_uncommitt_amount(self):
         purchase_line_obj = self.env["purchase.order.line"]
+        company_currency = self.company_id.currency_id
         for budget_line in self:
             commit_domain = [
                 ("date_order", ">=", budget_line.date_from),
@@ -40,15 +41,35 @@ class CrossoveredBudgetLines(models.Model):
             if budget_line.crossovered_budget_id.amount_include_tax:
                 budget_line.committed_amount = -sum(
                     [
-                        line.price_unit * (line.product_qty - line.qty_invoiced)
-                        + line.price_tax
+                        line.currency_id._convert(
+                            line.price_unit,
+                            company_currency,
+                            self.company_id,
+                            line.date_order,
+                            round=False,
+                        )
+                        * (line.product_qty - line.qty_invoiced)
+                        + line.currency_id._convert(
+                            line.price_tax,
+                            company_currency,
+                            self.company_id,
+                            line.date_order,
+                            round=False,
+                        )
                         for line in po_lines_commimt
                     ]
                 )
             else:
                 budget_line.committed_amount = -sum(
                     [
-                        line.price_unit * (line.product_qty - line.qty_invoiced)
+                        line.currency_id._convert(
+                            line.price_unit,
+                            company_currency,
+                            self.company_id,
+                            line.date_order,
+                            round=False,
+                        )
+                        * (line.product_qty - line.qty_invoiced)
                         for line in po_lines_commimt
                     ]
                 )
@@ -74,11 +95,36 @@ class CrossoveredBudgetLines(models.Model):
             po_lines_uncommit = purchase_line_obj.search(uncommit_domain)
             if budget_line.crossovered_budget_id.amount_include_tax:
                 budget_line.uncommitted_amount = -sum(
-                    [line.price_subtotal + line.price_tax for line in po_lines_uncommit]
+                    [
+                        line.currency_id._convert(
+                            line.price_subtotal,
+                            company_currency,
+                            self.company_id,
+                            line.date_order,
+                            round=False,
+                        )
+                        + line.currency_id._convert(
+                            line.price_tax,
+                            company_currency,
+                            self.company_id,
+                            line.date_order,
+                            round=False,
+                        )
+                        for line in po_lines_uncommit
+                    ]
                 )
             else:
                 budget_line.uncommitted_amount = -sum(
-                    [line.price_subtotal for line in po_lines_uncommit]
+                    [
+                        line.currency_id._convert(
+                            line.price_subtotal,
+                            company_currency,
+                            self.company_id,
+                            line.date_order,
+                            round=False,
+                        )
+                        for line in po_lines_uncommit
+                    ]
                 )
 
     def _compute_over_budget(self):
