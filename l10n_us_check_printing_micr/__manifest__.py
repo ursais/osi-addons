@@ -3,7 +3,7 @@
 
 {
     "name": "US Check Printing with MICR Font",
-    "version": "14.0.1.0.0",
+    "version": "16.0.1.0.0",
     "license": "AGPL-3",
     "summary": "US Check Printing With MICR Font",
     "author": "Open Source Integrators",
@@ -18,5 +18,14 @@
         "views/res_partner_bank.xml",
     ],
     "installable": True,
-    "maintainers": "[opensourceintegrators]",
+    "maintainers": ["opensourceintegrators"],
+    "assets": {
+        "web.report_assets_common": [
+            "/l10n_us_check_printing_micr/static/src/scss/fonts.scss",
+            "/l10n_us_check_printing/static/src/scss/report_check_commons.scss",
+            "/l10n_us_check_printing_micr/static/src/scss/report_check_bottom.scss",
+            "/l10n_us_check_printing_micr/static/src/scss/report_check_middle.scss",
+            "/l10n_us_check_printing_micr/static/src/scss/report_check_top.scss",
+        ],
+    },
 }
