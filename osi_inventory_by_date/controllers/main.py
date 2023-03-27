@@ -9,7 +9,7 @@ import base64
 from odoo import http
 from odoo.http import request
 
-from odoo.addons.web.controllers.main import content_disposition
+from odoo.http import content_disposition
 
 
 class Binary(http.Controller):
