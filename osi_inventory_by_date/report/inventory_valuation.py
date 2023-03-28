@@ -171,17 +171,11 @@ class InventoryValuationCategory(models.AbstractModel):
                         concat('product.category,',pc.id) and
                         irp1.name='property_stock_valuation_account_id')
                     LEFT JOIN account_account acc1 on (acc1.id =
-                        substr(irp1.value_reference, strpos(
-                        irp1.value_reference, ',') + 1,
-                        length(irp1.value_reference) - strpos(
-                        irp1.value_reference,','))::int)
+                        substr(irp1.value_reference, strpos(irp1.value_reference, ',') + 1)::int)
                     LEFT JOIN ir_property irp2 on (irp2.res_id is null and
                         irp2.name='property_stock_valuation_account_id')
                     LEFT JOIN account_account acc2 on (acc2.id =
-                        substr(irp2.value_reference,strpos(
-                        irp2.value_reference, ',') + 1,
-                        length(irp2.value_reference) - strpos(
-                        irp2.value_reference,','))::int)
+                        substr(irp2.value_reference,strpos(irp2.value_reference, ',') + 1)::int)
                     LEFT JOIN ir_property cost on (cost.res_id =
                         concat('product.product,', pp.id) AND
                         cost.name='standard_price')
@@ -217,16 +211,11 @@ class InventoryValuationCategory(models.AbstractModel):
                         concat('product.category,', pc.id) AND
                         irp1.name='property_stock_valuation_account_id')
                     LEFT JOIN account_account acc1 ON (acc1.id = substr(
-                        irp1.value_reference, strpos(irp1.value_reference, ',
-                        ') + 1, length(irp1.value_reference) - strpos(
-                        irp1.value_reference, ','))::int)
+                        irp1.value_reference, strpos(irp1.value_reference, ',') + 1)::int)
                     LEFT JOIN ir_property irp2 on (irp2.res_id is null AND
                         irp2.name='property_stock_valuation_account_id')
                     LEFT JOIN account_account acc2 on (acc2.id =
-                        substr(irp2.value_reference, strpos(
-                        irp2.value_reference, ',') + 1, length(
-                        irp2.value_reference) - strpos(irp2.value_reference,',
-                        '))::int)
+                        substr(irp2.value_reference, strpos(irp2.value_reference, ',') + 1)::int)
                     LEFT JOIN ir_property cost on (cost.res_id =
                         concat('product.product,', pp.id) AND
                         cost.name='standard_price')
@@ -262,17 +251,11 @@ class InventoryValuationCategory(models.AbstractModel):
                         concat('product.category,',pc.id) AND
                         irp1.name='property_stock_valuation_account_id')
                     LEFT JOIN account_account acc1 on (acc1.id =
-                        substr(irp1.value_reference,strpos(
-                        irp1.value_reference, ',') + 1, length(
-                        irp1.value_reference) - strpos(irp1.value_reference, ',
-                        '))::int)
+                        substr(irp1.value_reference,strpos(irp1.value_reference, ',') + 1)::int)
                     LEFT JOIN ir_property irp2 on (irp2.res_id is null AND
                         irp2.name='property_stock_valuation_account_id')
                     LEFT JOIN account_account acc2 on (acc2.id =
-                        substr(irp2.value_reference, strpos(
-                        irp2.value_reference, ',') + 1, length(
-                        irp2.value_reference) - strpos(irp2.value_reference,',
-                        '))::int)
+                        substr(irp2.value_reference, strpos(irp2.value_reference, ',') + 1)::int)
                     LEFT JOIN ir_property cost on (cost.res_id =
                         concat('product.product,', pp.id) AND
                         cost.name='standard_price')
@@ -309,17 +292,11 @@ class InventoryValuationCategory(models.AbstractModel):
                         concat('product.category,',pc.id) AND
                         irp1.name='property_stock_valuation_account_id')
                     LEFT JOIN account_account acc1 on (acc1.id =
-                        substr(irp1.value_reference, strpos(
-                        irp1.value_reference, ',') + 1, length(
-                        irp1.value_reference) - strpos(irp1.value_reference,',
-                        '))::int)
+                        substr(irp1.value_reference, strpos(irp1.value_reference, ',') + 1)::int)
                     LEFT JOIN ir_property irp2 on (irp2.res_id is null AND
                         irp2.name='property_stock_valuation_account_id')
                     LEFT JOIN account_account acc2 on (acc2.id =
-                        substr(irp2.value_reference, strpos(
-                        irp2.value_reference, ',') + 1, length(
-                        irp2.value_reference) - strpos(irp2.value_reference,',
-                        '))::int)
+                        substr(irp2.value_reference, strpos(irp2.value_reference, ',') + 1)::int)
                     LEFT JOIN ir_property cost on (cost.res_id =
                         concat('product.product,', pp.id) AND
                         cost.name='standard_price')

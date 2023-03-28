@@ -354,7 +354,7 @@ class InventoryValuationDateReport(models.TransientModel, InventoryValuationCate
         export_obj = self.env["inventory.valuation.success.box"]
         res_id = export_obj.create(
             {
-                "file": base64.encodestring(stream.getvalue()),
+                "file": base64.encodebytes(stream.getvalue()),
                 "fname": "Inventory Valuation by Location and Date Report.xls",
             }
         )
