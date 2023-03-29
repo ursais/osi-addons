@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <record id="view_partner_default_expense_account_form" model="ir.ui.view">
+        <field name="name">partner.default.expense.account.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form" />
+        <field name="arch" type="xml">
+            <field name="property_account_payable_id" position="after">
+                <field name="use_default_expense_account" />
+                <field
+                    name="default_expense_account_id"
+                    attrs="{'invisible': [('use_default_expense_account', '=', False)]}"
+                />
+            </field>
+        </field>
+    </record>
+
+</odoo>
