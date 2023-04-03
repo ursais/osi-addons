@@ -14,7 +14,8 @@
         "website_event",
     ],
     "data": [
-        'views/event_ticket_views.xml'
+        'views/event_ticket_views.xml',
+        'views/event_template.xml',
     ],
     "installable": True,
 }

@@ -17,7 +17,7 @@
     <record id="event_event_ticket_view_form_from_event_inherit" model="ir.ui.view">
         <field name="name">event_event_ticket_view_form_from_event_inherit</field>
         <field name="model">event.event.ticket</field>
-        <field name="inherit_id" ref="event.event_event_ticket_form_view"/>
+        <field name="inherit_id" ref="event.event_event_ticket_view_form_from_event"/>
         <field name="arch" type="xml">
 
             <xpath expr="//sheet" position="inside">

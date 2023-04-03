@@ -1,0 +1,10 @@
+<odoo>
+
+    <template id="registration_template_inherit" inherit_id="website_event.registration_template">
+        <xpath expr="//form[@id='registration_form']/div[@id='o_wevent_tickets']//div[@id='o_wevent_tickets_collapse']/div[hasclass('o_wevent_ticket_selector')]/div[2]" position="attributes">
+            <attribute name="t-if">ticket.published</attribute>
+        </xpath>
+    </template>
+
+
+</odoo>
