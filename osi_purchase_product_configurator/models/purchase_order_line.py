@@ -14,10 +14,12 @@ class PurchaseOrderLine(models.Model):
 
     @api.onchange('product_id')
     def onchange_product_id(self):
-        qty = self.product_qty or 1
-        res = super(PurchaseOrderLine, self).onchange_product_id()
-        if self._context.get('default_product_uom_qty'):
-            self.product_qty = self._context.get('default_product_uom_qty')
-        else:
-            self.product_qty = qty
-        return res
+        for po_line in self:
+            if not po_line.display_type in ['line_section', 'line_note']:
+                qty = self.product_qty or 1
+                res = super(PurchaseOrderLine, self).onchange_product_id()
+                if self._context.get('default_product_uom_qty'):
+                    self.product_qty = self._context.get('default_product_uom_qty')
+                else:
+                    self.product_qty = qty
+                return res
