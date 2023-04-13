@@ -360,9 +360,7 @@ class InventoryValuationDateReport(models.TransientModel, InventoryValuationCate
         )
         return {
             "type": "ir.actions.act_url",
-            "url": "/web/binary/download_document?model=inventory.valuation.success.box\
-            &field=file&record_id=%s\
-            &filename=Inventory Valuation by Location and Date Report.xls"
+            "url": "/web/binary/download_document?model=inventory.valuation.success.box&field=file&record_id=%s&filename=Inventory Valuation by Location and Date Report.xls"
             % (res_id.id),
             "target": "new",
         }
