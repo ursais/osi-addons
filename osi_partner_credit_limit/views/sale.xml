@@ -17,13 +17,12 @@
                     />
                 </group>
             </group>
-            <xpath expr="//sheet/div" position="before">
-                <widget
-                    name="web_ribbon"
-                    title="Sales Hold"
-                    bg_color="bg-danger"
-                    attrs="{'invisible': [('sales_hold', '=', False)]}"
-                />
+            <xpath expr="/form/sheet" position="before">
+                <div
+                 class="alert alert-warning mb-0" role="alert"
+                 attrs="{'invisible': [('osi_partner_credit_warning', '=', '')]}">
+                <field name="osi_partner_credit_warning"/>
+            </div>
             </xpath>
         </field>
     </record>

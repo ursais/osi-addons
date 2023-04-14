@@ -6,7 +6,7 @@
 Overview
 ========
 
-This module prevents users from shippings orders that would put customers
+This module prevents users from shipping orders that would put customers
 above their credit limit based on open invoices.
 
 It adds a new group that allows certain users to manage credit hold of the
@@ -14,6 +14,8 @@ customers.
 
 After this module is installed, credit limits will be verified for all
 customers.
+
+In Sale Orders, it shows the available credit for partners to use as banner when drafting new Sale Orders.
 
 Configuration
 =============
@@ -31,7 +33,7 @@ Usage
 
 * Credit Limit: Maximum allowed receivable balance for a customer.
 
-* Grace period: Time allowed for the customer to make payment after the term 
+* Grace period: Time allowed for the customer to make payment after the term
   has expired.
 
 * Credit Override: When set on sale order, allows shipment on the sale order
@@ -52,3 +54,4 @@ Contributors
 * Balaji Kannan <bkannan@opensourceintegrators.com>
 * Hardik Suthar <hsuthar@opensourceintegrators.com>
 * Chankya Soni <csoni@opensourceintegrators.com>
+* Sunny Patel <spatel@opensourceintegrators.com>
