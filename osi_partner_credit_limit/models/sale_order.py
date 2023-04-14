@@ -3,6 +3,7 @@
 
 from odoo import _, fields, models, api
 from odoo.exceptions import ValidationError
+from odoo.tools.misc import formatLang
 
 
 class SaleOrder(models.Model):
@@ -20,19 +21,21 @@ class SaleOrder(models.Model):
     )
 
     osi_partner_credit_warning = fields.Text(
-        compute='_compute_osi_partner_credit_warning')
+        compute='_compute_osi_partner_credit_warning', store=True)
 
-    @api.depends('partner_id',)
+    @api.depends('partner_id', 'state', 'partner_id.osi_credit_limit')
     def _compute_osi_partner_credit_warning(self):
         # Show the Warning banner with the credit available for user when drafting a new SO
         for order in self:
-            order.partner_credit_warning = ''
-            show_warning = order.state in ('draft', 'sent') and \
-                           order.partner_id.osi_credit_limit
+            order.osi_partner_credit_warning = ''
+            show_warning = False
+            if order.state in ('draft', 'sent') and \
+                order.partner_id and order.partner_id.osi_credit_limit:
+                show_warning = True
             if show_warning:
+                remaining_bal = order.partner_id.osi_credit_limit - order.partner_id.used_credit_limit_balance()
                 order.osi_partner_credit_warning = "{} has only {} credit available".format(
-                    order.partner_id.display_name,
-                    order.partner_id.osi_credit_limit - order.partner_id.used_credit_limit_balance())
+                    order.partner_id.display_name, formatLang(self.env, remaining_bal, currency_obj=self.currency_id))
 
     def action_confirm(self):
         self.partner_id.with_context(from_sale_order=True).check_limit(self)
