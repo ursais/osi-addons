@@ -12,7 +12,7 @@ class Partner(models.Model):
     sales_hold = fields.Boolean(
         help="If checked, new quotations cannot be confirmed",
     )
-    credit_limit = fields.Monetary()
+    osi_credit_limit = fields.Monetary("Credit Limit")
     grace_period = fields.Integer(
         help="Grace period added on top of the customer payment term (in days)",
     )
@@ -22,7 +22,7 @@ class Partner(models.Model):
 
     def write(self, vals):
         res = super(Partner, self).write(vals)
-        if "credit_limit" or "credit_hold" in vals:
+        if "osi_credit_limit" or "credit_hold" in vals:
             for partner in self:
                 order_ids = self.env["sale.order"].search(
                     [("partner_id", "=", partner.id)]
@@ -30,8 +30,8 @@ class Partner(models.Model):
                 # only if partner is on credit hold, set sale orders on ship hold immediately
                 ship_hold = partner.credit_hold
 
-                # check for credit_limit
-                if partner.credit_limit > 0 and order_ids:
+                # check for osi_credit_limit
+                if partner.osi_credit_limit > 0 and order_ids:
                     if not ship_hold and not self.with_context(
                         from_sale_order=False
                     ).check_limit(order_ids[0]):
@@ -41,9 +41,9 @@ class Partner(models.Model):
                 order_ids.write({"ship_hold": ship_hold})
         return res
 
-    def check_limit(self, sale_id):
-        partner_id = sale_id.partner_id
-        # Other orders for this partner
+    def used_credit_limit_balance(self, partner_id=None):
+        # Fetch total amount of credit used by partner from open SOs and Invoices
+        partner_id = partner_id or self
         order_ids = self.env["sale.order"].search(
             [
                 ("partner_id", "=", partner_id.id),
@@ -88,10 +88,11 @@ class Partner(models.Model):
                 )
         # All open sale orders + partner credit (AR balance) -
         # Open invoices (already included in partner credit)
-        if (
-            sale_id.partner_id.credit_limit
-            and (existing_invoice_balance + existing_order_balance)
-            > sale_id.partner_id.credit_limit
-        ):
+        return existing_order_balance + existing_invoice_balance
+
+    def check_limit(self, sale_id=None):
+        # This method will check if the Partner goes over the
+        partner_id = sale_id and sale_id.partner_id or self
+        if partner_id.osi_credit_limit and self.used_credit_limit_balance(partner_id) > partner_id.osi_credit_limit:
             return True
         return False

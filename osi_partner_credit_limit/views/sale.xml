@@ -17,13 +17,12 @@
                     />
                 </group>
             </group>
-            <xpath expr="//sheet/div" position="before">
-                <widget
-                    name="web_ribbon"
-                    title="Sales Hold"
-                    bg_color="bg-danger"
-                    attrs="{'invisible': [('sales_hold', '=', False)]}"
-                />
+            <xpath expr="/form/header" position="after">
+                <div
+                 class="alert alert-warning " role="alert"
+                 attrs="{'invisible': [('osi_partner_credit_warning', '=', '')]}">
+                <field name="osi_partner_credit_warning"/>
+            </div>
             </xpath>
         </field>
     </record>
@@ -60,10 +59,10 @@
         <field name="inherit_id" ref="sale.view_quotation_tree" />
         <field name="arch" type="xml">
             <field name="state" position="after">
-                <field name="sales_hold" string="Cust. Sales Hold" />
-                <field name="credit_hold" string="Cust. Credit Hold" />
-                <field name="ship_hold" string="Order Sales Hold" />
-                <field name="credit_override" string="Hold Override" />
+                <field name="sales_hold" string="Cust. Sales Hold" optional="hide"/>
+                <field name="credit_hold" string="Cust. Credit Hold" optional="hide"/>
+                <field name="ship_hold" string="Order Sales Hold" optional="hide"/>
+                <field name="credit_override" string="Hold Override" optional="hide"/>
             </field>
         </field>
     </record>
@@ -75,9 +74,9 @@
         <field name="inherit_id" ref="sale.view_order_tree" />
         <field name="arch" type="xml">
             <field name="state" position="after">
-                <field name="credit_hold" string="Cust. Credit Hold" />
-                <field name="ship_hold" string="Order Ship Hold" />
-                <field name="credit_override" string="Hold Override" />
+                <field name="credit_hold" string="Cust. Credit Hold" optional="hide"/>
+                <field name="ship_hold" string="Order Ship Hold" optional="hide"/>
+                <field name="credit_override" string="Hold Override" optional="hide"/>
             </field>
         </field>
     </record>
