@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record
+        id="action_view_account_move_reversal_payment"
+        model="ir.actions.act_window"
+    >
+        <field name="name">Reverse &amp; Void Payment</field>
+        <field name="res_model">account.move.reversal</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="account.view_account_move_reversal" />
+        <field name="target">new</field>
+    </record>
+    <record
+        id="advanced_check_void_account_move_reversal_form"
+        model="ir.ui.view"
+    >
+        <field name="name">account.move.reversal.form</field>
+        <field name="model">account.move.reversal</field>
+        <field name="inherit_id" ref="account.view_account_move_reversal" />
+        <field name="arch" type="xml">
+            <field name="date_mode" position="after">
+                <field name="void_reason" required="1" />
+            </field>
+        </field>
+    </record>
+</odoo>
