@@ -1,0 +1,30 @@
+<odoo>
+
+    <!-- Inherit Form View to Modify it -->
+    <record id="event_event_view_form_question_inherit" model="ir.ui.view">
+        <field name="name">event.event.view.form.question.inherit</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="website_event_questions.event_event_view_form" />
+        <field name="arch" type="xml">
+
+            <xpath
+                expr="//form//field[@name='answer_ids']/tree/field[@name='name']"
+                position="after"
+            >
+                <!-- Add your fields or attributes here -->
+                <field name="is_blocking" />
+            </xpath>
+
+            <xpath
+                expr="//field[@name='question_ids']/form/sheet/group"
+                position="after"
+            >
+                <group>
+                    <field name="description" />
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
