@@ -21,7 +21,7 @@ class SaleOrder(models.Model):
     )
 
     osi_partner_credit_warning = fields.Text(
-        compute='_compute_osi_partner_credit_warning', store=True)
+        compute='_compute_osi_partner_credit_warning', store=False, copy=False)
 
     @api.depends('partner_id', 'state', 'partner_id.osi_credit_limit')
     def _compute_osi_partner_credit_warning(self):
