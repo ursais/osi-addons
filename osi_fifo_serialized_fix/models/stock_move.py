@@ -37,7 +37,7 @@ class StockMove(models.Model):
                     final_layers.append(val)
                 final_layers = self.env["stock.valuation.layer"].create(final_layers)
                 move.write({"stock_valuation_layer_ids": [(6, 0, final_layers.ids)]})
-                ji_ids[0].move_id.button_draft()
+                ji_ids.mapped('move_id').button_draft()
                 ji_val = 0
                 for sv_id in move.stock_valuation_layer_ids:
                     if sv_id.product_id == ji_ids[0].product_id:
@@ -52,7 +52,7 @@ class StockMove(models.Model):
                         ji_id.with_context(check_move_validity=False).write(
                             {"debit": ji_val}
                         )
-                ji_ids[0].move_id.action_post()
+                ji_ids.mapped('move_id').action_post()
             elif len(svl_ids) == 1:
                 # Only 1 Valuation Layer, we can just change values
                 if len(move.stock_valuation_layer_ids.ids) > 1:
@@ -70,7 +70,7 @@ class StockMove(models.Model):
                         move.stock_valuation_layer_ids.quantity
                         * move.stock_valuation_layer_ids.unit_cost
                     )
-                ji_ids[0].move_id.button_draft()
+                ji_ids.mapped('move_id').button_draft()
                 # The Valuation Layer has been changed,
                 # now we have to edit the STJ Entry
                 for ji_id in ji_ids:
@@ -86,7 +86,7 @@ class StockMove(models.Model):
                         ji_id.with_context(check_move_validity=False).write(
                             {"debit": amount}
                         )
-                ji_ids[0].move_id.action_post()
+                ji_ids.mapped('move_id').action_post()
 
     def get_svl_ids(self, move):
         svl_ids = []
