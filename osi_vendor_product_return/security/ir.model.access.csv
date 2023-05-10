@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vendor_product_return,access_vendor_product_return,model_vendor_product_return,base.group_user,1,1,1,1
+access_vendor_product_return_line,access_vendor_product_return_line,model_vendor_product_return_line,base.group_user,1,1,1,1
+access_stock_pack_return_operation,access_stock_pack_return_operation,model_stock_pack_return_operation,base.group_user,1,1,1,1
+access_stock_pack_return_operation_line,access_stock_pack_return_operation_line,model_stock_pack_return_operation_line,base.group_user,1,1,1,1
+access_return_reason,access_return_reason,model_return_reason,base.group_user,1,1,1,1
