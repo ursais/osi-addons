@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record
+            id="view_account_journal_form_inherit_l10n_us_payment_nacha_ccd"
+            model="ir.ui.view"
+        >
+            <field
+                name="name"
+            >account.journal.form.inherit.l10n_us_payment_nacha_ccd</field>
+            <field name="model">account.journal</field>
+            <field name="priority">10</field>
+            <field
+                name="inherit_id"
+                ref="l10n_us_payment_nacha.view_account_journal_form_inherit_l10n_us_payment_nacha"
+            />
+            <field name="arch" type="xml">
+                <xpath
+                    expr="//page[@id='outbound_payment_settings']//group[@name='outgoing_payment']"
+                    position="inside"
+                >
+                    <group
+                        string="NACHA configuration"
+                        attrs="{'invisible': ['|', '!', ('selected_payment_method_codes', 'ilike', ',nacha,'), ('type', '!=', 'bank')]}"
+                    >
+                        <field name="nacha_immediate_destination" />
+                        <field name="nacha_destination" />
+                        <field name="nacha_immediate_origin" />
+                        <field name="nacha_company_identification" />
+                        <field name="nacha_origination_dfi_identification" />
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
