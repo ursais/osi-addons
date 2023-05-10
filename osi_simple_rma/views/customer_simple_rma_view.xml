@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Form view for Product Returns -->
+    <record id="view_product_return_form" model="ir.ui.view">
+        <field name="name">product.return.form</field>
+        <field name="model">customer.product.return</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button
+                        name="create_incoming_order"
+                        string="Confirm"
+                        type="object"
+                        class="btn-primary"
+                        states="draft"
+                    />
+                    <button
+                        string="Cancel"
+                        class="btn-default"
+                        special="cancel"
+                        states="draft"
+                    />
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,done"
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            class="oe_stat_button"
+                            name="action_picking_view"
+                            attrs="{'invisible': [('picking_count','&lt;=',0)]}"
+                            type="object"
+                            icon="fa-share-square-o"
+                            help="Receiving"
+                        >
+                            <field
+                                string="Receiving"
+                                name="picking_count"
+                                widget="statinfo"
+                            />
+                        </button>
+                        <button
+                            class="oe_stat_button"
+                            name="action_refunds_bill_view"
+                            attrs="{'invisible': [('customer_refund_count','&lt;=',0)]}"
+                            type="object"
+                            icon="fa-pencil-square-o"
+                            help="Bills"
+                        >
+                            <field
+                                string="Bills"
+                                name="customer_refund_count"
+                                widget="statinfo"
+                            />
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field
+                                name="partner_id"
+                                context="{'search_default_customer': 1,'res_partner_search_mode': 'customer','default_customer_rank': 1}"
+                            />
+                            <field name="reference" />
+                            <field
+                                name="source_location_id"
+                                domain="[('active', '=', True), ('usage', '=', 'customer')]"
+                                options="{'no_create': True}"
+                            />
+                            <field
+                                name="destination_location_id"
+                                domain="[('active', '=', True), ('usage', '=', 'internal')]"
+                                options="{'no_create': True}"
+                            />
+                            <field name="currency_id" invisible="1" />
+                        </group>
+                        <group>
+                            <field name="order_date" />
+                            <field name="is_create_refund" />
+                            <field
+                                name="company_id"
+                                options="{'no_create': True}"
+                                groups="base.group_multi_company"
+                            />
+                            <field name="reason_return" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Products">
+                            <field
+                                name="return_line"
+                                attrs="{'readonly': ['|',('source_location_id','=', False ),
+                                                                                ('state','=', 'done' )]}"
+                            >
+                                <tree editable="bottom">
+                                    <field name="product_id" />
+                                    <field name="type" invisible="1" />
+                                    <field name="company_id" invisible="1" />
+                                    <field
+                                        name="analytic_distribution"
+                                        optional="hide"
+                                        widget="analytic_distribution"
+                                        groups="analytic.group_analytic_accounting"
+                                        options="{'product_field': 'product_id', 'business_domain': 'customer_product_return_line'}"
+                                    />
+                                    <field name="quantity" />
+                                    <field name="uom_id" />
+                                    <field name="last_price_unit" />
+                                    <field
+                                        name="price_unit"
+                                        readonly="1"
+                                        force_save="1"
+                                    />
+                                    <field name="return_id" invisible="1" />
+                                    <field
+                                        name="qty_done"
+                                        attrs="{'invisible': [('type', '=', 'none')]}"
+                                    />
+                                    <!-- <button name="open_pack_return_operation" string="Lot Split" type="object" icon="fa-list" attrs="{'invisible': [('type', '=', 'none')]}"/> -->
+                                    <field name="currency_id" invisible="1" />
+                                    <field name="price_total" widget="monetary" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <group
+                        class="oe_subtotal_footer oe_right"
+                        colspan="2"
+                        name="sale_total"
+                    >
+                        <field
+                            name="amount_total"
+                            class="oe_subtotal_footer_separator"
+                            widget='monetary'
+                            options="{'currency_field': 'currency_id'}"
+                        />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree view for Product Returns -->
+    <record id="view_product_return_tree" model="ir.ui.view">
+        <field name="name">product.return.tree</field>
+        <field name="model">customer.product.return</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="order_date" />
+                <field name="is_create_refund" />
+                <field name="source_location_id" />
+                <field name="destination_location_id" />
+                <field name="company_id" invisible="1" />
+                <field name="reason_return" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action for Product Returns -->
+    <record id="action_simple_rma" model="ir.actions.act_window">
+        <field name="name">Customer Product Return</field>
+        <field name="res_model">customer.product.return</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu register under Sales => Product Return-->
+    <menuitem
+        action="action_simple_rma"
+        id="menu_view_simple_rma_form"
+        parent="sale.sale_order_menu"
+        sequence="50"
+        groups="sales_team.group_sale_salesman_all_leads"
+    />
+
+</odoo>
