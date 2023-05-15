@@ -13,15 +13,15 @@ class EventAnswer(models.Model):
 
     @api.constrains("value_answer_id")
     def check_answer_block(self):
-        if self.value_answer_id.is_blocking:
-            raise UserError(
-                _(
-                    "The answer you entered for "
-                    + str(self.question_id.title)
-                    + " is not valid. Unfortunately you cannot "
-                    "register for the event."
+        for answer in self:
+            if answer.value_answer_id.is_blocking:
+                raise UserError(
+                    _(
+                        "The answer you entered for %s is not valid. "
+                        "Unfortunately you cannot register for the event."
+                    )
+                    % str(answer.question_id.title)
                 )
-            )
 
 
 class EventQuestion(models.Model):
