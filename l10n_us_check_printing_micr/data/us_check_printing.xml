@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+
+    <record id="paperformat_check_us_micr" model="report.paperformat">
+        <field name="name">US MICR Check Letter</field>
+        <field name="default" eval="False" />
+        <field name="format">Letter</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">0</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_print_check_top_micr" model="ir.actions.report">
+        <field name="name">Print Check (Top)</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field
+            name="report_name"
+        >l10n_us_check_printing_micr.print_check_top_micr</field>
+        <field
+            name="report_file"
+        >l10n_us_check_printing_micr.print_check_top_micr</field>
+        <field
+            name="print_report_name"
+        >'Check Top - %s' % (object.partner_id.name or '',)</field>
+        <field
+            name="paperformat_id"
+            ref="l10n_us_check_printing_micr.paperformat_check_us_micr"
+        />
+        <field
+            name="attachment"
+        >'check_'+(object.partner_id and object.partner_id.name or 'Internal')+'_'+(object.name)+'_top.pdf'</field>
+        <field name="attachment_use">True</field>
+    </record>
+
+    <record id="action_print_check_middle_micr" model="ir.actions.report">
+        <field name="name">Print Check (Middle)</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field
+            name="report_name"
+        >l10n_us_check_printing_micr.print_check_middle_micr</field>
+        <field
+            name="report_file"
+        >l10n_us_check_printing_micr.print_check_middle_micr</field>
+        <field
+            name="print_report_name"
+        >'Check Middle - %s' % (object.partner_id.name or '',)</field>
+        <field
+            name="paperformat_id"
+            ref="l10n_us_check_printing_micr.paperformat_check_us_micr"
+        />
+        <field
+            name="attachment"
+        >'check_'+(object.partner_id and object.partner_id.name or 'Internal')+'_'+(object.name)+'_middle.pdf'</field>
+        <field name="attachment_use">True</field>
+    </record>
+
+    <record id="action_print_check_bottom_micr" model="ir.actions.report">
+        <field name="name">Print Check (Bottom)</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field
+            name="report_name"
+        >l10n_us_check_printing_micr.print_check_bottom_micr</field>
+        <field
+            name="report_file"
+        >l10n_us_check_printing_micr.print_check_bottom_micr</field>
+        <field
+            name="print_report_name"
+        >'Check Bottom - %s' % (object.partner_id.name or '',)</field>
+        <field
+            name="paperformat_id"
+            ref="l10n_us_check_printing_micr.paperformat_check_us_micr"
+        />
+        <field
+            name="attachment"
+        >'check_'+(object.partner_id and object.partner_id.name or 'Internal')+'_'+(object.name)+'_bottom.pdf'</field>
+        <field name="attachment_use">True</field>
+    </record>
+
+</odoo>
