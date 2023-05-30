@@ -12,7 +12,8 @@
     "website": "https://github.com/ursais/osi-addons",
     "depends": [
         "stock_account",
-        "purchase"
+        "purchase",
+        "purchase_stock"
     ],
     "data": [
 
