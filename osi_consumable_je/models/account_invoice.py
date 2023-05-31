@@ -19,7 +19,7 @@ class AccountMove(models.Model):
             move = move.with_company(move.company_id)
             for line in move.invoice_line_ids:
                 # Filter out lines being not eligible for price difference.
-                if line.product_id.type not in ('consu') or line.product_id.valuation != 'real_time':
+                if not line.product_id or line.product_id.type not in ('consu') or line.product_id.valuation != 'real_time':
                     continue
 
                 # Retrieve accounts needed to generate the price difference.
