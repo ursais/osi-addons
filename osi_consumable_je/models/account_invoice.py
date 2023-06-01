@@ -16,6 +16,7 @@ class AccountMove(models.Model):
             if move.move_type not in ('in_invoice', 'in_refund', 'in_receipt') or not move.company_id.anglo_saxon_accounting:
                 continue
 
+            import pdb;pdb.set_trace()
             move = move.with_company(move.company_id)
             for line in move.invoice_line_ids:
                 # Filter out lines being not eligible for price difference.
