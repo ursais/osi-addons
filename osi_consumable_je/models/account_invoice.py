@@ -16,7 +16,6 @@ class AccountMove(models.Model):
             if move.move_type not in ('in_invoice', 'in_refund', 'in_receipt') or not move.company_id.anglo_saxon_accounting:
                 continue
 
-            import pdb;pdb.set_trace()
             move = move.with_company(move.company_id)
             for line in move.invoice_line_ids:
                 # Filter out lines being not eligible for price difference.
@@ -49,7 +48,7 @@ class AccountMove(models.Model):
                 else:
                     # Valuation_price unit is always expressed in invoice currency, so that it can always be computed with the good rate
                     if line.product_id.type == 'consu':
-                        price_unit = line.product_id.uom_id._compute_price(line.purchase_line_id.price_unit, line.product_uom_id)
+                        price_unit = line.purchase_line_id.price_unit
                     else:
                         price_unit = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id)
                     price_unit = -price_unit if line.move_id.move_type == 'in_refund' else price_unit
