@@ -73,7 +73,6 @@ def _account_entry_move(self, qty, description, svl_id, cost):
         # if the move isn't owned by the company, we don't make any valuation
         return am_vals
 
-    import pdb;pdb.set_trace()
     company_from = self._is_out() and self.mapped('move_line_ids.location_id.company_id') or False
     company_to = self._is_in() and self.mapped('move_line_ids.location_dest_id.company_id') or False
 
