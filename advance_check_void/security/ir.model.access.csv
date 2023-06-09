@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_payment_check_history,payment.check.history,model_payment_check_history,,1,1,1,1
+access_payment_check_void,payment.check.void,model_payment_check_void,,1,1,1,1
+access_simple_void_check,simple.void.check,model_simple_void_check,,1,1,1,1
