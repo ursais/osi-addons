@@ -151,4 +151,15 @@
             </form>
         </field>
     </record>
+
+    <record id="view_payment_check_void_search" model="ir.ui.view">
+            <field name="name">payment.check.void.search</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account_check_printing.view_payment_check_printing_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//filter[@name='checks_to_send']" position="attributes">
+                    <attribute name="domain">[('payment_method_id.code', '=', 'check_printing'), ('state', '=', 'posted'), ('is_move_sent', '=', False), ("payment_state", "!=", "reversed")]</attribute>
+                </xpath>
+            </field>
+        </record>
 </odoo>
