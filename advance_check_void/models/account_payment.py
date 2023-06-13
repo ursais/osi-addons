@@ -144,10 +144,12 @@ class AccountPayment(models.Model):
                     "create_date": fields.Datetime.now(),
                     "write_date": fields.Datetime.now(),
                     "create_uid": res.create_uid.id,
-                    "state": res.state,
+                    # "state": res.state,
+                    "state": "sent",
                     "is_visible_check": not res.check_number,
                 }
                 new_chk = check_hist_obj.create(check_hist)
+            check_ids = False
             if new_chk:
                 check_ids = check_hist_obj.search(
                     [
@@ -157,14 +159,20 @@ class AccountPayment(models.Model):
                     ],
                     limit=1,
                 )
-            else:
-                check_ids = check_hist_obj.search(
-                    [("payment_id", "=", res.id), ("write_date", "<=", res.write_date)],
-                    limit=1,
-                )
+            # else:
+            #     check_ids = check_hist_obj.search(
+            #         [("payment_id", "=", res.id), ("write_date", "<=", res.write_date)],
+            #         limit=1,
+            #     )
             if check_ids:
                 for chk in check_ids:
-                    if res.state != "sent":
+                    if res.state == "posted":
+                        chk.write({"state": "sent"})
+                    elif res.state == "draft":
+                        chk.write({"state": "draft"})
+                    elif res.state == "cancelled":
+                        chk.write({"state": "cancelled"})
+                    else:
                         chk.write({"state": "void"})
         return result
 
