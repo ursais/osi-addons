@@ -30,11 +30,11 @@ class IrAttachment(models.Model):
                 ["res_model", "res_id", "public", "res_field"]
             )
             self._cr.execute(
-                """SELECT res_model, res_id, create_uid, public, res_field
+                """SELECT res_model, res_id, public, res_field
                   FROM ir_attachment WHERE id IN %s""",
                 [tuple(self.ids)],
             )
-            for res_model, res_id, create_uid, public, res_field in self._cr.fetchall():
+            for res_model, res_id, public, res_field in self._cr.fetchall():
                 if not self.env.is_system() and res_field:
                     raise AccessError(
                         _("Sorry, you are not allowed to access this document.")
