@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+
+    <!-- Sequences for vendor.product.return -->
+    <record id="seq_vendor_product_return" model="ir.sequence">
+        <field name="name">Vendor Product Return</field>
+        <field name="code">vendor.product.return</field>
+        <field name="prefix">PR</field>
+        <field name="padding">4</field>
+        <field name="company_id" eval="False" />
+    </record>
+
+</odoo>

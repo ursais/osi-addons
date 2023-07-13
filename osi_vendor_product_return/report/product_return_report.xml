@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="action_report_product_return" model="ir.actions.report">
+        <field name="name">Vendor Product Return</field>
+        <field name="model">vendor.product.return</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">osi_vendor_product_return.report_productreturn</field>
+        <field name="report_file">osi_vendor_product_return.report_productreturn</field>
+        <field name="binding_model_id" ref="model_vendor_product_return" />
+        <field name="binding_type">report</field>
+    </record>
+
+</odoo>

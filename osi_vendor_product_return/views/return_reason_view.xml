@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <!-- Tree view for Returns Reason -->
+    <record id="view_return_reason_tree" model="ir.ui.view">
+        <field name="name">return.reason.tree</field>
+        <field name="model">return.reason</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action for Returns Reason -->
+    <record id="action_return_reason" model="ir.actions.act_window">
+        <field name="name">Return Reason</field>
+        <field name="res_model">return.reason</field>
+        <field name="view_mode">tree</field>
+    </record>
+
+    <!-- Menu register under Purchase => Configuration => Return Reason-->
+    <menuitem
+        action="action_return_reason"
+        id="menu_return_reason"
+        parent="purchase.menu_purchase_config"
+        sequence="10"
+    />
+
+</odoo>
