@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_customer_product_return,access_customer_product_return,model_customer_product_return,stock.group_stock_user,1,1,1,1
+access_customer_product_return_line,access_customer_product_return_line,model_customer_product_return_line,stock.group_stock_user,1,1,1,1
