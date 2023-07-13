@@ -1,7 +1,7 @@
 Overview
 ========
 
-PQI creates a direct vendor bills for Electric, Utilities. It is hard to 
+Company creates a direct vendor bills for Electric, Utilities. It is hard to 
 remember expense account number for vendor bill line.
 
 When we create a vendor bills without any product, Odoo searches for default 
