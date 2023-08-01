@@ -47,11 +47,15 @@ class StockPicking(models.Model):
         for picking in self:
             if picking.picking_type_code == "outgoing":
                 if picking.dont_allow_transfer:
+                    hold_tx_names = self.filtered(
+                        "dont_allow_transfer"
+                    ).mapped("display_name")
                     raise UserError(
                         _(
-                            """Customer has a Credit hold.\n\nContact
-                        Sales/Accounting to verify
-                        sales hold/credit hold/overdue payments."""
+                            "Customer on transfer(s) (%s) has a credit hold."
+                            "\n\nContact Sales/Accounting to verify "
+                            "sales hold/credit hold/overdue payments.",
+                            ", ".join(hold_tx_names),
                         )
                     )
                 else:
