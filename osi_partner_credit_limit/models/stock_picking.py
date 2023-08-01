@@ -44,18 +44,23 @@ class StockPicking(models.Model):
 
     def button_validate(self):
         # Only outgoing picking
-        if self.picking_type_code == "outgoing":
-            if self.dont_allow_transfer:
-                raise UserError(
-                    _(
-                        """Customer has a Credit hold.\n\nContact
-                    Sales/Accounting to verify
-                    sales hold/credit hold/overdue payments."""
+        for picking in self:
+            if picking.picking_type_code == "outgoing":
+                if picking.dont_allow_transfer:
+                    hold_tx_names = self.filtered("dont_allow_transfer").mapped(
+                        "display_name"
                     )
-                )
+                    raise UserError(
+                        _(
+                            "Customer on transfer(s) (%s) has a credit hold."
+                            "\n\nContact Sales/Accounting to verify "
+                            "sales hold/credit hold/overdue payments.",
+                            ", ".join(hold_tx_names),
+                        )
+                    )
+                else:
+                    return super(StockPicking, self).button_validate()
+
+            # Incoming shipments / internal transfers
             else:
                 return super(StockPicking, self).button_validate()
-
-        # Incoming shipments / internal transfers
-        else:
-            return super(StockPicking, self).button_validate()
