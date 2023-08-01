@@ -45,8 +45,7 @@ class StockPicking(models.Model):
     def button_validate(self):
         # Only outgoing picking
         hold_transfers = self.filtered(
-            lambda p: p.picking_type_code == "outgoing"
-            and p.dont_allow_transfer
+            lambda p: p.picking_type_code == "outgoing" and p.dont_allow_transfer
         )
         if hold_transfers:
             raise UserError(
