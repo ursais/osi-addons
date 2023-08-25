@@ -47,7 +47,7 @@ class Partner(models.Model):
         order_ids = self.env["sale.order"].search(
             [
                 ("partner_id", "=", partner_id.id),
-                ("state", "=", "sale"),
+                ("state", "in", ("sale", "done")),
                 ("invoice_status", "!=", "invoiced"),
             ]
         )

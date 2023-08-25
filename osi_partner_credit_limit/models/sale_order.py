@@ -65,3 +65,7 @@ class SaleOrder(models.Model):
                 )
                 raise ValidationError(message)
             return super(SaleOrder, self).action_confirm()
+
+    def write(self, vals):
+        vals.update({"ship_hold": self.partner_id.ship_hold})
+        return super(SaleOrder, self).write(vals)

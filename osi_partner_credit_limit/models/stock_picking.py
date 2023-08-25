@@ -22,7 +22,7 @@ class StockPicking(models.Model):
                 if (
                     record.sale_id.sales_hold
                     or record.sale_id.credit_hold
-                    or record.sale_id.ship_hold
+                    or record.sale_id.ship_hold or record.partner_id.ship_hold
                 ):
                     hold_value = True
 
@@ -44,7 +44,7 @@ class StockPicking(models.Model):
 
     def button_validate(self):
         # Only outgoing picking
-        if self.picking_type_code == "outgoing":
+        if self.picking_type_code == "outgoing" and self.partner_id.ship_hold:
             if self.dont_allow_transfer:
                 raise UserError(
                     _(
