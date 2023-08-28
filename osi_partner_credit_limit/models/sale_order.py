@@ -43,9 +43,9 @@ class SaleOrder(models.Model):
             message = _("""Cannot confirm Order! The customer is on sales hold.""")
             # Display that the customer is on sales hold
             raise ValidationError(message)
-        elif self.ship_hold and not self.credit_override:
+        elif not self.credit_override and self.partner_id.with_context(from_sale_order=True).check_limit(self):
             message = _(
-                """Cannot confirm Order! \nThe customer exceed available credit limit and is on ship hold."""
+                """The customer exceeds the available credit limit. Cannot confirm Sales Order"""
             )
             raise ValidationError(message)
         else:
@@ -60,8 +60,7 @@ class SaleOrder(models.Model):
                 self.state = prev_state
                 self.ship_hold = True
                 message = _(
-                    """Cannot confirm Order! \nThis will exceed allowed Credit Limit.
-                    \nTo Override, check Override Sales/Credit/Delivery Hold"""
+                    """The customer exceeds the available credit limit. Cannot confirm Sales Order."""
                 )
                 raise ValidationError(message)
             return super(SaleOrder, self).action_confirm()
@@ -69,3 +68,12 @@ class SaleOrder(models.Model):
     def write(self, vals):
         vals.update({"ship_hold": self.partner_id.ship_hold})
         return super(SaleOrder, self).write(vals)
+
+    def create(self, vals):
+        res = super(SaleOrder, self).create(vals)
+        if res.partner_id.ship_hold:
+            res.ship_hold = self.partner_id.ship_hold
+        if res.partner_id.sales_hold and not res.credit_override:
+            message = _("""Cannot confirm Order! The customer is on sales hold.""")
+            raise ValidationError(message)
+        return res
