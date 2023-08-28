@@ -19,17 +19,21 @@ class StockPicking(models.Model):
                 "cancel",
             ):
                 # Sales person has a hold
+
                 if (
                     record.sale_id.sales_hold
                     or record.sale_id.credit_hold
-                    or record.sale_id.ship_hold or record.partner_id.ship_hold
+                    or record.sale_id.ship_hold
                 ):
                     hold_value = True
-
                 # Partner will exceed limit with current
                 # Sale order or is over-due
                 if record.sale_id.partner_id.check_limit(record.sale_id):
                     hold_value = True
+
+                # Override applied on Ship Hold on Partner Change
+                if not record.partner_id.ship_hold:
+                    hold_value = False
 
                 # Override applied on sale order
                 if record.sale_id.credit_override:
@@ -44,13 +48,11 @@ class StockPicking(models.Model):
 
     def button_validate(self):
         # Only outgoing picking
-        if self.picking_type_code == "outgoing" and self.partner_id.ship_hold:
+        if self.picking_type_code == "outgoing":
             if self.dont_allow_transfer:
                 raise UserError(
                     _(
-                        """Customer has a Credit hold.\n\nContact
-                    Sales/Accounting to verify
-                    sales hold/credit hold/overdue payments."""
+                        """Customer has a delivery hold. Please contact Accounting."""
                     )
                 )
             else:
