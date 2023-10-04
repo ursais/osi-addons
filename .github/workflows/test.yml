@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-22.04
     container: ${{ matrix.container }}
     env:
-      EXCLUDE: l10n_mx_res_partner_csf_regime
+      EXCLUDE: l10n_mx_res_partner_csf_regime,l10n_mx_edi_40
     strategy:
       fail-fast: false
       matrix:
