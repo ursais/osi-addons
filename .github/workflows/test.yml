@@ -8,9 +8,6 @@ on:
     branches:
       - "16.0*"
 
-env:
-  EXCLUDE: l10n_mx_res_partner_csf_regime
-
 jobs:
   test:
     runs-on: ubuntu-22.04
@@ -20,6 +17,7 @@ jobs:
       matrix:
         include:
           - container: ghcr.io/oca/oca-ci/py3.10-odoo16.0:latest
+            exclude: l10n_mx_res_partner_csf_regime
             makepot: "false"
             name: test with Odoo
     services:
