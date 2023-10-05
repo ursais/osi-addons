@@ -14,7 +14,7 @@
         "l10n_mx_res_partner_csf",
     ],
     "external_dependencies": {
-        "python": ["pdfminer", "pdfminer.six==20220319"],
+        "python": ["pdfminer.six==20220319"],
     },
     "application": False,
     "maintainers": ["ursais"],

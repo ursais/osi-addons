@@ -1,13 +1,4 @@
-import logging
-
 from odoo import models
-
-_logger = logging.getLogger(__name__)
-
-try:
-    pass
-except ImportError as err:
-    _logger.debug(err)
 
 FISCAL_REGIMES_MAPPING = {
     "Régimen General de Ley Personas Morales": "601",
@@ -36,8 +27,9 @@ class ImportCSF(models.TransientModel):
                 if fiscal_regime == "Régimen":
                     fiscal_regime = split_data[index + 3].strip()
                 fiscal_regime = FISCAL_REGIMES_MAPPING[fiscal_regime]
-        return vals.update(
+        vals.update(
             {
                 "l10n_mx_edi_fiscal_regime": fiscal_regime,
             }
         )
+        return vals
