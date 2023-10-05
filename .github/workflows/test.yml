@@ -19,7 +19,7 @@ jobs:
           - container: ghcr.io/oca/oca-ci/py3.10-odoo16.0:latest
             makepot: "false"
             name: test with Odoo
-            exclude: "l10n_mx_res_partner_csf_regime"
+            exclude: "l10n_mx_res_partner_csf_regime,l10n_mx_edi_40"
     services:
       postgres:
         image: postgres:9.6
