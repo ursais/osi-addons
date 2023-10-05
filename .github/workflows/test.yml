@@ -29,6 +29,9 @@ jobs:
           POSTGRES_DB: odoo
         ports:
           - 5432:5432
+    env:
+      INCLUDE: "${{ matrix.include }}"
+      EXCLUDE: "${{ matrix.exclude }}"
     steps:
       - uses: actions/checkout@v2
         with:
