@@ -1,4 +1,4 @@
-# Copyright (C) 2017 Open Source Integrators (https://www.opensourceintegrators.com)
+# Copyright (C) 2023 Open Source Integrators (https://www.opensourceintegrators.com)
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 {
     "name": "Mexican Localization Fiscal Regime Scan From CSF",
