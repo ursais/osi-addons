@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Jorels S.A.S. - Copyright (C) 2019-2023-->
+
+<!--This file is part of l10n_co_hr_payroll_enterprise.-->
+
+<!--This program is free software: you can redistribute it and/or modify-->
+<!--it under the terms of the GNU Lesser General Public License as published by-->
+<!--the Free Software Foundation, either version 3 of the License, or-->
+<!--(at your option) any later version.-->
+
+<!--This program is distributed in the hope that it will be useful,-->
+<!--but WITHOUT ANY WARRANTY; without even the implied warranty of-->
+<!--MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the-->
+<!--GNU Lesser General Public License for more details.-->
+
+<!--You should have received a copy of the GNU Lesser General Public License-->
+<!--along with this program. If not, see <https://www.gnu.org/licenses/>.-->
+
+<!--email: info@jorels.com-->
+
+<odoo>
+    <record id="view_hr_payslip_edi_form" model="ir.ui.view">
+        <field name="name">hr.payslip.edi.form</field>
+        <field name="model">hr.payslip.edi</field>
+        <field name="arch" type="xml">
+            <form string="Edi Payslip">
+                <header>
+                    <button string="Confirm" name="action_payslip_done" type="object" states="draft"
+                            class="oe_highlight"/>
+                    <button name="status_zip" type="object" string="Consult DIAN" groups="base.group_no_one"
+                            attrs="{'invisible': [('state','=','draft')]}"/>
+                    <button string="Refund" name="refund_sheet" states="confirm,done" type='object'/>
+                    <button string="Set to Draft" name="action_payslip_draft" type="object" states="cancel"/>
+                    <button string="Compute Sheet" name="compute_sheet" type="object" states="draft"
+                            class="oe_highlight"/>
+                    <button string="Cancel Payslip" name="action_payslip_cancel" type="object" states="draft,done"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="dian_preview" type="object" class="oe_stat_button" icon="fa-globe icon"
+                                attrs="{'invisible': [('edi_uuid', '=', False)]}">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">DIAN</span>
+                                <span class="o_stat_text">Web View</span>
+                            </div>
+                        </button>
+                    </div>
+                    <group>
+                        <group name="group-left">
+                            <field name="number"/>
+                            <field name="month"/>
+                            <field name="year" widget="integer"/>
+                            <field name="origin_payslip_id"/>
+                        </group>
+                        <group name="group-right">
+                            <field name="date"/>
+                            <field name="employee_id"/>
+                            <field name="contract_id"/>
+                            <field name="credit_note"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group name="payment">
+                            <field name="payment_form_id" readonly="True"/>
+                            <field name="payment_method_id" readonly="True"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="payslips" string="Payslips">
+                            <field name="payslip_ids"
+                                   domain="[('state', '=', 'done'),
+                                            ('employee_id', '=', employee_id),
+                                            ('month', '=', month),
+                                            ('year', '=', year),
+                                            ('credit_note', '=', False),
+                                            ('contract_id', '=', contract_id)]"/>
+                            <group>
+                                <field name="accrued_total_amount" widget="monetary" readonly="True"/>
+                                <field name="deductions_total_amount" widget="monetary" readonly="True"/>
+                                <field name="total_amount" widget="monetary" readonly="True"/>
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="worked_days_total" readonly="True"/>
+                            </group>
+                        </page>
+                        <page name="edi_response" string="Edi Response">
+                            <group>
+                                <field name="edi_sync" readonly="True"/>
+                                <field name="edi_is_not_test" readonly="True"/>
+                                <field name="edi_is_valid" readonly="True"/>
+                                <field name="edi_is_restored" readonly="True"/>
+                                <field name="edi_algorithm" readonly="True"/>
+                                <field name="edi_class" readonly="True"/>
+                                <field name="edi_number" readonly="True"/>
+                                <field name="edi_uuid" readonly="True" class="text-break"/>
+                                <field name="edi_issue_date" readonly="True"/>
+                                <field name="edi_expedition_date" readonly="True"/>
+                                <field name="edi_zip_key" readonly="True" class="text-break"/>
+                                <field name="edi_status_code" readonly="True"/>
+                                <field name="edi_status_description" readonly="True" class="text-break"/>
+                                <field name="edi_status_message" readonly="True" class="text-break"/>
+                                <field name="edi_errors_messages" readonly="True" class="text-break"/>
+                                <field name="edi_xml_name" readonly="True"/>
+                                <field name="edi_zip_name" readonly="True"/>
+                                <field name="edi_signature" readonly="True" class="text-break"/>
+                                <field name="edi_qr_code" readonly="True" class="text-break"/>
+                                <field name="edi_qr_data" readonly="True" class="text-break"/>
+                                <field name="edi_qr_link" widget="url" readonly="True" class="text-break"/>
+                                <field name="edi_pdf_download_link" widget="url" readonly="True" class="text-break"/>
+                                <field name="edi_xml_base64" readonly="True"/>
+                                <field name="edi_application_response_base64" readonly="True"/>
+                                <field name="edi_attached_document_base64" readonly="True"/>
+                                <field name="edi_pdf_base64" readonly="True"/>
+                                <field name="edi_zip_base64" readonly="True"/>
+                                <field name="edi_type_environment" readonly="True"/>
+                            </group>
+                        </page>
+                        <page string="Edi Payload">
+                            <group>
+                                <field name="edi_payload_html" readonly="True"/>
+                                <field name="edi_payload" readonly="True" groups="base.group_no_one" class="text-break"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hr_payslip_edi_tree" model="ir.ui.view">
+        <field name="name">hr.payslip.edi.tree</field>
+        <field name="model">hr.payslip.edi</field>
+        <field name="arch" type="xml">
+            <tree string="Edi Payslip" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
+                <field name="number"/>
+                <field name="employee_id"/>
+                <field name="name"/>
+                <field name="year"/>
+                <field name="month"/>
+                <field name="date"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="worked_days_total" sum="worked_days_total"/>
+                <field name="accrued_total_amount" sum="accrued_total_amount"/>
+                <field name="deductions_total_amount" sum="deductions_total_amount"/>
+                <field name="total_amount" sum="total_amount"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_view_hr_payslip_edi" model="ir.actions.act_window">
+        <field name="name">Edi Payslips</field>
+        <field name="res_model">hr.payslip.edi</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Edi Payslip!
+            </p>
+        </field>
+    </record>
+    <menuitem action="action_view_hr_payslip_edi"
+              id="menu_payslip_edi_tree"
+              name="Edi Payslips"
+              parent="hr_payroll.menu_hr_payroll_payslips"
+              groups="hr_payroll.group_hr_payroll_user"/>
+</odoo>

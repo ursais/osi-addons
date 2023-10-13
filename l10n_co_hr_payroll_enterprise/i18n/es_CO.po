@@ -1,0 +1,2613 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_co_hr_payroll_enterprise
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-08-22 06:18+0000\n"
+"PO-Revision-Date: 2023-08-22 01:27-0500\n"
+"Last-Translator: \n"
+"Language-Team: Jorels SAS\n"
+"Language: es_CO\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.3.2\n"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_config_settings__daily_overtime
+msgid "% Daily"
+msgstr "% Diario"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_config_settings__daily_surcharge_hours_sundays_holidays
+msgid "% Daily hours on sundays and holidays"
+msgstr "% Horas diarias en domingos y festivos"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_company__daily_overtime
+msgid "% Daily overtime"
+msgstr "% Horas extra diarias"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_company__daily_surcharge_hours_sundays_holidays
+msgid "% Daily surcharge hours on sundays and holidays"
+msgstr "% Recargo diario horas en domingos y festivos"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_company__hours_night_surcharge
+msgid "% Hours night surcharge"
+msgstr "% Recargo horas nocturna"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_config_settings__hours_night_surcharge
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_config_settings__overtime_night_hours
+msgid "% Night hours"
+msgstr "% Horas nocturnas"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_company__overtime_night_hours
+msgid "% Overtime night hours"
+msgstr "% Horas extra nocturnas"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_config_settings__sunday_holiday_daily_overtime
+msgid "% Sunday and Holiday daily"
+msgstr "% Domingo y festivo diario"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_company__sunday_holiday_daily_overtime
+msgid "% Sunday and Holiday daily overtime"
+msgstr "% Domingos y festivos horas extras diarias"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_config_settings__sunday_holidays_night_surcharge_hours
+msgid "% Sunday and holidays night hours"
+msgstr "% Domingos y festivos horas nocturnas"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_company__sunday_holidays_night_surcharge_hours
+msgid "% Sunday and holidays night surcharge hours"
+msgstr "% Domingos y festivos recargo horas nocturnas"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_config_settings__sunday_night_overtime_holidays
+msgid "% Sunday night and holidays"
+msgstr "% Noche de domingo y festivos"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_company__sunday_night_overtime_holidays
+msgid "% Sunday night overtime and holidays"
+msgstr "% Horas extra noche de domingo y festivos"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.actions.report,print_report_name:l10n_co_hr_payroll_enterprise.action_hr_payslip_co_report
+#: model:ir.actions.report,print_report_name:l10n_co_hr_payroll_enterprise.action_hr_payslip_edi_co_report
+msgid "(object.name)"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,help:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__state
+msgid ""
+"* When the payslip is created the status is 'Draft'\n"
+"                \n"
+"* If the payslip is under verification, the status is 'Waiting'.\n"
+"                \n"
+"* If the payslip is confirmed then status is set to 'Done'.\n"
+"                \n"
+"* When user cancel payslip the status is 'Rejected'."
+msgstr ""
+"* Cuando la nómina es creada el estado es 'Borrador'\n"
+"                \n"
+"* Si la nómina está bajo verificación el estado es 'En Espera'.\n"
+"                \n"
+"* Si la nómina está confirmada entonces el estado se cambia a 'Finalizado'.\n"
+"                \n"
+"* Cuando el usuario cancela la nómina el estado es 'Rechazado'."
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.res_config_settings_view_form_l10n_co_hr_payroll
+msgid ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base."
+"group_multi_company\" role=\"img\"/>"
+msgstr ""
+"<span class=\"\\&quot;fa\" fa-lg=\"\" fa-building-o=\"\" title=\"\\&quot;Los\" "
+"valores=\"\" establecidos=\"\" aqu=\"\" son=\"\" espec=\"\" de=\"\" la=\"\" "
+"empresa.=\"\" aria-label=\"\\&quot;Los\" groups=\"\\&quot;base."
+"group_multi_company\\&quot;\" role=\"\\&quot;img\\&quot;/\">\n"
+"                            </span>"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.res_config_settings_view_form_l10n_co_hr_payroll
+msgid ""
+"<span class=\"o_form_label\">Enable consolidated electronic payroll for this "
+"company</span>"
+msgstr ""
+"<span class=\"o_form_label\">Habilitar nómina electrónica consolidada para esta "
+"compañía</span>"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.res_config_settings_view_form_l10n_co_hr_payroll
+msgid ""
+"<span class=\"o_form_label\">Enable electronic payroll for this company</span>"
+msgstr ""
+"<span class=\"\\&quot;o_form_label\\&quot;\">Habilitar la nómina electrónica "
+"para esta empresa</span>"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.res_config_settings_view_form_l10n_co_hr_payroll
+msgid "<span class=\"o_form_label\">Legal parameters</span>"
+msgstr "<span class=\"\\&quot;o_form_label\\&quot;\">Parámetros legales</span>"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.res_config_settings_view_form_l10n_co_hr_payroll
+msgid "<span class=\"o_form_label\">Overtime percentages</span>"
+msgstr ""
+"<span class=\"\\&quot;o_form_label\\&quot;\">Porcentajes de horas extras</span>"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.res_config_settings_view_form_l10n_co_hr_payroll
+msgid "<span class=\"o_form_label\">Software ID</span>"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.res_config_settings_view_form_l10n_co_hr_payroll
+msgid "<span class=\"o_form_label\">Software pin</span>"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.res_config_settings_view_form_l10n_co_hr_payroll
+msgid "<span class=\"o_form_label\">Surcharge percentages</span>"
+msgstr "<span class=\"\\&quot;o_form_label\\&quot;\">Porcentajes de recargo</span>"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.res_config_settings_view_form_l10n_co_hr_payroll
+msgid "<span class=\"o_form_label\">TestSetID</span>"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.view_hr_payslip_edi_form
+msgid ""
+"<span class=\"o_stat_text\">DIAN</span>\n"
+"                                <span class=\"o_stat_text\">Web View</span>"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.hr_payslip_view_form_l10n_co_hr_payroll
+msgid ""
+"<span class=\"o_stat_text\">DIAN</span>\n"
+"                            <span class=\"o_stat_text\">Web View</span>"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.report_hr_payslip_co_template
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.report_hr_payslip_edi_co_template
+msgid "<strong>CUNE:</strong>"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.report_hr_payslip_co_template
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.report_hr_payslip_edi_co_template
+msgid "<strong>Electronic payslip:</strong>"
+msgstr "<strong>Nómina electrónica:</strong>"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "A adjustment note should not be made to a adjustment note"
+msgstr "Una nota de ajuste no puede ser hecha a una nota de ajuste"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "A valid Zip key or UUID was not obtained. Try again."
+msgstr "No se obtuvo una llave zip o UUID válido. Intente otra vez."
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "A valid Zip key was not obtained. Try again."
+msgstr "No se obtuvo una llave Zip válida. Intente otra vez."
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "A zip key or UUID is required to check the status of the document."
+msgstr "Se requiere una llave Zip o UUID para verificar el estado del documento."
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Account number"
+msgstr "Numero de cuenta"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Account type"
+msgstr "Tipo de cuenta"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__accrued_total_amount
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__accrued_total_amount
+msgid "Accrued"
+msgstr "Devengados"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Accrued total"
+msgstr "Total de devengados"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Address"
+msgstr "Dirección"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__credit_note
+msgid "Adjustment note"
+msgstr "Nota de ajuste"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Admission date"
+msgstr "Fecha de ingreso"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__deduction_category__advances
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__advances
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_deduction_line__category__advances
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__advances
+#, python-format
+msgid "Advances"
+msgstr "Anticipos"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__deduction_category__afc
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_deduction_line__category__afc
+#, python-format
+msgid "Afc"
+msgstr "Ahorro fomento a la construcción"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_algorithm
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_algorithm
+msgid "Algorithm"
+msgstr "Algoritmo"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_deduction_line__amount
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_earn_line__amount
+msgid "Amount"
+msgstr "Importe"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Amount time"
+msgstr "Cantidad de tiempo"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_application_response_base64
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_application_response_base64
+msgid "Application response"
+msgstr "Respuesta de la aplicación"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip__month__4
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip_edi__month__4
+msgid "April"
+msgstr "Abril"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Assistance"
+msgstr "Auxilio"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__assistances
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__assistances
+#, python-format
+msgid "Assistances"
+msgstr "Auxilios"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_attached_document_base64
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_attached_document_base64
+msgid "Attached document"
+msgstr "Documento adjunto"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip__month__8
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip_edi__month__8
+msgid "August"
+msgstr "Agosto"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Authentication error with the API"
+msgstr "Error de autenticación con la API"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__edi_quantity_select__auto
+msgid "Auto"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Bank"
+msgstr "Banco"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__basic
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__basic
+#, python-format
+msgid "Basic"
+msgstr "Basico"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__bonuses
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__bonuses
+#, python-format
+msgid "Bonuses"
+msgstr "Bonificaciones"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.view_hr_payslip_edi_form
+msgid "Cancel Payslip"
+msgstr "Cancelar nómina"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_deduction_line__category
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_earn_line__category
+msgid "Category"
+msgstr "Categoría"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_class
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_class
+msgid "Class"
+msgstr "Clase"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_rule_input__code
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_deduction_line__code
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_earn_line__code
+msgid "Code"
+msgstr "Código"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_config_settings__module_l10n_co_hr_payroll
+msgid "Colombian Payroll"
+msgstr "Nómina colombiana"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__commissions
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__commissions
+#, python-format
+msgid "Commissions"
+msgstr "Comisiones"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model,name:l10n_co_hr_payroll_enterprise.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__company_id
+msgid "Company"
+msgstr "Compañía"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__company_withdrawal_bonus
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__company_withdrawal_bonus
+#, python-format
+msgid "Company withdrawal bonus"
+msgstr "Bonificación de retiro"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__compensation
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__compensation
+#, python-format
+msgid "Compensation"
+msgstr "Indemnización"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Compensations"
+msgstr "Compensaciones"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__compensations_extraordinary
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__compensations_extraordinary
+msgid "Compensations extraordinary"
+msgstr "Compensaciones extraordinarias"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__compensations_ordinary
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__compensations_ordinary
+msgid "Compensations ordinary"
+msgstr "Compensaciones ordinarias"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__deduction_category__complementary_plans
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_deduction_line__category__complementary_plans
+#, python-format
+msgid "Complementary plans"
+msgstr "Planes complementarios"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.view_hr_payslip_edi_form
+msgid "Compute Sheet"
+msgstr "Calcular hoja"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model,name:l10n_co_hr_payroll_enterprise.model_res_config_settings
+msgid "Config Settings"
+msgstr "Opciones de configuración"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.view_hr_payslip_edi_form
+msgid "Confirm"
+msgstr "Confirmar"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.hr_payslip_view_form_l10n_co_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.view_hr_payslip_edi_form
+msgid "Consult DIAN"
+msgstr "Consultar DIAN"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__contract_id
+msgid "Contract"
+msgstr "Contrato"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Contract does not have a name"
+msgstr "El contrato no tiene nombre"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Contract type"
+msgstr "Tipo de contrato"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__deduction_category__cooperative
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_deduction_line__category__cooperative
+#, python-format
+msgid "Cooperative"
+msgstr "Cooperativa"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Country"
+msgstr "País"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.actions.act_window,help:l10n_co_hr_payroll_enterprise.action_view_hr_payslip_edi
+msgid "Create your first Edi Payslip!"
+msgstr "¡Crea tu primer Edi Payslip!"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__create_uid
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_rule_input__create_uid
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_deduction_line__create_uid
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_earn_line__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__create_date
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_rule_input__create_date
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_deduction_line__create_date
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_earn_line__create_date
+msgid "Created on"
+msgstr "Creado"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__currency_id
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__currency_id
+#, python-format
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.res_config_settings_view_form_l10n_co_hr_payroll
+msgid "DIAN TESTSETID"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.res_config_settings_view_form_l10n_co_hr_payroll
+msgid "DIAN settings"
+msgstr "Ajustes DIAN"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__daily_overtime
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__daily_overtime
+msgid "Daily overtime"
+msgstr "Horas extras diurnas"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__daily_surcharge_hours_sundays_holidays
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__daily_surcharge_hours_sundays_holidays
+msgid "Daily surcharge hours on sundays and holidays"
+msgstr "Horas recargo diarias dominicales y festivas"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_issue_date
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__date
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_issue_date
+#, python-format
+msgid "Date"
+msgstr "Fecha"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__date
+msgid "Date Account"
+msgstr "Fecha contable"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Date issue"
+msgstr "Fecha de emisión"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__deduction_category__debt
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_deduction_line__category__debt
+#, python-format
+msgid "Debt"
+msgstr "Deuda"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip__month__12
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip_edi__month__12
+msgid "December"
+msgstr "Diciembre"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__type_concept__deduction
+#, python-format
+msgid "Deduction"
+msgstr "Deducción"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.hr_payslip_view_form_l10n_co_hr_payroll
+msgid "Deduction Details"
+msgstr "Detalles de Deducciones"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_salary_rule__deduction_category
+msgid "Deduction category"
+msgstr "Categoría de la deducción"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model,name:l10n_co_hr_payroll_enterprise.model_l10n_co_hr_payroll_deduction_line
+msgid "Deduction details"
+msgstr "Detalles de deducciones"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__deduction_ids
+msgid "Deduction lines"
+msgstr "Lineas de deducciones"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__deductions_total_amount
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__deductions_total_amount
+msgid "Deductions"
+msgstr "Deducciones"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Deductions total"
+msgstr "Total de deducciones"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__edi_percent_select__default
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__edi_quantity_select__default
+msgid "Default"
+msgstr "Defecto"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_rule_input__name
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_deduction_line__name
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_earn_line__name
+#, python-format
+msgid "Description"
+msgstr "Descripción"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__display_name
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_rule_input__display_name
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_deduction_line__display_name
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_earn_line__display_name
+msgid "Display Name"
+msgstr "Nombre Público"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Document number"
+msgstr "Número de identificación"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Document type"
+msgstr "Tipo de documento"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip_edi__state__done
+msgid "Done"
+msgstr "Hecho"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip_edi__state__draft
+msgid "Draft"
+msgstr "Borrador"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__type_concept__earn
+#, python-format
+msgid "Earn"
+msgstr "Devengado"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.hr_payslip_view_form_l10n_co_hr_payroll
+msgid "Earn Details"
+msgstr "Detalles de Devengados"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_salary_rule__earn_category
+msgid "Earn category"
+msgstr "Categoría de devengado"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model,name:l10n_co_hr_payroll_enterprise.model_l10n_co_hr_payroll_earn_line
+msgid "Earn details"
+msgstr "Detalles de devengados"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__earn_ids
+msgid "Earn lines"
+msgstr "Lineas de devengados"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.hr_payslip_view_form_l10n_co_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.view_hr_payslip_edi_form
+msgid "Edi Payload"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.view_hr_payslip_edi_form
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.view_hr_payslip_edi_tree
+msgid "Edi Payslip"
+msgstr "Nómina Edi"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__name
+msgid "Edi Payslip Name"
+msgstr "Nombre de nómina Edi"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.actions.act_window,name:l10n_co_hr_payroll_enterprise.action_view_hr_payslip_edi
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__payslip_edi_ids
+#: model:ir.ui.menu,name:l10n_co_hr_payroll_enterprise.menu_payslip_edi_tree
+msgid "Edi Payslips"
+msgstr "Nóminas Edi"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.hr_salary_rule_view_form_l10n_co_hr_payroll
+msgid "Edi Percent"
+msgstr "Porcentaje Edi"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_line__edi_quantity
+msgid "Edi Quantity"
+msgstr "Cantidad Edi"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_line__edi_rate
+msgid "Edi Rate (%)"
+msgstr "Tasa Edi (%)"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.hr_payslip_view_form_l10n_co_hr_payroll
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.view_hr_payslip_edi_form
+msgid "Edi Response"
+msgstr "Respuesta Edi"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_salary_rule__edi_is_detailed
+msgid "Edi detailed"
+msgstr "Detalle Edi"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.actions.report,name:l10n_co_hr_payroll_enterprise.action_hr_payslip_co_report
+#: model:ir.actions.report,name:l10n_co_hr_payroll_enterprise.action_hr_payslip_edi_co_report
+msgid "Edi payslip"
+msgstr "Nómina Edi"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_salary_rule__edi_quantity_select
+msgid "Edi quantity"
+msgstr "Cantidad Edi"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__deduction_category__education
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_deduction_line__category__education
+#, python-format
+msgid "Education"
+msgstr "Educación"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__employee_id
+#, python-format
+msgid "Employee"
+msgstr "Empleado"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model,name:l10n_co_hr_payroll_enterprise.model_hr_contract
+msgid "Employee Contract"
+msgstr "Contrato de empleado"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Employee does not have a first name"
+msgstr "El empleado no tiene nombre"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Employee does not have a postal municipality"
+msgstr "El empleado no tiene un municipio postal"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Employee does not have a surname"
+msgstr "El empleado no tiene apellido"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Employee does not have an address."
+msgstr "El empleado no tiene una dirección."
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Employee does not have an document number"
+msgstr "El empleado no tiene un número de documento"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Employee does not have an identification type"
+msgstr "El empleado no tiene un tipo de identificación"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Employer"
+msgstr "Empleador"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_company__edi_payroll_consolidated_enable
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_config_settings__edi_payroll_consolidated_enable
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.res_config_settings_view_form_l10n_co_hr_payroll
+msgid "Enable consolidated electronic payroll for this company"
+msgstr "Habilitar nómina electrónica consolidada para esta compañía"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_company__edi_payroll_enable
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_config_settings__edi_payroll_enable
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.res_config_settings_view_form_l10n_co_hr_payroll
+msgid "Enable electronic payroll for this company"
+msgstr "Habilitar la nómina electrónica para esta empresa"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.res_config_settings_view_form_l10n_co_hr_payroll
+msgid "Enable production environment"
+msgstr "Habilitar entorno de producción"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "End"
+msgstr "Fin"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_earn_line__date_end
+msgid "End date"
+msgstr "Fecha final"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_earn_line__time_end
+msgid "End hour"
+msgstr "Hora final"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__endowment
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__endowment
+#, python-format
+msgid "Endowment"
+msgstr "Dotacion"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Environment"
+msgstr "Entorno"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_errors_messages
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_errors_messages
+msgid "Error messages"
+msgstr "Mensajes de error"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_expedition_date
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_expedition_date
+msgid "Expedition date"
+msgstr "Fecha de expedición"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Extraordinary"
+msgstr "Extraordinario"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Failed to process the request: %s"
+msgstr "No se pudo procesar la solicitud: %s"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip__month__2
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip_edi__month__2
+msgid "February"
+msgstr "Febrero"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "First name"
+msgstr "Primer Nombre"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_salary_rule__edi_percent_fix
+msgid "Fixed Percent"
+msgstr "Porcentaje Fijo"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__edi_percent_select__fix
+msgid "Fixed percent"
+msgstr "Porcentaje Fijo"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__deduction_category__health
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_deduction_line__category__health
+#, python-format
+msgid "Health"
+msgstr "Salud"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_contract__high_risk_pension
+#, python-format
+msgid "High risk pension"
+msgstr "Alto riesgo de pensión"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__hours_night_surcharge
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__hours_night_surcharge
+msgid "Hours night surcharge"
+msgstr "Horas recargo nocturno"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_payload_html
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_payload_html
+msgid "Html payload"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__id
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_rule_input__id
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_deduction_line__id
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_earn_line__id
+msgid "ID"
+msgstr "Identificación"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_is_not_test
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_is_not_test
+msgid "In production"
+msgstr "En producción"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Incapacities"
+msgstr "Incapacidades"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__incapacities_common
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__incapacities_common
+msgid "Incapacities common"
+msgstr "Incapacidades comunes"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__incapacities_professional
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__incapacities_professional
+msgid "Incapacities professional"
+msgstr "Incapacidades profesionales"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__incapacities_working
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__incapacities_working
+msgid "Incapacities working"
+msgstr "Incapacidades laborales"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Incapacity type"
+msgstr "Tipo de incapacidad"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,help:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__credit_note
+msgid "Indicates this edi payslip has a refund of another"
+msgstr "Indica que esta nómina Edi tiene una nota de ajuste de otra"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Information"
+msgstr "Información"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.hr_salary_rule_view_form_l10n_co_hr_payroll
+msgid "Input Data"
+msgstr "Datos de entrada"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_salary_rule__input_ids
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.hr_salary_rule_view_form_l10n_co_hr_payroll
+msgid "Inputs"
+msgstr "Entradas"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_contract__integral_salary
+#, python-format
+msgid "Integral salary"
+msgstr "Salario integral"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Interest payment"
+msgstr "Pago intereses"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__note
+msgid "Internal Note"
+msgstr "Nota interna"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/earn_line.py:0
+#, python-format
+msgid "Invalid end time: %s"
+msgstr "Tiempo final invalido: %s"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/earn_line.py:0
+#, python-format
+msgid "Invalid start time: %s"
+msgstr "Tiempo inicial invalido: %s"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_is_restored
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_is_restored
+msgid "Is restored?"
+msgstr "¿Ha sido restaurado?"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_is_valid
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_is_valid
+msgid "Is valid?"
+msgstr "¿Es válido?"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Issue date"
+msgstr "Fecha de emisión"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip__month__1
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip_edi__month__1
+msgid "January"
+msgstr "Enero"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip__month__7
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip_edi__month__7
+msgid "July"
+msgstr "Julio"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip__month__6
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip_edi__month__6
+msgid "June"
+msgstr "Junio"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,help:l10n_co_hr_payroll_enterprise.field_hr_payslip__date
+msgid "Keep empty to use the period of the validation(Payslip) date."
+msgstr "Manténgalo vacío para usar el período de la fecha de validación (Nómina)."
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi____last_update
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_rule_input____last_update
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_deduction_line____last_update
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_earn_line____last_update
+msgid "Last Modified on"
+msgstr "Última Modificación el"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__write_uid
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_rule_input__write_uid
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_deduction_line__write_uid
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_earn_line__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__write_date
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_rule_input__write_date
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_deduction_line__write_date
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_earn_line__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__layoffs
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__layoffs
+#, python-format
+msgid "Layoffs"
+msgstr "Cesantias"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__layoffs_interest
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__layoffs_interest
+msgid "Layoffs interest"
+msgstr "Interés de cesantías"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__legal_strikes
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__legal_strikes
+#, python-format
+msgid "Legal strikes"
+msgstr "Huelgas legales"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__deduction_category__libranzas
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_deduction_line__category__libranzas
+#, python-format
+msgid "Libranzas"
+msgstr "Libranzas"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Licensings"
+msgstr "Licencias"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__licensings_maternity_or_paternity_leaves
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__licensings_maternity_or_paternity_leaves
+msgid "Licensings maternity or paternity leaves"
+msgstr "Licencias de maternidad o paternidad"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__licensings_permit_or_paid_licenses
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__licensings_permit_or_paid_licenses
+msgid "Licensings permit or paid licenses"
+msgstr "Licencias remuneradas"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__licensings_suspension_or_unpaid_leaves
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__licensings_suspension_or_unpaid_leaves
+msgid "Licensings suspension or unpaid leaves"
+msgstr "Licencias no remunerada"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip__month__3
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip_edi__month__3
+msgid "March"
+msgstr "Marzo"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Maternity or paternity leaves"
+msgstr "Licencia de Maternidad o Paternidad"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip__month__5
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip_edi__month__5
+msgid "May"
+msgstr "Mayo"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__month
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__month
+msgid "Month"
+msgstr "Mes"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_company__stm_value
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_config_settings__stm_value
+msgid "Monthly transportation allowance"
+msgstr "Subsidio de transporte mensual"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Municipality"
+msgstr "Municipio"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Name"
+msgstr "Nombre"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "New"
+msgstr "Nuevo"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "No logical response was obtained from the API."
+msgstr "No se obtuvo ninguna respuesta lógica de la API."
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__assistances_non_salary
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__assistances_non_salary
+msgid "Non salary assistances"
+msgstr "Auxilios no salariales"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__bonuses_non_salary
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__bonuses_non_salary
+msgid "Non salary bonuses"
+msgstr "Bonificaciones no salariales"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Non salary food payment"
+msgstr "Bono Alimentación (No Salarial)"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__other_concepts_non_salary
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__other_concepts_non_salary
+msgid "Non salary other concepts"
+msgstr "Otros conceptos no salariales"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Non salary payment"
+msgstr "Pago (No Salarial)"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Non salary viatic"
+msgstr "Viaticos (No Salarial)"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Notes"
+msgstr "Notas"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Novelty"
+msgstr "Novedad"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip__month__11
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip_edi__month__11
+msgid "November"
+msgstr "Noviembre"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_number
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_number
+#, python-format
+msgid "Number"
+msgstr "Número"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip__month__10
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip_edi__month__10
+msgid "October"
+msgstr "Octubre"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.res_config_settings_view_form_l10n_co_hr_payroll
+msgid "Once enabled in DIAN"
+msgstr "Una vez habilitado en la DIAN"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Ordinary"
+msgstr "Ordinario"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__origin_payslip_id
+msgid "Origin Edi payslip"
+msgstr "Nómina Edi de origen"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__origin_payslip_id
+msgid "Origin payslip"
+msgstr "Nómina de origen"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__type_concept__other
+msgid "Other"
+msgstr "Otro"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__other_concepts
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__other_concepts
+#, python-format
+msgid "Other concepts"
+msgstr "Otro"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__deduction_category__other_deductions
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_deduction_line__category__other_deductions
+#, python-format
+msgid "Other deductions"
+msgstr "Otras deducciones"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Other names"
+msgstr "Otros nombres"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__others_total_amount
+msgid "Others"
+msgstr "Otros"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Overtime and surcharges type"
+msgstr "Tipo de horas extra y/o recargos"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__overtime_night_hours
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__overtime_night_hours
+msgid "Overtime night hours"
+msgstr "Horas extras nocturnas"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Overtimes and surcharges"
+msgstr "Horas extra y/o recargos"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_pdf_base64
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_pdf_base64
+msgid "PDF"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_pdf_download_link
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_pdf_download_link
+msgid "PDF link"
+msgstr "Enlace PDF"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.res_config_settings_view_form_l10n_co_hr_payroll
+msgid "Parameters"
+msgstr "Parámetros"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model,name:l10n_co_hr_payroll_enterprise.model_hr_payslip
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_deduction_line__payslip_id
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_earn_line__payslip_id
+msgid "Pay Slip"
+msgstr "Recibo de nómina"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_payload
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_payload
+msgid "Payload"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Payment"
+msgstr "Pago"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__payment_date
+msgid "Payment date"
+msgstr "Fecha de pago"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Payment dates"
+msgstr "Fechas de pago"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__payment_form_id
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__payment_form_id
+#, python-format
+msgid "Payment form"
+msgstr "Forma de pago"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__payment_method_id
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__payment_method_id
+#, python-format
+msgid "Payment method"
+msgstr "Método de pago"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Payment private"
+msgstr "Pago (Sanción Privada)"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Payment public"
+msgstr "Pago (Sanción Pública)"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Payment subsistence"
+msgstr "Pago (Fondo de Subsistencia)"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_contract__payroll_period_id
+#, python-format
+msgid "Payroll period"
+msgstr "Periodo de la nómina"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.res_config_settings_view_form_l10n_co_hr_payroll
+msgid "Payroll software ID"
+msgstr "Software ID de nómina"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.res_config_settings_view_form_l10n_co_hr_payroll
+msgid "Payroll software pin"
+msgstr "Pin de nómina"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model,name:l10n_co_hr_payroll_enterprise.model_hr_payslip_edi
+msgid "Payslip Edi"
+msgstr "Nómina Edi"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_rule_input__input_type_id
+msgid "Payslip Input Type"
+msgstr "Tipo de entrada de nómina"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model,name:l10n_co_hr_payroll_enterprise.model_hr_payslip_line
+msgid "Payslip Line"
+msgstr "Línea de recibo de nómina"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__payslip_ids
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.view_hr_payslip_edi_form
+msgid "Payslips"
+msgstr "Nóminas"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__deduction_category__pension_fund
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_deduction_line__category__pension_fund
+#, python-format
+msgid "Pension fund"
+msgstr "Fondos de pensión"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__deduction_category__pension_security_fund
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_deduction_line__category__pension_security_fund
+#, python-format
+msgid "Pension security fund"
+msgstr "Fondo de seguridad pensional"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__deduction_category__pension_security_fund_subsistence
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_deduction_line__category__pension_security_fund_subsistence
+msgid "Pension security fund subsistence"
+msgstr "Fondo de seguridad pensional de subsistencia"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_salary_rule__edi_percent_select
+msgid "Percent Type"
+msgstr "Tipo de porcentaje"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Percentage"
+msgstr "Porcentaje"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Percentage subsistence"
+msgstr "Porcentaje (Fondo de Subsistencia)"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.res_config_settings_view_form_l10n_co_hr_payroll
+msgid "Percentages"
+msgstr "Porcentajes"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Period"
+msgstr "Periodo"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Permit or paid licenses"
+msgstr "Licencia Remunerada"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Prefix"
+msgstr "Prefijo"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__primas
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__primas
+#, python-format
+msgid "Primas"
+msgstr "Prima legal"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__primas_non_salary
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__primas_non_salary
+msgid "Primas non salary"
+msgstr "Prima no salarial"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_company__edi_payroll_is_not_test
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_config_settings__edi_payroll_is_not_test
+msgid "Production environment"
+msgstr "Entorno de producción"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Provider"
+msgstr "Proveedor"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_salary_rule__edi_percent_python_compute
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__edi_percent_select__code
+msgid "Python Code"
+msgstr "Código Python"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_qr_code
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_qr_code
+msgid "QR code"
+msgstr "Código QR"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_qr_data
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_qr_data
+msgid "QR data"
+msgstr "Datos QR"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_qr_link
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_qr_link
+msgid "QR link"
+msgstr "Enlace QR"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_earn_line__quantity
+#, python-format
+msgid "Quantity"
+msgstr "Cantidad"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__number
+#, python-format
+msgid "Reference"
+msgstr "Referencia"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__deduction_category__refund
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__refund
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_deduction_line__category__refund
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__refund
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.view_hr_payslip_edi_form
+#, python-format
+msgid "Refund"
+msgstr "Reintegro"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Refund: "
+msgstr "Reintegro: "
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip_edi__state__cancel
+msgid "Rejected"
+msgstr "Rechazado"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Rounding"
+msgstr "Redondeo"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_deduction_line__rule_input_id
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_earn_line__rule_input_id
+msgid "Rule input"
+msgstr "Regla de entrada"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_company__smmlv_value
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_config_settings__smmlv_value
+msgid "SMMLV"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Salary"
+msgstr "Salario"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model,name:l10n_co_hr_payroll_enterprise.model_hr_salary_rule
+msgid "Salary Rule"
+msgstr "Regla salarial"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model,name:l10n_co_hr_payroll_enterprise.model_hr_rule_input
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_rule_input__input_id
+msgid "Salary Rule Input"
+msgstr "Entrada de regla salarial"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Salary Slip of %s for %s"
+msgstr "Nómina salarial de %s para %s"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Salary food payment"
+msgstr "Bono Alimentación (Salarial)"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Sanctions"
+msgstr "Sanciones"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__deduction_category__sanctions_private
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_deduction_line__category__sanctions_private
+msgid "Sanctions private"
+msgstr "Sanciones privadas"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__deduction_category__sanctions_public
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_deduction_line__category__sanctions_public
+msgid "Sanctions public"
+msgstr "Sanciones publicas"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Second surname"
+msgstr "Segundo apellido"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip__month__9
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip_edi__month__9
+msgid "September"
+msgstr "Septiembre"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_deduction_line__sequence
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_earn_line__sequence
+#, python-format
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.view_hr_payslip_edi_form
+msgid "Set to Draft"
+msgstr "Cambiar a borrador"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Settlement end date"
+msgstr "Fecha final de Nómina"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Settlement start date"
+msgstr "Fecha inicial de Nómina"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_signature
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_signature
+msgid "Signature"
+msgstr "Firma"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_company__edi_payroll_id
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_config_settings__edi_payroll_id
+#, python-format
+msgid "Software ID"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_company__edi_payroll_pin
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_config_settings__edi_payroll_pin
+msgid "Software PIN"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Software pin"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Start"
+msgstr "Inicio"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_earn_line__date_start
+msgid "Start date"
+msgstr "Fecha de inicio"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_earn_line__time_start
+msgid "Start hour"
+msgstr "Hora de inicio"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__state
+msgid "Status"
+msgstr "Estado"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_status_code
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_status_code
+msgid "Status code"
+msgstr "Código de estado"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_status_description
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_status_description
+msgid "Status description"
+msgstr "Descripción de estado"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_status_message
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_status_message
+msgid "Status message"
+msgstr "Mensaje de estado"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_contract__subtype_worker_id
+msgid "Subtype worker"
+msgstr "Subtipo de trabajador"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__sunday_holiday_daily_overtime
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__sunday_holiday_daily_overtime
+msgid "Sunday and Holiday daily overtime"
+msgstr "Horas extras diarias dominicales y festivas"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__sunday_holidays_night_surcharge_hours
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__sunday_holidays_night_surcharge_hours
+msgid "Sunday and holidays night surcharge hours"
+msgstr "Horas recargo nocturno dominicales y festivas"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__sunday_night_overtime_holidays
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__sunday_night_overtime_holidays
+msgid "Sunday night overtime and holidays"
+msgstr "Horas extras nocturnas dominicales y festivas"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Surname"
+msgstr "Apellido"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Suspension or unpaid leaves"
+msgstr "Licencia No Remunerada"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__sustainment_support
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__sustainment_support
+#, python-format
+msgid "Sustainment support"
+msgstr "Apoyo a Sostenimiento"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_sync
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_sync
+#, python-format
+msgid "Sync"
+msgstr "Sincronizar"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__deduction_category__tax_lien
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_deduction_line__category__tax_lien
+#, python-format
+msgid "Tax lien"
+msgstr "Embargo fiscal"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__telecommuting
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__telecommuting
+#, python-format
+msgid "Telecommuting"
+msgstr "Teletrabajo"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_company__edi_payroll_test_set_id
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_config_settings__edi_payroll_test_set_id
+msgid "TestSetId"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Text"
+msgstr "Texto"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#, python-format
+msgid ""
+"The 'Layoffs' and 'Layoffs interest' rules are mandatory in order to report "
+"Layoffs"
+msgstr ""
+"Las reglas 'Cesantías' e 'Intereses de Cesantías' son obligatorias para reportar "
+"Cesantías"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#, python-format
+msgid "The 'Primas' rule is mandatory in order to report Primas"
+msgstr "La regla 'Primas' es obligatoria para reportar Primas"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "The Origin payslip is required for adjusment notes."
+msgstr "La nómina de origen es obligatoria para notas de ajuste."
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,help:l10n_co_hr_payroll_enterprise.field_hr_rule_input__code
+#: model:ir.model.fields,help:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_deduction_line__code
+#: model:ir.model.fields,help:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_earn_line__code
+msgid "The code that can be used in the salary rules"
+msgstr "El código puede ser usado en las reglas salariales"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,help:l10n_co_hr_payroll_enterprise.field_hr_salary_rule__edi_quantity_select
+msgid "The computation method for rule Edi quantity."
+msgstr "Método de calculo para la cantidad Edi de la regla."
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,help:l10n_co_hr_payroll_enterprise.field_hr_salary_rule__edi_percent_select
+msgid "The computation method for the rule percent."
+msgstr "El método de calculo para el porcentaje de la regla."
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "The contract must have the 'Scheduled Pay' field configured"
+msgstr "El contrato debe tener configurado el campo 'Pago planificado'"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "The contract must have the 'Start Date' field configured"
+msgstr "El contrato debe tener configurado el campo 'Fecha de inicio'"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "The contract must have the 'Subtype worker' field configured"
+msgstr "El contrato debe tener configurado el campo 'Sontipo de trabajador'"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "The contract must have the 'Type contract' field configured"
+msgstr "El contrato debe tener configurado el campo 'Tipo de contrato"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "The contract must have the 'Type worker' field configured"
+msgstr "El contrato debe tener configurado el campo 'Tipo de trabajador'"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "The contract must have the 'Wage' field configured"
+msgstr "El contrato debe tener configurado el campo 'Salario'"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/deduction_line.py:0
+#, python-format
+msgid "The deduction amount must always be greater than 0 for: %s"
+msgstr "La cantidad de deducciones debe ser siempre mayor que 0 para: %s"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "The document could not be validated in DIAN."
+msgstr "No se pudo validar el documento ante la DIAN."
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/earn_line.py:0
+#, python-format
+msgid "The earn amount must always be greater than 0 for: %s"
+msgstr "La cantidad de devengados debe ser siempre mayor que 0 para: %s"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "The employee's document type cannot be NIT"
+msgstr "El tipo de documento del empleado no puede ser NIT"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/earn_line.py:0
+#, python-format
+msgid "The end date must always be greater than the start date for: %s"
+msgstr "La fecha final debe ser siempre mayor que la fecha inicial para: %s"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "The payroll must have a consecutive number, 'Reference' field"
+msgstr "La nómina debe tener un número consecutivo, campo 'Referencia'"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "The payroll must have a month"
+msgstr "La nómina debe tener un mes"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#, python-format
+msgid "The payroll must have a payment date"
+msgstr "La nómina debe tener una fecha de pago"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "The payroll must have a payment form"
+msgstr "La fecha debe tener una forma de pago"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "The payroll must have a payment method"
+msgstr "La nómina debe tener un método de pago"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#, python-format
+msgid "The payroll must have a period"
+msgstr "La nómina debe tener definido un periodo"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "The payroll must have a year"
+msgstr "La nómina debe tener un año"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "The reference payroll is not valid."
+msgstr "La nómina de referencia no es valida."
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "The sequence is required."
+msgstr "La secuencia es obligatoria."
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "The sequence must have a prefix"
+msgstr "La secuencia debe tener un prefijo"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#, python-format
+msgid "The time worked cannot be negative."
+msgstr "El tiempo trabajado no puede ser negativo."
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__deduction_category__third_party_payments
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__third_party_payments
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_deduction_line__category__third_party_payments
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__third_party_payments
+#, python-format
+msgid "Third party payments"
+msgstr "Pagos a Terceros"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#, python-format
+msgid "This concept must be calculated through the salary rules: %s"
+msgstr "Este concepto debe ser calculado a través de las reglas salariales: %s"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#, python-format
+msgid "This concept must be configured in salary rules as not detailed: %s"
+msgstr ""
+"Este concepto debe estar configurado en reglas salariales como no detallado: %s"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__total_amount
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__total_amount
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_l10n_co_hr_payroll_earn_line__total
+#, python-format
+msgid "Total"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__deduction_category__trade_unions
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_deduction_line__category__trade_unions
+#, python-format
+msgid "Trade unions"
+msgstr "Sindicatos"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Transports"
+msgstr "Transporte"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__transports_assistance
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__transports_assistance
+msgid "Transports assistance"
+msgstr "Auxilio de Transporte"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__transports_non_salary_viatic
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__transports_non_salary_viatic
+msgid "Transports non salary viatic"
+msgstr "Viáticos de transporte no salariales"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__transports_viatic
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__transports_viatic
+msgid "Transports viatic"
+msgstr "Viáticos de transporte"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Trm"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_salary_rule__type_concept
+msgid "Type concept"
+msgstr "Tipo de concepto"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_contract__type_contract_id
+msgid "Type contract"
+msgstr "Tipo de contrato"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_type_environment
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_type_environment
+msgid "Type environment"
+msgstr "Tipo de entorno"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_contract__type_worker_id
+msgid "Type worker"
+msgstr "Tipo de trabajador"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_uuid
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_uuid
+#, python-format
+msgid "UUID"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_company__uvt_value
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_res_config_settings__uvt_value
+msgid "UVT"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Vacation"
+msgstr "Vacaciones"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__vacation_common
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__vacation_common
+#, python-format
+msgid "Vacation common"
+msgstr "Vacaciones comunes"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__vacation_compensated
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__vacation_compensated
+#, python-format
+msgid "Vacation compensated"
+msgstr "Vacaciones compensadas"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Viatic"
+msgstr "Viatico"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__deduction_category__voluntary_pension
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_deduction_line__category__voluntary_pension
+#, python-format
+msgid "Voluntary pension"
+msgstr "Pensión voluntaria"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__vouchers
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__vouchers
+#, python-format
+msgid "Vouchers"
+msgstr "Vales"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__vouchers_non_salary
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__vouchers_non_salary
+msgid "Vouchers non salary"
+msgstr "Vales no salariales"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__vouchers_non_salary_food
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__vouchers_non_salary_food
+msgid "Vouchers non salary food"
+msgstr "Vales no salariales de alimentación"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__earn_category__vouchers_salary_food
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_earn_line__category__vouchers_salary_food
+msgid "Vouchers salary food"
+msgstr "Vales salariales de alimentación"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_payslip_edi__state__verify
+msgid "Waiting"
+msgstr "Esperando"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Withdrawal date"
+msgstr "Fecha de retiro"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__hr_salary_rule__deduction_category__withholding_source
+#: model:ir.model.fields.selection,name:l10n_co_hr_payroll_enterprise.selection__l10n_co_hr_payroll_deduction_line__category__withholding_source
+#, python-format
+msgid "Withholding source"
+msgstr "Retención en la Fuente"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__worked_days_total
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__worked_days_total
+#, python-format
+msgid "Worked days"
+msgstr "Días trabajados"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Worked salary"
+msgstr "Salario trabajado"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Worker code"
+msgstr "Código del trabajador"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Worker subtype"
+msgstr "Subtipo de trabajador"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Worker type"
+msgstr "Tipo de trabajador"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_salary_rule.py:0
+#, python-format
+msgid "Wrong percent python code defined for salary rule %s (%s). %s"
+msgstr ""
+"Código Python de porcentaje incorrecto definido para la regla salarial %s (%s). "
+"%s"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_xml_base64
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_xml_base64
+msgid "XML"
+msgstr ""
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_xml_name
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_xml_name
+msgid "XML name"
+msgstr "Nombre XML"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__year
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__year
+msgid "Year"
+msgstr "Año"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid ""
+"You cannot cancel a electronic payroll that has already been validated to the "
+"DIAN"
+msgstr ""
+"No puede cancelar una nomina electrónica que ya ha sido validada en la DIAN"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "You cannot delete a Edi payslip which is not draft or cancelled!"
+msgstr "¡No puede borrar una nomina electrónica en estado borrador o cancelado!"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "You do not have a software id and pin configured"
+msgstr "No tiene un software id ni un pin configurados"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "You have not configured a 'TestSetId'."
+msgstr "No tiene configurado un 'TestSetId'."
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "You must configure a token"
+msgstr "Debe configurar un token"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#, python-format
+msgid "You must create a sequence for adjusment notes with code 'salary.slip.note'"
+msgstr ""
+"Usted debe crear una secuencia para notas de ajuste con código 'salary.slip.note'"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Your company does not have a document number"
+msgstr "Su compañía no tiene un número de documento"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Your company does not have a name"
+msgstr "Su compañía no tiene un nombre"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Your company does not have a postal municipality"
+msgstr "Su compañía no tiene una municipalidad postal"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Your company does not have an address"
+msgstr "Su compañía no tiene una dirección"
+
+#. module: l10n_co_hr_payroll_enterprise
+#. odoo-python
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip.py:0
+#: code:addons/l10n_co_hr_payroll_enterprise/models/hr_payslip_edi.py:0
+#, python-format
+msgid "Your company does not have an identification type"
+msgstr "Su compañía no tiene un tipo de identificación"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_zip_base64
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_zip_base64
+msgid "Zip"
+msgstr "Documento Zip"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_zip_key
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_zip_key
+msgid "Zip key"
+msgstr "Llave Zip"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip__edi_zip_name
+#: model:ir.model.fields,field_description:l10n_co_hr_payroll_enterprise.field_hr_payslip_edi__edi_zip_name
+msgid "Zip name"
+msgstr "Nombre del Zip"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.view_hr_payslip_edi_tree
+msgid "accrued_total_amount"
+msgstr "total_de_devengados"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.view_hr_payslip_edi_tree
+msgid "deductions_total_amount"
+msgstr "total_de_deducciones"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.view_hr_payslip_edi_tree
+msgid "total_amount"
+msgstr "total"
+
+#. module: l10n_co_hr_payroll_enterprise
+#: model_terms:ir.ui.view,arch_db:l10n_co_hr_payroll_enterprise.view_hr_payslip_edi_tree
+msgid "worked_days_total"
+msgstr "total_días_trabajados"

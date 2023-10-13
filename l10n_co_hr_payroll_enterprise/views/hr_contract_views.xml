@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Jorels S.A.S. - Copyright (C) 2019-2023-->
+
+<!--This file is part of l10n_co_hr_payroll_enterprise.-->
+
+<!--This program is free software: you can redistribute it and/or modify-->
+<!--it under the terms of the GNU Lesser General Public License as published by-->
+<!--the Free Software Foundation, either version 3 of the License, or-->
+<!--(at your option) any later version.-->
+
+<!--This program is distributed in the hope that it will be useful,-->
+<!--but WITHOUT ANY WARRANTY; without even the implied warranty of-->
+<!--MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the-->
+<!--GNU Lesser General Public License for more details.-->
+
+<!--You should have received a copy of the GNU Lesser General Public License-->
+<!--along with this program. If not, see <https://www.gnu.org/licenses/>.-->
+
+<!--email: info@jorels.com-->
+
+<odoo>
+    <record id="hr_contract_view_form_l10n_co_hr_payroll" model="ir.ui.view">
+        <field name="name">hr.contract.form.l10n_co_hr_payroll.inherit</field>
+        <field name="model">hr.contract</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='hr_responsible_id']" position="after">
+                <field name="type_worker_id"/>
+                <field name="subtype_worker_id"/>
+                <field name="high_risk_pension"/>
+                <field name="integral_salary"/>
+                <field name="type_contract_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
