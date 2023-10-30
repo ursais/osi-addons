@@ -10,6 +10,8 @@ FISCAL_REGIMES_MAPPING = {
     "Régimen de Incorporación Fiscal": "621",
     "Régimen de las Actividades Empresariales "
     "con ingresos a través de Plataformas Tecnológicas": "625",
+    "Régimen de las Actividades Empresariales "
+    "con ingresos a través de Plataformas Tecnológicas.": "625",
     "Régimen Simplificado de Confianza": "626",
 }
 
@@ -21,11 +23,9 @@ class ImportCSF(models.TransientModel):
         vals = super().prepare_res_partner_values(text)
         split_data = text.split("\n")
         fiscal_regime = ""
-        for index, line in enumerate(split_data):
-            if "Regímenes" in line:
-                fiscal_regime += split_data[index + 2].strip()
-                if fiscal_regime == "Régimen":
-                    fiscal_regime = split_data[index + 3].strip()
+        for index, _line in enumerate(split_data):
+            if split_data[index].strip() in FISCAL_REGIMES_MAPPING.keys():
+                fiscal_regime = split_data[index].strip()
                 fiscal_regime = FISCAL_REGIMES_MAPPING[fiscal_regime]
         vals.update(
             {
