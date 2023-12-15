@@ -1,0 +1,66 @@
+<odoo>
+
+
+    <record id="xlsx_report_email_form_view" model="ir.ui.view">
+        <field name="name">xlsx_report_email_form_view</field>
+        <field name="model">xlsx.report.email</field>
+        <field name="arch" type="xml">
+            <form string="XLSX Report Email">
+                <sheet>
+                    <group>
+                        <field name="model_id"/>
+                        <field name="email"/>
+                        <field name="report_fields" widget="many2many_tags"/>
+                        <field name="groupby_fields" widget="many2many_tags"/>
+                        <field name="domain_expr"/>
+                        <field name="report_name"/>
+                        <field name="admin_user"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="xlsx_report_email_tree_view" model="ir.ui.view">
+        <field name="name">xlsx_report_email_tree_view</field>
+        <field name="model">xlsx.report.email</field>
+        <field name="arch" type="xml">
+            <tree string="XLSX Report Email">
+
+                <field name="model_id"/>
+                <field name="email"/>
+<!--                <field name="report_fields"/>-->
+<!--                <field name="domain_fields"/>-->
+                <field name="report_name"/>
+            </tree>
+        </field>
+    </record>
+
+
+
+    <record id="xlsx_report_email_action" model="ir.actions.act_window">
+        <field name="name">xlsx_report_email_action</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">xlsx.report.email</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            <!-- Add Text Here -->
+          </p><p>
+            <!-- More details about what a user can do with this object will be OK -->
+          </p>
+        </field>
+    </record>
+
+
+    <menuitem
+        id="xlsx_report_email_menu"
+        name="XLSX Report Email"
+        parent="base.menu_email"
+        action="xlsx_report_email_action"
+        sequence="100"
+    />
+
+
+</odoo>

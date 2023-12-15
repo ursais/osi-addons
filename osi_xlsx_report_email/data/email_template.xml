@@ -1,0 +1,19 @@
+<odoo>
+    <data noupdate="1">
+
+        <record id="email_template" model="mail.template">
+            <field name="name">XLSX Report Email Template</field>
+            <field name="model_id" ref="osi_xlsx_report_email.model_xlsx_report_email"/>
+            <field name="auto_delete" eval="False"/>
+            <field name="email_from">${(object.env.company.email)}</field>
+            <field name="email_to">${object.email}</field>
+            <field name="subject">Today's ${object.report_name} Report</field><field name="body_html">
+            <![CDATA[<p>Hello,
+            <br/>
+            <br/>Please find the atttached copy for the Inventory Archived Valuation Report for today.<br/>
+            </p>Regards,<br/>
+            ${(object.env.company.name)} ]]>
+            </field>
+        </record>
+    </data>
+</odoo>
