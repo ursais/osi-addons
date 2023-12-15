@@ -159,8 +159,7 @@ class XLSXReportEmail(models.Model):
 
             if attachment_rec:
                 email_values = rec.get_email_values()
-                sent_email = rec.send_email_with_attachment(attachment_rec, email_values)
-            return sent_email
+                rec.send_email_with_attachment(attachment_rec, email_values)
 
 
 

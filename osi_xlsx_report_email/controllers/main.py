@@ -34,7 +34,6 @@ def serialize_exception(f):
 
 class StockExportFormat(ExportFormat):
     def custom_base(self, data, token):
-        print("\n\n\n CUSTOM BASE CALLED ")
         params = json.loads(data)
         model, fields, ids, domain, import_compat = operator.itemgetter(
             "model", "fields", "ids", "domain", "import_compat"
@@ -87,7 +86,6 @@ class StockExcelExport(ExcelExport, StockExportFormat):
     @http.route("/web/export/custom/xlsx", type="json", auth="user")
     @serialize_exception
     def index_custom(self, **kwargs):
-        print("\n\n\n\n CUSTOM XLSX CALLED")
         data = kwargs.get("data")
         token = kwargs.get("token")
         b_content = None
