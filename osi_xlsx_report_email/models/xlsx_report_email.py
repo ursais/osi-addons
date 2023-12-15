@@ -26,7 +26,8 @@ class XLSXReportEmail(models.Model):
         relation="xlsx_report_email_ir_model_fields_domain_fields_rel",
         column1="xlsx_report_email_domain_field_id",
         column2="domain_field_id",
-        string='Group By Fields'
+        string='Group By Fields',
+        domain="[('model_id', '=', model_id)]"
     )
     domain_expr = fields.Text(string="Domain")
 
