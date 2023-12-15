@@ -32,7 +32,6 @@ class XLSXReportEmail(models.Model):
 
     report_name = fields.Char()
     new_field_ids = fields.Many2many()
-    admin_user = fields.Many2one('res.users')
 
     @api.onchange('model_id')
     def _onchange_model_set_domain(self):
@@ -48,7 +47,7 @@ class XLSXReportEmail(models.Model):
     def _get_db_user_info(self):
         password = os.environ.get("ODOO_ADMIN_USER_PASSWORD") or 'admin'
         db = self.env.cr.dbname
-        admin_user_login = self.admin_user.login or 'admin'
+        admin_user_login = self.env.ref("base.user_admin").login or 'admin'
         return admin_user_login, db, password
 
     def _build_payload(self, params=None):
@@ -144,16 +143,10 @@ class XLSXReportEmail(models.Model):
             export_endpoint = "/web/export/custom/xlsx"
             export_headers = {"Content-Type": "application/json"}
             export_report_data = rec._create_export_payload_data()
-
-
             payload = self._build_payload(export_report_data)
             export_response = self._get_request_response(session, HOST, export_endpoint, payload=payload,
                                                          headers=export_headers, cookies=auth_cookies)
             response_data = export_response.json()
-            # response_data = session.post(
-            #     export_req_url, json=payload, headers=headers, cookies=auth_cookies
-            # ).json()
-            #
             attachment_rec = None
             try:
                 b_data_content = response_data.get("result").get("output").get("data")

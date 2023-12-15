@@ -14,7 +14,6 @@
                         <field name="groupby_fields" widget="many2many_tags"/>
                         <field name="domain_expr"/>
                         <field name="report_name"/>
-                        <field name="admin_user"/>
                     </group>
                 </sheet>
             </form>
