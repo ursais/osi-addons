@@ -39,7 +39,7 @@ class XLSXReportEmail(models.Model):
             'domain':
                 {
                     'report_fields': [('model_id', '=', self.model_id.id)],
-                    'domain_fields': [('model_id', '=', self.model_id.id)]
+                    'groupby_fields': [('model_id', '=', self.model_id.id)]
 
                 }
         }
