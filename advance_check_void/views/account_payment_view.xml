@@ -14,6 +14,10 @@
                     decoration-success="payment_state == 'paid'"
                 />
             </xpath>
+            <xpath expr="//field[@name='payment_method_id']" position="after">
+                <field name="is_matched"/>
+                <field name="check_number"/>
+            </xpath>
         </field>
     </record>
 
