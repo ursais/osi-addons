@@ -126,6 +126,7 @@ class StockMove(models.Model):
             if (
                 move.product_id.tracking in ["serial", "lot"]
                 and move.picking_id.picking_type_id.code == "outgoing"
+                and move.product_id.categ_id.property_cost_method == "fifo"
             ):
                 self.get_svl_ids(move)
         return res
