@@ -12,6 +12,7 @@ _logger = logging.getLogger(__name__)
 class XLSXReportEmail(models.Model):
     _name = 'xlsx.report.email'
 
+    name = fields.Char("Name")
     model_id = fields.Many2one('ir.model')
     email = fields.Char(string='Email To send to')
     report_fields = fields.Many2many(
@@ -29,7 +30,7 @@ class XLSXReportEmail(models.Model):
         string='Group By Fields'
     )
     domain_expr = fields.Text(string="Domain")
-
+    model_name = fields.Char(related='model_id.model', string='Model Name', readonly=True)
     report_name = fields.Char()
     new_field_ids = fields.Many2many()
 
