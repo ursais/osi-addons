@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="view_settlement_tree">
+        <field name="name">Settlements tree - Paid decoration</field>
+        <field name="model">commission.settlement</field>
+        <field name="inherit_id" ref="commission.view_settlement_tree" />
+        <field name="arch" type="xml">
+            <tree position="attributes">
+                <attribute name="decoration-muted">state == 'paid'</attribute>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_settlement_form">
+        <field name="name">Settlements - Add paid stuff</field>
+        <field name="model">commission.settlement</field>
+        <field name="inherit_id" ref="commission.view_settlement_form" />
+        <field name="arch" type="xml">
+            <button name="action_invoice" position="attributes">
+                <attribute name="attrs">{'invisible': True}</attribute>
+            </button>
+            <button name="action_cancel" position="before">
+                <button
+                    string="Mark Paid"
+                    attrs="{'invisible': ['|', ('state', 'not in', ['settled','invoiced']), ('agent_type', '!=', 'agent')]}"
+                    class="oe_highlight"
+                    type="object"
+                    name="action_paid"
+                    groups="account.group_account_invoice"
+                />
+            </button>
+        </field>
+    </record>
+   <record model="ir.actions.server" id="action_mark_paid">
+       <field name="name">Mark Settlements Paid</field>
+       <field name="model_id" ref="osi_account_commission.model_commission_settlement"/>
+       <field name="binding_model_id" ref="osi_account_commission.model_commission_settlement"/>
+       <field name="state">code</field>
+       <field name="code">
+           action = records.action_paid()
+       </field>
+   </record>	    
+</odoo>
+
