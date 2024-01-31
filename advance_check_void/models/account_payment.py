@@ -177,6 +177,7 @@ class AccountPayment(models.Model):
         return result
 
     def action_cancel(self):
+        result = super(AccountPayment, self).action_cancel()
         for rec in self:
             if rec.check_number and rec.payment_type == "outbound":
                 raise ValidationError(
@@ -184,7 +185,6 @@ class AccountPayment(models.Model):
                         "You cannot allow cancelling payment because a check is already printed."
                     )
                 )
-            result = super(AccountPayment, rec).action_cancel()
             payment_check_history_obj = self.env["payment.check.history"]
             domain = [
                 ("payment_id", "=", rec.id),
