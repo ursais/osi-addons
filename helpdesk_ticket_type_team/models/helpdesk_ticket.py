@@ -9,7 +9,13 @@ class HelpdeskTicket(models.Model):
     @api.onchange("team_id")
     def _onchange_team_id(self):
         self.ticket_type_id = False
+        self.user_id = False
         if not self.team_id or not self.team_id.ticket_type_ids:
             return {"domain": {"ticket_type_id": [("team_id", "=", False)]}}
         else:
-            return {"domain": {"ticket_type_id": [("team_id", "=", self.team_id.id)]}}
+            return {
+                "domain": {
+                    "ticket_type_id": [("team_id", "=", self.team_id.id)],
+                    "user_id": [("team_ids", "=", self.team_id.id)],
+                }
+            }
