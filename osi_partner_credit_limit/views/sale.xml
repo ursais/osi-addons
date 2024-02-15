@@ -27,12 +27,18 @@
         />
         <field name="arch" type="xml">
             <field name='ship_hold' position="attributes">
-                <attribute name="readonly">"state not in ('draft', 'sent', 'sale')"</attribute>
-                <attribute name="groups">osi_partner_credit_limit.group_credit_hold</attribute>
+                <attribute
+                    name="readonly"
+                >"state not in ('draft', 'sent', 'sale')"</attribute>
+                <attribute
+                    name="groups"
+                >osi_partner_credit_limit.group_credit_hold</attribute>
             </field>
             <field name='credit_override' position="attributes">
                 <attribute name="readonly">"state in ('cancel', 'done')"</attribute>
-                <attribute name="groups">osi_partner_credit_limit.group_credit_hold</attribute>
+                <attribute
+                    name="groups"
+                >osi_partner_credit_limit.group_credit_hold</attribute>
             </field>
         </field>
     </record>
