@@ -45,4 +45,5 @@ class SaleOrder(models.Model):
                         To Override, check Override Sales/Credit/Delivery Hold"""
                 )
                 raise ValidationError(message)
+            self.state = prev_state
             return super(SaleOrder, self).action_confirm()
