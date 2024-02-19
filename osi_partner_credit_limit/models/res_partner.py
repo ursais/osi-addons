@@ -4,6 +4,8 @@
 from datetime import datetime, timedelta
 
 from odoo import fields, models
+import logging
+logger = logging.getLogger(__name__)
 
 
 class Partner(models.Model):
