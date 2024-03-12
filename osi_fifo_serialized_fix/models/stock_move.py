@@ -3,7 +3,6 @@
 
 from odoo import _, models
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero, float_repr, float_round, float_compare
 
 
 class StockMove(models.Model):
@@ -66,13 +65,20 @@ class StockMove(models.Model):
                 else:
                     move.stock_valuation_layer_ids.lot_ids = [(6, 0, svl_ids[0][2])]
                     svl = self.env["stock.valuation.layer"].browse(svl_ids[0][0])
-                    linked_svl = self.env["stock.valuation.layer"].search([('stock_valuation_layer_id', '=', svl.id)])
+                    linked_svl = self.env["stock.valuation.layer"].search(
+                        [("stock_valuation_layer_id", "=", svl.id)]
+                    )
                     unit_cost = svl.unit_cost
                     for link_svl in linked_svl:
                         unit_cost += link_svl.value
                     move.stock_valuation_layer_ids.unit_cost = unit_cost
-                    move.stock_valuation_layer_ids.value = (move.stock_valuation_layer_ids.quantity * move.stock_valuation_layer_ids.unit_cost)
-                    move.stock_valuation_layer_ids.remaining_value = move.stock_valuation_layer_ids.value
+                    move.stock_valuation_layer_ids.value = (
+                        move.stock_valuation_layer_ids.quantity
+                        * move.stock_valuation_layer_ids.unit_cost
+                    )
+                    move.stock_valuation_layer_ids.remaining_value = (
+                        move.stock_valuation_layer_ids.value
+                    )
                 ji_ids[0].move_id.button_draft()
                 # The Valuation Layer has been changed,
                 # now we have to edit the STJ Entry
@@ -96,7 +102,11 @@ class StockMove(models.Model):
         svl_ids = []
         # We need to get all of the valuation layers associated with this product
         test_vals = self.env["stock.valuation.layer"].search(
-            [("product_id", "=", move.product_id.id), ('stock_valuation_layer_id', '=', False)], order="id desc"
+            [
+                ("product_id", "=", move.product_id.id),
+                ("stock_valuation_layer_id", "=", False),
+            ],
+            order="id desc",
         )
         for line_id in move.move_line_ids:
             for valuation in test_vals:
@@ -116,10 +126,8 @@ class StockMove(models.Model):
                         self.increment_qty(valuation.id, svl_ids, line_id.lot_id.id)
         if len(svl_ids) == 0 and self.location_id.create_je is True:
             raise UserError(
-                _(
-                    "Need Check Stock Valution Layer For this Product :- %s"
-                    % (move.product_id.name)
-                )
+                _("Need Check Stock Valution Layer For this Product :- %s")
+                % (move.product_id.name)
             )
         self.get_ji_ids(move, svl_ids)
 

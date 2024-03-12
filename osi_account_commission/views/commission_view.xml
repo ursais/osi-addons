@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="commission_form_inh_comm" model="ir.ui.view">
+        <field name="name">commissions form inh</field>
+        <field name="model">commission</field>
+        <field name="inherit_id" ref="commission.commission_form" />
+        <field name="arch" type="xml">
+            <field name="section_ids" position="after">
+                <group colspan="2">
+                    <field
+                        name="amount"
+                        attrs="{'invisible': [('commission_type', '!=', 'amount')]}"
+                    />
+                </group>
+            </field>
+        </field>
+    </record>
+
+</odoo>
