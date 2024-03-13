@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_encrypt_line_manager,osi_encryption_encrypt_line_manager,model_encrypt_line,base.group_system,1,1,1,1
+access_generate_encrypt_lines_wizard_manager,osi_encryption_generate_encrypt_lines_wizard,model_generate_encrypt_lines_wizard,base.group_system,1,1,1,1
+access_encrypt_lines_wizard_manager,osi_encryption_encrypt_lines_wizard,model_encrypt_lines_wizard,base.group_system,1,1,1,1
+access_decrypt_lines_wizard_manager,osi_encryption_decrypt_lines_wizard,model_decrypt_lines_wizard,base.group_system,1,1,1,1
+access_drop_index_wizard_manager,osi_encryption_drop_index_wizard,model_drop_index_wizard,base.group_system,1,1,1,1
