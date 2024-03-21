@@ -40,7 +40,7 @@ class HelpdeskTicket(models.Model):
             i = 1
             # Wait for the campaign to finish
             start_time = datetime.now()
-            while res.get("status") != "FINISHED" and start_time + timedelta(minutes=2) < datetime.now():
+            while res.get("status") != "FINISHED" and start_time + timedelta(minutes=2) > datetime.now():
                 time.sleep(i)
                 i += 2
                 res = voicent_obj.checkStatus(campaign)
