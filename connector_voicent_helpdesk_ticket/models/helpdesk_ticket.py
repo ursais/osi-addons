@@ -7,6 +7,7 @@ import io
 import shutil
 import tempfile
 import time
+from datetime import datetime, timedelta
 
 from voicent import voicent
 
@@ -38,7 +39,8 @@ class HelpdeskTicket(models.Model):
             res = voicent_obj.checkStatus(campaign)
             i = 1
             # Wait for the campaign to finish
-            while res.get("status") != "FINISHED":
+            start_time = datetime.now()
+            while res.get("status") != "FINISHED" and start_time + timedelta(minutes=2) < datetime.now():
                 time.sleep(i)
                 i += 2
                 res = voicent_obj.checkStatus(campaign)
