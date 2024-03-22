@@ -1,0 +1,23 @@
+<odoo>
+    <record id="simple_void_check_form" model="ir.ui.view">
+        <field name="name">simple_void_check_form</field>
+        <field name="model">simple.void.check</field>
+        <field name="arch" type="xml">
+            <form string="Void Payment Wizard">
+                <group>
+                    <field name="payment_id" invisible="1" />
+                    <field name="void_reason" required="1" />
+                </group>
+                <footer>
+                    <button
+                        class="oe_highlight"
+                        name="simple_void_check"
+                        string="Confirm"
+                        type="object"
+                    />
+                    <button class="oe_link" special="cancel" string="Cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
