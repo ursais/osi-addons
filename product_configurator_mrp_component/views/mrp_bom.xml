@@ -1,0 +1,82 @@
+<odoo>
+    <record id="mrp_bom_configurable_components_inherit" model="ir.ui.view">
+        <field name="name">mrp.bom.configure.components</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view" />
+        <field name="arch" type="xml">
+            <page name="components" position="after">
+                <page
+                    name="config_components"
+                    string="Configurable Components"
+                    invisible="not config_ok"
+                >
+                    <field name="available_config_components" invisible="1" />
+                    <field
+                        name="bom_line_config_ids"
+                        context="{'default_bom_id': active_id, 'default_product_tmpl_id': False}"
+                    >
+                        <tree editable="bottom">
+                            <field name="available_config_components" invisible="1" />
+                            <field
+                                name="product_tmpl_id"
+                                domain="[('id', 'in', available_config_components)]"
+                            />
+                            <field name="product_qty" />
+                            <field
+                                name="product_uom_id"
+                                options="{'no_open':True,'no_create':True}"
+                                groups="uom.group_uom"
+                            />
+                            <field name="bom_id" invisible="1" />
+                        </tree>
+                        <form string="Configure Components">
+                            <group>
+                                <field
+                                    name="available_config_components"
+                                    invisible="1"
+                                />
+                                <field
+                                    name="product_tmpl_id"
+                                    domain="[('id', 'in', available_config_components)]"
+                                />
+                                <field name="product_qty" />
+                                <field
+                                    name="product_uom_id"
+                                    options="{'no_open':True,'no_create':True}"
+                                    groups="uom.group_uom"
+                                />
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </page>
+            <xpath
+                expr="//field[@name='bom_line_ids']/tree/field[@name='operation_id']"
+                position="before"
+            >
+                <field name="config_ok" invisible="1" />
+                <field name="product_template_attribute_value_ids" invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='bom_line_ids']/tree" position="inside">
+                <button
+                    readonly="True"
+                    class="oe_inline oe_stat_button"
+                    icon="fa-exclamation-triangle"
+                    invisible="not config_ok or product_template_attribute_value_ids"
+                    string=""
+                    title="Product has been set to configurable."
+                />
+            </xpath>
+        </field>
+    </record>
+    <record id="mrp_bom_filter_inherit" model="ir.ui.view">
+        <field name="name">mrp.bom.configure.components.filter</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.view_mrp_bom_filter" />
+        <field name="arch" type="xml">
+            <field name="bom_line_ids" position="after">
+                <field name="bom_line_config_ids" string="Configurable Component" />
+            </field>
+        </field>
+    </record>
+</odoo>

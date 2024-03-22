@@ -1,0 +1,164 @@
+<odoo>
+
+    <!-- configuration start -->
+    <record id="mrp_production_form_view_config" model="ir.ui.view">
+        <field name="name">product.config.mrp.form.view</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="js_class">product_configurator_mrp_form</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_title')]" position="attributes">
+                <attribute
+                    name="class"
+                >oe_title col-lg-10 col-md-9 col-sm-9 col-xs-12 pull-left</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                <div class="col-lg-2 col-md-3 col-sm-3 col-xs-12 pull-left">
+                    <field name="config_ok" invisible="1" />
+                    <button
+                        name="reconfigure_product"
+                        groups="product_configurator.group_product_configurator"
+                        class="oe_highlight"
+                        type="object"
+                        string="Reconfigure"
+                        invisible="not config_ok or state != 'draft'"
+                    />
+                </div>
+            </xpath>
+            <page name="finished_products" position="after">
+                <page string="Custom Values" name="custom_values">
+                    <field name="custom_value_ids" readonly="True" force_save="True">
+                        <tree>
+                            <field name="attribute_id" />
+                            <field name="cfg_session_id" />
+                            <field name="attachment_ids" />
+                        </tree>
+                    </field>
+                </page>
+            </page>
+        </field>
+    </record>
+
+    <record id="mrp_production_tree_view_config" model="ir.ui.view">
+        <field name="name">product.config.mrp.tree.view</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_tree_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">product_configurator_mrp_tree</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_production_kanban_view_config" model="ir.ui.view">
+        <field name="name">product.config.mrp.kanban.view</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_kanban_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="js_class">product_configurator_mrp_kanban</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp.mrp_production_action" model="ir.actions.act_window">
+        <field
+            name="context"
+        >{"search_default_todo": True, "default_company_id": allowed_company_ids[0], "custom_create_variant": True}</field>
+    </record>
+
+    <record id="mrp_bom_form_view" model="ir.ui.view">
+        <field name="name">product.config.mrp.bom.form.view</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view" />
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='product_tmpl_id']" position="after">
+                <field name="config_ok" readonly="True" force_save="True" />
+            </xpath>
+
+            <xpath expr="//field[@name='product_id']" position="attributes">
+                <attribute name="readonly">"config_ok"</attribute>
+                <attribute name="force_save">True</attribute>
+            </xpath>
+
+            <xpath
+                expr="//field[@name='bom_product_template_attribute_value_ids']"
+                position="attributes"
+            >
+                <attribute
+                    name="column_invisible"
+                >parent.type not in ('normal', 'phantom')</attribute>
+                <attribute name="readonly">parent.config_ok</attribute>
+            </xpath>
+
+             <xpath
+                expr="//field[@name='bom_product_template_attribute_value_ids']"
+                position="after"
+            >
+                <field
+                    name="config_set_id"
+                    readonly="not parent.config_ok"
+                    options="{'create_edit': True, 'open': 'True'}"
+                />
+             </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_bom_line_config_set_form_view" model="ir.ui.view">
+        <field name="name">mrp.bom.line.configuration.set.form.view</field>
+        <field name="model">mrp.bom.line.configuration.set</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name" />
+                    <field name="configuration_ids">
+                        <tree editable="bottom">
+                            <field name="value_ids" widget="many2many_tags" />
+                        </tree>
+                    </field>
+                    <field name="bom_line_ids">
+                        <tree>
+                            <field name="bom_id" />
+                            <field name="product_id" />
+                        </tree>
+                    </field>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="mrp_bom_line_config_set_tree_view" model="ir.ui.view">
+        <field name="name">mrp.bom.line.configuration.set.tree.view</field>
+        <field name="model">mrp.bom.line.configuration.set</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_mrp_bom_line_config_set" model="ir.actions.act_window">
+        <field name="name">Product Attribute Sets</field>
+        <field name="res_model">mrp.bom.line.configuration.set</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        id="menu_mrp_bom_line_config_set"
+        action="action_mrp_bom_line_config_set"
+        parent="mrp.menu_mrp_bom"
+        sequence="20"
+    />
+
+    <menuitem
+        id="product_menu_mrp_bom_line_config_set"
+        action="action_mrp_bom_line_config_set"
+        name="Configuration Sets"
+        parent="product_configurator.menu_product_configurable_settings"
+        sequence="45"
+    />
+
+</odoo>

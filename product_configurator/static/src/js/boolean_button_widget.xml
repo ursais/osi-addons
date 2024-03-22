@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="product_configurator.BooleanButtonField" owl="1">
+        <div t-ref="root" t-on-click="onChange">
+            <CheckBox
+                id="props.id"
+                value="props.value or false"
+                className="'d-inline-block me-2'"
+                disabled="isReadonly"
+                onChange.bind="onChange"
+            />
+        </div>
+    </t>
+
+</templates>

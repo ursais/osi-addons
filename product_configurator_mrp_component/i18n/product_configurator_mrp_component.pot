@@ -1,0 +1,135 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* product_configurator_mrp_component
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: product_configurator_mrp_component
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_mrp_bom_line__product_template_attribute_value_ids
+msgid "Attribute Values"
+msgstr ""
+
+#. module: product_configurator_mrp_component
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_mrp_bom__available_config_components
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_mrp_bom_line_config__available_config_components
+msgid "Available Config Components"
+msgstr ""
+
+#. module: product_configurator_mrp_component
+#: model:ir.model,name:product_configurator_mrp_component.model_mrp_bom_line_config
+msgid "BOM Line Configuration"
+msgstr ""
+
+#. module: product_configurator_mrp_component
+#: model:ir.model,name:product_configurator_mrp_component.model_mrp_bom
+msgid "Bill of Material"
+msgstr ""
+
+#. module: product_configurator_mrp_component
+#: model:ir.model,name:product_configurator_mrp_component.model_mrp_bom_line
+msgid "Bill of Material Line"
+msgstr ""
+
+#. module: product_configurator_mrp_component
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_mrp_bom_line_config__bom_id
+msgid "BoM"
+msgstr ""
+
+#. module: product_configurator_mrp_component
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_mrp_bom_line__config_ok
+msgid "Can be Configured"
+msgstr ""
+
+#. module: product_configurator_mrp_component
+#: model_terms:ir.ui.view,arch_db:product_configurator_mrp_component.mrp_bom_filter_inherit
+msgid "Configurable Component"
+msgstr ""
+
+#. module: product_configurator_mrp_component
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_mrp_bom__bom_line_config_ids
+#: model_terms:ir.ui.view,arch_db:product_configurator_mrp_component.mrp_bom_configurable_components_inherit
+msgid "Configurable Components"
+msgstr ""
+
+#. module: product_configurator_mrp_component
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_mrp_bom_line_config__product_tmpl_id
+msgid "Configurable Product"
+msgstr ""
+
+#. module: product_configurator_mrp_component
+#: model_terms:ir.ui.view,arch_db:product_configurator_mrp_component.mrp_bom_configurable_components_inherit
+msgid "Configure Components"
+msgstr ""
+
+#. module: product_configurator_mrp_component
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_mrp_bom_line_config__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: product_configurator_mrp_component
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_mrp_bom_line_config__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: product_configurator_mrp_component
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_mrp_bom__display_name
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_mrp_bom_line__display_name
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_mrp_bom_line_config__display_name
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_product_config_session__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: product_configurator_mrp_component
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_mrp_bom__id
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_mrp_bom_line__id
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_mrp_bom_line_config__id
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_product_config_session__id
+msgid "ID"
+msgstr ""
+
+#. module: product_configurator_mrp_component
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_mrp_bom____last_update
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_mrp_bom_line____last_update
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_mrp_bom_line_config____last_update
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_product_config_session____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: product_configurator_mrp_component
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_mrp_bom_line_config__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: product_configurator_mrp_component
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_mrp_bom_line_config__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: product_configurator_mrp_component
+#: model:ir.model,name:product_configurator_mrp_component.model_product_config_session
+msgid "Product Config Session"
+msgstr ""
+
+#. module: product_configurator_mrp_component
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_mrp_bom_line_config__product_uom_id
+msgid "Product Unit of Measure"
+msgstr ""
+
+#. module: product_configurator_mrp_component
+#: model_terms:ir.ui.view,arch_db:product_configurator_mrp_component.mrp_bom_configurable_components_inherit
+msgid "Product has been set to configurable."
+msgstr ""
+
+#. module: product_configurator_mrp_component
+#: model:ir.model.fields,field_description:product_configurator_mrp_component.field_mrp_bom_line_config__product_qty
+msgid "Quantity"
+msgstr ""

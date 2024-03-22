@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+     <!-- Inherit Form View to Modify it -->
+    <record id="account_payment_form_view_inherit" model="ir.ui.view">
+        <field name="name">account.payment.form.view.inherit</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="ap_partner_id" invisible="1" />
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

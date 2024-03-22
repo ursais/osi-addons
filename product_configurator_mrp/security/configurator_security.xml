@@ -1,0 +1,13 @@
+<odoo>
+
+    <record id="group_product_configurator_mrp" model="res.groups">
+        <field name="name">Products &amp; BOMS</field>
+        <field name="category_id" ref="product_configurator.product_config_category" />
+        <field
+            eval="[(4, ref('product_configurator.group_product_configurator'))]"
+            name="implied_ids"
+        />
+        <field eval="[(4, ref('base.user_root'))]" name="users" />
+    </record>
+
+</odoo>

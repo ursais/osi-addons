@@ -1,0 +1,23 @@
+<odoo noupdate="1">
+
+    <record id="server_action_mrp_bom_clean_components" model="ir.actions.server">
+        <field name="name">Clean Components</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="mrp.model_mrp_bom"/>
+        <field name="binding_model_id" ref="mrp.model_mrp_bom"/>
+        <field name="state">code</field>
+        <field name="code">
+for bom in records:
+    # Only clean parent BoM
+    if not bom.product_id:
+        # Clean Archived Configurable Components
+        archived_configurable_components = bom.mapped("bom_line_config_ids").filtered(lambda l: l.product_tmpl_id.active == False)
+        archived_configurable_components.unlink()
+
+        # Clean Archived Components
+        archived_components = bom.mapped("bom_line_ids").filtered(lambda l: l.product_id.active == False)
+        archived_components.unlink()
+        </field>
+    </record>
+
+</odoo>

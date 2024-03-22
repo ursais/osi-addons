@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- Configuration Steps -->
+
+    <record id="config_step_form_view" model="ir.ui.view">
+        <field name="name">product.configurator.config.step.form</field>
+        <field name="model">product.config.step</field>
+        <field name="arch" type="xml">
+            <form string="Configuration Step">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="config_step_tree_view" model="ir.ui.view">
+        <field name="name">product.configurator.config.step.tree</field>
+        <field name="model">product.config.step</field>
+        <field name="arch" type="xml">
+            <form string="Configuration Step">
+                <tree name="name">
+                    <field name="name" />
+                </tree>
+            </form>
+        </field>
+    </record>
+
+    <!-- Configuration Restrictions -->
+
+    <record id="product_config_domain_form_view" model="ir.ui.view">
+        <field name="name">product.configurator.domain.form</field>
+        <field name="model">product.config.domain</field>
+        <field name="arch" type="xml">
+            <form string="Configuration Restrictions">
+                <group>
+                    <group>
+                        <field name="name" />
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Rules">
+                        <field name="domain_line_ids">
+                            <tree editable="bottom">
+                                <field name="sequence" widget="handle" />
+                                <field
+                                    name="attribute_id"
+                                    options="{'no_create': True, 'no_create_edit': True}"
+                                />
+                                <field name="condition" />
+                                <field
+                                    name="value_ids"
+                                    widget="many2many_tags"
+                                    options="{'no_create': True, 'no_create_edit': True}"
+                                    context="{'show_attribute': False}"
+                                    domain="[('attribute_id', '=', attribute_id)]"
+                                />
+                                <field name="operator" />
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Inherited">
+                        <field name="implied_ids" />
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+    <!-- Created seprate view for the template -->
+    <record id="product_config_domain_form_view_template" model="ir.ui.view">
+        <field name="name">product.configurator.domain.form.template</field>
+        <field name="model">product.config.domain</field>
+        <field name="arch" type="xml">
+            <form string="Configuration Restrictions">
+                <group>
+                    <group>
+                        <field name="name" />
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Rules">
+                        <field name="domain_line_ids">
+                            <tree editable="bottom">
+                                <field name="sequence" widget="handle" />
+
+                                <field
+                                    name="attribute_id"
+                                    domain="[('id', 'in', context.get('product_attribute_ids', []))]"
+                                    options="{'no_create': True, 'no_create_edit': True}"
+                                />
+                                <field name="condition" />
+                                <field
+                                    name="template_attribute_value_ids"
+                                    invisible="1"
+                                />
+                                <field
+                                    name="value_ids"
+                                    widget="many2many_tags"
+                                    options="{'no_create': True, 'no_create_edit': True}"
+                                    context="{'show_attribute': False}"
+                                    domain="[('id', 'in', template_attribute_value_ids)]"
+                                />
+                                <field name="operator" />
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Inherited">
+                        <field name="implied_ids" />
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+
+    <record id="product_config_session_tree_view" model="ir.ui.view">
+        <field name="name">product.config.session.tree</field>
+        <field name="model">product.config.session</field>
+        <field name="arch" type="xml">
+            <tree create="false">
+                <field name="name" />
+                <field name="product_tmpl_id" />
+                <field name="value_ids" widget="many2many_tags" />
+                <field name="user_id" />
+                <field name="custom_value_ids" />
+                <field name="currency_id" invisible="1" />
+                <field
+                    name="price"
+                    widget='monetary'
+                    options="{'currency_field': 'currency_id', 'field_digits': True}"
+                />
+                <field name="config_step_name" />
+                <field name="product_id" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="product_config_session_form_view" model="ir.ui.view">
+        <field name="name">product.config.session.form</field>
+        <field name="model">product.config.session</field>
+        <field name="arch" type="xml">
+            <form string="Configuration Sessions" editable="bottom" create="false">
+                <header>
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <group>
+                        <h1><field name="name" nolabel="1" /></h1>
+                    </group>
+                    <group>
+                        <field name="product_tmpl_id" />
+                        <field name="user_id" />
+                        <field name="value_ids" widget="many2many_tags" />
+                        <field name="currency_id" invisible="1" />
+                        <field
+                            name="price"
+                            widget='monetary'
+                            options="{'currency_field': 'currency_id', 'field_digits': True}"
+                        />
+                        <field name="config_step_name" />
+                        <field name="product_id" />
+                    </group>
+                    <notebook>
+                        <page name="custom_vals" string="Custom Values">
+                            <field name="custom_value_ids">
+                                <tree editable="bottom">
+                                    <field name="attribute_id" />
+                                    <field name="value" />
+                                    <field
+                                        name="attachment_ids"
+                                        widget="many2many_tags"
+                                    />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

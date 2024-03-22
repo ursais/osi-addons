@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="l10n_us_payment_nacha.account_payment_method_nacha" model="account.payment.method">
+        <field name="name">NACHA (PPD)</field>
+        <field name="code">nacha</field>
+        <field name="payment_type">outbound</field>
+    </record>
+
+    <record id="account_payment_method_nacha_ccd" model="account.payment.method">
+        <field name="name">NACHA (CCD)</field>
+        <field name="code">nacha_ccd</field>
+        <field name="payment_type">outbound</field>
+    </record>
+
+</odoo>

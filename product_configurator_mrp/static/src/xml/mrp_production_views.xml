@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t
+        t-name="product_configurator_mrp.ListButtons"
+        t-inherit="web.ListView.Buttons"
+        t-inherit-mode="primary"
+    >
+         <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
+            <!-- t-on-click="onUnselectClick" -->
+            <button type="button" class="btn btn-primary" t-on-click="_onConfigure">
+                Configure
+            </button>
+         </xpath>
+     </t>
+
+     <t
+        t-name="product_configurator_mrp.KanbanButtons"
+        t-inherit="web.KanbanView.Buttons"
+        t-inherit-mode="primary"
+    >
+        <xpath expr="//div[hasclass('o_cp_buttons')]" position="inside">
+            <button type="button" class="btn btn-primary" t-on-click="_onConfigure">
+                Configure
+            </button>
+        </xpath>
+    </t>
+
+    <t
+        t-name="product_configurator_mrp.FormButtons"
+        t-inherit="web.FormView.Buttons"
+        t-inherit-mode="primary"
+    >
+        <xpath expr="//div[hasclass('o_cp_buttons')]" position="inside">
+            <button type="button" class="btn btn-primary" t-on-click="_onConfigure">
+                Configure
+            </button>
+        </xpath>
+    </t>
+    <!-- <t t-extend="ListView.buttons" t-name="ConfigListView.buttons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <button
+                t-if="widget.is_action_enabled('create')"
+                type="button"
+                class="btn btn-primary o_list_button_add_config"
+                accesskey="c"
+            >
+                Configure
+            </button>
+        </t>
+    </t>
+
+    <t t-extend="KanbanView.buttons" t-name="ConfigKanbanView.buttons">
+        <t t-jquery="button" t-operation="after">
+            <button
+                type="button"
+                t-attf-class="btn #{btnClass} o-kanban-button-new_config"
+                accesskey="c"
+            >
+                Configure
+            </button>
+        </t>
+    </t>
+
+    <t t-name="ConfigFormView.buttons">
+        <button
+            t-if="widget.is_action_enabled('create')"
+            type="button"
+            class="btn btn-secondary o_form_button_create_config"
+            accesskey="c"
+        >
+            Configure
+        </button>
+    </t> -->
+</templates>

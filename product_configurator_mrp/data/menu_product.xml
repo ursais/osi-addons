@@ -1,0 +1,14 @@
+<odoo>
+
+    <record id="mrp.product_template_action" model="ir.actions.act_window">
+        <field
+            name="context"
+        >{&quot;search_default_consumable&quot;: 1, &quot;default_type&quot;: &quot;product&quot;, &quot;search_default_filter_standard_products&quot;: 1}</field>
+    </record>
+    <record id="mrp.mrp_product_variant_action" model="ir.actions.act_window">
+        <field
+            name="context"
+        >{&quot;search_default_filter_standard_products&quot;: 1}</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,105 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* product_configurator_restriction_policy
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: product_configurator_restriction_policy
+#: model_terms:ir.ui.view,arch_db:product_configurator_restriction_policy.product_configurator_policy_settings_view_form
+msgid "<span class=\"o_form_label\">Default Restriction Policy</span>"
+msgstr ""
+
+#. module: product_configurator_restriction_policy
+#: model:ir.model,name:product_configurator_restriction_policy.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: product_configurator_restriction_policy
+#: model:ir.model.fields,field_description:product_configurator_restriction_policy.field_product_config_session__display_name
+#: model:ir.model.fields,field_description:product_configurator_restriction_policy.field_product_template__display_name
+#: model:ir.model.fields,field_description:product_configurator_restriction_policy.field_res_config_settings__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: product_configurator_restriction_policy
+#: model:ir.model.fields,field_description:product_configurator_restriction_policy.field_product_config_session__id
+#: model:ir.model.fields,field_description:product_configurator_restriction_policy.field_product_template__id
+#: model:ir.model.fields,field_description:product_configurator_restriction_policy.field_res_config_settings__id
+msgid "ID"
+msgstr ""
+
+#. module: product_configurator_restriction_policy
+#: model:ir.model.fields,field_description:product_configurator_restriction_policy.field_product_config_session____last_update
+#: model:ir.model.fields,field_description:product_configurator_restriction_policy.field_product_template____last_update
+#: model:ir.model.fields,field_description:product_configurator_restriction_policy.field_res_config_settings____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: product_configurator_restriction_policy
+#: model:ir.model,name:product_configurator_restriction_policy.model_product_config_session
+msgid "Product Config Session"
+msgstr ""
+
+#. module: product_configurator_restriction_policy
+#: model:ir.model,name:product_configurator_restriction_policy.model_product_template
+msgid "Product Template"
+msgstr ""
+
+#. module: product_configurator_restriction_policy
+#: model:ir.model.fields,field_description:product_configurator_restriction_policy.field_product_product__restriction_policy
+#: model:ir.model.fields,field_description:product_configurator_restriction_policy.field_product_template__restriction_policy
+#: model:ir.model.fields,field_description:product_configurator_restriction_policy.field_res_config_settings__restriction_policy
+msgid "Restriction Policy"
+msgstr ""
+
+#. module: product_configurator_restriction_policy
+#: model_terms:ir.ui.view,arch_db:product_configurator_restriction_policy.product_configurator_policy_settings_view_form
+msgid "Restrictions"
+msgstr ""
+
+#. module: product_configurator_restriction_policy
+#: model:ir.model.fields.selection,name:product_configurator_restriction_policy.selection__product_template__restriction_policy__sequential
+#: model:ir.model.fields.selection,name:product_configurator_restriction_policy.selection__res_config_settings__restriction_policy__sequential
+msgid "Sequential"
+msgstr ""
+
+#. module: product_configurator_restriction_policy
+#: model_terms:ir.ui.view,arch_db:product_configurator_restriction_policy.product_configurator_policy_settings_view_form
+msgid "Set the default policy for restriction processing."
+msgstr ""
+
+#. module: product_configurator_restriction_policy
+#: model:ir.model.fields.selection,name:product_configurator_restriction_policy.selection__product_template__restriction_policy__standard
+#: model:ir.model.fields.selection,name:product_configurator_restriction_policy.selection__res_config_settings__restriction_policy__standard
+msgid "Standard"
+msgstr ""
+
+#. module: product_configurator_restriction_policy
+#: model:ir.model.fields,help:product_configurator_restriction_policy.field_res_config_settings__restriction_policy
+msgid ""
+"Standard: When the system is calculating the available values from\n"
+"        restrictions, it will group the restrictions by attribute and then\n"
+"        determine the values to show.\n"
+"        Sequential: The the system will go through each restriction individually\n"
+"         to calculate the available values to show."
+msgstr ""
+
+#. module: product_configurator_restriction_policy
+#: model:ir.model.fields,help:product_configurator_restriction_policy.field_product_product__restriction_policy
+#: model:ir.model.fields,help:product_configurator_restriction_policy.field_product_template__restriction_policy
+msgid ""
+"Standard: When the system is calculating the available values from\n"
+"        restrictions, it will group the restrictions by attribute and then\n"
+"        determine the values to show.\n"
+"        Sequential: The the system will go through each restriction individually\n"
+"        to calculate the available values to show."
+msgstr ""
