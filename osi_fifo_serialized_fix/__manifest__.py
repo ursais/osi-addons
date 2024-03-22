@@ -8,9 +8,12 @@
     "version": "16.0.0.0.1",
     "license": "LGPL-3",
     "author": "Open Source Integrators",
+    "maintainer": "Open Source Integrators",
+    "website": "https://github.com/ursais/osi-addons",
     "category": "Accounting",
     "depends": ["stock_account", "mrp_account"],
     "data": ["views/stock_valuation_layer.xml"],
+    "application": False,
     "maintainers": ["osi-scampbell", "Chanakya-OSI", "RLeeOSI", "agyamuta"],
     "installable": True,
 }
