@@ -1,0 +1,38 @@
+<odoo>
+
+    <record id="view_groups_tree" model="ir.ui.view">
+        <field name="name">res.groups.tree</field>
+        <field name="model">res.groups</field>
+        <field name="arch" type="xml">
+            <tree string="Groups">
+                <field name="name"/>
+                <field name="interval_number"/>
+                <field name="interval_type"/>
+                <field name="login_calendar_id"/>
+                <field name="multiple_sessions_block"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_groups_form" model="ir.ui.view">
+        <field name="name">res.groups.form</field>
+        <field name="model">res.groups</field>
+        <field name="inherit_id" ref="base.view_groups_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="after">
+                <group>
+                    <group string="Session Timeout">
+                        <field name="interval_number"/>
+                        <field name="interval_type"/>
+                        <newline/>
+                        <field name="multiple_sessions_block"/>
+                    </group>
+                    <group string="Login Calendar">
+                        <field name="login_calendar_id"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
