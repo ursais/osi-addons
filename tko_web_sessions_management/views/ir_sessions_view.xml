@@ -1,0 +1,132 @@
+<odoo>
+
+    <record id="view_sesssions_tree" model="ir.ui.view">
+        <field name="name">ir.sessions.tree</field>
+        <field name="model">ir.sessions</field>
+        <field name="arch" type="xml">
+            <tree edit="false" create="false" delete="false"
+                  decoration-muted="logged_in == False"
+                  decoration-bf="logged_in == True">
+                <field name="logged_in"/>
+                <field name="ip"/>
+                <field name="ip_location"/>
+                <field name="remote_tz"/>
+                <field name="multiple_sessions_block"/>
+                <field name="user_id"/>
+                <field name="date_login"/>
+                <field name="session_duration"/>
+                <field name="date_expiration"/>
+                <field name="date_logout"/>
+                <field name="logout_type"/>
+                <field name="user_kill_id"/>
+                <field name="unsuccessful_message"/>
+                <button name="action_close_session" string="Close Session"
+                        type="object" icon="fa-remove" invisible="logged_in == False" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_sesssions_form" model="ir.ui.view">
+        <field name="name">ir.sessions.form</field>
+        <field name="model">ir.sessions</field>
+        <field name="arch" type="xml">
+            <form edit="false" create="false" delete="false">
+                <group col="4">
+                    <field name="logged_in"/>
+                    <field name="ip"/>
+                    <field name="ip_location"/>
+                    <field name="remote_tz"/>
+                    <field name="multiple_sessions_block"/>
+                    <field name="user_id"/>
+                    <field name="date_login"/>
+                    <field name="session_duration"/>
+                    <field name="date_expiration"/>
+                    <field name="date_logout"/>
+                    <field name="logout_type"/>
+                    <field name="user_kill_id"/>
+                    <field name="unsuccessful_message"/>
+                </group>
+                <button name="action_close_session" string="Close Session"
+                        type="object" icon="fa-remove" invisible="logged_in == False" />
+            </form>
+        </field>
+    </record>
+
+    <record id="view_sesssions_search" model="ir.ui.view">
+        <field name="name">ir.sessions.search</field>
+        <field name="model">ir.sessions</field>
+        <field name="arch" type="xml">
+            <search string="Search Sessions">
+                <field name="logged_in"/>
+                <field name="ip"/>
+                <field name="ip_location"/>
+                <field name="remote_tz"/>
+                <field name="multiple_sessions_block"/>
+                <field name="user_id"/>
+                <field name="date_login"/>
+                <field name="logout_type"/>
+                <field name="date_logout"/>
+                <field name="user_kill_id"/>
+                <field name="session_duration"/>
+                <field name="unsuccessful_message"/>
+                <group expand="0" string="Filter by Login State">
+                    <filter name="logged" string="Logged" domain="[('logged_in','=',True)]" help="Logged"/>
+                    <filter name="not_logged" string="Not Logged" domain="[('logged_in','=',False)]" help="Not Logged"/>
+                </group>
+                <group expand="0" string="Filter by Multiple Session">
+                    <filter name="allow_multi_session" string="Can Open Multiple Session" domain="[('multiple_sessions_block','=',False)]"
+                            help="Users that can login in multiple sessions"/>
+                    <filter name="not_allow_multi_session" string="Can't Open Multiple Sessions" domain="[('multiple_sessions_block','=',True)]"
+                            help="Users that can't open multiple sessions"/>
+                </group>
+                <group expand="0" string="Group By">
+                    <filter name="user" string="User" domain="[]"
+                            context="{'group_by' : 'user_id'}"/>
+                    <filter name="login_state" string="Login State" domain="[]"
+                            context="{'group_by' : 'logged_in'}"/>
+                    <filter name="login_date" string="Login Date" domain="[]"
+                            context="{'group_by' : 'date_login'}"/>
+                    <filter name="logout_date" string="Logout Date" domain="[]"
+                            context="{'group_by' : 'date_logout'}"/>
+                    <filter name="login_type" string="Logout Type" domain="[]"
+                            context="{'group_by' : 'logout_type'}"/>
+                    <filter name="kill_user" string="Kill User" domain="[]"
+                            context="{'group_by' : 'user_kill_id'}"/>
+                    <filter name="multisessions" string="Block Multisessions" domain="[]"
+                            context="{'group_by' : 'multiple_sessions_block'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_sesssions_graph" model="ir.ui.view">
+        <field name="name">ir.sessions.graph</field>
+        <field name="model">ir.sessions</field>
+        <field name="arch" type="xml">
+            <graph string="Sessions">
+                <field name="date_login" interval="month"/>
+                <field name="user_id"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_sesssions_report_pivot" model="ir.ui.view">
+        <field name="name">ir.sessions.report.pivot</field>
+        <field name="model">ir.sessions</field>
+        <field name="arch" type="xml">
+            <pivot string="Sessions Analysis" disable_linking="True">
+                <field name="date_login" interval="month" type="row"/>
+                <field name="user_id" type="row"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="ir_session_action" model="ir.actions.act_window">
+        <field name="name">Sessions</field>
+        <field name="res_model">ir.sessions</field>
+        <field name="view_mode">tree,form,graph,pivot</field>
+    </record>
+
+    <menuitem id="ir_session_menu" action="ir_session_action" parent="base.menu_security"/>
+
+</odoo>

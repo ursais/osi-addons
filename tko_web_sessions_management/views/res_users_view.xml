@@ -1,0 +1,148 @@
+<odoo>
+
+    <record id="view_users_tree" model="ir.ui.view">
+        <field name="name">view.users.tree</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="ip"/>
+                <field name="interval_number"/>
+                <field name="interval_type"/>
+                <field name="login_calendar_id"/>
+                <field name="multiple_sessions_block"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_users_form" model="ir.ui.view">
+        <field name="name">res.users.form.session</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='access_rights']" position="after">
+                <page string="Sessions">
+                    <group>
+                        <group string="Session Timeout">
+                            <field name="interval_number"/>
+                            <field name="interval_type"/>
+                            <newline/>
+                            <field name="multiple_sessions_block"/>
+                        </group>
+                        <group string="Login Calendar">
+                            <field name="login_calendar_id"/>
+                        </group>
+                    </group>
+                    <group string="Sessions">
+                        <field name="session_ids" readonly="1" colspan="2" nolabel="1" domain="[('user_id', '=', parent.id)]">
+                            <tree edit="false" create="false"
+                                  decoration-muted="logged_in == False"
+                                  decoration-info="logged_in == True">
+                                <field name="logged_in"/>
+                                <field name="ip"/>
+                                <field name="multiple_sessions_block"/>
+                                <field name="date_login"/>
+                                <field name="session_duration"/>
+                                <field name="date_expiration"/>
+                                <field name="date_logout"/>
+                                <field name="logout_type"/>
+                                <field name="user_kill_id"/>
+                                <field name="unsuccessful_message"/>
+                                <button name="action_close_session" string="Close Session"
+                                        type="object" icon="fa-remove"
+                                        invisible="logged_in == False"/>
+                            </tree>
+                            <form edit="false" create="false"
+                                  delete="false">
+                                <group col="4">
+                                    <field name="logged_in"/>
+                                    <field name="ip"/>
+                                    <field name="remote_tz"/>
+                                    <field name="multiple_sessions_block"/>
+                                    <field name="date_login"/>
+                                    <field name="session_duration"/>
+                                    <field name="date_expiration"/>
+                                    <field name="date_logout"/>
+                                    <field name="logout_type"/>
+                                    <field name="user_kill_id"/>
+                                    <field name="unsuccessful_message"/>
+                                </group>
+                            </form>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_users_form_simple_modif" model="ir.ui.view">
+        <field name="name">res.users.preferences.form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[2]" position="replace">
+                <notebook col="4">
+                    <page string="Email Preferences">
+                        <group string="Email Preferences">
+                            <field name="email" widget="email" readonly="0"/>
+                            <field name="signature" readonly="0"/>
+                        </group>
+                    </page>
+                    <page string="Sessions">
+                        <group col="6">
+                            <group string="Session Timeout">
+                                <field name="interval_number" readonly="1"/>
+                                <field name="interval_type" readonly="1"/>
+                                <newline/>
+                                <field name="multiple_sessions_block" readonly="1"/>
+                            </group>
+                            <group string="Login Calendar">
+                                <field name="login_calendar_id" readonly="1"/>
+                            </group>
+                        </group>
+                        <group string="Sessions">
+                            <field name="session_ids" colspan="2"
+                                   readonly="1" nolabel="1"
+                                   domain="[('user_id', '=', parent.id)]">
+                                <tree edit="false" create="false"
+                                      delete="false"
+                                      decoration-muted="logged_in == False"
+                                      decoration-info="logged_in == True">
+                                    <field name="logged_in"/>
+                                    <field name="ip"/>
+                                    <field name="multiple_sessions_block"/>
+                                    <field name="date_login"/>
+                                    <field name="session_duration"/>
+                                    <field name="date_expiration"/>
+                                    <field name="date_logout"/>
+                                    <field name="logout_type"/>
+                                    <field name="user_kill_id"/>
+                                    <field name="unsuccessful_message"/>
+                                    <button name="action_close_session" string="Close Session"
+                                            type="object" icon="fa-remove"
+                                            invisible="logged_in == False"/>
+                                </tree>
+                                <form edit="false" create="false">
+                                    <group col="4">
+                                        <field name="logged_in"/>
+                                        <field name="ip"/>
+                                        <field name="remote_tz"/>
+                                        <field name="multiple_sessions_block"/>
+                                        <field name="date_login"/>
+                                        <field name="session_duration"/>
+                                        <field name="date_expiration"/>
+                                        <field name="date_logout"/>
+                                        <field name="logout_type"/>
+                                        <field name="user_kill_id"/>
+                                        <field name="unsuccessful_message"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

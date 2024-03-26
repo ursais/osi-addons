@@ -1,0 +1,14 @@
+<odoo>
+    <record id="ir_cron_user_session_validator" model="ir.cron"
+            forcecreate="True">
+        <field name="name">Sessions validator</field>
+        <field name="model_id" ref="model_ir_sessions"/>
+        <field name="state">code</field>
+        <field name="code">model.validate_sessions()</field>
+        <field name="active" eval="True"/>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+    </record>
+</odoo>
