@@ -1,0 +1,25 @@
+<odoo>
+
+    <record id="view_helpdesk_ticket_type_tree_inherit_mppd" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.type.tree.inherit.mppd</field>
+        <field name="model">helpdesk.ticket.type</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_type_view_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="team_id" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_helpdesk_team_form_inherit_mppd" model="ir.ui.view">
+        <field name="name">helpdesk.team.form.inherit.mppd</field>
+        <field name="model">helpdesk.team</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_team_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='description']" position="after">
+                <field name="ticket_type_ids" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
