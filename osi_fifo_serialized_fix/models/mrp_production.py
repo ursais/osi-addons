@@ -28,7 +28,7 @@ class MRPProduction(models.Model):
                     time_lines = work_order.time_ids.filtered(
                         lambda t: t.date_end and not t.cost_already_recorded
                     )
-                    work_center_cost += work_order._cal_cost(times=time_lines)
+                    work_center_cost += work_order._cal_cost()
                     time_lines.write({"cost_already_recorded": True})
                 qty_done = finished_move.product_uom._compute_quantity(
                     finished_move.quantity, finished_move.product_id.uom_id
@@ -105,7 +105,10 @@ class MRPProduction(models.Model):
                         and finished_move.stock_valuation_layer_ids[0]
                         or []
                     )
-                    mo._correct_svl_je(fg_svl, finished_move, total_cost)
+                    credits = sum(fg_svl.account_move_id.line_ids.mapped("credit"))
+                    debits = sum(fg_svl.account_move_id.line_ids.mapped("debit"))
+                    if credits != debits or credits != total_cost or debits != total_cost:
+                        mo._correct_svl_je(fg_svl, finished_move, total_cost)
             if mo.analytic_account_ids:
                 mo.analytic_account_ids.line_ids.write({"manufacturing_order_id": mo.id})
         return res
@@ -129,7 +132,7 @@ class MRPProduction(models.Model):
                     ji_id.with_context(check_move_validity=False).write(
                         {"credit": total_cost}
                     )
-                else:
+                elif ji_id.debit != 0:
                     ji_id.with_context(check_move_validity=False).write(
                         {"debit": total_cost}
                     )
