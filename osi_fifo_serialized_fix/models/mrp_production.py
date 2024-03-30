@@ -107,7 +107,9 @@ class MRPProduction(models.Model):
                     )
                     credits = sum(fg_svl.account_move_id.line_ids.mapped("credit"))
                     debits = sum(fg_svl.account_move_id.line_ids.mapped("debit"))
-                    if credits != debits or credits != total_cost or debits != total_cost:
+                    balanced_credits = credits == (total_cost * qty_done)
+                    balanced_debits = debits == (total_cost * qty_done)
+                    if credits != debits or not balanced_credits or not balanced_debits:
                         mo._correct_svl_je(fg_svl, finished_move, total_cost)
             if mo.analytic_account_ids:
                 mo.analytic_account_ids.line_ids.write({"manufacturing_order_id": mo.id})
