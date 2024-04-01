@@ -105,8 +105,8 @@ class MRPProduction(models.Model):
                         and finished_move.stock_valuation_layer_ids[0]
                         or []
                     )
-                    credits = sum(fg_svl.account_move_id.line_ids.mapped("credit"))
-                    debits = sum(fg_svl.account_move_id.line_ids.mapped("debit"))
+                    credits = float_round(sum(fg_svl.account_move_id.line_ids.mapped("credit")), precision_rounding=0.0001)
+                    debits = float_round(sum(fg_svl.account_move_id.line_ids.mapped("debit")), precision_rounding=0.0001)
                     balanced_credits = credits == (total_cost * qty_done)
                     balanced_debits = debits == (total_cost * qty_done)
                     if credits != debits or not balanced_credits or not balanced_debits:
