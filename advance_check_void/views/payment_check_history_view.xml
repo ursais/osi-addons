@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_payment_check_history_tree" model="ir.ui.view">
+        <field name="name">payment.check.details.tree</field>
+        <field name="model">payment.check.history</field>
+        <field name="arch" type="xml">
+            <tree create="false" delete="false">
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="journal_id" />
+                <field name="check_number" />
+                <field
+                    name="amount"
+                    sum="amount"
+                    widget="monetary"
+                    options="{'currency_field': 'currency_id'}"
+                />
+                <field
+                    name="check_amount"
+                    sum="check_amount"
+                    widget="monetary"
+                    options="{'currency_field': 'currency_id'}"
+                />
+                <field name="date" />
+                <field name="create_uid" />
+                <field name="create_date" />
+                <field name="write_uid" />
+                <field name="write_date" />
+                <field name="state" />
+                <field name="payment_id" />
+                <field name="currency_id" invisible="1" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_payment_check_history_search" model="ir.ui.view">
+        <field name="name">payment.check.details.search</field>
+        <field name="model">payment.check.history</field>
+        <field name="arch" type="xml">
+            <search string="Payment Check History">
+                <field name="name" />
+                <field name="partner_id" />
+                <field name="journal_id" />
+                <field name="check_number" />
+                <field name="create_uid" />
+                <group expand="0" string="Group By">
+                    <filter
+                        string="Journal"
+                        name="journal"
+                        domain="[]"
+                        context="{'group_by': 'journal_id'}"
+                    />
+                    <filter
+                        string="Partner"
+                        name="partner"
+                        domain="[]"
+                        context="{'group_by': 'partner_id'}"
+                    />
+                    <filter
+                        string="Status"
+                        name="status"
+                        domain="[]"
+                        context="{'group_by': 'state'}"
+                    />
+                    <filter
+                        string="Check Reconcilation"
+                        name="reconcilation"
+                        domain="[('state','in',('sent','void'))]"
+                        context="{}"
+                    />
+                    <filter
+                        string="Currency"
+                        name="currency"
+                        domain="[]"
+                        context="{'group_by': 'currency_id'}"
+                        groups="base.group_multi_currency"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_payment_check_history_form" model="ir.ui.view">
+        <field name="name">payment.check.details.form</field>
+        <field name="model">payment.check.history</field>
+        <field name="arch" type="xml">
+            <form
+                string="Payment Check History"
+                write="false"
+                create="false"
+                delete="false"
+            >
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="partner_id" />
+                        <field name="journal_id" />
+                        <field name="check_number" />
+                        <field
+                            name="amount"
+                            widget="monetary"
+                            options="{'currency_field': 'currency_id'}"
+                        />
+                        <field
+                            name="check_amount"
+                            widget="monetary"
+                            options="{'currency_field': 'currency_id'}"
+                        />
+                        <field name="date" readonly="True" />
+                        <field name="create_uid" />
+                        <field name="create_date" />
+                        <field name="state" />
+                        <field name="payment_id" />
+                        <field name="currency_id" invisible="1" />
+                        <field name="is_visible_check" invisible="1" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_payment_check_history" model="ir.actions.act_window">
+        <field name="name">Payment Check History</field>
+        <field name="res_model">payment.check.history</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_reconcilation':1}</field>
+        <field name="domain">[]</field>
+        <field
+            name="view_id"
+            ref="advance_check_void.view_payment_check_history_tree"
+        />
+        <field
+            name="search_view_id"
+            ref="advance_check_void.view_payment_check_history_search"
+        />
+    </record>
+
+    <menuitem
+        id="account.payables_payment_check_history"
+        action="action_payment_check_history"
+        name="Payment Check History"
+        parent="account.menu_finance_entries"
+        sequence="200"
+    />
+</odoo>
