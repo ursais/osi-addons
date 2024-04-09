@@ -49,7 +49,7 @@ class StockValuationLayer(models.Model):
                     )
                     total_qty = sum([svl.quantity for svl in all_lot_layers])
                     total_value = sum([svl.value for svl in all_lot_layers])
-                    svl_value = total_value / total_qty if total_qty else 1.0
+                    svl_value = (total_value / total_qty if total_qty else 1.0) * abs(layer.quantity)
                     lot.write({"real_price": svl_value})
                     total_lot_price += svl_value
                 layer.value = -total_lot_price
