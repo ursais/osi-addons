@@ -48,16 +48,12 @@ class StockPicking(models.Model):
 
     def button_validate(self):
         # Only outgoing picking
-        if self.picking_type_code == "outgoing":
-            if self.dont_allow_transfer:
-                raise UserError(
-                    _(
-                        """Customer has a delivery hold. Please contact Accounting."""
+        for rec in self:
+            if rec.picking_type_code == "outgoing":
+                if rec.dont_allow_transfer:
+                    raise UserError(
+                        _(
+                            """Customer has a delivery hold. Please contact Accounting."""
+                        )
                     )
-                )
-            else:
-                return super(StockPicking, self).button_validate()
-
-        # Incoming shipments / internal transfers
-        else:
-            return super(StockPicking, self).button_validate()
+        return super(StockPicking, self).button_validate()
