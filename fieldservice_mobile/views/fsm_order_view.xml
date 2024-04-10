@@ -28,6 +28,9 @@
                     </field>
                 </group>
             </xpath>
+            <field name="company_id" position="after">
+                <field name="payment_state" invisible="1"/>
+            </field>
         </field>
     </record>
 
