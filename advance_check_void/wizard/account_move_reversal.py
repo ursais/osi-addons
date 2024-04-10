@@ -96,11 +96,6 @@ class AccountMoveReversal(models.TransientModel):
                 self._context.get("account_move_id")
             )
             res["move_ids"] = move_id.ids
-            res["refund_method"] = (
-                (len(move_id) > 1 or move_id.move_type == "entry")
-                and "cancel"
-                or "refund"
-            )
             res["residual"] = len(move_id) == 1 and move_id.amount_residual or 0
             res["currency_id"] = (
                 len(move_id.currency_id) == 1 and move_id.currency_id.id or False
