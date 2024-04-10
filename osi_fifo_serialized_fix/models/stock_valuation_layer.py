@@ -46,18 +46,35 @@ class StockValuationLayer(models.Model):
                 for lot in layer.lot_ids:
                     all_lot_layers = self.search(
                         [("lot_ids", "in", lot.id), ("id", "!=", layer.id)]
-                    )
-                    total_qty = sum([svl.quantity for svl in all_lot_layers])
-                    total_value = sum([svl.value for svl in all_lot_layers])
-                    svl_value = (total_value / total_qty if total_qty else 1.0) * abs(layer.quantity)
-                    lot.write({"real_price": svl_value})
-                    total_lot_price += svl_value
+                    ).sorted(reverse=True)
+                    move_lines = layer.stock_move_id.move_line_ids.filtered(lambda x: x.lot_id.id == lot.id)
+                    move_quantity = sum(move_line.quantity for move_line in move_lines)
+                    total_lot_quantity = 0
+                    lot_price_total = 0
+                    for consumed_layer in all_lot_layers:
+                        if not move_quantity:
+                            break
+                        layer_diff = consumed_layer.quantity - consumed_layer.remaining_qty
+                        if layer_diff <= move_quantity:
+                            move_quantity -= layer_diff
+                            consumed_quantity = layer_diff
+                        elif layer_diff > move_quantity:
+                            consumed_quantity = move_quantity                            
+                            move_quantity = 0
+                        else:
+                            continue
+                        real_price = consumed_layer.value / consumed_layer.quantity if consumed_layer.quantity else 0
+                        real_value = real_price * consumed_quantity
+                        total_lot_price += real_value
+                        lot_price_total += real_value
+                        total_lot_quantity += consumed_quantity
+                    lot.write({"real_price": lot_price_total / total_lot_quantity})
+                layer.remaining_value = 0
                 layer.value = -total_lot_price
 
                 layer.unit_cost = -(
                     total_lot_price / layer.quantity if layer.quantity else 1
                 )
-                layer.remaining_value = layer.value
                 layer.lot_ids = [(6, 0, [])]
 
             if (
