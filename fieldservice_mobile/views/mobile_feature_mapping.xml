@@ -43,8 +43,9 @@
                     <notebook>
                         <page name="mapping_page" string="Group Access Rights">
                             <field name="feature_line_ids">
-                                <tree editable="bottom">
-                                    <field name="name" />
+                                <tree editable="bottom" create="false" delete="false">
+                                    <field name="name" readonly="1" force_save="1" />
+                                    <field name="code" readonly="1" force_save="1" optional="hide" />
                                     <field name="group_ids" widget="many2many_tags" />
                                 </tree>
                             </field>
