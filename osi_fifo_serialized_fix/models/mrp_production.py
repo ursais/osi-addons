@@ -98,6 +98,7 @@ class MRPProduction(models.Model):
                         )
                         / qty_done
                     )
+                    total_fg_cost = finished_move.price_unit * qty_done
                     mo.lot_producing_id.real_price = finished_move.price_unit
                     fg_svl = (
                         finished_move.stock_valuation_layer_ids
@@ -106,10 +107,10 @@ class MRPProduction(models.Model):
                     )
                     credits = float_round(sum(fg_svl.account_move_id.line_ids.mapped("credit")), precision_rounding=0.0001)
                     debits = float_round(sum(fg_svl.account_move_id.line_ids.mapped("debit")), precision_rounding=0.0001)
-                    balanced_credits = credits == total_cost
-                    balanced_debits = debits == total_cost
+                    balanced_credits = credits == total_fg_cost
+                    balanced_debits = debits == total_fg_cost
                     if credits != debits or not balanced_credits or not balanced_debits:
-                        mo._correct_svl_je(fg_svl, finished_move, total_cost)
+                        mo._correct_svl_je(fg_svl, finished_move, total_fg_cost)
             if mo.analytic_account_ids:
                 mo.analytic_account_ids.line_ids.write({"manufacturing_order_id": mo.id})
         return res
