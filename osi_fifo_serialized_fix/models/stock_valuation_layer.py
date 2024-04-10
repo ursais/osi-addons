@@ -52,10 +52,18 @@ class StockValuationLayer(models.Model):
                     total_lot_quantity = 0
                     lot_price_total = 0
                     for consumed_layer in all_lot_layers:
+                        adjusted_value = 0
                         if not move_quantity:
                             break
                         layer_diff = consumed_layer.quantity - consumed_layer.remaining_qty
                         if layer_diff <= move_quantity:
+                            if not layer_diff and consumed_layer.price_diff_value:
+                                linked_layers = self.search(
+                                    [("lot_ids", "in", lot.id), ("id", "not in", (layer.id, consumed_layer.id))]
+                                )
+                                qty = sum(linked_layers.mapped('quantity'))
+                                if qty:
+                                    adjusted_value = (consumed_layer.value / qty) * min(qty, move_quantity)
                             move_quantity -= layer_diff
                             consumed_quantity = layer_diff
                         elif layer_diff > move_quantity:
@@ -64,7 +72,7 @@ class StockValuationLayer(models.Model):
                         else:
                             continue
                         real_price = consumed_layer.value / consumed_layer.quantity if consumed_layer.quantity else 0
-                        real_value = real_price * consumed_quantity
+                        real_value = (real_price * consumed_quantity) + adjusted_value
                         total_lot_price += real_value
                         lot_price_total += real_value
                         total_lot_quantity += consumed_quantity
