@@ -64,7 +64,7 @@ class MRPProduction(models.Model):
                         )
                         if byproduct.lot_ids:
                             byproduct.lot_ids.write({"real_price": byproduct.price_unit})
-                        mo._correct_svl_je(byproduct_svl, byproduct, byproduct.price_unit)
+                        mo._correct_svl_je(byproduct_svl, byproduct, total_cost * byproduct.cost_share / 100)
                 if (
                     finished_move.product_id.valuation == "manual_periodic"
                     and byproduct_cost_share
