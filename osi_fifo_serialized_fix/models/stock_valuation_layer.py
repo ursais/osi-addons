@@ -83,7 +83,6 @@ class StockValuationLayer(models.Model):
                 layer.unit_cost = -(
                     total_lot_price / layer.quantity if layer.quantity else 1
                 )
-                layer.lot_ids = [(6, 0, [])]
 
             if (
                 layer.stock_move_id.production_id
