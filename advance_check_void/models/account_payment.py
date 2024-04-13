@@ -50,28 +50,28 @@ class AccountPayment(models.Model):
                 if payment.payment_method_code == "manual" and payment.is_move_sent:
                     payment.can_be_voided = True
 
-    @api.onchange("payment_method_id")
+    @api.onchange("payment_method_code")
     def onchange_payment_method(self):
         """Allow to customer payment to enter check number.
         - Based on journal check printing manual True/False for vendor."""
         self.is_visible_check = False
         self.is_readonly_check = False
-        if self.payment_method_id:
+        if self.payment_type:
             if (
-                self.payment_method_id.payment_type == "inbound"
+                self.payment_type == "inbound"
                 and self.payment_method_code in ("check_printing", "ACH-Out", "manual")
             ):
                 self.is_visible_check = True
                 self.check_number = 0
             elif self._context.get("is_vendor"):
                 if (
-                    self.payment_method_id.payment_type == "outbound"
+                    self.payment_type == "outbound"
                     and self.payment_method_code
                     in ("check_printing", "ACH-Out", "manual")
                 ):
                     self.is_visible_check = False
             elif (
-                self.payment_method_id.payment_type == "outbound"
+                self.payment_type == "outbound"
                 and self.payment_method_code in ("check_printing", "ACH-Out", "manual")
             ):
                 self.is_visible_check = True
@@ -167,6 +167,12 @@ class AccountPayment(models.Model):
                     if res.state != "sent":
                         chk.write({"state": "void"})
         return result
+    
+    def create(self, vals):
+        res = super(AccountPayment, self).create(vals)
+        for rec in res:
+            rec.onchange_payment_method()
+        return res
 
     def action_cancel(self):
         if self.check_number and self.payment_type == "outbound":
