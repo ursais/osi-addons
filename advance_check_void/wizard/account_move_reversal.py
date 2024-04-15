@@ -19,7 +19,7 @@ class AccountMoveReversal(models.TransientModel):
     )
     void_reason = fields.Char()
 
-    def reverse_moves(self):
+    def reverse_moves(self, is_modify=False):
         res = super().reverse_moves()
         payment_check_void_obj = self.env["payment.check.void"]
         payment_check_history_obj = self.env["payment.check.history"]
