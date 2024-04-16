@@ -4,15 +4,6 @@
 
 from odoo import api, fields, models
 
-PAYMENT_STATE_SELECTION = [
-        ('not_paid', 'Not Paid'),
-        ('in_payment', 'In Payment'),
-        ('paid', 'Paid'),
-        ('partial', 'Partially Paid'),
-        ('reversed', 'Reversed'),
-        ('invoicing_legacy', 'Invoicing App Legacy'),
-]
-
 
 class FSMOrder(models.Model):
     _inherit = "fsm.order"
@@ -30,12 +21,22 @@ class FSMOrder(models.Model):
                 rec.duration = 0.0
         return res
 
-    @api.depends("invoice_ids.payment_state")
+    @api.depends("sale_id.transaction_ids.state")
     def _compute_payment_state(self):
         for rec in self:
-            rec.payment_state = "not_paid"
-            for invoice in rec.invoice_ids:
-                rec.payment_state = invoice.payment_state
+            payment_state = "not_paid"
+            paid_payment_check_list = [
+                True if paym.state == "done" else False
+                for paym in rec.sale_id.transaction_ids
+            ]
+            if rec.sale_id.transaction_ids:
+                if all(paid_payment_check_list):
+                    payment_state = "paid"
+                elif rec.sale_id.transaction_ids.filtered(
+                    lambda r: r.state == "pending"
+                ):
+                    payment_state = "pending"
+            rec.payment_state = payment_state
 
     duration = fields.Float(
         string="Actual duration",
@@ -46,7 +47,12 @@ class FSMOrder(models.Model):
     fsm_stage_history_ids = fields.One2many(
         "fsm.stage.history", "order_id", string="Stage History"
     )
-    payment_state = fields.Selection(PAYMENT_STATE_SELECTION, string="Payment State", compute="_compute_payment_state", store=True)
+    payment_state = fields.Selection(
+        [("not_paid", "Not Paid"), ("paid", "Paid"), ("pending", "Pending")],
+        string="Payment State",
+        compute="_compute_payment_state",
+        store=True,
+    )
 
     @api.model
     def create_fsm_attachment(self, name, datas, res_model, res_id):
@@ -66,52 +72,28 @@ class FSMOrder(models.Model):
             return attachment.id
 
     @api.model
-    def get_so_invoice(self):
-        invoice_rec = self.env["account.move"].sudo().search([
-            ("invoice_origin", "=", self.sale_id.name),
-            ("partner_id", "=", self.sale_id.partner_id.id)],
-            order='id desc', limit=1
-        )
-        return invoice_rec
-
-    @api.model
-    def generate_invoice_payment_link(self, fsm_order_id):
+    def generate_so_payment_link(self, fsm_order_id):
         order = self.env["fsm.order"].browse(fsm_order_id)
         if not order.sale_id:
-            return {'payment_status': False, 'message': 'The sale order is not found related to this FSO.'}
-    
-        invoice_rec = order.get_so_invoice()
-        if not invoice_rec:
-            sale_advance_payment_obj = self.env["sale.advance.payment.inv"].sudo()
-            advc_payment_wiz = sale_advance_payment_obj.with_context(
-                {
-                    "active_model": "sale.order",
-                    "active_id": order.sale_id.id,
-                    "active_ids": order.sale_id.ids,
-                }
-            ).create(
-                {
-                    "advance_payment_method": "delivered",
-                    "amount": order.sale_id.amount_total,
-                }
-            )
-            advc_payment_wiz.sudo().create_invoices()
-            invoice_rec = order.get_so_invoice()
-        if invoice_rec:
-            payment_link_id = (self.env['payment.link.wizard']
-            .with_context(
-                default_res_model='account.move',
-                default_res_id=invoice_rec.id
-            )
-            .sudo().create({
-                'res_model': 'account.move',
-                'res_id': invoice_rec.id,
-                'amount': invoice_rec.amount_total,
-                'currency_id': invoice_rec.currency_id.id,
-                'partner_id': invoice_rec.partner_id.id,
-                'description': order.sale_id.name,
-            }))
             return {
-                'payment_status': True,
-                'payment_link': payment_link_id.link
+                "payment_status": False,
+                "message": "The sale order is not found related to this FSO.",
             }
+        payment_link_id = (
+            self.env["payment.link.wizard"]
+            .with_context(
+                default_res_model="sale.order", default_res_id=order.sale_id.id
+            )
+            .sudo()
+            .create(
+                {
+                    "res_model": "sale.order",
+                    "res_id": order.sale_id.id,
+                    "amount": order.sale_id.amount_total,
+                    "currency_id": order.sale_id.currency_id.id,
+                    "partner_id": order.sale_id.partner_id.id,
+                    "description": order.sale_id.name,
+                }
+            )
+        )
+        return {"payment_status": True, "payment_link": payment_link_id.link}

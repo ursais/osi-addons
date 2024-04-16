@@ -16,6 +16,7 @@
         "analytic",
         "maintenance",
         "fieldservice_vehicle",
+        "fieldservice_sale",
     ],
     "data": [
         "security/ir_rule.xml",
