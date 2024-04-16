@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="encryption_line_view_tree" model="ir.ui.view">
+        <field name="name">encryption.line.view.tree</field>
+        <field name="model">encrypt.line</field>
+        <field name="arch" type="xml">
+            <tree
+                string="Encryption Lines"
+                decoration-success="state in ('encrypted','sanitized')"
+                decoration-muted="state == 'excluded'"
+                decoration-danger="state == 'error'"
+            >
+                <field name="line_action" optional="show" />
+                <field name="table_id" invisible="1" />
+                <field name="model" optional="show" />
+                <field name="name" optional="show" />
+                <field name="included_char_column_ids" widget="many2many_tags" optional="hide" />
+                <field name="export_include_column_format" optional="show" />
+                <field name="excluded_char_column_ids" widget="many2many_tags" optional="hide" />
+                <field name="exclude_ids" optional="show" />
+                <field name="export_exclude_column_format" optional="show" />
+                <field name="indexes" optional="hide" />
+                <field name="dropped_indexes" optional="hide" />
+                <field name="total_num_records" optional="show" />
+                <field name="num_records" optional="show" />
+                <field name="encrypt_time" widget="float_time" readonly="1" optional="show" />
+                <field name="decrypt_time" widget="float_time" readonly="1" optional="show" />
+                <field name="exclude_reason" optional="show" />
+                <field name="state" optional="show" readonly="1" />
+             </tree>
+        </field>
+    </record>
+
+    <record id="view_encrypt_lines_form" model="ir.ui.view">
+        <field name="name">encryption.line.view.form</field>
+        <field name="model">encrypt.line</field>
+        <field name="arch" type="xml">
+            <form string="Encryption Line">
+                <header>
+                    <button
+                        name="encrypt_sanitize_char_data_wizard"
+                        type="object"
+                        string="Encrypt"
+                        class="oe_highlight"
+                        invisible="line_action == 'sanitize_unsanitize' or state in ('excluded','encrypted','sanitized','unsanitized')"
+                    />
+                    <button
+                        name="decrypt_unsanitize_char_data_wizard"
+                        type="object"
+                        string="Decrypt"
+                        class="oe_highlight"
+                        invisible="line_action == 'sanitize_unsanitize' or not state == 'encrypted'"
+                    />
+                    <button
+                        name="encrypt_sanitize_char_data_wizard"
+                        type="object"
+                        string="Sanitize"
+                        class="oe_highlight"
+                        invisible="line_action == 'encrypt_decrypt' or state in ('excluded','encrypted','sanitized','decrypted')"
+                    />
+                    <button
+                        name="decrypt_unsanitize_char_data_wizard"
+                        type="object"
+                        string="Desanitize"
+                        class="oe_highlight"
+                        invisible="line_action == 'encrypt_decrypt' or not state == 'sanitized'"
+                    />
+                    <button
+                        name="button_get_number_of_rows"
+                        type="object"
+                        string="Update # Records"
+                        class="btn-secondary"
+                    />
+                    <button
+                        name="button_exclude"
+                        type="object"
+                        string="Desanitize"
+                        class="btn-secondary"
+                        invisible="state not in ('encrypted', 'in progress', 'sanitized')"
+                    />
+                    <button
+                        name="button_include"
+                        type="object"
+                        string="Desanitize"
+                        class="btn-secondary"
+                        invisible="not state == 'excluded'"
+                    />
+                    <field name="state" widget="statusbar" readonly="1" force_save="1" statusbar_visible=" " />
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Sanitized" bg_color="bg-success" invisible="not state == 'sanitized'" />
+                    <widget name="web_ribbon" title="Encrypted" bg_color="bg-success" invisible="not state == 'encrypted'" />
+                    <widget name="web_ribbon" title="Excluded" bg_color="bg-danger" invisible="not state == 'excluded'" />
+                    <div class="oe_title">
+                        <h1>
+                            <field name="table_id" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group name="information">
+                        <group>
+                            <field name="line_action" />
+                            <field name="name" />
+                            <field name="model" />
+                            <field name="table_id" />
+                            <field name="total_num_records" readonly="1" />
+                        </group>
+                        <group>
+                            <field name="encrypt_time" widget="float_time" readonly="1" />
+                            <field name="decrypt_time" widget="float_time" readonly="1" />
+                            <field name="num_records" readonly="1" />
+                        </group>
+                    </group>
+                    <group name="include_exclude">
+                        <field name="exclude_ids" help="Comma seperated list Example: 2,5,33,545" placeholder="2,5,33,545" />
+                        <field name="included_char_column_ids" domain="[('model_id', '=', table_id), ('ttype', 'in', ('char','text','html')), ('store', '!=', False), ('related', '=', False)]" >
+                            <tree string="Included Char Columns" editable="bottom">
+                                <field name="name" optional="show" />
+                                <field name="field_description" optional="show" />
+                                <field name="ttype" optional="show" />
+                                <field name="size" optional="show" />
+                                <field name="index" optional="show" />
+                                <field name="store" optional="show" />
+                                <field name="readonly" optional="show" />
+                                <field name="related" optional="show" />
+                            </tree>
+                        </field>
+                        <field name="excluded_char_column_ids" domain="[('model_id', '=', table_id), ('ttype', 'in', ('char','text','html'))]" >
+                            <tree string="Included Char Columns" editable="bottom">
+                                <field name="name" optional="show" />
+                                <field name="field_description" optional="show" />
+                                <field name="ttype" optional="show" />
+                                <field name="size" optional="show" />
+                                <field name="index" optional="show" />
+                                <field name="store" optional="show" />
+                                <field name="readonly" optional="show" />
+                                <field name="related" optional="show" />
+                            </tree>
+                        </field>
+                    </group>
+                    <notebook>
+                        <page string="Log" name="log_notes">
+                            <group>
+                                <field name="exclude_reason" />
+                            </group>
+                            <field name="log_notes" nolabel="1" />
+                        </page>
+                        <page string="Indexes" name="indexes">
+                            <button
+                                name="button_drop_index_wizard"
+                                type="object"
+                                string="Drop Index"
+                                class="btn-secondary"
+                                invisible="line_action == 'sanitize_unsanitize'"
+                            />
+                            <group>
+                                <field name="indexes" />
+                                <field name="dropped_indexes" />
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_encrypt_lines_form_search" model="ir.ui.view">
+        <field name="name">encryption.line.view.search</field>
+        <field name="model">encrypt.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Encryption Lines">
+                <field
+                    name="name"
+                    filter_domain="['|', '|', ('name', 'ilike', self), ('table_id', 'ilike', self), ('model', 'ilike', self)]"
+                    string="Name or Code"
+                />
+                <filter
+                    name="decrypted"
+                    string="Decrypted"
+                    domain="[('state', '=', 'decrypted')]"
+                />
+                <filter
+                    name="unsanitized"
+                    string="Unsanitized"
+                    domain="[('state', '=', 'unsanitized')]"
+                />
+                <separator/>
+                <filter
+                    name="in progress"
+                    string="In Progress"
+                    domain="[('state', '=', 'in_progress')]"
+                />
+                <separator/>
+                <filter
+                    name="encrypted"
+                    string="Encrypted"
+                    domain="[('state', '=', 'encrypted')]"
+                />
+                <filter
+                    name="sanitized"
+                    string="Sanitized"
+                    domain="[('state', '=', 'sanitized')]"
+                />
+                <separator/>
+                <filter
+                    name="error"
+                    string="Error"
+                    domain="[('state', '=', 'error')]"
+                />
+                <filter
+                    name="excluded"
+                    string="Excluded"
+                    domain="[('state', '=', 'excluded')]"
+                />
+                <separator/>
+                <filter
+                    name="has_records"
+                    string="Has Records"
+                    domain="[('total_num_records', '>', 0)]"
+                />
+                <group string="Group By" name="groupby">
+                    <filter
+                        string="State"
+                        name="state_groupby"
+                        context="{'group_by': 'state'}"
+                    />
+                    <filter
+                        string="Table"
+                        name="table_id_groupby"
+                        context="{'group_by': 'table_id'}"
+                    />
+                    <filter
+                        string="Action"
+                        name="line_action_groupby"
+                        context="{'group_by': 'line_action'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="encrypt_lines_action" model="ir.actions.act_window">
+        <field name="name">Encryption Lines</field>
+        <field name="res_model">encrypt.line</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Click to add a new line.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="encryption_main_menu"
+        name="Encryption"
+        web_icon="osi_encryption,static/description/icon.png"
+    />
+
+    <menuitem
+        id="encryption_lines_menu"
+        name="Encryption Lines"
+        action="encrypt_lines_action"
+        parent="encryption_main_menu"
+        sequence="10"
+    />
+
+    <menuitem
+        id="menu_generate_encryption_lines"
+        name="Generate Lines"
+        action="action_generate_encryption_lines_wizard"
+        parent="encryption_main_menu"
+        sequence="12"
+    />
+
+</odoo>
