@@ -18,12 +18,26 @@ class StockValuationLayer(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        res = super().create(vals_list)
+        new_vals_list = []
+        for val in vals_list:
+            stock_move_id = self.env["stock.move"].browse(val.get("stock_move_id"))
+            if stock_move_id:
+                if len(stock_move_id.move_line_ids) > 1:
+                    for line in stock_move_id.move_line_ids:
+                        new_val = val.copy()
+                        new_val["quantity"] = line.quantity
+                        new_val["remaining_qty"] = line.quantity
+                        new_val["value"] = line.quantity * new_val.get("unit_cost")
+                        new_val["remaining_value"] = new_val["value"]
+                        new_val["lot_ids"] = [line.lot_id.id]
+                        new_vals_list.append(new_val)
+                else:
+                    val["lot_ids"] = [stock_move_id.move_line_ids.lot_id.id]
+                    new_vals_list.append(val)
+        res = super().create(new_vals_list)
         for layer in res.filtered(
             lambda l: l.stock_move_id.lot_ids or l.stock_valuation_layer_id.lot_ids
         ):
-            layer.lot_ids = [(6, 0, layer.stock_move_id.lot_ids.ids)]
-
             # Update the lot price when we do incoming lots
             # update the lot_ids for linked layer.
             # i.g. Landed cost layers, Price diff layers.
@@ -44,9 +58,7 @@ class StockValuationLayer(models.Model):
             if layer.stock_move_id.raw_material_production_id:
                 total_lot_price = 0
                 for lot in layer.lot_ids:
-                    all_lot_layers = self.search(
-                        [("lot_ids", "in", lot.id), ("id", "!=", layer.id)]
-                    ).sorted(reverse=True)
+                    all_lot_layers = self.search([("lot_ids", "in", lot.id), ("id", "!=", layer.id)]).sorted(reverse=True)
                     move_lines = layer.stock_move_id.move_line_ids.filtered(lambda x: x.lot_id.id == lot.id)
                     move_quantity = sum(move_line.quantity for move_line in move_lines)
                     total_lot_quantity = 0
@@ -56,7 +68,10 @@ class StockValuationLayer(models.Model):
                         if not move_quantity:
                             break
                         layer_diff = consumed_layer.quantity - consumed_layer.remaining_qty
-                        if layer_diff <= move_quantity:
+                        if not layer_diff and not consumed_layer.price_diff_value:
+                            consumed_quantity = move_quantity
+                            move_quantity = 0
+                        elif layer_diff <= move_quantity:
                             if not layer_diff and consumed_layer.price_diff_value:
                                 linked_layers = self.search(
                                     [("lot_ids", "in", lot.id), ("id", "not in", (layer.id, consumed_layer.id))]
