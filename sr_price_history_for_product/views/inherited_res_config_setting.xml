@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<record
+			id="res_config_settings_view_form_extends_add_sale_purchase_history_configuration"
+			model="ir.ui.view">
+			<field name="name">res.config.settings.view.form.extends.add.sale.purchase.history.configuration
+			</field>
+			<field name="model">res.config.settings</field>
+			<field name="inherit_id"
+				ref="sale.res_config_settings_view_form" />
+			<field name="arch" type="xml">
+				<!-- <xpath expr="//div[@data-key='sale_management']" position="inside"> -->
+				<xpath expr="//app/block[@id='connectors_setting_container']" position="after">
+
+					<block title="Sales Price History" id="sales_price_history_setting">
+                        <setting id="sales_price_history_connector">
+                        	<div>
+                                <label string="Record Limit" for="sale_order_line_record_limit"/>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="sale_order_line_record_limit" class="o_light_label"/>
+                                    </div>
+                                </div>
+	                        </div>
+                        </setting>
+                        <setting id="sales_price_history_connector_rigth">
+                        	<div>
+                                <label string="Show Price History Based on" for="sale_order_status"/>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="sale_order_status" class="o_light_label" widget="radio"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+
+
+					<!-- <h2>Sales Price History
+					</h2>
+					<div class="row mt16 o_settings_container">
+						<div class="col-12 col-lg-6 o_setting_box">
+							
+							<div class="o_setting_right_pane">
+                                <label string="Record Limit" for="sale_order_line_record_limit"/>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="sale_order_line_record_limit" class="o_light_label"/>
+                                    </div>
+                                </div>
+                            </div>
+							
+							
+						</div>
+						<div class="col-12 col-lg-6 o_setting_box">
+							<div class="o_setting_right_pane">
+                                <label string="Show Price History Based on" for="sale_order_status"/>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="sale_order_status" class="o_light_label" widget="radio"/>
+                                    </div>
+                                </div>
+                            </div>
+						</div>
+					</div> -->
+				</xpath>
+			</field>
+		</record>
+		
+
+		<record
+			id="res_config_settings_view_form_purchase_extends_add_sale_purchase_history_configuration"
+			model="ir.ui.view">
+			<field name="name">res.config.settings.view.form.purchase.extends.add.sale.purchase.history.configuration
+			</field>
+			<field name="model">res.config.settings</field>
+			<field name="inherit_id"
+				ref="purchase.res_config_settings_view_form_purchase" />
+			<field name="arch" type="xml">
+				<xpath expr="//app/block[@name='matrix_setting_container']" position="after">
+					<block title="Purchase Price History" id="purchase_price_history_setting">
+                        <setting id="purchase_price_history_connector">
+                        	<div>
+                                <label string="Record Limit" for="purchase_order_line_record_limit"/>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="purchase_order_line_record_limit" class="o_light_label"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </setting>
+                        <setting id="purchase_price_history_connector_rigth">
+                        	<div>
+                                <label string="Show Price History Based on" for="purchase_order_status"/>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="purchase_order_status" class="o_light_label" widget="radio"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+				</xpath>
+				<!-- <xpath expr="//div[@data-key='purchase']"
+					position="inside">
+					<h2>Purchase Price History
+					</h2>
+					<div class="row mt16 o_settings_container">
+						<div class="col-12 col-lg-6 o_setting_box">
+							
+							<div class="o_setting_right_pane">
+                                <label string="Record Limit" for="purchase_order_line_record_limit"/>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="purchase_order_line_record_limit" class="o_light_label"/>
+                                    </div>
+                                </div>
+                            </div>
+							
+							
+						</div>
+						<div class="col-12 col-lg-6 o_setting_box">
+							<div class="o_setting_right_pane">
+                                <label string="Show Price History Based on" for="purchase_order_status"/>
+                                <div class="content-group">
+                                    <div class="mt16">
+                                        <field name="purchase_order_status" class="o_light_label" widget="radio"/>
+                                    </div>
+                                </div>
+                            </div>
+						</div>
+					</div>
+				</xpath> -->
+			</field>
+		</record>
+
+		
+
+	</data>
+</odoo>
