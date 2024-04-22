@@ -21,6 +21,7 @@ class StockValuationLayer(models.Model):
         new_vals_list = []
         for val in vals_list:
             stock_move_id = self.env["stock.move"].browse(val.get("stock_move_id"))
+            svl_id = self.env["stock.valuation.layer"].browse(val.get("stock_valuation_layer_id"))
             if stock_move_id:
                 if len(stock_move_id.move_line_ids) > 1:
                     for line in stock_move_id.move_line_ids:
@@ -36,6 +37,10 @@ class StockValuationLayer(models.Model):
                     if stock_move_id.move_line_ids.lot_id:
                         val["lot_ids"] = [stock_move_id.move_line_ids.lot_id.id]
                     new_vals_list.append(val)
+            elif svl_id:
+                new_val = val.copy()
+                new_val["lot_ids"] = [svl_id.lot_ids.ids]
+                new_vals_list.append(new_val)
         res = super().create(new_vals_list)
         for layer in res.filtered(
             lambda l: l.stock_move_id.lot_ids or l.stock_valuation_layer_id.lot_ids
