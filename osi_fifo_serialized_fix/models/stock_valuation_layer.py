@@ -29,10 +29,12 @@ class StockValuationLayer(models.Model):
                         new_val["remaining_qty"] = line.quantity
                         new_val["value"] = line.quantity * new_val.get("unit_cost")
                         new_val["remaining_value"] = new_val["value"]
-                        new_val["lot_ids"] = [line.lot_id.id]
+                        if line.lot_id:
+                            new_val["lot_ids"] = [line.lot_id.id]
                         new_vals_list.append(new_val)
                 else:
-                    val["lot_ids"] = [stock_move_id.move_line_ids.lot_id.id]
+                    if stock_move_id.move_line_ids.lot_id:
+                        val["lot_ids"] = [stock_move_id.move_line_ids.lot_id.id]
                     new_vals_list.append(val)
         res = super().create(new_vals_list)
         for layer in res.filtered(
