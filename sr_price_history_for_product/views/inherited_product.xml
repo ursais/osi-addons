@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+
+		<record
+			id="product_template_form_view_extends_add_sale_purchase_price_history"
+			model="ir.ui.view">
+			<field name="name">product.template.form.view.extends.add.sale.purchase.price.history
+			</field>
+			<field name="model">product.template</field>
+			<field name="inherit_id"
+				ref="product.product_template_form_view" />
+			<field name="arch" type="xml">
+				<notebook position="inside">
+				<page string="Product Sales Price History">
+					<field name="sale_price_history_ids" nolabel="1" mode="tree,kanban">
+						<tree>
+							<field name="product_tmpl_id"/>
+							<field name="variant_id"/>
+							<field name="sale_order_id"/>
+							<field name="sale_order_date"/>
+							<field name="partner_id"/>
+							<field name="user_id"/>
+							<field name="product_uom_qty"/>
+							<field name="unit_price"/>
+							<field name="total_price"/>
+							
+						</tree>
+					</field>
+				</page>
+				
+				<page string="Product Purchase Price History">
+					<field name="purchase_price_history_ids" nolabel="1" mode="tree,kanban">
+						<tree>
+							<field name="product_tmpl_id"/>
+							<field name="variant_id"/>
+							<field name="purchase_order_id"/>
+							<field name="purchase_order_date"/>
+							<field name="partner_id"/>
+							<field name="user_id"/>
+							<field name="product_uom_qty"/>
+							<field name="unit_price"/>
+							<field name="total_price"/>
+							
+						</tree>
+					</field>
+				</page>
+				</notebook>
+			</field>
+		</record>
+
+	</data>
+</odoo>
