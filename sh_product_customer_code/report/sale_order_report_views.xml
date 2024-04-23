@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    
+    <template id="inherit_sale_order_report_view" name="customer_code_with_sale_order_report"
+        inherit_id="sale.report_saleorder_document">
+        <xpath expr="//th[@name='th_description']" position="after">
+            <th name="th_ssh_product_code" class="text-end">Customer Product Code</th>
+            <th name="th_ssh_product_name" class="text-end">Customer Product Name</th>
+        </xpath>
+        <xpath expr="//td[@name='td_name']" position="after">
+            <td name="td_ssh_product_code" class="text-end">
+                <span t-field="line.sh_line_customer_code" />
+            </td>
+            <td name="td_ssh_product_name" class="text-end">
+                <span t-field="line.sh_line_customer_product_name" />
+            </td>
+        </xpath>
+    </template>
+
+    <template id="inherit_sale_order_portal_content_for_cutomer_code"
+        name="inherit_sale_order_portal_content_for_cutomer_code"
+        inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//table[@id='sales_order_table']/thead/tr/th[1]" position="after">
+            <th class="text-end" id="td_ssh_product_code_header">Customer Product Code</th>
+            <th class="text-end" id="td_ssh_product_name_header">Customer Product Name</th>
+        </xpath>
+        <xpath expr="//td[@id='product_name']" position="after">
+            <td id="sh_portal_product_code" class="text-end">
+                <span t-field="line.sh_line_customer_code" />
+            </td>
+            <td id="sh_portal_product_name" class="text-end">
+                <span t-field="line.sh_line_customer_product_name" />
+            </td>
+        </xpath>
+    </template>
+
+</odoo>

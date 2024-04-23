@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+sh_product_customer_code.access_sh_product_customer_info,access_sh_product_customer_info,sh_product_customer_code.model_sh_product_customer_info,base.group_user,1,1,1,1

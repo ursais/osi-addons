@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="sh_product_customer_code_separate_form_view" model="ir.ui.view">
+        <field name="name">sh.product.customer.info.form.view</field>
+        <field name="model">sh.product.customer.info</field>
+        <field name="arch" type="xml">
+            <form string="Product Customer Code">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" context="{'search_default_customer': 1,'res_partner_search_mode': 'customer', 'default_is_company': True, 'default_customer_rank': 1}" />
+                            <field name="product_tmpl_id" required="True" />
+                            <field name="product_id" required="True" domain="[('product_tmpl_id', '=', product_tmpl_id)]"/>
+                        </group>
+                        <group>
+                            <field name="product_code" />
+                            <field name="product_name" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sh_product_customer_code_separate_tree_view" model="ir.ui.view">
+        <field name="name">sh.product.customer.info.tree</field>
+        <field name="model">sh.product.customer.info</field>
+        <field name="arch" type="xml">
+            <tree class="o_sale_order" multi_edit="1" sample="1">
+                <field name="name" widget="res_partner_many2one" optional="show" />
+                <field name="product_tmpl_id" optional="show" />
+                <field name="product_id" optional="show" />
+                <field name="product_code" optional="show" />
+                <field name="product_name" optional="show" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="sh_product_customer_code_separate_search_view" model="ir.ui.view">
+        <field name="name">sh.product.customer.info.view</field>
+        <field name="model">sh.product.customer.info</field>
+        <field name="arch" type="xml">
+            <search string="Product Customer Code">
+                <field name="product_tmpl_id" />
+                <field name="product_id" />
+                <field name="product_code" />
+                <field name="name" />
+                <field name="product_name" />
+                <group expand="0" string="Group By">
+                    <filter string="Product Template" name="product" context="{'group_by':'product_tmpl_id'}" />
+                    <filter string="Product Varient" name="product_id" context="{'group_by':'product_id'}" />
+                    <filter string="Product Code" name="product_code" context="{'group_by':'product_code'}" />
+                    <filter string="Customer" name="name" context="{'group_by':'name'}" />
+                    <filter string="Product Name" name="product_name" context="{'group_by':'product_name'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="sh_product_customer_code_separate_view_action" model="ir.actions.act_window">
+        <field name="name">Product Customer Code</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sh.product.customer.info</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+    <menuitem id="sh_product_customer_code_menu" parent="sale.prod_config_main" action="sh_product_customer_code.sh_product_customer_code_separate_view_action" sequence="2" groups="sh_product_customer_code.group_product_customer_code" />
+
+    <menuitem
+        id="sh_product_customer_code_product_menu"
+        parent="sale.product_menu_catalog"
+        action="sh_product_customer_code.sh_product_customer_code_separate_view_action"
+        sequence="99"
+        groups="sh_product_customer_code.group_product_customer_code"
+    />
+</odoo>

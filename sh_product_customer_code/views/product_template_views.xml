@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- product.template Form View -->
+    <record id="sh_product_customer_code_form_view_inherit" model="ir.ui.view">
+        <field name="name">sh.product.form.view</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view" />
+        <field name="arch" type="xml">
+            <group name="sale" position="before">
+                <group string="Customers" name="customers" colspan="4"
+                    groups="sh_product_customer_code.group_product_customer_code">
+                    <field name="sh_product_customer_ids" colspan="2"
+                        context="{'default_product_tmpl_id':context.get('product_tmpl_id',active_id), 'product_template_invisible_variant': True}"
+                        nolabel="1">
+                        <tree editable="bottom" class="sh_product_customer_code_tree">
+                            <field name="name" widget="res_partner_many2one" class="sh_pc_name" />
+
+                            <field name="product_id" groups="product.group_product_variant"
+                                domain="[('product_tmpl_id', '=', parent.id)]" />
+                            <field name="product_code" class="sh_pc_product_code" />
+                            <field name="product_name" class="sh_pc_product_name" />
+                        </tree>
+                        <form string="Product Customer Code">
+                            <sheet>
+                                <group>
+                                    <group>
+                                        <field name="name"
+                                            context="{'search_default_customer': 1,'res_partner_search_mode': 'customer', 'default_is_company': True, 'default_customer_rank': 1}" />
+                                        <field
+                                            name="product_id"
+                                            groups="product.group_product_variant"
+                                            domain="[('product_tmpl_id', '=', parent.id)]"
+                                            force_save="1"
+                                            attrs="{'column_invisible': [('parent.product_variant_count', '&lt;', 2)]}"
+                                        />
+                                    </group>
+                                    <group>
+                                        <field name="product_code" />
+                                        <field name="product_name" />
+                                    </group>
+                                </group>
+                            </sheet>
+                        </form>
+                    </field>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <!-- product.product Form View -->
+    <record id="sh_product_customer_code_product_product_form_view_inherit" model="ir.ui.view">
+        <field name="name">sh.product.product.form.view</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view" />
+        <field name="arch" type="xml">
+            <group name="sale" position="before">
+                <group string="Customers" name="customers" colspan="4"
+                    groups="sh_product_customer_code.group_product_customer_code">
+                    <field name="sh_product_customer_ids" colspan="2"
+                        domain="[('id', '=', 'product_id')]"
+                        nolabel="1">
+                        <tree editable="bottom" class="sh_product_customer_code_tree"
+                        >
+                            <field name="name" widget="res_partner_many2one" class="sh_pc_name" />
+                            <field name="product_id" groups="product.group_product_variant"
+                                domain="[('id', '=', parent.id)]" />
+                            <field name="product_code" class="sh_pc_product_code" />
+                            <field name="product_name" class="sh_pc_product_name" />
+                        </tree>
+                        <form string="Product Customer Code">
+                            <sheet>
+                                <group>
+                                    <group>
+                                        <field name="name"
+                                            context="{'search_default_customer': 1,'res_partner_search_mode': 'customer', 'default_is_company': True, 'default_customer_rank': 1}" />
+                                        <field
+                                            name="product_id"
+                                            groups="product.group_product_variant"
+                                            domain="[('id', '=', parent.id)]"
+                                            force_save="1"
+                                            attrs="{'column_invisible': [('parent.product_variant_count', '&lt;', 2)]}"
+                                        />
+                                    </group>
+                                    <group>
+                                        <field name="product_code" />
+                                        <field name="product_name" />
+                                    </group>
+                                </group>
+                            </sheet>
+                        </form>
+                    </field>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="product_template_search_view_inherit_costomer_code11" model="ir.ui.view">
+        <field name="name">product.template.search.inherit.sale</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view" />
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="code_id" string="Customer Product Code" />
+                <field name="product_code_name" string="Customer Product Name" />
+            </field>
+        </field>
+    </record>
+
+</odoo>
