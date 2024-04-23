@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sh_add_pro_code_from_sales_res_config_settings" model="ir.ui.view">
+        <field name="name">Product Code</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//block[@name='catalog_setting_container']" position="after">
+                <block title="Product Customer Code Configuration"
+                    name="sh_product_customer_code_configuration"
+                    groups="sh_product_customer_code.group_product_customer_code">
+                    <setting id="sh_enable_product_code_setting"
+                        help="Want to add Product Code from Sale Order">
+                        <field name="enable_pro_code_from_so" />
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

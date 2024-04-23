@@ -1,0 +1,9 @@
+.o_notebook .sh_product_customer_code_tree.o_list_view .o_list_table th[data-name="name"],
+.o_notebook .sh_product_customer_code_tree.o_list_view .o_list_table th[data-name="product_code"],
+.o_notebook .sh_product_customer_code_tree.o_list_view .o_list_table th[data-name="product_name"]{width: 24% !important;}
+.o_notebook .sh_product_customer_code_tree.o_list_view .o_list_table th[data-name="product_id"]{width: 50% !important;}
+.o_notebook .sh_product_customer_code_tree.o_list_view .o_list_table th.o_list_record_remove_header{width: 3% !important;}
+.o_notebook .sh_product_customer_code_tree.o_list_view .o_list_table .sh_pc_name,
+.o_notebook .sh_product_customer_code_tree.o_list_view .o_list_table .sh_pc_product_id,
+.o_notebook .sh_product_customer_code_tree.o_list_view .o_list_table .sh_pc_product_code,
+.o_notebook .sh_product_customer_code_tree.o_list_view .o_list_table .sh_pc_product_name{word-break: break-word;white-space: normal !important;}
