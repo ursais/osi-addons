@@ -16,7 +16,6 @@ class Partner(models.Model):
         default=False,
         help="If checked, new quotations cannot be confirmed",
     )
-    credit_limit = fields.Float(string="Credit Limit")
     grace_period = fields.Integer(
         string="Grace Period",
         help="Grace period added on top of the customer \
