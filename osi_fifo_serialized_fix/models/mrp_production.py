@@ -138,4 +138,4 @@ class MRPProduction(models.Model):
                     ji_id.with_context(check_move_validity=False).write(
                         {"debit": total_cost}
                     )
-            account_move_id.action_post()
+            account_move_id.sudo().action_post()
