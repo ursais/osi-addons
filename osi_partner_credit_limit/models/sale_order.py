@@ -18,9 +18,15 @@ class SaleOrder(models.Model):
     credit_override = fields.Boolean(
         string="Override Hold", tracking=True, default=False
     )
+    ship_hold_days = fields.Integer(
+        related="partner_id.ship_hold_days",
+        help="Period past scheduled date for customer hold to verify credit card authorization",
+    )
 
     def action_confirm(self):
-        self.partner_id.check_limit(self)
+        state = self.partner_id.check_limit(self)
+        if not state:
+            self.ship_hold = False
         if self.sales_hold and not self.credit_override:
             message = _("""Cannot confirm Order! The customer is on sales hold.""")
             # Display that the customer is on sales hold

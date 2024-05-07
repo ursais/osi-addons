@@ -4,6 +4,7 @@
 from datetime import datetime, timedelta
 
 from odoo import fields, models
+
 import logging
 logger = logging.getLogger(__name__)
 
@@ -27,7 +28,69 @@ class Partner(models.Model):
         help="Place the customer on credit hold to prevent \
             from shipping goods",
     )
+    credit_used = fields.Monetary(string="Credit Used", compute="calculate_credit")
+    credit_available = fields.Monetary(
+        string="Credit Available", compute="calculate_credit"
+    )
+    ship_hold_days = fields.Integer(
+        string="Customer Credit Period",
+        help="Period past scheduled date for customer hold to verify credit card authorization",
+    )
+    def get_existing_invoice_balance(self, partner_id):
+        # Open invoices (unpaid or partially paid invoices --
+        # It is already included in partner.credit
+        invoice_ids = self.env["account.move"].search(
+            [
+                ("partner_id", "=", partner_id.id),
+                # ('state', '=', 'draft'),
+                ("state", "in", ["open", "posted"]),
+                ("payment_state", "in", ["not_paid", "partial"]),
+                ("move_type", "in", ["out_invoice", "out_refund"]),
+            ]
+        )
+        # Invoices that are open (also shows up as part of partner.
+        # Credit, so must be deducted
+        now = fields.Datetime.to_string(datetime.now())
+        grace_period = timedelta(days=partner_id.grace_period)
+        existing_invoice_balance = sum(
+            invoice_ids.filtered(
+                lambda inv: (
+                    inv.invoice_date_due
+                    or inv.date_invoice
+                    or inv.create_date + grace_period > now
+                )
+            ).mapped("amount_residual")
+        )
 
+        return existing_invoice_balance
+
+    def get_existing_order_balance(self, partner_id):
+        # Other orders for this partner
+        order_ids = self.env["sale.order"].search(
+            [
+                ("partner_id", "=", partner_id.id),
+                ("state", "=", "sale"),
+                ("invoice_status", "!=", "invoiced"),
+            ]
+        )
+
+        # Confirmed orders - invoiced - draft or open / not invoiced
+        existing_order_balance = sum(order_ids.mapped("amount_total"))
+
+        return existing_order_balance
+
+
+    def calculate_credit(self):
+        for partner_id in self:
+            existing_order_balance = self.get_existing_order_balance(partner_id)
+            existing_invoice_balance = self.get_existing_invoice_balance(partner_id)
+
+            # All open sale orders + partner credit (AR balance) -
+            # Open invoices (already included in partner credit)
+            partner_id.credit_used = existing_invoice_balance + existing_order_balance
+            partner_id.credit_available = (
+                partner_id.credit_limit - partner_id.credit_used
+            )
     def write(self, vals):
         res = super(Partner, self).write(vals)
         if "credit_limit" or "credit_hold" in vals:
@@ -46,59 +109,32 @@ class Partner(models.Model):
                         ship_hold = True
 
                 order_ids.write({"ship_hold": ship_hold})
+
+        # user reset credit authorization days
+        if "ship_hold_days" in vals:
+            pickings = self.env["stock.picking"].search(
+                [
+                    ("picking_type_code", "=", "outgoing"),
+                    ("partner_id.parent_id", "=", self.id),
+                    ("state", "in", ("assigned", "confirmed", "waiting")),
+                ]
+            )
+            pickings.compute_customer_hold()
+
         return res
 
     def check_limit(self, sale_id):
         partner_id = sale_id.partner_id
-        # Other orders for this partner
-        order_ids = self.env["sale.order"].search(
-            [
-                ("partner_id", "=", partner_id.id),
-                ("state", "=", "sale"),
-                ("invoice_status", "!=", "invoiced"),
-            ]
-        )
-        # Open invoices (unpaid or partially paid invoices --
-        # It is already included in partner.credit
-        invoice_ids = self.env["account.move"].search(
-            [
-                ("partner_id", "=", partner_id.id),
-                # ('state', '=', 'draft'),
-                ("state", "in", ["open", "posted"]),
-                ("payment_state", "in", ["not_paid", "partial"]),
-                ("move_type", "in", ["out_invoice", "out_refund"]),
-            ]
-        )
-        # Initialize variables
-        existing_order_balance = 0.0
-        existing_invoice_balance = 0.0
         # Confirmed orders - invoiced - draft or open / not invoiced
-        for order in order_ids:
-            existing_order_balance = existing_order_balance + order.amount_total
-        # Invoices that are open (also shows up as part of partner.
-        # Credit, so must be deducted
-        for invoice in invoice_ids:
-            if (
-                fields.Datetime.to_string(
-                    (
-                        invoice.invoice_date_due
-                        or invoice.date_invoice
-                        or invoice.create_date
-                    )
-                    + timedelta(days=partner_id.grace_period)
-                )
-            ) > fields.Datetime.to_string(datetime.now()):
-                continue
-            else:
-                existing_invoice_balance = (
-                    existing_invoice_balance + invoice.amount_residual
-                )
+        existing_order_balance = self.get_existing_order_balance(partner_id)
+        existing_invoice_balance = self.get_existing_invoice_balance(partner_id)
+
         # All open sale orders + partner credit (AR balance) -
         # Open invoices (already included in partner credit)
         if (
-            sale_id.partner_id.credit_limit
+            partner_id.credit_limit
             and (existing_invoice_balance + existing_order_balance)
-            > sale_id.partner_id.credit_limit
+            > partner_id.credit_limit
         ):
             return True
         else:
