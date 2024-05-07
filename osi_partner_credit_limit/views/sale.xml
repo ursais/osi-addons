@@ -12,7 +12,7 @@
                 <field name="ship_hold" readonly="1" />
                 <field
                     name="credit_override"
-                    groups="osi_partner_credit_limit.group_credit_hold"
+                    groups="osi_partner_credit_limit.group_sales_hold"
                 />
             </field>
         </field>
@@ -58,7 +58,7 @@
         </field>
     </record>
 
-    <!-- Sale Orders tree view with Warehouse field -->
+    <!-- Sale Orders tree view with Hold fields -->
     <record id="view_order_tree_credit_hold" model="ir.ui.view">
         <field name="name">sale.order.credit.holdtree</field>
         <field name="model">sale.order</field>

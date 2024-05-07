@@ -17,6 +17,7 @@
     ],
     "data": [
         "security/osi_partner_credit_limit.xml",
+        "data/picking_data.xml",
         "views/res_partner.xml",
         "views/sale.xml",
         "views/stock.xml",
