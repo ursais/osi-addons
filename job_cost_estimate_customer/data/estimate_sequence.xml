@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+    
+        <!-- Sequences for Product Estimate -->
+        <record id="product_estimate_seq_job" model = "ir.sequence">
+            <field name="name">Product Estimate Sequence.seq</field>
+            <field name="code">product.estimate.seq.job</field>
+            <field name="prefix">JOB/EST/</field>
+            <field name="padding">4</field>
+        </record>
+        
+    </data>
+</odoo>
+ 
