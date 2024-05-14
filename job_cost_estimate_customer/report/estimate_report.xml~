@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    
+        <report
+            id="report_estimate_information_job" 
+            model="sale.estimate.job"
+            report_type="qweb-pdf"
+            string="Print Job Estimate"
+            name="job_cost_estimate_customer.estimate_print"
+            file="job_cost_estimate_customer.estimate_print"
+         />
+         
+        <template id="estimate_print">
+             <t t-foreach="docs" t-as="doc">
+<!--               <t t-call="report.external_layout">-->
+                <t t-call="web.external_layout"> <!--odoo11-->
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <div>
+                        <center><h3>Job Estimate # - <span t-field="doc.number"/></h3></center>
+                    </div>
+                    
+            <div class="row">
+                <div>
+                    <div t-field="doc.partner_id"
+                        t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True, "phone_icons": True}' /><br/>
+                </div>
+                <div>
+                    <table class="table table-responsive table-condensed table-bordered">
+                        <tr>
+                       </tr>
+                       <tr>
+                           <td><strong>Your Reference </strong></td><td> <span t-field="doc.reference"/></td>
+                           <td><strong>Payment Terms </strong></td><td> <span t-field="doc.payment_term_id.name"/></td>
+                       </tr>
+                       <tr>
+                            <td><strong>Sales Person</strong></td><td> <span t-field="doc.user_id.name"/></td>
+                           <td><strong>Sales Team</strong> </td><td> <span t-field="doc.team_id.name"/></td>
+                       </tr>
+                       <tr>
+                            <td><strong>Job Types</strong></td>
+                           <td colspan="3"><t t-foreach="doc.job_type_ids" t-as="job_type">  <input type="checkbox"/>  <span t-field="job_type.name"/></t></td>
+                       </tr>
+                    </table>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Total Job Estimate</th>
+                                <th class="text-center">Date of Estimate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center"><span t-esc="doc.estimate_total" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/></td>
+                                <td class="text-center"><span t-field="doc.estimate_date"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                        
+                </div>
+                <div>
+                            <h3>Material Estimation</h3>
+                            <table class="table table-condensed table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Description</th>
+                                        <th>Quantity</th>
+                                        <th>Unit of Measure</th>
+                                        <th>Unit Price</th>
+                                        <th>Discount</th>
+                                        <th class="text-right">Sub Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="doc.estimate_ids" t-as="estimate_line">
+                                        <td>
+                                            <span t-field="estimate_line.product_id.name"/> 
+                                        </td>
+                                        <td>
+                                            <span t-field="estimate_line.product_description"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="estimate_line.product_uom_qty"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="estimate_line.product_uom"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="estimate_line.price_unit" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                        </td>
+                                        <td>
+                                            <span t-field="estimate_line.discount"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="estimate_line.price_subtotal" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div>
+                            <h3>Labour Estimation</h3>
+                            <table class="table table-condensed table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Description</th>
+                                        <th>Quantity</th>
+                                        <th>Unit of Measure</th>
+                                        <th>Unit Price</th>
+                                        <th>Discount</th>
+                                        <th class="text-right">Sub Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="doc.labour_estimate_line_ids" t-as="labour_line">
+                                        <td>
+                                            <span t-field="labour_line.product_id.name"/> 
+                                        </td>
+                                        <td>
+                                            <span t-field="labour_line.product_description"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="labour_line.product_uom_qty"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="labour_line.product_uom"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="labour_line.price_unit" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                        </td>
+                                        <td>
+                                            <span t-field="labour_line.discount"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="labour_line.price_subtotal" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div>
+                            <h3>Overhead Estimation</h3>
+                            <table class="table table-condensed table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Description</th>
+                                        <th>Quantity</th>
+                                        <th>Unit of Measure</th>
+                                        <th>Unit Price</th>
+                                        <th>Discount</th>
+                                        <th class="text-right">Sub Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="doc.overhead_estimate_line_ids" t-as="overhead_line">
+                                        <td>
+                                            <span t-field="overhead_line.product_id.name"/> 
+                                        </td>
+                                        <td>
+                                            <span t-field="overhead_line.product_description"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="overhead_line.product_uom_qty"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="overhead_line.product_uom"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="overhead_line.price_unit" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                        </td>
+                                        <td>
+                                            <span t-field="overhead_line.discount"/>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="overhead_line.price_subtotal" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-4 pull-right">
+                                <table class="table table-condensed table-bordered">
+                                    <tr class="border-black">
+                                        <td><strong>Total Material Estimate</strong></td>
+                                        <td class="text-right">
+                                            <span t-esc="doc.total" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Total Labour Estimate</strong></td>
+                                        <td class="text-right">
+                                            <span t-esc="doc.labour_total" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Total Overhead Estimate</strong></td>
+                                        <td class="text-right">
+                                            <span t-esc="doc.overhead_total" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Total Job Estimate</strong></td>
+                                        <td class="text-right">
+                                            <span t-esc="doc.estimate_total" t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div>
+                            <table class="table table-responsive table-condensed table-bordered" t-if="doc.description">
+                                    <thead>
+                                        <tr t-if="doc.description">
+                                            <th class="text-left">Description of Job Estimate</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-left"><span t-field="doc.description"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <p>Estimate Approved By  ____________________________</p>
+                            </div>
+                            <div class="col-xs-6">
+                                <p>Signature  ____________________________</p>
+                                <p>Date  ____________________________</p>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+              </t>
+            </t>
+        </template>
+        
+    </data>
+</odoo>

@@ -1,0 +1,33 @@
+<odoo>
+    <data noupdate='1'>
+        
+        <record id="estimate_own_rule_job" model="ir.rule">
+            <field name="name">Estimate Own</field>
+            <field name="model_id" ref="model_sale_estimate_job"/>
+            <field name="domain_force">[('user_id','=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+        </record>
+
+        <record id="estimate_all_rule_job" model="ir.rule">
+            <field name="name">Estimate All</field>
+            <field name="model_id" ref="model_sale_estimate_job"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+        </record>
+
+        <record model="ir.rule" id="job_cost_estimate_multi_comp_rule">
+            <field name="name">Job Cost Estimate multi-company</field>
+            <field name="model_id" ref="model_sale_estimate_job"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record model="ir.rule" id="job_cost_estimate_line_multi_comp_rule">
+            <field name="name">Job Cost Estimate Line multi-company</field>
+            <field name="model_id" ref="model_sale_estimate_line_job"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
+       
+    </data>
+</odoo>

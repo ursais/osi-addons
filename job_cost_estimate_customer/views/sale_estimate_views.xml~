@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="view_sale_estimate_form_job" model="ir.ui.view">
+            <field name="name">sale.estimate.job.form</field>
+            <field name="model">sale.estimate.job</field>
+            <field name="arch" type="xml">
+                <form string="Job Estimate" class="o_sale_order">
+                <header>
+                    <button name="estimate_confirm" type="object" string="Confirm" states="draft,sent" class="btn-primary" groups=" sales_team.group_sale_salesman"/>
+                    <button name="estimate_approve" type="object" string="Approve" states="confirm" class="btn-primary" groups=" sales_team.group_sale_salesman"/>
+                    <button name="estimate_reject" type="object" string="Reject" states="confirm" groups=" sales_team.group_sale_salesman"/>
+                    <button name="estimate_to_quotation" type="object" string="Create Quotation" states="approve" class="btn-primary"/>
+                    <button name="action_estimate_send" type="object" string="Send by Email" states="draft,sent,confirm,approve,quotesend"  class="btn-primary" groups="sales_team.group_sale_salesman"/>
+                    <button name="contract_close" type="object" string="Close" states='claim' class="btn-primary" groups="sales_team.group_sale_manager"/>
+                    <button name="reset_todraft" type="object" string="Reset to Draft" states='cancel,approve' groups=" sales_team.group_sale_salesman"/>
+                    <button name="estimate_cancel" type="object" string="Cancel" states="draft,sent,reject"/>
+                    <field name="state" widget="statusbar" string="confirm"  
+                                    statusbar_visible="draft,sent,confirm,approve,quotesend"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="number" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options="{&quot;always_reload&quot;: True}" attrs="{'readonly': [('state', 'in', ['approve','quotesend','cancel','reject'])]}"/>
+                            <field name="pricelist_id" attrs="{'readonly': [('state', 'in', ['approve','quotesend','cancel','reject'])]}" groups="product.group_sale_pricelist"/>
+                            <field name="payment_term_id" attrs="{'readonly': [('state', 'in', ['approve','quotesend','cancel','reject'])]}" options="{'no_create': True}"/>
+                            <field name="reference" attrs="{'readonly': [('state', 'in', ['approve','quotesend','cancel','reject'])]}"/>
+                        </group>
+                        <group>
+                            <field name="estimate_date" attrs="{'readonly': [('state', 'in', ['approve','quotesend','cancel','reject'])]}"/>
+                            <field name="company_id" attrs="{'readonly': [('state', 'in', ['approve','quotesend','cancel','reject'])]}" groups="base.group_multi_company"/>
+                            <field name="currency_id" attrs="{'readonly': [('state', 'in', ['approve','quotesend','cancel','reject'])]}" groups="base.group_multi_currency"/>
+                            <field name="project_id" attrs="{'readonly': [('state', 'in', ['approve','quotesend','cancel','reject'])]}"/>
+                            <field name="analytic_id" attrs="{'readonly': [('state', 'in', ['approve','quotesend','cancel','reject'])]}"/>
+                            <field name="job_type_ids" widget="many2many_tags" attrs="{'readonly': [('state', 'in', ['approve','quotesend','cancel','reject'])]}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Material Estimation">
+                            <field name="estimate_ids" context="{'default_analytic_id':analytic_id,'default_job_type':'material'}" attrs="{'readonly': [('state', 'in', ['approve','quotesend','cancel','reject'])]}" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="job_type"/>
+                                    <field name="product_id"/>
+                                    <field name="product_description"/>
+                                    <field name="product_uom_qty"/>
+                                    <field name="product_uom"/>
+                                    <field name="price_unit"/>
+                                    <field name="discount"/>
+                                    <field name="price_subtotal"/>
+                                    <field name="estimate_id" invisible="1"/> 
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Labour Estimation">
+                            <field name="labour_estimate_line_ids" context="{'default_analytic_id':analytic_id,'default_job_type':'labour'}" attrs="{'readonly': [('state', 'in', ['approve','quotesend','cancel','reject'])]}" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="job_type"/>
+                                    <field name="product_id"/>
+                                    <field name="product_description"/>
+                                    <field name="product_uom_qty"/>
+                                    <field name="product_uom"/>
+                                    <field name="price_unit"/>
+                                    <field name="discount"/>
+                                    <field name="price_subtotal"/>
+                                    <field name="estimate_id" invisible="1"/> 
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Overhead Estimation">
+                            <field name="overhead_estimate_line_ids" context="{'default_analytic_id':analytic_id,'default_job_type':'overhead'}" attrs="{'readonly': [('state', 'in', ['approve','quotesend','cancel','reject'])]}" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="job_type"/>
+                                    <field name="product_id"/>
+                                    <field name="product_description"/>
+                                    <field name="product_uom_qty"/>
+                                    <field name="product_uom"/>
+                                    <field name="price_unit"/>
+                                    <field name="discount"/>
+                                    <field name="price_subtotal"/>
+                                    <field name="estimate_id" invisible="1"/> 
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Other Info">
+                            <group>
+                                <group>
+                                    <field name="source" attrs="{'readonly': [('state', 'in', ['approve','quotesend','cancel','reject'])]}"/>
+                                    <field name="user_id" attrs="{'readonly': [('state', 'in', ['approve','quotesend','cancel','reject'])]}"/>
+                                </group>
+                                <group>
+                                    <field name="team_id" attrs="{'readonly': [('state', 'in', ['approve','quotesend','cancel','reject'])]}"/>
+                                    <field name="quotation_id" attrs="{'readonly': [('state', 'in', ['approve','quotesend','cancel','reject'])]}"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Aditional Notes">
+                            <field name="note" attrs="{'readonly': [('state', 'in', ['approve','quotesend','cancel','reject'])]}"/>
+                        </page>
+                    </notebook>
+                    <group>
+                        <group class="oe_subtotal_footer oe_right" colspan="2" name="estimate_total">
+                            <field name="total" widget="monetary"/>
+                            <field name="labour_total" widget="monetary"/>
+                            <field name="overhead_total" widget="monetary"/>
+                            <field name="estimate_total" widget="monetary"/>
+                        </group>
+                        <group string="Description of Jobs Estimate">
+                        </group>
+                        <field name="description" class="oe_inline" attrs="{'readonly': [('state', 'in', ['approve','quotesend','cancel','reject'])]}" placeholder="Setup default Jobs Estimate Content." nolabel="1"/>
+                            <div class="oe_clear"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+            </field>
+        </record>
+        
+        <record id="view_sale_estimate_tree_job" model="ir.ui.view">
+            <field name="name">sale.estimate.job.tree</field>
+            <field name="model">sale.estimate.job</field>
+            <field name="priority">4</field>
+            <field name="arch" type="xml">
+                <tree string="Estimate">
+                    <field name="number"/>
+                    <field name="partner_id"/>
+                    <field name="estimate_date"/>
+                    <field name="total" widget="monetary"/>
+                    <field name="labour_total" widget="monetary"/>
+                    <field name="overhead_total" widget="monetary"/>
+                    <field name="estimate_total" widget="monetary"/>
+                    <field name="user_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="sale_estimate_search_view_job" model="ir.ui.view">
+            <field name="name">sale.estimate job search</field>
+            <field name="model">sale.estimate.job</field>
+            <field name="arch" type="xml">
+                <search string="Sale Estimate search" >
+                    <field name="number"/>
+                    <field name="partner_id"/>
+                    <field name="estimate_date"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="user_id"/>
+                    <field name="team_id"/>
+                    <field name="pricelist_id" groups="product.group_sale_pricelist"/>
+                    <field name="payment_term_id"/>
+                    <field name="state"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Customer" context="{'group_by':'partner_id'}"/>
+                        <filter string="Currency" context="{'group_by':'currency_id'}"/>
+                        <filter string="Estimate Date" context="{'group_by':'estimate_date'}"/>
+                        <filter string="Company" context="{'group_by':'company_id'}"/>
+                        <filter string="State" context="{'group_by':'state'}"/>
+                        <filter string="Sales Person" context="{'group_by':'user_id'}"/>
+                        <filter string="Sales Team" context="{'group_by':'team_id'}"/>
+                        <filter string="Pricelist" context="{'group_by':'pricelist_id'}"/>
+                        <filter string="Payment Term" context="{'group_by':'payment_term_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+       
+        <record id="action_estimate_job" model="ir.actions.act_window">
+            <field name="name">Job Estimates</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.estimate.job</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+<!--        <menuitem id="menu_sale_estimate_job" name="Job Estimates" action="action_estimate_job" parent="sales_team.menu_sales"-->
+<!--                sequence="9"/>-->
+        <menuitem id="menu_sale_estimate_job" name="Job Estimates" action="action_estimate_job" parent="sale.sale_order_menu"
+                sequence="9"/> <!--odoo11-->
+
+</odoo>

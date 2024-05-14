@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!--Email template -->
+        <record id="email_template_estimate_job" model="mail.template">
+            <field name="name">Estimate - Send by Email</field>
+            <field name="email_from">${(object.company_id.email)}</field>
+            <field name="subject">${object.company_id.name} ${object.state in ('draft', 'sent') and 'Estimate' or 'Order'} (Ref ${object.number or 'n/a' })</field>
+            <field name="email_to">${object.partner_id.email}</field>
+            <field name="model_id" ref="job_cost_estimate_customer.model_sale_estimate_job"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="report_template" ref="job_cost_estimate_customer.report_estimate_information_job"/>
+            <field name="report_name">Estimate</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="body_html"><![CDATA[
+<p>Dear ${object.partner_id.name},
+
+<p>
+Here is your estimate of ${object.number} <strong>${object.name}</strong> with
+% if object.origin:
+(with reference: ${object.origin} )
+% endif
+<strong> Material Estimate </strong> amounting in <strong> ${object.total} ${object.pricelist_id.currency_id.name}</strong> <strong> Labour Estimate </strong> amounting in <strong>${object.labour_total} ${object.pricelist_id.currency_id.name}</strong> <strong> Overhead Estimate </strong> amounting in <strong>${object.overhead_total} ${object.pricelist_id.currency_id.name}</strong> <strong> Total Job Estimate       </strong> amounting in <strong>${object.estimate_total} ${object.pricelist_id.currency_id.name}</strong>
+from ${object.company_id.name}.
+</p>
+
+    <br/><br/>
+% if is_online:
+    <center>
+        <a href="${access_url}" style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;" class="o_default_snippet_text">${access_name}</a>
+        <br/><br/>
+        <span style="color:#888888">(or view attached PDF)</span>
+    </center>
+    <br/>
+% endif
+
+<p>You can reply to this email if you have any questions.</p>
+<p>Thank you,</p>
+
+<p style="color:#eeeeee;">
+% if object.user_id and object.user_id.signature:
+    ${object.user_id.signature | safe}
+% endif
+</p>
+]]></field>
+        </record>
+        
+    </data>
+</odoo>
+ 

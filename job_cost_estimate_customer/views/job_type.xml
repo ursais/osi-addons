@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+    
+    <record model="ir.ui.view" id="estimate_job_type_form_view">
+        <field name="name">Estimate.Job.Type.Form</field>
+        <field name="model">estimate.job.type</field>
+        <field name="arch" type="xml">
+            <form string='Job Type form'>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="job_type"/>
+                        </group>
+                        <group>
+                            <field name="code"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <record id="estimate_job_type_tree_view" model="ir.ui.view">
+        <field name="name">Estimate.Job.Type.List</field>
+        <field name="model">estimate.job.type</field>
+        <field name="arch" type="xml">
+            <tree string="Job Types" editable="bottom">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="job_type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_estimate_job_type">
+        <field name="name">Estimate Job Type</field>
+        <field name="res_model">estimate.job.type</field>
+        <!-- <field name="view_type">form</field> -->
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!-- <menuitem id="menu_estimate_job_type" parent="sales_team.menu_sale_config" name="Job Types" action="action_estimate_job_type" sequence="2"/> -->
+    <menuitem id="menu_estimate_job_type" parent="sale.menu_sale_config" name="Job Types" action="action_estimate_job_type" sequence="2"/>
+
+    </data>
+</odoo>
