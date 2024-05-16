@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="so_backorder_tree_view" model="ir.ui.view">
+        <field name="name">so.backorder.report.tree</field>
+        <field name="model">sale.order.line</field>
+        <field name="arch" type="xml">
+            <tree string="SO Backorders">
+                <field name="order_id" />
+                <field name="name" />
+                <field name="bo_qty" />
+                <field name="bo_value" />
+                <field name="uigd_qty" />
+                <field name="uigd_value" />
+                <field name="last_date_delivered" />
+                <field name="last_bill_date" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_so_backorder" model="ir.actions.act_window">
+        <field name="name">SO Backorders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">sale.order.line</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="sale_backorder.so_backorder_tree_view" />
+        <field name="context">{'create': False, 'edit': False}</field>
+        <field name="domain">['&amp;', ('product_type', '=', 'product'), '|',
+            ('bo_value', '!=', 0), ('uigd_value', '!=', 0)]
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_so_backorder"
+        action="action_so_backorder"
+        parent="sale.sale_order_menu"
+        sequence="11"
+    />
+
+</odoo>

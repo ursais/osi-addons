@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="so_backorder_report_view" model="ir.ui.view">
+        <field name="name">SO Backorder Report Wizard</field>
+        <field name="model">sobackorder.report.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <footer>
+                    <button
+                        type="object"
+                        name="action_print_report"
+                        string="Print Report"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_so_backorder_wizard" model="ir.actions.act_window">
+        <field name="name">Generate SO Backorder Report</field>
+        <field name="res_model">sobackorder.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="so_backorder_report_view" />
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_so_backorder_report"
+        action="action_so_backorder_wizard"
+        parent="sale.sale_order_menu"
+        sequence="12"
+    />
+</odoo>
