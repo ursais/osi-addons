@@ -6,26 +6,20 @@
         <field name="priority">100</field>
         <field name="inherit_id" ref="product.product_template_form_view" />
         <field name="arch" type="xml">
-            <div name="options" position="replace">
-                <div name="options">
-                    <div>
-                        <span class="d-inline-block">
-                            <field name="sale_ok" />
-                            <label for="sale_ok" />
-                        </span>
-                        <span class="d-inline-block">
-                            <field name="sale_ok_confirm" />
-                            <label for="sale_ok_confirm" />
-                        </span>
-                    </div>
-                    <div>
-                        <span class="d-inline-block">
-                            <field name="purchase_ok" />
-                            <label for="purchase_ok" />
-                        </span>
-                    </div>
+            <xpath expr="//div[@name='options']/span" position="after">
+                <span class="d-inline-block">
+                    <field name="sale_ok_confirm" />
+                    <label for="sale_ok_confirm" />
+                </span>
+            </xpath>
+            <xpath expr="//div[@name='options']/span[3]" position="replace">
+                <div>
+                    <span class="d-inline-block">
+                        <field name="purchase_ok" />
+                        <label for="purchase_ok" />
+                    </span>
                 </div>
-            </div>
+            </xpath>
             <page name="inventory" position="after">
                 <page name="states" string="State Configuration">
                     <group name="candidate_fields">
