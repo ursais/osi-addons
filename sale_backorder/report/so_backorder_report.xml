@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <template id="so_backorder_report">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <br />
+                <div class="page">
+                    <h2>PO Backorder Report</h2>
+                    <table class="table table-sm table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Order Reference</th>
+                                <th>Description</th>
+                                <th>Backorder Qty</th>
+                                <th>Backorder Value</th>
+                                <th>UIGD Qty</th>
+                                <th>UIGD Value</th>
+                                <th>Last Date Delivered</th>
+                                <th>Last Bill Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="docs" t-as="line">
+                                <td><span t-field="line.order_id" /></td>
+                                <td><span t-field="line.name" /></td>
+                                <td class="text-right"><span
+                                        t-field="line.bo_qty"
+                                    /></td>
+                                <td class="text-right"><span
+                                        t-field="line.bo_value"
+                                    /></td>
+                                <td class="text-right"><span
+                                        t-field="line.uigd_qty"
+                                    /></td>
+                                <td class="text-right"><span
+                                        t-field="line.uigd_value"
+                                    /></td>
+                                <td><span t-field="line.last_date_delivered" /></td>
+                                <td><span t-field="line.last_bill_date" /></td>
+                                <td />
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_so_backorder_report" model="ir.actions.report">
+        <field name="name">SO Backorder Report</field>
+        <field name="model">sale.order.line</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">sale_backorder.so_backorder_report</field>
+        <field name="report_file">sale_backorder.so_backorder_report</field>
+        <field name="binding_model_id" ref="sale.model_sale_order_line" />
+        <field name="print_report_name">"SO Backorder Report"</field>
+    </record>
+
+</odoo>
