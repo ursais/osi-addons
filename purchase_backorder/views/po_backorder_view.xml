@@ -1,0 +1,39 @@
+<odoo>
+
+    <record id="po_backorder_tree_view" model="ir.ui.view">
+        <field name="name">po.backorder.report.view</field>
+        <field name="model">purchase.order.line</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="order_id" />
+                <field name="name" />
+                <field name="bo_qty" />
+                <field name="bo_value" />
+                <field name="uigr_qty" />
+                <field name="uigr_value" />
+                <field name="last_date_received" />
+                <field name="last_bill_date" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_po_backorder" model="ir.actions.act_window">
+        <field name="name">PO Backorders</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">purchase.order.line</field>
+        <field name="view_id" ref="purchase_backorder.po_backorder_tree_view" />
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'create': False, 'edit': False}</field>
+        <field
+            name="domain"
+        >['&amp;', ('product_type', '=', 'product'), '|', ('bo_value', '!=', 0), ('uigr_value', '!=', 0)]</field>
+    </record>
+
+    <menuitem
+        id="menu_po_backorder"
+        action="action_po_backorder"
+        parent="purchase.menu_procurement_management"
+        sequence="11"
+    />
+
+</odoo>

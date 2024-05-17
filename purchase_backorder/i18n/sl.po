@@ -1,0 +1,170 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* purchase_backorder
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2020-10-05 11:16+0000\n"
+"Last-Translator: Matjaz Mozetic <matjaz@matmoz.si>\n"
+"Language-Team: none\n"
+"Language: sl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=4; plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n"
+"%100==4 ? 2 : 3;\n"
+"X-Generator: Weblate 3.10\n"
+
+#. module: purchase_backorder
+#: model:ir.model.fields,field_description:purchase_backorder.field_purchase_order_line__bo_qty
+#: model_terms:ir.ui.view,arch_db:purchase_backorder.po_backorder_report
+msgid "Backorder Qty"
+msgstr "Nedob. kol."
+
+#. module: purchase_backorder
+#: model:ir.model.fields,field_description:purchase_backorder.field_purchase_order_line__bo_value
+#: model_terms:ir.ui.view,arch_db:purchase_backorder.po_backorder_report
+msgid "Backorder Value"
+msgstr "Nedob. vred."
+
+#. module: purchase_backorder
+#: model:ir.model.fields,field_description:purchase_backorder.field_purchase_order__bo_value
+msgid "Bo Value"
+msgstr ""
+
+#. module: purchase_backorder
+#: model_terms:ir.ui.view,arch_db:purchase_backorder.po_backorder_report_view
+msgid "Cancel"
+msgstr "Preklic"
+
+#. module: purchase_backorder
+#: model:ir.model.fields,field_description:purchase_backorder.field_pobackorder_report_wizard__create_uid
+msgid "Created by"
+msgstr "Ustvaril"
+
+#. module: purchase_backorder
+#: model:ir.model.fields,field_description:purchase_backorder.field_pobackorder_report_wizard__create_date
+msgid "Created on"
+msgstr "Ustvarjeno"
+
+#. module: purchase_backorder
+#: model_terms:ir.ui.view,arch_db:purchase_backorder.po_backorder_report
+msgid "Description"
+msgstr "Opis"
+
+#. module: purchase_backorder
+#: model:ir.model.fields,field_description:purchase_backorder.field_pobackorder_report_wizard__display_name
+msgid "Display Name"
+msgstr "Prikazani naziv"
+
+#. module: purchase_backorder
+#: model:ir.actions.act_window,name:purchase_backorder.action_po_backorder_wizard
+#: model:ir.ui.menu,name:purchase_backorder.menu_po_backorder_report
+msgid "Generate PO Backorder Report"
+msgstr "Ustvari poročilo o zaostalih prejemih"
+
+#. module: purchase_backorder
+#: model:ir.model.fields,field_description:purchase_backorder.field_pobackorder_report_wizard__id
+msgid "ID"
+msgstr "ID"
+
+#. module: purchase_backorder
+#: model:ir.model.fields,field_description:purchase_backorder.field_purchase_order__last_bill_date
+#: model:ir.model.fields,field_description:purchase_backorder.field_purchase_order_line__last_bill_date
+#: model_terms:ir.ui.view,arch_db:purchase_backorder.po_backorder_report
+msgid "Last Bill Date"
+msgstr "Zadnji prej. račun"
+
+#. module: purchase_backorder
+#: model:ir.model.fields,field_description:purchase_backorder.field_purchase_order__last_date_received
+#: model:ir.model.fields,field_description:purchase_backorder.field_purchase_order_line__last_date_received
+#: model_terms:ir.ui.view,arch_db:purchase_backorder.po_backorder_report
+msgid "Last Date Received"
+msgstr "Zadnji prejem"
+
+#. module: purchase_backorder
+#: model:ir.model.fields,field_description:purchase_backorder.field_pobackorder_report_wizard____last_update
+msgid "Last Modified on"
+msgstr "Zadnjič spremenjeno"
+
+#. module: purchase_backorder
+#: model:ir.model.fields,field_description:purchase_backorder.field_pobackorder_report_wizard__write_uid
+msgid "Last Updated by"
+msgstr "Zadnji posodobil"
+
+#. module: purchase_backorder
+#: model:ir.model.fields,field_description:purchase_backorder.field_pobackorder_report_wizard__write_date
+msgid "Last Updated on"
+msgstr "Zadnjič posodobljeno"
+
+#. module: purchase_backorder
+#: model_terms:ir.ui.view,arch_db:purchase_backorder.po_backorder_report
+msgid "Order Reference"
+msgstr "Sklic naročila"
+
+#. module: purchase_backorder
+#: model:ir.actions.report,name:purchase_backorder.action_po_backorder_report
+#: model_terms:ir.ui.view,arch_db:purchase_backorder.po_backorder_report
+msgid "PO Backorder Report"
+msgstr "Poročilo o zaostalih prejemih"
+
+#. module: purchase_backorder
+#: model:ir.model,name:purchase_backorder.model_pobackorder_report_wizard
+msgid "PO Backorder Report Wizard"
+msgstr "Čarovnik za poročilo o zaost. prejemih"
+
+#. module: purchase_backorder
+#: model:ir.actions.act_window,name:purchase_backorder.action_po_backorder
+#: model:ir.ui.menu,name:purchase_backorder.menu_po_backorder
+msgid "PO Backorders"
+msgstr "Zaostali prejemi"
+
+#. module: purchase_backorder
+#: model_terms:ir.ui.view,arch_db:purchase_backorder.po_backorder_report_view
+msgid "Print Report"
+msgstr "Natisni poročilo"
+
+#. module: purchase_backorder
+#: model:ir.model.fields,field_description:purchase_backorder.field_purchase_order_line__product_type
+msgid "Product Type"
+msgstr "Tip proizvoda"
+
+#. module: purchase_backorder
+#: model:ir.model,name:purchase_backorder.model_purchase_order
+msgid "Purchase Order"
+msgstr "Nabavni nalog"
+
+#. module: purchase_backorder
+#: model:ir.model,name:purchase_backorder.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Nabavna postavka"
+
+#. module: purchase_backorder
+#: model:ir.model.fields,field_description:purchase_backorder.field_purchase_order_line__uigr_qty
+#: model_terms:ir.ui.view,arch_db:purchase_backorder.po_backorder_report
+msgid "UIGR Qty"
+msgstr "UIGR kol"
+
+#. module: purchase_backorder
+#: model:ir.model.fields,field_description:purchase_backorder.field_purchase_order_line__uigr_value
+#: model_terms:ir.ui.view,arch_db:purchase_backorder.po_backorder_report
+msgid "UIGR Value"
+msgstr "UIGR vred."
+
+#. module: purchase_backorder
+#: model:ir.model.fields,field_description:purchase_backorder.field_purchase_order__uigr_value
+msgid "Uigr Value"
+msgstr ""
+
+#~ msgid ""
+#~ "A storable product is a product for which you manage stock. The Inventory "
+#~ "app has to be installed.\n"
+#~ "A consumable product is a product for which stock is not managed.\n"
+#~ "A service is a non-material product you provide."
+#~ msgstr ""
+#~ "Izdelek za zalogo je proizvod, za katerega se vodijo zaloge. Nameščena "
+#~ "mora biti aplikacija Inventar.\n"
+#~ "Potrošni proizvod je izdelek, za katerega se ne vodijo zaloge.\n"
+#~ "Storitev je nematerialni proizvod, ki ga dobavljate."

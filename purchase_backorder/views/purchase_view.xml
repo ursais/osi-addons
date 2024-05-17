@@ -1,0 +1,17 @@
+<odoo>
+
+    <record id="purchase_order_form_backorder" model="ir.ui.view">
+        <field name="name">purchase.order.form.backorder</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_ref']" position="after">
+                <field name="uigr_value" readonly='1' />
+                <field name="bo_value" readonly='1' />
+                <field name="last_bill_date" readonly='1' />
+                <field name="last_date_received" readonly='1' />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
