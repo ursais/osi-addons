@@ -35,7 +35,7 @@
         />
         <field name="priority">100</field>
         <field name="arch" type="xml">
-            <button name="print_checks" position="attributes">
+            <!-- <button name="print_checks" position="attributes">
                 <attribute name="invisible">
                 payment_state == 'reversed' or payment_method_code != 'check_printing' or state != 'posted' or payment_type == 'inbound' or not is_move_sent
                 </attribute>
@@ -44,7 +44,7 @@
                 <attribute name="invisible">
                     payment_state == 'reversed' or payment_method_code in ('check_printing', 'ACH-Out', 'manual') or state not in ('posted', 'cancel')
                 </attribute>
-            </button>
+            </button> -->
             <button name="mark_as_sent" position="attributes">
                 <attribute name="invisible">
                     payment_state == 'reversed' or state != 'posted' or is_move_sent or payment_method_code != 'manual'
