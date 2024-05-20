@@ -24,11 +24,12 @@ class StockValuationLayer(models.Model):
             svl_id = self.env["stock.valuation.layer"].browse(val.get("stock_valuation_layer_id"))
             if stock_move_id:
                 if len(stock_move_id.move_line_ids) > 1:
+                    sign = 1 if val["quantity"] >= 0 else -1
                     for line in stock_move_id.move_line_ids:
                         new_val = val.copy()
-                        new_val["quantity"] = line.quantity
-                        new_val["remaining_qty"] = line.quantity
-                        new_val["value"] = line.quantity * new_val.get("unit_cost")
+                        new_val["quantity"] = line.quantity * sign
+                        new_val["remaining_qty"] = line.quantity * sign
+                        new_val["value"] = (line.quantity * new_val.get("unit_cost")) * sign
                         new_val["remaining_value"] = new_val["value"]
                         if line.lot_id:
                             new_val["lot_ids"] = [line.lot_id.id]
