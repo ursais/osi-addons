@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+   	
+    <template id="user_dropdown" inherit_id="portal.user_dropdown" priority="1">
+        <xpath expr="//a[@id='o_logout']" position="after">
+            <a t-if="request.session.impersonate_uid" href="/web/login_back" role="menuitem" class="dropdown-item ps-3">
+                <i class="fa fa-user-secret me-1 small text-muted"/> Stop impersonation
+            </a>
+        </xpath>
+    </template>
+	
+
+</odoo>

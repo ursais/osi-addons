@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+<t t-name="oi_login_as.LoginAs">
+    <div class="d-none d-md-inline-block" t-on-click.prevent="_onClick">
+        <button t-if="impersonate" title="Login back" aria-label="Login back" class="o_nav_entry">
+            <i class="fa fa-user-secret" role="img"/>
+        </button>
+        <button t-else="" title="Login As" aria-label="Login As" class="o_nav_entry">
+            <i class="fa fa-user" role="img"/>
+        </button>
+    </div>
+</t>
+
+</templates>
