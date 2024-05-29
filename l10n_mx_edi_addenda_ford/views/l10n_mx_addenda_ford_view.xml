@@ -1,0 +1,17 @@
+<odoo>
+    <template id="l10n_mx_edi_addenda_ford" name="Addenda Ford">
+       <fomadd:addenda
+            xmlns:fomadd="http://www.ford.com.mx/cfdi/addenda"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://www.ford.com.mx/cfdi/addenda http://www.ford.com.mx/cfdi/addenda/cfdiAddendaFord_1_0.xsd"
+        >
+            <fomadd:FOMASN version="1.0">
+                <fomadd:GSDB><span t-field="record.ref" /></fomadd:GSDB>
+                <fomadd:ASN><span t-field="record.ford_reference" /></fomadd:ASN>
+            </fomadd:FOMASN>
+        </fomadd:addenda>
+        </template>
+        <record id="l10n_mx_edi_addenda_ford" model="ir.ui.view">
+            <field name="l10n_mx_edi_addenda_flag" eval="True" />
+        </record>
+</odoo>
