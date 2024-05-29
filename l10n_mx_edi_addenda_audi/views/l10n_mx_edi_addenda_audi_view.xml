@@ -1,0 +1,34 @@
+<odoo>
+    <template id="view_account_move_addenda_audi">
+        <S:Factura xmlns:S="http://www.Audi.net.mx/Addenda/S" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.Audi.net.mx/Addenda/S S.xsd" codigoImpuesto="D2"
+                   tipoDocumentoFiscal="FA" version="1.0" tipoDocumento="S">
+            <S:Moneda t-att-tipoMoneda="record.currency_id.name"/>
+            <S:Proveedor t-attf-noProveedor="00X7244100" t-attf-eMail="infomx@ams-fa.com"/>
+            <S:Referencias t-att-unidadNegocio="record.unidad_negocio"/>
+            <S:Solicitante t-att-eMail="record.email_solicitante"/>
+            <S:Partes>
+                <t t-set="i" t-value="1"/>
+                <t t-set="unidad_medida" t-value="UP"/>
+                <t t-set="codigo_impuesto" t-value="D2"/>
+                <t t-foreach="record.invoice_line_ids" t-as="move_line">
+                    <S:Parte t-att-precioUnitario="move_line.price_unit"
+                             t-att-numeroParte="move_line.line_external_code"
+                             t-att-descripcion="move_line.product_id.name" t-attf-codigoImpuesto="D2"
+                             t-att-cantidad="move_line.quantity"
+                             t-att-posicion="i" t-att-montoLinea="move_line.price_unit * move_line.quantity"
+                             t-att-unidadMedida="move_line.product_uom_id.name">
+                        <t t-set="i" t-value="i+1"/>
+
+                        <S:Referencias t-att-ordenCompra="record.ordenCompra"/>
+                    </S:Parte>
+                </t>
+            </S:Partes>
+        </S:Factura>
+    </template>
+
+    <record id="l10n_mx_edi_addenda_audi.view_account_move_addenda_audi" model="ir.ui.view">
+        <field name="l10n_mx_addenda_flag" eval="True"/>
+    </record>
+
+</odoo>
