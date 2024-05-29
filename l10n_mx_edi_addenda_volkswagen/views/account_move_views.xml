@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="view_account_move_form_inherit_addenda_volkswagen" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.addenda.volkswagen</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="Addenda">
+                    <group>
+                        <field name="vw_flag" invisible="1"/>
+                        <field name="vw_division" invisible="not vw_flag"/>
+                        <field name="vw_applicant_name" invisible="not vw_flag"/>
+                        <field name="vw_applicant_email" invisible="not vw_flag"/>
+                        <field name="vw_file" invisible="not vw_flag"/>
+                        <field name="vw_reference" invisible="not vw_flag"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
