@@ -1,0 +1,30 @@
+<odoo>
+    <template id="l10n_mx_edi_addenda_volkswagen" name="Addenda Volkswagen">
+        <PSV:Factura version="1.0" tipoDocumentoFiscal="FA" tipoDocumentoVWM="PSV" t-att-division="record.vw_division"
+                     xmlns:PSV="http://www.vwnovedades.com/volkswagen/kanseilab/shcp/2009/Addenda/PSV">
+            <PSV:Moneda t-att-tipoMoneda="record.currency_id.name" t-att-tipoCambio="record.currency_id.inverse_rate"
+                        t-attf-codigoImpuesto="1A"/>
+            <PSV:Proveedor codigo="6001017954" nombre="AMS FACTORY AUTOMATION DE MEXICO SA"
+                           correoContacto="infomx@ams-fa.com"/>
+            <PSV:Solicitante t-att-nombre="record.vw_applicant_name" t-att-correo="record.vw_applicant_email"/>
+            <PSV:Archivo t-att-datos="record.vw_file" tipo="PDF"/>
+            <PSV:Partes>
+                <t t-set="i" t-value="1"/>
+                <t t-foreach="record.invoice_line_ids" t-as="move_line">
+                    <PSV:Parte t-att-posicion="i" t-att-numeroMaterial="record.vw_reference"
+                               t-att-descripcionMaterial="move_line.product_id.name"
+                               t-att-cantidadMaterial="move_line.quantity" t-attf-unidadMedida="PC"
+                               t-att-precioUnitario="move_line.price_unit" t-att-montoLinea="move_line.price_subtotal"
+                               t-attf-codigoImpuesto="1A">
+                        <PSV:Referencias t-att-ordenCompra="record.ref"/>
+                    </PSV:Parte>
+                    <t t-set="i" t-value="i+1"/>
+                </t>
+            </PSV:Partes>
+        </PSV:Factura>
+    </template>
+
+    <record id="l10n_mx_edi_addenda_volkswagen" model="ir.ui.view">
+        <field name="l10n_mx_edi_addenda_flag" eval="True"/>
+    </record>
+</odoo>
