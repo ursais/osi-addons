@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Sale Order form view -->
+    <record id="view_order_form_inherit_ol_sale" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Added  Original Shipment Commitment Date -->
+            <xpath expr="//group[@name='sale_shipping']//label[@for='commitment_date']" position="replace"/>
+            <xpath expr="//group[@name='sale_shipping']" position="inside">
+                <div class="o_td_label">
+                    <label for="original_commitment_date" string="Original Shipment Commitment Date"/>
+                </div>
+                <field name="original_commitment_date" nolabel="1" readonly="1"/>
+            </xpath>
+
+            <!-- Added  Original Customer Request Date and Delivery Date -->
+            <xpath expr="//group[@name='order_details']//field[@name='has_active_pricelist']" position="before">
+                <div class="o_td_label">
+                    <label for="original_request_date" string="Original Customer Request Date"/>
+                </div>
+                <field name="original_request_date" nolabel="1" readonly="state == 'sale'"/>
+                <div class="o_td_label">
+                   <label for="commitment_date" string="Delivery Date"/>
+                </div>
+                <div name="commitment_date_div" position="move"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
