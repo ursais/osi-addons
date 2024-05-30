@@ -28,7 +28,7 @@ class StockValuationLayer(models.Model):
                     for line in stock_move_id.move_line_ids:
                         new_val = val.copy()
                         new_val["quantity"] = line.quantity * sign
-                        new_val["remaining_qty"] = line.quantity * sign
+                        new_val["remaining_qty"] = line.quantity if sign > 0 else 0
                         new_val["value"] = (line.quantity * new_val.get("unit_cost")) * sign
                         new_val["remaining_value"] = new_val["value"]
                         if line.lot_id:
