@@ -14,7 +14,7 @@
     ],
     "data": [
         "views/account_move_views.xml",
-        "views/l10n_mx_edi_addenda_audi_wiew.xml",
+        "views/l10n_mx_edi_addenda_audi_view.xml",
     ],
     "application": False
 }

@@ -5,8 +5,8 @@
                    tipoDocumentoFiscal="FA" version="1.0" tipoDocumento="S">
             <S:Moneda t-att-tipoMoneda="record.currency_id.name"/>
             <S:Proveedor t-attf-noProveedor="00X7244100" t-attf-eMail="infomx@ams-fa.com"/>
-            <S:Referencias t-att-unidadNegocio="record.unidad_negocio"/>
-            <S:Solicitante t-att-eMail="record.email_solicitante"/>
+            <S:Referencias t-att-unidadNegocio="record.audi_business_unit"/>
+            <S:Solicitante t-att-eMail="record.audi_applicant_email"/>
             <S:Partes>
                 <t t-set="i" t-value="1"/>
                 <t t-set="unidad_medida" t-value="UP"/>
@@ -20,7 +20,7 @@
                              t-att-unidadMedida="move_line.product_uom_id.name">
                         <t t-set="i" t-value="i+1"/>
 
-                        <S:Referencias t-att-ordenCompra="record.ordenCompra"/>
+                        <S:Referencias t-att-ordenCompra="record.ref"/>
                     </S:Parte>
                 </t>
             </S:Partes>
