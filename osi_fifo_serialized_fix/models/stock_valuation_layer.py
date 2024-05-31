@@ -24,8 +24,7 @@ class StockValuationLayer(models.Model):
             svl_id = self.env["stock.valuation.layer"].browse(val.get("stock_valuation_layer_id"))
             if stock_move_id:
                 if len(stock_move_id.move_line_ids) > 1:
-                    lotless_products = stock_move_id.move_line_ids.filtered(lambda x: x.lot_id.id == False)
-                    print(stock_move_id.move_line_ids.mapped('lot_id'))
+                    lotless_move_lines = stock_move_id.move_line_ids.filtered(lambda x: x.lot_id.id == False)
                     for lot_id in stock_move_id.move_line_ids.mapped("lot_id"):
                         move_lines = stock_move_id.move_line_ids.filtered(lambda x: x.lot_id == lot_id)
                         sign = 1 if val["quantity"] >= 0 else -1
@@ -37,7 +36,7 @@ class StockValuationLayer(models.Model):
                         new_val["remaining_value"] = new_val["value"]
                         new_val["lot_ids"] = [lot_id.id]
                         new_vals_list.append(new_val)
-                    for product in lotless_products:
+                    for product in lotless_move_lines.mapped("product_id"):
                         move_lines = stock_move_id.move_line_ids.filtered(lambda x: x.product_id == product)
                         sign = 1 if val["quantity"] >= 0 else -1
                         quantity = sum(move_lines.mapped("quantity"))
