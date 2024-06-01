@@ -37,16 +37,16 @@ class MRPProduction(models.Model):
                 total_cost = (
                     -sum(
                         consumed_moves.sudo()
-                        .stock_valuation_layer_ids.filtered(lambda svl: svl.quantity < 0)
+                        .stock_valuation_layer_ids.filtered(
+                            lambda svl: svl.quantity < 0
+                        )
                         .mapped("value")
                     )
                     + work_center_cost
                     + extra_cost
                 )
                 byproduct_moves = mo.move_byproduct_ids.filtered(
-                    lambda m: m.state == "done"
-                    and m.quantity > 0
-                    and m.cost_share != 0
+                    lambda m: m.state == "done" and m.quantity > 0 and m.cost_share != 0
                 )
                 byproduct_cost_share = 0
                 for byproduct in byproduct_moves:
@@ -63,8 +63,14 @@ class MRPProduction(models.Model):
                             precision_rounding=byproduct_svl.currency_id.rounding,
                         )
                         if byproduct.lot_ids:
-                            byproduct.lot_ids.write({"real_price": byproduct.price_unit})
-                        mo._correct_svl_je(byproduct_svl, byproduct, total_cost * byproduct.cost_share / 100)
+                            byproduct.lot_ids.write(
+                                {"real_price": byproduct.price_unit}
+                            )
+                        mo._correct_svl_je(
+                            byproduct_svl,
+                            byproduct,
+                            total_cost * byproduct.cost_share / 100,
+                        )
                 if (
                     finished_move.product_id.valuation == "manual_periodic"
                     and byproduct_cost_share
@@ -105,14 +111,22 @@ class MRPProduction(models.Model):
                         and finished_move.stock_valuation_layer_ids[0]
                         or []
                     )
-                    credits = float_round(sum(fg_svl.account_move_id.line_ids.mapped("credit")), precision_rounding=0.0001)
-                    debits = float_round(sum(fg_svl.account_move_id.line_ids.mapped("debit")), precision_rounding=0.0001)
-                    balanced_credits = credits == total_fg_cost
-                    balanced_debits = debits == total_fg_cost
-                    if credits != debits or not balanced_credits or not balanced_debits:
+                    credit = float_round(
+                        sum(fg_svl.account_move_id.line_ids.mapped("credit")),
+                        precision_rounding=0.0001,
+                    )
+                    debit = float_round(
+                        sum(fg_svl.account_move_id.line_ids.mapped("debit")),
+                        precision_rounding=0.0001,
+                    )
+                    balanced_credits = credit == total_fg_cost
+                    balanced_debits = debit == total_fg_cost
+                    if credit != debit or not balanced_credits or not balanced_debits:
                         mo._correct_svl_je(fg_svl, finished_move, total_fg_cost)
             if mo.analytic_account_ids:
-                mo.analytic_account_ids.line_ids.write({"manufacturing_order_id": mo.id})
+                mo.analytic_account_ids.line_ids.write(
+                    {"manufacturing_order_id": mo.id}
+                )
         return res
 
     def _correct_svl_je(self, svl, stock_move, total_cost):

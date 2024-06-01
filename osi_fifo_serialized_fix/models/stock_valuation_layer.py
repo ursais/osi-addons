@@ -21,7 +21,9 @@ class StockValuationLayer(models.Model):
         new_vals_list = []
         for val in vals_list:
             stock_move_id = self.env["stock.move"].browse(val.get("stock_move_id"))
-            svl_id = self.env["stock.valuation.layer"].browse(val.get("stock_valuation_layer_id"))
+            svl_id = self.env["stock.valuation.layer"].browse(
+                val.get("stock_valuation_layer_id")
+            )
             if stock_move_id:
                 if len(stock_move_id.move_line_ids) > 1:
                     for line in stock_move_id.move_line_ids:
@@ -43,7 +45,7 @@ class StockValuationLayer(models.Model):
                 new_vals_list.append(new_val)
         res = super().create(new_vals_list)
         for layer in res.filtered(
-            lambda l: l.stock_move_id.lot_ids or l.stock_valuation_layer_id.lot_ids
+            lambda ly: ly.stock_move_id.lot_ids or ly.stock_valuation_layer_id.lot_ids
         ):
             # Update the lot price when we do incoming lots
             # update the lot_ids for linked layer.
@@ -65,8 +67,12 @@ class StockValuationLayer(models.Model):
             if layer.stock_move_id.raw_material_production_id:
                 total_lot_price = 0
                 for lot in layer.lot_ids:
-                    all_lot_layers = self.search([("lot_ids", "in", lot.id), ("id", "!=", layer.id)]).sorted(reverse=True)
-                    move_lines = layer.stock_move_id.move_line_ids.filtered(lambda x: x.lot_id.id == lot.id)
+                    all_lot_layers = self.search(
+                        [("lot_ids", "in", lot.id), ("id", "!=", layer.id)]
+                    ).sorted(reverse=True)
+                    move_lines = layer.stock_move_id.move_line_ids.filtered(
+                        lambda x: x.lot_id.id == lot.id
+                    )
                     move_quantity = sum(move_line.quantity for move_line in move_lines)
                     total_lot_quantity = 0
                     lot_price_total = 0
@@ -74,26 +80,37 @@ class StockValuationLayer(models.Model):
                         adjusted_value = 0
                         if not move_quantity:
                             break
-                        layer_diff = consumed_layer.quantity - consumed_layer.remaining_qty
+                        layer_diff = (
+                            consumed_layer.quantity - consumed_layer.remaining_qty
+                        )
                         if not layer_diff and not consumed_layer.price_diff_value:
                             consumed_quantity = move_quantity
                             move_quantity = 0
                         elif layer_diff <= move_quantity:
                             if not layer_diff and consumed_layer.price_diff_value:
                                 linked_layers = self.search(
-                                    [("lot_ids", "in", lot.id), ("id", "not in", (layer.id, consumed_layer.id))]
+                                    [
+                                        ("lot_ids", "in", lot.id),
+                                        ("id", "not in", (layer.id, consumed_layer.id)),
+                                    ]
                                 )
-                                qty = sum(linked_layers.mapped('quantity'))
+                                qty = sum(linked_layers.mapped("quantity"))
                                 if qty:
-                                    adjusted_value = (consumed_layer.value / qty) * min(qty, move_quantity)
+                                    adjusted_value = (consumed_layer.value / qty) * min(
+                                        qty, move_quantity
+                                    )
                             move_quantity -= layer_diff
                             consumed_quantity = layer_diff
                         elif layer_diff > move_quantity:
-                            consumed_quantity = move_quantity                            
+                            consumed_quantity = move_quantity
                             move_quantity = 0
                         else:
                             continue
-                        real_price = consumed_layer.value / consumed_layer.quantity if consumed_layer.quantity else 0
+                        real_price = (
+                            consumed_layer.value / consumed_layer.quantity
+                            if consumed_layer.quantity
+                            else 0
+                        )
                         real_value = (real_price * consumed_quantity) + adjusted_value
                         total_lot_price += real_value
                         lot_price_total += real_value
