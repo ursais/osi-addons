@@ -10,13 +10,13 @@ github_enable_makepot: true
 github_enable_stale_action: true
 github_enforce_dev_status_compatibility: true
 include_wkhtmltopdf: false
-odoo_version: 16.0
-org_name: Odoo Community Association (OCA)
-org_slug: OCA
+odoo_version: 17.0
+org_name: Open Source Integrators
+org_slug: ursais
 rebel_module_groups: []
 repo_description: 'TODO: add repo description.'
-repo_name: field-service
-repo_slug: field-service
-repo_website: https://github.com/OCA/field-service
+repo_name: osi-addons
+repo_slug: osi-addons
+repo_website: https://github.com/ursais/osi-addons
 travis_apt_packages: []
 travis_apt_sources: []
