@@ -8,9 +8,9 @@ class AccountMove(models.Model):
     mabe_ref1 = fields.Char(string="Reference 1", default="NA")
     mabe_ref2 = fields.Char(string="Reference 2", default="NA")
     mabe_amount_with_letter = fields.Char(string="Amount with letter")
-    mabe_flag = fields.Boolean(compute="_compute_flag")
+    mabe_flag = fields.Boolean(default=True, compute="_compute_flag")
 
-    @api.depends("partner_id.l10n_mx_edi_addenda")
+    @api.depends("partner_id.l10n_mx_edi_addenda_name")
     def _compute_flag(self):
         for record in self:
             record.mabe_flag = (
