@@ -53,7 +53,7 @@
             <mabe:Total t-att-importe="record.amount_total" />
         </mabe:Factura>
 
-        <record id="l10n_mx_edi.l10n_mx_edi_addenda_mabe" model="ir.ui.view">
+        <record id="view_account_move_addenda_mabe" model="ir.ui.view">
             <field name="l10n_mx_addenda_flag" eval="True" />
         </record>
     </template>
