@@ -54,7 +54,7 @@
         </mabe:Factura>
 
         <record id="view_account_move_addenda_mabe" model="ir.ui.view">
-            <field name="l10n_mx_addenda_flag" eval="True" />
+            <field name="l10n_mx_edi_addenda_flag" eval="True" />
         </record>
     </template>
 </odoo>
