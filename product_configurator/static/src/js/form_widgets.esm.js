@@ -26,14 +26,13 @@ patch(FormController.prototype, {
             }
         });
     },
-    // Async beforeExecuteActionButton(clickParams) {
-    //     console.log("beforeExecuteActionButton", clickParams);
-    //     if (clickParams.special === "no_save") {
-    //         delete clickParams.special;
-    //         return true;
-    //     }
-    //     return super.beforeExecuteActionButton(...arguments);
-    // },
+    async beforeExecuteActionButton(clickParams) {
+        if (clickParams.special === "no_save") {
+            delete clickParams.special;
+            return true;
+        }
+        return super.beforeExecuteActionButton(...arguments);
+    },
 });
 
 patch(ListController.prototype, {
