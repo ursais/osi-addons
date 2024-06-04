@@ -311,6 +311,82 @@ class ProductAttributeValue(models.Model):
                     rec.display_name = name or rec.display_name
 
     @api.model
+    def web_search_read(
+        self, domain, specification, offset=0, limit=None, order=None, count_limit=None
+    ):
+        """Use name_search as a domain restriction for the frontend to show
+        only values set on the product template taking all the configuration
+        restrictions into account.
+
+        TODO: This only works when activating the selection not when typing
+        """
+        if self.env.context.get("wizard_id"):
+            wiz_id = self.env["product.configurator"].browse(
+                self.env.context.get("wizard_id")
+            )
+            if (
+                wiz_id.domain_attr_ids
+                and self.env.context.get("field_name") == wiz_id.dyn_field_value
+            ):
+                if self.env.context.get("is_m2m"):
+                    if len(domain) > 2:
+                        vals1 = domain[-1]
+                        vals2 = domain[1]
+                        if vals2 and vals1:
+                            vals = list(set(vals2[2]) - set(vals1[2]))
+                        domain = [("id", "in", vals)]
+                else:
+                    domain = [("id", "in", wiz_id.domain_attr_ids.ids)]
+
+            elif wiz_id.domain_attr_2_ids and (
+                self.env.context.get("field_name") == wiz_id.dyn_field_2_value
+                or not wiz_id.dyn_field_2_value
+            ):
+                domain = [("id", "in", wiz_id.domain_attr_2_ids.ids)]
+
+        product_tmpl_id = self.env.context.get("_cfg_product_tmpl_id")
+        if product_tmpl_id:
+            # TODO: Avoiding browse here could be a good performance enhancer
+            product_tmpl = self.env["product.template"].browse(product_tmpl_id)
+            tmpl_vals = product_tmpl.attribute_line_ids.mapped("value_ids")
+            attr_restrict_ids = []
+            preset_val_ids = []
+            new_args = []
+            for arg in domain:
+                # Restrict values only to value_ids set on product_template
+                if arg[0] == "id" and arg[1] == "not in":
+                    preset_val_ids = arg[2]
+                    # TODO: Check if all values are available for configuration
+                else:
+                    new_args.append(arg)
+            val_ids = set(tmpl_vals.ids)
+            if preset_val_ids:
+                val_ids -= set(arg[2])
+            val_ids = self.env["product.config.session"].values_available(
+                val_ids, preset_val_ids, product_tmpl_id=product_tmpl_id
+            )
+            new_args.append(("id", "in", val_ids))
+            mono_tmpl_lines = product_tmpl.attribute_line_ids.filtered(
+                lambda line: not line.multi
+            )
+            for line in mono_tmpl_lines:
+                line_val_ids = set(line.mapped("value_ids").ids)
+                if line_val_ids & set(preset_val_ids):
+                    attr_restrict_ids.append(line.attribute_id.id)
+            if attr_restrict_ids:
+                new_args.append(("attribute_id", "not in", attr_restrict_ids))
+            domain = new_args
+        res = super().web_search_read(
+            domain,
+            specification,
+            offset=offset,
+            limit=limit,
+            order=order,
+            count_limit=count_limit,
+        )
+        return res
+
+    @api.model
     def name_search(self, name="", args=None, operator="ilike", limit=100):
         """Use name_search as a domain restriction for the frontend to show
         only values set on the product template taking all the configuration
