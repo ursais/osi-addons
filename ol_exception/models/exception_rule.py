@@ -1,5 +1,6 @@
 # Import Odoo libs
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class ExceptionRule(models.Model):
@@ -55,8 +56,41 @@ class ExceptionRule(models.Model):
     def _get_view(self, view_id=None, view_type="form", **options):
         arch, view = super()._get_view(view_id, view_type, **options)
         for node in arch.xpath("//field[@name='code']"):
-            if self.user_has_groups("ol_exception.group_exception_python"):
-                node.set("readonly", "1")
+            if (
+                self.user_has_groups("ol_exception.group_exception_python")
+                and self.exception_type == "by_py_code"
+            ):
+                node.set("invisible", "0")
         return arch, view
+
+    @api.model
+    def create(self, vals):
+        res = super().create(vals)
+        if (
+            self.user_has_groups("base_exception.group_exception_rule_manager")
+            and not self.user_has_groups("ol_exception.group_exception_python")
+            and self.exception_type == "by_py_code"
+        ):
+            raise UserError(
+                _(
+                    "You do not have permissions to add python code to exceptions. Please see your administrator for access."
+                )
+            )
+
+        return res
+
+    def write(self, vals):
+        res = super().write(vals)
+        if (
+            self.user_has_groups("base_exception.group_exception_rule_manager")
+            and not self.user_has_groups("ol_exception.group_exception_python")
+            and self.exception_type == "by_py_code"
+        ):
+            raise UserError(
+                _(
+                    "You do not have permissions to add python code to exceptions. Please see your administrator for access."
+                )
+            )
+        return res
 
     # END #########
