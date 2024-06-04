@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Add it to the product view -->
+    <record id="product_product_last_purchase_info_form_view_inh" model="ir.ui.view">
+        <field name="name">product.product.last.purchase.info.form.inh</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="purchase_last_price_info.product_product_last_purchase_info_form_view"/>
+        <field name="arch" type="xml">
+            <field name="last_purchase_price" position="after">
+                <field name="cost_base_pricing"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
