@@ -9,8 +9,8 @@
             t-att-folio="record.name"
             t-att-fecha="record.invoice_date"
             t-att-ordenCompra="record.ref"
-            t-att-referencia1="record.mabe_reference1"
-            t-att-referencia2="record.mabe_reference2"
+            t-att-referencia1="record.mabe_ref1"
+            t-att-referencia2="record.mabe_ref2"
         >
             <mabe:Moneda
                 t-att-tipoMoneda="record.currency_id.name"

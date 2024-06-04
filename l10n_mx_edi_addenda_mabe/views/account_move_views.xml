@@ -9,18 +9,18 @@
                     <group>
                         <field invisible="1" name="mabe_flag" />
                         <field
-                            name="mabe_reference1"
-                            string="Referencia 1"
+                            name="mabe_ref1"
+                            string="Reference 1"
                             invisible="not mabe_flag"
                         />
                         <field
-                            name="mabe_reference2"
-                            string="Referencia 2"
+                            name="mabe_ref2"
+                            string="Reference 2"
                             invisible="not mabe_flag"
                         />
                         <field
                             name="mabe_amount_with_letter"
-                            string="Importe con letra"
+                            string="Amount with letter"
                             invisible="not mabe_flag"
                         />
                     </group>
