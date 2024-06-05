@@ -1,5 +1,5 @@
 <odoo>
-    <template id="view_account_move_addenda_mabe" name="Addenda Mabe">
+    <template id="l10n_mx_edi_addenda_mabe" name="Addenda Mabe">
         <mabe:Factura
             xmlns:mabe="http://recepcionfe.mabempresa.com/cfd/addenda/v1"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -53,7 +53,7 @@
             <mabe:Total t-att-importe="record.amount_total" />
         </mabe:Factura>
 
-        <record id="view_account_move_addenda_mabe" model="ir.ui.view">
+        <record id="l10n_mx_edi_addenda_mabe" model="ir.ui.view">
             <field name="l10n_mx_edi_addenda_flag" eval="True" />
         </record>
     </template>

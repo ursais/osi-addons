@@ -5,9 +5,10 @@
         <field name="inherit_id" ref="account.view_move_form" />
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
-                <page string="Addenda">
+                <field name="mabe_flag" invisible="1" />
+                <page string="Addenda Mabe">
                     <group>
-                        <field invisible="1" name="mabe_flag" />
+                        <field name="mabe_flag" />
                         <field
                             name="mabe_ref1"
                             string="Reference 1"
