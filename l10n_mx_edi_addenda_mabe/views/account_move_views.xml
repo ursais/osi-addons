@@ -8,7 +8,6 @@
                 <field name="mabe_flag" invisible="1" />
                 <page string="Addenda Mabe">
                     <group>
-                        <field name="mabe_flag" />
                         <field
                             name="mabe_ref1"
                             string="Reference 1"
