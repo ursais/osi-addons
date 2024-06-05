@@ -1,4 +1,3 @@
-
 # Copyright (C) 2023 Open Source Integrators (https://www.opensourceintegrators.com)
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 {
@@ -13,10 +12,7 @@
         "account",
         "l10n_mx_edi",
     ],
-    "data": [
-        "views/account_move_views.xml",
-        "views/l10n_mx_addenda_ford_view.xml"
-    ],
+    "data": ["views/account_move_views.xml", "views/l10n_mx_addenda_ford_view.xml"],
     "application": False,
     "maintainers": ["ursais"],
 }
