@@ -1,0 +1,36 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* l10n_mx_edi_addenda_ford
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e-20240224\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-06-05 16:30+0000\n"
+"PO-Revision-Date: 2024-06-05 16:30+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: l10n_mx_edi_addenda_ford
+#: model:ir.model.fields,field_description:l10n_mx_edi_addenda_ford.field_account_bank_statement_line__ford_flag
+#: model:ir.model.fields,field_description:l10n_mx_edi_addenda_ford.field_account_move__ford_flag
+#: model:ir.model.fields,field_description:l10n_mx_edi_addenda_ford.field_account_payment__ford_flag
+msgid "Ford Flag"
+msgstr ""
+
+#. module: l10n_mx_edi_addenda_ford
+#: model:ir.model,name:l10n_mx_edi_addenda_ford.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: l10n_mx_edi_addenda_ford
+#: model:ir.model.fields,field_description:l10n_mx_edi_addenda_ford.field_account_bank_statement_line__ford_ref
+#: model:ir.model.fields,field_description:l10n_mx_edi_addenda_ford.field_account_move__ford_ref
+#: model:ir.model.fields,field_description:l10n_mx_edi_addenda_ford.field_account_payment__ford_ref
+#: model_terms:ir.ui.view,arch_db:l10n_mx_edi_addenda_ford.view_account_move_form_inherit_addenda_ford
+msgid "Reference"
+msgstr "Referencia"
