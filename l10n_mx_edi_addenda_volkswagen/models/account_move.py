@@ -8,7 +8,7 @@ class AccountMove(models.Model):
     vw_file = fields.Char(string="File")
     vw_applicant_email = fields.Char(string="Applicant email")
     vw_reference = fields.Char(string="Reference")
-    vw_flag = fields.Boolean(compute="_compute_flag")
+    vw_flag = fields.Boolean(compute="_compute_vw_flag", store=True)
 
     @api.depends("partner_id.l10n_mx_edi_addenda")
     def _compute_flag(self):
