@@ -1,17 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record id="view_account_move_form_inherit_addenda_audi" model="ir.ui.view">
 
         <field name="name">account.move.form.inherit.addenda.audi</field>
         <field name="model">account.move</field>
-        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="inherit_id" ref="account.view_move_form" />
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
-                <page name="Addenda">
+                <field name="audi_flag" invisible="1" />
+                <page name="Addenda" invisible="not audi_flag">
                     <group>
-                        <field name="audi_flag" invisible = "1"/>
-                        <field name="audi_business_unit" invisible="not audi_flag"/>
-                        <field name="audi_applicant_email" invisible="not audi_flag"/>
+                        <field name="audi_business_unit" invisible="not audi_flag" />
+                        <field name="audi_applicant_email" invisible="not audi_flag" />
                     </group>
                 </page>
             </xpath>
