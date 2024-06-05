@@ -8,7 +8,6 @@
                 <field invisible="1" name="ford_flag" />
                 <page name="Addenda Ford" invisible="not ford_flag">
                     <group>
-                        <field name="ford_flag" />
                         <field
                             name="ford_ref"
                             string="Reference"
