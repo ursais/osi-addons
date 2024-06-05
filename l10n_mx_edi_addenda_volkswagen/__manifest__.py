@@ -8,13 +8,10 @@
     "author": "Open Source Integrators",
     "maintainer": "Open Source Integrators",
     "website": "https://github.com/ursais/osi-addons",
-    "depends": [
-        "account",
-        "l10n_mx_edi"
-    ],
+    "depends": ["account", "l10n_mx_edi"],
     "data": [
         "views/account_move_views.xml",
         "views/l10n_mx_edi_addenda_volkswagen_views.xml",
     ],
-    "application": False
+    "application": False,
 }

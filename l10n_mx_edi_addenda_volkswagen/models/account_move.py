@@ -1,7 +1,8 @@
 from odoo import api, fields, models
 
+
 class AccountMove(models.Model):
-    _inherit = 'account.move'
+    _inherit = "account.move"
 
     vw_division = fields.Char(string="Division")
     vw_applicant_name = fields.Char(string="Applicant Name")
@@ -16,4 +17,3 @@ class AccountMove(models.Model):
             record.vw_flag = (
                 record.partner_id.l10n_mx_edi_addenda_name == "Addenda Volkswagen"
             )
-
