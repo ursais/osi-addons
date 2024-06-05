@@ -19,7 +19,7 @@ Addenda Audi
 
 |badge1| |badge2| |badge3|
 
-This module adds the addenda of Audi and allow you to generate electronic invoices.
+This module adds the addenda of Audi and allows you to generate electronic invoices.
 
 **Table of contents**
 
@@ -92,6 +92,6 @@ Current `maintainer <https://odoo-community.org/page/maintainer-role>`__:
 
 |maintainer-smaciasosi|
 
-This module is part of the `ursais/osi-addons <https://github.com/ursais/osi-addons/tree/17.0/documents_helpdesk>`_ project on GitHub.
+This module is part of the `ursais/osi-addons <https://github.com/ursais/osi-addons/tree/17.0/l10n_mx_edi_addenda_audi>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.
