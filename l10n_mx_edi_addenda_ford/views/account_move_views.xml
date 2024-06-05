@@ -5,9 +5,10 @@
         <field name="inherit_id" ref="account.view_move_form" />
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
-                <page name="Addenda">
+                <field invisible="1" name="ford_flag" />
+                <page name="Addenda Ford" invisible="not ford_flag">
                     <group>
-                        <field invisible="1" name="ford_flag" />
+                        <field name="ford_flag" />
                         <field
                             name="ford_ref"
                             string="Reference"

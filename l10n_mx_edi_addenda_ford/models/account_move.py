@@ -6,10 +6,10 @@ class AccountMove(models.Model):
 
     # New Fields
     ford_ref = fields.Char(string="Reference", default="NA")
-    ford_flag = fields.Boolean(default=False, compute="_compute_flag")
+    ford_flag = fields.Boolean(compute="_compute_ford_flag", store=True)
 
-    @api.depends("partner_id.l10n_mx_edi_addenda_name")
-    def _compute_flag(self):
+    @api.depends("partner_id.l10n_mx_edi_addenda")
+    def _compute_ford_flag(self):
         for record in self:
             record.ford_flag = (
                 record.partner_id.l10n_mx_edi_addenda_name == "Addenda Ford"
