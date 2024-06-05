@@ -1,0 +1,30 @@
+<odoo>
+    <record id="view_delivery_carrier_multiplier_tree" model="ir.ui.view">
+       <field name="name">delivery.carrier.multiplier</field>
+       <field name="model">delivery.carrier.multiplier</field>
+       <field name="arch" type="xml">
+           <tree editable="bottom">
+               <field name="carrier_id"/>
+               <field name="multiplier"/>
+               <field name="company_id"/>
+           </tree>
+       </field>
+    </record>
+
+    <record id="action_delivery_carrier_multiplier" model="ir.actions.act_window">
+        <field name="name">Shipping Method Multipliers</field>
+        <field name="res_model">delivery.carrier.multiplier</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a new Shipping Multiplier Method
+          </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_delivery_carrier_multiplier"
+         name="Shipping Method Multipliers"
+         parent="stock.menu_delivery"
+         action="action_delivery_carrier_multiplier"
+         sequence="0"/>
+</odoo>
