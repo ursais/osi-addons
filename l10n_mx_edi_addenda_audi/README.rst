@@ -42,6 +42,53 @@ To use this module, you need to:
 #. Create a new invoice fo Audi
 #. Fill in the Customer reference field
 
+Addenda
+===========
+
+Campos
+~~~~~~
+- S:Factura
+ - xmlns:S="http://www.Audi.net.mx/Addenda/S"
+ - xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ - xsi:schemaLocation="http://www.Audi.net.mx/Addenda/S S.xsd"
+ - codigoImpuesto="D2"
+ - tipoDocumentoFiscal="FA"
+ - version="1.0"
+ - tipoDocumento="S"
+ - S:Moneda
+  - t-att-tipoMoneda="record.currency_id.name"
+ - S:Proveedor
+  - t-attf-noProveedor="00X7244100"
+  - t-attf-eMail="infomx@ams-fa.com"
+ - S:Referencias
+  - t-att-eMail="record.audi_applicant_email"
+ - S:Partes
+  - t-foreach="record.invoice_line_ids" t-as="move_line"
+   - S:Parte
+    - t-att-precioUnitario="move_line.price_unit"
+    - t-att-numeroParte="move_line.product_id.audi_ref"
+    - t-att-descripcion="move_line.product_id.name"
+    - t-attf-codigoImpuesto="D2"
+    - t-att-cantidad="move_line.quantity"
+    - t-att-posicion="i"
+    - t-att-montoLinea="move_line.price_unit * move_line.quantity"
+    - t-att-unidadMedida="move_line.product_uom_id.name"
+    - S:Referencia
+     - t-att-ordenCompra="record.ref"
+
+- Campos adicionales
+ - audi_business_unit (account.move)
+ - audi_applicant_email (account.move)
+ - audi_flag (account.move)
+ - audi_ref (product.template)
+
+
+Test environment
+~~~~~~~~~~~~~~
+This is the `Test Environment <https://cfdi.audi.com.mx/Login.aspx?csrt=13032167440383359560&ReturnUrl=%2f>`_. where
+we got the addends from.
+
+
 Bug Tracker
 ===========
 
@@ -60,7 +107,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Santiago Rodriguez <srodriguez@opensourceintegrators.com>
 * Edgar Martinez <emartinez@opensourceintegrators.com>
 * Samuel Macias <smacias@opensourceintegrators.com>
 * Maxime Chambreuil <mchambreuil@opensourceintegrators.com>
