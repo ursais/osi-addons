@@ -105,10 +105,13 @@ Campos Adicionales
 ~~~~~~~~~~~~~~~~~~
 (account.move)
 
-- mabe_ref1
-- mabe_ref2
-- mabe_amount_with_letter
-- mabe_flag
+Campos que se agregan en la factura para poder
+cumplir con lo que se especifica en la addenda palsamada anteriormente
+
+- mabe_ref1 (Referencia 1)
+- mabe_ref2 (Referencia 2)
+- mabe_amount_with_letter (Importe con letra)
+- mabe_flag (Just a field to know if the client has a mabe addenda)
 
 Bug Tracker
 ===========
