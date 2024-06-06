@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
                 <field name="mabe_flag" invisible="1" />
-                <page string="Addenda Mabe">
+                <page string="Mabe Addenda">
                     <group>
                         <field
                             name="mabe_ref1"

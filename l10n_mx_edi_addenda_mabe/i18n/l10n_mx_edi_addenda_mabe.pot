@@ -17,8 +17,8 @@ msgstr ""
 
 #. module: l10n_mx_edi_addenda_mabe
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi_addenda_mabe.view_account_move_form_inherit_addenda_mabe
-msgid "Addenda Mabe"
-msgstr ""
+msgid "Mabe Addenda"
+msgstr "Addenda Mabe"
 
 #. module: l10n_mx_edi_addenda_mabe
 #: model:ir.model.fields,field_description:l10n_mx_edi_addenda_mabe.field_account_bank_statement_line__mabe_amount_with_letter

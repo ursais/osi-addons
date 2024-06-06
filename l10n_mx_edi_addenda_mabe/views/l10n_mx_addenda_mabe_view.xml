@@ -15,15 +15,15 @@
             <mabe:Moneda
                 t-att-tipoMoneda="record.currency_id.name"
                 t-att-tipoCambio="record.currency_id.inverse_rate"
-                t-att-importeConLetra="record.amount_with_letter"
+                t-att-importeConLetra="record.mabe_amount_with_letter"
             />
-            <mabe:Proveedor t-att-codigo="record.partner_id.code_ams" />
+            <mabe:Proveedor t-att-codigo="record.partner_id.ref" />
             <mabe:Entrega
-                t-att-plantaEntrega="record.partner_shipping_id.street_number"
+                t-att-plantaEntrega="record.partner_shipping_id.mabe_plant_code"
                 t-att-calle="record.partner_shipping_id.street_name"
-                noExterior="record.partner_shipping_id.street_number"
-                noInterior="record.partner_shipping_id.street_number2"
-                codigoPostal="record.partner_shipping_id.zip"
+                t-att-noExterior="record.partner_shipping_id.street_number"
+                t-att-noInterior="record.partner_shipping_id.street_number2"
+                t-att-codigoPostal="record.partner_shipping_id.zip"
             />
             <mabe:Detalles>
                 <t t-set="i" t-value="1" />
@@ -52,9 +52,9 @@
             </mabe:Retenciones>
             <mabe:Total t-att-importe="record.amount_total" />
         </mabe:Factura>
-
-        <record id="l10n_mx_edi_addenda_mabe" model="ir.ui.view">
-            <field name="l10n_mx_edi_addenda_flag" eval="True" />
-        </record>
     </template>
+
+    <record id="l10n_mx_edi_addenda_mabe" model="ir.ui.view">
+        <field name="l10n_mx_edi_addenda_flag" eval="True" />
+    </record>
 </odoo>
