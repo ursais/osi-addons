@@ -32,7 +32,7 @@ Configuration
 #. Create a new partner "Mabe" with the complete address
 #. Add the "Mabe Plant Code" with the correct code
 #. In the "Sales and Purchase" tab, in the Fiscal Information section select the "Addenda Mabe" for the addenda
-#. In the same tab, add the enterprise ID for the AMS Code
+#. In the same tab, fill the reference field for the AMS Code
 
 Usage
 =====
