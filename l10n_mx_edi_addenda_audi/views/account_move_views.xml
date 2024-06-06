@@ -15,8 +15,11 @@
                     </group>
                 </page>
             </xpath>
-            <xpath expr="//notebook//page[@name='invoice_tab']//field[@name='invoice_line_ids']//tree//field[@name='product_id']" position="after">
-                <field name="audi_line_product_ref"/>
+            <xpath
+                expr="//notebook//page[@name='invoice_tab']//field[@name='invoice_line_ids']//tree//field[@name='product_id']"
+                position="after"
+            >
+                <field name="audi_line_product_ref" />
             </xpath>
         </field>
     </record>
