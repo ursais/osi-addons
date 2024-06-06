@@ -41,6 +41,75 @@ To use this module, you need to:
 #. Create a new invoice for Mabe
 #. Fill in the Customer reference field
 
+Addenda
+=======
+
+Campos
+~~~~~~
+ - mabe:Factura
+  - xmlns:mabe="http://recepcionfe.mabempresa.com/cfd/addenda/v1"
+  - xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  - xsi:schemaLocation="http://recepcionfe.mabempresa.com/cfd/addenda/v1 http://recepcionfe.mabempresa.com/cfd/addenda/v1/mabev1.xsd"
+  - version="1.0"
+  - tipoDocumento="FACTURA"
+  - t-att-folio="record.name"
+  - t-att-fecha="record.invoice_date"
+  - t-att-ordenCompra="record.ref"
+  - t-att-referencia1="record.mabe_ref1"
+  - t-att-referencia2="record.mabe_ref2"
+ - __
+  - mabe:Moneda
+   - t-att-tipoMoneda="record.currency_id.name"
+   - t-att-tipoCambio="record.currency_id.inverse_rate"
+   - t-att-importeConLetra="record.amount_with_letter"
+  - mabe: Proveedor
+   - t-att-codigo="record.partner_id.code_ams"
+  - mabe: Entrega
+   - t-att-plantaEntrega="record.partner_shipping_id.street_number"
+   - t-att-calle="record.partner_shipping_id.street_name"
+   - noExterior="record.partner_shipping_id.street_number"
+   - noInterior="record.partner_shipping_id.street_number2"
+   - codigoPostal="record.partner_shipping_id.zip"
+  - mabe:Detalles
+   - t t-foreach="record.invoice_line_ids" t-as="move_line"
+    - mabe:Detalle
+     - t-att-noLineaArticulo="i"
+     - t-att-codigoArticulo="move_line.product_id.default_code"
+     - t-att-descripcion="move_line.product_id.name"
+     - t-att-unidad="move_line.product_uom_id.name"
+     - t-att-cantidad="move_line.quantity"
+     - t-att-precioSinIva="move_line.price_unit"
+     - t-att-precioConIva="move_line.price_unit * 16"
+     - t-att-importeSinIva="move_line.price_subtotal * move_line.quantity"
+     - t-att-importeConIva="move_line.price_subtotal"
+  - mabe:Descuentos
+   - tipo="CARGO"
+   - descripcion="NA"
+   - importe="0.00"
+  - mabe:Subtotal
+   - t-att-importe="record.amount_untaxed"
+  - mabe:Traslados
+   - mabe:Traslado
+    - tipo="IVA"
+    - tasa="16"
+    - t-att-importe="record.amount_tax"
+  - mabe:Retenciones
+   - mabe:Retencion
+    - tipo="NA"
+    - tasa="0.00"
+    - importe="0.00"
+  - mabe:Total
+   - t-att-importe="record.amount_total"
+
+Campos Adicionales
+~~~~~~~~~~~~~~~~~~
+(account.move)
+
+- mabe_ref1
+- mabe_ref2
+- mabe_amount_with_letter
+- mabe_flag
+
 Bug Tracker
 ===========
 
