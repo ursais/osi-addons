@@ -9,7 +9,7 @@
                 position="inside"
             >
                 <group string="Audi Product Reference">
-                    <field name="audi_product_ref" />
+                    <field name="audi_ref" />
                 </group>
             </xpath>
         </field>
