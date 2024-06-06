@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
                 <field name="audi_flag" invisible="1" />
-                <page name="Addenda" invisible="not audi_flag">
+                <page name="Audi Addenda" invisible="not audi_flag">
                     <group>
                         <field name="audi_business_unit" invisible="not audi_flag" />
                         <field name="audi_applicant_email" invisible="not audi_flag" />
