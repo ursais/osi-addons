@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e-20240224\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-05 19:02+0000\n"
-"PO-Revision-Date: 2024-06-05 19:02+0000\n"
+"POT-Creation-Date: 2024-06-07 20:00+0000\n"
+"PO-Revision-Date: 2024-06-07 20:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_mx_edi_addenda_audi.field_account_move__audi_applicant_email
 #: model:ir.model.fields,field_description:l10n_mx_edi_addenda_audi.field_account_payment__audi_applicant_email
 msgid "Applicant email"
-msgstr ""
+msgstr "Email del solicitante"
 
 #. module: l10n_mx_edi_addenda_audi
 #: model:ir.model.fields,field_description:l10n_mx_edi_addenda_audi.field_account_bank_statement_line__audi_flag
@@ -32,14 +32,14 @@ msgstr ""
 #. module: l10n_mx_edi_addenda_audi
 #: model_terms:ir.ui.view,arch_db:l10n_mx_edi_addenda_audi.view_product_template_form_inherit_addenda_audi
 msgid "Audi Product Reference"
-msgstr ""
+msgstr "Referencia del producto Audi"
 
 #. module: l10n_mx_edi_addenda_audi
 #: model:ir.model.fields,field_description:l10n_mx_edi_addenda_audi.field_account_bank_statement_line__audi_business_unit
 #: model:ir.model.fields,field_description:l10n_mx_edi_addenda_audi.field_account_move__audi_business_unit
 #: model:ir.model.fields,field_description:l10n_mx_edi_addenda_audi.field_account_payment__audi_business_unit
 msgid "Business Unit"
-msgstr ""
+msgstr "Unidad de negocio"
 
 #. module: l10n_mx_edi_addenda_audi
 #: model:ir.model,name:l10n_mx_edi_addenda_audi.model_account_move
@@ -52,12 +52,13 @@ msgid "Journal Item"
 msgstr ""
 
 #. module: l10n_mx_edi_addenda_audi
-#: model:ir.model.fields,field_description:l10n_mx_edi_addenda_audi.field_account_move_line__audi_line_product_ref
-#: model:ir.model.fields,field_description:l10n_mx_edi_addenda_audi.field_product_product__audi_product_ref
-msgid "Product Reference"
+#: model:ir.model,name:l10n_mx_edi_addenda_audi.model_product_template
+msgid "Product"
 msgstr ""
 
 #. module: l10n_mx_edi_addenda_audi
-#: model:ir.model,name:l10n_mx_edi_addenda_audi.model_product_product
-msgid "Product Variant"
-msgstr ""
+#: model:ir.model.fields,field_description:l10n_mx_edi_addenda_audi.field_account_move_line__audi_line_product_ref
+#: model:ir.model.fields,field_description:l10n_mx_edi_addenda_audi.field_product_product__audi_ref
+#: model:ir.model.fields,field_description:l10n_mx_edi_addenda_audi.field_product_template__audi_ref
+msgid "Product Reference"
+msgstr "Referencia del producto"
