@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+
+    <record id="ol_mrp_eco_tier_validation_stage_from" model="ir.ui.view">
+        <field name="name">mrp.eco.stage.tier.validation.inherit.form</field>
+        <field name="model">mrp.eco.stage</field>
+        <field name="inherit_id" ref="mrp_plm.mrp_eco_stage_view_form" />
+        <field name="arch" type="xml">
+            <field name="type_ids" position="after">
+                <field name="state" />
+            </field>
+        </field>
+    </record>
+
+    <record id="ol_mrp_eco_tier_validation_stage_tree" model="ir.ui.view">
+        <field name="name">mrp.eco.stage.tier.validation.inherit.tree</field>
+        <field name="model">mrp.eco.stage</field>
+        <field name="inherit_id" ref="mrp_plm.mrp_eco_stage_view_tree" />
+        <field name="arch" type="xml">
+            <field name="type_ids" position="after">
+                <field name="state" />
+            </field>
+        </field>
+    </record>
+
+</odoo>
