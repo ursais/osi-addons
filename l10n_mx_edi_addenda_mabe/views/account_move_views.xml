@@ -1,0 +1,31 @@
+<odoo>
+    <record id="view_account_move_form_inherit_addenda_mabe" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.addenda.mabe</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <field name="mabe_flag" invisible="1" />
+                <page string="Mabe Addenda" invisible="not mabe_flag">
+                    <group>
+                        <field
+                            name="mabe_ref1"
+                            string="Reference 1"
+                            invisible="not mabe_flag"
+                        />
+                        <field
+                            name="mabe_ref2"
+                            string="Reference 2"
+                            invisible="not mabe_flag"
+                        />
+                        <field
+                            name="mabe_amount_with_letter"
+                            string="Amount with letter"
+                            invisible="not mabe_flag"
+                        />
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
