@@ -21,7 +21,11 @@ class MRPEco(models.Model):
 
     def write(self, vals):
         result = super().write(vals)
-        if vals.get("stage_id", False) and self.product_tmpl_id:
+        if (
+            vals.get("stage_id", False)
+            and self.product_tmpl_id
+            and self.stage_id.product_state_id
+        ):
             self.product_tmpl_id.product_state_id = self.stage_id.product_state_id.id
         return result
 
