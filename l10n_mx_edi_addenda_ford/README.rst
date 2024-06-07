@@ -13,7 +13,7 @@ Addenda Ford
     :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
     :alt: License: LGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-ursais%2Fosi--addons-lightgray.png?logo=github
-    :target: https://github.com/ursais/osi-addons/tree/17.0/l10n_mx_edi_addenda_mabe
+    :target: https://github.com/ursais/osi-addons/tree/17.0/l10n_mx_edi_addenda_ford
     :alt: ursais/osi-addons
 
 |badge1| |badge2| |badge3|
@@ -38,14 +38,9 @@ Usage
 To use this module, you need to:
 
 #. Go to Accounting > Customers > Invoices
-#. Create a new invoice for Mabe
+#. Create a new invoice for Ford
 #. In the "Other Information" tab, add the customer reference
 #. In the "Ford Addenda" tab, add the sale reference
-
-How To Test
-===========
-Service Account <facturacion.electronica@mabe.com.mx>
-
 
 Bug Tracker
 ===========
@@ -53,7 +48,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/ursais/osi-addons/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us smashing it by providing a detailed and welcomed
-`feedback <https://github.com/ursais/osi-addons/issues/new?body=module:%20l10n_mx_edi_addenda_mabe%0Aversion:%2017.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/ursais/osi-addons/issues/new?body=module:%20l10n_mx_edi_addenda_ford%0Aversion:%2017.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Credits
 =======
@@ -97,6 +92,6 @@ Current `maintainer <https://odoo-community.org/page/maintainer-role>`__:
 
 |maintainer-smaciasosi|
 
-This module is part of the `ursais/osi-addons <https://github.com/ursais/osi-addons/tree/17.0/l10n_mx_edi_addenda_mabe>`_ project on GitHub.
+This module is part of the `ursais/osi-addons <https://github.com/ursais/osi-addons/tree/17.0/l10n_mx_edi_addenda_ford>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.
