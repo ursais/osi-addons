@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
                 <field name="vw_flag" invisible="1" />
-                <page name="Addenda" invisible="not vw_flag">
+                <page name="Addenda Volkswagen" invisible="not vw_flag">
                     <group>
                         <field name="vw_division" invisible="not vw_flag" />
                         <field name="vw_applicant_name" invisible="not vw_flag" />

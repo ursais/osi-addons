@@ -44,7 +44,7 @@ To use this module, you need to:
 #. Go to Accounting > Customers > Invoices
 #. Create a new invoice fo Volkswagen
 #. In the "Other Information" tab, fill in the Customer reference field
-#. In the "Addenda" tab, fill in the division, applicant name, applicant email, file and reference fields
+#. In the "Addenda Volkswagen" tab, fill in the division, applicant name, applicant email, file and reference fields
 
 Bug Tracker
 ===========
