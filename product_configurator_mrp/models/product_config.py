@@ -46,6 +46,7 @@ class ProductConfigSession(models.Model):
             order="sequence asc",
             limit=1,
         )
+        bom_type = parent_bom and parent_bom.type or "normal"
         bom_lines = []
         if not parent_bom:
             # If not Bom, then Cycle through attributes to add their
@@ -113,6 +114,7 @@ class ProductConfigSession(models.Model):
             bom_values = {
                 "product_tmpl_id": self.product_tmpl_id.id,
                 "product_id": variant.id,
+                "type": bom_type,
                 "bom_line_ids": bom_lines,
             }
             specs = self.get_onchange_specifications(model="mrp.bom")

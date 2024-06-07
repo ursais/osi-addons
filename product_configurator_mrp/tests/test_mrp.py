@@ -10,7 +10,7 @@ from odoo.addons.product_configurator.tests.test_product_configurator_test_cases
 
 class TestMrp(ProductConfiguratorTestCases):
     def setUp(self):
-        super(TestMrp, self).setUp()
+        super().setUp()
         self.mrpBomConfigSet = self.env["mrp.bom.line.configuration.set"]
         self.mrpBomConfig = self.env["mrp.bom.line.configuration"]
         self.mrpBom = self.env["mrp.bom"]
