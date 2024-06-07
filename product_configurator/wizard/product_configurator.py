@@ -963,7 +963,6 @@ class ProductConfigurator(models.TransientModel):
         wizard_action = self.with_context(
             allow_preset_selection=False
         ).get_wizard_action(wizard=self)
-
         if not self.product_tmpl_id:
             return wizard_action
 
@@ -1041,7 +1040,6 @@ class ProductConfigurator(models.TransientModel):
         )
         if wizard:
             ctx.update({"wizard_id": wizard.id, "wizard_id_view_ref": wizard.id})
-
         wizard_action = {
             "type": "ir.actions.act_window",
             "res_model": self._name,
@@ -1058,6 +1056,8 @@ class ProductConfigurator(models.TransientModel):
         }
         if wizard:
             wizard_action.update({"res_id": wizard.id})
+        if self and not self.state:
+            self.state = "select"
         return wizard_action
 
     def open_step(self, step):
