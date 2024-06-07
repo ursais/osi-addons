@@ -1,0 +1,21 @@
+<odoo>
+    <record id="view_account_move_form_inherit_addenda_ford" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.addenda.ford</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <field invisible="1" name="ford_flag" />
+                <page name="Addenda Ford" invisible="not ford_flag">
+                    <group>
+                        <field
+                            name="ford_ref"
+                            string="Reference"
+                            invisible="not ford_flag"
+                        />
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
