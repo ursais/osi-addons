@@ -29,12 +29,20 @@ This module adds the addenda of Volkswagen and allows you to generate electronic
 Configuration
 =============
 
-Client
-~~~~~~
+Customer
+~~~~~~~~
 
 #. Go to Accounting > Customers > Customers
 #. Create a new partner "Volkswagen" with the complete address
 #. In the "Sales and Purchase" tab, select the "Addenda Volkswagen" for the addenda
+
+Product
+~~~~~~~
+
+#. Go to Sales > Products > Products
+#. Create a new product or edit an existing one
+#. In the "Accounting" tab, fill in the VW reference that corresponds to
+the part number
 
 Usage
 =====
@@ -44,7 +52,8 @@ To use this module, you need to:
 #. Go to Accounting > Customers > Invoices
 #. Create a new invoice fo Volkswagen
 #. In the "Other Information" tab, fill in the Customer reference field
-#. In the "Addenda Volkswagen" tab, fill in the division, applicant name, applicant email, file and reference fields
+#. In the "Addenda Volkswagen" tab, fill in the division, applicant name,
+applicant email and file fields
 
 Bug Tracker
 ===========
