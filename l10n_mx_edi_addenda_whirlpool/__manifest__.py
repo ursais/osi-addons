@@ -9,7 +9,7 @@
     "maintainer": "Open Source Integrators",
     "website": "https://github.com/ursais/osi-addons",
     "depends": ["account", "l10n_mx_edi"],
-    "data": ["views/l10n_mx_addenda_whirlpool_view.xml"],
+    "data": ["views/l10n_mx_addenda_whirlpool.xml"],
     "application": False,
     "maintainers": ["ursais"],
 }
