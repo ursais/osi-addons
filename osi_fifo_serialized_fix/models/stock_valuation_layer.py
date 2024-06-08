@@ -33,7 +33,7 @@ class StockValuationLayer(models.Model):
                         new_val["quantity"] = quantity * sign
                         new_val["remaining_qty"] = quantity if sign > 0 else 0
                         new_val["value"] = quantity * new_val.get("unit_cost", 0.0) * sign
-                        new_val["remaining_value"] = new_val["value"]
+                        new_val["remaining_value"] = new_val["value"] if sign > 0 else 0
                         new_val["lot_ids"] = [lot_id.id]
                         new_vals_list.append(new_val)
                     for product in lotless_move_lines.mapped("product_id"):
@@ -44,7 +44,7 @@ class StockValuationLayer(models.Model):
                         new_val["quantity"] = quantity * sign
                         new_val["remaining_qty"] = quantity if sign > 0 else 0
                         new_val["value"] = quantity * new_val.get("unit_cost", 0.0) * sign
-                        new_val["remaining_value"] = new_val["value"]
+                        new_val["remaining_value"] = new_val["value"] if sign > 0 else 0
                         new_vals_list.append(new_val)
                 else:
                     if stock_move_id.move_line_ids.lot_id:
@@ -54,6 +54,8 @@ class StockValuationLayer(models.Model):
                 new_val = val.copy()
                 new_val["lot_ids"] = [svl_id.lot_ids.ids]
                 new_vals_list.append(new_val)
+            else:
+                new_vals_list = vals_list
         res = super().create(new_vals_list)
         for layer in res.filtered(
             lambda l: l.stock_move_id.lot_ids or l.stock_valuation_layer_id.lot_ids
