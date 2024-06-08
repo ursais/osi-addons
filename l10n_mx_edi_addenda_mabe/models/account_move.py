@@ -5,8 +5,8 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     # New Fields
-    mabe_ref1 = fields.Char(string="Reference 1", default="NA")
-    mabe_ref2 = fields.Char(string="Reference 2", default="NA")
+    mabe_ref1 = fields.Char(string="Mabe Reference 1", default="NA")
+    mabe_ref2 = fields.Char(string="Mabe Reference 2", default="NA")
     mabe_amount_with_letter = fields.Char(string="Amount with letter")
     mabe_flag = fields.Boolean(default=False, compute="_compute_mabe_flag", store=True)
 
