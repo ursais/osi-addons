@@ -21,6 +21,11 @@ Addenda Audi
 
 This module adds the addenda of Audi and allows you to generate electronic invoices.
 
+How To Test
+===========
+
+Go to `https://cfdi.audi.com.mx <https://cfdi.audi.com.mx/Login.aspx>`_.
+
 **Table of contents**
 
 .. contents::
@@ -29,8 +34,8 @@ This module adds the addenda of Audi and allows you to generate electronic invoi
 Configuration
 =============
 
-Client
-~~~~~~
+Customer
+~~~~~~~~
 
 #. Go to Accounting > Customers > Customers
 #. Create a new partner "Audi" with the complete address
@@ -40,8 +45,9 @@ Product
 ~~~~~~~
 
 #. Go to Sales > Products > Products
-#. Create a new product or edit an existing
-#. In the "Accounting" tab, add a product reference that corresponds to part number
+#. Create a new product or edit an existing one
+#. In the "Accounting" tab, fill in the Audi reference that corresponds to
+the part number
 
 Usage
 =====
@@ -51,12 +57,8 @@ To use this module, you need to:
 #. Go to Accounting > Customers > Invoices
 #. Create a new invoice fo Audi
 #. In the "Other Information" tab, fill in the Customer reference field
-#. In the "Addenda Audi" tab, fill in the business unit and applicant emial fields
-
-How To Test
-================
-This is the `Test Environment <https://cfdi.audi.com.mx/Login.aspx?csrt=13032167440383359560&ReturnUrl=%2f>`_. where
-we got the addends from.
+#. In the "Addenda Audi" tab, fill in the business unit and applicant email
+fields
 
 Bug Tracker
 ===========
@@ -76,6 +78,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
+
 * Santiago Rodriguez <srodriguez@opensourceintegrators.com>
 * Edgar Martinez <emartinez@opensourceintegrators.com>
 * Samuel Macias <smacias@opensourceintegrators.com>
