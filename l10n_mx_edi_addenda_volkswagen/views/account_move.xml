@@ -13,7 +13,6 @@
                         <field name="vw_applicant_name" invisible="not vw_flag" />
                         <field name="vw_applicant_email" invisible="not vw_flag" />
                         <field name="vw_file" invisible="not vw_flag" />
-                        <field name="vw_reference" invisible="not vw_flag" />
                     </group>
                 </page>
             </xpath>
