@@ -47,7 +47,7 @@ Product
 #. Go to Sales > Products > Products
 #. Create a new product or edit an existing one
 #. In the "Accounting" tab, fill in the Audi reference that corresponds to
-the part number
+   the part number
 
 Usage
 =====
@@ -58,7 +58,7 @@ To use this module, you need to:
 #. Create a new invoice fo Audi
 #. In the "Other Information" tab, fill in the Customer reference field
 #. In the "Addenda Audi" tab, fill in the business unit and applicant email
-fields
+   fields
 
 Bug Tracker
 ===========
