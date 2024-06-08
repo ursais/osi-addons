@@ -10,9 +10,9 @@
     "website": "https://github.com/ursais/osi-addons",
     "depends": ["account", "l10n_mx_edi", "product"],
     "data": [
-        "views/account_move_views.xml",
-        "views/product_template_views.xml",
-        "views/l10n_mx_edi_addenda_audi_view.xml",
+        "views/account_move.xml",
+        "views/product_template.xml",
+        "views/l10n_mx_edi_addenda_audi.xml",
     ],
     "application": False,
 }
