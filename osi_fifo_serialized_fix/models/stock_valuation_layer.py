@@ -26,14 +26,27 @@ class StockValuationLayer(models.Model):
             )
             if stock_move_id:
                 if len(stock_move_id.move_line_ids) > 1:
-                    for line in stock_move_id.move_line_ids:
+                    lotless_move_lines = stock_move_id.move_line_ids.filtered(lambda x: x.lot_id.id == False)
+                    for lot_id in stock_move_id.move_line_ids.mapped("lot_id"):
+                        move_lines = stock_move_id.move_line_ids.filtered(lambda x: x.lot_id == lot_id)
+                        sign = 1 if val["quantity"] >= 0 else -1
+                        quantity = sum(move_lines.mapped("quantity"))
                         new_val = val.copy()
-                        new_val["quantity"] = line.quantity
-                        new_val["remaining_qty"] = line.quantity
-                        new_val["value"] = line.quantity * new_val.get("unit_cost")
-                        new_val["remaining_value"] = new_val["value"]
-                        if line.lot_id:
-                            new_val["lot_ids"] = [line.lot_id.id]
+                        new_val["quantity"] = quantity * sign
+                        new_val["remaining_qty"] = quantity if sign > 0 else 0
+                        new_val["value"] = quantity * new_val.get("unit_cost", 0.0) * sign
+                        new_val["remaining_value"] = new_val["value"] if sign > 0 else 0
+                        new_val["lot_ids"] = [lot_id.id]
+                        new_vals_list.append(new_val)
+                    for product in lotless_move_lines.mapped("product_id"):
+                        move_lines = stock_move_id.move_line_ids.filtered(lambda x: x.product_id == product)
+                        sign = 1 if val["quantity"] >= 0 else -1
+                        quantity = sum(move_lines.mapped("quantity"))
+                        new_val = val.copy()
+                        new_val["quantity"] = quantity * sign
+                        new_val["remaining_qty"] = quantity if sign > 0 else 0
+                        new_val["value"] = quantity * new_val.get("unit_cost", 0.0) * sign
+                        new_val["remaining_value"] = new_val["value"] if sign > 0 else 0
                         new_vals_list.append(new_val)
                 else:
                     if stock_move_id.move_line_ids.lot_id:
@@ -43,6 +56,8 @@ class StockValuationLayer(models.Model):
                 new_val = val.copy()
                 new_val["lot_ids"] = [svl_id.lot_ids.ids]
                 new_vals_list.append(new_val)
+            else:
+                new_vals_list = vals_list
         res = super().create(new_vals_list)
         for layer in res.filtered(
             lambda ly: ly.stock_move_id.lot_ids or ly.stock_valuation_layer_id.lot_ids

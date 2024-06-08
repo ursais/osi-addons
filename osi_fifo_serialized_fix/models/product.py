@@ -17,62 +17,65 @@ class ProductProduct(models.Model):
 
         # Find back incoming stock valuation layers
         # (called candidates here) to value `quantity`.
-        qty_to_take_on_candidates = quantity
-        candidates = (
-            self.env["stock.valuation.layer"]
-            .sudo()
-            .search(
-                [
-                    ("product_id", "=", self.id),
-                    ("remaining_qty", ">", 0),
-                    ("company_id", "=", company.id),
-                ]
+        for line in rel_stock_move.move_line_ids:
+            quantity = line.quantity
+            qty_to_take_on_candidates = quantity
+            candidates = (
+                self.env["stock.valuation.layer"]
+                .sudo()
+                .search(
+                    [
+                        ("product_id", "=", self.id),
+                        ("remaining_qty", ">", 0),
+                        ("company_id", "=", company.id),
+                        ("lot_ids", "in", line.lot_id.id)
+                    ]
+                )
             )
-        )
-        new_standard_price = 0
-        tmp_value = 0  # to accumulate the value taken on the candidates
-        for candidate in candidates:
-            if any(lot in candidate.lot_ids for lot in rel_stock_move.lot_ids):
-                qty_taken_on_candidate = min(
-                    qty_to_take_on_candidates, candidate.remaining_qty
-                )
-                candidate_unit_cost = (
-                    candidate.remaining_value / candidate.remaining_qty
-                )
-                new_standard_price = candidate_unit_cost
-                value_taken_on_candidate = qty_taken_on_candidate * candidate_unit_cost
-                value_taken_on_candidate = candidate.currency_id.round(
-                    value_taken_on_candidate
-                )
-                new_remaining_value = (
-                    candidate.remaining_value - value_taken_on_candidate
-                )
+            new_standard_price = 0
+            tmp_value = 0  # to accumulate the value taken on the candidates
+            for candidate in candidates:
+                if line.lot_id in candidate.lot_ids:
+                    qty_taken_on_candidate = min(
+                        qty_to_take_on_candidates, candidate.remaining_qty
+                    )
+                    candidate_unit_cost = (
+                        candidate.remaining_value / candidate.remaining_qty
+                    )
+                    new_standard_price = candidate_unit_cost
+                    value_taken_on_candidate = qty_taken_on_candidate * candidate_unit_cost
+                    value_taken_on_candidate = candidate.currency_id.round(
+                        value_taken_on_candidate
+                    )
+                    new_remaining_value = (
+                        candidate.remaining_value - value_taken_on_candidate
+                    )
 
-                candidate_vals = {
-                    "remaining_qty": candidate.remaining_qty - qty_taken_on_candidate,
-                    "remaining_value": new_remaining_value,
-                }
+                    candidate_vals = {
+                        "remaining_qty": candidate.remaining_qty - qty_taken_on_candidate,
+                        "remaining_value": new_remaining_value,
+                    }
 
-                candidate.write(candidate_vals)
+                    candidate.write(candidate_vals)
 
-                qty_to_take_on_candidates -= qty_taken_on_candidate
-                tmp_value += value_taken_on_candidate
+                    qty_to_take_on_candidates -= qty_taken_on_candidate
+                    tmp_value += value_taken_on_candidate
 
-                if float_is_zero(
-                    qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding
-                ):
                     if float_is_zero(
-                        candidate.remaining_qty, precision_rounding=self.uom_id.rounding
+                        qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding
                     ):
-                        next_candidates = candidates.filtered(
-                            lambda svl: svl.remaining_qty > 0
-                        )
-                        new_standard_price = (
-                            next_candidates
-                            and next_candidates[0].unit_cost
-                            or new_standard_price
-                        )
-                    break
+                        if float_is_zero(
+                            candidate.remaining_qty, precision_rounding=self.uom_id.rounding
+                        ):
+                            next_candidates = candidates.filtered(
+                                lambda svl: svl.remaining_qty > 0
+                            )
+                            new_standard_price = (
+                                next_candidates
+                                and next_candidates[0].unit_cost
+                                or new_standard_price
+                            )
+                        break
 
         # Update the standard price with the price of the last used candidate, if any.
         if new_standard_price and self.cost_method == "fifo":
