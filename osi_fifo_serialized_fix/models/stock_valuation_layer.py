@@ -75,51 +75,18 @@ class StockValuationLayer(models.Model):
                     {"real_price": total_value / total_qty if total_qty else 1}
                 )
 
-            # Update the lot price for the raw material moves.
-            # Update the layer values for raw materual moves
+            # Product is consumed in Manufacturing Order
             if layer.stock_move_id.raw_material_production_id:
                 total_lot_price = 0
                 for lot in layer.lot_ids:
-                    all_lot_layers = self.search([("lot_ids", "in", lot.id), ("id", "!=", layer.id)]).sorted(reverse=True)
                     move_lines = layer.stock_move_id.move_line_ids.filtered(lambda x: x.lot_id.id == lot.id)
                     move_quantity = sum(move_line.quantity for move_line in move_lines)
-                    total_lot_quantity = 0
-                    lot_price_total = 0
-                    for consumed_layer in all_lot_layers:
-                        adjusted_value = 0
-                        if not move_quantity:
-                            break
-                        layer_diff = consumed_layer.quantity - consumed_layer.remaining_qty
-                        if not layer_diff and not consumed_layer.price_diff_value:
-                            consumed_quantity = move_quantity
-                            move_quantity = 0
-                        elif layer_diff <= move_quantity:
-                            if not layer_diff and consumed_layer.price_diff_value:
-                                linked_layers = self.search(
-                                    [("lot_ids", "in", lot.id), ("id", "not in", (layer.id, consumed_layer.id))]
-                                )
-                                qty = sum(linked_layers.mapped('quantity'))
-                                if qty:
-                                    adjusted_value = (consumed_layer.value / qty) * min(qty, move_quantity)
-                            move_quantity -= layer_diff
-                            consumed_quantity = layer_diff
-                        elif layer_diff > move_quantity:
-                            consumed_quantity = move_quantity                            
-                            move_quantity = 0
-                        else:
-                            continue
-                        real_price = consumed_layer.value / consumed_layer.quantity if consumed_layer.quantity else 0
-                        real_value = (real_price * consumed_quantity) + adjusted_value
-                        total_lot_price += real_value
-                        lot_price_total += real_value
-                        total_lot_quantity += consumed_quantity
-                    lot.write({"real_price": lot_price_total / total_lot_quantity})
+                    real_price = move_lines.mapped("lot_id").mapped("real_price")[0]
+                    lot.write({"real_price": real_price})
                 layer.remaining_value = 0
-                layer.value = -total_lot_price
+                layer.value = -(real_price * move_quantity)
 
-                layer.unit_cost = -(
-                    total_lot_price / layer.quantity if layer.quantity else 1
-                )
+                layer.unit_cost = real_price
 
             if (
                 layer.stock_move_id.production_id
