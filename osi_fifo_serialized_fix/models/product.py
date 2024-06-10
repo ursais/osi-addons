@@ -17,6 +17,7 @@ class ProductProduct(models.Model):
 
         # Find back incoming stock valuation layers
         # (called candidates here) to value `quantity`.
+        used_candidates = []
         for line in rel_stock_move.move_line_ids:
             quantity = line.quantity
             qty_to_take_on_candidates = quantity
@@ -57,10 +58,11 @@ class ProductProduct(models.Model):
                     }
 
                     candidate.write(candidate_vals)
+                    used_candidates.append(candidate.id)
 
                     qty_to_take_on_candidates -= qty_taken_on_candidate
                     tmp_value += value_taken_on_candidate
-
+                    candidate.write({"used_price": new_standard_price, "used_tmp_value": tmp_value})
                     if float_is_zero(
                         qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding
                     ):
@@ -75,6 +77,7 @@ class ProductProduct(models.Model):
                                 and next_candidates[0].unit_cost
                                 or new_standard_price
                             )
+                            candidate.write({"used_price": new_standard_price, "used_tmp_value": tmp_value})
                         break
 
         # Update the standard price with the price of the last used candidate, if any.
@@ -104,4 +107,5 @@ class ProductProduct(models.Model):
                 "value": -tmp_value,
                 "unit_cost": last_fifo_price,
             }
+        vals.update({"used_candidates": used_candidates})
         return vals

@@ -15,6 +15,9 @@ class StockValuationLayer(models.Model):
 
     lot_ids = fields.Many2many("stock.lot", string="Lot ID's")
     repair_type = fields.Selection([("add", "ADD"), ("remove", "Remove")])
+    used_candidates = fields.Many2many("stock.valuation.layer", "stock_valuation_layer_rel", "stock_valuation_layer_id", "new_svl_id")
+    used_tmp_value = fields.Float()
+    used_price = fields.Float()
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -35,6 +38,12 @@ class StockValuationLayer(models.Model):
                         new_val["value"] = quantity * new_val.get("unit_cost", 0.0) * sign
                         new_val["remaining_value"] = new_val["value"] if sign > 0 else 0
                         new_val["lot_ids"] = [lot_id.id]
+                        if stock_move_id.location_dest_id.usage == "customer" or stock_move_id.raw_material_production_id:
+                            if val.get("used_candidates"):
+                                used_candidates = self.env["stock.valuation.layer"].browse(val.get("used_candidates"))
+                                for candidate in used_candidates.filtered(lambda x: x.lot_ids.ids == [lot_id.id]):
+                                    new_val["unit_cost"] = candidate.used_price
+                                    new_val["value"] = candidate.used_tmp_value * sign
                         new_vals_list.append(new_val)
                     for product in lotless_move_lines.mapped("product_id"):
                         move_lines = stock_move_id.move_line_ids.filtered(lambda x: x.product_id == product)
@@ -75,19 +84,6 @@ class StockValuationLayer(models.Model):
                     {"real_price": total_value / total_qty if total_qty else 1}
                 )
 
-            # Product is consumed in Manufacturing Order
-            if layer.stock_move_id.raw_material_production_id:
-                total_lot_price = 0
-                for lot in layer.lot_ids:
-                    move_lines = layer.stock_move_id.move_line_ids.filtered(lambda x: x.lot_id.id == lot.id)
-                    move_quantity = sum(move_line.quantity for move_line in move_lines)
-                    real_price = move_lines.mapped("lot_id").mapped("real_price")[0]
-                    lot.write({"real_price": real_price})
-                layer.remaining_value = 0
-                layer.value = -(real_price * move_quantity)
-
-                layer.unit_cost = real_price
-
             if (
                 layer.stock_move_id.production_id
                 and layer.stock_move_id.product_id.cost_method in ("fifo", "average")
@@ -102,7 +98,8 @@ class StockValuationLayer(models.Model):
                 and layer.stock_move_id.location_dest_id.usage in ("inventory")
                 and "inventory_mode" in self._context.keys()
             ):
-                layer.unit_cost = sum(layer.mapped("lot_ids").mapped("real_price"))
+                #TODO Fix how unit_cost is calculated
+                # layer.unit_cost = sum(layer.mapped("lot_ids").mapped("real_price"))
                 layer.value = layer.unit_cost * layer.quantity
         return res
 
