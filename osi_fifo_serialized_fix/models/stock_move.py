@@ -15,8 +15,3 @@ class StockMove(models.Model):
             )._create_out_svl(forced_quantity)
             res += result
         return res
-
-class StockMoveLine(models.Model):
-    _inherit = "stock.move.line"
-
-    unit_cost = fields.Float()
