@@ -10,7 +10,7 @@ from odoo.tests.common import TransactionCase
 
 class TestSaleBackorderCommon(TransactionCase):
     def setUp(self):
-        super(TestSaleBackorderCommon, self).setUp()
+        super().setUp()
         self.SaleOrder = self.env["sale.order"]
         self.sobackorder_wiz = self.env["sobackorder.report.wizard"]
         self.fsm_per_order_1 = self.env["product.product"].create(
@@ -46,14 +46,11 @@ class TestSaleBackorderCommon(TransactionCase):
         self.default_account_revenue = self.env["account.account"].search(
             [
                 ("company_id", "=", self.env.user.company_id.id),
-                (
-                    "user_type_id",
-                    "=",
-                    self.env.ref("account.data_account_type_revenue").id,
-                ),
+                ("account_type", "=", "income"),
             ],
             limit=1,
         )
+        # account_type
         self.default_journal_sale = self.env["account.journal"].search(
             [("company_id", "=", self.env.user.company_id.id), ("type", "=", "sale")],
             limit=1,
@@ -117,16 +114,14 @@ class TestSaleBackorderCommon(TransactionCase):
 
     def test_sale_order_order_line(self):
         self.sale_order_1.action_confirm()
-        self.context = {
-            "active_model": "sale.order",
-            "active_ids": [self.sale_order_1.id],
-            "active_id": self.sale_order_1.id,
-            "default_journal_id": self.default_journal_sale.id,
-        }
-
         downpayment = (
             self.env["sale.advance.payment.inv"]
-            .with_context(self.context)
+            .with_context(
+                active_model="sale.order",
+                active_ids=[self.sale_order_1.id],
+                active_id=self.sale_order_1.id,
+                default_journal_id=self.default_journal_sale.id,
+            )
             .create(
                 {
                     "advance_payment_method": "fixed",
@@ -161,11 +156,11 @@ class TestSaleBackorderCommon(TransactionCase):
                 {
                     "date": datetime.today(),
                     "reason": "no reason",
-                    "refund_method": "refund",
+                    "journal_id": self.env.ref("account.1_sale").id,
                 }
             )
         )
-        move_reversal.reverse_moves()
+        move_reversal.refund_moves()
         for line in self.sale_order_1.order_line:
             for move in line.move_ids:
                 move.picking_id.write({"state": "done"})

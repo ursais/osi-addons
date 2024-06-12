@@ -5,7 +5,7 @@
         <field name="name">so.backorder.report.tree</field>
         <field name="model">sale.order.line</field>
         <field name="arch" type="xml">
-            <tree string="SO Backorders">
+            <tree>
                 <field name="order_id" />
                 <field name="name" />
                 <field name="bo_qty" />
@@ -34,7 +34,8 @@
         id="menu_so_backorder"
         action="action_so_backorder"
         parent="sale.sale_order_menu"
-        sequence="11"
+        sequence="21"
+        groups="sales_team.group_sale_salesman"
     />
 
 </odoo>

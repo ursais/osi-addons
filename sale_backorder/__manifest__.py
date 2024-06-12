@@ -9,7 +9,7 @@
     "summary": "Report of Un-Invoice Goods Delivered and Backorders",
     "category": "Sale",
     "website": "https://github.com/OCA/sale-reporting",
-    "depends": ["sale_management", "sale_stock"],
+    "depends": ["sales_team", "sale_stock"],
     "data": [
         "security/ir.model.access.csv",
         "views/so_backorder_view.xml",
