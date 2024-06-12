@@ -9,11 +9,9 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     last_date_delivered = fields.Datetime(
-        string="Last Date Delivered", compute="_compute_last_date_delivered", store=True
+        compute="_compute_last_date_delivered", store=True
     )
-    last_bill_date = fields.Datetime(
-        string="Last Bill Date", compute="_compute_last_bill_date", store=True
-    )
+    last_bill_date = fields.Datetime(compute="_compute_last_bill_date", store=True)
     uigd_qty = fields.Float(
         string="Uninvoiced Goods Delivered Qty",
         compute="_compute_uigd_qty",

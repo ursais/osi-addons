@@ -31,6 +31,7 @@
         id="menu_so_backorder_report"
         action="action_so_backorder_wizard"
         parent="sale.sale_order_menu"
-        sequence="12"
+        sequence="22"
+        groups="sales_team.group_sale_salesman"
     />
 </odoo>

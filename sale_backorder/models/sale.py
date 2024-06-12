@@ -8,17 +8,11 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     last_date_delivered = fields.Datetime(
-        string="Last Date Delivered", compute="_compute_last_date_delivered", store=True
+        compute="_compute_last_date_delivered", store=True
     )
-    last_bill_date = fields.Datetime(
-        string="Last Bill Date", compute="_compute_last_bill_date", store=True
-    )
-    uigd_value = fields.Monetary(
-        string="UIGD Value", compute="_compute_uigd_value", store=True
-    )
-    bo_value = fields.Monetary(
-        string="Backorder Value", compute="_compute_bo_value", store=True
-    )
+    last_bill_date = fields.Datetime(compute="_compute_last_bill_date", store=True)
+    uigd_value = fields.Monetary(compute="_compute_uigd_value", store=True)
+    bo_value = fields.Monetary(compute="_compute_bo_value", store=True)
 
     @api.depends("order_line.uigd_value")
     def _compute_uigd_value(self):
