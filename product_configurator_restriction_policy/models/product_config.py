@@ -29,7 +29,7 @@ class ProductConfigSession(models.Model):
         avail_val_ids = []
         for attr_val_id in check_val_ids:
             config_lines = product_tmpl.config_line_ids.filtered(
-                lambda line: attr_val_id in line.value_ids.ids
+                lambda line, attr_val_id: attr_val_id in line.value_ids.ids
             )
             domains = config_lines.mapped("domain_id").compute_domain()
             if product_tmpl.restriction_policy == "sequential":
