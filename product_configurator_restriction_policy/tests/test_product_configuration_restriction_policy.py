@@ -1,12 +1,15 @@
-from odoo.addons.product_configurator.tests.test_product_configurator_test_cases import ProductConfiguratorTestCases
+from odoo.addons.product_configurator.tests import test_product_configurator_test_cases
 
 
-class ProductRestrictionPolicy(ProductConfiguratorTestCases):
-
+class ProductRestrictionPolicy(
+    test_product_configurator_test_cases.ProductConfiguratorTestCases
+):
     def test_product_restriction_policy(self):
         """
-        The test_product_restriction_policy function tests the values_available() method of the product.config.session model
-        to ensure that it returns a list of available attribute values for a given set of selected attribute values and product template,
+        The test_product_restriction_policy function tests
+        the values_available() method of the product.config.session model
+        to ensure that it returns a list of available attribute values
+        for a given set of selected attribute values and product template,
         based on the restriction policy defined in the product template.
         :return: A list of values that are not available
         """
@@ -18,9 +21,7 @@ class ProductRestrictionPolicy(ProductConfiguratorTestCases):
             self.value_gasoline + self.value_218i + self.value_sport_line
         ).ids
         product_tmpl_id = self.config_product.id
-        self.config_product.write({
-            "restriction_policy": "standard"
-        })
+        self.config_product.write({"restriction_policy": "standard"})
         values_ids = [self.value_diesel.id]
         available_value_ids = self.productConfigSession.values_available(
             check_available_val_ids, values_ids, {}, product_tmpl_id

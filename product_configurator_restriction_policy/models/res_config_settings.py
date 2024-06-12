@@ -9,7 +9,6 @@ class ResConfigSettings(models.TransientModel):
 
     restriction_policy = fields.Selection(
         [("standard", "Standard"), ("sequential", "Sequential")],
-        string="Restriction Policy",
         default="standard",
         help="""Standard: When the system is calculating the available values from
         restrictions, it will group the restrictions by attribute and then

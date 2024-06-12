@@ -9,7 +9,6 @@ class ProductTemplate(models.Model):
 
     restriction_policy = fields.Selection(
         [("standard", "Standard"), ("sequential", "Sequential")],
-        string="Restriction Policy",
         default=lambda self: self._get_default_restriction_policy_value(),
         help="""Standard: When the system is calculating the available values from
         restrictions, it will group the restrictions by attribute and then
