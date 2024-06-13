@@ -31,6 +31,7 @@ class StockValuationLayer(models.Model):
                     for lot_id in stock_move_id.move_line_ids.mapped("lot_id"):
                         move_lines = stock_move_id.move_line_ids.filtered(lambda x: x.lot_id == lot_id)
                         sign = 1 if val["quantity"] >= 0 else -1
+                        is_out_adjustment = layer.stock_move_id and layer.stock_move_id.location_dest_id.usage in ("inventory") and "inventory_mode" in self._context.keys()
                         quantity = sum(move_lines.mapped("quantity"))
                         new_val = val.copy()
                         new_val["quantity"] = quantity * sign
@@ -38,7 +39,7 @@ class StockValuationLayer(models.Model):
                         new_val["value"] = quantity * new_val.get("unit_cost", 0.0) * sign
                         new_val["remaining_value"] = new_val["value"] if sign > 0 else 0
                         new_val["lot_ids"] = [lot_id.id]
-                        if stock_move_id.location_dest_id.usage == "customer" or stock_move_id.raw_material_production_id:
+                        if stock_move_id.location_dest_id.usage == "customer" or stock_move_id.raw_material_production_id or is_out_adjustment:
                             if val.get("used_candidates"):
                                 used_candidates = self.env["stock.valuation.layer"].browse(val.get("used_candidates"))
                                 for candidate in used_candidates.filtered(lambda x: x.lot_ids.ids == [lot_id.id]):
@@ -91,16 +92,6 @@ class StockValuationLayer(models.Model):
                 layer.stock_move_id.production_id.lot_producing_id.real_price = (
                     layer.stock_move_id.price_unit
                 )
-
-            # For inventory Decrease
-            if (
-                layer.stock_move_id
-                and layer.stock_move_id.location_dest_id.usage in ("inventory")
-                and "inventory_mode" in self._context.keys()
-            ):
-                #TODO Fix how unit_cost is calculated
-                # layer.unit_cost = sum(layer.mapped("lot_ids").mapped("real_price"))
-                layer.value = layer.unit_cost * layer.quantity
         return res
 
     def svl_lots_update(self):
