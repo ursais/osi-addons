@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_product_price_review_inv_user,product.price.review.inv.user,model_product_price_review,stock.group_stock_user,1,0,0,0
+access_product_price_review_review_user,product.price.review.review.user,model_product_price_review,ol_product_pricing_review.group_pricing_review_user,1,1,1,0
+access_product_price_review_review_approver,product.price.review.review.approver,model_product_price_review,ol_product_pricing_review.group_pricing_review_approver,1,1,1,0
+

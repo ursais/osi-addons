@@ -1,0 +1,65 @@
+<odoo>
+
+    <record id="ol_product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.form.view</field>
+        <field name="model">product.template</field>
+        <field name="priority">21</field>
+
+        <field name="inherit_id" ref="product.product_template_form_view" />
+        <field name="arch" type="xml">
+            <field name="product_variant_count" position="after">
+                <field name="has_configurable_attributes" invisible="1" />
+            </field>
+            <xpath expr="//page[@name='general_information']" position="after">
+                <page string="Pricing" name="pricing">
+                    <group>
+                        <group>
+                            <field name="based_on" invisible="1" />
+                            <field name="total_cost" readonly="1" />
+                            <field name="last_purchase_price" />
+                            <field name="last_purchase_margin" />
+                        </group>
+                        <group>
+                            <group invisible="has_configurable_attributes">
+                                <field name="disable_price_reviews" />
+                                <field name="enable_margin_threshold" invisible="disable_price_reviews" />
+                                <field name="margin_min" invisible="not enable_margin_threshold or disable_price_reviews" />
+                                <field name="margin_max" invisible="not enable_margin_threshold or disable_price_reviews" />
+                            </group>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <field name="based_on" position="before">
+                <xpath expr="//label[@for='list_price']" position="move" />
+                <xpath expr="//div[@name='pricing']" position="move" />
+                <xpath expr="//label[@for='standard_price']" position="move" />
+                <xpath expr="//div[@name='standard_price_uom']" position="move" />
+                <field name="tariff_percent" position="move" invisible="has_configurable_attributes" widget="percent" />
+                <field name="tooling_cost" position="move" invisible="has_configurable_attributes" />
+                <field name="defrayment_cost" position="move" invisible="has_configurable_attributes" />
+                <field name="carrier_multiplier_id" position="move" invisible="has_configurable_attributes" />
+                <field name="default_shipping_cost" position="move" invisible="has_configurable_attributes" />
+                <field name="override_margin" invisible="has_configurable_attributes" />
+                <field name="charm_price" invisible="has_configurable_attributes" />
+                <field name="override_price" invisible="has_configurable_attributes" />
+                <field name="special_price" invisible="has_configurable_attributes" />
+            </field>
+        </field>
+    </record>
+
+    <!-- product.product_normal_form_view -->
+    <record id="ol_product_normal_form_view" model="ir.ui.view">
+        <field name="name">product.product.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button string="Price Review" type="object" name="action_price_review" invisible="disable_price_reviews or has_configurable_attributes" />
+            </xpath>
+
+        </field>
+    </record>
+
+
+</odoo>

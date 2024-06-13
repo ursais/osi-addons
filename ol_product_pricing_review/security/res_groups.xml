@@ -1,0 +1,21 @@
+<odoo>
+
+    <record model="ir.module.category" id="price_review_record_access">
+        <field name="name">Price Review Access</field>
+    </record>
+
+    <!-- Price Review User Access -->
+    <record id="group_pricing_review_user" model="res.groups">
+        <field name="name">Pricing Review User</field>
+        <field name="category_id" ref="price_review_record_access" />
+    </record>
+
+    <!-- Pricing Review Approver Access -->
+    <record id="group_pricing_review_approver" model="res.groups">
+        <field name="name">Pricing Review Approver</field>
+        <field name="category_id" ref="price_review_record_access" />
+        <field name="implied_ids" eval="[(4, ref('ol_product_pricing_review.group_pricing_review_user'))]" />
+        <field name="users" eval="[(4, ref('base.user_admin'))]" />
+    </record>
+
+</odoo>

@@ -1,0 +1,15 @@
+<odoo>
+
+    <!-- INHERIT PRODUCT CATEGORY FORM VIEW -->
+    <record id="ol_product_category_form_view" model="ir.ui.view">
+        <field name="name">product.category.form</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="stock_account.view_category_property_form_stock" />
+        <field name="arch" type="xml">
+            <field name="property_cost_method" position="before">
+                <field name="suggested_margin" />
+            </field>
+        </field>
+    </record>
+
+</odoo>
