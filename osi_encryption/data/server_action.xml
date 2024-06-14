@@ -1,0 +1,71 @@
+<odoo>
+
+    <record id="encrypt_lines_action_server" model="ir.actions.server">
+        <field name="name">Encrypt or Sanitize</field>
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="model_id" ref="osi_encryption.model_encrypt_line"/>
+        <field name="binding_model_id" ref="osi_encryption.model_encrypt_line"/>
+        <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+        <field name="code">
+action = records.encrypt_sanitize_char_data_wizard()
+        </field>
+    </record>
+
+    <record id="decrypt_lines_action_server" model="ir.actions.server">
+        <field name="name">Decrypt or Desanitize</field>
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="model_id" ref="osi_encryption.model_encrypt_line"/>
+        <field name="binding_model_id" ref="osi_encryption.model_encrypt_line"/>
+        <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+        <field name="code">
+action = records.decrypt_unsanitize_char_data_wizard()
+        </field>
+    </record>
+
+    <record id="exclude_lines_action_server" model="ir.actions.server">
+        <field name="name">Exclude Line(s)</field>
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="model_id" ref="osi_encryption.model_encrypt_line"/>
+        <field name="binding_model_id" ref="osi_encryption.model_encrypt_line"/>
+        <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+        <field name="code">
+for rec in records:
+    if rec.state not in ('encrypted', 'in progress', 'sanitized'):
+        rec.write({'state': 'excluded'})
+        </field>
+    </record>
+
+    <record id="include_lines_action_server" model="ir.actions.server">
+        <field name="name">Include Line(s)</field>
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="model_id" ref="osi_encryption.model_encrypt_line"/>
+        <field name="binding_model_id" ref="osi_encryption.model_encrypt_line"/>
+        <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+        <field name="code">
+for rec in records:
+    if rec.state == 'excluded':
+        if rec.line_action == 'sanitize_unsanitize':
+            rec.write({'state': 'unsanitized'})
+        else:
+            rec.write({'state': 'decrypted'})
+        </field>
+    </record>
+
+    <record id="update_row_num_server" model="ir.actions.server">
+        <field name="name">Update # of Records</field>
+        <field name="type">ir.actions.server</field>
+        <field name="state">code</field>
+        <field name="model_id" ref="osi_encryption.model_encrypt_line"/>
+        <field name="binding_model_id" ref="osi_encryption.model_encrypt_line"/>
+        <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+        <field name="code">
+for rec in records:
+    rec.button_get_number_of_rows()
+        </field>
+    </record>
+
+</odoo>
