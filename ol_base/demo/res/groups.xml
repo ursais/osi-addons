@@ -1,0 +1,12 @@
+<odoo>
+
+    <record id="unit_test_admin" model="res.groups">
+        <field name="name">Unit Test Admin</field>
+    </record>
+
+    <!-- During testing all internal users should receive the `Unit Test Admin`-->
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('ol_base.unit_test_admin'))]" />
+    </record>
+
+</odoo>

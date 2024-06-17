@@ -1,0 +1,199 @@
+<odoo>
+
+    <!-- ============================= -->
+    <!-- Product Accounting Properties -->
+    <!-- ============================= -->
+
+    <!-- ================== -->
+    <!-- Default Properties -->
+    <!-- ================== -->
+
+    <!-- Price Difference Account -->
+    <record id="system_price_difference_account_default_us" model="ir.property">
+        <field name="company_id" ref="base.main_company" />
+        <field name="fields_id" search="[('model', '=', 'product.category'), ('name', '=', 'property_account_creditor_price_difference_categ')]" />
+        <field name="name">property_account_creditor_price_difference_categ</field>
+        <field name="value_reference"
+               eval="'account.account,{}'.format(
+                      ref('ol_base.{}_price_difference'.format(
+                      ref('base.main_company'))))" />
+    </record>
+
+    <!-- Income Account -->
+    <record id="system_income_account_default_us" model="ir.property">
+        <field name="company_id" ref="base.main_company" />
+        <field name="fields_id" search="[('model', '=', 'product.category'), ('name', '=', 'property_account_income_categ_id')]" />
+        <field name="name">property_account_income_categ_id</field>
+        <field name="value_reference"
+               eval="'account.account,{}'.format(
+                      ref('ol_base.{}_products'.format(
+                      ref('base.main_company'))))" />
+    </record>
+
+    <!-- Expense Account -->
+    <record id="system_expense_account_default_us" model="ir.property">
+        <field name="company_id" ref="base.main_company" />
+        <field name="fields_id" search="[('model', '=', 'product.category'), ('name', '=', 'property_account_expense_categ_id')]" />
+        <field name="name">property_account_expense_categ_id</field>
+        <field name="value_reference"
+               eval="'account.account,{}'.format(
+                      ref('ol_base.{}_direct_materials'.format(
+                      ref('base.main_company'))))" />
+    </record>
+
+    <!-- Stock Input Account -->
+    <record id="system_stock_input_account_default_us" model="ir.property">
+        <field name="company_id" ref="base.main_company" />
+        <field name="fields_id" search="[('model', '=', 'product.category'), ('name', '=', 'property_stock_account_input_categ_id')]" />
+        <field name="name">property_stock_account_input_categ_id</field>
+        <field name="value_reference"
+               eval="'account.account,{}'.format(
+                      ref('ol_base.{}_prepaid_inventory'.format(
+                      ref('base.main_company'))))" />
+    </record>
+
+    <!-- Stock Output Account -->
+    <record id="system_stock_output_account_default_us" model="ir.property">
+        <field name="company_id" ref="base.main_company" />
+        <field name="fields_id" search="[('model', '=', 'product.category'), ('name', '=', 'property_stock_account_output_categ_id')]" />
+        <field name="name">property_stock_account_output_categ_id</field>
+        <field name="value_reference"
+               eval="'account.account,{}'.format(
+                      ref('ol_base.{}_outgoing_clearing'.format(
+                      ref('base.main_company'))))" />
+    </record>
+
+    <!-- Stock Valuation Account -->
+    <record id="system_stock_valuation_account_default_us" model="ir.property">
+        <field name="company_id" ref="base.main_company" />
+        <field name="fields_id" search="[('model', '=', 'product.category'), ('name', '=', 'property_stock_valuation_account_id')]" />
+        <field name="name">property_stock_valuation_account_id</field>
+        <field name="value_reference"
+               eval="'account.account,{}'.format(
+                      ref('ol_base.{}_raw_materials'.format(
+                      ref('base.main_company'))))" />
+    </record>
+
+    <!-- Price Difference Account -->
+    <record id="system_price_difference_account_default_eu" model="ir.property">
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="fields_id" search="[('model', '=', 'product.category'), ('name', '=', 'property_account_creditor_price_difference_categ')]" />
+        <field name="name">property_account_creditor_price_difference_categ</field>
+        <field name="value_reference"
+               eval="'account.account,{}'.format(
+                      ref('ol_base.{}_price_difference'.format(
+                      ref('ol_base.onlogic_eu'))))" />
+    </record>
+
+    <!-- Income Account -->
+    <record id="system_income_account_default_eu" model="ir.property">
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="fields_id" search="[('model', '=', 'product.category'), ('name', '=', 'property_account_income_categ_id')]" />
+        <field name="name">property_account_income_categ_id</field>
+        <field name="value_reference"
+               eval="'account.account,{}'.format(
+                      ref('ol_base.{}_products'.format(
+                      ref('ol_base.onlogic_eu'))))" />
+    </record>
+
+    <!-- Expense Account -->
+    <record id="system_expense_account_default_eu" model="ir.property">
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="fields_id" search="[('model', '=', 'product.category'), ('name', '=', 'property_account_expense_categ_id')]" />
+        <field name="name">property_account_expense_categ_id</field>
+        <field name="value_reference"
+               eval="'account.account,{}'.format(
+                      ref('ol_base.{}_direct_materials'.format(
+                      ref('ol_base.onlogic_eu'))))" />
+    </record>
+
+    <!-- Stock Input Account -->
+    <record id="system_stock_input_account_default_eu" model="ir.property">
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="fields_id" search="[('model', '=', 'product.category'), ('name', '=', 'property_stock_account_input_categ_id')]" />
+        <field name="name">property_stock_account_input_categ_id</field>
+        <field name="value_reference"
+               eval="'account.account,{}'.format(
+                      ref('ol_base.{}_prepaid_inventory'.format(
+                      ref('ol_base.onlogic_eu'))))" />
+    </record>
+
+    <!-- Stock Output Account -->
+    <record id="system_stock_output_account_default_eu" model="ir.property">
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="fields_id" search="[('model', '=', 'product.category'), ('name', '=', 'property_stock_account_output_categ_id')]" />
+        <field name="name">property_stock_account_output_categ_id</field>
+        <field name="value_reference"
+               eval="'account.account,{}'.format(
+                      ref('ol_base.{}_outgoing_clearing'.format(
+                      ref('ol_base.onlogic_eu'))))" />
+    </record>
+
+    <!-- Stock Valuation Account -->
+    <record id="system_stock_valuation_account_default_eu" model="ir.property">
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="fields_id" search="[('model', '=', 'product.category'), ('name', '=', 'property_stock_valuation_account_id')]" />
+        <field name="name">property_stock_valuation_account_id</field>
+        <field name="value_reference"
+               eval="'account.account,{}'.format(
+                      ref('ol_base.{}_raw_materials'.format(
+                      ref('ol_base.onlogic_eu'))))" />
+    </record>
+
+    <!-- ================== -->
+    <!-- Systems Properties -->
+    <!-- ================== -->
+
+    <!-- Stock Input Account -->
+    <record id="system_stock_input_account_systems_us" model="ir.property">
+        <field name="company_id" ref="base.main_company" />
+        <field name="fields_id" search="[('model', '=', 'product.category'), ('name', '=', 'property_stock_account_input_categ_id')]" />
+        <field name="name">property_stock_account_input_categ_id</field>
+        <field name="res_id"
+               eval="'product.category,{}'.format(ref('ol_base.product_category_systems'))"/>
+        <field name="value_reference"
+               eval="'account.account,{}'.format(
+                      ref('ol_base.{}_wip'.format(
+                      ref('base.main_company'))))" />
+    </record>
+
+    <!-- Stock Valuation Account -->
+    <record id="system_stock_valuation_account_systems_us" model="ir.property">
+        <field name="company_id" ref="base.main_company" />
+        <field name="fields_id" search="[('model', '=', 'product.category'), ('name', '=', 'property_stock_valuation_account_id')]" />
+        <field name="name">property_stock_valuation_account_id</field>
+        <field name="res_id"
+               eval="'product.category,{}'.format(ref('ol_base.product_category_systems'))"/>
+        <field name="value_reference"
+               eval="'account.account,{}'.format(
+                     ref('ol_base.{}_finished_goods'.format(
+                     ref('base.main_company'))))" />
+    </record>
+
+    <!-- Stock Input Account -->
+    <record id="system_stock_input_account_systems_eu" model="ir.property">
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="fields_id" search="[('model', '=', 'product.category'), ('name', '=', 'property_stock_account_input_categ_id')]" />
+        <field name="name">property_stock_account_input_categ_id</field>
+        <field name="res_id"
+               eval="'product.category,{}'.format(ref('ol_base.product_category_systems'))"/>
+        <field name="value_reference"
+               eval="'account.account,{}'.format(
+                      ref('ol_base.{}_wip'.format(
+                      ref('ol_base.onlogic_eu'))))" />
+    </record>
+
+    <!-- Stock Valuation Account -->
+    <record id="system_stock_valuation_account_systems_eu" model="ir.property">
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="fields_id" search="[('model', '=', 'product.category'), ('name', '=', 'property_stock_valuation_account_id')]" />
+        <field name="name">property_stock_valuation_account_id</field>
+        <field name="res_id"
+               eval="'product.category,{}'.format(ref('ol_base.product_category_systems'))"/>
+        <field name="value_reference"
+               eval="'account.account,{}'.format(
+                      ref('ol_base.{}_finished_goods'.format(
+                      ref('ol_base.onlogic_eu'))))" />
+    </record>
+
+</odoo>

@@ -1,0 +1,41 @@
+<odoo>
+
+    <!-- ===================================== -->
+    <!-- Set default properties for categories -->
+    <!-- ===================================== -->
+
+    <!-- Set US default: cost method to FIFO -->
+    <record id="category_fifo_us" model="ir.property">
+        <field name="fields_id" ref="stock_account.field_product_category__property_cost_method" />
+        <field name="name">property_cost_method</field>
+        <field name="value_text">fifo</field>
+        <field name="type">selection</field>
+        <field name="company_id" ref="base.main_company" />
+    </record>
+    <!-- Set US default: Generate accounting entries based on stock movement in real time -->
+    <record id="category_real_time_valuation_us" model="ir.property">
+        <field name="fields_id" ref="stock_account.field_product_category__property_valuation" />
+        <field name="name">property_valuation</field>
+        <field name="value_text">real_time</field>
+        <field name="type">selection</field>
+        <field name="company_id" ref="base.main_company" />
+    </record>
+
+    <!-- Set EU default: cost method to FIFO -->
+    <record id="category_fifo_eu" model="ir.property">
+        <field name="fields_id" ref="stock_account.field_product_category__property_cost_method" />
+        <field name="name">property_cost_method</field>
+        <field name="value_text">fifo</field>
+        <field name="type">selection</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+    </record>
+    <!-- Set EU default: Generate accounting entries based on stock movement in real time -->
+    <record id="category_real_time_valuation_eu" model="ir.property">
+        <field name="fields_id" ref="stock_account.field_product_category__property_valuation" />
+        <field name="name">property_valuation</field>
+        <field name="value_text">real_time</field>
+        <field name="type">selection</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+    </record>
+
+</odoo>

@@ -1,0 +1,15 @@
+<odoo>
+
+    <!-- Disable the callback to Odoo cron -->
+    <function model="ir.cron" name="write">
+        <value model="ir.cron" eval="ref('mail.ir_cron_module_update_notification')" />
+        <value eval="{'active': False, 'nextcall': '2030-01-01'}" />
+    </function>
+
+    <!-- Set expiration date to way in the future so we don't get expiring messages -->
+    <record id="database_expiration" model="ir.config_parameter">
+        <field name="key">database.expiration_date</field>
+        <field name="value">2030-01-01</field>
+    </record>
+
+</odoo>

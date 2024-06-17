@@ -1,0 +1,1055 @@
+<odoo>
+  <!-- NOTE: product.attribute.value.company_id is be added in ls_product_configurator,
+             but we set up all the p.a.v records here to begin with -->
+
+  <!-- =========== -->
+  <!-- K300 System -->
+  <!-- =========== -->
+
+  <record id="k300_product_template" model="product.template">
+    <field name="name">Karbon 300 Compact Rugged Computer</field>
+    <field name="purchase_ok">False</field>
+    <field name="sale_ok">True</field>
+    <field name="default_code">K300</field>
+    <field name="company_id" eval="" />
+    <field name="list_price">0</field>
+    <field name="uom_id" ref="uom.product_uom_unit" />
+    <field name="uom_po_id" ref="uom.product_uom_unit" />
+
+    <field name="type">product</field>
+    <field name="categ_id" ref="ol_base.product_category_systems" />
+
+    <!-- <field name="produce_delay">7.0</field> -->
+    <field name="sale_delay">7</field>
+    <field name="tracking">serial</field>
+    <field name="description_sale">Karbon 300 is a compact rugged PC with integrated CAN bus, PoE+ LAN, and customizable DIO with options for cellular wireless connectivity and Movidius VPU.</field>
+  </record>
+
+  <!-- PLATFORM attributes, lines, values -->
+  <record id="k300_attribute_value_platform_E3930" model="product.attribute.value">
+    <field name="name">K300-E3930-4-P</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_platform"/>
+  </record>
+  <record id="k300_attribute_value_platform_E3950" model="product.attribute.value">
+    <field name="name">K300-E3950-8-P</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_platform"/>
+  </record>
+  <!-- <record id="k300_attribute_value_platform_E3930_eu" model="product.attribute.value">
+    <field name="name">K300-E3930-4-P</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_platform"/>
+  </record> -->
+  <!-- <record id="k300_attribute_value_platform_E3950_eu" model="product.attribute.value">
+    <field name="name">K300-E3950-8-P</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_platform"/>
+  </record> -->
+  <record id="k300_template_attribute_line_platform" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.k300_product_template"/>
+    <field name="attribute_id" ref="ol_base.k300_attribute_platform"/>
+    <field name="value_ids"
+           search="[('id', 'in',
+                   (ref('k300_attribute_value_platform_E3930'),
+                   ref('k300_attribute_value_platform_E3950')))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <!-- <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.k300_template_attribute_value_platform_E3930',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_platform').product_template_value_ids[0],
+                 'noupdate': True,
+                 }, {
+                 'xml_id': 'ol_base.k300_template_attribute_value_platform_E3950',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_platform').product_template_value_ids[1],
+                 'noupdate': True,
+                 },{
+                 'xml_id': 'ol_base.k300_template_attribute_value_platform_E3930_eu',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_platform').product_template_value_ids[2],
+                 'noupdate': True,
+                 }, {
+                 'xml_id': 'ol_base.k300_template_attribute_value_platform_E3950_eu',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_platform').product_template_value_ids[3],
+                 'noupdate': True,
+                 }]"/>
+  </function> -->
+
+  <!-- STORAGE attributes, lines, values -->
+  <record id="k300_attribute_value_storage_none" model="product.attribute.value">
+    <field name="name">None</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_storage"/>
+  </record>
+  <record id="k300_attribute_value_storage_32" model="product.attribute.value">
+    <field name="name">TS32GMTS800</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_storage"/>
+  </record>
+  <record id="k300_attribute_value_storage_64" model="product.attribute.value">
+    <field name="name">TS64GMTS800</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_storage"/>
+  </record>
+  <record id="k300_attribute_value_storage_none_eu" model="product.attribute.value">
+    <field name="name">None</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_storage"/>
+  </record>
+  <record id="k300_attribute_value_storage_32_eu" model="product.attribute.value">
+    <field name="name">TS32GMTS800</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_storage"/>
+  </record>
+  <record id="k300_attribute_value_storage_64_eu" model="product.attribute.value">
+    <field name="name">TS64GMTS800</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_storage"/>
+  </record>
+
+  <record id="k300_template_attribute_line_storage" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.k300_product_template"/>
+    <field name="attribute_id" ref="ol_base.k300_attribute_storage"/>
+    <field name="value_ids"
+           search="[('id', 'in',
+                   (ref('k300_attribute_value_storage_none'),
+                   ref('k300_attribute_value_storage_32'),
+                   ref('k300_attribute_value_storage_64'),
+                   ref('k300_attribute_value_storage_none_eu'),
+                   ref('k300_attribute_value_storage_32_eu'),
+                   ref('k300_attribute_value_storage_64_eu')))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.k300_template_attribute_value_storage_none',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_storage').product_template_value_ids[0],
+                 'noupdate': True,
+                 }, {
+                 'xml_id': 'ol_base.k300_template_attribute_value_storage_32',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_storage').product_template_value_ids[1],
+                 'noupdate': True,
+                 }, {
+                 'xml_id': 'ol_base.k300_template_attribute_value_storage_64',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_storage').product_template_value_ids[2],
+                 'noupdate': True,
+                 }, {
+                 'xml_id': 'ol_base.k300_template_attribute_value_storage_none_eu',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_storage').product_template_value_ids[3],
+                 'noupdate': True,
+                 }, {
+                 'xml_id': 'ol_base.k300_template_attribute_value_storage_32_eu',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_storage').product_template_value_ids[4],
+                 'noupdate': True,
+                 }, {
+                 'xml_id': 'ol_base.k300_template_attribute_value_storage_64_eu',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_storage').product_template_value_ids[5],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- ADAPTER attributes, lines, values -->
+  <record id="k300_attribute_value_adapter_none" model="product.attribute.value">
+    <field name="name">None</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_adapter"/>
+  </record>
+  <record id="k300_attribute_value_adapter_cink" model="product.attribute.value">
+    <field name="name">GST120A24-CIN-K</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_adapter"/>
+  </record>
+  <record id="k300_attribute_value_adapter_none_eu" model="product.attribute.value">
+    <field name="name">None</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_adapter"/>
+  </record>
+  <record id="k300_attribute_value_adapter_cink_eu" model="product.attribute.value">
+    <field name="name">GST120A24-CIN-K</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_adapter"/>
+  </record>
+  <record id="k300_template_attribute_line_adapter" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.k300_product_template"/>
+    <field name="attribute_id" ref="ol_base.k300_attribute_adapter"/>
+    <field name="value_ids"
+           search="[('id', 'in', (
+                   ref('k300_attribute_value_adapter_none'),
+                   ref('k300_attribute_value_adapter_cink'),
+                   ref('k300_attribute_value_adapter_none_eu'),
+                   ref('k300_attribute_value_adapter_cink_eu')))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.k300_template_attribute_value_adapter_none',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_adapter').product_template_value_ids[0],
+                 'noupdate': True,
+                 }, {
+                 'xml_id': 'ol_base.k300_template_attribute_value_adapter_cink',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_adapter').product_template_value_ids[1],
+                 'noupdate': True,
+                 }, {
+                 'xml_id': 'ol_base.k300_template_attribute_value_adapter_none_eu',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_adapter').product_template_value_ids[2],
+                 'noupdate': True,
+                 }, {
+                 'xml_id': 'ol_base.k300_template_attribute_value_adapter_cink_eu',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_adapter').product_template_value_ids[3],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- PORT BLOCKING KIT attributes, lines, values -->
+  <record id="k300_attribute_value_port_blocking_kit_none" model="product.attribute.value">
+    <field name="name">None</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_port_blocking_kit"/>
+  </record>
+  <record id="k300_attribute_value_port_blocking_kit_acc101" model="product.attribute.value">
+    <field name="name">ACC101</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_port_blocking_kit"/>
+  </record>
+  <record id="k300_attribute_value_port_blocking_kit_none_eu" model="product.attribute.value">
+    <field name="name">None</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_port_blocking_kit"/>
+  </record>
+  <record id="k300_attribute_value_port_blocking_kit_acc101_eu" model="product.attribute.value">
+    <field name="name">ACC101</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_port_blocking_kit"/>
+  </record>
+  <record id="k300_template_attribute_line_port_blocking_kit" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.k300_product_template"/>
+    <field name="attribute_id" ref="ol_base.k300_attribute_port_blocking_kit"/>
+    <field name="value_ids"
+           search="[('id', 'in', (
+                   ref('k300_attribute_value_port_blocking_kit_none'),
+                   ref('k300_attribute_value_port_blocking_kit_acc101'),
+                   ref('k300_attribute_value_port_blocking_kit_none_eu'),
+                   ref('k300_attribute_value_port_blocking_kit_acc101_eu')))]"/>
+  </record>
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.k300_template_attribute_value_port_blocking_kit_none',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_port_blocking_kit').product_template_value_ids[0],
+                 'noupdate': True,
+                 }, {
+                 'xml_id': 'ol_base.k300_template_attribute_value_port_blocking_kit_acc101',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_port_blocking_kit').product_template_value_ids[1],
+                 'noupdate': True,
+                 }, {
+                 'xml_id': 'ol_base.k300_template_attribute_value_port_blocking_kit_none_eu',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_port_blocking_kit').product_template_value_ids[2],
+                 'noupdate': True,
+                 }, {
+                 'xml_id': 'ol_base.k300_template_attribute_value_port_blocking_kit_acc101_eu',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_port_blocking_kit').product_template_value_ids[3],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- OPERATING SYSTEM attributes, lines, values -->
+  <record id="k300_attribute_value_operating_system_none" model="product.attribute.value">
+    <field name="name">None</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_operating_system"/>
+  </record>
+  <record id="k300_attribute_value_operating_system_win1064_pro" model="product.attribute.value">
+    <field name="name">Win1064-Pro</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_operating_system"/>
+  </record>
+  <record id="k300_attribute_value_operating_system_ubuntu1804-64" model="product.attribute.value">
+    <field name="name">ubuntun18.04-64</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_operating_system"/>
+  </record>
+  <record id="k300_attribute_value_operating_system_none_eu" model="product.attribute.value">
+    <field name="name">None</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_operating_system"/>
+  </record>
+  <record id="k300_attribute_value_operating_system_win1064_pro_eu" model="product.attribute.value">
+    <field name="name">Win1064-Pro</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_operating_system"/>
+  </record>
+  <record id="k300_attribute_value_operating_system_ubuntu1804-64_eu" model="product.attribute.value">
+    <field name="name">ubuntun18.04-64</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_operating_system"/>
+  </record>
+  <record id="k300_template_attribute_line_operating_system" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.k300_product_template"/>
+    <field name="attribute_id" ref="ol_base.k300_attribute_operating_system"/>
+    <field name="value_ids"
+           search="[('id', 'in', (
+                   ref('k300_attribute_value_operating_system_none'),
+                   ref('k300_attribute_value_operating_system_win1064_pro'),
+                   ref('k300_attribute_value_operating_system_ubuntu1804-64'),
+                   ref('k300_attribute_value_operating_system_none_eu'),
+                   ref('k300_attribute_value_operating_system_win1064_pro_eu'),
+                   ref('k300_attribute_value_operating_system_ubuntu1804-64_eu')))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.k300_template_attribute_value_operating_system_none',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_operating_system').product_template_value_ids[0],
+                 'noupdate': True,
+                 }, {
+                 'xml_id': 'ol_base.k300_template_attribute_value_operating_system_win1064_pro',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_operating_system').product_template_value_ids[1],
+                 'noupdate': True,
+                 }, {
+                 'xml_id': 'ol_base.k300_template_attribute_value_operating_system_ubuntu1804-64',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_operating_system').product_template_value_ids[2],
+                 'noupdate': True,
+                 }, {
+                 'xml_id': 'ol_base.k300_template_attribute_value_operating_system_none_eu',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_operating_system').product_template_value_ids[3],
+                 'noupdate': True,
+                 }, {
+                 'xml_id': 'ol_base.k300_template_attribute_value_operating_system_win1064_pro_eu',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_operating_system').product_template_value_ids[4],
+                 'noupdate': True,
+                 }, {
+                 'xml_id': 'ol_base.k300_template_attribute_value_operating_system_ubuntu1804-64_eu',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_operating_system').product_template_value_ids[5],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- BUILD attributes, lines, values -->
+  <record id="k300_attribute_value_build_standard" model="product.attribute.value">
+    <field name="name">V_B&amp;T_ECO</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_build"/>
+  </record>
+  <record id="k300_attribute_value_build_rush" model="product.attribute.value">
+    <field name="name">V_B&amp;T_ICR</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_build"/>
+  </record>
+  <record id="k300_attribute_value_build_standard_eu" model="product.attribute.value">
+    <field name="name">V_B&amp;T_ECO</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_build"/>
+  </record>
+  <record id="k300_attribute_value_build_rush_eu" model="product.attribute.value">
+    <field name="name">V_B&amp;T_ICR</field>
+    <field name="attribute_id" ref="ol_base.k300_attribute_build"/>
+  </record>
+  <record id="k300_template_attribute_line_build" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.k300_product_template"/>
+    <field name="attribute_id" ref="ol_base.k300_attribute_build"/>
+    <field name="value_ids"
+           search="[('id', 'in',
+                   (ref('k300_attribute_value_build_standard'),
+                   ref('k300_attribute_value_build_rush'),
+                   ref('k300_attribute_value_build_standard_eu'),
+                   ref('k300_attribute_value_build_rush_eu')))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.k300_template_attribute_value_build_standard',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_build').product_template_value_ids[0],
+                 'noupdate': True,
+                 }, {
+                 'xml_id': 'ol_base.k300_template_attribute_value_build_rush',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_build').product_template_value_ids[1],
+                 'noupdate': True,
+                 }, {
+                 'xml_id': 'ol_base.k300_template_attribute_value_build_standard_eu',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_build').product_template_value_ids[2],
+                 'noupdate': True,
+                 }, {
+                 'xml_id': 'ol_base.k300_template_attribute_value_build_rush_eu',
+                 'record': obj().env.ref('ol_base.k300_template_attribute_line_build').product_template_value_ids[3],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- ================ -->
+  <!-- ML210G-12 System -->
+  <!-- ================ -->
+  <record id="ml210g-12_product_template" model="product.template">
+    <field name="name">Industrial Intel Braswell Fanless Computer with Dual Gb LAN</field>
+    <field name="purchase_ok">False</field>
+    <field name="sale_ok">True</field>
+    <field name="default_code">ML210G-12</field>
+    <field name="company_id" eval="" />
+    <field name="list_price">0</field>
+    <field name="uom_id" ref="uom.product_uom_unit" />
+    <field name="uom_po_id" ref="uom.product_uom_unit" />
+
+    <field name="type">product</field>
+    <field name="categ_id" ref="ol_base.product_category_systems" />
+
+    <field name="produce_delay">7.0</field>
+    <field name="sale_delay">7.0</field>
+    <field name="tracking">serial</field>
+    <field name="description_sale">The pinnacle of embedded computing technology, combining energy-efficient quad-core processing with hardened, compact form factor. Fanless, ventless, and solid state for maximum reliability.</field>
+  </record>
+
+  <!-- MOTHERBOARD attributes, lines, values -->
+  <record id="ml210g-12_attribute_value_motherboard_imb-155" model="product.attribute.value">
+    <field name="name">IMB-155</field>
+    <field name="attribute_id" ref="ml210g-12_attribute_motherboard"/>
+  </record>
+  <record id="ml210g-12_template_attribute_line_motherboard" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.ml210g-12_product_template"/>
+    <field name="attribute_id" ref="ol_base.ml210g-12_attribute_motherboard"/>
+    <field name="value_ids"
+           search="[('id', 'in',
+                   (ref('ol_base.ml210g-12_attribute_value_motherboard_imb-155'),))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.ml210g-12_template_attribute_value_motherboard_imb-155',
+                 'record': obj().env.ref('ol_base.ml210g-12_template_attribute_line_motherboard').product_template_value_ids[0],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- CASE -->
+  <record id="ml210g-12_attribute_value_case_ml210g_case" model="product.attribute.value">
+    <field name="name">ML210G</field>
+    <field name="attribute_id" ref="ml210g-12_attribute_case"/>
+  </record>
+  <record id="ml210g-12_template_attribute_line_case" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.ml210g-12_product_template"/>
+    <field name="attribute_id" ref="ol_base.ml210g-12_attribute_case"/>
+    <field name="value_ids"
+           search="[('id', 'in',
+                   (ref('ol_base.ml210g-12_attribute_value_case_ml210g_case'),))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.ml210g-12_template_attribute_value_case_ml210g_case',
+                 'record': obj().env.ref('ol_base.ml210g-12_template_attribute_line_case').product_template_value_ids[0],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- MEMORY -->
+  <record id="ml210g-12_attribute_value_memory_ts256msk64w6x" model="product.attribute.value">
+    <field name="name">TS256MSK64W6X</field>
+    <field name="attribute_id" ref="ml210g-12_attribute_memory"/>
+  </record>
+  <record id="ml210g-12_attribute_value_memory_ts512msk64w6h" model="product.attribute.value">
+    <field name="name">TS512MSK64W6H</field>
+    <field name="attribute_id" ref="ml210g-12_attribute_memory"/>
+  </record>
+
+  <record id="ml210g-12_template_attribute_line_memory" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.ml210g-12_product_template"/>
+    <field name="attribute_id" ref="ol_base.ml210g-12_attribute_memory"/>
+    <field name="value_ids"
+           search="[('id', 'in',
+                   (ref('ol_base.ml210g-12_attribute_value_memory_ts256msk64w6x'),
+                   ref('ol_base.ml210g-12_attribute_value_memory_ts512msk64w6h'),))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.ml210g-12_template_attribute_value_memory_ts256msk64w6x',
+                 'record': obj().env.ref('ol_base.ml210g-12_template_attribute_line_memory').product_template_value_ids[0],
+                 'noupdate': True,
+                 },{
+                 'xml_id': 'ol_base.ml210g-12_template_attribute_value_memory_ts512msk64w6h',
+                 'record': obj().env.ref('ol_base.ml210g-12_template_attribute_line_memory').product_template_value_ids[1],
+                 'noupdate': True,
+                 },]"/>
+  </function>
+
+  <!-- STORAGE -->
+  <record id="ml210g-12_attribute_value_storage_ts32gmsa370" model="product.attribute.value">
+    <field name="name">TS32GMSA370</field>
+    <field name="attribute_id" ref="ml210g-12_attribute_storage"/>
+  </record>
+  <record id="ml210g-12_attribute_value_storage_ts64gmsa370" model="product.attribute.value">
+    <field name="name">TS64GMSA370</field>
+    <field name="attribute_id" ref="ml210g-12_attribute_storage"/>
+  </record>
+  <record id="ml210g-12_template_attribute_line_storage" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.ml210g-12_product_template"/>
+    <field name="attribute_id" ref="ol_base.ml210g-12_attribute_storage"/>
+    <field name="value_ids"
+           search="[('id', 'in',
+                   (ref('ol_base.ml210g-12_attribute_value_storage_ts32gmsa370'),
+                   ref('ol_base.ml210g-12_attribute_value_storage_ts64gmsa370'),))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.ml210g-12_template_attribute_value_storage_ts32gmsa370',
+                 'record': obj().env.ref('ol_base.ml210g-12_template_attribute_line_storage').product_template_value_ids[0],
+                 'noupdate': True,
+                 },
+                 {
+                 'xml_id': 'ol_base.ml210g-12_template_attribute_value_storage_ts64gmsa370',
+                 'record': obj().env.ref('ol_base.ml210g-12_template_attribute_line_storage').product_template_value_ids[1],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- WIFI/BLUETOOTH CARD -->
+  <record id="ml210g-12_attribute_value_wifi_card_none" model="product.attribute.value">
+    <field name="name">None</field>
+    <field name="attribute_id" ref="ol_base.ml210g-12_attribute_wifi_card"/>
+  </record>
+  <record id="ml210g-12_attribute_value_wifi_card_nwk100-01-s" model="product.attribute.value">
+    <field name="name">NWK100-01-S</field>
+    <field name="attribute_id" ref="ml210g-12_attribute_wifi_card"/>
+  </record>
+  <record id="ml210g-12_attribute_value_wifi_card_dhxa-222-k" model="product.attribute.value">
+    <field name="name">DHXA-222-K</field>
+    <field name="attribute_id" ref="ml210g-12_attribute_wifi_card"/>
+  </record>
+  <record id="ml210g-12_template_attribute_line_wifi_card" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.ml210g-12_product_template"/>
+    <field name="attribute_id" ref="ol_base.ml210g-12_attribute_wifi_card"/>
+    <field name="value_ids"
+           search="[('id', 'in',
+                   (ref('ol_base.ml210g-12_attribute_value_wifi_card_none'),
+                   ref('ol_base.ml210g-12_attribute_value_wifi_card_nwk100-01-s'),
+                   ref('ol_base.ml210g-12_attribute_value_wifi_card_dhxa-222-k'),))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.ml210g-12_template_attribute_value_wifi_card_none',
+                 'record': obj().env.ref('ol_base.ml210g-12_template_attribute_line_wifi_card').product_template_value_ids[0],
+                 'noupdate': True,
+                 },{
+                 'xml_id': 'ol_base.ml210g-12_template_attribute_value_wifi_card_nwk100-01-s',
+                 'record': obj().env.ref('ol_base.ml210g-12_template_attribute_line_wifi_card').product_template_value_ids[1],
+                 'noupdate': True,
+                 },{
+                 'xml_id': 'ol_base.ml210g-12_template_attribute_value_wifi_card_dhxa-222-k',
+                 'record': obj().env.ref('ol_base.ml210g-12_template_attribute_line_wifi_card').product_template_value_ids[2],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- WIFI ANTENNA -->
+
+  <record id="ml210g-12_attribute_value_wifi_antenna_none" model="product.attribute.value">
+    <field name="name">None</field>
+    <field name="attribute_id" ref="ol_base.ml210g-12_attribute_wifi_antenna"/>
+  </record>
+  <record id="ml210g-12_attribute_value_wifi_antenna_kwa-dbv0-8" model="product.attribute.value">
+    <field name="name">KWA-DBV0-8</field>
+    <field name="attribute_id" ref="ml210g-12_attribute_wifi_antenna"/>
+  </record>
+  <record id="ml210g-12_attribute_value_wifi_antenna_ant-a-100" model="product.attribute.value">
+    <field name="name">ANT-A-100</field>
+    <field name="attribute_id" ref="ml210g-12_attribute_wifi_antenna"/>
+  </record>
+  <record id="ml210g-12_template_attribute_line_wifi_antenna" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.ml210g-12_product_template"/>
+    <field name="attribute_id" ref="ol_base.ml210g-12_attribute_wifi_antenna"/>
+    <field name="value_ids"
+           search="[('id', 'in',
+                   (ref('ol_base.ml210g-12_attribute_value_wifi_antenna_none'),
+                   ref('ol_base.ml210g-12_attribute_value_wifi_antenna_kwa-dbv0-8'),
+                   ref('ol_base.ml210g-12_attribute_value_wifi_antenna_ant-a-100'),))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.ml210g-12_template_attribute_value_none',
+                 'record': obj().env.ref('ol_base.ml210g-12_template_attribute_line_wifi_antenna').product_template_value_ids[0],
+                 'noupdate': True,
+                 },{
+                 'xml_id': 'ol_base.ml210g-12_template_attribute_value_kwa-dbv0-8',
+                 'record': obj().env.ref('ol_base.ml210g-12_template_attribute_line_wifi_antenna').product_template_value_ids[1],
+                 'noupdate': True,
+                 },{
+                 'xml_id': 'ol_base.ml210g-12_template_attribute_value_ant-a-100',
+                 'record': obj().env.ref('ol_base.ml210g-12_template_attribute_line_wifi_antenna').product_template_value_ids[2],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- BUILD -->
+  <record id="ml210g-12_attribute_value_standard_build" model="product.attribute.value">
+    <field name="name">Standard Build</field>
+    <field name="attribute_id" ref="ml210g-12_attribute_build"/>
+  </record>
+  <record id="ml210g-12_template_attribute_line_standard_build" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.ml210g-12_product_template"/>
+    <field name="attribute_id" ref="ol_base.ml210g-12_attribute_build"/>
+    <field name="value_ids"
+           search="[('id', 'in',
+                   (ref('ol_base.ml210g-12_attribute_value_standard_build'),))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.ml210g-12_template_attribute_value_standard_build',
+                 'record': obj().env.ref('ol_base.ml210g-12_template_attribute_line_standard_build').product_template_value_ids[0],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- ======================= -->
+  <!-- IMB-155 Motherboard Kit -->
+  <!-- ======================= -->
+  <record id="imb-155_product_template" model="product.template">
+    <field name="name">ASRock IMB-155 Intel Braswell Industrial Thin Mini-ITX Motherboard</field>
+    <field name="purchase_ok">False</field>
+    <field name="sale_ok">True</field>
+    <field name="default_code">IMB-155</field>
+    <field name="company_id" eval="" />
+    <field name="list_price">0</field>
+    <field name="uom_id" ref="uom.product_uom_unit" />
+    <field name="uom_po_id" ref="uom.product_uom_unit" />
+
+    <field name="type">product</field>
+    <field name="categ_id" ref="ol_base.product_category_systems" />
+
+    <field name="produce_delay">7.0</field>
+    <field name="sale_delay">7.0</field>
+    <field name="tracking">serial</field>
+    <field name="description_sale">Long-life, energy-efficient Mini-ITX motherboard with Braswell processing for point-of-sale (POS) and industrial automation applications.</field>
+  </record>
+
+  <!-- Motherboard -->
+  <record id="imb-155_attribute_value_motherboard_imb-155" model="product.attribute.value">
+    <field name="name">IMB-155</field>
+    <field name="attribute_id" ref="imb-155_attribute_motherboard"/>
+  </record>
+  <record id="imb-155_template_attribute_line_motherboard" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.imb-155_product_template"/>
+    <field name="attribute_id" ref="ol_base.imb-155_attribute_motherboard"/>
+    <field name="value_ids"
+           search="[('id', 'in',
+                   (ref('ol_base.imb-155_attribute_value_motherboard_imb-155'),))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.imb-155_template_attribute_value_motherboard_imb-155',
+                 'record': obj().env.ref('ol_base.imb-155_template_attribute_line_motherboard').product_template_value_ids[0],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- Memory -->
+  <record id="imb-155_attribute_value_memory_none" model="product.attribute.value">
+    <field name="name">None</field>
+    <field name="attribute_id" ref="ol_base.imb-155_attribute_memory"/>
+  </record>
+  <record id="imb-155_attribute_value_memory_ts512msk64w6h" model="product.attribute.value">
+    <field name="name">TS512MSK64W6H</field>
+    <field name="attribute_id" ref="imb-155_attribute_memory"/>
+  </record>
+  <record id="imb-155_attribute_value_memory_ts1gsk64w6h" model="product.attribute.value">
+    <field name="name">TS1GSK64W6H</field>
+    <field name="attribute_id" ref="imb-155_attribute_memory"/>
+  </record>
+  <record id="imb-155_template_attribute_line_memory" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.imb-155_product_template"/>
+    <field name="attribute_id" ref="ol_base.imb-155_attribute_memory"/>
+    <field name="value_ids"
+           search="[('id', 'in',
+                   (ref('ol_base.imb-155_attribute_value_memory_none'),
+                   ref('ol_base.imb-155_attribute_value_memory_ts512msk64w6h'),
+                   ref('ol_base.imb-155_attribute_value_memory_ts1gsk64w6h')))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.imb-155_template_attribute_value_memory_none',
+                 'record': obj().env.ref('ol_base.imb-155_template_attribute_line_memory').product_template_value_ids[0],
+                 'noupdate': True,
+                 },{
+                 'xml_id': 'ol_base.imb-155_template_attribute_value_memory_ts512msk64w6h',
+                 'record': obj().env.ref('ol_base.imb-155_template_attribute_line_memory').product_template_value_ids[1],
+                 'noupdate': True,
+                 },{
+                 'xml_id': 'ol_base.imb-155_template_attribute_value_memory_ts1gsk64w6h',
+                 'record': obj().env.ref('ol_base.imb-155_template_attribute_line_memory').product_template_value_ids[2],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- AC Adapter -->
+  <record id="imb-155_attribute_value_adapter_none" model="product.attribute.value">
+    <field name="name">None</field>
+    <field name="attribute_id" ref="ol_base.imb-155_attribute_adapter"/>
+  </record>
+  <record id="imb-155_attribute_value_adapter_pw-12v5a-l6-k" model="product.attribute.value">
+    <field name="name">PW-12V5A-L6-K</field>
+    <field name="attribute_id" ref="imb-155_attribute_adapter"/>
+  </record>
+  <record id="imb-155_template_attribute_line_adapter" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.imb-155_product_template"/>
+    <field name="attribute_id" ref="ol_base.imb-155_attribute_adapter"/>
+    <field name="value_ids"
+           search="[('id', 'in',
+                   (ref('ol_base.imb-155_attribute_value_adapter_none'),
+                   ref('ol_base.imb-155_attribute_value_adapter_pw-12v5a-l6-k'),))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.imb-155_template_attribute_value_adapter_none',
+                 'record': obj().env.ref('ol_base.imb-155_template_attribute_line_adapter').product_template_value_ids[0],
+                 'noupdate': True,
+                 },{
+                 'xml_id': 'ol_base.imb-155_template_attribute_value_adapter_pw-12v5a-l6-k',
+                 'record': obj().env.ref('ol_base.imb-155_template_attribute_line_adapter').product_template_value_ids[1],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- Open Case -->
+  <record id="imb-155_attribute_value_open_case_none" model="product.attribute.value">
+    <field name="name">None</field>
+    <field name="attribute_id" ref="ol_base.imb-155_attribute_open_case"/>
+  </record>
+  <record id="imb-155_attribute_value_open_case_ct100" model="product.attribute.value">
+    <field name="name">CT100</field>
+    <field name="attribute_id" ref="imb-155_attribute_open_case"/>
+  </record>
+  <record id="imb-155_template_attribute_line_open_case" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.imb-155_product_template"/>
+    <field name="attribute_id" ref="ol_base.imb-155_attribute_open_case"/>
+    <field name="value_ids"
+           search="[('id', 'in',
+                   (ref('ol_base.imb-155_attribute_value_open_case_none'),
+                   ref('ol_base.imb-155_attribute_value_open_case_ct100'),))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.imb-155_template_attribute_value_open_case_none',
+                 'record': obj().env.ref('ol_base.imb-155_template_attribute_line_open_case').product_template_value_ids[0],
+                 'noupdate': True,
+                 },{
+                 'xml_id': 'ol_base.imb-155_template_attribute_value_open_case_ct100',
+                 'record': obj().env.ref('ol_base.imb-155_template_attribute_line_open_case').product_template_value_ids[1],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- Motherboard Test -->
+  <record id="imb-155_attribute_value_test_none" model="product.attribute.value">
+    <field name="name">None</field>
+    <field name="attribute_id" ref="ol_base.imb-155_attribute_motherboard_test"/>
+  </record>
+  <record id="imb-155_attribute_value_test_mobo-test-o" model="product.attribute.value">
+    <field name="name">Mobo-Test-O</field>
+    <field name="attribute_id" ref="imb-155_attribute_motherboard_test"/>
+  </record>
+  <record id="imb-155_template_attribute_line_test" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.imb-155_product_template"/>
+    <field name="attribute_id" ref="ol_base.imb-155_attribute_motherboard_test"/>
+    <field name="value_ids"
+           search="[('id', 'in',
+                   (ref('ol_base.imb-155_attribute_value_test_none'),
+                   ref('ol_base.imb-155_attribute_value_test_mobo-test-o'),))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.imb-155_template_attribute_value_test_none',
+                 'record': obj().env.ref('ol_base.imb-155_template_attribute_line_test').product_template_value_ids[0],
+                 'noupdate': True,
+                 },{
+                 'xml_id': 'ol_base.imb-155_template_attribute_value_test_mobo-test-o',
+                 'record': obj().env.ref('ol_base.imb-155_template_attribute_line_test').product_template_value_ids[1],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- ============================== -->
+  <!-- K300-l33t System Custom System -->
+  <!-- ============================== -->
+
+  <record id="k300-l33t_product_template" model="product.template">
+    <field name="name">Karbon 300 Compact Rugged Computer (CUSTOM VERSION)</field>
+    <field name="purchase_ok">False</field>
+    <field name="sale_ok">True</field>
+    <field name="default_code">K300-l33t</field>
+    <field name="company_id" eval="" />
+    <field name="list_price">0</field>
+    <field name="uom_id" ref="uom.product_uom_unit" />
+    <field name="uom_po_id" ref="uom.product_uom_unit" />
+
+    <field name="type">product</field>
+    <field name="categ_id" ref="ol_base.product_category_systems" />
+
+    <field name="produce_delay">7.0</field>
+    <field name="sale_delay">7.0</field>
+    <field name="tracking">serial</field>
+    <field name="description_sale">Someone made this system just for kicks!</field>
+  </record>
+
+  <!-- PLATFORM attributes, lines, values -->
+  <record id="k300-l33t_attribute_value_platform_E3930" model="product.attribute.value">
+    <field name="name">K300-E3930-4-P</field>
+    <field name="attribute_id" ref="k300-l33t_attribute_platform"/>
+  </record>
+  <record id="k300-l33t_template_attribute_line_platform" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.k300-l33t_product_template"/>
+    <field name="attribute_id" ref="ol_base.k300-l33t_attribute_platform"/>
+    <field name="value_ids"
+           search="[('id', '=',
+                   ref('k300-l33t_attribute_value_platform_E3930'))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.k300-l33t_template_attribute_value_platform_E3930',
+                 'record': obj().env.ref('ol_base.k300-l33t_template_attribute_line_platform').product_template_value_ids[0],
+                 'noupdate': True,
+                 },]"/>
+  </function>
+
+  <!-- ADAPTER attributes, lines, values -->
+  <record id="k300-l33t_attribute_value_adapter_cink" model="product.attribute.value">
+    <field name="name">GST120A24-CIN-K</field>
+    <field name="attribute_id" ref="ol_base.k300-l33t_attribute_adapter"/>
+  </record>
+  <record id="k300-l33t_template_attribute_line_adapter" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.k300-l33t_product_template"/>
+    <field name="attribute_id" ref="ol_base.k300-l33t_attribute_adapter"/>
+    <field name="value_ids"
+           search="[('id', '=', ref('k300-l33t_attribute_value_adapter_cink'))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.k300-l33t_template_attribute_value_adapter_cink',
+                 'record': obj().env.ref('ol_base.k300-l33t_template_attribute_line_adapter').product_template_value_ids[0],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- BUILD attributes, lines, values -->
+  <record id="k300-l33t_attribute_value_build_rush" model="product.attribute.value">
+    <field name="name">V_B&amp;T_ICR</field>
+    <field name="attribute_id" ref="ol_base.k300-l33t_attribute_build"/>
+  </record>
+  <record id="k300-l33t_template_attribute_line_build" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.k300-l33t_product_template"/>
+    <field name="attribute_id" ref="ol_base.k300-l33t_attribute_build"/>
+    <field name="value_ids"
+           search="[('id', '=', ref('k300-l33t_attribute_value_build_rush'))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.k300-l33t_template_attribute_value_build_rush',
+                 'record': obj().env.ref('ol_base.k300-l33t_template_attribute_line_build').product_template_value_ids[0],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- =============================================== -->
+  <!-- Harmon Pope customer system: HAPO-ML210 System  -->
+  <!-- =============================================== -->
+
+  <record id="hapo-ml210_product_template" model="product.template">
+    <field name="name">Harmon-Pope Customer ML210 System</field>
+    <field name="purchase_ok">False</field>
+    <field name="sale_ok">True</field>
+    <field name="default_code">HAPO-ML210</field>
+    <field name="company_id" eval="" />
+    <field name="list_price">0</field>
+    <field name="uom_id" ref="uom.product_uom_unit" />
+    <field name="uom_po_id" ref="uom.product_uom_unit" />
+
+    <field name="type">product</field>
+    <field name="categ_id" ref="ol_base.product_category_systems" />
+
+    <field name="produce_delay">7.0</field>
+    <field name="sale_delay">7.0</field>
+    <field name="tracking">serial</field>
+    <field name="description_sale">Harmon-Pope Customer system based on ML210G-12</field>
+  </record>
+
+  <!-- MOTHERBOARD attributes, lines, values -->
+  <record id="hapo-ml210_attribute_value_motherboard_imb-155" model="product.attribute.value">
+    <field name="name">IMB-155</field>
+    <field name="attribute_id" ref="hapo-ml210_attribute_motherboard"/>
+  </record>
+  <record id="hapo-ml210_template_attribute_line_motherboard" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.hapo-ml210_product_template"/>
+    <field name="attribute_id" ref="ol_base.hapo-ml210_attribute_motherboard"/>
+    <field name="value_ids"
+           search="[('id', 'in',
+                   (ref('ol_base.hapo-ml210_attribute_value_motherboard_imb-155'),))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.hapo-ml210_template_attribute_value_motherboard_imb-155',
+                 'record': obj().env.ref('ol_base.hapo-ml210_template_attribute_line_motherboard').product_template_value_ids[0],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- CASE -->
+  <record id="hapo-ml210_attribute_value_case_ml210g_case" model="product.attribute.value">
+    <field name="name">ML210G</field>
+    <field name="attribute_id" ref="hapo-ml210_attribute_case"/>
+  </record>
+  <record id="hapo-ml210_template_attribute_line_case" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.hapo-ml210_product_template"/>
+    <field name="attribute_id" ref="ol_base.hapo-ml210_attribute_case"/>
+    <field name="value_ids"
+           search="[('id', 'in',
+                   (ref('ol_base.hapo-ml210_attribute_value_case_ml210g_case'),))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.hapo-ml210_template_attribute_value_case_ml210g_case',
+                 'record': obj().env.ref('ol_base.hapo-ml210_template_attribute_line_case').product_template_value_ids[0],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- MEMORY -->
+  <record id="hapo-ml210_attribute_value_memory_ts512msk64w6h" model="product.attribute.value">
+    <field name="name">TS512MSK64W6H</field>
+    <field name="attribute_id" ref="hapo-ml210_attribute_memory"/>
+  </record>
+
+  <record id="hapo-ml210_template_attribute_line_memory" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.hapo-ml210_product_template"/>
+    <field name="attribute_id" ref="ol_base.hapo-ml210_attribute_memory"/>
+    <field name="value_ids"
+           search="[('id', '=', ref('ol_base.hapo-ml210_attribute_value_memory_ts512msk64w6h'))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.hapo-ml210_template_attribute_value_memory_ts512msk64w6h',
+                 'record': obj().env.ref('ol_base.hapo-ml210_template_attribute_line_memory').product_template_value_ids[0],
+                 'noupdate': True,
+                 },]"/>
+  </function>
+
+  <!-- STORAGE -->
+  <record id="hapo-ml210_attribute_value_storage_ts64gmsa370" model="product.attribute.value">
+    <field name="name">TS64GMSA370</field>
+    <field name="attribute_id" ref="hapo-ml210_attribute_storage"/>
+  </record>
+  <record id="hapo-ml210_template_attribute_line_storage" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.hapo-ml210_product_template"/>
+    <field name="attribute_id" ref="ol_base.hapo-ml210_attribute_storage"/>
+    <field name="value_ids"
+           search="[('id', '=', ref('ol_base.hapo-ml210_attribute_value_storage_ts64gmsa370'))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.hapo-ml210_template_attribute_value_storage_ts64gmsa370',
+                 'record': obj().env.ref('ol_base.hapo-ml210_template_attribute_line_storage').product_template_value_ids[0],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- WIFI/BLUETOOTH CARD -->
+  <record id="hapo-ml210_attribute_value_wifi_card_dhxa-222-k" model="product.attribute.value">
+    <field name="name">DHXA-222-K</field>
+    <field name="attribute_id" ref="hapo-ml210_attribute_wifi_card"/>
+  </record>
+  <record id="hapo-ml210_template_attribute_line_wifi_card" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.hapo-ml210_product_template"/>
+    <field name="attribute_id" ref="ol_base.hapo-ml210_attribute_wifi_card"/>
+    <field name="value_ids"
+           search="[('id', '=', ref('ol_base.hapo-ml210_attribute_value_wifi_card_dhxa-222-k'))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.hapo-ml210_template_attribute_value_wifi_card_dhxa-222-k',
+                 'record': obj().env.ref('ol_base.hapo-ml210_template_attribute_line_wifi_card').product_template_value_ids[0],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- WIFI ANTENNA -->
+  <record id="hapo-ml210_attribute_value_wifi_antenna_ant-a-100" model="product.attribute.value">
+    <field name="name">ANT-A-100</field>
+    <field name="attribute_id" ref="hapo-ml210_attribute_wifi_antenna"/>
+  </record>
+  <record id="hapo-ml210_template_attribute_line_wifi_antenna" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.hapo-ml210_product_template"/>
+    <field name="attribute_id" ref="ol_base.hapo-ml210_attribute_wifi_antenna"/>
+    <field name="value_ids"
+           search="[('id', '=', ref('ol_base.hapo-ml210_attribute_value_wifi_antenna_ant-a-100'))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.hapo-ml210_template_attribute_value_ant-a-100',
+                 'record': obj().env.ref('ol_base.hapo-ml210_template_attribute_line_wifi_antenna').product_template_value_ids[0],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+  <!-- BUILD -->
+  <record id="hapo-ml210_attribute_value_standard_build" model="product.attribute.value">
+    <field name="name">Standard Build</field>
+    <field name="attribute_id" ref="hapo-ml210_attribute_build"/>
+  </record>
+  <record id="hapo-ml210_template_attribute_line_standard_build" model="product.template.attribute.line">
+    <field name="product_tmpl_id" ref="ol_base.hapo-ml210_product_template"/>
+    <field name="attribute_id" ref="ol_base.hapo-ml210_attribute_build"/>
+    <field name="value_ids"
+           search="[('id', 'in',
+                   (ref('ol_base.hapo-ml210_attribute_value_standard_build'),))]"/>
+  </record>
+
+  <!-- Update auto-created records to have an xml_id value so that we can edit its values -->
+  <function model="ir.model.data" name="_update_xmlids">
+    <value model="base"
+           eval="[{
+                 'xml_id': 'ol_base.hapo-ml210_template_attribute_value_standard_build',
+                 'record': obj().env.ref('ol_base.hapo-ml210_template_attribute_line_standard_build').product_template_value_ids[0],
+                 'noupdate': True,
+                 }]"/>
+  </function>
+
+</odoo>

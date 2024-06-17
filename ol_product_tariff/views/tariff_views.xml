@@ -1,0 +1,49 @@
+<odoo>
+
+    <!-- Tree View -->
+    <record id="view_tarif_code_tree" model="ir.ui.view">
+        <field name="name">helpdesk.rma.view.tree</field>
+        <field name="model">tariff.code</field>
+        <field name="arch" type="xml">
+            <tree string="Tariff Code">
+                <field name="type_id" />
+                <field name="name" />
+                <field name="code" />
+                <field name="schedule_b" />
+                <field name="company_id" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record model="ir.actions.act_window" id="product_tariff_code">
+        <field name="name">Tariff Codes</field>
+        <field name="res_model">tariff.code</field>
+        <field name="view_id" ref="view_tarif_code_tree" />
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record model="ir.actions.act_window" id="product_tariff_code_type">
+        <field name="name">Tariff Code Types</field>
+        <field name="res_model">tariff.code.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menus -->
+    <menuitem
+        id="menu_product_tariff_code"
+        name="Tariff Codes"
+        action="product_tariff_code"
+        parent="sale.prod_config_main"
+        sequence="30"
+        groups="sales_team.group_sale_manager"
+    />
+    <menuitem
+        id="menu_product_tariff_code_type"
+        name="Tariff Code Types"
+        action="product_tariff_code_type"
+        parent="sale.prod_config_main"
+        sequence="31"
+        groups="sales_team.group_sale_manager"
+    />
+
+</odoo>
