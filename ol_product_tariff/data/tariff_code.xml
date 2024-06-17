@@ -1,0 +1,414 @@
+<odoo noupdate="1">
+
+    <!-- Tariff Code Types -->
+    <record id="hts_code" model="tariff.code.type">
+        <field name="name">hts</field>
+        <field name="label">HTS</field>
+    </record>
+
+    <record id="taric_code" model="tariff.code.type">
+        <field name="name">taric</field>
+        <field name="label">Taric</field>
+    </record>
+
+    <!-- US -->
+    <record id="built_system_hts" model="tariff.code">
+        <field name="name">Built Systems</field>
+        <field name="company_id" search="[('company_user_id', '=', 'inc')]" />
+        <field name="short_description">Fully assembled system, ready for use upon arrival; Includes fully assembled Panel PCs.</field>
+        <field name="description">Automatic data processing machines and units thereof; Other automatic data processing machines:8471.41.01 Comprising in the same housing at least a central processing unit and an input and output unit, whether or not combined,other</field>
+        <field name="schedule_b">8471.50.0150</field>
+        <field name="type_id" ref="hts_code" />
+        <field name="code">8471.50.0150</field>
+    </record>
+    <!-- EU -->
+    <record id="built_system_taric" model="tariff.code">
+        <field name="name">Built Systems</field>
+        <field name="company_id" search="[('company_user_id', '=', 'bv')]" />
+        <field name="short_description">Fully assembled system, ready for use upon arrival; Includes fully assembled Panel PCs.</field>
+        <field name="description">Automatic data processing machines and units thereof; Other automatic data processing machines:8471.41.01 Comprising in the same housing at least a central processing unit and an input and output unit, whether or not combined,other</field>
+        <field name="schedule_b">8471.50.0150</field>
+        <field name="type_id" ref="taric_code" />
+        <field name="code">8471.50.0150</field>
+    </record>
+
+    <!-- US -->
+    <record id="unit_components_hts" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'inc')]" />
+        <field name="name">Unit Components: Integral component to data processing machine</field>
+        <field name="short_description">Motherboard (mainboard), Barebones (including Panel PC barebones), Developer's Kits, Riser Cards, Timers, Add-on Modules</field>
+        <field name="description">Parts and accessories (other than covers, carrying cases and the like) suitable for use solely or principally with machines of headings 8469 to 8472:Parts and Accessories of the machines of heading 8471:</field>
+        <field name="schedule_b">8473.30.0002</field>
+        <field name="type_id" ref="hts_code" />
+        <field name="code">8471.30.1180</field>
+    </record>
+    <!-- EU -->
+    <record id="unit_components_taric" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'bv')]" />
+        <field name="name">Unit Components: Integral component to data processing machine</field>
+        <field name="short_description">Motherboard (mainboard), Barebones (including Panel PC barebones), Developer's Kits, Riser Cards, Timers, Add-on Modules</field>
+        <field name="description">Parts and accessories (other than covers, carrying cases and the like) suitable for use solely or principally with machines of headings 8469 to 8472:Parts and Accessories of the machines of heading 8471:</field>
+        <field name="schedule_b">8473.30.0002</field>
+        <field name="type_id" ref="taric_code" />
+        <field name="code">8471.30.1180</field>
+    </record>
+
+    <!-- US -->
+    <record id="unit_accessories_hts" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'inc')]" />
+        <field name="name">Unit Accessories: Non-integral component to data processing machine</field>
+        <field name="short_description">Backplates, Cases(with or without power supply), Heat Pipes, Heat Sinks, Case Accessories, Brackets, Fans, Antennas</field>
+        <field name="description">Parts and accessories (other than covers, carrying cases and the like) suitable for use solely or principally with machines of headings 8469 to 8472:Parts and Accessories of the machines of heading 8471:</field>
+        <field name="schedule_b">8473.30.0002</field>
+        <field name="type_id" ref="hts_code" />
+        <field name="code">8473.30.5100</field>
+    </record>
+    <!-- EU -->
+    <record id="unit_accessories_taric" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'bv')]" />
+        <field name="name">Unit Accessories: Non-integral component to data processing machine</field>
+        <field name="short_description">Backplates, Cases(with or without power supply), Heat Pipes, Heat Sinks, Case Accessories, Brackets, Fans, Antennas</field>
+        <field name="description">Parts and accessories (other than covers, carrying cases and the like) suitable for use solely or principally with machines of headings 8469 to 8472:Parts and Accessories of the machines of heading 8471:</field>
+        <field name="schedule_b">8473.30.0002</field>
+        <field name="type_id" ref="taric_code" />
+        <field name="code">8473.30.5100</field>
+    </record>
+
+
+    <!-- US -->
+    <record id="hard_drives_hts" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'inc')]" />
+        <field name="name">Hard Drives</field>
+        <field name="short_description">Excludes external devices (Note: We currently do not sell external hard drives)</field>
+        <field name="description">Automatic data processing machines and units thereof; magnetic or optical readers ... Storage units: Magnetic disk drive units: Other: Not assembled in cabinets, and without attached external power supply: Hard magnetic disk drive units</field>
+        <field name="schedule_b">8471.70.4065</field>
+        <field name="type_id" ref="hts_code" />
+        <field name="code">8471.70.4065</field>
+    </record>
+    <!-- EU -->
+    <record id="hard_drives_taric" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'bv')]" />
+        <field name="name">Hard Drives</field>
+        <field name="short_description">Excludes external devices (Note: We currently do not sell external hard drives)</field>
+        <field name="description">Automatic data processing machines and units thereof; magnetic or optical readers ... Storage units: Magnetic disk drive units: Other: Not assembled in cabinets, and without attached external power supply: Hard magnetic disk drive units</field>
+        <field name="schedule_b">8471.70.4065</field>
+        <field name="type_id" ref="taric_code" />
+        <field name="code">8471.70.4065</field>
+    </record>
+    <!-- US -->
+    <record id="processors_hts" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'inc')]" />
+        <field name="name">Processors</field>
+        <field name="short_description">CPUs/Processors</field>
+        <field name="description">Electronic integrated circuits; parts thereof: Processors and controllers, whether or not combined with memories, converters, logic circuits, amplifiers, clock and timing circuits, or other circuits.</field>
+        <field name="schedule_b">8542.31.0000</field>
+        <field name="type_id" ref="hts_code" />
+        <field name="code">8542.31.0000</field>
+    </record>
+    <!-- EU -->
+    <record id="processors_taric" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'bv')]" />
+        <field name="name">Processors</field>
+        <field name="short_description">CPUs/Processors</field>
+        <field name="description">Electronic integrated circuits; parts thereof: Processors and controllers, whether or not combined with memories, converters, logic circuits, amplifiers, clock and timing circuits, or other circuits.</field>
+        <field name="schedule_b">8542.31.0000</field>
+        <field name="type_id" ref="taric_code" />
+        <field name="code">8542.31.0000</field>
+    </record>
+
+    <!-- US -->
+    <record id="cd_dvd_drives_hts" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'inc')]" />
+        <field name="name">CD/DVD Drives</field>
+        <field name="short_description">Excludes portable devices (Note: We currently do not sell portable devices)</field>
+        <field name="description">Storage units: other units of automatic data processing machines: other: Unites suitable for physical incorporation into automatic data processing machines.</field>
+        <field name="schedule_b">8471.80.4000</field>
+        <field name="type_id" ref="hts_code" />
+        <field name="code">8471.80.4000</field>
+    </record>
+    <!-- EU -->
+    <record id="cd_dvd_drives_taric" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'bv')]" />
+        <field name="name">CD/DVD Drives</field>
+        <field name="short_description">Excludes portable devices (Note: We currently do not sell portable devices)</field>
+        <field name="description">Storage units: other units of automatic data processing machines: other: Unites suitable for physical incorporation into automatic data processing machines.</field>
+        <field name="schedule_b">8471.80.4000</field>
+        <field name="type_id" ref="taric_code" />
+        <field name="code">8471.80.4000</field>
+    </record>
+
+    <!-- US -->
+    <record id="memory_hts" model="tariff.code">
+        <field name="name">Memory Modules</field>
+        <field name="company_id" search="[('company_user_id', '=', 'inc')]" />
+        <field name="short_description">DIMM, SODIMM, SDRAM, DDR, DDR2</field>
+        <field name="description">Parts and accessories (other than covers, carrying cases and the like) suitable for use solely or principally with machines of headings 8469 to 8472:Parts and Accessories of the machines of heading 8471:</field>
+        <field name="schedule_b">8473.30.0002</field>
+        <field name="type_id" ref="hts_code" />
+        <field name="code">8473.30.1140</field>
+    </record>
+    <!-- EU -->
+    <record id="memory_taric" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'bv')]" />
+        <field name="name">Memory Modules</field>
+        <field name="short_description">DIMM, SODIMM, SDRAM, DDR, DDR2</field>
+        <field name="description">Parts and accessories (other than covers, carrying cases and the like) suitable for use solely or principally with machines of headings 8469 to 8472:Parts and Accessories of the machines of heading 8471:</field>
+        <field name="schedule_b">8473.30.0002</field>
+        <field name="type_id" ref="taric_code" />
+        <field name="code">8473.30.1140</field>
+    </record>
+
+    <!-- US -->
+    <record id="flash_memory_hts" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'inc')]" />
+        <field name="name">Flash Memory</field>
+        <field name="short_description">CF Cards, Flash Modules, Flash Drives, SSD's</field>
+        <field name="description">Discs, tapes, solid-state non-volatile storage devices, "smart cards" and other media for the recording of sound or of other phenomena, whether or not recorded, including matrices and masters for the production of discs, but excluding products of Charter 37: Semiconductor media: Solid-state non-volatile storage devices</field>
+        <field name="schedule_b">8523.51.0000</field>
+        <field name="type_id" ref="hts_code" />
+        <field name="code">8523.51.0000</field>
+    </record>
+    <!-- EU -->
+    <record id="flash_memory_taric" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'bv')]" />
+        <field name="name">Flash Memory</field>
+        <field name="short_description">CF Cards, Flash Modules, Flash Drives, SSD's</field>
+        <field name="description">Discs, tapes, solid-state non-volatile storage devices, "smart cards" and other media for the recording of sound or of other phenomena, whether or not recorded, including matrices and masters for the production of discs, but excluding products of Charter 37: Semiconductor media: Solid-state non-volatile storage devices</field>
+        <field name="schedule_b">8523.51.0000</field>
+        <field name="type_id" ref="taric_code" />
+        <field name="code">8523.51.0000</field>
+    </record>
+
+    <!-- US -->
+    <record id="lcd_display_lt13_hts" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'inc')]" />
+        <field name="name">LCD Displays (up to 13.5")</field>
+        <field name="short_description">Monitor Only; Up to 13.5" diagonal</field>
+        <field name="description">Monitors and projectors, not incorporating television reception apparatus; reception apparatus for television, etc. - (con.):Other monitors:Of a kind solely or principally used in an automatic data processing system of heading 8471</field>
+        <field name="schedule_b">8528.51.0000</field>
+        <field name="type_id" ref="hts_code" />
+        <field name="code">8528.59.2500</field>
+    </record>
+
+    <!-- EU -->
+    <record id="lcd_display_lt13_taric" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'bv')]" />
+        <field name="name">LCD Displays (up to 13.5")</field>
+        <field name="short_description">Monitor Only; Up to 13.5" diagonal</field>
+        <field name="description">Monitors and projectors, not incorporating television reception apparatus; reception apparatus for television, etc. - (con.):Other monitors:Of a kind solely or principally used in an automatic data processing system of heading 8471</field>
+        <field name="schedule_b">8528.51.0000</field>
+        <field name="type_id" ref="taric_code" />
+        <field name="code">8528.59.2500</field>
+    </record>
+
+    <!-- US -->
+    <record id="lcd_display_gt13_hts" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'inc')]" />
+        <field name="name">LCD Displays (greater than 13.5")</field>
+        <field name="short_description">Monitor Only; Greater than 13.5" diagonal</field>
+        <field name="description">Monitors and projectors, not incorporating television reception apparatus; reception apparatus for television, etc. - (con.):Other monitors:Of a kind solely or principally used in an automatic data processing system of heading 8471</field>
+        <field name="schedule_b">8528.51.0000</field>
+        <field name="type_id" ref="hts_code" />
+        <field name="code">8528.59.3350</field>
+    </record>
+    <!-- EU -->
+    <record id="lcd_display_gt13_taric" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'bv')]" />
+        <field name="name">LCD Displays (greater than 13.5")</field>
+        <field name="short_description">Monitor Only; Greater than 13.5" diagonal</field>
+        <field name="description">Monitors and projectors, not incorporating television reception apparatus; reception apparatus for television, etc. - (con.):Other monitors:Of a kind solely or principally used in an automatic data processing system of heading 8471</field>
+        <field name="schedule_b">8528.51.0000</field>
+        <field name="type_id" ref="taric_code" />
+        <field name="code">8528.59.3350</field>
+    </record>
+
+    <!-- US -->
+    <record id="power_supply_50_150_hts" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'inc')]" />
+        <field name="name">Internal power supplies (50-150W) </field>
+        <field name="short_description">DC-DC boards, direct plug PSU 50-150W</field>
+        <field name="description">Power supplies for automatic data processing machines or units thereof of heading 8471: Suitable for physical incorporation into automatic data processing machines or units thereof of Heading 8471: With a power output exceeding 50W but not exceeding 150W</field>
+        <field name="schedule_b">8504.40.6007</field>
+        <field name="type_id" ref="hts_code" />
+        <field name="code">8504.40.6007</field>
+    </record>
+    <!-- EU -->
+    <record id="power_supply_50_150_taric" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'bv')]" />
+        <field name="name">Internal power supplies (50-150W) </field>
+        <field name="short_description">DC-DC boards, direct plug PSU 50-150W</field>
+        <field name="description">Power supplies for automatic data processing machines or units thereof of heading 8471: Suitable for physical incorporation into automatic data processing machines or units thereof of Heading 8471: With a power output exceeding 50W but not exceeding 150W</field>
+        <field name="schedule_b">8504.40.6007</field>
+        <field name="type_id" ref="taric_code" />
+        <field name="code">8504.40.6007</field>
+    </record>
+
+    <!-- US -->
+    <record id="power_supply_150_500_hts" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'inc')]" />
+        <field name="name">Internal power supplies (150-500W) </field>
+        <field name="short_description">DC-DC boards, direct plug PSU 150-500W</field>
+        <field name="description">Power supplies for automatic data processing machines or units thereof of heading 8471: Suitable for physical incorporation into automatic data processing machines or units thereof of Heading 8471: With a power output exceeding 150W but not exceeding 500W</field>
+        <field name="schedule_b">8504.40.6012</field>
+        <field name="type_id" ref="hts_code" />
+        <field name="code">8504.40.6012</field>
+    </record>
+    <!-- EU -->
+    <record id="power_supply_150_500_taric" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'bv')]" />
+        <field name="name">Internal power supplies (150-500W) </field>
+        <field name="short_description">DC-DC boards, direct plug PSU 150-500W</field>
+        <field name="description">Power supplies for automatic data processing machines or units thereof of heading 8471: Suitable for physical incorporation into automatic data processing machines or units thereof of Heading 8471: With a power output exceeding 150W but not exceeding 500W</field>
+        <field name="schedule_b">8504.40.6012</field>
+        <field name="type_id" ref="taric_code" />
+        <field name="code">8504.40.6012</field>
+    </record>
+
+    <!-- US -->
+    <record id="ac_adapter_50_150_hts" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'inc')]" />
+        <field name="name">AC adapters between 50-150W</field>
+        <field name="short_description">AC adapters between 50-150W</field>
+        <field name="description">Rectifiers ... power supplies: with a power output exceeding 50 W but not exceeding 150 W</field>
+        <field name="schedule_b">8504.40.9520</field>
+        <field name="type_id" ref="hts_code" />
+        <field name="code">8504.40.9520</field>
+    </record>
+    <!-- EU -->
+    <record id="ac_adapter_50_150_taric" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'bv')]" />
+        <field name="name">AC adapters between 50-150W</field>
+        <field name="short_description">AC adapters between 50-150W</field>
+        <field name="description">Rectifiers ... power supplies: with a power output exceeding 50 W but not exceeding 150 W</field>
+        <field name="schedule_b">8504.40.9520</field>
+        <field name="type_id" ref="taric_code" />
+        <field name="code">8504.40.9520</field>
+    </record>
+
+    <!-- US -->
+    <record id="cables_hts" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'inc')]" />
+        <field name="name">Cables</field>
+        <field name="short_description">Audio/Video/Data/Power Cables with or without connectors (not including networking cables)</field>
+        <field name="description">Insulated wire, cable and other insulated electric conductors, whether or not fitted with connectors; optical fiber cables, made up of individually sheathed fibers, whether or not assembled with electric conductors or fitted with connectors: Other electric conductors, for a voltage not exceeding 1,000 V:Fitted with connectors</field>
+        <field name="schedule_b">8544.42.0000</field>
+        <field name="type_id" ref="hts_code" />
+        <field name="code">8544.42.9000</field>
+    </record>
+    <!-- EU -->
+    <record id="cables_taric" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'bv')]" />
+        <field name="name">Cables</field>
+        <field name="short_description">Audio/Video/Data/Power Cables with or without connectors (not including networking cables)</field>
+        <field name="description">Insulated wire, cable and other insulated electric conductors, whether or not fitted with connectors; optical fiber cables, made up of individually sheathed fibers, whether or not assembled with electric conductors or fitted with connectors: Other electric conductors, for a voltage not exceeding 1,000 V:Fitted with connectors</field>
+        <field name="schedule_b">8544.42.0000</field>
+        <field name="type_id" ref="taric_code" />
+        <field name="code">8544.42.9000</field>
+    </record>
+
+    <!-- US -->
+    <record id="keyboards_hts" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'inc')]" />
+        <field name="name">Keyboards</field>
+        <field name="short_description">Keyboard, Mouse</field>
+        <field name="description">Input or output units, whether or not containing storage units in the same housing: other: keyboards</field>
+        <field name="schedule_b">8471.60.2000</field>
+        <field name="type_id" ref="hts_code" />
+        <field name="code">8471.60.2000</field>
+    </record>
+    <!-- EU -->
+    <record id="keyboards_taric" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'bv')]" />
+        <field name="name">Keyboards</field>
+        <field name="short_description">Keyboard, Mouse</field>
+        <field name="description">Input or output units, whether or not containing storage units in the same housing: other: keyboards</field>
+        <field name="schedule_b">8471.60.2000</field>
+        <field name="type_id" ref="taric_code" />
+        <field name="code">8471.60.2000</field>
+    </record>
+
+    <!-- US -->
+    <record id="networking_hts" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'inc')]" />
+        <field name="name">Networking</field>
+        <field name="short_description">Network Adapters and Interface Cards </field>
+        <field name="description">Automatic data processing machines and units thereof;Other units of automatic data processing machines: Other:Units suitable for physical incorporation into automatic data processing machines.</field>
+        <field name="schedule_b">8471.80.4000</field>
+        <field name="type_id" ref="hts_code" />
+        <field name="code">8471.80.4000</field>
+    </record>
+    <!-- EU -->
+    <record id="networking_taric" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'bv')]" />
+        <field name="name">Networking</field>
+        <field name="short_description">Network Adapters and Interface Cards </field>
+        <field name="description">Automatic data processing machines and units thereof;Other units of automatic data processing machines: Other:Units suitable for physical incorporation into automatic data processing machines.</field>
+        <field name="schedule_b">8471.80.4000</field>
+        <field name="type_id" ref="taric_code" />
+        <field name="code">8471.80.4000</field>
+    </record>
+
+    <!-- US -->
+    <record id="software_hts" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'inc')]" />
+        <field name="name">Software</field>
+        <field name="short_description">Prepackaged software, sold at retail</field>
+        <field name="description">Discs, tapes, solid-state non-volatile storage devices,..optical media: for reproducing phenomena other than sound or image prepackages software for automatic data processing machines, of a kind sold at retail.</field>
+        <field name="schedule_b">8523.40.2010</field>
+        <field name="type_id" ref="hts_code" />
+        <field name="code">8523.40.2010</field>
+    </record>
+    <!-- EU -->
+    <record id="software_taric" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'bv')]" />
+        <field name="name">Software</field>
+        <field name="short_description">Prepackaged software, sold at retail</field>
+        <field name="description">Discs, tapes, solid-state non-volatile storage devices,..optical media: for reproducing phenomena other than sound or image prepackages software for automatic data processing machines, of a kind sold at retail.</field>
+        <field name="schedule_b">8523.40.2010</field>
+        <field name="type_id" ref="taric_code" />
+        <field name="code">8523.40.2010</field>
+    </record>
+
+    <!-- US -->
+    <record id="ac_adapter_50_hts" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'inc')]" />
+        <field name="name">AC adapters under 50W</field>
+        <field name="short_description">AC adapters under 50W</field>
+        <field name="description">Rectifiers...power supplies:With a power output not exceeding 50 W</field>
+        <field name="schedule_b">8504.40.9510</field>
+        <field name="type_id" ref="hts_code" />
+        <field name="code">8504.40.9510</field>
+    </record>
+    <!-- EU -->
+    <record id="ac_adapter_50_taric" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'bv')]" />
+        <field name="name">AC adapters under 50W</field>
+        <field name="short_description">AC adapters under 50W</field>
+        <field name="description">Rectifiers...power supplies:With a power output not exceeding 50 W</field>
+        <field name="schedule_b">8504.40.9510</field>
+        <field name="type_id" ref="taric_code" />
+        <field name="code">8504.40.9510</field>
+    </record>
+
+    <!-- US -->
+    <record id="ac_adapter_150_500_hts" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'inc')]" />
+        <field name="name">AC adapters between 150-500W</field>
+        <field name="short_description">AC adapters between 150-500W</field>
+        <field name="description">Rectifiers ... power supplies: with a power output exceeding 150 W but not exceeding 500 W</field>
+        <field name="schedule_b">8504.40.9530</field>
+        <field name="type_id" ref="hts_code" />
+        <field name="code">8504.40.9530</field>
+    </record>
+    <!-- EU -->
+    <record id="ac_adapter_150_500_taric" model="tariff.code">
+        <field name="company_id" search="[('company_user_id', '=', 'bv')]" />
+        <field name="name">AC adapters between 150-500W</field>
+        <field name="short_description">AC adapters between 150-500W</field>
+        <field name="description">Rectifiers ... power supplies: with a power output exceeding 150 W but not exceeding 500 W</field>
+        <field name="schedule_b">8504.40.9530</field>
+        <field name="type_id" ref="taric_code" />
+        <field name="code">8504.40.9530</field>
+    </record>
+
+</odoo>

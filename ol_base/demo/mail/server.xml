@@ -1,0 +1,13 @@
+<odoo>
+
+    <!-- Default docker_dev mail server -->
+    <record id="mailhog" model="ir.mail_server">
+        <field name="name">MailHog</field>
+        <field name="sequence">1</field>
+        <field name="smtp_debug">False</field>
+        <field name="smtp_encryption">none</field>
+        <field name="smtp_host">mail</field>
+        <field name="smtp_port">1025</field>
+    </record>
+
+</odoo>

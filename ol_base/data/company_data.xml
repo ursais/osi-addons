@@ -1,0 +1,73 @@
+<odoo>
+    <!-- Company specific admins -->
+    <!-- US Admin -->
+    <record id="us_company_user" model="res.users">
+        <field name="name">Admin, Inc</field>
+        <field name="login">inc</field>
+        <field name="email">inc.test@onlogic.com</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="company_ids" eval="[(6, 0, [ref('base.main_company')])]" />
+    </record>
+
+    <!-- EU Admin (company fields will be added later) -->
+    <record id="eu_company_user" model="res.users">
+        <field name="name">Administrator, Bv.</field>
+        <field name="login">bv</field>
+      <field name="email">bv.test@onlogic.com</field>
+    </record>
+
+    <!-- Rename base company to OnLogic USA  -->
+    <record id="base.main_company" model="res.company">
+        <field name="name">OnLogic US</field>
+        <field name="currency_id" ref="base.USD" />
+        <field name="street">35 Thompson St</field>
+        <field name="city">South Burlington</field>
+        <field name="zip">05403</field>
+        <field name="phone">8028612300</field>
+        <field name="email">info@onlogic.com</field>
+        <field name="website">https://www.onlogic.com</field>
+        <field name="company_user_id" ref="ol_base.us_company_user" />
+        <field name="country_id" ref="base.us" />
+        <field name="state_id" ref="base.state_us_46" />
+    </record>
+    <!-- Create the OnLogic EU Company -->
+    <record id="onlogic_eu" model="res.company">
+        <field name="name">OnLogic EU</field>
+        <field name="currency_id" ref="base.EUR" />
+        <field name="street">De Boedingen 39</field>
+        <field name="city">Oosterhout</field>
+        <field name="zip">4906 BA</field>
+        <field name="phone">8028612300</field>
+        <field name="email">info.eu@onlogic.com</field>
+        <field name="website">https://www.onlogic.com/eu-en/</field>
+        <field name="company_user_id" ref="ol_base.eu_company_user" />
+        <field name="country_id" ref="base.nl" />
+    </record>
+
+    <!-- Update company fields for EU admin-->
+    <record id="ol_base.eu_company_user" model="res.users">
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="company_ids" eval="[(6, 0, [ref('ol_base.onlogic_eu')])]" />
+    </record>
+
+    <!-- Add the company users to Default Groups -->
+    <!-- Base Settings -->
+    <record id="base.group_system" model="res.groups">
+        <field name="users" eval="[(4, ref('ol_base.us_company_user'), 0),(4, ref('ol_base.eu_company_user'), 0)]" />
+    </record>
+    <record id="stock.group_production_lot" model="res.groups">
+        <field name="users" eval="[(4, ref('ol_base.us_company_user'), 0),(4, ref('ol_base.eu_company_user'), 0)]" />
+    </record>
+    <record id="stock.group_stock_multi_locations" model="res.groups">
+        <field name="users" eval="[(4, ref('ol_base.us_company_user'), 0),(4, ref('ol_base.eu_company_user'), 0)]" />
+    </record>
+    <!-- Give admin multi-company -->
+    <record id="base.group_multi_company" model="res.groups">
+        <field name="users" eval="[(4, ref('base.user_admin'), 0)]" />
+    </record>
+    <!-- Give admin EU company -->
+    <record id="base.user_admin" model="res.users">
+        <field name="company_ids" eval="[(4, ref('ol_base.onlogic_eu'), 0)]" />
+    </record>
+
+</odoo>

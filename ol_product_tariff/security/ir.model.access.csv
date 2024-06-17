@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_tariff_code,access_tariff_code,model_tariff_code,sales_team.group_sale_salesman,1,0,0,0
+access_tariff_code_type,access_tariff_code_type,model_tariff_code_type,sales_team.group_sale_salesman,1,0,0,0
+access_tariff_code_manager,access_tariff_code_manager,model_tariff_code,sales_team.group_sale_manager,1,1,1,1
+access_tariff_code_type_manager,access_tariff_code_type_manager,model_tariff_code_type,sales_team.group_sale_manager,1,1,1,1

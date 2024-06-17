@@ -1,0 +1,25 @@
+<odoo noupdate="1">
+
+    <!--  Demo Crm Lead-->
+    <record id="crm_lead_powergen" model="crm.lead">
+        <field name="create_date" eval="DateTime.now() - relativedelta(days=8)"/>
+        <field name="type">lead</field>
+        <field name="partner_name">Hardcraft Industries, Inc.</field>
+        <field name="name">PowerGen 2018: Hardcraft Industries, Inc. (Tier1)</field>
+        <field name="email_from">demo@hardcraft-demo.com</field>
+        <field name="mobile">257.563.7401</field>
+        <field name="phone">257.563.7401</field>
+        <field name="street">711-2880 Nulla St.</field>
+        <field name="function">ACCOUNT EXECUTIVE</field>
+        <field name="country_id" ref="base.us"/>
+        <field name="city">Mankato</field>
+        <field name="zip">96522</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="user_id" ref="ol_base.sales_user_us"/>
+        <field name="date_open">2019-01-02 19:51:17</field>
+        <field name="stage_id" ref="crm.stage_lead1"/>
+        <field name="medium_id" ref="utm.utm_medium_email"/>
+        <field name="source_id" ref="utm.utm_source_mailing"/>
+    </record>
+
+</odoo>

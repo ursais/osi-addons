@@ -1,0 +1,402 @@
+<odoo>
+
+    <record id="ant-a-100_us" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.ant-a-100" />
+        <field name="product_min_qty">220</field>
+        <field name="product_max_qty">320</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="lead_days">84</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('base.main_company'))]" />
+        <field name="location_id" ref="stock.stock_location_stock" />
+    </record>
+    <record id="ant-a-100_eu" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.ant-a-100" />
+        <field name="product_min_qty">220</field>
+        <field name="product_max_qty">320</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="lead_days">84</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('ol_base.onlogic_eu'))]" />
+        <field name="location_id" search="[('company_id', '=', ref('ol_base.onlogic_eu')), ('name', '=', 'Stock')]" />
+    </record>
+
+    <record id="ct100_us" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.ct100" />
+        <field name="product_min_qty">310</field>
+        <field name="product_max_qty">410</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="lead_days">77</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('base.main_company'))]" />
+        <field name="location_id" ref="stock.stock_location_stock" />
+    </record>
+    <record id="ct100_eu" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.ct100" />
+        <field name="product_min_qty">310</field>
+        <field name="product_max_qty">410</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="lead_days">77</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('ol_base.onlogic_eu'))]" />
+        <field name="location_id" search="[('company_id', '=', ref('ol_base.onlogic_eu')), ('name', '=', 'Stock')]" />
+    </record>
+
+    <record id="gst120a24-cin-k_us" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.gst120a24_cin_k" />
+        <field name="product_min_qty">40</field>
+        <field name="product_max_qty">190</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="lead_days">77</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('base.main_company'))]" />
+        <field name="location_id" ref="stock.stock_location_stock" />
+    </record>
+    <record id="gst120a24-cin-k_eu" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.gst120a24_cin_k" />
+        <field name="product_min_qty">40</field>
+        <field name="product_max_qty">190</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="lead_days">77</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('ol_base.onlogic_eu'))]" />
+        <field name="location_id" search="[('company_id', '=', ref('ol_base.onlogic_eu')), ('name', '=', 'Stock')]" />
+    </record>
+
+    <record id="imb-155-p_us" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.imb-155-p" />
+        <field name="product_min_qty">60</field>
+        <field name="product_max_qty">110</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="lead_days">84</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('base.main_company'))]" />
+        <field name="location_id" ref="stock.stock_location_stock" />
+    </record>
+    <record id="imb-155-p_eu" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.imb-155-p" />
+        <field name="product_min_qty">60</field>
+        <field name="product_max_qty">110</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="lead_days">84</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('ol_base.onlogic_eu'))]" />
+        <field name="location_id" search="[('company_id', '=', ref('ol_base.onlogic_eu')), ('name', '=', 'Stock')]" />
+    </record>
+
+    <record id="k300-e3930-4-p_us" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.e3930_p" />
+        <field name="product_min_qty">280</field>
+        <field name="product_max_qty">580</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="lead_days">70</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('base.main_company'))]" />
+        <field name="location_id" ref="stock.stock_location_stock" />
+    </record>
+    <record id="k300-e3930-4-p_eu" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.e3930_p" />
+        <field name="product_min_qty">280</field>
+        <field name="product_max_qty">580</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="lead_days">70</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('ol_base.onlogic_eu'))]" />
+        <field name="location_id" search="[('company_id', '=', ref('ol_base.onlogic_eu')), ('name', '=', 'Stock')]" />
+    </record>
+
+    <record id="k300-e3950-8-p_us" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.e3950_p" />
+        <field name="product_min_qty">120</field>
+        <field name="product_max_qty">270</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="lead_days">35</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('base.main_company'))]" />
+        <field name="location_id" ref="stock.stock_location_stock" />
+    </record>
+    <record id="k300-e3950-8-p_eu" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.e3950_p" />
+        <field name="product_min_qty">120</field>
+        <field name="product_max_qty">270</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="lead_days">35</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('ol_base.onlogic_eu'))]" />
+        <field name="location_id" search="[('company_id', '=', ref('ol_base.onlogic_eu')), ('name', '=', 'Stock')]" />
+    </record>
+
+    <record id="kwa-dbv0-8_us" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.kwa-dbv0-8" />
+        <field name="product_min_qty">390</field>
+        <field name="product_max_qty">490</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="lead_days">14</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('base.main_company'))]" />
+        <field name="location_id" ref="stock.stock_location_stock" />
+    </record>
+    <record id="kwa-dbv0-8_eu" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.kwa-dbv0-8" />
+        <field name="product_min_qty">390</field>
+        <field name="product_max_qty">490</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="lead_days">14</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('ol_base.onlogic_eu'))]" />
+        <field name="location_id" search="[('company_id', '=', ref('ol_base.onlogic_eu')), ('name', '=', 'Stock')]" />
+    </record>
+
+    <record id="mc500g_us" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.mc500g" />
+        <field name="product_min_qty">100</field>
+        <field name="product_max_qty">550</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="lead_days">7</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('base.main_company'))]" />
+        <field name="location_id" ref="stock.stock_location_stock" />
+    </record>
+    <record id="mc500g_eu" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.mc500g" />
+        <field name="product_min_qty">100</field>
+        <field name="product_max_qty">550</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="lead_days">7</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('ol_base.onlogic_eu'))]" />
+        <field name="location_id" search="[('company_id', '=', ref('ol_base.onlogic_eu')), ('name', '=', 'Stock')]" />
+    </record>
+
+    <record id="ml210g_us" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.ml210g_case" />
+        <field name="product_min_qty">230</field>
+        <field name="product_max_qty">330</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="lead_days">84</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('base.main_company'))]" />
+        <field name="location_id" ref="stock.stock_location_stock" />
+    </record>
+    <record id="ml210g_eu" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.ml210g_case" />
+        <field name="product_min_qty">230</field>
+        <field name="product_max_qty">330</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="lead_days">84</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('ol_base.onlogic_eu'))]" />
+        <field name="location_id" search="[('company_id', '=', ref('ol_base.onlogic_eu')), ('name', '=', 'Stock')]" />
+    </record>
+
+    <record id="nwk100-01-s_us" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.nwk100-01-s" />
+        <field name="product_min_qty">210</field>
+        <field name="product_max_qty">660</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="lead_days">84</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('base.main_company'))]" />
+        <field name="location_id" ref="stock.stock_location_stock" />
+    </record>
+    <record id="nwk100-01-s_eu" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.nwk100-01-s" />
+        <field name="product_min_qty">210</field>
+        <field name="product_max_qty">660</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="lead_days">84</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('ol_base.onlogic_eu'))]" />
+        <field name="location_id" search="[('company_id', '=', ref('ol_base.onlogic_eu')), ('name', '=', 'Stock')]" />
+    </record>
+
+    <record id="pw-12v5a-l6-k_us" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.pw-12v5a-l6-k" />
+        <field name="product_min_qty">180</field>
+        <field name="product_max_qty">380</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="lead_days">49</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('base.main_company'))]" />
+        <field name="location_id" ref="stock.stock_location_stock" />
+    </record>
+    <record id="pw-12v5a-l6-k_eu" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.pw-12v5a-l6-k" />
+        <field name="product_min_qty">180</field>
+        <field name="product_max_qty">380</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="lead_days">49</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('ol_base.onlogic_eu'))]" />
+        <field name="location_id" search="[('company_id', '=', ref('ol_base.onlogic_eu')), ('name', '=', 'Stock')]" />
+    </record>
+
+    <record id="ts1gmsk64w6h_us" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.ts1gsk64w6h" />
+        <field name="product_min_qty">150</field>
+        <field name="product_max_qty">450</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="lead_days">42</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('base.main_company'))]" />
+        <field name="location_id" ref="stock.stock_location_stock" />
+    </record>
+    <record id="ts1gmsk64w6h_eu" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.ts1gsk64w6h" />
+        <field name="product_min_qty">150</field>
+        <field name="product_max_qty">450</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="lead_days">42</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('ol_base.onlogic_eu'))]" />
+        <field name="location_id" search="[('company_id', '=', ref('ol_base.onlogic_eu')), ('name', '=', 'Stock')]" />
+    </record>
+
+    <record id="ts256msk64w6x_us" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.ts256msk64w6x" />
+        <field name="product_min_qty">360</field>
+        <field name="product_max_qty">510</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="lead_days">49</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('base.main_company'))]" />
+        <field name="location_id" ref="stock.stock_location_stock" />
+    </record>
+    <record id="ts256msk64w6x_eu" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.ts256msk64w6x" />
+        <field name="product_min_qty">360</field>
+        <field name="product_max_qty">510</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="lead_days">49</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('ol_base.onlogic_eu'))]" />
+        <field name="location_id" search="[('company_id', '=', ref('ol_base.onlogic_eu')), ('name', '=', 'Stock')]" />
+    </record>
+
+    <record id="ts32gmsa370_us" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.ts32gmsa370" />
+        <field name="product_min_qty">160</field>
+        <field name="product_max_qty">260</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="lead_days">63</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('base.main_company'))]" />
+        <field name="location_id" ref="stock.stock_location_stock" />
+    </record>
+    <record id="ts32gmsa370_eu" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.ts32gmsa370" />
+        <field name="product_min_qty">160</field>
+        <field name="product_max_qty">260</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="lead_days">63</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('ol_base.onlogic_eu'))]" />
+        <field name="location_id" search="[('company_id', '=', ref('ol_base.onlogic_eu')), ('name', '=', 'Stock')]" />
+    </record>
+
+    <record id="ts32gmts800_us" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.ts32gmts800" />
+        <field name="product_min_qty">20</field>
+        <field name="product_max_qty">220</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="lead_days">56</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('base.main_company'))]" />
+        <field name="location_id" ref="stock.stock_location_stock" />
+    </record>
+    <record id="ts32gmts800_eu" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.ts32gmts800" />
+        <field name="product_min_qty">20</field>
+        <field name="product_max_qty">220</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="lead_days">56</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('ol_base.onlogic_eu'))]" />
+        <field name="location_id" search="[('company_id', '=', ref('ol_base.onlogic_eu')), ('name', '=', 'Stock')]" />
+    </record>
+
+    <record id="ts512msk64w6h_us" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.ts512msk64w6h" />
+        <field name="product_min_qty">480</field>
+        <field name="product_max_qty">680</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="lead_days">28</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('base.main_company'))]" />
+        <field name="location_id" ref="stock.stock_location_stock" />
+    </record>
+    <record id="ts512msk64w6h_eu" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.ts512msk64w6h" />
+        <field name="product_min_qty">480</field>
+        <field name="product_max_qty">680</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="lead_days">28</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('ol_base.onlogic_eu'))]" />
+        <field name="location_id" search="[('company_id', '=', ref('ol_base.onlogic_eu')), ('name', '=', 'Stock')]" />
+    </record>
+
+    <record id="ts64gmsa370_us" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.ts64gmsa370" />
+        <field name="product_min_qty">150</field>
+        <field name="product_max_qty">600</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="lead_days">28</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('base.main_company'))]" />
+        <field name="location_id" ref="stock.stock_location_stock" />
+    </record>
+    <record id="ts64gmsa370_eu" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.ts64gmsa370" />
+        <field name="product_min_qty">150</field>
+        <field name="product_max_qty">600</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="lead_days">28</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('ol_base.onlogic_eu'))]" />
+        <field name="location_id" search="[('company_id', '=', ref('ol_base.onlogic_eu')), ('name', '=', 'Stock')]" />
+    </record>
+
+    <record id="ts64gmts800_us" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.ts64gmts800" />
+        <field name="product_min_qty">220</field>
+        <field name="product_max_qty">520</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="lead_days">42</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('base.main_company'))]" />
+        <field name="location_id" ref="stock.stock_location_stock" />
+    </record>
+    <record id="ts64gmts800_eu" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.ts64gmts800" />
+        <field name="product_min_qty">220</field>
+        <field name="product_max_qty">520</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="lead_days">42</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('ol_base.onlogic_eu'))]" />
+        <field name="location_id" search="[('company_id', '=', ref('ol_base.onlogic_eu')), ('name', '=', 'Stock')]" />
+    </record>
+
+    <record id="KWPTCv0-18_us" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.KWPTCv0-18" />
+        <field name="product_min_qty">200</field>
+        <field name="product_max_qty">2000</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="lead_days">42</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('base.main_company'))]" />
+        <field name="location_id" ref="stock.stock_location_stock" />
+    </record>
+    <record id="KWPTCv0-18_eu" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.KWPTCv0-18" />
+        <field name="product_min_qty">150</field>
+        <field name="product_max_qty">2500</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="lead_days">42</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('ol_base.onlogic_eu'))]" />
+        <field name="location_id" search="[('company_id', '=', ref('ol_base.onlogic_eu')), ('name', '=', 'Stock')]" />
+    </record>
+
+    <record id="DHXA-222_us" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.DHXA-222" />
+        <field name="product_min_qty">100</field>
+        <field name="product_max_qty">4500</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="lead_days">42</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('base.main_company'))]" />
+        <field name="location_id" ref="stock.stock_location_stock" />
+    </record>
+    <record id="DHXA-222_eu" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.DHXA-222" />
+        <field name="product_min_qty">150</field>
+        <field name="product_max_qty">4500</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="lead_days">42</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('ol_base.onlogic_eu'))]" />
+        <field name="location_id" search="[('company_id', '=', ref('ol_base.onlogic_eu')), ('name', '=', 'Stock')]" />
+    </record>
+
+    <record id="DNXA-116_us" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.DNXA-116" />
+        <field name="product_min_qty">100</field>
+        <field name="product_max_qty">4500</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="lead_days">42</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('base.main_company'))]" />
+        <field name="location_id" ref="stock.stock_location_stock" />
+    </record>
+    <record id="DNXA-116_eu" model="stock.warehouse.orderpoint">
+        <field name="product_id" ref="ol_base.DNXA-116" />
+        <field name="product_min_qty">230</field>
+        <field name="product_max_qty">4500</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="lead_days">42</field>
+        <field name="warehouse_id" search="[('company_id', '=', ref('ol_base.onlogic_eu'))]" />
+        <field name="location_id" search="[('company_id', '=', ref('ol_base.onlogic_eu')), ('name', '=', 'Stock')]" />
+    </record>
+
+</odoo>

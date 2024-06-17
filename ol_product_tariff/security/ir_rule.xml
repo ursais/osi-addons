@@ -1,0 +1,10 @@
+<odoo>
+
+    <record id="tariff_code_multico_rule" model="ir.rule">
+        <field name="name">Tariff Code Multi-company Rule</field>
+        <field name="model_id" ref="ol_product_tariff.model_tariff_code" />
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="global" eval="True" />
+    </record>
+
+</odoo>

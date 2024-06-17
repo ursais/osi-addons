@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+      <record id="product_category_systems" model="product.category">
+          <field name="parent_id" ref="product.product_category_all" />
+          <field name="name">Systems</field>
+      </record>
+      <record id="product_category_components" model="product.category">
+          <field name="parent_id" ref="product.product_category_all" />
+          <field name="name">Components</field>
+      </record>
+      <record id="product_category_services" model="product.category">
+          <field name="parent_id" ref="product.product_category_all" />
+          <field name="name">Services</field>
+      </record>
+
+</odoo>
