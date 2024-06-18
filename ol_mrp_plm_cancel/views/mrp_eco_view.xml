@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ECO Form View -->
+    <record id="mrp_eco_view_form_cancel" model="ir.ui.view">
+        <field name="name">mrp.eco.view.form</field>
+        <field name="model">mrp.eco</field>
+        <field name="inherit_id" ref="mrp_plm.mrp_eco_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='reject']" position="after">
+                <button string="Cancel" name="action_cancel" type="object" class="oe_highlight" invisible="stage_id.cancel_stage == True" groups="mrp_plm.group_plm_user"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
