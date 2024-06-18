@@ -8,7 +8,7 @@
     "category": "Generic Modules/Warehouse Management",
     "author": "opensourceintegrators, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/manufacture",
-    "depends": ["mrp", "base_exception"],
+    "depends": ["mrp", "base_exception", "stock_exception"],
     "license": "AGPL-3",
     "data": [
         "security/ir.model.access.csv",
