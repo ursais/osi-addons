@@ -1,7 +1,7 @@
 # pylint: disable=pointless-statement
 {
     "name": "OnLogic Exception handling",
-    "summary": "Store and sync tariff field on products.",
+    "summary": "Add group for python access to exception rules.",
     "description": """
         Adding the Group for Adding a Python code in Base Exception.
         """,
@@ -11,7 +11,12 @@
     "category": "Tools",
     "version": "17.0.0.1.0",
     # any module necessary for this one to work correctly
-    "depends": ["base_exception", "base_tier_validation"],
+    "depends": [
+        "base_exception",
+    ],
     # always loaded
-    "data": ["security/base_exception_security.xml", "views/exception_rule_view.xml"],
+    "data": [
+        "security/base_exception_security.xml",
+        "views/exception_rule_view.xml",
+    ],
 }

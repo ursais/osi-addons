@@ -10,7 +10,7 @@ class ExceptionRule(models.Model):
     """
     Rewrite Exception Rule fields for adding the Tracking.
     """
-
+    # COLUMNS #####
     name = fields.Char("Exception Name", required=True, translate=True, tracking=True)
     description = fields.Text(translate=True, tracking=True)
     sequence = fields.Integer(
@@ -19,7 +19,6 @@ class ExceptionRule(models.Model):
     model = fields.Selection(
         selection=[], string="Apply on", required=True, tracking=True
     )
-
     exception_type = fields.Selection(
         selection=[
             ("by_domain", "By domain"),
@@ -36,7 +35,13 @@ class ExceptionRule(models.Model):
         tracking=True,
     )
     domain = fields.Char(tracking=True)
-    method = fields.Selection(selection=[], readonly=True, tracking=True)
+    method = fields.Selection(
+        selection=[],
+        readonly=True,
+        tracking=True,
+        help="If methods are added via modules they would show here to run the "
+        "exception rule check when the method is triggered.",
+    )
     active = fields.Boolean(default=True, tracking=True)
     code = fields.Text(
         "Python Code",
@@ -47,6 +52,7 @@ class ExceptionRule(models.Model):
     is_blocking = fields.Boolean(
         help="When checked the exception can not be ignored", tracking=True
     )
+    # END #########
 
     def _valid_field_parameter(self, field, name):
         # EXTENDS models
@@ -63,21 +69,22 @@ class ExceptionRule(models.Model):
                 node.set("invisible", "0")
         return arch, view
 
-    @api.model
-    def create(self, vals):
-        res = super().create(vals)
-        if (
-            self.user_has_groups("base_exception.group_exception_rule_manager")
-            and not self.user_has_groups("ol_exception.group_exception_python")
-            and self.exception_type == "by_py_code"
-        ):
-            raise UserError(
-                _(
-                    "You do not have permissions to add python code to exceptions. Please see your administrator for access."
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if (
+                self.user_has_groups("base_exception.group_exception_rule_manager")
+                and not self.user_has_groups("ol_exception.group_exception_python")
+                and vals.get("exception_type") == "by_py_code"
+            ):
+                raise UserError(
+                    _(
+                        "You do not have permissions to add python code to exceptions. "
+                        "Please see your administrator for access."
+                    )
                 )
-            )
 
-        return res
+        return super().create(vals_list)
 
     def write(self, vals):
         res = super().write(vals)
@@ -88,9 +95,8 @@ class ExceptionRule(models.Model):
         ):
             raise UserError(
                 _(
-                    "You do not have permissions to add python code to exceptions. Please see your administrator for access."
+                    "You do not have permissions to add python code to exceptions. "
+                    "Please see your administrator for access."
                 )
             )
         return res
-
-    # END #########

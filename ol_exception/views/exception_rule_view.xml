@@ -10,6 +10,9 @@
                     <field name="message_ids"/>
                 </div>
         	</xpath>
+            <field name="is_blocking" position="before">
+                <field name="method" readonly="exception_type != 'by_method'" invisible="exception_type != 'by_method'" />
+            </field>
         </field>
     </record>
 </odoo>
