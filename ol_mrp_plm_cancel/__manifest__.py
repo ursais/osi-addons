@@ -1,4 +1,3 @@
-# pylint: disable=pointless-statement
 {
     "name": "OnLogic Product Lifecycle Management (PLM) Cancel",
     "summary": "OnLogic Product Lifecycle Management (PLM) Cancel.",
@@ -11,10 +10,11 @@
     "category": "MRP",
     "version": "17.0.0.1.0",
     # any module necessary for this one to work correctly
-    "depends": ["mrp_plm", "product_state", "ol_mrp_plm_tier_validation"],
-    # always loaded
-    "data": [
-        "views/mrp_eco_stage.xml",
-        "views/mrp_eco_view.xml"
+    "depends": [
+        "mrp_plm",
+        "product_state",
+        "ol_mrp_plm_tier_validation",
     ],
+    # always loaded
+    "data": ["views/mrp_eco_stage.xml", "views/mrp_eco_view.xml"],
 }

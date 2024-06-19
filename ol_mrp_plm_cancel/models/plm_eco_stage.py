@@ -2,7 +2,7 @@
 from odoo import fields, models, api
 
 
-class PLMECOStage(models.Model):
+class PlmEcoStage(models.Model):
     """
     Add field to PLM ECO Stage
     """

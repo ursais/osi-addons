@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
     <!-- ECO Form View -->
@@ -10,6 +9,9 @@
             <xpath expr="//button[@name='reject']" position="after">
                 <button string="Cancel" name="action_cancel" type="object" class="oe_highlight" invisible="stage_id.cancel_stage == True" groups="mrp_plm.group_plm_user"/>
             </xpath>
+            <field name="tag_ids" position="after">
+                <field name="initial_product_state_id"/>
+            </field>
         </field>
     </record>
 

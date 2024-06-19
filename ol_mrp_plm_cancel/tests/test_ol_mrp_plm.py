@@ -1,5 +1,4 @@
-# Copyright 2020 Sergio Teruel <sergio.teruel@tecnativa.com>
-# License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl.html).
+# Import Odoo libs
 from odoo.tests import common, tagged
 
 from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
@@ -23,7 +22,12 @@ class TestSaleTierValidation(common.TransactionCase):
         cls.ecotype0 = cls.env.ref("mrp_plm.ecotype0")
 
         cls.product = cls.env["product.template"].create(
-            [{"name": "Test product", "list_price": 500,}]
+            [
+                {
+                    "name": "Test product",
+                    "list_price": 500,
+                }
+            ]
         )
 
     def test_action_new_revision_ol(self):
