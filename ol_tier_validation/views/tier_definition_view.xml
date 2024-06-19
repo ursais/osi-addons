@@ -1,0 +1,59 @@
+<odoo>
+
+    <record id="tier_definition_view_form_ol" model="ir.ui.view">
+        <field name="name">tier.definition.form.ol</field>
+        <field name="model">tier.definition</field>
+        <field name="inherit_id" ref="base_tier_validation_formula.tier_definition_view_form" />
+        <field name="arch" type="xml">
+            <field name="definition_domain" position="after">
+                <field name="has_tier_group" invisible="0"/>
+            </field>
+            <field name="reviewer_expression" position="replace">
+                <field
+                    name="reviewer_expression"
+                    colspan="4"
+                    invisible="review_type != 'expression' or has_tier_group"
+                    readonly="1"
+                />
+                <field
+                    name="reviewer_expression"
+                    colspan="4"
+                    invisible="review_type != 'expression'"
+                    groups="ol_tier_validation.group_tier_validation_python"
+                />
+            </field>
+            <field name="python_code" position="replace">
+                <field
+                        name="python_code"
+                        widget="code"
+                        options="{'mode': 'python'}"
+                        invisible="definition_type not in ('formula', 'domain_formula') or has_tier_group"
+                        readonly="1"
+                    />
+                <field
+                        name="python_code"
+                        widget="code"
+                        options="{'mode': 'python'}"
+                        invisible="definition_type not in ('formula', 'domain_formula')"
+                        groups="ol_tier_validation.group_tier_validation_python"
+                    />
+            </field>
+        </field>
+    </record>
+
+    <record id="base_tier_definition_view_form_ol" model="ir.ui.view">
+        <field name="name">base.tier.definition.form.ol</field>
+        <field name="model">tier.definition</field>
+        <field name="inherit_id" ref="base_tier_validation.tier_definition_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" />
+                    <field name="activity_ids" />
+                    <field name="message_ids" />
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
