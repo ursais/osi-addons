@@ -6,14 +6,14 @@
     "author": "Open Source Integrators,Odoo Community Association (OCA)",
     "license": "AGPL-3",
     "website": "https://github.com/OCA/product-configurator",
-    "depends": ["product_configurator","product_configurator_mrp"],
+    "depends": ["product_configurator", "product_configurator_mrp"],
     "data": [
         "security/ir.model.access.csv",
         "views/product_view.xml",
         "views/product_attribute_view.xml",
         "wizard/product_configurator_view.xml",
         "views/product_config_view.xml",
-    ]
+    ],
     "images": ["static/description/cover.png"],
     "development_status": "Beta",
     "maintainer": "Open Source Integrators",
