@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- Product Attributes -->
+    <record
+        id="product_template_attribute_value_view_form_is_qty_required"
+        model="ir.ui.view"
+    >
+        <field
+            name="name"
+        >product.template.attribute.value.view.form.weight.extra</field>
+        <field name="model">product.template.attribute.value</field>
+        <field
+            name="inherit_id"
+            ref="product.product_template_attribute_value_view_form"
+        />
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='price_extra']" position="after">
+                <field
+                    name="is_qty_required"
+                    groups="product_configurator.group_product_configurator_manager" invisible="1"
+                />
+                <field name="default_qty" required="is_qty_required" invisible ="not is_qty_required" groups="product_configurator.group_product_configurator_manager"/>
+                <field
+                    name="maximum_qty" required="is_qty_required" invisible ="not is_qty_required"
+                    groups="product_configurator.group_product_configurator_manager"
+                />
+            </xpath>
+        </field>
+    </record>
+
+    <record
+        id="product_template_attribute_value_view_tree_is_qty_required"
+        model="ir.ui.view"
+    >
+        <field
+            name="name"
+        >product.template.attribute.value.view.tree.weight.extra</field>
+        <field name="model">product.template.attribute.value</field>
+        <field
+            name="inherit_id"
+            ref="product.product_template_attribute_value_view_tree"
+        />
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <field name="price_extra" position="after">
+                <field
+                    name="is_qty_required" invisible="1"
+                />
+                <field name="default_qty" invisible ="not is_qty_required" />
+                <field name="maximum_qty" invisible ="not is_qty_required" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="product_template_only_form_view_inherited_mrp_qty" model="ir.ui.view">
+        <field name="name">product.configurator.product.template.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='attribute_line_ids']/tree/field[@name='value_ids']"
+                position="after"
+            >
+                <field
+                    name="is_qty_required"
+                    column_invisible="not context.get('default_config_ok', False)"
+                />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_normal_form_view_inherited_mrp_qty" model="ir.ui.view">
+        <field name="name">product.product.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='product_template_variant_value_ids']"
+                position="after"
+            >
+                <field
+                    name="product_attribute_value_qty_ids" widget="many2many_tags" />
+                    <!-- readonly="True" groups="product.group_product_variant" -->
+            </xpath>
+        </field>
+    </record>
+</odoo>
