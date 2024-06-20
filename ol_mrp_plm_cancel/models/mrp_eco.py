@@ -14,7 +14,7 @@ class MrpEco(models.Model):
     initial_product_state_id = fields.Many2one(
         comodel_name="product.state",
         string="Product State",
-        default="product_tmpl_id.product_state_id",
+        default=lambda self: self.product_tmpl_id.product_state_id.id,
     )
     # END #######
 
