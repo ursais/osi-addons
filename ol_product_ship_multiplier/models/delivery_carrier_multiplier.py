@@ -15,7 +15,7 @@ class DeliveryCarrierMultiplier(models.Model):
 
     _name = "delivery.carrier.multiplier"
     _description = "Shipment Method Master Data"
-    _rec_name = "carrier_id"
+    _rec_name = "carrier"
 
     # COLUMNS ###
 

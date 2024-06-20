@@ -1,6 +1,6 @@
 # pylint: disable=pointless-statement
 {
-    "name": "OnLogic Ship Multiplier",
+    "name": "OnLogic Product Ship Multiplier",
     "summary": "Product Shipping Multiplier.",
     "description": """Product Shipping Multiplier""",
     "author": "OnLogic",

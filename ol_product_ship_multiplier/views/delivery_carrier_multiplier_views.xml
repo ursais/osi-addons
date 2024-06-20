@@ -4,7 +4,7 @@
        <field name="model">delivery.carrier.multiplier</field>
        <field name="arch" type="xml">
            <tree editable="bottom">
-               <field name="carrier_id"/>
+               <field name="carrier"/>
                <field name="multiplier"/>
                <field name="company_id"/>
            </tree>
