@@ -19,7 +19,7 @@ class DeliveryCarrierMultiplier(models.Model):
 
     # COLUMNS ###
 
-    company_id = fields.Many2one("res.company")
+    company_id = fields.Many2one("res.company", default=lambda self: self.env.company)
     carrier = fields.Char(string="Inbound Ship Method", required="1")
     multiplier = fields.Float(
         string="Cost Multiplier",

@@ -4,9 +4,9 @@
        <field name="model">delivery.carrier.multiplier</field>
        <field name="arch" type="xml">
            <tree editable="bottom">
-               <field name="carrier"/>
-               <field name="multiplier"/>
-               <field name="company_id"/>
+               <field name="carrier" />
+               <field name="multiplier" />
+               <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" />
            </tree>
        </field>
     </record>
@@ -26,5 +26,5 @@
          name="Shipping Method Multipliers"
          parent="stock.menu_delivery"
          action="action_delivery_carrier_multiplier"
-         sequence="0"/>
+         sequence="0" />
 </odoo>
