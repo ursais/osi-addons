@@ -128,7 +128,8 @@ class ProductAttribute(models.Model):
             elif maxv and val > maxv:
                 raise ValidationError(
                     _(
-                        "Selected custom value '%(name)s' must be lower than %(max_value)s"
+                        "Selected custom value '%(name)s'\
+                         must be lower than %(max_value)s"
                     )
                     % ({"name": self.name, "max_val": self.max_val + 1})
                 )
