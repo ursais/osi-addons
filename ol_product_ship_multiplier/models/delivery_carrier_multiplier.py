@@ -19,8 +19,8 @@ class DeliveryCarrierMultiplier(models.Model):
 
     # COLUMNS ###
 
-    company_id = fields.Many2one(comodel_name="res.company")
-    carrier_id = fields.Char(string="Inbound Ship Method", required="1")
+    company_id = fields.Many2one("res.company")
+    carrier = fields.Char(string="Inbound Ship Method", required="1")
     multiplier = fields.Float(
         string="Cost Multiplier",
         default="1",
