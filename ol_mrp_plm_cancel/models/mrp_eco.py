@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import models, fields, _
+from odoo import api, models, fields, _
 from odoo.exceptions import ValidationError
 
 
@@ -12,11 +12,22 @@ class MrpEco(models.Model):
 
     # COLUMNS ###
     initial_product_state_id = fields.Many2one(
-        comodel_name="product.state",
-        string="Product State",
+        "product.state",
+        string="Initial Product State",
         default=lambda self: self.product_tmpl_id.product_state_id.id,
+        help="Shows the state of the product when the ECO was created.",
+    )
+    current_product_state_id = fields.Many2one(
+        "product.state",
+        string="Current Product State",
+        related="product_tmpl_id.product_state_id",
+        help="Shows the current state of the product.",
     )
     # END #######
+
+    @api.onchange("product_tmpl_id")
+    def product_tmpl_id_onchange(self):
+        self.initial_product_state_id = self.product_tmpl_id.product_state_id.id
 
     def action_cancel(self):
         """Similar to final stage functionality, but to cancal an ECO.

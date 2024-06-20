@@ -12,7 +12,7 @@ class PLMECOStage(models.Model):
     # COLUMNS #####
     product_state_id = fields.Many2one(
         comodel_name="product.state",
-        string="State",
+        string="Product State",
         help="Select a state for this product",
     )
     # END #########
