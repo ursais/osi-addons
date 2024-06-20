@@ -1,27 +1,26 @@
 <odoo>
 
-    <!-- Product variant form view -->
-    <record model="ir.ui.view" id="product_normal_form_view">
-        <field name="name">ls_inbound_shipping.product.form.view</field>
-        <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_normal_form_view" />
-        <field name="arch" type="xml">
-            <!-- Add shipping type and calculated cost -->
-            <div name="standard_price_uom" position="after">
-                <field name="tariff_percent" readonly="1" />
-            </div>
-        </field>
-    </record>
-
     <!-- Add it to the template view -->
-    <record id="ol_product_tariff.template_only_view" model="ir.ui.view">
+    <record id="ol_product_tariff_product_template_form_view" model="ir.ui.view">
         <field name="name">ol_product_tariff.template.form</field>
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view" />
         <field name="arch" type="xml">
-            <field name="standard_price" position="after">
+            <field name="categ_id" position="before">
                 <field name="tariff_code_id" readonly="0" />
             </field>
+        </field>
+    </record>
+
+    <!-- Product variant form view -->
+    <record model="ir.ui.view" id="ol_product_tariff_product_normal_form_view">
+        <field name="name">ol_product_tariff.product.form.view</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view" />
+        <field name="arch" type="xml">
+            <div name="standard_price_uom" position="after">
+                <field name="tariff_percent" readonly="1" />
+            </div>
         </field>
     </record>
 
