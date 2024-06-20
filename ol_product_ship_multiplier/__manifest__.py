@@ -1,8 +1,8 @@
 # pylint: disable=pointless-statement
 {
-    "name": "OnLogic Product Price customization",
-    "summary": "Product Price customization.",
-    "description": """Product Price customization.""",
+    "name": "OnLogic Ship Multiplier",
+    "summary": "Product Shipping Multiplier.",
+    "description": """Product Shipping Multiplier""",
     "author": "OnLogic",
     "website": "https://www.onlogic.com",
     "onlogic": True,
