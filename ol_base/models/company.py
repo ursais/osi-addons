@@ -11,9 +11,11 @@ class ResCompany(models.Model):
 
     # COLUMNS #####
 
+    external_display_name = fields.Char(string="Company Name for External Documents")
     company_user_id = fields.Many2one(
         string="Company Administrator",
         comodel_name="res.users",
     )
+    short_name = fields.Char(string="Abbreviated Company Identifier")
 
     # END #########
