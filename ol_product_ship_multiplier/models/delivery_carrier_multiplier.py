@@ -7,8 +7,8 @@ class DeliveryCarrierMultiplier(models.Model):
 
     New Object Delivery Carrier Multiplier
 
-    Shipment Method Table to hold Masterdata for Shipment Method and Multiplier. 
-    The Table needs to hold Shipment Methods for each individual Company, 
+    Shipment Method Table to hold Masterdata for Shipment Method and Multiplier.
+    The Table needs to hold Shipment Methods for each individual Company,
     so each line needs to have a Company Identifier.
 
     """
@@ -20,9 +20,7 @@ class DeliveryCarrierMultiplier(models.Model):
     # COLUMNS ###
 
     company_id = fields.Many2one(comodel_name="res.company")
-    carrier_id = fields.Many2one(
-        comodel_name="delivery.carrier", string="Inbound Ship Method", required="1"
-    )
+    carrier_id = fields.Char(string="Inbound Ship Method", required="1")
     multiplier = fields.Float(
         string="Cost Multiplier",
         default="1",
