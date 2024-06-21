@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="base_tier_validation_formula.tier_definition_view_form" />
         <field name="arch" type="xml">
             <field name="definition_domain" position="after">
-                <field name="has_tier_group" invisible="0"/>
+                <field name="has_tier_group" invisible="0" />
             </field>
             <field name="reviewer_expression" position="replace">
                 <field

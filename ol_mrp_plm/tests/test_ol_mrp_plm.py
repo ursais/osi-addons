@@ -6,7 +6,7 @@ from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
 
 
 @tagged("-at_install", "post_install")
-class TestSaleTierValidation(common.TransactionCase):
+class TestPLMProductState(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -23,7 +23,12 @@ class TestSaleTierValidation(common.TransactionCase):
         cls.ecotype0 = cls.env.ref("mrp_plm.ecotype0")
 
         cls.product = cls.env["product.template"].create(
-            [{"name": "Test product", "list_price": 500,}]
+            [
+                {
+                    "name": "Test product",
+                    "list_price": 500,
+                }
+            ]
         )
 
     def test_action_new_revision_ol(self):

@@ -1,4 +1,5 @@
 <odoo>
+
     <record id="product_template_last_purchase_info_inherit_ol_product" model="ir.ui.view">
         <field name="name">product.template.form.ol.product.ship.multiplier</field>
         <field name="model">product.template</field>
@@ -10,4 +11,5 @@
             </xpath>
         </field>
     </record>
+
 </odoo>

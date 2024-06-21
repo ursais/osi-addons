@@ -1,4 +1,3 @@
-# pylint: disable=pointless-statement
 {
     "name": "OnLogic Product Lifecycle Management (PLM)",
     "summary": "OnLogic Product Lifecycle Management (PLM) Customization.",

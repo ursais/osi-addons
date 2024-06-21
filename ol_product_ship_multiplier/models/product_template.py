@@ -1,6 +1,5 @@
 # Import Odoo libs
 from odoo import api, fields, models
-from odoo.exceptions import UserError
 
 
 class ProductTemplate(models.Model):

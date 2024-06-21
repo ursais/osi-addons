@@ -1,4 +1,3 @@
-# pylint: disable=pointless-statement
 {
     "name": "OnLogic Exception handling",
     "summary": "Add group for python access to exception rules.",

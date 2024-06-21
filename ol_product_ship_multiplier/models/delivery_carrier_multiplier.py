@@ -8,7 +8,7 @@ class DeliveryCarrierMultiplier(models.Model):
     New Object Delivery Carrier Multiplier
 
     Shipment Method Table to hold Masterdata for Shipment Method and Multiplier.
-    The Table needs to hold Shipment Methods for each individual Company,
+    The Table needs to hold Shipment Method and multiplier for each individual Company,
     so each line needs to have a Company Identifier.
 
     """
@@ -24,7 +24,8 @@ class DeliveryCarrierMultiplier(models.Model):
     multiplier = fields.Float(
         string="Cost Multiplier",
         default="1",
-        help="The multiplier is used on price reviews to calculate an estimated shipping cost for the product (Multiplier * Product Weight)",
+        help="""The multiplier is used on price reviews to calculate an estimated
+          shipping cost for the product (Multiplier * Product Weight)""",
     )
 
     # END #######
