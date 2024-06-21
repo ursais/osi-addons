@@ -27,7 +27,7 @@
                 <t t-foreach="record.invoice_line_ids" t-as="move_line">
                     <PSV:Parte
                         t-att-posicion="i"
-                        t-att-numeroMaterial="move_line.product_id.vw_ref"
+                        t-att-numeroMaterial="move_line.vw_product_ref"
                         t-att-descripcionMaterial="move_line.product_id.name"
                         t-att-cantidadMaterial="move_line.quantity"
                         t-attf-unidadMedida="PC"

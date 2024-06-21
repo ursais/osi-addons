@@ -16,6 +16,9 @@
                     </group>
                 </page>
             </xpath>
+            <xpath expr="//tree//field[@name='product_id']" position="after">
+                <field name="vw_product_ref" column_invisible="not parent.vw_flag" />
+            </xpath>
         </field>
     </record>
 </odoo>

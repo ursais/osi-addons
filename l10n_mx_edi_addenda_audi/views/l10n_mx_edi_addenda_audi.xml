@@ -23,7 +23,7 @@
                 <t t-foreach="record.invoice_line_ids" t-as="move_line">
                     <S:Parte
                         t-att-precioUnitario="move_line.price_unit"
-                        t-att-numeroParte="move_line.product_id.audi_ref"
+                        t-att-numeroParte="move_line.audi_product_ref"
                         t-att-descripcion="move_line.product_id.name"
                         t-attf-codigoImpuesto="D2"
                         t-att-cantidad="move_line.quantity"
