@@ -14,11 +14,7 @@
                     </group>
                 </page>
             </xpath>
-            <xpath
-                expr="//tree//field[@name='product_id']"
-                position="after"
-                invisible="not audi_flag"
-            >
+            <xpath expr="//tree//field[@name='product_id']" position="after">
                 <field
                     name="audi_product_ref"
                     column_invisible="not parent.audi_flag"
