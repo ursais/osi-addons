@@ -11,6 +11,7 @@ class TierDefinition(models.Model):
     Add tracking to fields
     """
     # COLUMNS ###
+
     python_code = fields.Text(
         string="Tier Definition Expression",
         help="Write Python code that defines when this tier confirmation "
@@ -29,8 +30,9 @@ class TierDefinition(models.Model):
         tracking=True,
     )
     has_tier_group = fields.Boolean(compute="_compute_has_tier_group")
-    # END #######
 
+    # END #######
+    # METHODS ###
     def _compute_has_tier_group(self):
         for rec in self:
             rec.has_tier_group = self.env["res.users"].has_group(
@@ -67,3 +69,5 @@ class TierDefinition(models.Model):
                 )
             )
         return super().write(vals)
+
+    # END #######

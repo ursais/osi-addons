@@ -1,15 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
     <!-- ECO Stage Form View -->
     <record id="mrp_eco_stage_view_form_inherit_ol_mrp_plm" model="ir.ui.view">
         <field name="name">mrp.eco.stage.view.form</field>
         <field name="model">mrp.eco.stage</field>
-        <field name="inherit_id" ref="mrp_plm.mrp_eco_stage_view_form"/>
+        <field name="inherit_id" ref="mrp_plm.mrp_eco_stage_view_form" />
         <field name="arch" type="xml">
             <!-- Add product_state_id -->
             <field name="final_stage" position="after">
-                <field name="product_state_id"/>
+                <field name="product_state_id" />
             </field>
         </field>
     </record>

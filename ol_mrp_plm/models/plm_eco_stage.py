@@ -10,9 +10,11 @@ class PLMECOStage(models.Model):
     _inherit = "mrp.eco.stage"
 
     # COLUMNS #####
+
     product_state_id = fields.Many2one(
         comodel_name="product.state",
         string="Product State",
         help="Select a state for this product",
     )
+
     # END #########

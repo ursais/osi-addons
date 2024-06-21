@@ -1,7 +1,9 @@
 <odoo>
+
 	<record id="ol_product_ship_multiplier_rule" model="ir.rule">
         <field name="name">Product Ship Multiplier rule</field>
         <field name="model_id" ref="model_delivery_carrier_multiplier" />
         <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
+
 </odoo>

@@ -1,8 +1,8 @@
 <odoo>
 
-	 <record id="group_tier_validation_python" model="res.groups">
+    <record id="group_tier_validation_python" model="res.groups">
         <field name="name">Tier Definition: Python</field>
-        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
     </record>
 
 </odoo>
