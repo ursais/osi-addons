@@ -165,6 +165,7 @@
                         />
                         <field name="config_step_name" />
                         <field name="product_id" />
+                        <field name="product_preset_id" invisible="not product_preset_id" readonly="1" />
                     </group>
                     <notebook>
                         <page name="custom_vals" string="Custom Values">
