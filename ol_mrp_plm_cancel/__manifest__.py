@@ -16,5 +16,8 @@
         "ol_mrp_plm_tier_validation",
     ],
     # always loaded
-    "data": ["views/mrp_eco_stage.xml", "views/mrp_eco_view.xml"],
+    "data": [
+        "views/mrp_eco_stage.xml",
+        "views/mrp_eco_view.xml",
+    ],
 }

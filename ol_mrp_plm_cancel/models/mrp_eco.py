@@ -27,6 +27,7 @@ class MrpEco(models.Model):
 
     @api.onchange("product_tmpl_id")
     def product_tmpl_id_onchange(self):
+        """If product changes then update the initial product state."""
         self.initial_product_state_id = self.product_tmpl_id.product_state_id.id
 
     def action_cancel(self):
@@ -51,3 +52,11 @@ class MrpEco(models.Model):
             )
         if self.initial_product_state_id:
             self.product_tmpl_id.product_state_id = self.initial_product_state_id.id
+
+    def write(self, vals):
+        """It's possible to move the stage to a cancel stage outside of the cancel button
+        so this will ensure the product state gets properly set if this happens."""
+        res = super().write(vals)
+        if self.stage_id.cancel_stage and self.product_tmpl_id.product_state_id.id:
+            self.product_tmpl_id.product_state_id = self.initial_product_state_id.id
+        return res
