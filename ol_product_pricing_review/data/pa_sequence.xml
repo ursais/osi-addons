@@ -1,0 +1,11 @@
+<odoo noupdate="1">
+
+    <record id="pa_sequence" model="ir.sequence">
+        <field name="name">Price Review Adjustment</field>
+        <field name="code">product.price.review</field>
+        <field name="prefix">PA</field>
+        <field name="padding">6</field>
+        <field name="company_id" eval="False" />
+    </record>
+
+</odoo>

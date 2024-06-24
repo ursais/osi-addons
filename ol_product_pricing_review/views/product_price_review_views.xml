@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- PRODUCT PRICE Review FORM VIEW -->
+    <record id="product_price_review_form_view" model="ir.ui.view">
+        <field name="name">Price Review Form View</field>
+        <field name="model">product.price.review</field>
+        <field name="arch" type="xml">
+            <form string="Price Adjustments">
+                <header>
+                    <button name="validate_button" type="object" string="Validate" class="oe_highlight" groups="ol_product_pricing_review.group_pricing_review_approver" invisible="state == 'reject' or  state == 'validated'" />
+                    <button name="reject_button" type="object" string="Reject" class="oe_highlight" groups="ol_product_pricing_review.group_pricing_review_approver" invisible="state == 'reject' or  state == 'validated'" />
+                    <button name="assign_to_me"  type="object" string="Assign To Me" class="oe_highlight"  invisible="state == 'reject' or  state == 'validated'" groups="ol_product_pricing_review.group_pricing_review_user" />
+                    <field name="state" widget="statusbar" statusbar_visible="new, in_progress, reject, validated" />
+                </header>
+                <sheet readonly="state in ('reject', 'validated')">
+                    <div class="oe_title">
+                        <h1>
+                            <field name="pa" placeholder="Name.." />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="product_id" />
+                            <field name="default_code" />
+                            <field name="detailed_type" />
+                            <field name="categ_id" />
+                            <field name="company_id" readonly="1" force_save="1" />
+                        </group>
+                        <group>
+                            <field name="user_id" />
+                            <field name="origin_vendor_id" options="{'no_create': True}" />
+                            <field name="origin_purchase_id" options="{'no_create': True}" />
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Proposed Pricing">
+                            <field name="origin_last_purchase_price" />
+                            <field name="tariff_percent" widget="percentage" />
+                            <field name="tooling_cost" />
+                            <field name="defrayment_cost" />
+                            <field name="carrier_multiplier_id" options="{'no_create': True}" />
+                        </group>
+                        <group string="Current Pricing Summary">
+                            <field name="origin_final_price" readonly="1" force_save="1" />
+                            <field name="origin_based_on" readonly="1" force_save="1" />
+                            <field name="origin_total_cost" readonly="1" force_save="1" />
+                            <field name="origin_margin" readonly="1" force_save="1" />
+                            <field name="origin_margin_percent" readonly="1" force_save="1" widget="percentage" />
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="default_shipping_cost" />
+                            <field name="suggested_margin" />
+                            <field name="override_margin" />
+                            <field name="calculated_price" />
+                            <field name="charm_price" />
+                            <field name="override_price" />
+                            <field name="special_price" />
+                        </group>
+                        <group string="Proposed Pricing Summary">
+                            <field name="final_price" />
+                            <field name="based_on" />
+                            <field name="total_cost" />
+                            <field name="cost_delta" />
+                            <field name="margin" />
+                            <field name="margin_percent" widget="percentage" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="other_info" string="Other Info" groups="base.group_no_one">
+                            <group string="Original Pricing">
+                                <group>
+                                    <field name="origin_tariff_percent" readonly="1" force_save="1" widget="percentage" />
+                                    <field name="origin_tooling_cost" readonly="1" force_save="1" />
+                                    <field name="origin_defrayment_cost" readonly="1" force_save="1" />
+                                    <field name="origin_carrier_multiplier_id" readonly="1" force_save="1" />
+                                    <field name="origin_default_shipping_cost" readonly="1" force_save="1" />
+                                    <field name="origin_last_purchase_margin" readonly="1" force_save="1" />
+                                </group>
+                                <group>
+                                    <field name="origin_suggested_margin" readonly="1" force_save="1" />
+                                    <field name="origin_override_margin" readonly="1" force_save="1" />
+                                    <field name="origin_charm_price" readonly="1" force_save="1" />
+                                    <field name="origin_override_price" readonly="1" force_save="1" />
+                                    <field name="origin_special_price" readonly="1" force_save="1" />
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- Product Price Review Tree View -->
+    <record id="product_price_review_tree_view" model="ir.ui.view">
+        <field name="name">Price Review Tree View</field>
+        <field name="model">product.price.review</field>
+        <field name="arch" type="xml">
+            <tree string="Price Adjustment">
+                <!-- icon="fa-solid fa-check" -->
+                <button name="validate_button" type="object" title="Approve Button" icon="fa-check" groups="ol_product_pricing_review.group_pricing_review_approver" invisible="state == 'reject' or  state == 'validated'" />
+                <button name="reject_button" type="object" title="Reject Button" icon="fa-close" groups="ol_product_pricing_review.group_pricing_review_approver" invisible="state == 'reject' or  state == 'validated'" />
+                <field name="company_id" />
+                <field name="product_id" />
+                <field name="default_code" />
+                <field name="state" />
+                <field name="origin_last_purchase_price" />
+                <!-- <field name="current_cost" /> -->
+                <!-- <field name="cost_delta" /> TBD-->
+                <field name="origin_final_price" />
+                <field name="based_on" />
+                <field name="margin" />
+                <field name="margin_percent" />
+                <field name="origin_vendor_id" />
+                <field name="origin_purchase_id" />
+                <field name="pa" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Product Price Review Search View -->
+    <record id="product_price_review_search_view" model="ir.ui.view">
+        <field name="name">Price Review Search View</field>
+        <field name="model">product.price.review</field>
+        <field name="arch" type="xml">
+            <search string="Search Price Adjustment">
+                <field name="product_id" />
+                <field name="user_id" />
+                <field name="state" />
+                <filter
+                    name="review_assigned"
+                    string="Assigned"
+                    domain="[('user_id','!=', False)]"
+                    help="Assigned Price Reviews."
+                />
+                <filter
+                    name="review_state_draft"
+                    string="Draft"
+                    domain="[('state','=', 'new')]"
+                    help="Purchase Reviews in Draft State."
+                />
+                <filter
+                    name="review_state_in_progress"
+                    string="In Progress"
+                    domain="[('state','=', 'in_progress')]"
+                    help="Purchase Reviews in In Progress State."
+                />
+                <filter
+                    name="review_state_validated"
+                    string="Validated"
+                    domain="[('state','=', 'validated')]"
+                    help="Purchase Reviews in Validated State."
+                />
+                <filter
+                    name="review_state_reject"
+                    string="Rejected"
+                    domain="[('state','=', 'reject')]"
+                    help="Purchase Reviews in Rejected State."
+                />
+                <group expand="0" string="Group By...">
+                    <filter
+                        name="state"
+                        string="State"
+                        domain="[]"
+                        context="{'group_by' : 'state'}"
+                    />
+                    <filter
+                        name="product"
+                        string="Product"
+                        domain="[]"
+                        context="{'group_by' : 'product_id'}"
+                    />
+                    <filter
+                        name="user_id"
+                        string="Assigned To"
+                        domain="[]"
+                        context="{'group_by' : 'user_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACTIONS (WINDOW) -->
+    <record id="action_price_review" model="ir.actions.act_window">
+        <!-- <field name="roll_no">Student</field> -->
+        <field name="name">Price Reviews</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">product.price.review</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="product_price_review_search_view" />
+        <field name="context">{"search_default_review_state_draft": True, "search_default_review_state_in_progress": True}</field>
+        <field name="domain">[]</field>
+    </record>
+
+    <!-- MENU ITEMS -->
+    <menuitem
+        id="menu_price_review"
+        name="Price Reviews"
+        action="action_price_review"
+        parent="stock.menu_stock_warehouse_mgmt"
+    />
+
+</odoo>

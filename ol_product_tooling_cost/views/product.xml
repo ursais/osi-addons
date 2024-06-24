@@ -1,0 +1,17 @@
+<odoo>
+
+    <!-- Product variant form view -->
+    <record id="product_template_form_view_inherit_ol" model="ir.ui.view" >
+        <field name="name">ol_inbound_shipping.product.form.view</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id"  ref="product.product_template_form_view" />
+        <field name="arch" type="xml">
+            <!-- Add tooling cost -->
+            <div name="standard_price_uom" position="after">
+              <field name="tooling_cost" readonly="1" widget="monetary" />
+              <field name="defrayment_cost" readonly="1" widget="monetary" />
+            </div>
+        </field>
+    </record>
+
+</odoo>

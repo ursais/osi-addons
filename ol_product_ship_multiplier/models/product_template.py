@@ -17,10 +17,13 @@ class ProductTemplate(models.Model):
         string="Inbound Ship Method",
         company_dependent=True,
         check_company=True,
+        help="Inbound shipping method to be used for estimating shipping costs.",
     )
     default_shipping_cost = fields.Float(
         string="Cost Multiplier",
         compute="_compute_default_shipping_cost",
+        store=True,
+        help="Estimated shipping cost. Calculated by multiplying product weight by the inbound shipping method multiplier.",
     )
 
     # END #######
