@@ -103,7 +103,6 @@ class ProductConfigurator(models.TransientModel):
             return steps
 
         open_lines = wiz.config_session_id.get_open_step_lines()
-
         if open_lines:
             open_steps = open_lines.mapped(lambda x: (str(x.id), x.config_step_id.name))
             steps = open_steps if wiz.product_id else steps + open_steps
@@ -359,7 +358,6 @@ class ProductConfigurator(models.TransientModel):
                 elif values and value[0][2]:
                     self.dyn_field_2_value = key
                     self.domain_attr_2_ids = [(6, 0, value[0][2])]
-
         vals = self.get_form_vals(
             dynamic_fields=dynamic_fields,
             domains=domains,
@@ -375,9 +373,10 @@ class ProductConfigurator(models.TransientModel):
         onchange_values = self.apply_onchange_values(
             values=values, field_name=field_name, field_onchange=field_onchange
         )
-
         field_prefix = self._prefixes.get("field_prefix")
 
+        if field_name == ['product_preset_id']:
+            self.with_context(preset_values=values)._onchange_product_preset()
         vals = onchange_values.get("value", {})
         for key, val in vals.items():
             if isinstance(val, int) and key.startswith(field_prefix):
@@ -451,7 +450,11 @@ class ProductConfigurator(models.TransientModel):
     @api.onchange("product_preset_id")
     def _onchange_product_preset(self):
         """Set value ids as from product preset"""
-        pta_value_ids = self.product_preset_id.product_template_attribute_value_ids
+        preset_id = self.product_preset_id
+        if not preset_id and self.env.context.get('preset_values'):
+            preset_id = self.env.context.get('preset_values').get('product_preset_id')
+            preset_id = self.env["product.product"].browse(preset_id)
+        pta_value_ids = preset_id.product_template_attribute_value_ids
         attr_value_ids = pta_value_ids.mapped("product_attribute_value_id")
         self.value_ids = attr_value_ids
 
@@ -871,7 +874,6 @@ class ProductConfigurator(models.TransientModel):
 
         field_prefix = self._prefixes.get("field_prefix")
         custom_field_prefix = self._prefixes.get("custom_field_prefix")
-
         attr_vals = [f for f in fields if f.startswith(field_prefix)]
         custom_attr_vals = [f for f in fields if f.startswith(custom_field_prefix)]
 
@@ -1020,10 +1022,12 @@ class ProductConfigurator(models.TransientModel):
             self.config_session_id.unlink()
         except Exception:
             session = self.env["product.config.step"]
-        action = session_product_tmpl_id.with_context({}).create_config_wizard(
-            click_next=False
-        )
-        return action
+        if session_product_tmpl_id:
+            action = session_product_tmpl_id.with_context({}).create_config_wizard(
+                click_next=False
+            )
+            return action
+        return False
 
     def get_wizard_action(self, view_cache=False, wizard=None):
         """Return action of wizard
