@@ -20,7 +20,10 @@ class TariffCode(models.Model):
     # COLUMNS ###
     name = fields.Char(string="Name", size=64, required=True)
     company_id = fields.Many2one(
-        string="Internal Company", comodel_name="res.company", readonly=True
+        string="Internal Company",
+        comodel_name="res.company",
+        default=lambda self: self.env.company,
+        readonly=True,
     )
     short_description = fields.Char(string="Short Description")
     description = fields.Text(string="Description")
