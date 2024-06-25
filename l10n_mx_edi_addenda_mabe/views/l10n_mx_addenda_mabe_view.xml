@@ -35,9 +35,9 @@
                         t-att-unidad="move_line.product_uom_id.name"
                         t-att-cantidad="move_line.quantity"
                         t-att-precioSinIva="move_line.price_unit"
-                        t-att-precioConIva="move_line.price_unit * 16"
-                        t-att-importeSinIva="move_line.price_subtotal * move_line.quantity"
-                        t-att-importeConIva="move_line.price_subtotal"
+                        t-att-precioConIva="move_line.price_unit * 1.16"
+                        t-att-importeSinIva="move_line.price_subtotal"
+                        t-att-importeConIva="move_line.price_subtotal * 1.16"
                     />
                     <t t-set="i" t-value="i+1" />
                 </t>
