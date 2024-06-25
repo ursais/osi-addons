@@ -22,5 +22,6 @@ class MrpEcoStage(models.Model):
         default="progress",
         required=True,
         help="""Used by tier validations that need to trigger based on stage changes.
-         Set to 'to_approve'Set to 'Approved' if the ECO stage requires approval before entering this stage.""",
+         Set to 'to_approve'Set to 'Approved' if the ECO stage requires approval
+         before entering this stage.""",
     )
