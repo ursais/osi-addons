@@ -15,6 +15,8 @@ class ResPartner(models.Model):
             ("A003", "TI"),
             ("A004", "CSC FINANZAS"),
             ("A006", "CORPORATIVO TYP"),
+            ("R001", "Mabe Celaya"),
+            ("S001", "Mabe San Luis"),
             ("T102", "ADR MEXICO DF"),
             ("T103", "MODULO MEXICO METRO NORTE"),
             ("T104", "MODULO ACAPULCO"),
@@ -50,5 +52,6 @@ class ResPartner(models.Model):
             ("T134", "MODULO LA PAZ"),
             ("T135", "Corporativo Serviplus"),
             ("T136", "ADR SAN LUIS POTOSI"),
+            ("W002", "Mabe Saltillo"),
         ]
     )
