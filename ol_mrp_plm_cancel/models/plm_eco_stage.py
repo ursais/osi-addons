@@ -20,8 +20,9 @@ class PlmEcoStage(models.Model):
     @api.onchange("cancel_stage")
     def onchange_cancel_stage(self):
         """If setting cancel stage to true, then state will be cancel,
-        but if setting to false then the state will be in_progress."""
-        if self.cancel_stage:
-            self.state = "cancel"
-        else:
-            self.state = "in_progress"
+        but if setting to false then the state will be in progress."""
+        for rec in self:
+            if rec.cancel_stage:
+                rec.state = "cancel"
+            elif not rec.cancel_stage and rec.state == "cancel":
+                rec.state = "progress"
