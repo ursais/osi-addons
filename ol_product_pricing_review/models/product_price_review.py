@@ -43,16 +43,16 @@ class ProductPriceReview(models.Model):
         string="State",
     )
     user_id = fields.Many2one("res.users", string="Assigned To")
+    currency_id = fields.Many2one(
+        "res.currency",
+        related="product_id.product_tmpl_id.currency_id",
+    )
 
     # Origin fields, recorded on the price review for historical purposes
-    origin_list_price = fields.Float(
-        string="Original Sales Price", related="product_id.list_price"
-    )
     origin_last_purchase_price = fields.Float(
         string="Original Last PO Cost",
         help="Product cost on most recent confirmed purchase",
     )
-    origin_cost_base_pricing = fields.Float(string="Original Cost Base Pricing")
     origin_tariff_percent = fields.Float(string="Original Tariff Percent")
     origin_tooling_cost = fields.Float(string="Original Tooling Cost")
     origin_defrayment_cost = fields.Float(
@@ -239,9 +239,6 @@ class ProductPriceReview(models.Model):
                 rec.origin_last_purchase_price = rec.product_id.with_company(
                     rec.company_id
                 ).last_purchase_line_id.price_unit
-                rec.origin_cost_base_pricing = rec.product_id.with_company(
-                    rec.company_id
-                ).cost_base_pricing
                 rec.origin_tariff_percent = rec.product_id.with_company(
                     rec.company_id
                 ).tariff_percent
@@ -272,7 +269,9 @@ class ProductPriceReview(models.Model):
                 rec.origin_special_price = rec.product_id.with_company(
                     rec.company_id
                 ).special_price
-                origin_based_on = rec.product_id.with_company(rec.company_id).based_on
+                rec.origin_based_on = rec.product_id.with_company(
+                    rec.company_id
+                ).based_on
                 if rec.product_id.with_company(rec.company_id).charm_price:
                     rec.origin_charm_price = rec.product_id.with_company(
                         rec.company_id
@@ -333,7 +332,7 @@ class ProductPriceReview(models.Model):
 
     # COMPUTE METHODS
     @api.depends(
-        "origin_list_price",
+        "origin_final_price",
         "origin_last_purchase_price",
         "origin_tariff_percent",
         "origin_tooling_cost",
@@ -354,17 +353,17 @@ class ProductPriceReview(models.Model):
         self.origin_last_purchase_margin = last_purchase_margin
 
     @api.depends(
-        "origin_list_price",
+        "origin_final_price",
         "origin_total_cost",
     )
     def _compute_origin_margins(self):
         for rec in self:
             origin_margin = 0.0
             origin_margin_percent = 0
-            if rec.origin_list_price:
-                origin_margin = rec.origin_list_price - rec.origin_total_cost
+            if rec.origin_final_price:
+                origin_margin = rec.origin_final_price - rec.origin_total_cost
                 if rec.origin_margin:
-                    origin_margin_percent = rec.origin_margin / rec.origin_list_price
+                    origin_margin_percent = rec.origin_margin / rec.origin_final_price
             rec.origin_margin = origin_margin
             rec.origin_margin_percent = origin_margin_percent
 
@@ -430,15 +429,15 @@ class ProductPriceReview(models.Model):
             else:
                 final_price = rec.calculated_price
 
-            # Apply Charm Pricing
-            if rec.charm_price == ".00":
-                final_price = round(final_price)  # Round to nearest .00
-            elif rec.charm_price == ".95":
-                final_price = round(final_price) - 0.05  # Round to nearest .95
-            elif rec.charm_price == ".99":
-                final_price = round(final_price) - 0.01  # Round to nearest .99
-            else:
-                final_price = final_price
+                # Apply Charm Pricing
+                if rec.charm_price == ".00":
+                    final_price = round(final_price)  # Round to nearest .00
+                elif rec.charm_price == ".95":
+                    final_price = round(final_price) - 0.05  # Round to nearest .95
+                elif rec.charm_price == ".99":
+                    final_price = round(final_price) - 0.01  # Round to nearest .99
+                else:
+                    final_price = final_price
             rec.final_price = final_price
 
     @api.depends("final_price", "total_cost")
@@ -462,9 +461,9 @@ class ProductPriceReview(models.Model):
     def _compute_based_on(self):
         for rec in self:
             based_on = ""
-            if rec.special_price > 0.0:
-                based_on = "Special Price"
-            elif rec.override_price > 0.0:
+            # if rec.special_price > 0.0:
+            #     based_on = "Special Price"
+            if rec.override_price > 0.0:
                 based_on = "Override Price"
             elif rec.override_margin > 0.0:
                 based_on = "Override Margin"

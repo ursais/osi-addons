@@ -1,17 +1,13 @@
 # Import Odoo libs
-from odoo import fields, models, api
+from odoo import api, fields, models
 
 
-class ProductProduct(models.Model):
-    """Add field to product.product to store Cost Base Pricing"""
-
-    _inherit = "product.product"
+class ProductTemplate(models.Model):
+    _inherit = "product.template"
 
     # COLUMNS ###
 
-    last_purchase_line_ids = fields.One2many(
-        store=True,
-    )
+    list_price = fields.Float(company_dependent=True)
 
     # END #######
 

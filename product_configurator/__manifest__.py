@@ -32,6 +32,7 @@
             "/product_configurator/static/src/js/boolean_button_widget.esm.js",
             "/product_configurator/static/src/js/boolean_button_widget.xml",
             "/product_configurator/static/src/js/relational_fields.esm.js",
+            "/product_configurator/static/src/js/view.js",
         ]
     },
     "demo": [
