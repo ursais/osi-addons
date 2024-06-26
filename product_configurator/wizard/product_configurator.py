@@ -1040,6 +1040,7 @@ class ProductConfigurator(models.TransientModel):
             {
                 "view_cache": view_cache,
                 "differentiator": ctx.get("differentiator", 1) + 1,
+                "is_product_configurator":True,
             }
         )
         if wizard:
