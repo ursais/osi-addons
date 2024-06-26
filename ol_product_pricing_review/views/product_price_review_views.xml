@@ -10,10 +10,10 @@
                 <header>
                     <button name="validate_button" type="object" string="Validate" class="oe_highlight" groups="ol_product_pricing_review.group_pricing_review_approver" invisible="state == 'reject' or  state == 'validated'" />
                     <button name="reject_button" type="object" string="Reject" class="oe_highlight" groups="ol_product_pricing_review.group_pricing_review_approver" invisible="state == 'reject' or  state == 'validated'" />
-                    <button name="assign_to_me"  type="object" string="Assign To Me" class="oe_highlight"  invisible="state == 'reject' or  state == 'validated'" groups="ol_product_pricing_review.group_pricing_review_user" />
+                    <button name="assign_to_me" type="object" string="Assign To Me" class="oe_highlight"  invisible="state == 'reject' or  state == 'validated'" groups="ol_product_pricing_review.group_pricing_review_user" />
                     <field name="state" widget="statusbar" statusbar_visible="new, in_progress, reject, validated" />
                 </header>
-                <sheet readonly="state in ('reject', 'validated')">
+                <sheet>
                     <div class="oe_title">
                         <h1>
                             <field name="pa" placeholder="Name.." />
@@ -21,49 +21,50 @@
                     </div>
                     <group>
                         <group>
-                            <field name="product_id" />
+                            <field name="currency_id" invisible="1" />
+                            <field name="product_id" readonly="state in ('reject', 'validated')" />
                             <field name="default_code" />
                             <field name="detailed_type" />
                             <field name="categ_id" />
                             <field name="company_id" readonly="1" force_save="1" />
                         </group>
                         <group>
-                            <field name="user_id" />
-                            <field name="origin_vendor_id" options="{'no_create': True}" />
-                            <field name="origin_purchase_id" options="{'no_create': True}" />
+                            <field name="user_id" readonly="state in ('reject', 'validated')" />
+                            <field name="origin_vendor_id" options="{'no_create': True}" readonly="state in ('reject', 'validated')" />
+                            <field name="origin_purchase_id" options="{'no_create': True}" readonly="state in ('reject', 'validated')" />
                         </group>
                     </group>
                     <group>
                         <group string="Proposed Pricing">
-                            <field name="origin_last_purchase_price" />
-                            <field name="tariff_percent" widget="percentage" />
-                            <field name="tooling_cost" />
-                            <field name="defrayment_cost" />
-                            <field name="carrier_multiplier_id" options="{'no_create': True}" />
+                            <field name="origin_last_purchase_price" readonly="state in ('reject', 'validated')" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                            <field name="tariff_percent" widget="percentage" readonly="state in ('reject', 'validated')" />
+                            <field name="tooling_cost" readonly="state in ('reject', 'validated')" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                            <field name="defrayment_cost" readonly="state in ('reject', 'validated')" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                            <field name="carrier_multiplier_id" options="{'no_create': True}" readonly="state in ('reject', 'validated')" />
                         </group>
                         <group string="Current Pricing Summary">
-                            <field name="origin_final_price" readonly="1" force_save="1" />
+                            <field name="origin_final_price" readonly="1" force_save="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                             <field name="origin_based_on" readonly="1" force_save="1" />
-                            <field name="origin_total_cost" readonly="1" force_save="1" />
+                            <field name="origin_total_cost" readonly="1" force_save="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                             <field name="origin_margin" readonly="1" force_save="1" />
                             <field name="origin_margin_percent" readonly="1" force_save="1" widget="percentage" />
                         </group>
                     </group>
                     <group>
                         <group>
-                            <field name="default_shipping_cost" />
-                            <field name="suggested_margin" />
-                            <field name="override_margin" />
-                            <field name="calculated_price" />
-                            <field name="charm_price" />
-                            <field name="override_price" />
-                            <field name="special_price" />
+                            <field name="default_shipping_cost" readonly="state in ('reject', 'validated')" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                            <field name="suggested_margin" readonly="state in ('reject', 'validated')" />
+                            <field name="override_margin" readonly="state in ('reject', 'validated')" />
+                            <field name="calculated_price" readonly="state in ('reject', 'validated')" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                            <field name="charm_price" readonly="state in ('reject', 'validated')" />
+                            <field name="override_price" readonly="state in ('reject', 'validated')" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                            <field name="special_price" readonly="state in ('reject', 'validated')" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                         </group>
                         <group string="Proposed Pricing Summary">
-                            <field name="final_price" />
+                            <field name="final_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                             <field name="based_on" />
-                            <field name="total_cost" />
-                            <field name="cost_delta" />
+                            <field name="total_cost" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                            <field name="cost_delta" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                             <field name="margin" />
                             <field name="margin_percent" widget="percentage" />
                         </group>
@@ -73,18 +74,18 @@
                             <group string="Original Pricing">
                                 <group>
                                     <field name="origin_tariff_percent" readonly="1" force_save="1" widget="percentage" />
-                                    <field name="origin_tooling_cost" readonly="1" force_save="1" />
-                                    <field name="origin_defrayment_cost" readonly="1" force_save="1" />
+                                    <field name="origin_tooling_cost" readonly="1" force_save="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                                    <field name="origin_defrayment_cost" readonly="1" force_save="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                                     <field name="origin_carrier_multiplier_id" readonly="1" force_save="1" />
-                                    <field name="origin_default_shipping_cost" readonly="1" force_save="1" />
-                                    <field name="origin_last_purchase_margin" readonly="1" force_save="1" />
+                                    <field name="origin_default_shipping_cost" readonly="1" force_save="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                                    <field name="origin_last_purchase_margin" readonly="1" force_save="1" widget="percentage" />
                                 </group>
                                 <group>
                                     <field name="origin_suggested_margin" readonly="1" force_save="1" />
                                     <field name="origin_override_margin" readonly="1" force_save="1" />
                                     <field name="origin_charm_price" readonly="1" force_save="1" />
-                                    <field name="origin_override_price" readonly="1" force_save="1" />
-                                    <field name="origin_special_price" readonly="1" force_save="1" />
+                                    <field name="origin_override_price" readonly="1" force_save="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                                    <field name="origin_special_price" readonly="1" force_save="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                                 </group>
                             </group>
                         </page>
@@ -109,20 +110,24 @@
                 <!-- icon="fa-solid fa-check" -->
                 <button name="validate_button" type="object" title="Approve Button" icon="fa-check" groups="ol_product_pricing_review.group_pricing_review_approver" invisible="state == 'reject' or  state == 'validated'" />
                 <button name="reject_button" type="object" title="Reject Button" icon="fa-close" groups="ol_product_pricing_review.group_pricing_review_approver" invisible="state == 'reject' or  state == 'validated'" />
-                <field name="company_id" />
-                <field name="product_id" />
-                <field name="default_code" />
-                <field name="state" />
-                <field name="origin_last_purchase_price" />
-                <!-- <field name="current_cost" /> -->
-                <!-- <field name="cost_delta" /> TBD-->
-                <field name="origin_final_price" />
-                <field name="based_on" />
-                <field name="margin" />
-                <field name="margin_percent" />
-                <field name="origin_vendor_id" />
-                <field name="origin_purchase_id" />
-                <field name="pa" />
+                <field name="company_id" optional="show" />
+                <field name="product_id" optional="show" />
+                <field name="default_code" optional="show" />
+                <field name="state" optional="show" />
+                <button name="assign_to_me" type="object" title="Assign to Me Button" icon="fa-user-plus" groups="ol_product_pricing_review.group_pricing_review_approver" invisible="state == 'reject' or  state == 'validated'" />
+                <field name="user_id" optional="show" />
+                <field name="origin_last_purchase_price" optional="show" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                <field name="origin_total_cost" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                <field name="total_cost" optional="show" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                <field name="cost_delta" optional="show" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                <field name="origin_final_price" optional="show" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                <field name="final_price" optional="show" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                <field name="based_on" optional="show" />
+                <field name="margin" optional="show" />
+                <field name="margin_percent" optional="show" />
+                <field name="origin_vendor_id" optional="show" />
+                <field name="origin_purchase_id" optional="show" />
+                <field name="pa" optional="show" />
             </tree>
         </field>
     </record>

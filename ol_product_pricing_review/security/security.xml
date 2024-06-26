@@ -18,4 +18,11 @@
         <field name="users" eval="[(4, ref('base.user_admin'))]" />
     </record>
 
+    <!-- Record Rule for Price Reviews-->
+    <record model="ir.rule" id="pricing_review_record_rule">
+        <field name="name">Price Review company rule</field>
+        <field name="model_id" ref="model_product_price_review"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'parent_of', company_ids)]</field>
+    </record>
+
 </odoo>

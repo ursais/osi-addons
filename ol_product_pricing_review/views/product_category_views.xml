@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="stock_account.view_category_property_form_stock" />
         <field name="arch" type="xml">
             <field name="property_cost_method" position="before">
-                <field name="suggested_margin" />
+                <field name="suggested_margin" widget="percentage" />
             </field>
         </field>
     </record>

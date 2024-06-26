@@ -18,7 +18,7 @@
     ],
     # Data Loaded.
     "data": [
-        "security/res_groups.xml",
+        "security/security.xml",
         "security/ir.model.access.csv",
         "data/pa_sequence.xml",
         "views/product_category_views.xml",
