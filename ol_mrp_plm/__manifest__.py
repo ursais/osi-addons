@@ -12,5 +12,8 @@
     # any module necessary for this one to work correctly
     "depends": ["mrp_plm", "product_state"],
     # always loaded
-    "data": ["views/mrp_eco_stage.xml"],
+    "data": [
+        "security/bom_restiction_group.xml",
+        "views/mrp_eco_stage.xml"
+        ],
 }
