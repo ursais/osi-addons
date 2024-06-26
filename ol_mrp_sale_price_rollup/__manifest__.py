@@ -1,4 +1,3 @@
-# pylint: disable=pointless-statement
 {
     "name": "OnLogic MRP Sale Price Rollup",
     "summary": "OnLogic MRP Sale Price Rollup Customization.",
@@ -12,10 +11,21 @@
     "category": "MRP",
     "version": "17.0.0.1.0",
     # any module necessary for this one to work correctly
-    "depends": ["sale", "mrp", "mrp_account", "product_configurator"],
+    "depends": [
+        "sale",
+        "mrp",
+        "mrp_account",
+        "product_configurator_mrp",
+        "osi_mrp_bom_sequence",
+    ],
     # always loaded
     "data": [
         "views/product_view.xml",
         "report/mrp_report_bom_structure.xml",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "ol_mrp_sale_price_rollup/static/src/**/*.xml",
+        ],
+    },
 }
