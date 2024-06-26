@@ -1,24 +1,24 @@
-<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
-    <template id="mrp_report_mrp_bom" inherit_id="mrp.report_mrp_bom">
+
+    <template id="inherit_mrp_report_mrp_bom" inherit_id="mrp.report_mrp_bom">
         <xpath expr="//table[hasclass('o_mrp_bom_expandable')]/thead/tr/th[9]" position="before">
             <th t-if="data['show_costs']" class="text-end">Sales Price</th>
         </xpath>
         <xpath expr="//table[hasclass('o_mrp_bom_expandable')]/tbody/tr/td[9]" position="before">
-            <td t-if="data['show_costs']" class="text-end" t-esc="data['prod_price']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+            <td t-if="data['show_costs']" class="text-end" t-esc="data['prod_price']" t-options="{'widget': 'monetary', 'display_currency': currency}" />
         </xpath>
         <xpath expr="//table[hasclass('o_mrp_bom_expandable')]/tfoot/tr/td[9]" position="before">
-            <td class="text-end" t-esc="data['prod_price'] / data['quantity']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+            <td class="text-end" t-esc="data['prod_price'] / data['quantity']" t-options="{'widget': 'monetary', 'display_currency': currency}" />
         </xpath>
         <xpath expr="//table[hasclass('o_mrp_bom_expandable')]/tfoot/t/tr/td[9]" position="before">
-            <td class="text-end" t-esc="data['prod_price'] / data['quantity']" t-options='{"widget": "monetary", "display_currency": currency}'/>
-        </xpath>
-    </template>
-    <template id="mrp_report_mrp_bom_pdf_line" inherit_id="mrp.report_mrp_bom_pdf_line">
-        <xpath expr="//t/tr/td[9]" position="before">
-            <td t-if="data['show_costs']" t-attf-class="text-end {{ 'text-muted' if l['type'] == 'component' else '' }}" t-esc="l['prod_price']" t-options='{"widget": "monetary", "display_currency": currency}'/>
+            <td class="text-end" t-esc="data['prod_price'] / data['quantity']" t-options="{'widget': 'monetary', 'display_currency': currency}" />
         </xpath>
     </template>
 
-    
+    <template id="inherit_mrp_report_mrp_bom_pdf_line" inherit_id="mrp.report_mrp_bom_pdf_line">
+        <xpath expr="//t/tr/td[9]" position="before">
+            <td t-if="data['show_costs']" t-attf-class="text-end {{ 'text-muted' if l['type'] == 'component' else '' }}" t-esc="l['prod_price']" t-options="{'widget': 'monetary', 'display_currency': currency}" />
+        </xpath>
+    </template>
+
 </odoo>
