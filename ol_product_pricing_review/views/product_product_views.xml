@@ -44,7 +44,7 @@
                 <field name="defrayment_cost" position="move" invisible="has_configurable_attributes" readonly="1" />
                 <field name="carrier_multiplier_id" position="move" invisible="has_configurable_attributes" readonly="1" />
                 <field name="default_shipping_cost" position="move" invisible="has_configurable_attributes" />
-                <field name="override_margin" invisible="has_configurable_attributes" readonly="1" />
+                <field name="override_margin" invisible="has_configurable_attributes" readonly="1" widget="percentage" />
                 <field name="charm_price" invisible="has_configurable_attributes" readonly="1" />
                 <field name="override_price" invisible="has_configurable_attributes" readonly="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                 <field name="special_price" invisible="has_configurable_attributes" readonly="1" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
