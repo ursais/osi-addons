@@ -55,7 +55,7 @@
                             <field name="default_shipping_cost" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                             <field name="suggested_margin" widget="percentage" />
                             <field name="override_margin" readonly="state in ('reject', 'validated')" widget="percentage" />
-                            <field name="calculated_price" readonly="state in ('reject', 'validated')" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                            <field name="calculated_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                             <field name="charm_price" readonly="state in ('reject', 'validated')" />
                             <field name="override_price" readonly="state in ('reject', 'validated')" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                             <field name="special_price" readonly="state in ('reject', 'validated')" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
