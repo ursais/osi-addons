@@ -2,7 +2,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 {
     "name": "Mexican Addendum For Invoices For Ford",
-    "version": "17.0.1.0.0",
+    "version": "17.0.1.1.0",
     "license": "LGPL-3",
     "summary": "Mexican Localization Addendum For Ford",
     "author": "Open Source Integrators",
