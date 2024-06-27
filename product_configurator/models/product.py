@@ -348,31 +348,31 @@ class ProductTemplate(models.Model):
                 ]
                 raise ValidationError(
                     _(
-                        "The following attributes are missing\
-                         from Configuration Steps: %s",
+                        "The following attributes are missing from "
+                        "Configuration Steps: %s",
                         (attrs),
                     )
                 )
-            all_attrs = self.config_step_line_ids.attribute_line_ids.ids
-            check = False
-            dupAttrs = []
-            for config_step in self.config_step_line_ids[1:]:
-                check = any(e in all_attrs for e in config_step.attribute_line_ids.ids)
-                if check:
-                    dupAttrs.append(
-                        [
-                            attr.attribute_id.name
-                            for attr in config_step.attribute_line_ids
-                        ]
-                    )
-            if check and dupAttrs:
-                raise ValidationError(
-                    _(
-                        "The following attributes have \
-                        duplicates in Configuration Steps: %s",
-                        (dupAttrs),
-                    )
-                )
+            # all_attrs = self.config_step_line_ids.attribute_line_ids.ids
+            # check = False
+            # dupAttrs = []
+            # for config_step in self.config_step_line_ids[1:]:
+            #     check = any(e in all_attrs for e in config_step.attribute_line_ids.ids)
+            #     if check:
+            #         dupAttrs.append(
+            #             [
+            #                 attr.attribute_id.name
+            #                 for attr in config_step.attribute_line_ids
+            #             ]
+            #         )
+            # if check and dupAttrs:
+            #     raise ValidationError(
+            #         _(
+            #             "The following attributes have "
+            #             "duplicates in Configuration Steps: %s",
+            #             (dupAttrs),
+            #         )
+            #     )
         return res
 
     @api.constrains("config_line_ids")
