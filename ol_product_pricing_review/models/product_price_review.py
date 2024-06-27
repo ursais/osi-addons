@@ -401,13 +401,9 @@ class ProductPriceReview(models.Model):
     def _compute_calculated_price(self):
         for rec in self:
             if rec.override_margin == 0.0:
-                rec.calculated_price = rec.total_cost / (
-                    (100 - rec.suggested_margin) / 100
-                )
+                rec.calculated_price = rec.total_cost / ((1 - rec.suggested_margin) / 1)
             elif rec.override_margin < 100:
-                rec.calculated_price = rec.total_cost / (
-                    (100 - rec.override_margin) / 100
-                )
+                rec.calculated_price = rec.total_cost / ((1 - rec.override_margin) / 1)
 
     @api.depends(
         "tariff_percent",
