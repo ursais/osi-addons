@@ -303,7 +303,7 @@ class ProductConfigurator(models.TransientModel):
             cfg_step = self.env["product.config.step.line"]
 
         dynamic_fields = {k: v for k, v in values.items() if k.startswith(field_prefix)}
-
+        self.dyn_field_2_value = False
         # Get the unstored values from the client view
         for k, v in dynamic_fields.items():
             attr_id = int(k.split(field_prefix)[1])
