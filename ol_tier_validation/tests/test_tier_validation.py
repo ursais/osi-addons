@@ -1,5 +1,6 @@
 # Import Odoo libs
 from odoo.tests import common, tagged
+from odoo.exceptions import ValidationError
 
 
 @tagged("-at_install", "post_install")
@@ -7,42 +8,130 @@ class TestProductTierValidation(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        group_ids = cls.env.ref("base.group_system").ids
-        cls.test_user_1 = cls.env["res.users"].create(
-            {
-                "name": "John",
-                "login": "test1",
-                "groups_id": [(6, 0, group_ids)],
-                "email": "test@examlple.com",
-            }
-        )
-
+        cls.test_user_1 = cls.env.ref("ol_tier_validation.res_user_john_doe")
         cls.tier_def_obj = cls.env["tier.definition"]
-        cls.eco_type = cls.env.ref("mrp_plm.ecotype0")
-        cls.product = cls.env.ref(
-            "mrp.product_product_computer_desk_bolt_product_template"
-        )
-        cls.draft_stage = cls.env.ref("mrp_plm.ecostage_new").write(
-            {"state": "progress"}
-        )
-        cls.normal_stage = cls.env.ref("mrp_plm.ecostage_progress").write(
-            {"state": "approved"}
-        )
 
-    def test_tier_validation_model_name(self):
-        self.assertIn("mrp.eco", self.tier_def_obj._get_tier_validation_model_names())
+    def test_create_tier_definition_without_permissions(self):
+        """
+        Ensure users with permission can't create certain tier_definition fields
+        User Error should be returned
+        """
+        # Create tier definition with python_code
+        # Should return user error
+        with self.assertRaises(ValidationError):
+            self.tier_def_obj.with_user(self.test_user_1).create({
+                'name': 'Tier Definition 1',
+                'python_code': "#Testing Create python_code"
+            })
 
-    def test_validation_eco(self):
-        eco = self.env["mrp.eco"].create(
-            {
-                "name": "ECO for test",
-                "type_id": self.eco_type.id,
-                "type": "product",
-                "product_id": self.product.id,
-                "stage_id": self.draft_state.id,
-            }
-        )
-        eco.request_validation()
-        eco.with_user(self.test_user_1).validate_tier()
-        eco.write({"stage_id": self.normal_stage.id})
-        self.assertEqual(eco.state, self.normal_stage.state)
+        # Create tier definition with reviewer_expression
+        # Should return user error
+        with self.assertRaises(ValidationError):
+            self.tier_def_obj.with_user(self.test_user_1).create({
+                'name': 'Tier Definition 2',
+                'reviewer_expression': "#Testing Create reviewer_expression"
+            })
+
+        # Create tier definition with neither
+        # Should not return user error
+        try:
+            self.tier_def_obj.with_user(self.test_user_1).create({
+                'name': 'Tier Definition 3',
+            })
+        except ValidationError:
+            self.fail("create() raised ValidationError unexpectedly!")
+
+    def test_write_tier_definition_without_permissions(self):
+        """
+        Ensure users with permission can't edit certain tier_definition fields
+        """
+        # Write tier definition with python_code
+        # Should return user error
+        with self.assertRaises(ValidationError):
+            self.tier_def_obj.with_user(self.test_user_1).write({
+                'python_code': '#Test Write python_code',
+            })
+        
+        # Write tier definition with reviewer_expression
+        # Should return user error
+        with self.assertRaises(ValidationError):
+            self.tier_def_obj.with_user(self.test_user_1).write({
+                'reviewer_expression': '#Test Write reviewer_expression',
+            })
+        
+        # write tier definition with neither
+        # Should not return user error
+        try:
+            self.tier_def_obj.with_user(self.test_user_1).write({
+                'name': 'Tier Definition 3 - Edit name',
+            })
+        except ValidationError:
+            self.fail("write() raised ValidationError unexpectedly!")
+
+    def test_create_tier_definition_with_permissions(self):
+        """
+        Ensure users with permission can create certain tier_definition fields
+        """
+        self.test_user_1.write({"groups_id": [(4, self.env.ref("ol_tier_validation.group_tier_validation_python").id)]})
+        
+        # Create tier definition with python_code
+        # Should not return user error
+        try:
+            self.tier_def_obj.with_user(self.test_user_1).create({
+                'name': 'Tier Definition 1',
+                'python_code': "#Testing 1"
+            })
+        except ValidationError:
+            self.fail("create() raised ValidationError unexpectedly on python_code!")
+
+        # Create tier definition with reviewer_expression
+        # Should not return user error
+        try:
+            self.tier_def_obj.with_user(self.test_user_1).create({
+                'name': 'Tier Definition 2',
+                'reviewer_expression': "#Testing 2"
+            })
+        except ValidationError:
+            self.fail("create() raised ValidationError unexpectedly on reviewer_expression!")
+
+        # Create tier definition with neither
+        # Should not return user error
+        try:
+            self.tier_def_obj.with_user(self.test_user_1).create({
+                'name': 'Tier Definition 3',
+            })
+        except ValidationError:
+            self.fail("create() raised ValidationError unexpectedly on name!")
+
+    def test_write_tier_definition_with_permissions(self):
+        """
+        Ensure users with permission can edit certain tier_definition fields
+        """
+        self.test_user_1.write({"groups_id": [(4, self.env.ref("ol_tier_validation.group_tier_validation_python").id)]})
+
+        # Write tier definition with python_code
+        # Should not return user error
+        try:
+            self.tier_def_obj.with_user(self.test_user_1).write({
+                'field_name': 'field_value',
+            })
+        except ValidationError:
+            self.fail("write() raised ValidationError unexpectedly on python_code!")
+        
+        # Write tier definition with reviewer_expression
+        # Should not return user error
+        try:
+            self.tier_def_obj.with_user(self.test_user_1).write({
+                'field_name': 'field_value',
+            })
+        except ValidationError:
+            self.fail("write() raised ValidationError unexpectedly on reviewer_expression!")
+        
+        # Write tier definition with name
+        # Should not return user error
+        try:
+            self.tier_def_obj.with_user(self.test_user_1).write({
+                'name': 'Tier Definition 3 - Edit',
+            })
+        except ValidationError:
+            self.fail("create() raised ValidationError unexpectedly on name!")

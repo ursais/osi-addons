@@ -18,6 +18,10 @@
         "security/tier_validation_group.xml",
         "views/tier_definition_view.xml",
     ],
+    # only loaded in demo mode
+    "demo": [
+        "demo/res_users.xml",
+    ],
     "application": False,
     "installable": True,
 }
