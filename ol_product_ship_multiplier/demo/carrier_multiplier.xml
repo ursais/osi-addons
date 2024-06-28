@@ -1,0 +1,18 @@
+<odoo>
+
+  <record id="carrier_multiplier0" model="delivery.carrier.multiplier">
+    <field name="carrier" ref="ol_base.normal_delivery_carrier"/>
+    <field name="multiplier">10</field>
+  </record>
+
+  <record id="carrier_multiplier1" model="delivery.carrier.multiplier">
+    <field name="carrier" ref="ol_base.normal_delivery_carrier"/>
+    <field name="multiplier">20</field>
+  </record>
+
+  <record id="carrier_multiplier2" model="delivery.carrier.multiplier">
+    <field name="carrier" ref="ol_base.normal_delivery_carrier"/>
+    <field name="multiplier">30</field>
+  </record>
+
+</odoo>
