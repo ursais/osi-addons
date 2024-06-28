@@ -13,51 +13,29 @@ class TestSaleOlValidation(common.TransactionCase):
         cls.company2 = cls.env.ref("base.main_company")
         cls.delivery1 = cls.env.ref("delivery.free_delivery_carrier")
         cls.delivery2 = cls.env.ref("delivery.delivery_carrier")
-
-        cls.product0 = cls.env["product.template"].create(
-            {"name": "Product for test", "list_price": 120.00, "weight": 1,}
-        )
-        cls.product1 = cls.env["product.template"].create(
-            {
-                "name": "Product for test 1",
-                "list_price": 120.00,
-                "weight": 1,
-                "company_id": cls.company1.id,
-            }
-        )
-
-        cls.product2 = cls.env["product.template"].create(
-            {
-                "name": "Product for test 2",
-                "list_price": 120.00,
-                "weight": 1,
-                "company_id": cls.company2.id,
-            }
-        )
+        cls.product0 = cls.env.ref("product.product_product_4_product_template")
+        cls.carrier_multiplier0 = cls.env.ref("ol_product_ship_multiplier.carrier_multiplier0")
+        cls.carrier_multiplier1 = cls.env.ref("ol_product_ship_multiplier.carrier_multiplier1")
+        cls.carrier_multiplier2 = cls.env.ref("ol_product_ship_multiplier.carrier_multiplier2")
 
     def test_action_confirm_ValidationError(self):
-        carrier_multiplier0 = self.env["delivery.carrier.multiplier"].create(
-            {"carrier_id": self.delivery1.id, "multiplier": 10,}
-        )
-        self.product0.write({"carrier_multiplier_id": carrier_multiplier0.id})
+        """
+            Tests to ensure shipping cost is correctly calculated
+            First product should end with a shipping cost of 10
+            Second product should end with a shipping cost of 20
+            Third product should end with a shipping cost of 30
+        """
+        self.product0.write({"carrier_multiplier_id": self.carrier_multiplier0.id})
         self.product0._compute_default_shipping_cost()
+        expected_shipping_cost0 = self.product0.weight * self.carrier_multiplier0.multiplier
+        self.assertEqual(self.product0.default_shipping_cost, expected_shipping_cost0)
 
-        carrier_multiplier1 = self.env["delivery.carrier.multiplier"].create(
-            {
-                "company_id": self.company1.id,
-                "carrier_id": self.delivery1.id,
-                "multiplier": 20,
-            }
-        )
-        self.product1.write({"carrier_multiplier_id": carrier_multiplier1.id})
-        self.product1._compute_default_shipping_cost()
+        self.product0.write({"carrier_multiplier_id": self.carrier_multiplier1.id})
+        self.product0._compute_default_shipping_cost()
+        expected_shipping_cost1 = self.product0.weight * self.carrier_multiplier1.multiplier
+        self.assertEqual(self.product0.default_shipping_cost, expected_shipping_cost1)
 
-        carrier_multiplier2 = self.env["delivery.carrier.multiplier"].create(
-            {
-                "company_id": self.company2.id,
-                "carrier_id": self.delivery1.id,
-                "multiplier": 30,
-            }
-        )
-        self.product2.write({"carrier_multiplier_id": carrier_multiplier2.id})
-        self.product2._compute_default_shipping_cost()
+        self.product0.write({"carrier_multiplier_id": self.carrier_multiplier2.id})
+        self.product0._compute_default_shipping_cost()
+        expected_shipping_cost2 = self.product0.weight * self.carrier_multiplier2.multiplier
+        self.assertEqual(self.product0.default_shipping_cost, expected_shipping_cost2)

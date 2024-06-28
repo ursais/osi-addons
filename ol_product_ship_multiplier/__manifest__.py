@@ -19,4 +19,9 @@
         "views/delivery_carrier_multiplier_views.xml",
         "views/product_views.xml",
     ],
+    # only loaded in demonstration mode
+    "demo": [
+        # delivery
+        "demo/carrier_multiplier.xml",
+    ],
 }

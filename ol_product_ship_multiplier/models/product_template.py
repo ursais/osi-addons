@@ -4,7 +4,6 @@ from odoo import api, fields, models
 
 class ProductTemplate(models.Model):
     """
-
     Adding Fields in Product Template.
     """
 
@@ -23,7 +22,8 @@ class ProductTemplate(models.Model):
         string="Cost Multiplier",
         compute="_compute_default_shipping_cost",
         store=True,
-        help="Estimated shipping cost. Calculated by multiplying product weight by the inbound shipping method multiplier.",
+        help="Estimated shipping cost. Calculated by multiplying product "
+        "weight by the inbound shipping method multiplier.",
     )
 
     # END #######
@@ -37,6 +37,10 @@ class ProductTemplate(models.Model):
     )
     @api.depends_context("company")
     def _compute_default_shipping_cost(self):
+        """
+        Compute default shipping cost:
+        Weitht * Multiplier
+        """
         for rec in self:
             default_shipping_cost = 0.0
             if rec.carrier_multiplier_id:

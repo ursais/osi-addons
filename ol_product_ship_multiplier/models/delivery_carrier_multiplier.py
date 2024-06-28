@@ -4,13 +4,11 @@ from odoo import fields, models
 
 class DeliveryCarrierMultiplier(models.Model):
     """
-
     New Object Delivery Carrier Multiplier
 
     Shipment Method Table to hold Masterdata for Shipment Method and Multiplier.
     The Table needs to hold Shipment Method and multiplier for each individual Company,
     so each line needs to have a Company Identifier.
-
     """
 
     _name = "delivery.carrier.multiplier"
