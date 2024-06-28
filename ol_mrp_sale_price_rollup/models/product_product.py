@@ -4,11 +4,10 @@ from odoo.tools import float_round
 
 
 class ProductProduct(models.Model):
-    """
-    Inherit Product for Method Overriding.
-    """
+    """Inherit Product for Method Overriding."""
 
     _inherit = "product.product"
+
     bom_lst_price = fields.Float(
         "BoM List Price",
         digits="Product Price",
@@ -16,16 +15,26 @@ class ProductProduct(models.Model):
     )
 
     # METHODS ##########
-    @api.depends("product_template_attribute_value_ids.price_extra", "bom_lst_price")
+    """ The methods below are very similar to the compute cost from bom methods """
+
+    @api.depends(
+        "product_template_attribute_value_ids.price_extra",
+        "bom_lst_price",
+    )
     def _compute_product_price_extra(self):
+        """Override the price extra method to add the bom_lst_price to extra price."""
         standard_products = self.filtered(lambda product: not product.config_ok)
         config_products = self - standard_products
+
+        # Use normal compute if standard product
         if standard_products:
             result = super(
                 ProductProduct, standard_products
             )._compute_product_price_extra()
         else:
             result = None
+
+        # If configured product then compute extra price but add bom_lst_price.
         for product in config_products:
             attribute_value_obj = self.env["product.attribute.value"]
             value_ids = (
@@ -38,10 +47,12 @@ class ProductProduct(models.Model):
         return result
 
     def button_bom_sale_price(self):
+        """Button method on the product form."""
         self.ensure_one()
         self._set_sale_price_from_bom()
 
     def action_bom_sale_price(self):
+        """Get the bom's to compute."""
         boms_to_recompute = self.env["mrp.bom"].search(
             [
                 "|",
@@ -55,6 +66,7 @@ class ProductProduct(models.Model):
             product._set_sale_price_from_bom(boms_to_recompute)
 
     def _set_sale_price_from_bom(self, boms_to_recompute=False):
+        """ets the bom_lst_price."""
         self.ensure_one()
         bom = self.env["mrp.bom"]._bom_find(self)[self]
         if bom:
@@ -75,23 +87,29 @@ class ProductProduct(models.Model):
                     self.bom_lst_price = price
 
     def _compute_bom_sale_price(
-        self, bom, boms_to_recompute=False, byproduct_bom=False
+        self,
+        bom,
+        boms_to_recompute=False,
+        byproduct_bom=False,
     ):
+        """Cycle through the BoM and child BoM's to compute the sale price."""
         self.ensure_one()
         if not bom:
             return 0
         if not boms_to_recompute:
             boms_to_recompute = []
         total = 0
-        for opt in bom.operation_ids:
-            if opt._skip_operation_line(self):
-                continue
 
-            duration_expected = (
-                opt.workcenter_id._get_expected_duration(self)
-                + opt.time_cycle * 100 / opt.workcenter_id.time_efficiency
-            )
-            total += (duration_expected / 60) * opt._total_cost_per_hour()
+        # Leaving commented incase this is needed in the future,
+        # This code will add operation costs into the sales price if desired.
+        # for opt in bom.operation_ids:
+        #     if opt._skip_operation_line(self):
+        #         continue
+        #     duration_expected = (
+        #         opt.workcenter_id._get_expected_duration(self)
+        #         + opt.time_cycle * 100 / opt.workcenter_id.time_efficiency
+        #     )
+        #     total += (duration_expected / 60) * opt._total_cost_per_hour()
 
         for line in bom.bom_line_ids:
             if line._skip_bom_line(self):
@@ -115,6 +133,8 @@ class ProductProduct(models.Model):
                     )
                     * line.product_qty
                 )
+
+        # Ensure byproduct costs are part of the pricing
         if byproduct_bom:
             byproduct_lines = bom.byproduct_ids.filtered(
                 lambda b: b.product_id == self and b.cost_share != 0
