@@ -1,4 +1,4 @@
-<odoo>
+<odoo noupdate="1">
 
     <record id="group_bypass_bom_restiction" model="res.groups">
         <field name="name">Bypass Product/BoM Edit Restrictions</field>
