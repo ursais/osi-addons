@@ -492,8 +492,7 @@ class ProductPriceReview(models.Model):
     def validate_button(self):
         for rec in self:
             if rec.product_id and not rec.product_id.disable_price_reviews:
-                write_values = {}
-                write_values.update(
+                rec.product_id.sudo().write(
                     {
                         "tariff_percent": rec.tariff_percent,
                         "tooling_cost": rec.tooling_cost,
@@ -508,7 +507,11 @@ class ProductPriceReview(models.Model):
                         "based_on": rec.based_on,
                     }
                 )
-                rec.product_id.sudo().write(write_values)
+                # Recompute the last PO Margin since it's equation values may update.
+                rec.product_id.product_tmpl_id._compute_last_purchase_margin(
+                    from_review=True
+                )
+                # Move price review to approved/validated state
                 rec.approve()
 
     # END ##########
