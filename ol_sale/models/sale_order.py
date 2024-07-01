@@ -25,7 +25,7 @@ class SaleOrder(models.Model):
         """
         res = super().action_confirm()
         self.original_commitment_date = (
-            self.commitment_date and self.commitment_date or self.expected_date
+            self.commitment_date or self.expected_date
         )
         if not self.original_request_date:
             raise ValidationError(
