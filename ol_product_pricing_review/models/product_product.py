@@ -1,7 +1,7 @@
 from odoo import fields, models
 
 
-class ProducProduct(models.Model):
+class ProductProduct(models.Model):
     _inherit = "product.product"
 
     price_review_count = fields.Integer(
