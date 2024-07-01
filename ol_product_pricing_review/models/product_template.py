@@ -18,6 +18,7 @@ class ProductTemplate(models.Model):
                 ) / rec.list_price
             rec.last_purchase_margin = last_purchase_margin
 
+    list_price = fields.Float(company_dependent=True)
     based_on = fields.Char(
         string="Based On",
         company_dependent=True,
