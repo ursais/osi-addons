@@ -1,0 +1,13 @@
+<odoo>
+
+    <record id="res_user_john_doe" model="res.users">
+        <field name="name">John Doe</field>
+        <field name="login">login1</field>
+        <field name="password">password</field>
+        <field name="email">test1@example.com</field>
+        <field name="tz">US/Eastern</field>
+        <field name="active" eval="True" />
+        <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+
+</odoo>

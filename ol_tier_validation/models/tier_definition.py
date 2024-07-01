@@ -41,21 +41,19 @@ class TierDefinition(models.Model):
 
     @api.model
     def create(self, vals):
-        tier_python_group = self.env["res.users"].has_group(
-            "ol_tier_validation.group_tier_validation_python"
-        )
-        if (
-            "python_code" in vals or "reviewer_expression" in vals
-        ) and not tier_python_group:
-            raise ValidationError(
-                _(
-                    """You do not have permissions to add python code to tier
-                     validations. Please see your administrator for access."""
-                )
-            )
+        self.check_user_permissions(vals)
         return super().create(vals)
 
     def write(self, vals):
+        self.check_user_permissions(vals)
+        return super().write(vals)
+
+    def check_user_permissions(self, vals):
+        """
+        If python_code or reviewer_expression is set/changed
+        and user does not have the correct permissions
+        raise UserError
+        """
         tier_python_group = self.env["res.users"].has_group(
             "ol_tier_validation.group_tier_validation_python"
         )
@@ -68,6 +66,5 @@ class TierDefinition(models.Model):
                       validations. Please see your administrator for access."""
                 )
             )
-        return super().write(vals)
 
     # END #######
