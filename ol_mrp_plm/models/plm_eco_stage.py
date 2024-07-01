@@ -16,5 +16,6 @@ class PLMECOStage(models.Model):
         string="Product State",
         help="Select a state for this product",
     )
+    allow_bom_edits = fields.Boolean(string="Allow Modifications")
 
     # END #########

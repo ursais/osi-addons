@@ -10,6 +10,9 @@
             <field name="final_stage" position="after">
                 <field name="product_state_id" />
             </field>
+            <field name="allow_apply_change" position="before">
+                <field name="allow_bom_edits" />
+            </field>
         </field>
     </record>
 
