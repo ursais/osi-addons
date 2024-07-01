@@ -23,6 +23,10 @@ class TestOlPurchaseLastPriceInfo(common.TransactionCase):
         )
 
     def test_ol_purchase_last_price_info_demo(self):
+        """
+        Test ensures that when a purchase is confirmed,
+        the product price matches the latest purchase price and date
+        """
         purchase_order = self.env.ref("purchase.purchase_order_6")
         purchase_order.write(
             {"date_order": "2000-01-01", "currency_id": self.currency.id}
@@ -54,6 +58,11 @@ class TestOlPurchaseLastPriceInfo(common.TransactionCase):
         self.assertEqual(self.product.last_purchase_price_currency, 1.0)
 
     def test_ol_purchase_last_price_info_new_order(self):
+        """
+        Test ensures that when a purchase is confirmed,
+        the product price matches the latest purchase price and date
+        where the currency rate is doubled
+        """
         purchase_order = self.purchase_model.create(
             {
                 "date_order": "2000-01-01",
