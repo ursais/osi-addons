@@ -396,7 +396,7 @@ class ProductAttributeValue(models.Model):
         TODO: This only works when activating the selection not when typing
         """
         if self.env.context.get("wizard_id"):
-            wiz_id = self.env["product.configurator"].browse(
+            wiz_id = self.env[self.env.context.get('active_model','product.configurator')].browse(
                 self.env.context.get("wizard_id")
             )
             if (

@@ -348,8 +348,8 @@ class ProductTemplate(models.Model):
         #         ]
         #         raise ValidationError(
         #             _(
-        #                 "The following attributes are missing from "
-        #                 "Configuration Steps: %s",
+        #                 "The following attributes are missing\
+        #                  from Configuration Steps: %s",
         #                 (attrs),
         #             )
         #         )
@@ -368,8 +368,8 @@ class ProductTemplate(models.Model):
         #     if check and dupAttrs:
         #         raise ValidationError(
         #             _(
-        #                 "The following attributes have "
-        #                 "duplicates in Configuration Steps: %s",
+        #                 "The following attributes have \
+        #                 duplicates in Configuration Steps: %s",
         #                 (dupAttrs),
         #             )
         #         )
