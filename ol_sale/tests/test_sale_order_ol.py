@@ -10,38 +10,20 @@ class TestSaleOlValidation(common.TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.env = cls.env(context=dict(cls.env.context, **DISABLED_MAIL_CONTEXT))
-        # Get sale order model
-        cls.so_model = cls.env.ref("sale.model_sale_order")
-        cls.env.company.country_id = cls.env.ref("base.us")
-        cls.env.ref("base.main_company").currency_id = cls.env.ref("base.USD")
-        cls.currency = cls.env.ref("base.USD")
 
-        dummy_product = cls.env["product.product"].create(
-            [{"name": "Test product", "list_price": 500,}]
-        )
-        # Create users
-        group_ids = (
-            cls.env.ref("base.group_system")
-            + cls.env.ref("sales_team.group_sale_salesman_all_leads")
-        ).ids
-        cls.test_user_1 = cls.env["res.users"].create(
-            {
-                "name": "John",
-                "login": "test1",
-                "groups_id": [(6, 0, group_ids)],
-                "email": "test@examlple.com",
-            }
-        )
-        cls.customer = cls.env["res.partner"].create({"name": "Partner for test"})
-        cls.product = cls.env["product.product"].create(
-            {"name": "Product for test", "list_price": 120.00}
-        )
+        cls.customer = cls.env.ref("hr.work_contact_mit")
+        cls.product = cls.env.ref("product.product_product_6")
 
     def test_action_confirm_ValidationError(self):
+        """
+        Test to ensure that Validation Error is raised
+        when original request date is missing
+        """
         # Without original_request_date
         sale_wo_original_request_date = self.env["sale.order"].create(
             {
                 "partner_id": self.customer.id,
+                "pricelist_id": self.customer.property_product_pricelist.id,
                 "order_line": [
                     (
                         0,
@@ -55,15 +37,15 @@ class TestSaleOlValidation(common.TransactionCase):
                         },
                     )
                 ],
-                "pricelist_id": self.customer.property_product_pricelist.id,
             }
         )
-        # Without original_request_date
+        # With original_request_date
         sale_w_original_request_date = self.env["sale.order"].create(
             {
                 "partner_id": self.customer.id,
                 "original_request_date": "2024-06-12",
                 "commitment_date": "2024-06-10",
+                "pricelist_id": self.customer.property_product_pricelist.id,
                 "order_line": [
                     (
                         0,
@@ -77,9 +59,11 @@ class TestSaleOlValidation(common.TransactionCase):
                         },
                     )
                 ],
-                "pricelist_id": self.customer.property_product_pricelist.id,
             }
         )
         with self.assertRaises(ValidationError):
             sale_wo_original_request_date.action_confirm()
-        sale_w_original_request_date.action_confirm()
+        try:
+            sale_w_original_request_date.action_confirm()
+        except ValidationError:
+            self.fail("action_confirm() raised ValidationError unexpectedly!")
