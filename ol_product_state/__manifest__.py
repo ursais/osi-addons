@@ -17,6 +17,10 @@
         "security/product_state_group.xml",
         "views/product_template_view.xml",
     ],
+    # only loaded in demo mode
+    "demo": [
+        "demo/product_template.xml",
+    ],
     "application": False,
     "installable": True,
 }
