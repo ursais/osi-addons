@@ -1,5 +1,6 @@
 # Import Odoo libs
 from odoo import fields, api, models
+from odoo.exceptions import ValidationError
 
 
 class ProductPriceReview(models.Model):
@@ -400,6 +401,11 @@ class ProductPriceReview(models.Model):
     )
     def _compute_calculated_price(self):
         for rec in self:
+            if rec.suggested_margin == 1.0:
+                raise ValidationError("The suggested margin cannot be 100%")
+            if rec.override_margin == 1.0:
+                raise ValidationError("The override margin cannot be 100%")
+
             if rec.override_margin == 0.0 and rec.suggested_margin < 1.0:
                 rec.calculated_price = rec.total_cost / ((1 - rec.suggested_margin) / 1)
             elif rec.override_margin < 1.0:
