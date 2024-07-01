@@ -1,4 +1,3 @@
-# pylint: disable=pointless-statement
 {
     "name": "OnLogic Purchase Product Last Price Info",
     "version": "17.0.0.1.0",

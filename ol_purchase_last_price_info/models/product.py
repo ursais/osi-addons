@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import fields, models, api
+from odoo import api, fields, models
 
 
 class ProductProduct(models.Model):
@@ -18,6 +18,8 @@ class ProductProduct(models.Model):
     @api.depends_context("company")
     @api.depends("last_purchase_line_ids.state")
     def _compute_last_purchase_line_id(self):
+        """Override method in purchase_last_price_info module to make sure
+        purchase orders for internal companies don't count towards last purchase."""
         company_partners = (
             self.env["res.company"].sudo().search([]).mapped("partner_id")
         )

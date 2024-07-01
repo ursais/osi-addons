@@ -5,15 +5,11 @@ from odoo import api, fields, models
 class ProductTemplate(models.Model):
     _inherit = "product.template"
 
-    # COLUMNS ###
-
-    list_price = fields.Float(company_dependent=True)
-
-    # END #######
-
     @api.depends_context("company")
     @api.depends("last_purchase_line_ids.state")
     def _compute_last_purchase_line_id(self):
+        """Override method in purchase_last_price_info module to make sure
+        purchase orders for internal companies don't count towards last purchase."""
         company_partners = (
             self.env["res.company"].sudo().search([]).mapped("partner_id")
         )

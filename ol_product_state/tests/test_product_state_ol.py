@@ -1,4 +1,3 @@
-from odoo.exceptions import ValidationError
 from odoo.tests import common, tagged
 
 from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
@@ -15,8 +14,12 @@ class TestProductStateOlValidation(common.TransactionCase):
         # configure 'New Product Introduction' ECO type stages
         cls.ecostage_progress = cls.env.ref("mrp_plm.ecostage_progress")
         cls.ecostage_effective = cls.env.ref("mrp_plm.ecostage_effective")
-        cls.ecostage_progress.product_state_id = cls.env.ref("product_state.product_state_sellable")
-        cls.ecostage_effective.product_state_id = cls.env.ref("product_state.product_state_obsolete")
+        cls.ecostage_progress.product_state_id = cls.env.ref(
+            "product_state.product_state_sellable"
+        )
+        cls.ecostage_effective.product_state_id = cls.env.ref(
+            "product_state.product_state_obsolete"
+        )
 
     def test_action_confirm_product_state_changes(self):
         """Test ensures product is able to move product stages correctly with eco stages"""
@@ -43,7 +46,7 @@ class TestProductStateOlValidation(common.TransactionCase):
         self.assertEqual(self.product_1.product_state_id.name, "Normal")
 
         # Move ECO to 'Validated'
-        # Product stage should change to "Obsolete" 
+        # Product stage should change to "Obsolete"
         mrp_eco.stage_id = self.env.ref("mrp_plm.ecostage_validated").id
         mrp_eco.action_apply()
         self.assertEqual(self.product_1.product_state_id.name, "Obsolete")
