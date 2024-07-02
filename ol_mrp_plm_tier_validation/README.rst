@@ -23,6 +23,7 @@ To configure this module, you need to:
 
 1. Go to *Settings > Technical > Tier Validations > Tier Definition*.
 2. Create as many tiers as you want for PLM ECO model.
+3. Set the 'state' on the ECO stages as tier validation is only checked on state changes. (eg. in progress -> approved)
 
 Usage
 =====

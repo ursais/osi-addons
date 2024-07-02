@@ -8,6 +8,8 @@ class MrpEcoStage(models.Model):
     Add stage to PLM ECO Stage for Tier Validation Usage
     """
 
+    # COLUMNS ###
+
     state = fields.Selection(
         [
             ("confirmed", "To Do"),
@@ -25,3 +27,5 @@ class MrpEcoStage(models.Model):
          Set to 'to_approve'Set to 'Approved' if the ECO stage requires approval
          before entering this stage.""",
     )
+
+    # END #######
