@@ -9,30 +9,32 @@ class TestProductTierValidation(common.TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         # Set variables from demo data
-        cls.test_user_1 = cls.env.ref("base.partner_admin")
+        cls.test_user_1 = cls.env.ref("base.user_admin")
         cls.eco_type = cls.env.ref("mrp_plm.ecotype0")
         cls.product = cls.env.ref(
             "mrp.product_product_computer_desk_bolt_product_template"
         )
         # Set states on the stages which tier validation uses
-        cls.draft_stage = cls.env.ref("mrp_plm.ecostage_new").write(
+        cls.draft_stage = cls.env.ref("mrp_plm.ecostage_new")
+        cls.draft_stage.write(
             {"state": "progress"}
         )
-        cls.normal_stage = cls.env.ref("mrp_plm.ecostage_progress").write(
+        cls.normal_stage = cls.env.ref("mrp_plm.ecostage_progress")
+        cls.normal_stage.write(
             {"state": "approved"}
         )
 
         # Get tier definition model
         cls.tier_def_obj = cls.env["tier.definition"]
         # Get ECO model
-        cls.eco_model = cls.env.ref("mrp.model_mrp_eco")
+        cls.eco_model = cls.env.ref("mrp_plm.model_mrp_eco")
         # Create tier definition for this test
         cls.tier_def_obj.create(
             {
                 "model_id": cls.eco_model.id,
                 "review_type": "individual",
                 "reviewer_id": cls.test_user_1.id,
-                "definition_domain": "[('stage_id.name', '=', 'new')]",
+                "definition_domain": "[('stage_id.name', '=', 'New')]",
             }
         )
 
@@ -51,7 +53,7 @@ class TestProductTierValidation(common.TransactionCase):
                 "name": "ECO for test",
                 "type_id": self.eco_type.id,
                 "type": "product",
-                "product_id": self.product.id,
+                "product_tmpl_id": self.product.id,
                 "stage_id": self.draft_stage.id,
             }
         )
@@ -65,6 +67,7 @@ class TestProductTierValidation(common.TransactionCase):
 
         # Validate the tier validation request
         eco.with_user(self.test_user_1).validate_tier()
+        self.assertTrue(eco.validated)
 
         # Change the eco stage to normal
         eco.write({"stage_id": self.normal_stage.id})
