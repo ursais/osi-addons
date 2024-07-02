@@ -277,10 +277,11 @@ class ProductConfigurator(models.TransientModel):
             state = self.state
 
         cfg_vals = self.env["product.attribute.value"]
-        if values.get("value_ids", []):
-            cfg_vals = self.env["product.attribute.value"].browse(
-                values.get("value_ids", [])[0][2]
-            )
+        # TODO: VP Need to Check
+        # if values.get("value_ids", []):
+        #     cfg_vals = self.env["product.attribute.value"].browse(
+        #         values.get("value_ids", [])[0][2]
+        #     )
         if not cfg_vals:
             cfg_vals = self.value_ids
 
