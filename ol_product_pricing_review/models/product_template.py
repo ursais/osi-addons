@@ -109,7 +109,7 @@ class ProductTemplate(models.Model):
                     open_review = self.env["product.price.review"].search(
                         [
                             ("company_id", "=", self.env.company.id),
-                            ("product_id", "=", self.product_variant_id.id),
+                            ("product_id", "=", rec.product_variant_id.id),
                             ("state", "not in", ("reject", "validated")),
                         ],
                         limit=1,
