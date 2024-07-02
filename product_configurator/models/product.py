@@ -6,6 +6,7 @@ from mako.template import Template
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from collections import Counter
 
 _logger = logging.getLogger(__name__)
 
@@ -334,45 +335,41 @@ class ProductTemplate(models.Model):
         if change_config_ok or configurable_templates:
             self[:1].check_config_user_access()
         res = super().write(vals)
-        # if "config_step_line_ids" in vals:
-        #     miss_attrs = list(
-        #         set(self.attribute_line_ids.ids)
-        #         - set(self.config_step_line_ids.attribute_line_ids.ids)
-        #     )
-        #     if miss_attrs:
-        #         attrs = [
-        #             x.attribute_id.name
-        #             for x in self.env["product.template.attribute.line"].browse(
-        #                 miss_attrs
-        #             )
-        #         ]
-        #         raise ValidationError(
-        #             _(
-        #                 "The following attributes are missing\
-        #                  from Configuration Steps: %s",
-        #                 (attrs),
-        #             )
-        #         )
-        #     all_attrs = self.config_step_line_ids.attribute_line_ids.ids
-        #     check = False
-        #     dupAttrs = []
-        #     for config_step in self.config_step_line_ids[1:]:
-        #         check = any(e in all_attrs for e in config_step.attribute_line_ids.ids)
-        #         if check:
-        #             dupAttrs.append(
-        #                 [
-        #                     attr.attribute_id.name
-        #                     for attr in config_step.attribute_line_ids
-        #                 ]
-        #             )
-        #     if check and dupAttrs:
-        #         raise ValidationError(
-        #             _(
-        #                 "The following attributes have \
-        #                 duplicates in Configuration Steps: %s",
-        #                 (dupAttrs),
-        #             )
-        #         )
+        if "config_step_line_ids" in vals:
+            miss_attrs = list(
+                set(self.attribute_line_ids.ids)
+                - set(self.config_step_line_ids.attribute_line_ids.ids)
+            )
+            if miss_attrs:
+                attrs = [
+                    x.attribute_id.name
+                    for x in self.env["product.template.attribute.line"].browse(
+                        miss_attrs
+                    )
+                ]
+                raise ValidationError(
+                    _(
+                        "The following attributes are missing from Configuration Steps: %s",
+                        (",".join(attrs)),
+                    )
+                )
+            couter = []
+            for config_step in self.config_step_line_ids:
+                couter.extend(config_step.attribute_line_ids.ids)
+            counter = Counter(couter)
+            duplicates = []
+            for k,v in dict(counter).items():
+                if v > 1:
+                    duplicates.append(k)
+            if duplicates:
+                duplicates = self.env['product.template.attribute.line'].browse(duplicates)
+                duplicates = ",".join(duplicates.mapped('attribute_id.name'))
+                raise ValidationError(
+                    _(
+                        "The following attributes have duplicates in Configuration Steps: %s",
+                        (duplicates),
+                    )
+                )
         return res
 
     @api.constrains("config_line_ids")
