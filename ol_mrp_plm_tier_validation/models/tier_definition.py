@@ -7,6 +7,7 @@ class TierDefinition(models.Model):
 
     @api.model
     def _get_tier_validation_model_names(self):
+        """This method adds the ECO model to tier definitions."""
         res = super()._get_tier_validation_model_names()
         res.append("mrp.eco")
         return res

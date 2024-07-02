@@ -1,5 +1,3 @@
-<?xml version="1.0" encoding="utf-8" ?>
-
 <odoo>
 
     <record id="ol_mrp_eco_tier_validation_eco_search" model="ir.ui.view">
