@@ -46,12 +46,19 @@ class ProductPriceReview(models.Model):
     user_id = fields.Many2one("res.users", string="Assigned To")
     currency_id = fields.Many2one(
         "res.currency",
-        related="product_id.product_tmpl_id.currency_id",
+        related="company_id.currency_id",
     )
 
     # Origin fields, recorded on the price review for historical purposes
+    origin_last_purchase_currency_id = fields.Many2one("res.currency")
     origin_last_purchase_price = fields.Float(
         string="Original Last PO Cost",
+        help="Product cost on most recent confirmed purchase",
+    )
+    origin_last_purchase_price_converted = fields.Float(
+        string="Original Last PO Cost (Currency Converted)",
+        store=True,
+        compute="_compute_origin_last_purchase_price_converted",
         help="Product cost on most recent confirmed purchase",
     )
     origin_tariff_percent = fields.Float(string="Original Tariff Percent")
@@ -240,6 +247,9 @@ class ProductPriceReview(models.Model):
                 rec.origin_last_purchase_price = rec.product_id.with_company(
                     rec.company_id
                 ).last_purchase_line_id.price_unit
+                rec.origin_last_purchase_currency_id = rec.product_id.with_company(
+                    rec.company_id
+                ).last_purchase_line_id.order_id.currency_id
                 rec.origin_tariff_percent = rec.product_id.with_company(
                     rec.company_id
                 ).tariff_percent
@@ -332,6 +342,23 @@ class ProductPriceReview(models.Model):
         return super().create(vals_list)
 
     # COMPUTE METHODS
+    @api.depends("origin_last_purchase_price")
+    def _compute_origin_last_purchase_price_converted(self):
+        for rec in self:
+            if (
+                rec.origin_last_purchase_currency_id
+                and rec.origin_last_purchase_currency_id != self.env.company.currency_id
+            ):
+                rec.origin_last_purchase_price_converted = (
+                    rec.origin_last_purchase_currency_id._convert(
+                        rec.origin_last_purchase_price, rec.company_id.currency_id
+                    )
+                )
+            else:
+                rec.origin_last_purchase_price_converted = (
+                    rec.origin_last_purchase_price
+                )
+
     @api.depends(
         "origin_final_price",
         "origin_last_purchase_price",
@@ -346,7 +373,10 @@ class ProductPriceReview(models.Model):
             if rec.product_id.list_price:
                 last_purchase_margin = (
                     rec.product_id.list_price
-                    - (rec.origin_last_purchase_price * (1 + rec.origin_tariff_percent))
+                    - (
+                        rec.origin_last_purchase_price_converted
+                        * (1 + rec.origin_tariff_percent)
+                    )
                     + rec.origin_tooling_cost
                     + rec.origin_defrayment_cost
                     + rec.origin_default_shipping_cost
@@ -378,7 +408,7 @@ class ProductPriceReview(models.Model):
     def _compute_total_cost(self):
         for rec in self:
             rec.total_cost = (
-                rec.origin_last_purchase_price * (1 + rec.tariff_percent)
+                rec.origin_last_purchase_price_converted * (1 + rec.tariff_percent)
                 + rec.tooling_cost
                 + rec.defrayment_cost
                 + rec.default_shipping_cost
@@ -427,8 +457,10 @@ class ProductPriceReview(models.Model):
     def _compute_final_price(self):
         for rec in self:
             final_price = 0
-            # Use override price if exists, otherwise set final price based on computed
-            if rec.override_price:
+            # Use special/override price, otherwise set final price based on computed
+            if rec.special_price:
+                final_price = rec.special_price
+            elif rec.override_price:
                 final_price = rec.override_price
             else:
                 final_price = rec.calculated_price
@@ -465,9 +497,9 @@ class ProductPriceReview(models.Model):
     def _compute_based_on(self):
         for rec in self:
             based_on = ""
-            # if rec.special_price > 0.0:
-            #     based_on = "Special Price"
-            if rec.override_price > 0.0:
+            if rec.special_price > 0.0:
+                based_on = "Special Price"
+            elif rec.override_price > 0.0:
                 based_on = "Override Price"
             elif rec.override_margin > 0.0:
                 based_on = "Override Margin"
