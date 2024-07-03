@@ -55,6 +55,12 @@ class ProductPriceReview(models.Model):
         string="Original Last PO Cost",
         help="Product cost on most recent confirmed purchase",
     )
+    origin_last_purchase_price_converted = fields.Float(
+        string="Original Last PO Cost (Currency Converted)",
+        store=True,
+        compute="_compute_origin_last_purchase_price_converted",
+        help="Product cost on most recent confirmed purchase",
+    )
     origin_tariff_percent = fields.Float(string="Original Tariff Percent")
     origin_tooling_cost = fields.Float(string="Original Tooling Cost")
     origin_defrayment_cost = fields.Float(
@@ -336,6 +342,23 @@ class ProductPriceReview(models.Model):
         return super().create(vals_list)
 
     # COMPUTE METHODS
+    @api.depends("origin_last_purchase_price")
+    def _compute_origin_last_purchase_price_converted(self):
+        for rec in self:
+            if (
+                rec.origin_last_purchase_currency_id
+                and rec.origin_last_purchase_currency_id != self.env.company.currency_id
+            ):
+                rec.origin_last_purchase_price_converted = (
+                    rec.origin_last_purchase_currency_id._convert(
+                        rec.origin_last_purchase_price, rec.company_id.currency_id
+                    )
+                )
+            else:
+                rec.origin_last_purchase_price_converted = (
+                    rec.origin_last_purchase_price
+                )
+
     @api.depends(
         "origin_final_price",
         "origin_last_purchase_price",
@@ -350,7 +373,10 @@ class ProductPriceReview(models.Model):
             if rec.product_id.list_price:
                 last_purchase_margin = (
                     rec.product_id.list_price
-                    - (rec.origin_last_purchase_price * (1 + rec.origin_tariff_percent))
+                    - (
+                        rec.origin_last_purchase_price_converted
+                        * (1 + rec.origin_tariff_percent)
+                    )
                     + rec.origin_tooling_cost
                     + rec.origin_defrayment_cost
                     + rec.origin_default_shipping_cost
@@ -382,7 +408,7 @@ class ProductPriceReview(models.Model):
     def _compute_total_cost(self):
         for rec in self:
             rec.total_cost = (
-                rec.origin_last_purchase_price * (1 + rec.tariff_percent)
+                rec.origin_last_purchase_price_converted * (1 + rec.tariff_percent)
                 + rec.tooling_cost
                 + rec.defrayment_cost
                 + rec.default_shipping_cost

@@ -80,6 +80,12 @@ class ProductTemplate(models.Model):
         "Sale Price Currency",
         compute="_compute_price_currency_id",
     )
+    last_purchase_price_converted = fields.Float(
+        string="Last PO Cost (Currency Converted)",
+        store=True,
+        compute="_compute_last_purchase_price_converted",
+        help="Product cost on most recent confirmed purchase",
+    )
 
     @api.depends("company_id")
     @api.depends_context("company")
@@ -90,6 +96,22 @@ class ProductTemplate(models.Model):
                 template.company_id.currency_id.id or env_currency_id
             )
 
+    @api.depends("last_purchase_line_id")
+    def _compute_last_purchase_price_converted(self):
+        for rec in self:
+            if (
+                rec.last_purchase_currency_id
+                and rec.price_currency_id
+                and rec.last_purchase_currency_id != rec.price_currency_id
+            ):
+                rec.last_purchase_price_converted = (
+                    rec.last_purchase_currency_id._convert(
+                        rec.last_purchase_price, rec.price_currency_id
+                    )
+                )
+            else:
+                rec.last_purchase_price_converted = rec.last_purchase_price
+
     @api.depends(
         "last_purchase_line_id",
         "carrier_multiplier_id.multiplier",
@@ -98,10 +120,21 @@ class ProductTemplate(models.Model):
         """This will compute the last purchase margin."""
         for rec in self:
             last_purchase_margin = 0
+            if (
+                rec.last_purchase_currency_id
+                and rec.last_purchase_currency_id != rec.currency_id
+            ):
+                rec.last_purchase_price_converted = (
+                    rec.last_purchase_currency_id._convert(
+                        rec.last_purchase_price, rec.currency_id
+                    )
+                )
+            else:
+                rec.last_purchase_price_converted = rec.last_purchase_price
             if rec.list_price:
                 last_purchase_margin = (
                     rec.list_price
-                    - (rec.last_purchase_price * (1 + rec.tariff_percent))
+                    - (rec.last_purchase_price_converted * (1 + rec.tariff_percent))
                     + rec.tooling_cost
                     + rec.defrayment_cost
                     + rec.default_shipping_cost

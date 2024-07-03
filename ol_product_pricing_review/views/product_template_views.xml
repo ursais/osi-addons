@@ -37,8 +37,10 @@
                         <group>
                             <field name="based_on" invisible="1" />
                             <field name="price_currency_id" invisible="1" />
+                            <field name="last_purchase_currency_id" invisible="1" />
                             <field name="total_cost" readonly="1" widget="monetary" options="{'currency_field': 'price_currency_id', 'field_digits': True}" />
                             <field name="last_purchase_price" widget="monetary" options="{'currency_field': 'last_purchase_currency_id', 'field_digits': True}" />
+                            <field name="last_purchase_price_converted" invisible="last_purchase_currency_id == price_currency_id" widget="monetary" options="{'currency_field': 'price_currency_id', 'field_digits': True}" />
                             <field name="last_purchase_margin" widget="percentage" />
                         </group>
                         <group>

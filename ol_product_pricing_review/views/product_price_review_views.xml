@@ -38,6 +38,7 @@
                         <group string="Proposed Pricing">
                             <field name="origin_last_purchase_currency_id" invisible="1" />
                             <field name="origin_last_purchase_price" readonly="state in ('reject', 'validated')" widget="monetary" options="{'currency_field': 'origin_last_purchase_currency_id', 'field_digits': True}" />
+                            <field name="origin_last_purchase_price_converted" invisible="origin_last_purchase_currency_id == currency_id" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                             <field name="tariff_percent" widget="percentage" readonly="state in ('reject', 'validated')" />
                             <field name="tooling_cost" readonly="state in ('reject', 'validated')" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                             <field name="defrayment_cost" readonly="state in ('reject', 'validated')" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
