@@ -36,7 +36,8 @@
                     </group>
                     <group>
                         <group string="Proposed Pricing">
-                            <field name="origin_last_purchase_price" readonly="state in ('reject', 'validated')" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                            <field name="origin_last_purchase_currency_id" invisible="1" />
+                            <field name="origin_last_purchase_price" readonly="state in ('reject', 'validated')" widget="monetary" options="{'currency_field': 'origin_last_purchase_currency_id', 'field_digits': True}" />
                             <field name="tariff_percent" widget="percentage" readonly="state in ('reject', 'validated')" />
                             <field name="tooling_cost" readonly="state in ('reject', 'validated')" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                             <field name="defrayment_cost" readonly="state in ('reject', 'validated')" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
@@ -116,17 +117,18 @@
                 <field name="state" optional="show" />
                 <button name="assign_to_me" type="object" title="Assign to Me Button" icon="fa-user-plus" groups="ol_product_pricing_review.group_pricing_review_approver" invisible="state == 'reject' or  state == 'validated'" />
                 <field name="user_id" optional="show" />
-                <field name="origin_last_purchase_price" optional="show" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
-                <field name="origin_total_cost" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
-                <field name="total_cost" optional="show" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
-                <field name="cost_delta" optional="show" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
-                <field name="origin_final_price" optional="show" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
-                <field name="final_price" optional="show" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                <field name="origin_last_purchase_price" avg="Average" optional="show" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                <field name="origin_total_cost" optional="show" avg="Average" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                <field name="total_cost" optional="show" avg="Average" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                <field name="cost_delta" optional="show" avg="Average" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                <field name="origin_final_price" optional="show" avg="Average" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                <field name="final_price" optional="show" avg="Average" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                 <field name="based_on" optional="show" />
-                <field name="margin" optional="show" />
-                <field name="margin_percent" optional="show" />
+                <field name="margin" optional="show" avg="Average" />
+                <field name="margin_percent" optional="show" avg="Average" widget="percentage" />
                 <field name="origin_vendor_id" optional="show" />
                 <field name="origin_purchase_id" optional="show" />
+                <field name="currency_id" optional="hide" />
                 <field name="pa" optional="show" />
             </tree>
         </field>

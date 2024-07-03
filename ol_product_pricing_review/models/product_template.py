@@ -75,6 +75,20 @@ class ProductTemplate(models.Model):
         string="Special Price",
         company_dependent=True,
     )
+    price_currency_id = fields.Many2one(
+        "res.currency",
+        "Sale Price Currency",
+        compute="_compute_price_currency_id",
+    )
+
+    @api.depends("company_id")
+    @api.depends_context("company")
+    def _compute_price_currency_id(self):
+        env_currency_id = self.env.company.currency_id.id
+        for template in self:
+            template.price_currency_id = (
+                template.company_id.currency_id.id or env_currency_id
+            )
 
     @api.depends(
         "last_purchase_line_id",

@@ -1,0 +1,78 @@
+<odoo>
+
+    <record id="ol_product_pricing_review_product_template_form_view_inherit_ol" model="ir.ui.view">
+        <field name="name">product.template.form.view</field>
+        <field name="model">product.template</field>
+        <field name="priority">100</field>
+        <field name="inherit_id" ref="ol_product_tooling_cost.product_template_form_view_inherit_ol" />
+        <field name="arch" type="xml">
+            <!-- We are going to put these into pricing section so we will inherit and remove from tooling cost view -->
+            <field name="tooling_cost" position="replace" />
+            <field name="defrayment_cost" position="replace" />
+        </field>
+    </record>
+
+    <record id="ol_product_pricing_review_product_template_last_purchase_info_inherit_ol_product" model="ir.ui.view">
+        <field name="name">product.template.form.view</field>
+        <field name="model">product.template</field>
+        <field name="priority">100</field>
+        <field name="inherit_id" ref="ol_product_ship_multiplier.product_template_last_purchase_info_inherit_ol_product" />
+        <field name="arch" type="xml">
+            <field name="default_shipping_cost" position="replace" />
+        </field>
+    </record>
+
+    <record id="ol_product_pricing_review_product_template_form_view" model="ir.ui.view">
+        <field name="name">product.template.form.view</field>
+        <field name="model">product.template</field>
+        <field name="priority">100</field>
+        <field name="inherit_id" ref="product.product_template_form_view" />
+        <field name="arch" type="xml">
+            <field name="product_variant_count" position="after">
+                <field name="has_configurable_attributes" invisible="1" />
+            </field>
+            <xpath expr="//page[@name='general_information']" position="after">
+                <page string="Pricing" name="pricing">
+                    <group>
+                        <group>
+                            <field name="based_on" invisible="1" />
+                            <field name="price_currency_id" invisible="1" />
+                            <field name="total_cost" readonly="1" widget="monetary" options="{'currency_field': 'price_currency_id', 'field_digits': True}" />
+                            <field name="last_purchase_price" widget="monetary" options="{'currency_field': 'last_purchase_currency_id', 'field_digits': True}" />
+                            <field name="last_purchase_margin" widget="percentage" />
+                        </group>
+                        <group>
+                            <group invisible="has_configurable_attributes">
+                                <field name="disable_price_reviews" />
+                                <field name="enable_margin_threshold" invisible="disable_price_reviews" />
+                                <field name="margin_min" invisible="not enable_margin_threshold or disable_price_reviews" widget="percentage" />
+                                <field name="margin_max" invisible="not enable_margin_threshold or disable_price_reviews" widget="percentage" />
+                            </group>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <field name="based_on" position="before">
+                <xpath expr="//label[@for='list_price']" position="move" />
+                <xpath expr="//div[@name='pricing']" position="move" />
+                <label for="standard_price" invisible="product_variant_count &gt; 1 and not is_product_variant" />
+                <div name="standard_price_uom" invisible="product_variant_count &gt; 1 and not is_product_variant">
+                    <field name="standard_price" class="oe_inline" widget="monetary" options="{'currency_field': 'cost_currency_id', 'field_digits': True}" />
+                    <span groups="uom.group_uom">per
+                        <field name="uom_name" class="oe_inline"/>
+                    </span>
+                </div>
+                <field name="tariff_percent" invisible="has_configurable_attributes" widget="percentage" readonly="1" />
+                <field name="tooling_cost" invisible="has_configurable_attributes" readonly="1" widget="monetary" options="{'currency_field': 'price_currency_id', 'field_digits': True}" />
+                <field name="defrayment_cost" invisible="has_configurable_attributes" readonly="1" widget="monetary" options="{'currency_field': 'price_currency_id', 'field_digits': True}" />
+                <field name="carrier_multiplier_id" position="move" invisible="has_configurable_attributes" readonly="1" />
+                <field name="default_shipping_cost" invisible="has_configurable_attributes" widget="monetary" options="{'currency_field': 'price_currency_id', 'field_digits': True}" />
+                <field name="override_margin" invisible="has_configurable_attributes" readonly="1" widget="percentage" />
+                <field name="charm_price" invisible="has_configurable_attributes" readonly="1" />
+                <field name="override_price" invisible="has_configurable_attributes" readonly="1" widget="monetary" options="{'currency_field': 'price_currency_id', 'field_digits': True}" />
+                <field name="special_price" invisible="has_configurable_attributes" readonly="1" widget="monetary" options="{'currency_field': 'price_currency_id', 'field_digits': True}" />
+            </field>
+        </field>
+    </record>
+
+</odoo>
