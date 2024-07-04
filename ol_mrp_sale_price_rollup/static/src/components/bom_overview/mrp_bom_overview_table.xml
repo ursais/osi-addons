@@ -2,17 +2,23 @@
 <templates xml:space="preserve">
 
     <t t-name="ol_mrp_sale_price_rollup.BomOverviewTable" t-inherit="mrp.BomOverviewTable" t-inherit-mode="extension">
-        <xpath expr="//th[@t-if='showCosts']" position="after">
+        <xpath expr="//th[@t-if='showCosts'][1]" position="after">
             <th t-if="showCosts" class="text-end">Sales Price</th>
         </xpath>
 
         <xpath expr="//td[@t-esc='formatMonetary(data.bom_cost / data.quantity)']" position="after">
             <td class="text-end" t-esc="formatMonetary(data.prod_price / data.quantity)" />
         </xpath>
-
-        <!-- <xpath expr="//td[@t-esc='formatMonetary(data.bom_cost / data.quantity)']" position="after">
-            <td t-if="showCosts" t-esc="formatMonetary(data.prod_price / data.quantity)" />
-        </xpath> -->
     </t>
+
+    <t t-name="ol_mrp_sale_price_rollup.BomOverviewLine" t-inherit="mrp.BomOverviewLine" t-inherit-mode="extension">
+        <xpath expr="//td[@t-if='showCosts']" position="after">
+            <td t-if="showCosts" class="text-end">
+                <span t-esc="formatMonetary(data.prod_price)"/>
+            </td>
+        </xpath> 
+
+    </t>
+
 
 </templates>
