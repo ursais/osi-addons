@@ -69,7 +69,6 @@ class ReportBomStructure(models.AbstractModel):
                     )
                     * current_quantity
                 )
-
         bom_report_line["prod_price"] = prod_price
         return bom_report_line
 
