@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
     <t t-name="ol_mrp_sale_price_rollup.BomOverviewTable" t-inherit="mrp.BomOverviewTable" t-inherit-mode="extension">
@@ -16,9 +15,8 @@
             <td t-if="showCosts" class="text-end">
                 <span t-esc="formatMonetary(data.prod_price)"/>
             </td>
-        </xpath> 
+        </xpath>
 
     </t>
-
 
 </templates>
