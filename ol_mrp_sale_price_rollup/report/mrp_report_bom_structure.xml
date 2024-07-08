@@ -1,6 +1,7 @@
 <odoo>
 
     <template id="inherit_mrp_report_mrp_bom" inherit_id="mrp.report_mrp_bom">
+        <!-- Adds sales price to the bom overview report -->
         <xpath expr="//table[hasclass('o_mrp_bom_expandable')]/thead/tr/th[9]" position="before">
             <th t-if="data['show_costs']" class="text-end">Sales Price</th>
         </xpath>
@@ -15,8 +16,8 @@
         </xpath>
     </template>
 
-
     <template id="inherit_mrp_report_mrp_bom_pdf_line" inherit_id="mrp.report_mrp_bom_pdf_line">
+        <!-- Adds sales price to the bom overview report PDF -->
         <xpath expr="//t/tr/td[9]" position="before">
             <td t-if="data['show_costs']" t-attf-class="text-end {{ 'text-muted' if l['type'] == 'component' else '' }}" t-esc="l['prod_price']" t-options="{'widget': 'monetary', 'display_currency': currency}" />
         </xpath>

@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import api, fields, models
+from odoo import api, models
 from odoo.tools import float_round
 
 

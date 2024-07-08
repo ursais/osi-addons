@@ -1,9 +1,12 @@
-# -*- coding: utf-8 -*-
-
+# Import Odoo libs
 from odoo import api, models
 
 
 class ReportBomStructure(models.AbstractModel):
+    """
+    Inherit/Override bom overview report to add sales prices
+    """
+
     _inherit = "report.mrp.report_bom_structure"
 
     @api.model
@@ -21,6 +24,7 @@ class ReportBomStructure(models.AbstractModel):
         product_info=False,
         ignore_stock=False,
     ):
+        """Inherit to add the sales price data to the report."""
         bom_report_line = super()._get_bom_data(
             bom,
             warehouse,
@@ -85,6 +89,7 @@ class ReportBomStructure(models.AbstractModel):
         product_info,
         ignore_stock=False,
     ):
+        """Inherit method to add sales price data to line on report."""
         component_line = super()._get_component_data(
             parent_bom,
             parent_product,
@@ -112,6 +117,7 @@ class ReportBomStructure(models.AbstractModel):
     def _get_bom_array_lines(
         self, data, level, unfolded_ids, unfolded, parent_unfolded=True
     ):
+        """Override of method to add sales price (prod_price) to the report."""
         bom_lines = data["components"]
         lines = []
         for bom_line in bom_lines:

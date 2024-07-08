@@ -12,6 +12,7 @@ class ProductTemplate(models.Model):
     # METHODS ##########
 
     def action_bom_sale_price(self):
+        """Action to set sale price on template level if single variant."""
         templates = self.filtered(
             lambda t: t.product_variant_count == 1 and t.bom_count > 0
         )
@@ -19,6 +20,7 @@ class ProductTemplate(models.Model):
             return templates.mapped("product_variant_id").action_bom_sale_price()
 
     def button_bom_sale_price(self):
+        """Button action to set sale price on template level if single variant."""
         templates = self.filtered(
             lambda t: t.product_variant_count == 1 and t.bom_count > 0
         )

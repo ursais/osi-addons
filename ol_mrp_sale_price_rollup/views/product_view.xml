@@ -1,5 +1,5 @@
-<?xml version="1.0"?>
 <odoo>
+
     <record id="product_product_ext_form_view_sale_price" model="ir.ui.view">
         <field name="name">product_extended.product.form.view.sale.price</field>
         <field name="model">product.template</field>
@@ -22,4 +22,5 @@
             </xpath>
         </field>
     </record>
+
 </odoo>
