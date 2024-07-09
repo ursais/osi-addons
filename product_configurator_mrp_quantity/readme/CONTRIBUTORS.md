@@ -1,2 +1,2 @@
-- Nikul Chaudhary \<<nchaudhary@opensourceintegrators.com>\>
-- Murtaza Mithaiwala \<<mmithaiwala@opensourceintegrators.com>\>
+- Vandan Pandeji \<\<<vpandeji@opensourceintegrators.com>\>\>
+- Patrick Wilson \<\<<pwilson@opensourceintegrators.com>\>\>

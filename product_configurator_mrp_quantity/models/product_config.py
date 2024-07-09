@@ -1,50 +1,76 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
+
 class ProductConfigSession(models.Model):
-    _inherit="product.config.session"
+    _inherit = "product.config.session"
 
-    session_value_quantity_ids = fields.One2many("product.config.session.value.qty","session_id",string="Quantities")
-
+    session_value_quantity_ids = fields.One2many(
+        "product.config.session.value.qty", "session_id", string="Quantities"
+    )
 
     @api.model
     def search_variant(self, value_ids=None, product_tmpl_id=None):
-        products = super().search_variant(value_ids=value_ids, product_tmpl_id=product_tmpl_id)
+        products = super().search_variant(
+            value_ids=value_ids, product_tmpl_id=product_tmpl_id
+        )
         session_filter_values = []
         product_attrs_qtys = products.product_attribute_value_qty_ids
         session_attrs_qtys = self.session_value_quantity_ids
         for attr_qty in session_attrs_qtys:
-            session_filter_values.extend(product_attrs_qtys.filtered(lambda l:l.attr_value_id.id != attr_qty.attr_value_id.id and l.qty != int(attr_qty.qty)).mapped('product_id').ids)
-        session_filter_products = self.env["product.product"].browse(session_filter_values)
+            filter_values = product_attrs_qtys.filtered(
+                lambda prod_attr: prod_attr.attr_value_id.id
+                == attr_qty.attr_value_id.id
+                and prod_attr.qty == int(attr_qty.qty)
+            )
+            session_filter_values.extend(filter_values.mapped("product_id").ids)
+        session_filter_products = self.env["product.product"].browse(
+            session_filter_values
+        )
         if session_filter_products:
-            return products - session_filter_products
+            return session_filter_products
         else:
             return self.env["product.product"]
 
     def create_get_variant(self, value_ids=None, custom_vals=None):
-        result = super().create_get_variant(value_ids=value_ids, custom_vals=custom_vals)
+        result = super().create_get_variant(
+            value_ids=value_ids, custom_vals=custom_vals
+        )
         if self.session_value_quantity_ids and result.id != self.product_id.id:
             result.product_attribute_value_qty_ids.unlink()
-            qty_attr_obj = self.env['product.product.attribute.value.qty']
+            qty_attr_obj = self.env["product.product.attribute.value.qty"]
             qty_list = []
             for qty_value in self.session_value_quantity_ids:
-                qty_attr_dict = {'product_id':result.id,"attr_value_id":qty_value.attr_value_id.id,"qty":qty_value.qty}
+                qty_attr_dict = {
+                    "product_id": result.id,
+                    "attr_value_id": qty_value.attr_value_id.id,
+                    "qty": qty_value.qty,
+                }
                 qty_list.append(qty_attr_dict)
-            qty_attr  = qty_attr_obj.create(qty_list)
+            qty_attr_obj.create(qty_list)
         return result
 
     @api.model
     def get_variant_vals(self, value_ids=None, custom_vals=None, **kwargs):
-        values = super().get_variant_vals(value_ids=value_ids,custom_vals=custom_vals)
+        values = super().get_variant_vals(value_ids=value_ids, custom_vals=custom_vals)
         attrs_value_qty_list = []
         for attr_qty in self.session_value_quantity_ids:
-            attrs_value_qty_list.append((0,0,{"attr_value_id":attr_qty.attr_value_id.id,"qty":int(attr_qty.qty)}))
-        values.update({"product_attribute_value_qty_ids":attrs_value_qty_list})
+            attrs_value_qty_list.append(
+                (
+                    0,
+                    0,
+                    {
+                        "attr_value_id": attr_qty.attr_value_id.id,
+                        "qty": int(attr_qty.qty),
+                    },
+                )
+            )
+        values.update({"product_attribute_value_qty_ids": attrs_value_qty_list})
         return values
 
-    #============================
-        #OVERRIDE Methods
-    #============================
+    # ============================
+    # OVERRIDE Methods
+    # ============================
 
     def update_session_configuration_value(self, vals, product_tmpl_id=None):
         """Update value of configuration in current session
@@ -63,7 +89,6 @@ class ProductConfigSession(models.Model):
             "custom_field_prefix"
         )
         qty_field_prefix = product_configurator_obj._prefixes.get("qty_field")
-
         custom_val = self.get_custom_value_id()
 
         attr_val_dict = {}
@@ -75,7 +100,11 @@ class ProductConfigSession(models.Model):
             custom_field_name = custom_field_prefix + str(attr_id)
             qty_field_name = qty_field_prefix + str(attr_id)
 
-            if field_name not in vals and custom_field_name not in vals and qty_field_name not in vals:
+            if (
+                field_name not in vals
+                and custom_field_name not in vals
+                and qty_field_name not in vals
+            ):
                 continue
 
             # Add attribute values from the client except custom attribute
@@ -84,7 +113,11 @@ class ProductConfigSession(models.Model):
             # existing_session_attrs_qtys = self.session_value_quantity_ids.filtered(lambda l:l.attr_value_id.attribute_id.id == attr_id and l.qty == int(vals.get(qty_field_name)))
             existing_session_attrs_nonqtys = False
             if vals.get(qty_field_name):
-                existing_session_attrs_nonqtys = self.session_value_quantity_ids.filtered(lambda l:l.attr_value_id.attribute_id.id == attr_id and l.qty != int(vals.get(qty_field_name)))
+                existing_session_attrs_nonqtys = self.session_value_quantity_ids.filtered(
+                    lambda session_value_id: session_value_id.attr_value_id.attribute_id.id
+                    == attr_id
+                    and session_value_id.qty != int(vals.get(qty_field_name))
+                )
             if vals.get(field_name, custom_val.id) != custom_val.id:
                 if attr_line.multi and isinstance(vals[field_name], list):
                     if not vals[field_name]:
@@ -100,13 +133,16 @@ class ProductConfigSession(models.Model):
                         # field_val = [
                         #     i[1] for i in vals[field_name] if vals[field_name][0]
                         # ] or vals[field_name][0][1]
-                elif not attr_line.multi and isinstance(vals[field_name], int) :
+                elif not attr_line.multi and isinstance(vals[field_name], int):
                     field_val = vals[field_name]
-                    
+
                     if attr_line.is_qty_required and vals.get(qty_field_name):
                         qty_field_val = vals[qty_field_name]
                     if self.session_value_quantity_ids:
-                        update_session_ids = self.session_value_quantity_ids.filtered(lambda k: k.attr_value_id.attribute_id.id==attr_id)
+                        update_session_ids = self.session_value_quantity_ids.filtered(
+                            lambda local_session: local_session.attr_value_id.attribute_id.id
+                            == attr_id
+                        )
                         for sess in update_session_ids:
                             sess.attr_value_id = field_val
                 else:
@@ -132,11 +168,17 @@ class ProductConfigSession(models.Model):
                 # from selected value to custom value.
                 attr_val_dict.update({attr_id: False})
 
-            elif vals.get(qty_field_name) and not qty_val_dict and attr_line.is_qty_required:
-                existing_session_attrs_nonqtys.write({'qty':vals.get(qty_field_name)})
-        self.update_config(attr_val_dict, custom_val_dict,qty_val_dict)
+            elif (
+                vals.get(qty_field_name)
+                and not qty_val_dict
+                and attr_line.is_qty_required
+            ):
+                existing_session_attrs_nonqtys.write({"qty": vals.get(qty_field_name)})
+        self.update_config(attr_val_dict, custom_val_dict, qty_val_dict)
 
-    def update_config(self, attr_val_dict=None, custom_val_dict=None,qty_val_dict=None):
+    def update_config(
+        self, attr_val_dict=None, custom_val_dict=None, qty_val_dict=None
+    ):
         """Update the session object with the given value_ids and custom values.
 
         Use this method instead of write in order to prevent incompatible
@@ -172,7 +214,7 @@ class ProductConfigSession(models.Model):
         value_ids = self.value_ids.ids
         for attr_id, vals in attr_val_dict.items():
             attr_val_ids = self.value_ids.filtered(
-                lambda x: x.attribute_id.id == int(attr_id)
+                lambda value_id: value_id.attribute_id.id == int(attr_id)
             ).ids
             # Remove all values for this attribute and add vals from dict
             value_ids = list(set(value_ids) - set(attr_val_ids))
@@ -189,15 +231,23 @@ class ProductConfigSession(models.Model):
             if self.session_value_quantity_ids:
                 self.session_value_quantity_ids.unlink()
             session_qty_list = []
-            for k,v in qty_val_dict.items():
-                attr_value_id = attr_val_dict and attr_val_dict.get(k) or self.value_ids.filtered(lambda l: l.attribute_id.id == k).id
-                session_qty_list.append((0,0,{'attr_value_id':attr_value_id,'qty':v}))
-            update_vals.update({'session_value_quantity_ids':session_qty_list})
+            for k, v in qty_val_dict.items():
+                attr_value_id = (
+                    attr_val_dict
+                    and attr_val_dict.get(k)
+                    or self.value_ids.filtered(
+                        lambda value_id: value_id.attribute_id.id == k
+                    ).id
+                )
+                session_qty_list.append(
+                    (0, 0, {"attr_value_id": attr_value_id, "qty": v})
+                )
+            update_vals.update({"session_value_quantity_ids": session_qty_list})
         # Remove all custom values included in the custom_vals dict
         self.custom_value_ids.filtered(
-            lambda x: x.attribute_id.id in custom_val_dict.keys()
+            lambda custom_value_id: custom_value_id.attribute_id.id
+            in custom_val_dict.keys()
         ).unlink()
-
 
         if custom_val_dict:
             binary_field_ids = (
@@ -238,13 +288,175 @@ class ProductConfigSession(models.Model):
             update_vals["custom_value_ids"].append((0, 0, custom_vals))
         self.write(update_vals)
 
+    def create_get_bom(self, variant, product_tmpl_id=None, values=None):
+        # default_type is set as 'product' when the user navigates
+        # through menu item "Products". This conflicts
+        # with the type for mrp.bom when mrpBom.onchange() is executed.
+        ctx = self.env.context.copy()
+        if ctx.get("default_type"):
+            ctx.pop("default_type")
+        self.env.context = ctx
+
+        if values is None:
+            values = {}
+        if product_tmpl_id is None or variant.product_tmpl_id != product_tmpl_id:
+            product_tmpl_id = variant.product_tmpl_id
+
+        mrpBom = self.env["mrp.bom"]
+        mrpBomLine = self.env["mrp.bom.line"]
+        attr_products = variant.product_template_attribute_value_ids.mapped(
+            "product_attribute_value_id.product_id"
+        )
+
+        attr_values = variant.product_template_attribute_value_ids.mapped(
+            "product_attribute_value_id"
+        )
+        existing_bom = self.env["mrp.bom"].search(
+            [
+                ("product_tmpl_id", "=", product_tmpl_id.id),
+                ("product_id", "=", variant.id),
+            ]
+        )
+        session_attr_qty_values = self.session_value_quantity_ids
+        if existing_bom:
+            return existing_bom[:1]
+
+        parent_bom = self.env["mrp.bom"].search(
+            [
+                ("product_tmpl_id", "=", product_tmpl_id.id),
+                ("product_id", "=", False),
+            ],
+            order="sequence asc",
+            limit=1,
+        )
+        bom_type = parent_bom and parent_bom.type or "normal"
+        bom_lines = []
+        if not parent_bom:
+            # If not Bom, then Cycle through attributes to add their
+            # related products to the bom lines.
+            for product in attr_products:
+                local_session_attr_qty_value = session_attr_qty_values.filtered(
+                    lambda local_session: local_session.attr_value_id.product_id.id
+                    == product.id
+                )
+                bom_line_vals = {
+                    "product_id": product.id,
+                    "product_qty": local_session_attr_qty_value.qty > 0
+                    and local_session_attr_qty_value.qty
+                    or 1,
+                }
+                specs = self.get_onchange_specifications(model="mrp.bom.line")
+                for key, val in specs.items():
+                    if val is None:
+                        specs[key] = {}
+                updates = mrpBomLine.onchange(
+                    bom_line_vals, ["product_id", "product_qty"], specs
+                )
+                values = updates.get("value", {})
+                values = self.get_vals_to_write(values=values, model="mrp.bom.line")
+                values.update(bom_line_vals)
+                bom_lines.append((0, 0, values))
+        else:
+            # If parent BOM is used, then look through Config Sets
+            # on parent product's bom to add the products to the bom lines.
+            for parent_bom_line in parent_bom.bom_line_ids:
+                if parent_bom_line.config_set_id:
+                    for config in parent_bom_line.config_set_id.configuration_ids:
+                        # Add bom lines if config values are part of attr_values
+                        if set(config.value_ids.ids).issubset(set(attr_values.ids)):
+                            local_session_attr_qty_values = session_attr_qty_values.filtered(
+                                lambda local_session: local_session.attr_value_id.product_id
+                                and local_session.attr_value_id.attribute_id.id
+                                in config.value_ids.mapped("attribute_id").ids
+                            )
+                            session_attr_qty_values = (
+                                session_attr_qty_values - local_session_attr_qty_values
+                            )
+                            if parent_bom_line.bom_id.id == parent_bom.id:
+                                parent_bom_line_vals = {
+                                    "product_id": parent_bom_line.product_id.id,
+                                    "product_qty": local_session_attr_qty_values.qty > 0
+                                    and parent_bom_line.product_qty
+                                    * local_session_attr_qty_values.qty
+                                    or parent_bom_line.product_qty,
+                                }
+                                specs = self.get_onchange_specifications(
+                                    model="mrp.bom.line"
+                                )
+                                for key, val in specs.items():
+                                    if val is None:
+                                        specs[key] = {}
+                                updates = mrpBomLine.onchange(
+                                    parent_bom_line_vals,
+                                    ["product_id", "product_qty"],
+                                    specs,
+                                )
+                                values = updates.get("value", {})
+                                values = self.get_vals_to_write(
+                                    values=values, model="mrp.bom.line"
+                                )
+                                values.update(parent_bom_line_vals)
+                                bom_lines.append((0, 0, parent_bom_line_vals))
+                else:
+                    parent_bom_product = parent_bom_line.product_id
+                    local_session_attr_qty_value = session_attr_qty_values.filtered(
+                        lambda local_session: local_session.attr_value_id.product_id.id
+                        == parent_bom_product.id
+                    )
+                    parent_bom_line_vals = {
+                        "product_id": parent_bom_product.id,
+                        "product_qty": local_session_attr_qty_value.qty > 0
+                        and local_session_attr_qty_value.qty
+                        * parent_bom_line.product_qty
+                        or parent_bom_line.product_qty,
+                    }
+                    specs = self.get_onchange_specifications(model="mrp.bom.line")
+                    for key, val in specs.items():
+                        if val is None:
+                            specs[key] = {}
+                    updates = mrpBomLine.onchange(
+                        parent_bom_line_vals, ["product_id", "product_qty"], specs
+                    )
+                    values = updates.get("value", {})
+                    values = self.get_vals_to_write(values=values, model="mrp.bom.line")
+                    values.update(parent_bom_line_vals)
+                    bom_lines.append((0, 0, values))
+        if bom_lines:
+            bom_values = {
+                "product_tmpl_id": self.product_tmpl_id.id,
+                "product_id": variant.id,
+                "type": bom_type,
+                "bom_line_ids": bom_lines,
+            }
+            specs = self.get_onchange_specifications(model="mrp.bom")
+            for key, val in specs.items():
+                if val is None:
+                    specs[key] = {}
+            updates = mrpBom.onchange(
+                bom_values,
+                [
+                    "product_id",
+                    "product_configurator_sale_mrproduct_tmpl_id",
+                    "bom_line_ids",
+                ],
+                specs,
+            )
+            values = updates.get("value", {})
+            values = self.get_vals_to_write(values=values, model="mrp.bom")
+            values.update(bom_values)
+            mrp_bom_id = mrpBom.create(values)
+            if mrp_bom_id and parent_bom:
+                for operation_line in parent_bom.operation_ids:
+                    operation_line.copy(default={"bom_id": mrp_bom_id.id})
+            return mrp_bom_id
+        return False
+
 
 class ProductConfigSessionValueQty(models.Model):
-    _name ="product.config.session.value.qty"
-    _description = "Helper object to store the user's choice for any value that has an associated quantity."
+    _name = "product.config.session.value.qty"
+    _description = """Helper object to store
+    the user's choice for any value that has an associated quantity."""
 
-    session_id = fields.Many2one("product.config.session",ondelete="cascade")
+    session_id = fields.Many2one("product.config.session", ondelete="cascade")
     attr_value_id = fields.Many2one("product.attribute.value")
     qty = fields.Integer(string="Quantity")
-
-

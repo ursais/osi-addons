@@ -19,11 +19,19 @@
             <xpath expr="//field[@name='price_extra']" position="after">
                 <field
                     name="is_qty_required"
-                    groups="product_configurator.group_product_configurator_manager" invisible="1"
+                    groups="product_configurator.group_product_configurator_manager"
+                    invisible="1"
                 />
-                <field name="default_qty" required="is_qty_required" invisible ="not is_qty_required" groups="product_configurator.group_product_configurator_manager"/>
                 <field
-                    name="maximum_qty" required="is_qty_required" invisible ="not is_qty_required"
+                    name="default_qty"
+                    required="is_qty_required"
+                    invisible="not is_qty_required"
+                    groups="product_configurator.group_product_configurator_manager"
+                />
+                <field
+                    name="maximum_qty"
+                    required="is_qty_required"
+                    invisible="not is_qty_required"
                     groups="product_configurator.group_product_configurator_manager"
                 />
             </xpath>
@@ -45,11 +53,9 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <field name="price_extra" position="after">
-                <field
-                    name="is_qty_required" invisible="1"
-                />
-                <field name="default_qty" invisible ="not is_qty_required" />
-                <field name="maximum_qty" invisible ="not is_qty_required" />
+                <field name="is_qty_required" invisible="1" />
+                <field name="default_qty" invisible="not is_qty_required" />
+                <field name="maximum_qty" invisible="not is_qty_required" />
             </field>
         </field>
     </record>
