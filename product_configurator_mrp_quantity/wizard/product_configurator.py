@@ -1,13 +1,11 @@
 from lxml import etree
 
-from odoo import _, api, fields, models, tools
+from odoo import _, api, models
 from odoo.exceptions import UserError
-
 
 
 class ProductConfigurator(models.TransientModel):
     _inherit = "product.configurator"
-
 
     @property
     def _prefixes(self):
@@ -15,7 +13,7 @@ class ProductConfigurator(models.TransientModel):
         return {
             "field_prefix": "__attribute_",
             "custom_field_prefix": "__custom_",
-            "qty_field": "__qty_"
+            "qty_field": "__qty_",
         }
 
     @api.model
@@ -44,14 +42,21 @@ class ProductConfigurator(models.TransientModel):
             attribute = line.attribute_id
             value_ids = line.value_ids.ids
             if line.is_qty_required:
-                selection_vals = [(False, '')]
-                attribute_value_obj = self.env['product.template.attribute.value']
-                atrr_values = attribute_value_obj.search([('attribute_line_id','=',line.id)])
-                default_qty = min(atrr_values.mapped('default_qty'))
-                maximum_qty = max(atrr_values.mapped('maximum_qty'))
-                for i in range(default_qty,maximum_qty+1):
-                    selection_vals.append((str(i),i))
-                res[qty_field_prefix + str(attribute.id)] = dict(default_attrs,type="selection",string="Qty",selection=selection_vals)
+                selection_vals = [(False, "")]
+                attribute_value_obj = self.env["product.template.attribute.value"]
+                atrr_values = attribute_value_obj.search(
+                    [("attribute_line_id", "=", line.id)]
+                )
+                default_qty = min(atrr_values.mapped("default_qty"))
+                maximum_qty = max(atrr_values.mapped("maximum_qty"))
+                for i in range(default_qty, maximum_qty + 1):
+                    selection_vals.append((str(i), i))
+                res[qty_field_prefix + str(attribute.id)] = dict(
+                    default_attrs,
+                    type="selection",
+                    string="Qty",
+                    selection=selection_vals,
+                )
         return res
 
     @api.model_create_multi
@@ -62,24 +67,41 @@ class ProductConfigurator(models.TransientModel):
                 product_attr_qty = product.product_attribute_value_qty_ids
                 attr_qty_list = []
                 session = self.env["product.config.session"].create_get_session(
-                product_tmpl_id=int(vals.get("product_tmpl_id")))
+                    product_tmpl_id=int(vals.get("product_tmpl_id"))
+                )
                 flag = False
                 for attr in product_attr_qty:
-                    session_attr = session.session_value_quantity_ids.filtered(lambda l:l.attr_value_id.id == attr.attr_value_id.id and l.qty == int(attr.qty))
+                    session_attr = session.session_value_quantity_ids.filtered(
+                        lambda l: l.attr_value_id.id == attr.attr_value_id.id
+                        and l.qty == int(attr.qty)
+                    )
                     if not session_attr:
-                        attr_qty_list.append((0,0,{"attr_value_id":attr.attr_value_id.id,"qty":int(attr.qty)}))
+                        attr_qty_list.append(
+                            (
+                                0,
+                                0,
+                                {
+                                    "attr_value_id": attr.attr_value_id.id,
+                                    "qty": int(attr.qty),
+                                },
+                            )
+                        )
                 if attr_qty_list:
-                    vals.update({
-                        "session_value_quantity_ids":attr_qty_list
-                    })
+                    vals.update({"session_value_quantity_ids": attr_qty_list})
         return super().create(vals_list)
 
-    #============================
-        #OVERRIDE Methods
-    #============================
+    # ============================
+    # OVERRIDE Methods
+    # ============================
 
     def prepare_attrs_initial(
-        self, attr_lines, field_prefix, custom_field_prefix, qty_field_prefix,dynamic_fields, wiz
+        self,
+        attr_lines,
+        field_prefix,
+        custom_field_prefix,
+        qty_field_prefix,
+        dynamic_fields,
+        wiz,
     ):
         cfg_step_ids = []
         for attr_line in attr_lines:
@@ -169,7 +191,7 @@ class ProductConfigurator(models.TransientModel):
                     "invisible": invisible_str,
                 }
             )
-        return attrs, field_name, custom_field, qty_field,config_steps, cfg_step_ids
+        return attrs, field_name, custom_field, qty_field, config_steps, cfg_step_ids
 
     @api.model
     def add_dynamic_fields(self, res, dynamic_fields, wiz):
@@ -207,7 +229,12 @@ class ProductConfigurator(models.TransientModel):
                 config_steps,
                 cfg_step_ids,
             ) = self.prepare_attrs_initial(
-                attr_line, field_prefix, custom_field_prefix, qty_field_prefix,dynamic_fields,wiz
+                attr_line,
+                field_prefix,
+                custom_field_prefix,
+                qty_field_prefix,
+                dynamic_fields,
+                wiz,
             )
 
             # Create the new field in the view
@@ -292,7 +319,9 @@ class ProductConfigurator(models.TransientModel):
                 # self.setup_modifiers(node) # TODO: NC: Need to improve this method
                 xml_dynamic_form.append(node)
             if attr_line.is_qty_required and qty_field in dynamic_fields:
-                node = etree.Element("field", name=qty_field,on_change="1", attrib=attrs)
+                node = etree.Element(
+                    "field", name=qty_field, on_change="1", attrib=attrs
+                )
                 # self.setup_modifiers(node) # TODO: NC: Need to improve this method
                 xml_dynamic_form.append(node)
         return xml_view
@@ -332,7 +361,9 @@ class ProductConfigurator(models.TransientModel):
             qty_field_name = qty_field_prefix + str(attr_id)
 
             # Handle default values for dynamic fields on Odoo frontend
-            res[0].update({field_name: False, custom_field_name: False,qty_field_name:False})
+            res[0].update(
+                {field_name: False, custom_field_name: False, qty_field_name: False}
+            )
 
             custom_vals = self.custom_value_ids.filtered(
                 lambda x: x.attribute_id.id == attr_id
@@ -344,7 +375,9 @@ class ProductConfigurator(models.TransientModel):
                 show_price_extra=True,
                 active_id=self.product_tmpl_id.id,
             )
-            qty_field_values = self.session_value_quantity_ids.filtered(lambda l:l.attr_value_id.attribute_id.id == attr_id)
+            qty_field_values = self.session_value_quantity_ids.filtered(
+                lambda l: l.attr_value_id.attribute_id.id == attr_id
+            )
             if not attr_line.custom and not vals:
                 continue
 
@@ -374,6 +407,6 @@ class ProductConfigurator(models.TransientModel):
 
             if qty_field_values:
                 for attr_qty in qty_field_values:
-                    dynamic_vals.update({qty_field_name:str(attr_qty.qty)})
+                    dynamic_vals.update({qty_field_name: str(attr_qty.qty)})
             res[0].update(dynamic_vals)
         return res

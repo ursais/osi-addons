@@ -21,14 +21,13 @@
     <record id="product_normal_form_view_inherited_mrp_qty" model="ir.ui.view">
         <field name="name">product.product.form</field>
         <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="inherit_id" ref="product.product_normal_form_view" />
         <field name="arch" type="xml">
             <xpath
                 expr="//field[@name='product_template_variant_value_ids']"
                 position="after"
             >
-                <field
-                    name="product_attribute_value_qty_ids" widget="many2many_tags" />
+                <field name="product_attribute_value_qty_ids" widget="many2many_tags" />
                     <!-- readonly="True" groups="product.group_product_variant" -->
             </xpath>
         </field>
