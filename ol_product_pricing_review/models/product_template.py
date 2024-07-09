@@ -131,6 +131,7 @@ class ProductTemplate(models.Model):
                 )
             else:
                 rec.last_purchase_price_converted = rec.last_purchase_price
+
             if rec.list_price:
                 last_purchase_margin = (
                     rec.list_price
@@ -148,7 +149,7 @@ class ProductTemplate(models.Model):
                 if (
                     rec.enable_margin_threshold
                     and rec.margin_max < rec.last_purchase_margin > rec.margin_min
-                ):
+                ):  
                     return True
 
                 # Check for open review or create one.
