@@ -7,6 +7,11 @@ class AccountMove(models.Model):
     audi_business_unit = fields.Char(string="Business Unit")
     audi_applicant_email = fields.Char(string="Applicant email")
     audi_flag = fields.Boolean(compute="_compute_audi_flag", store=True)
+    audi_tax_code = fields.Char(string="Tax Code")
+    audi_fiscal_document_type = fields.Char(string="Fiscal Document Type")
+    audi_document_type = fields.Char(string="Document Type")
+    audi_supplier_email = fields.Char(string="Supplier Email")
+    audi_supplier_number = fields.Char(string="Supplier Number")
 
     @api.depends("partner_id.l10n_mx_edi_addenda")
     def _compute_audi_flag(self):

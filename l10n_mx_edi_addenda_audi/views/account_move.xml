@@ -11,6 +11,14 @@
                     <group>
                         <field name="audi_business_unit" invisible="not audi_flag" />
                         <field name="audi_applicant_email" invisible="not audi_flag" />
+                        <field name="audi_tax_code" invisible="not audi_flag" />
+                        <field
+                            name="audi_fiscal_document_type"
+                            invisible="not audi_flag"
+                        />
+                        <field name="audi_document_type" invisible="not audi_flag" />
+                        <field name="audi_supplier_email" invisible="not audi_flag" />
+                        <field name="audi_supplier_number" invisible="not audi_flag" />
                     </group>
                 </page>
             </xpath>
