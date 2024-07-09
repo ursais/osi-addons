@@ -19,7 +19,6 @@
     <field name="type">product</field>
     <field name="categ_id" ref="ol_base.product_category_systems" />
 
-    <!-- <field name="produce_delay">7.0</field> -->
     <field name="sale_delay">7</field>
     <field name="tracking">serial</field>
     <field name="description_sale">Karbon 300 is a compact rugged PC with integrated CAN bus, PoE+ LAN, and customizable DIO with options for cellular wireless connectivity and Movidius VPU.</field>
@@ -34,14 +33,14 @@
     <field name="name">K300-E3950-8-P</field>
     <field name="attribute_id" ref="ol_base.k300_attribute_platform"/>
   </record>
-  <!-- <record id="k300_attribute_value_platform_E3930_eu" model="product.attribute.value">
-    <field name="name">K300-E3930-4-P</field>
+  <record id="k300_attribute_value_platform_E3930_eu" model="product.attribute.value">
+    <field name="name">K300-E3930-4-P (EU)</field>
     <field name="attribute_id" ref="ol_base.k300_attribute_platform"/>
-  </record> -->
-  <!-- <record id="k300_attribute_value_platform_E3950_eu" model="product.attribute.value">
-    <field name="name">K300-E3950-8-P</field>
+  </record>
+  <record id="k300_attribute_value_platform_E3950_eu" model="product.attribute.value">
+    <field name="name">K300-E3950-8-P (EU)</field>
     <field name="attribute_id" ref="ol_base.k300_attribute_platform"/>
-  </record> -->
+  </record>
   <record id="k300_template_attribute_line_platform" model="product.template.attribute.line">
     <field name="product_tmpl_id" ref="ol_base.k300_product_template"/>
     <field name="attribute_id" ref="ol_base.k300_attribute_platform"/>
@@ -87,15 +86,15 @@
     <field name="attribute_id" ref="ol_base.k300_attribute_storage"/>
   </record>
   <record id="k300_attribute_value_storage_none_eu" model="product.attribute.value">
-    <field name="name">None</field>
+    <field name="name">None (EU)</field>
     <field name="attribute_id" ref="ol_base.k300_attribute_storage"/>
   </record>
   <record id="k300_attribute_value_storage_32_eu" model="product.attribute.value">
-    <field name="name">TS32GMTS800</field>
+    <field name="name">TS32GMTS800 (EU)</field>
     <field name="attribute_id" ref="ol_base.k300_attribute_storage"/>
   </record>
   <record id="k300_attribute_value_storage_64_eu" model="product.attribute.value">
-    <field name="name">TS64GMTS800</field>
+    <field name="name">TS64GMTS800 (EU)</field>
     <field name="attribute_id" ref="ol_base.k300_attribute_storage"/>
   </record>
 
@@ -152,11 +151,11 @@
     <field name="attribute_id" ref="ol_base.k300_attribute_adapter"/>
   </record>
   <record id="k300_attribute_value_adapter_none_eu" model="product.attribute.value">
-    <field name="name">None</field>
+    <field name="name">None (EU)</field>
     <field name="attribute_id" ref="ol_base.k300_attribute_adapter"/>
   </record>
   <record id="k300_attribute_value_adapter_cink_eu" model="product.attribute.value">
-    <field name="name">GST120A24-CIN-K</field>
+    <field name="name">GST120A24-CIN-K (EU)</field>
     <field name="attribute_id" ref="ol_base.k300_attribute_adapter"/>
   </record>
   <record id="k300_template_attribute_line_adapter" model="product.template.attribute.line">
@@ -202,11 +201,11 @@
     <field name="attribute_id" ref="ol_base.k300_attribute_port_blocking_kit"/>
   </record>
   <record id="k300_attribute_value_port_blocking_kit_none_eu" model="product.attribute.value">
-    <field name="name">None</field>
+    <field name="name">None (EU)</field>
     <field name="attribute_id" ref="ol_base.k300_attribute_port_blocking_kit"/>
   </record>
   <record id="k300_attribute_value_port_blocking_kit_acc101_eu" model="product.attribute.value">
-    <field name="name">ACC101</field>
+    <field name="name">ACC101 (EU)</field>
     <field name="attribute_id" ref="ol_base.k300_attribute_port_blocking_kit"/>
   </record>
   <record id="k300_template_attribute_line_port_blocking_kit" model="product.template.attribute.line">
@@ -255,15 +254,15 @@
     <field name="attribute_id" ref="ol_base.k300_attribute_operating_system"/>
   </record>
   <record id="k300_attribute_value_operating_system_none_eu" model="product.attribute.value">
-    <field name="name">None</field>
+    <field name="name">None (EU)</field>
     <field name="attribute_id" ref="ol_base.k300_attribute_operating_system"/>
   </record>
   <record id="k300_attribute_value_operating_system_win1064_pro_eu" model="product.attribute.value">
-    <field name="name">Win1064-Pro</field>
+    <field name="name">Win1064-Pro (EU)</field>
     <field name="attribute_id" ref="ol_base.k300_attribute_operating_system"/>
   </record>
   <record id="k300_attribute_value_operating_system_ubuntu1804-64_eu" model="product.attribute.value">
-    <field name="name">ubuntun18.04-64</field>
+    <field name="name">ubuntun18.04-64 (EU)</field>
     <field name="attribute_id" ref="ol_base.k300_attribute_operating_system"/>
   </record>
   <record id="k300_template_attribute_line_operating_system" model="product.template.attribute.line">
@@ -319,11 +318,11 @@
     <field name="attribute_id" ref="ol_base.k300_attribute_build"/>
   </record>
   <record id="k300_attribute_value_build_standard_eu" model="product.attribute.value">
-    <field name="name">V_B&amp;T_ECO</field>
+    <field name="name">V_B&amp;T_ECO (EU)</field>
     <field name="attribute_id" ref="ol_base.k300_attribute_build"/>
   </record>
   <record id="k300_attribute_value_build_rush_eu" model="product.attribute.value">
-    <field name="name">V_B&amp;T_ICR</field>
+    <field name="name">V_B&amp;T_ICR (EU)</field>
     <field name="attribute_id" ref="ol_base.k300_attribute_build"/>
   </record>
   <record id="k300_template_attribute_line_build" model="product.template.attribute.line">
@@ -375,8 +374,7 @@
     <field name="type">product</field>
     <field name="categ_id" ref="ol_base.product_category_systems" />
 
-    <field name="produce_delay">7.0</field>
-    <field name="sale_delay">7.0</field>
+    <field name="sale_delay">7</field>
     <field name="tracking">serial</field>
     <field name="description_sale">The pinnacle of embedded computing technology, combining energy-efficient quad-core processing with hardened, compact form factor. Fanless, ventless, and solid state for maximum reliability.</field>
   </record>
@@ -615,8 +613,7 @@
     <field name="type">product</field>
     <field name="categ_id" ref="ol_base.product_category_systems" />
 
-    <field name="produce_delay">7.0</field>
-    <field name="sale_delay">7.0</field>
+    <field name="sale_delay">7</field>
     <field name="tracking">serial</field>
     <field name="description_sale">Long-life, energy-efficient Mini-ITX motherboard with Braswell processing for point-of-sale (POS) and industrial automation applications.</field>
   </record>
@@ -798,8 +795,7 @@
     <field name="type">product</field>
     <field name="categ_id" ref="ol_base.product_category_systems" />
 
-    <field name="produce_delay">7.0</field>
-    <field name="sale_delay">7.0</field>
+    <field name="sale_delay">7</field>
     <field name="tracking">serial</field>
     <field name="description_sale">Someone made this system just for kicks!</field>
   </record>
@@ -888,8 +884,7 @@
     <field name="type">product</field>
     <field name="categ_id" ref="ol_base.product_category_systems" />
 
-    <field name="produce_delay">7.0</field>
-    <field name="sale_delay">7.0</field>
+    <field name="sale_delay">7</field>
     <field name="tracking">serial</field>
     <field name="description_sale">Harmon-Pope Customer system based on ML210G-12</field>
   </record>

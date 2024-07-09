@@ -14,17 +14,17 @@
         <field name="company_id" ref="base.main_company" />
         <field name="value_reference"
                eval="'account.account,{}'.format(
-                      ref('ol_base.{}_payable'.format(
+                      ref('account.{}_payable'.format(
                       ref('base.main_company'))))" />
     </record>
     <record id="partner_payable_property_default_eu" model="ir.property">
         <field name="fields_id" search="[('model', '=', 'res.partner'),('name', '=', 'property_account_payable_id')]" />
         <field name="name">property_account_payable_id</field>
-        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="company_id" ref="account.onlogic_eu" />
         <field name="value_reference"
                eval="'account.account,{}'.format(
-                     ref('ol_base.{}_payable'.format(
-                     ref('ol_base.onlogic_eu'))))" />
+                     ref('account.{}_payable'.format(
+                     ref('account.onlogic_eu'))))" />
        </record>
 
     <!-- Field: res.partner.property_account_receivable_id -->
@@ -34,17 +34,17 @@
         <field name="company_id" ref="base.main_company" />
         <field name="value_reference"
                eval="'account.account,{}'.format(
-                     ref('ol_base.{}_receivable'.format(
+                     ref('account.{}_receivable'.format(
                      ref('base.main_company'))))" />
     </record>
     <record id="partner_receivable_property_default_eu" model="ir.property">
         <field name="fields_id" search="[('model', '=', 'res.partner'),('name', '=', 'property_account_receivable_id')]" />
         <field name="name">property_account_receivable_id</field>
-        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="company_id" ref="account.onlogic_eu" />
         <field name="value_reference"
                eval="'account.account,{}'.format(
-                     ref('ol_base.{}_receivable'.format(
-                     ref('ol_base.onlogic_eu'))))" />
+                     ref('account.{}_receivable'.format(
+                     ref('account.onlogic_eu'))))" />
     </record>
 
 </odoo>

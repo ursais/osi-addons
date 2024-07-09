@@ -1,0 +1,31 @@
+id,name,reconcile,code,account_type
+wire,Wire/ACH,False,11020,asset_current
+paypal_liquidity,PayPal,True,11040,asset_current
+receivable,Accounts Receivable,True,11310,asset_receivable
+payable,Accounts Payable,True,21010,liability_payable
+sales_tax,Sales Tax,False,21420,asset_current
+products,Products,False,41100,asset_current
+services,Services,False,41200,asset_current
+direct_materials,Direct materials,False,51005,expense_direct_cost
+freight_in,Freight In,False,51305,expense_direct_cost
+paypal_transaction_charges,PayPal,False,62015,expense
+freight_out,Freight Out,False,62105,expense
+office_supplies,Office Supplies,False,61005,expense
+it,IT,False,61025,expense
+prepaid_inventory,Prepaid Inventory,False,11710,asset_current
+raw_materials,Raw Materials,False,11720,asset_current
+wip,Work-in-Progress,False,11730,asset_current
+outgoing_clearing,Outgoing Clearing,False,11750,asset_current
+finished_goods,Finished Goods,False,11740,asset_current
+customer_deposits,Customer Deposits,True,21510,asset_non_current
+credit_card_clearing,"Credit Card, Clearing",True,21030,liability_payable
+receivable_other,"Accounts Receivable, Other",True,11320,asset_receivable
+credit_card_payable,"Credit Card, Payable",True,21020,liability_payable
+payable_clearing,"Accounts Payable, Clearing",True,21011,liability_payable
+travel,Travel,False,61015,expense
+cogs_inventory_adjustment,COGS – Inventory Adjustment,False,51110,expense_direct_cost
+deposits,Deposits,False,11830,asset_non_current
+shipping,Shipping,False,41300,asset_current
+cogs_eo_scrap,COGS – E&O/Scrap,False,51105,expense_direct_cost
+price_difference,Foreign Currency Translation,False,72005,income_other
+operating_foreign_currency,Operating - Foreign Currency,True,11011,asset_current

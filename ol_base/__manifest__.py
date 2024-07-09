@@ -56,7 +56,8 @@
     # only loaded in demonstration mode
     "demo": [
         # configurations
-        # "demo/config/master_config.xml",
+        "demo/config/master_config.xml",
+        "demo/config/pdf_config.xml",
         # core records
         "demo/res/users.xml",
         "demo/res/groups.xml",
@@ -65,30 +66,37 @@
         # mail
         "demo/mail/server.xml",
         # accounting
+        "demo/account/account.account.csv",
+        "demo/account/account_chart_template.xml",
+        "demo/account/load_template.xml",
+        # "demo/account/account.xml", # Needs Work
+        # "demo/account/journal.xml",
         "demo/account/product.xml",
         "demo/account/payment_term.xml",
         "demo/account/payment_method.xml",
+        # "demo/account/tax.xml",
         # products
         "demo/product/attribute.xml",
         "demo/product/components.xml",
-        # "demo/product/categories.xml", # Needs work
-        # "demo/product/system.xml", # Needs work
-        # "demo/product/supplierinfo.xml",  # Needs work
+        "demo/product/categories.xml",
+        "demo/product/system.xml",
+        "demo/product/supplierinfo.xml",
         # units of measure
         "demo/uom/uom.xml",
         # inventory
         "demo/stock/warehouse.xml",
-        # "demo/stock/locations.xml",  # Needs work
-        # "demo/stock/orderpoint.xml",  # Needs work
+        "demo/stock/locations.xml",
+        "demo/stock/orderpoint.xml",
         # delivery
         "demo/delivery/carrier.xml",
         # crm
         "demo/crm/lead.xml",
+        'demo/crm/team.xml',
         # accounting properties
         # "demo/ir/partner_properties.xml", # Needs work
         # "demo/ir/product_properties.xml", # Needs work
         # config parameters
-        # "demo/ir/config_parameter.xml", #Will enable if m2x is desired
+        "demo/ir/config_parameter.xml", #Will enable if m2x is desired
         # actions which need to be called (ie changing base records once)
         "demo/action/cron.xml",
     ],
