@@ -11,6 +11,11 @@
                     <group>
                         <field name="audi_business_unit" invisible="not audi_flag" />
                         <field name="audi_applicant_email" invisible="not audi_flag" />
+                        <field name="audi_tax_code" invisible="not audi_flag" placeholder="e.g. D2"/>
+                        <field name="audi_fiscal_document_type" invisible="not audi_flag" placeholder="e.g. FA" />
+                        <field name="audi_document_type" invisible="not audi_flag" placeholder="e.g. S" />
+                        <field name="audi_supplier_email" invisible="not audi_flag" placeholder="e.g. infomx@ams-fa.com" />
+                        <field name="audi_supplier_number" invisible="not audi_flag" placeholder="e.g. 00X7244100" />
                     </group>
                 </page>
             </xpath>

@@ -4,28 +4,26 @@
             xmlns:S="http://www.Audi.net.mx/Addenda/S"
             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://www.Audi.net.mx/Addenda/S S.xsd"
-            codigoImpuesto="D2"
-            tipoDocumentoFiscal="FA"
+            t-att-codigoImpuesto="record.audi_tax_code"
+            t-att-tipoDocumentoFiscal="record.audi_fiscal_document_type"
             version="1.0"
-            tipoDocumento="S"
+            t-att-tipoDocumento="record.audi_document_type"
         >
             <S:Moneda t-att-tipoMoneda="record.currency_id.name" />
             <S:Proveedor
-                t-attf-noProveedor="00X7244100"
-                t-attf-eMail="infomx@ams-fa.com"
+                t-att-noProveedor="record.audi_supplier_number"
+                t-att-eMail="record.audi_supplier_email"
             />
             <S:Referencias t-att-unidadNegocio="record.audi_business_unit" />
             <S:Solicitante t-att-eMail="record.audi_applicant_email" />
             <S:Partes>
                 <t t-set="i" t-value="1" />
-                <t t-set="unidad_medida" t-value="UP" />
-                <t t-set="codigo_impuesto" t-value="D2" />
                 <t t-foreach="record.invoice_line_ids" t-as="move_line">
                     <S:Parte
                         t-att-precioUnitario="move_line.price_unit"
                         t-att-numeroParte="move_line.audi_product_ref"
                         t-att-descripcion="move_line.product_id.name"
-                        t-attf-codigoImpuesto="D2"
+                        t-att-codigoImpuesto="record.audi_tax_code"
                         t-att-cantidad="move_line.quantity"
                         t-att-posicion="i"
                         t-att-montoLinea="move_line.price_unit * move_line.quantity"
