@@ -31,7 +31,7 @@
        </function>
 
     <!-- Set accounts for production location -->
-    <record id="ol_base.production_location_us" model="stock.location">
+    <!-- <record id="ol_base.production_location_us" model="stock.location">
         <field name="name">Production</field>
         <field name="valuation_in_account_id" eval="ref('ol_base.{}_wip'.format(ref('base.main_company')))" />
         <field name="valuation_out_account_id" eval="ref('ol_base.{}_wip'.format(ref('base.main_company')))" />
@@ -40,6 +40,6 @@
         <field name="name">Production</field>
         <field name="valuation_in_account_id" eval="ref('ol_base.{}_wip'.format(ref('ol_base.onlogic_eu')))" />
         <field name="valuation_out_account_id" eval="ref('ol_base.{}_wip'.format(ref('ol_base.onlogic_eu')))" />
-    </record>
+    </record> -->
 
 </odoo>

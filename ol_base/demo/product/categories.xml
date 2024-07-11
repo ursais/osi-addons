@@ -1,15 +1,15 @@
 <odoo>
 
     <!--  Make these Routes usable on Product Categories -->
-    <record id="mrp.route_warehouse0_manufacture" model='stock.location.route'>
+    <record id="mrp.route_warehouse0_manufacture" model='stock.route'>
         <field name="product_categ_selectable">True</field>
     </record>
 
-    <record id="stock.route_warehouse0_mto" model='stock.location.route'>
+    <record id="stock.route_warehouse0_mto" model='stock.route'>
         <field name="product_categ_selectable">True</field>
     </record>
 
-    <record id="purchase_stock.route_warehouse0_buy" model='stock.location.route'>
+    <record id="purchase_stock.route_warehouse0_buy" model='stock.route'>
       <field name="product_categ_selectable">True</field>
     </record>
 

@@ -9,6 +9,7 @@
         <field name="min_qty">500.0</field>
         <field name="product_code">1070-5002_r02| MC500G</field>
         <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.mc500g_product_template" />
         <field name="price">17.61</field>
     </record>
@@ -19,7 +20,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">250.0</field>
         <field name="product_code">1070-5002_r01| MC500G</field>
-        <field name="name" ref="ol_base.supplier_company_eu" />
+        <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.mc500g_product_template" />
         <field name="price">16.45</field>
     </record>
@@ -33,6 +35,7 @@
         <field name="min_qty">100.0</field>
         <field name="product_code">1088-5002_r05|ML210G</field>
         <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.ml210g_case_product_template" />
         <field name="price">25.95</field>
     </record>
@@ -44,6 +47,7 @@
         <field name="min_qty">150.0</field>
         <field name="product_code">ML210G / 1088-5002_r05</field>
         <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.ml210g_case_product_template" />
         <field name="price">19.85</field>
     </record>
@@ -57,6 +61,7 @@
         <field name="min_qty">70</field>
         <field name="product_code">imb-155-p</field>
         <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.imb-155-p_product_template" />
         <field name="price">84</field>
     </record>
@@ -68,6 +73,7 @@
         <field name="min_qty">70</field>
         <field name="product_code">imb-155-p</field>
         <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.imb-155-p_product_template" />
         <field name="price">37</field>
     </record>
@@ -79,7 +85,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">24</field>
         <field name="product_code">dhxa-222-k</field>
-        <field name="name" ref="ol_base.supplier_company_us" />
+        <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.dhxa-222-k_product_template" />
         <field name="price">39</field>
     </record>
@@ -90,7 +97,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">24</field>
         <field name="product_code">dhxa-222-k</field>
-        <field name="name" ref="ol_base.supplier_company_eu" />
+        <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.dhxa-222-k_product_template" />
         <field name="price">29</field>
     </record>
@@ -102,7 +110,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">85</field>
         <field name="product_code">ct100</field>
-        <field name="name" ref="ol_base.supplier_company_us" />
+        <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.ct100_product_template" />
         <field name="price">8</field>
     </record>
@@ -113,7 +122,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">85</field>
         <field name="product_code">ct100</field>
-        <field name="name" ref="ol_base.supplier_company_eu" />
+        <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.ct100_product_template" />
         <field name="price">69</field>
     </record>
@@ -125,7 +135,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">105</field>
         <field name="product_code">gst120a24-cin-k</field>
-        <field name="name" ref="ol_base.supplier_company_us" />
+        <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.gst120a24_cin_k_product_template" />
         <field name="price">91</field>
     </record>
@@ -136,7 +147,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">105</field>
         <field name="product_code">gst120a24-cin-k</field>
-        <field name="name" ref="ol_base.supplier_company_eu" />
+        <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.gst120a24_cin_k_product_template" />
         <field name="price">7</field>
     </record>
@@ -148,7 +160,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">38</field>
         <field name="product_code">nwk100-01-s</field>
-        <field name="name" ref="ol_base.supplier_company_us" />
+        <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.nwk100-01-s_product_template" />
       <field name="price">76</field>
     </record>
@@ -159,7 +172,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">38</field>
         <field name="product_code">nwk100-01-s</field>
-        <field name="name" ref="ol_base.supplier_company_eu" />
+        <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.nwk100-01-s_product_template" />
         <field name="price">55</field>
     </record>
@@ -171,7 +185,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">40</field>
         <field name="product_code">k300-e3930-4-p</field>
-        <field name="name" ref="ol_base.supplier_company_us" />
+        <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.e3930_p_product_template" />
         <field name="price">69</field>
     </record>
@@ -182,7 +197,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">40</field>
         <field name="product_code">k300-e3930-4-p</field>
-        <field name="name" ref="ol_base.supplier_company_eu" />
+        <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.e3930_p_product_template" />
         <field name="price">44</field>
     </record>
@@ -194,7 +210,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">14</field>
         <field name="product_code">k300-e3950-8-p</field>
-        <field name="name" ref="ol_base.supplier_company_us" />
+        <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.e3950_p_product_template" />
         <field name="price">45</field>
     </record>
@@ -205,7 +222,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">14</field>
         <field name="product_code">k300-e3950-8-p</field>
-        <field name="name" ref="ol_base.supplier_company_eu" />
+        <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.e3950_p_product_template" />
         <field name="price">17</field>
     </record>
@@ -217,7 +235,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">100</field>
         <field name="product_code">acc101</field>
-        <field name="name" ref="ol_base.supplier_company_us" />
+        <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.acc101_product_template" />
         <field name="price">0.75</field>
     </record>
@@ -228,7 +247,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">100</field>
         <field name="product_code">acc101</field>
-        <field name="name" ref="ol_base.supplier_company_us" />
+        <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.acc101_product_template" />
         <field name="price">1.15</field>
     </record>
@@ -240,7 +260,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">45</field>
         <field name="product_code">win1064-pro</field>
-        <field name="name" ref="ol_base.supplier_company_us" />
+        <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.win1064_pro_product_template" />
         <field name="price">59</field>
     </record>
@@ -251,7 +272,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">45</field>
         <field name="product_code">win1064-pro</field>
-        <field name="name" ref="ol_base.supplier_company_eu" />
+        <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.win1064_pro_product_template" />
         <field name="price">71</field>
     </record>
@@ -263,7 +285,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">7</field>
         <field name="product_code">pw-12v5a-l6-k</field>
-        <field name="name" ref="ol_base.supplier_company_us" />
+        <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.pw-12v5a-l6-k_product_template" />
         <field name="price">44</field>
     </record>
@@ -274,7 +297,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">7</field>
         <field name="product_code">pw-12v5a-l6-k</field>
-        <field name="name" ref="ol_base.supplier_company_eu" />
+        <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.pw-12v5a-l6-k_product_template" />
         <field name="price">17</field>
     </record>
@@ -286,7 +310,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">28</field>
         <field name="product_code">ant-a-100</field>
-        <field name="name" ref="ol_base.supplier_company_us" />
+        <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.ant-a-100_product_template" />
         <field name="price">54</field>
     </record>
@@ -297,7 +322,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">28</field>
         <field name="product_code">ant-a-100</field>
-        <field name="name" ref="ol_base.supplier_company_eu" />
+        <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.ant-a-100_product_template" />
         <field name="price">22</field>
     </record>
@@ -309,7 +335,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">64</field>
         <field name="product_code">ts32gmsa370</field>
-        <field name="name" ref="ol_base.supplier_company_us" />
+        <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.ts32gmsa370_product_template" />
         <field name="price">21</field>
     </record>
@@ -320,7 +347,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">64</field>
         <field name="product_code">ts32gmsa370</field>
-        <field name="name" ref="ol_base.supplier_company_eu" />
+        <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.ts32gmsa370_product_template" />
         <field name="price">51</field>
     </record>
@@ -332,7 +360,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">20</field>
         <field name="product_code">ts64gmsa370</field>
-        <field name="name" ref="ol_base.supplier_company_us" />
+        <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.ts64gmsa370_product_template" />
         <field name="price">99</field>
     </record>
@@ -343,7 +372,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">20</field>
         <field name="product_code">ts64gmsa370</field>
-        <field name="name" ref="ol_base.supplier_company_eu" />
+        <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.ts64gmsa370_product_template" />
         <field name="price">56</field>
     </record>
@@ -355,7 +385,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">68</field>
         <field name="product_code">ts32gmts800</field>
-        <field name="name" ref="ol_base.supplier_company_us" />
+        <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.ts32gmts800_product_template" />
         <field name="price">42</field>
     </record>
@@ -366,7 +397,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">68</field>
         <field name="product_code">ts32gmts800</field>
-        <field name="name" ref="ol_base.supplier_company_eu" />
+        <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.ts32gmts800_product_template" />
         <field name="price">41</field>
     </record>
@@ -378,7 +410,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">15</field>
         <field name="product_code">ts64gmts800</field>
-        <field name="name" ref="ol_base.supplier_company_us" />
+        <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.ts64gmts800_product_template" />
         <field name="price">34</field>
     </record>
@@ -389,7 +422,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">15</field>
         <field name="product_code">ts64gmts800</field>
-        <field name="name" ref="ol_base.supplier_company_eu" />
+        <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.ts64gmts800_product_template" />
         <field name="price">20</field>
     </record>
@@ -402,7 +436,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">52</field>
         <field name="product_code">ts256msk64w6x</field>
-        <field name="name" ref="ol_base.supplier_company_us" />
+        <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.ts256msk64w6x_product_template" />
         <field name="price">60</field>
     </record>
@@ -413,7 +448,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">52</field>
         <field name="product_code">ts256msk64w6x</field>
-        <field name="name" ref="ol_base.supplier_company_eu" />
+        <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.ts256msk64w6x_product_template" />
         <field name="price">7</field>
     </record>
@@ -425,7 +461,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">45</field>
         <field name="product_code">ts512msk64w6h</field>
-        <field name="name" ref="ol_base.supplier_company_us" />
+        <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.ts512msk64w6h_product_template" />
         <field name="price">48</field>
     </record>
@@ -436,7 +473,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">45</field>
         <field name="product_code">ts512msk64w6h</field>
-        <field name="name" ref="ol_base.supplier_company_eu" />
+        <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.ts512msk64w6h_product_template" />
         <field name="price">70</field>
     </record>
@@ -448,7 +486,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">10</field>
         <field name="product_code">ts1gmsk64w6h</field>
-        <field name="name" ref="ol_base.supplier_company_us" />
+        <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.ts1gsk64w6h_product_template" />
         <field name="price">58</field>
     </record>
@@ -459,7 +498,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">10</field>
         <field name="product_code">ts1gmsk64w6h</field>
-        <field name="name" ref="ol_base.supplier_company_eu" />
+        <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.ts1gsk64w6h_product_template" />
         <field name="price">35</field>
     </record>
@@ -471,7 +511,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">50</field>
         <field name="product_code">kwa-dbv0-8</field>
-        <field name="name" ref="ol_base.supplier_company_us" />
+        <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.kwa-dbv0-8_product_template" />
         <field name="price">57</field>
     </record>
@@ -482,7 +523,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">50</field>
         <field name="product_code">kwa-dbv0-8</field>
-        <field name="name" ref="ol_base.supplier_company_eu" />
+        <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.kwa-dbv0-8_product_template" />
         <field name="price">64</field>
     </record>
@@ -494,7 +536,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">50</field>
         <field name="product_code">KWPTCv0-18</field>
-        <field name="name" ref="ol_base.supplier_company_us" />
+        <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.KWPTCv0-18_product_template" />
         <field name="price">57</field>
     </record>
@@ -505,7 +548,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">50</field>
         <field name="product_code">KWPTCv0-18</field>
-        <field name="name" ref="ol_base.supplier_company_eu" />
+        <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.KWPTCv0-18_product_template" />
         <field name="price">64</field>
     </record>
@@ -517,7 +561,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">50</field>
         <field name="product_code">DHXA-222</field>
-        <field name="name" ref="ol_base.supplier_company_us" />
+        <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.DHXA-222_product_template" />
         <field name="price">57</field>
     </record>
@@ -528,7 +573,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">50</field>
         <field name="product_code">DHXA-222</field>
-        <field name="name" ref="ol_base.supplier_company_eu" />
+        <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.DHXA-222_product_template" />
         <field name="price">64</field>
     </record>
@@ -539,7 +585,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">50</field>
         <field name="product_code">DNXA-116</field>
-        <field name="name" ref="ol_base.supplier_company_us" />
+        <!-- <field name="name" ref="ol_base.supplier_company_us" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.DNXA-116_product_template" />
         <field name="price">57</field>
     </record>
@@ -550,7 +597,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">50</field>
         <field name="product_code">DNXA-116</field>
-        <field name="name" ref="ol_base.supplier_company_eu" />
+        <!-- <field name="name" ref="ol_base.supplier_company_eu" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_eu" />
         <field name="product_tmpl_id" ref="ol_base.DNXA-116_product_template" />
         <field name="price">64</field>
     </record>
@@ -563,7 +611,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">5000.0</field>
         <field name="product_code">RST07-1600 | CBD100</field>
-        <field name="name" ref="ol_base.supplier_amphenol_assembletech" />
+        <!-- <field name="name" ref="ol_base.supplier_amphenol_assembletech" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.cbd100_product_template" />
         <field name="price">0.64</field>
     </record>
@@ -574,7 +623,8 @@
         <field name="sequence">1</field>
         <field name="min_qty">1000.0</field>
         <field name="product_code">	RST07-1599 | CBD110</field>
-        <field name="name" ref="ol_base.supplier_amphenol_assembletech" />
+        <!-- <field name="name" ref="ol_base.supplier_amphenol_assembletech" /> -->
+        <field name="partner_id" ref="ol_base.supplier_company_contact_both" />
         <field name="product_tmpl_id" ref="ol_base.cbd110_product_template" />
         <field name="price">0.67</field>
     </record>

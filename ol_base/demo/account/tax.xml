@@ -1,0 +1,86 @@
+<odoo>
+  <!-- ============== -->
+  <!-- PAYABLE VAT -->
+  <!-- ============== -->
+  <record id="account_tax_vat_21_pct_payable" model="account.tax">
+    <field name="name">VAT 21% Payable</field>
+    <field name="type_tax_use">sale</field>
+    <field name="amount_type">percent</field>
+    <field name="company_id" ref="ol_base.onlogic_eu"/>
+    <field name="sequence">1</field>
+    <field name="amount">21.00000</field>
+    <field name="description">VAT21Payable</field>
+    <field name="include_base_amount">False</field>
+    <field name="tax_group_id" ref="account.1_tax_group_15" />
+  </record>
+  <record id="account_tax_vat_9_pct_payable" model="account.tax">
+    <field name="name">VAT 9% Payable</field>
+    <field name="type_tax_use">sale</field>
+    <field name="amount_type">percent</field>
+    <field name="company_id" ref="ol_base.onlogic_eu"/>
+    <field name="sequence">1</field>
+    <field name="amount">9.00000</field>
+    <field name="description">VAT9Payable</field>
+    <field name="include_base_amount">False</field>
+    <field name="tax_group_id" ref="account.1_tax_group_15" />
+  </record>
+  <record id="account_tax_vat_6_pct_payable" model="account.tax">
+    <field name="name">VAT 6% Payable</field>
+    <field name="type_tax_use">sale</field>
+    <field name="amount_type">percent</field>
+    <field name="company_id" ref="ol_base.onlogic_eu"/>
+    <field name="sequence">1</field>
+    <field name="amount">6.00000</field>
+    <field name="description">VAT6Payable</field>
+    <field name="include_base_amount">False</field>
+    <field name="tax_group_id" ref="account.1_tax_group_15" />
+  </record>
+  <record id="account_tax_vat_0_pct_payable" model="account.tax">
+    <field name="name">VAT 0% Payable</field>
+    <field name="type_tax_use">sale</field>
+    <field name="amount_type">percent</field>
+    <field name="company_id" ref="ol_base.onlogic_eu"/>
+    <field name="sequence">1</field>
+    <field name="amount">0.00000</field>
+    <field name="description">VAT0Payable</field>
+    <field name="include_base_amount">False</field>
+    <field name="tax_group_id" ref="account.1_tax_group_15" />
+  </record>
+
+  <!-- ============== -->
+  <!-- RECEIVABLE VAT -->
+  <!-- ============== -->
+  <record id="account_tax_vat_21_pct_receivable" model="account.tax">
+    <field name="name">VAT 21% Receivable</field>
+    <field name="type_tax_use">purchase</field>
+    <field name="amount_type">percent</field>
+    <field name="company_id" ref="ol_base.onlogic_eu"/>
+    <field name="sequence">1</field>
+    <field name="amount">21.00000</field>
+    <field name="description">VAT21Receivable</field>
+    <field name="include_base_amount">False</field>
+    <field name="tax_group_id" ref="account.1_tax_group_15" />
+  </record>
+  <record id="account_tax_vat_6_pct_receivable" model="account.tax">
+    <field name="name">VAT 6% Receivable</field>
+    <field name="type_tax_use">purchase</field>
+    <field name="amount_type">percent</field>
+    <field name="company_id" ref="ol_base.onlogic_eu"/>
+    <field name="sequence">1</field>
+    <field name="amount">6.00000</field>
+    <field name="description">VAT6Receivable</field>
+    <field name="include_base_amount">False</field>
+    <field name="tax_group_id" ref="account.1_tax_group_15" />
+  </record>
+  <record id="account_tax_vat_0_pct_receivable" model="account.tax">
+    <field name="name">VAT 0% Receivable</field>
+    <field name="type_tax_use">purchase</field>
+    <field name="amount_type">percent</field>
+    <field name="company_id" ref="ol_base.onlogic_eu"/>
+    <field name="sequence">1</field>
+    <field name="amount">0.00000</field>
+    <field name="description">VAT0Receivable</field>
+    <field name="include_base_amount">False</field>
+    <field name="tax_group_id" ref="account.1_tax_group_15" />
+  </record>
+</odoo>
