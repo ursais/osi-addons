@@ -5,7 +5,7 @@ from odoo.exceptions import ValidationError
 
 class SaleOrder(models.Model):
     """
-    Add new fields to product templates
+    Add new fields to Sale Order
     """
 
     _inherit = "sale.order"

@@ -9,7 +9,7 @@
     "category": "Sale",
     "version": "17.0.0.1.0",
     # any module necessary for this one to work correctly
-    "depends": ["sale_management"],
+    "depends": ["sale_management","product_state"],
     # always loaded
     "data": ["views/sale_order_view.xml"],
 }

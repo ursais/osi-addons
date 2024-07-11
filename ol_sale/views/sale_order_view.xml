@@ -29,6 +29,11 @@
                 <div name="commitment_date_div" position="move"/>
             </xpath>
 
+            <!-- Added Product State in Sale order line after name field in tree view -->
+            <xpath expr="//page[@name='order_lines']//field[@name='order_line']//tree//field[@name='name']" position="after">
+                <field name="product_state_id" optional="show"/>
+            </xpath>
+
         </field>
     </record>
 
