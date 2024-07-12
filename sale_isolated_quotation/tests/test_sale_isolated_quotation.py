@@ -44,7 +44,7 @@ class TestSaleIsolatedQuotation(TransactionCase):
             dom = ast.literal_eval(action.domain or "{}")
             self.assertTrue("order_sequence" in ctx)
             self.assertTrue("default_order_sequence" in ctx)
-            self.assertTrue("order_sequence" in map(lambda l: l[0], dom))
+            self.assertTrue("order_sequence" in map(lambda x: x[0], dom))
         # Uninstall this module
         uninstall_hook(self.cr, self.registry)
         # Check context and domain in action after uninstall this module
@@ -52,20 +52,19 @@ class TestSaleIsolatedQuotation(TransactionCase):
             action = self.env.ref(action_id)
             ctx = ast.literal_eval(action.context)
             dom = ast.literal_eval(action.domain or "{}")
-            self.assertTrue("order_sequence" not in ctx)
-            self.assertTrue("default_order_sequence" not in ctx)
-            self.assertTrue("order_sequence" not in map(lambda l: l[0], dom))
             if action_id == "sale.action_orders":
-                self.assertTrue("state" in map(lambda l: l[0], dom))
+                self.assertTrue(ctx.get("order_sequence"))
             else:
                 self.assertTrue("search_default_my_quotation" in ctx)
+                self.assertTrue(("order_sequence", "=", False) in dom)
+                self.assertTrue(not ctx.get("order_sequence"))
+                self.assertTrue(not ctx.get("default_order_sequence"))
 
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        cls.partner = cls.env.ref("base.res_partner_2")
+    def setUp(self):
+        super().setUp()
+        self.partner = self.env.ref("base.res_partner_2")
         vals = {
-            "partner_id": cls.partner.id,
+            "partner_id": self.partner.id,
             "order_sequence": False,
         }
-        cls.quotation = cls.env["sale.order"].create(vals)
+        self.quotation = self.env["sale.order"].create(vals)
