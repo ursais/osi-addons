@@ -27,6 +27,7 @@ class SaleOrder(models.Model):
     )
     quotation_state = fields.Selection(
         string="Quotation Status",
+        readonly=True,
         related="state",
         help="Only relative quotation states",
     )
@@ -39,7 +40,6 @@ class SaleOrder(models.Model):
         return not order_sequence
 
     def _prepare_order_from_quotation(self):
-        self.ensure_one()
         return {
             "name": self.env["ir.sequence"].next_by_code("sale.order") or "/",
             "order_sequence": True,
