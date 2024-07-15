@@ -10,12 +10,15 @@
     "version": "17.0.1.0.0",
     # any module necessary for this one to work correctly
     "depends": [
-        "product_state",
+        "sale_product_approval_purchase",
+        "sale_product_approval_mrp",
+        "sale_product_approval_stock",
     ],
     # always loaded
     "data": [
         "security/product_state_group.xml",
         "views/product_template_view.xml",
+        "data/product_state_data.xml",
     ],
     # only loaded in demo mode
     "demo": [
