@@ -1,13 +1,19 @@
+# Import Odoo libs
 from odoo import fields, models
 
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
+    # COLUMNS #####
+
     price_review_count = fields.Integer(
         "# Price Reviews",
         compute="_compute_price_review",
     )
+
+    # END ##########
+    # METHODS ##########
 
     def _compute_price_review(self):
         """Computes the number of price reviews to show in the smart button."""
@@ -64,3 +70,5 @@ class ProductProduct(models.Model):
                 "view_id": view.id,
                 "target": "current",
             }
+
+    # END ##########
