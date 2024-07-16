@@ -9,6 +9,7 @@
     "version": "17.0.0.1.0",
     # Modules required to this module to work properly
     "depends": [
+        "ol_base",
         "ol_product_ship_multiplier",
         "ol_product_tooling_cost",
         "ol_product_tariff",

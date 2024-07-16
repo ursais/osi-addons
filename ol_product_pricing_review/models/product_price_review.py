@@ -28,7 +28,9 @@ class ProductPriceReview(models.Model):
     default_code = fields.Char(related="product_id.default_code")
     detailed_type = fields.Selection(related="product_id.detailed_type")
     categ_id = fields.Many2one(
-        "product.category", string="Product Category", related="product_id.categ_id"
+        "product.category",
+        string="Product Category",
+        related="product_id.categ_id",
     )
     company_id = fields.Many2one(
         "res.company", string="Company", default=lambda self: self.env.company
@@ -75,7 +77,8 @@ class ProductPriceReview(models.Model):
     )
     origin_total_cost = fields.Float(
         string="Original Total Cost",
-        help="Total cost of product including purchase cost, tariff, tooling, defrayment, and shipping.",
+        help="Total cost of product including purchase cost, tariff,"
+        " tooling, defrayment, and shipping.",
     )
     origin_last_purchase_margin = fields.Float(
         string="Original Last PO Margin",
@@ -110,7 +113,8 @@ class ProductPriceReview(models.Model):
     )
     origin_special_price = fields.Float(
         string="Original Special Price",
-        help="Special fixed price that overrides all other pricing selections. Original price shows with strikethrough text on e-commerce platform",
+        help="Special fixed price that overrides all other pricing selections."
+        " Original price shows with strikethrough text on e-commerce platform",
     )
     origin_vendor_id = fields.Many2one(
         "res.partner",
@@ -167,7 +171,8 @@ class ProductPriceReview(models.Model):
     total_cost = fields.Float(
         string="Total Cost",
         compute="_compute_total_cost",
-        help="Total cost of product including purchase cost, tariff, tooling, defrayment, and shipping.",
+        help="Total cost of product including purchase cost, tariff,"
+        " tooling, defrayment, and shipping.",
     )
     suggested_margin = fields.Float(
         related="categ_id.suggested_margin",
@@ -215,7 +220,8 @@ class ProductPriceReview(models.Model):
     )
     special_price = fields.Float(
         string="Special Price",
-        help="Special fixed price that overrides all other pricing selections. Original price shows with strikethrough text on e-commerce platform",
+        help="Special fixed price that overrides all other pricing selections."
+        " Original price shows with strikethrough text on e-commerce platform",
     )
     calculated_price = fields.Float(
         string="Calculated Price",
@@ -226,9 +232,10 @@ class ProductPriceReview(models.Model):
     # END ##########
     # METHODS ##########
 
+    # ONCHANGE METHODS
     @api.onchange("product_id")
     def onchange_product_id(self):
-        """Pull in all fields from product to set on the review record, for historical documentation."""
+        """Update fields based on selected product for historical documentation."""
         for rec in self:
             if rec.product_id:
                 # Populate historical fields on price review
@@ -317,15 +324,21 @@ class ProductPriceReview(models.Model):
                 ).special_price
                 rec.based_on = rec.product_id.with_company(rec.company_id).based_on
 
-    # ONCHANGE METHODS
     @api.onchange("user_id")
     def onchange_user_id(self):
+        """Update state to 'in_progress' when user_id is assigned and state is 'new'."""
         for rec in self:
             if rec.user_id and rec.state == "new":
                 rec.state = "in_progress"
 
-    @api.depends("carrier_multiplier_id", "product_id.weight")
+    # COMPUTE METHODS
+    @api.depends(
+        "carrier_multiplier_id",
+        "product_id.weight",
+    )
     def _compute_default_shipping_cost(self):
+        """Compute default shipping cost based on carrier multiplier
+        and product weight."""
         default_shipping_cost = 0.0
         for rec in self:
             if rec.carrier_multiplier_id:
@@ -334,14 +347,6 @@ class ProductPriceReview(models.Model):
                 )
             rec.default_shipping_cost = default_shipping_cost
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            seq = self.env["ir.sequence"].next_by_code("product.price.review") or "New"
-            vals["pa"] = seq
-        return super().create(vals_list)
-
-    # COMPUTE METHODS
     @api.depends("origin_last_purchase_price")
     def _compute_origin_last_purchase_price_converted(self):
         for rec in self:
@@ -455,9 +460,11 @@ class ProductPriceReview(models.Model):
         "charm_price",
     )
     def _compute_final_price(self):
+        """Compute the final price based on various factors."""
         for rec in self:
             final_price = 0
-            # Use special/override price, otherwise set final price based on computed
+
+            # Determine final price based on special/override price or calculated price
             if rec.special_price:
                 final_price = rec.special_price
             elif rec.override_price:
@@ -465,7 +472,7 @@ class ProductPriceReview(models.Model):
             else:
                 final_price = rec.calculated_price
 
-                # Apply Charm Pricing
+                # Apply Charm Pricing if specified
                 if rec.charm_price == ".00":
                     final_price = round(final_price)  # Round to nearest .00
                 elif rec.charm_price == ".95":
@@ -474,16 +481,24 @@ class ProductPriceReview(models.Model):
                     final_price = round(final_price) - 0.01  # Round to nearest .99
                 else:
                     final_price = final_price
+
+            # Assign computed final price to the record
             rec.final_price = final_price
 
     @api.depends("final_price", "total_cost")
     def _compute_margins(self):
+        """Compute margins based on final price and total cost."""
+
         for rec in self:
             margin = 0
             margin_percent = 0
+
+            # Calculate margin and margin percentage if final price is defined
             if rec.final_price:
                 margin = rec.final_price - rec.total_cost
                 margin_percent = margin / rec.final_price
+
+            # Assign computed margin and margin percentage to the record
             rec.margin = margin
             rec.margin_percent = margin_percent
 
@@ -495,8 +510,11 @@ class ProductPriceReview(models.Model):
         "override_price",
     )
     def _compute_based_on(self):
+        """Determine the basis for pricing based on various fields."""
         for rec in self:
             based_on = ""
+
+            # Determine based on which pricing strategy is being used
             if rec.special_price > 0.0:
                 based_on = "Special Price"
             elif rec.override_price > 0.0:
@@ -505,23 +523,37 @@ class ProductPriceReview(models.Model):
                 based_on = "Override Margin"
             else:
                 based_on = "Suggested Margin"
+
+            # Assign determined basis to the record
             rec.based_on = based_on
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Override create method to generate sequence 'pa' for each record."""
+        for vals in vals_list:
+            seq = self.env["ir.sequence"].next_by_code("product.price.review") or "New"
+            vals["pa"] = seq
+        return super().create(vals_list)
+
     def assign_to_me(self):
+        """Assign the current user to the record and update state if 'new'."""
         for rec in self:
             rec.user_id = self.env.uid
             if rec.state == "new":
                 rec.state = "in_progress"
 
     def approve(self):
+        """Set the state of the record to 'validated'."""
         for rec in self:
             rec.state = "validated"
 
     def reject_button(self):
+        """Set the state of the record to 'reject'."""
         for rec in self:
             rec.state = "reject"
 
     def validate_button(self):
+        """Validate the price review and update corresponding product fields."""
         for rec in self:
             if rec.product_id and not rec.product_id.disable_price_reviews:
                 rec.product_id.sudo().write(
