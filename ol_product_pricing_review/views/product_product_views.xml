@@ -17,6 +17,9 @@
                 <field name="has_configurable_attributes" invisible="1" />
                 <button string="Price Review" type="object" name="action_price_review" invisible="disable_price_reviews or has_configurable_attributes" />
             </xpath>
+            <field name="lst_price" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
         </field>
     </record>
 

@@ -18,6 +18,7 @@
         <field name="priority">100</field>
         <field name="inherit_id" ref="ol_product_ship_multiplier.product_template_last_purchase_info_inherit_ol_product" />
         <field name="arch" type="xml">
+            <field name="carrier_multiplier_id" position="replace" />
             <field name="default_shipping_cost" position="replace" />
         </field>
     </record>
@@ -59,7 +60,7 @@
                 <xpath expr="//div[@name='pricing']" position="move" />
                 <label for="standard_price" invisible="product_variant_count &gt; 1 and not is_product_variant" />
                 <div name="standard_price_uom" invisible="product_variant_count &gt; 1 and not is_product_variant">
-                    <field name="standard_price" class="oe_inline" widget="monetary" options="{'currency_field': 'cost_currency_id', 'field_digits': True}" />
+                    <field name="standard_price" readonly="1" class="oe_inline" widget="monetary" options="{'currency_field': 'cost_currency_id', 'field_digits': True}" />
                     <span groups="uom.group_uom">per
                         <field name="uom_name" class="oe_inline"/>
                     </span>
@@ -67,7 +68,7 @@
                 <field name="tariff_percent" invisible="has_configurable_attributes" widget="percentage" readonly="1" />
                 <field name="tooling_cost" invisible="has_configurable_attributes" readonly="1" widget="monetary" options="{'currency_field': 'price_currency_id', 'field_digits': True}" />
                 <field name="defrayment_cost" invisible="has_configurable_attributes" readonly="1" widget="monetary" options="{'currency_field': 'price_currency_id', 'field_digits': True}" />
-                <field name="carrier_multiplier_id" position="move" invisible="has_configurable_attributes" readonly="1" />
+                <field name="carrier_multiplier_id" invisible="has_configurable_attributes" readonly="1" />
                 <field name="default_shipping_cost" invisible="has_configurable_attributes" widget="monetary" options="{'currency_field': 'price_currency_id', 'field_digits': True}" />
                 <field name="override_margin" invisible="has_configurable_attributes" readonly="1" widget="percentage" />
                 <field name="charm_price" invisible="has_configurable_attributes" readonly="1" />
