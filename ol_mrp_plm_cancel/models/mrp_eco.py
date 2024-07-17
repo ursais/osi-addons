@@ -39,6 +39,7 @@ class MrpEco(models.Model):
 
         cancel_stage = self.env["mrp.eco.stage"].search(
             [("type_ids", "in", [self.type_id.id]), ("cancel_stage", "=", True)],
+            order="sequence asc",
             limit=1,
         )
         if cancel_stage:
@@ -57,7 +58,10 @@ class MrpEco(models.Model):
         """It's possible to move the stage to a cancel stage outside of the cancel button
         so this will ensure the product state gets properly set if this happens."""
         res = super().write(vals)
-        for rec in self:
-            if rec.stage_id.cancel_stage and rec.product_tmpl_id.product_state_id.id:
-                rec.product_tmpl_id.product_state_id = rec.initial_product_state_id.id
+        if (
+            "stage_id" in vals
+            and self.stage_id.cancel_stage
+            and self.product_tmpl_id.product_state_id.id
+        ):
+            self.product_tmpl_id.product_state_id = self.initial_product_state_id.id
         return res

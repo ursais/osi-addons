@@ -1,14 +1,20 @@
 {
     "name": "OnLogic Purchase Product Last Price Info",
-    "version": "17.0.0.1.0",
-    "depends": ["purchase", "purchase_last_price_info"],
+    "description": """
+        Reviews pricing when Last PO Cost changes for components
+    """,
     "author": "OnLogic",
     "website": "https://www.onlogic.com",
     "onlogic": True,
     "category": "Purchase",
-    "description": """
-        Reviews pricing when Last PO Cost changes for components
-    """,
+    "version": "17.0.0.1.0",
+    # any module necessary for this one to work correctly
+    "depends": [
+        "ol_base",
+        "purchase",
+        "purchase_last_price_info",
+    ],
     "demo": [],
+    # always loaded
     "data": [],
 }

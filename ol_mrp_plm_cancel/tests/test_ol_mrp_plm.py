@@ -21,7 +21,14 @@ class TestSaleTierValidation(common.TransactionCase):
         cls.ecostage_progress.write({"product_state_id": product_state_sellable.id})
 
         cls.ecotype0 = cls.env.ref("mrp_plm.ecotype0")
-        cls.product = cls.env.ref("product.product_product_4_product_template")
+        cls.product = cls.env["product.template"].create(
+            [
+                {
+                    "name": "Test product",
+                    "list_price": 500,
+                }
+            ]
+        )
 
     def test_cancel_action(self):
         # Create new ECO
@@ -51,7 +58,7 @@ class TestSaleTierValidation(common.TransactionCase):
                 {
                     "name": "Cancel",
                     "cancel_stage": True,
-                    "type_ids": [(6, 0, [self.ecotype0.id])],
+                    "type_ids": [(6, 0, self.ecotype0.id)],
                 }
             ]
         )
@@ -61,7 +68,7 @@ class TestSaleTierValidation(common.TransactionCase):
         mrp_eco.action_cancel()
 
         # Assert that stage_id is updated correctly
-        self.assertEqual(mrp_eco.stage_id.id, stage_cancel.id)
+        self.assertEqual(mrp_eco.stage_id, stage_cancel.id)
 
         # Assert that product state is reset to initial state
         self.assertEqual(
