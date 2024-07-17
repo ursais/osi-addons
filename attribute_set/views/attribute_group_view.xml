@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="attribute_group_form_view" model="ir.ui.view">
+        <field name="model">attribute.group</field>
+        <field name="arch" type="xml">
+            <form string="Attribute Group">
+                <group>
+                    <field name="name" string="Group name" class="oe_inline" />
+                    <field name="sequence" class="oe_inline" />
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="attribute_group_tree_view" model="ir.ui.view">
+        <field name="model">attribute.group</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="sequence" widget="handle" />
+                <field name="name" />
+                <field name="model_id" invisible="context.get('default_model_id')" />
+                <button
+                    string="Sort Attribute"
+                    name="%(attribute_attribute_sort_action)d"
+                    type="action"
+                    icon="fa-sort-amount-asc"
+                />
+            </tree>
+        </field>
+    </record>
+    <record id="attribute_group_search_view" model="ir.ui.view">
+        <field name="model">attribute.group</field>
+        <field name="arch" type="xml">
+            <search string="Search Attributes">
+                <field name="name" />
+            </search>
+        </field>
+    </record>
+    <record id="attribute_group_action" model="ir.actions.act_window">
+        <field name="name">Attribute Groups</field>
+        <field name="res_model">attribute.group</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="attribute_group_search_view" />
+        <field name="context">{}</field>
+        <field name="help" />
+    </record>
+    <menuitem
+        action="attribute_group_action"
+        id="menu_attribute_group_action"
+        parent="menu_attribute_in_admin"
+        sequence="50"
+    />
+</odoo>

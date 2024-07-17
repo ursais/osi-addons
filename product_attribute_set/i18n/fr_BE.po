@@ -1,0 +1,128 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* product_attribute_set
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: product_attribute_set
+#: model:ir.model.fields,field_description:product_attribute_set.field_product_product__attribute_set_id
+#: model:ir.model.fields,field_description:product_attribute_set.field_product_template__attribute_set_id
+#: model_terms:ir.ui.view,arch_db:product_attribute_set.product_template_search_view
+msgid "Attribute Set"
+msgstr "Ensemble d'attribut"
+
+#. module: product_attribute_set
+#: model_terms:ir.ui.view,arch_db:product_attribute_set.product_template_form_view
+msgid "Attributes"
+msgstr "Attributs"
+
+#. module: product_attribute_set
+#: model:attribute.set,name:product_attribute_set.computer_attribute_set
+msgid "Computer"
+msgstr "Ordinateur"
+
+#. module: product_attribute_set
+#: model:ir.model.fields,field_description:product_attribute_set.field_product_category__attribute_set_id
+msgid "Default Attribute Set"
+msgstr "Ensemble d'attribut par défaut"
+
+#. module: product_attribute_set
+#: model:attribute.option,name:product_attribute_set.computer_processor_attribute_option_1
+msgid "Intel i5"
+msgstr ""
+
+#. module: product_attribute_set
+#: model:attribute.option,name:product_attribute_set.computer_processor_attribute_option_2
+msgid "Intel i6"
+msgstr ""
+
+#. module: product_attribute_set
+#: model:attribute.option,name:product_attribute_set.computer_processor_attribute_option_3
+msgid "Intel i7"
+msgstr ""
+
+#. module: product_attribute_set
+#: model:attribute.set,name:product_attribute_set.mouse_attribute_set
+msgid "Mouse"
+msgstr "Souris"
+
+#. module: product_attribute_set
+#: model:ir.model.fields,field_description:product_attribute_set.computer_processor_attribute_ir_model_fields
+msgid "Processor"
+msgstr "Processeur"
+
+#. module: product_attribute_set
+#: model:ir.model,name:product_attribute_set.model_product_template
+msgid "Product"
+msgstr ""
+
+#. module: product_attribute_set
+#: model:ir.model,name:product_attribute_set.model_product_category
+msgid "Product Category"
+msgstr "Catégorie d'article"
+
+#. module: product_attribute_set
+#: model:attribute.group,name:product_attribute_set.computer_technical_attribute_group
+msgid "Technical"
+msgstr "Technique"
+
+#. module: product_attribute_set
+#: model:ir.model.fields,field_description:product_attribute_set.computer_tech_description_attribute_ir_model_fields
+msgid "Technical Description"
+msgstr "Description Technique"
+
+#. module: product_attribute_set
+#: model:attribute.group,name:product_attribute_set.computer_transport_attribute_group
+msgid "Transport"
+msgstr "Transport"
+
+#. module: product_attribute_set
+#: model:ir.model.fields,field_description:product_attribute_set.computer_linux_compatible_attribute_ir_model_fields
+msgid "X Linux Compatible"
+msgstr "Compatible linux X"
+
+#~ msgid "Attribute Set Completion Rate"
+#~ msgstr "Taux d'achèvement de l'ensemble d'attribut"
+
+#~ msgid "Attribute Set Completion State"
+#~ msgstr "État d'achèvement de l'ensemble d'attribut"
+
+#~ msgid "Attribute Set completed criterias"
+#~ msgstr "Critères remplis de l'ensemble d'attribut"
+
+#~ msgid "Attribute Set not completed criterias"
+#~ msgstr "Critères non remplis de l'ensemble d'attribut"
+
+#~ msgid "Attribute set completeness percentage"
+#~ msgstr "Pourcentage de complétude de l'ensemble d'attribut"
+
+#~ msgid "Attribute set completeness status"
+#~ msgstr "État de complétude de l'ensemble d'attribut"
+
+#~ msgid "Completeness Requirements"
+#~ msgstr "Exigences d'exhaustivité"
+
+#~ msgid "Display Name"
+#~ msgstr "Nom affiché"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Dernière modification le"
+
+#~ msgid "Product Template"
+#~ msgstr "Article"
+
+#~ msgid "Volume"
+#~ msgstr "Volume"
+
+#~ msgid "Weight"
+#~ msgstr "Poids"

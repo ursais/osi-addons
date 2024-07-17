@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Attribute Sets -->
+    <record id="computer_attribute_set" model="attribute.set">
+        <field name="name">Computer</field>
+        <field name="model_id" ref="product.model_product_template" />
+    </record>
+    <record id="mouse_attribute_set" model="attribute.set">
+        <field name="name">Mouse</field>
+        <field name="model_id" ref="product.model_product_template" />
+    </record>
+    <!-- Attribute Groups -->
+    <record id="computer_technical_attribute_group" model="attribute.group">
+        <field name="name">Technical</field>
+        <field name="sequence" eval="1" />
+        <field name="model_id" ref="product.model_product_template" />
+    </record>
+    <record id="computer_transport_attribute_group" model="attribute.group">
+        <field name="name">Transport</field>
+        <field name="sequence" eval="2" />
+        <field name="model_id" ref="product.model_product_template" />
+    </record>
+    <!-- Custom attributes -->
+    <record id="computer_processor_attribute" model="attribute.attribute">
+        <field name="nature">custom</field>
+        <field name="field_description">Processor</field>
+        <field name="name">x_processor</field>
+        <field name="attribute_type">select</field>
+        <field name="attribute_group_id" ref="computer_technical_attribute_group" />
+        <field name="attribute_set_ids" eval="[(4, ref('computer_attribute_set'))]" />
+        <field name="model_id" ref="product.model_product_template" />
+    </record>
+    <record id="computer_processor_attribute_option_1" model="attribute.option">
+        <field name="name">Intel i5</field>
+        <field name="attribute_id" ref="computer_processor_attribute" />
+    </record>
+    <record id="computer_processor_attribute_option_2" model="attribute.option">
+        <field name="name">Intel i6</field>
+        <field name="attribute_id" ref="computer_processor_attribute" />
+    </record>
+    <record id="computer_processor_attribute_option_3" model="attribute.option">
+        <field name="name">Intel i7</field>
+        <field name="attribute_id" ref="computer_processor_attribute" />
+    </record>
+    <record id="computer_tech_description_attribute" model="attribute.attribute">
+        <field name="nature">custom</field>
+        <field name="field_description">Technical Description</field>
+        <field name="name">x_technical_description</field>
+        <field name="attribute_type">text</field>
+        <field name="attribute_group_id" ref="computer_technical_attribute_group" />
+        <field name="attribute_set_ids" eval="[(4, ref('computer_attribute_set'))]" />
+        <field name="model_id" ref="product.model_product_template" />
+    </record>
+    <record id="computer_linux_compatible_attribute" model="attribute.attribute">
+        <field name="nature">custom</field>
+        <field name="name">x_linux_compatible</field>
+        <field name="attribute_type">boolean</field>
+        <field name="attribute_group_id" ref="computer_technical_attribute_group" />
+        <field name="attribute_set_ids" eval="[(4, ref('computer_attribute_set'))]" />
+        <field name="model_id" ref="product.model_product_template" />
+    </record>
+    <!-- Native attributes -->
+    <record id="computer_weight_attribute" model="attribute.attribute">
+        <field name="nature">native</field>
+        <field name="field_id" eval="ref('product.field_product_template__weight')" />
+        <field name="attribute_group_id" ref="computer_transport_attribute_group" />
+        <field name="attribute_set_ids" eval="[(4, ref('computer_attribute_set'))]" />
+        <field name="model_id" ref="product.model_product_template" />
+    </record>
+    <record id="computer_volume_attribute" model="attribute.attribute">
+        <field name="nature">native</field>
+        <field name="field_id" eval="ref('product.field_product_template__volume')" />
+        <field name="attribute_group_id" ref="computer_transport_attribute_group" />
+        <field name="attribute_set_ids" eval="[(4, ref('computer_attribute_set'))]" />
+        <field name="model_id" ref="product.model_product_template" />
+    </record>
+</odoo>
