@@ -556,6 +556,7 @@ class ProductPriceReview(models.Model):
         """Validate the price review and update corresponding product fields."""
         for rec in self:
             if rec.product_id and not rec.product_id.disable_price_reviews:
+                # Update Product Values
                 rec.product_id.sudo().write(
                     {
                         "tariff_percent": rec.tariff_percent,
@@ -571,11 +572,13 @@ class ProductPriceReview(models.Model):
                         "based_on": rec.based_on,
                     }
                 )
+
+                # Move price review to validated state
+                rec.approve()
+
                 # Recompute the last PO Margin since it's equation values may update.
                 rec.product_id.product_tmpl_id._compute_last_purchase_margin(
                     from_review=True
                 )
-                # Move price review to approved/validated state
-                rec.approve()
 
     # END ##########

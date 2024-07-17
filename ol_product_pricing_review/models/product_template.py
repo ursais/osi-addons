@@ -1,5 +1,6 @@
 # Import Odoo libs
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class ProductTemplate(models.Model):
@@ -149,7 +150,6 @@ class ProductTemplate(models.Model):
 
     @api.depends(
         "last_purchase_line_id",
-        "carrier_multiplier_id.multiplier",
     )
     def _compute_last_purchase_margin(self, from_review=False):
         """This will compute the last purchase margin."""
