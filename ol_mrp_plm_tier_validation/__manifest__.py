@@ -10,6 +10,7 @@
     "version": "17.0.1.0.0",
     # any module necessary for this one to work correctly
     "depends": [
+        "ol_base",
         "mrp_plm",
         "base_tier_validation",
     ],
