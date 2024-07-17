@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
     <!-- Sale Order form view -->
@@ -9,7 +8,6 @@
         <field name="arch" type="xml">
 
             <!-- Added  Original Shipment Commitment Date -->
-            <xpath expr="//group[@name='sale_shipping']//label[@for='commitment_date']" position="replace"/>
             <xpath expr="//group[@name='sale_shipping']" position="inside">
                 <div class="o_td_label">
                     <label for="original_commitment_date" string="Original Shipment Commitment Date"/>
@@ -26,7 +24,12 @@
                 <div class="o_td_label">
                    <label for="commitment_date" string="Delivery Date"/>
                 </div>
-                <div name="commitment_date_div" position="move"/>
+                <!-- <div name="commitment_date_div" position="move"/>-->
+                <div class="o_row">
+                    <field name="commitment_date"/>
+                    <span class="text-muted" invisible="effective_date and commitment_date">Expected: <field name="expected_date" class="oe_inline" widget="date"/></span>
+                </div>
+                <field name="effective_date" invisible="not effective_date"/>
             </xpath>
 
             <!-- Added Product State in Sale order line after name field in tree view -->
