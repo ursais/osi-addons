@@ -1,7 +1,7 @@
 <odoo>
 
-    <record id="product_product_ext_form_view_sale_price" model="ir.ui.view">
-        <field name="name">product_extended.product.form.view.sale.price</field>
+    <record id="product_template_ext_form_view_sale_price" model="ir.ui.view">
+        <field name="name">product.template.ext.form.view.sale.price</field>
         <field name="model">product.template</field>
         <field name="priority">99</field>
         <field name="inherit_id" ref="product.product_template_form_view" />
@@ -13,7 +13,54 @@
                     name="button_bom_sale_price"
                     string="Compute Sales Price from BoM"
                     type="object"
-                    invisible="bom_count == 0 or has_configurable_attributes"
+                    invisible="bom_count == 0 or has_configurable_attributes or not config_ok"
+                    help="Compute the sales price of the product using products and operations of related bill of materials, for manufactured products only."
+                    class="oe_link pt-0"
+                    colspan="2"
+                    groups="base.group_no_one"
+                />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_product_ext_form_view_sale_price" model="ir.ui.view">
+        <field name="name">product.product.ext.form.view.sale.price</field>
+        <field name="model">product.product</field>
+        <field name="priority">99</field>
+        <field name="inherit_id" ref="product.product_normal_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='pricing']" position="inside">
+                <field name="bom_count" invisible="1" />
+                <field name="has_configurable_attributes" invisible="1" />
+                <button
+                    name="button_bom_sale_price"
+                    string="Compute Sales Price from BoM"
+                    type="object"
+                    invisible="bom_count == 0 or not product_tmpl_id.config_ok"
+                    help="Compute the sales price of the product using products and operations of related bill of materials, for manufactured products only."
+                    class="oe_link pt-0"
+                    colspan="2"
+                    groups="base.group_no_one"
+                />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_product_ext_form_view_sale_price_easy_edit" model="ir.ui.view">
+        <field name="name">product.product.ext.form.view.sale.price.easy.edit</field>
+        <field name="model">product.product</field>
+        <field name="priority">99</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='lst_price']" position="after">
+                <field name="bom_count" invisible="1" />
+                <field name="has_configurable_attributes" invisible="1" />
+                <field name="product_tmpl_id" invisible="1" />
+                <button
+                    name="button_bom_sale_price"
+                    string="Compute Sales Price from BoM"
+                    type="object"
+                    invisible="bom_count == 0 or not product_tmpl_id.config_ok"
                     help="Compute the sales price of the product using products and operations of related bill of materials, for manufactured products only."
                     class="oe_link pt-0"
                     colspan="2"
