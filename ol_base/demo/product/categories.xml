@@ -10,14 +10,13 @@
     </record>
 
     <record id="purchase_stock.route_warehouse0_buy" model='stock.route'>
-      <field name="product_categ_selectable">True</field>
+        <field name="product_categ_selectable">True</field>
     </record>
 
     <!--  Set up correct Product Category Routes for Demo data-->
     <record id="ol_base.product_category_systems" model="product.category">
         <field name="removal_strategy_id" ref="stock.removal_fifo" />
-        <field name="route_ids" eval="[(4,ref('mrp.route_warehouse0_manufacture')),
-            (4,ref('stock.route_warehouse0_mto'))]" />
+        <field name="route_ids" eval="[(4,ref('mrp.route_warehouse0_manufacture')), (4,ref('stock.route_warehouse0_mto'))]" />
     </record>
 
     <record id="ol_base.product_category_components" model="product.category">

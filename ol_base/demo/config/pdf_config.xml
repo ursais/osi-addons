@@ -1,11 +1,9 @@
 <odoo>
-  <data>
 
     <!-- Set this value to enable wkhtmltopdf to pull in CSS files for PDF reports locally -->
     <record id="pdf_report_url" model="ir.config_parameter">
-      <field name="key">report.url</field>
-      <field name="value">http://localhost:8069</field>
+        <field name="key">report.url</field>
+        <field name="value">http://localhost:8069</field>
     </record>
 
-  </data>
 </odoo>

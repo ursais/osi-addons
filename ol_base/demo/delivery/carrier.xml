@@ -1,20 +1,22 @@
 <odoo>
-  <!-- TODO: Make this delivery method more accurate to the OL business? -->
-  <record id="product_product_delivery_normal" model="product.product">
-    <field name="name">Normal Delivery Charges</field>
-    <field name="default_code">Delivery_008</field>
-    <field name="type">service</field>
-    <field name="categ_id" ref="ol_base.product_category_services"/>
-    <field name="sale_ok" eval="False"/>
-    <field name="purchase_ok" eval="False"/>
-    <field name="list_price">10.0</field>
-  </record>
 
-  <record id="normal_delivery_carrier" model="delivery.carrier">
-    <field name="name">Normal Delivery Charges</field>
-    <field name="fixed_price">10.0</field>
-    <field name="sequence">3</field>
-    <field name="delivery_type">fixed</field>
-    <field name="product_id" ref="ol_base.product_product_delivery_normal"/>
-  </record>
+    <!-- TODO: Make this delivery method more accurate to the OL business? -->
+    <record id="product_product_delivery_normal" model="product.product">
+        <field name="name">Normal Delivery Charges</field>
+        <field name="default_code">Delivery_008</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="ol_base.product_category_services"/>
+        <field name="sale_ok" eval="False"/>
+        <field name="purchase_ok" eval="False"/>
+        <field name="list_price">10.0</field>
+    </record>
+
+    <record id="normal_delivery_carrier" model="delivery.carrier">
+        <field name="name">Normal Delivery Charges</field>
+        <field name="fixed_price">10.0</field>
+        <field name="sequence">3</field>
+        <field name="delivery_type">fixed</field>
+        <field name="product_id" ref="ol_base.product_product_delivery_normal"/>
+    </record>
+
 </odoo>

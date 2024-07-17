@@ -1,685 +1,679 @@
 <odoo>
-  <record id="mc500g" model="product.product">
-
-    <!-- General Info -->
-    <field name="name">MC500 Compact Mini-ITX Case (Orange and Silver)</field>
-    <field name="default_code">MC500G</field>
-    <field name="company_id" eval="" />
-
-    <!-- Sales -->
-    <field name="description_sale">As eye-catching as it is functional, the MC500 in orange and silver stands out from the ranks of indistinguishable IPC cases, not just based on its looks, but due to its versatility, durability, and ease of customization.</field>
-
-    <!-- Purchase -->
-    <!-- Nothing yet -->
-
-    <!-- Inventory -->
-    <!-- Nothing yet -->
-
-    <!-- Accounting -->
-    <!-- Nothing yet -->
-  </record>
-
-  <!-- product.template record is automatically created from the product.product-->
-  <record id="mc500g_product_template" model="product.template">
-    <!-- Product type is always set at the template level -->
-    <field name="type">product</field>
-    <field name="categ_id" ref="ol_base.product_category_components" />
-    <field name="list_price">65</field>
-  </record>
-
-  <!-- MC500G company specific values -->
-  <!-- TODO: Get better prices here -->
-  <record id="mc500g_standard_price_us" model="ir.property" forcecreate="True">
-    <field name="name">standard_price</field>
-    <field name="type">float</field>
-    <field name="company_id" ref="base.main_company" />
-    <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
-    <field name="res_id" eval="'product.product,{}'.format(ref('mc500g'))" />
-    <field name="value_float">100</field>
-  </record>
-
-  <record id="mc500g_standard_price_eu" model="ir.property" forcecreate="True">
-    <field name="name">standard_price</field>
-    <field name="type">float</field>
-    <field name="company_id" ref="ol_base.onlogic_eu" />
-    <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
-    <field name="res_id" eval="'product.product,{}'.format(ref('mc500g'))" />
-    <field name="value_float">200</field>
-  </record>
-
-  <!-- K300 PLATFORMS -->
-
-  <!-- E3930 -->
-  <record id="e3930_p" model="product.product">
-    <field name="name">Karbon 300 with Atom E3930 and 4GB Memory</field>
-    <field name="default_code">K300-E3930-4-P</field>
-    <field name="company_id" eval="" />
-    <field name="description_sale">Karbon 300 Ultra-Compact Rugged with Atom E3930 and 4GB Memory</field>
-    <field name="weight">2.0870</field>
-  </record>
-  <record id="e3930_p_product_template" model="product.template">
-    <field name="type">product</field>
-    <field name="categ_id" ref="ol_base.product_category_components" />
-    <field name="list_price">486</field>
-  </record>
-
-
-  <record id="e3930_p_standard_price_us" model="ir.property" forcecreate="True">
-    <field name="name">standard_price</field>
-    <field name="type">float</field>
-    <field name="company_id" ref="base.main_company" />
-    <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
-    <field name="res_id" eval="'product.product,{}'.format(ref('e3930_p'))" />
-    <field name="value_float">253.49</field>
-  </record>
-
-  <record id="e3930_p_standard_price_eu" model="ir.property" forcecreate="True">
-    <field name="name">standard_price</field>
-    <field name="type">float</field>
-    <field name="company_id" ref="ol_base.onlogic_eu" />
-    <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
-    <field name="res_id" eval="'product.product,{}'.format(ref('e3930_p'))" />
-    <field name="value_float">237.06</field>
-  </record>
-
-
-  <!-- E3950 -->
-  <record id="e3950_p" model="product.product">
-    <field name="name">Karbon 300 with Atom E3950 and 8GB Memory</field>
-    <field name="default_code">K300-E3950-8-P</field>
-    <field name="company_id" eval="" />
-    <field name="description_sale">Karbon 300 Ultra-Compact Rugged with Atom E3950 and 8GB Memory</field>
-    <field name="weight">2.0870</field>
-  </record>
-  <record id="e3950_p_product_template" model="product.template">
-    <field name="type">product</field>
-    <field name="categ_id" ref="ol_base.product_category_components" />
-    <field name="list_price">586</field>
-  </record>
-
-  <record id="e3950_p_standard_price_1" model="ir.property" forcecreate="True">
-    <field name="name">standard_price</field>
-    <field name="type">float</field>
-    <field name="company_id" ref="base.main_company" />
-    <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
-    <field name="res_id" eval="'product.product,{}'.format(ref('e3950_p'))" />
-    <field name="value_float">322.84</field>
-  </record>
-
-  <record id="e3950_p_standard_price_2" model="ir.property" forcecreate="True">
-    <field name="name">standard_price</field>
-    <field name="type">float</field>
-    <field name="company_id" ref="ol_base.onlogic_eu" />
-    <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
-    <field name="res_id" eval="'product.product,{}'.format(ref('e3950_p'))" />
-    <field name="value_float">286.56</field>
-  </record>
-
-  <!-- K300 STORAGE -->
-
-  <!-- 32G -->
-  <record id="ts32gmts800" model="product.product">
-    <field name="name">Transcend M.2 2280-D2-B-M SATA SSD - 32GB - [5S]</field>
-    <field name="default_code">TS32GMTS800</field>
-    <field name="company_id" eval="" />
-    <field name="description_sale">Transcend M.2 SSD with read/write speeds of up to 260/40 MB/s.</field>
-
-    <field name="weight">0.1364</field>
-  </record>
-
-  <record id="ts32gmts800_standard_price_us" model="ir.property" forcecreate="True">
-    <field name="name">standard_price</field>
-    <field name="type">float</field>
-    <field name="company_id" ref="base.main_company" />
-    <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
-    <field name="res_id" eval="'product.product,{}'.format(ref('ts32gmts800'))" />
-    <field name="value_float">20.2</field>
-  </record>
-
-  <record id="ts32gmts800_standard_price_eu" model="ir.property" forcecreate="True">
-    <field name="name">standard_price</field>
-    <field name="type">float</field>
-    <field name="company_id" ref="ol_base.onlogic_eu" />
-    <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
-    <field name="res_id" eval="'product.product,{}'.format(ref('ts32gmts800'))" />
-    <field name="value_float">17.39</field>
-  </record>
-
-  <record id="ts32gmts800_product_template" model="product.template">
-    <field name="categ_id" ref="ol_base.product_category_components" />
-    <field name="type">product</field>
-    <field name="list_price">40</field>
-  </record>
-
-  <!-- 64G -->
-  <record id="ts64gmts800" model="product.product">
-    <field name="name">Transcend M.2 2280-D2-B-M SATA SSD - 64GB - [8J]</field>
-    <field name="default_code">TS64GMTS800</field>
-    <field name="company_id" eval="" />
-    <field name="description_sale">Transcend M.2 SSD with read/write speeds of up to 520/80 MB/s. Features Power Shield to protect data during power outages.</field>
-    <field name="weight">0.1364</field>
-  </record>
-
-  <record id="ts64gmts800_standard_price_us" model="ir.property" forcecreate="True">
-    <field name="name">standard_price</field>
-    <field name="type">float</field>
-    <field name="company_id" ref="base.main_company" />
-    <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
-    <field name="res_id" eval="'product.product,{}'.format(ref('ts64gmts800'))" />
-    <field name="value_float">33.0</field>
-  </record>
-
-  <record id="ts64gmts800_standard_price_eu" model="ir.property" forcecreate="True">
-    <field name="name">standard_price</field>
-    <field name="type">float</field>
-    <field name="company_id" ref="ol_base.onlogic_eu" />
-    <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
-    <field name="res_id" eval="'product.product,{}'.format(ref('ts64gmts800'))" />
-    <field name="value_float">31.95</field>
-  </record>
-
-  <record id="ts64gmts800_product_template" model="product.template">
-    <field name="categ_id" ref="ol_base.product_category_components" />
-    <field name="type">product</field>
-    <field name="list_price">67</field>
-  </record>
-
-  <!-- K300 ADAPTER -->
-  <!-- TODO: find and create the EU equivalent adapter -->
-  <record id="gst120a24_cin_k" model="product.product">
-    <field name="name">Cincoze Level VI Power Adapter 120W 24V 5A with 3-pin Terminal Block - US Power Cord</field>
-    <field name="default_code">GST120A24-CIN-K</field>
-    <field name="company_id" eval="" />
-    <field name="description_sale">Cincoze Level VI Power Adapter 120W 24V 5A with 3-pin Terminal Block - US Power Cord</field>
-    <field name="weight">0.8409</field>
-  </record>
-
-  <record id="gst120a24_cin_k_standard_price_us" model="ir.property" forcecreate="True">
-    <field name="name">standard_price</field>
-    <field name="type">float</field>
-    <field name="company_id" ref="base.main_company" />
-    <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
-    <field name="res_id" eval="'product.product,{}'.format(ref('gst120a24_cin_k'))" />
-    <field name="value_float">31.9</field>
-  </record>
-
-  <record id="gst120a24_cin_k_product_template" model="product.template">
-    <field name="categ_id" ref="ol_base.product_category_components" />
-    <!-- NOTE: this will become a phantom type in ls_phantom_kits -->
-    <field name="type">product</field>
-    <field name="list_price">78</field>
-  </record>
-
-  <!-- K300 PORT BLOCKING KIT -->
-
-  <record id="acc101" model="product.product">
-    <field name="name">Computer Port and Dust Blocking Kit</field>
-    <field name="default_code">ACC101</field>
-    <field name="company_id" eval="" />
-    <field name="description_sale">Block dust from, and access to, unused ports with ease using this simple kit. Includes 30 pieces (see description below for specific details).</field>
-    <field name="weight">0.05</field>
-  </record>
-
-  <record id="acc101_standard_price_us" model="ir.property" forcecreate="True">
-    <field name="name">standard_price</field>
-    <field name="type">float</field>
-    <field name="company_id" ref="base.main_company" />
-    <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
-    <field name="res_id" eval="'product.product,{}'.format(ref('acc101'))" />
-    <field name="value_float">1.25</field>
-  </record>
-
-  <record id="acc101_standard_price_us" model="ir.property" forcecreate="True">
-    <field name="name">standard_price</field>
-    <field name="type">float</field>
-    <field name="company_id" ref="ol_base.onlogic_eu" />
-    <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
-    <field name="res_id" eval="'product.product,{}'.format(ref('acc101'))" />
-    <field name="value_float">2.25</field>
-  </record>
-
-  <record id="acc101_product_template" model="product.template">
-    <field name="categ_id" ref="ol_base.product_category_components" />
-    <field name="type">product</field>
-    <field name="list_price">10</field>
-  </record>
-
-
-  <!-- K300 OPERATING SYSTEM -->
-
-  <!-- Windows 10 64 Pro -->
-
-  <record id="win1064_pro" model="product.product">
-    <field name="name">Microsoft Windows 10 Pro - 64-bit</field>
-    <field name="default_code">Win1064-Pro</field>
-    <field name="description_sale"></field>
-    <field name="company_id" eval="" />
-  </record>
-
-  <record id="win1064_pro_product_template" model="product.template">
-    <field name="categ_id" ref="ol_base.product_category_components" />
-    <field name="type">service</field>
-    <field name="list_price">192</field>
-  </record>
-
-  <!-- Ubuntu 18.04 -->
-  <record id="ubuntu1804-64" model="product.product">
-    <field name="name">Ubuntu Desktop 18.04 LTS 64-bit</field>
-    <field name="default_code">ubuntu18.06-64</field>
-    <field name="description_sale"></field>
-    <field name="company_id" eval="" />
-  </record>
-
-  <record id="ubuntu1804-64_product_template" model="product.template">
-    <field name="categ_id" ref="ol_base.product_category_services" />
-    <field name="type">service</field>
-    <field name="list_price">10</field>
-  </record>
-
-
-  <!-- K300 BUILD -->
-
-  <!-- Standard build -->
-  <record id="k300_standard_build" model="product.product">
-    <field name="name">Standard Build (3-5 business days)</field>
-    <field name="default_code">V_B&amp;T_ECO</field>
-    <field name="description_sale">Standard Assembly &amp; Validation</field>
-    <field name="company_id" eval="" />
-  </record>
-
-  <record id="k300_standard_build_product_template" model="product.template">
-    <field name="categ_id" ref="ol_base.product_category_services" />
-    <field name="type">service</field>
-    <field name="list_price">30</field>
-  </record>
-
-
-  <!-- Rush build -->
-  <record id="k300_rush_build" model="product.product">
-    <field name="name">Expedited Build (1-2 business days) - Integrated CPU</field>
-    <field name="default_code">V_B&amp;T_ICR</field>
-    <field name="description_sale">Expedited Assembly &amp; Validation</field>
-    <field name="company_id" eval="" />
-  </record>
-
-  <record id="k300_rush_build_product_template" model="product.template">
-    <field name="categ_id" ref="ol_base.product_category_services" />
-    <field name="type">service</field>
-    <field name="list_price">210</field>
-  </record>
-
-  <!-- ML210G-12 Components -->
-  <!-- TODO: Add standard prices -->
-  <!-- Motherboard -->
-  <record id="imb-155-p" model="product.product">
-    <field name="default_code">IMB-155-P</field>
-    <field name="name">ASRock IMB-155 Mainboard</field>
-    <field name="company_id" eval="" />
-  </record>
-  <record id="imb-155-p_product_template" model="product.template">
-    <field name="type">product</field>
-    <field name="categ_id" ref="ol_base.product_category_components"/>
-    <field name="list_price">155</field>
-  </record>
-
-  <!-- Assembly and Validation -->
-  <record id="ml210g-12_standard_build" model="product.product">
-    <field name="name">Standard Build (3-5 business days)</field>
-    <field name="default_code">V_B&amp;T_FS</field>
-    <field name="company_id" eval="" />
-  </record>
-  <record id="ml210g-12_standard_build_product_template" model="product.template">
-    <field name="type">service</field>
-    <field name="categ_id" ref="ol_base.product_category_services"/>
-    <field name="list_price">15</field>
-  </record>
-
-  <!-- Case -->
-  <record id="ml210g_case" model="product.product">
-    <field name="default_code">ML210G</field>
-    <field name="name">ML210G Fanless Thin Mini-ITX Case - Orange</field>
-    <field name="company_id" eval="" />
-  </record>
-  <record id="ml210g_case_product_template" model="product.template">
-    <field name="type">product</field>
-    <field name="categ_id" ref="ol_base.product_category_components"/>
-    <field name="list_price">100</field>
-  </record>
-
-  <!-- Memory -->
-  <record id="ts256msk64w6x" model="product.product">
-    <field name="default_code">TS256MSK64W6X</field>
-    <field name="name">Transcend SO-DIMM DDR3L (256x16) 1600 Memory 2GB - [WQ]</field>
-    <field name="company_id" eval="" />
-  </record>
-  <record id="ts256msk64w6x_product_template" model="product.template">
-    <field name="type">product</field>
-    <field name="categ_id" ref="ol_base.product_category_components"/>
-    <field name="list_price">30</field>
-  </record>
-  <record id="ts512msk64w6h" model="product.product">
-    <field name="default_code">TS512MSK64W6H</field>
-    <field name="name">Transcend SO-DIMM DDR3L Low Voltage 1600 Memory 4GB - [7P]</field>
-    <field name="company_id" eval="" />
-  </record>
-  <record id="ts512msk64w6h_product_template" model="product.template">
-    <field name="type">product</field>
-    <field name="categ_id" ref="ol_base.product_category_components"/>
-    <field name="list_price">60</field>
-  </record>
-
-  <!-- Storage -->
-  <record id="ts32gmsa370" model="product.product">
-    <field name="default_code">TS32GMSA370</field>
-    <field name="name">Transcend 370 mSATA SSD - 32 GB - [0J]</field>
-    <field name="company_id" eval="" />
-  </record>
-  <record id="ts32gmsa370_product_template" model="product.template">
-    <field name="type">product</field>
-    <field name="categ_id" ref="ol_base.product_category_components"/>
-    <field name="list_price">46</field>
-  </record>
-  <record id="ts64gmsa370" model="product.product">
-    <field name="default_code">TS64GMSA370</field>
-    <field name="name">Transcend 370 mSATA SSD - 64 GB - [OI]</field>
-    <field name="company_id" eval="" />
-  </record>
-  <record id="ts64gmsa370_product_template" model="product.template">
-    <field name="type">product</field>
-    <field name="categ_id" ref="ol_base.product_category_components"/>
-    <field name="list_price">70</field>
-  </record>
-
-  <!-- Wifi/Bluetooth cards -->
-  <record id="nwk100-01-s" model="product.product">
-    <field name="default_code">NWK100-01-S</field>
-    <field name="name">Extrovert 4G LTE Modem With Installed AT&amp;T SIM (Activation Required)</field>
-    <field name="company_id" eval="" />
-  </record>
-  <record id="nwk100-01-s_product_template" model="product.template">
-    <field name="type">product</field>
-    <field name="categ_id" ref="ol_base.product_category_components"/>
-    <field name="list_price">191</field>
-  </record>
-  <record id="dhxa-222-k" model="product.product">
-    <field name="default_code">DHXA-222-K</field>
-    <field name="name">Atheros Dual Band Wi-Fi and Bluetooth 4.0/HS PCIe Mini Card (DHXA-222)</field>
-    <field name="company_id" eval="" />
-  </record>
-  <record id="dhxa-222-k_product_template" model="product.template">
-    <field name="type">product</field>
-    <field name="categ_id" ref="ol_base.product_category_components"/>
-    <field name="list_price">39</field>
-  </record>
-
-  <!-- Wifi/Bluetooth Antennas -->
-  <record id="kwa-dbv0-8" model="product.product">
-    <field name="default_code">KWA-DBv0-8</field>
-    <field name="name">Wireless High-Gain Dual Band Antenna, 196mm (8")</field>
-    <field name="company_id" eval="" />
-  </record>
-  <record id="kwa-dbv0-8_product_template" model="product.template">
-    <field name="type">product</field>
-    <field name="categ_id" ref="ol_base.product_category_components"/>
-    <field name="list_price">15</field>
-  </record>
-  <record id="ant-a-100" model="product.product">
-    <field name="default_code">ANT-A-100</field>
-    <field name="name">Taoglas T-Bar GSA.8822 2G/3G/4G LTE Adhesive Antenna, SMA(M), 3M RG-174</field>
-    <field name="company_id" eval="" />
-  </record>
-  <record id="ant-a-100_product_template" model="product.template">
-    <field name="type">product</field>
-    <field name="categ_id" ref="ol_base.product_category_components"/>
-    <field name="list_price">20</field>
-  </record>
-
-  <!-- OS -->
-  <record id="ubuntu1604-64" model="product.product">
-    <field name="default_code">ubuntu16.04-64</field>
-    <field name="name">Ubuntu 16.04 LTS 64-bit</field>
-    <field name="company_id" eval="" />
-  </record>
-  <record id="ubuntu1604-64_product_template" model="product.template">
-    <field name="type">service</field>
-    <field name="categ_id" ref="ol_base.product_category_components"/>
-    <field name="list_price">10</field>
-  </record>
-  <!-- Win1064-Pro is defined above in the K300 Operating System section -->
-
-
-  <!-- IMB-155 Motherboard Kit Components -->
-  <!-- Motherboard defined above -->
-
-  <!-- 4GB memory defined above -->
-  <record id="ts1gsk64w6h" model="product.product">
-    <field name="default_code">TS1GMSK64W6H</field>
-    <field name="name">Transcend SO-DIMM DDR3L Low Voltage 1600 Memory 8GB - [32]</field>
-    <field name="company_id" eval="" />
-  </record>
-  <record id="ts1gsk64w6h_product_template" model="product.template">
-    <field name="type">product</field>
-    <field name="categ_id" ref="ol_base.product_category_components"/>
-    <field name="list_price">52</field>
-  </record>
-
-  <!-- Adapter -->
-  <record id="pw-12v5a-l6-k" model="product.product">
-    <field name="default_code">PW-12V5A-L6-K</field>
-    <field name="name">Power Adapter DC 12 V, 5A, 60 W Level VI</field>
-    <field name="company_id" eval="" />
-  </record>
-
-  <!-- This is actually a phantom kit and will be modified in ls_phantom_kits -->
-  <record id="pw-12v5a-l6-k_product_template" model="product.template">
-    <field name="type">product</field>
-    <field name="categ_id" ref="ol_base.product_category_components" />
-    <field name="list_price">22</field>
-  </record>
-
-  <!-- Open Case -->
-  <record id="ct100" model="product.product">
-    <field name="default_code">CT100</field>
-    <field name="name">CT100 Mountable Open Case</field>
-    <field name="company_id" eval="" />
-  </record>
-  <record id="ct100_product_template" model="product.template">
-    <field name="type">product</field>
-    <field name="categ_id" ref="ol_base.product_category_components" />
-    <field name="list_price">29</field>
-  </record>
-
-  <!-- Motherboard Test -->
-  <record id="mobo-test-o" model="product.product">
-    <field name="default_code">Mobo-Test-O</field>
-    <field name="name">MB Test (Apx. 3 business days; Req. purchase of memory)</field>
-    <field name="company_id" eval="" />
-  </record>
-  <record id="mobo-test-o_product_template" model="product.template">
-    <field name="type">service</field>
-    <field name="categ_id" ref="ol_base.product_category_components" />
-    <field name="list_price">20</field>
-  </record>
-
-  <!-- ================================= -->
-  <!-- Services used for various reasons -->
-  <!-- ================================= -->
-  <!-- Install custom BIOS -->
-  <record id="custom_bios_service" model="product.product">
-    <field name="default_code">SV-CustomBIOS</field>
-    <field name="name">Install Custom BIOS</field>
-    <field name="company_id" eval="" />
-  </record>
-  <record id="custom_bios_service_product_template" model="product.template">
-    <field name="type">service</field>
-    <field name="categ_id" ref="ol_base.product_category_services" />
-    <field name="list_price">10</field>
-  </record>
-
-  <!-- Custom Work Instructions -->
-  <record id="custom_work_instructions_service" model="product.product">
-    <field name="default_code">SV-CUWorkInst</field>
-    <field name="name">Custom Production Instructions</field>
-    <field name="company_id" eval="" />
-  </record>
-  <record id="custom_work_instructions_service_product_template" model="product.template">
-    <field name="type">service</field>
-    <field name="categ_id" ref="ol_base.product_category_services" />
-    <field name="list_price">0</field>
-  </record>
-
-  <!-- ===================================== -->
-  <!-- Components to be used in phantom kits -->
-  <!-- ===================================== -->
-  <!-- Cable-->
-  <record id="KWPTCv0-18" model="product.product">
-    <field name="default_code">KWPTCv0-18</field>
-    <field name="name">Wireless Pigtail Cable, 250mm (18")</field>
-    <field name="company_id" eval=""/>
-    <field name="weight">0.0455</field>
-  </record>
-
-  <record id="KWPTCv0-18_product_template" model="product.template">
-    <field name="type">product</field>
-    <field name="categ_id" ref="ol_base.product_category_components"/>
-    <field name="list_price">5.5</field>
-  </record>
-
-  <record id="KWPTCv0-18_standard_price_us" model="ir.property" forcecreate="True">
-    <field name="name">standard_price</field>
-    <field name="type">float</field>
-    <field name="company_id" ref="base.main_company"/>
-    <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]"/>
-    <field name="res_id" eval="'product.product,{}'.format(ref('KWPTCv0-18'))"/>
-    <field name="value_float">1.15</field>
-  </record>
-
-  <record id="KWPTCv0-18_standard_price_eu" model="ir.property" forcecreate="True">
-    <field name="name">standard_price</field>
-    <field name="type">float</field>
-    <field name="company_id" ref="ol_base.onlogic_eu"/>
-    <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]"/>
-    <field name="res_id" eval="'product.product,{}'.format(ref('KWPTCv0-18'))"/>
-    <field name="value_float">1.04</field>
-  </record>
-
-  <!-- these cables are used to test PO scheduled dates -->
-  <record id="cbd100" model="product.product">
-    <field name="default_code">CBD100</field>
-    <field name="name">SATA Data Cable, Straight Locking Connectors</field>
-    <field name="company_id" eval=""/>
-    <field name="weight">0.0455</field>
-  </record>
-  <record id="cbd100_product_template" model="product.template">
-    <field name="type">product</field>
-    <field name="categ_id" ref="ol_base.product_category_components"/>
-    <field name="list_price">5.95</field>
-    <field name="uom_po_id" ref="uom.product_uom_unit" />
-  </record>
-  <record id="cbd100_standard_price_us" model="ir.property" forcecreate="True">
-    <field name="name">standard_price</field>
-    <field name="type">float</field>
-    <field name="company_id" ref="base.main_company"/>
-    <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]"/>
-    <field name="res_id" eval="'product.product,{}'.format(ref('cbd100'))"/>
-    <field name="value_float">0.89</field>
-  </record>
-  <!-- cable 2 with earlier vendor delay date -->
-  <record id="cbd110" model="product.product">
-    <field name="default_code">CBD110</field>
-    <field name="name">SATA Data Cable, Right-Angle Locking Connectors</field>
-    <field name="company_id" eval=""/>
-    <field name="weight">0.0455</field>
-  </record>
-  <record id="cbd110_product_template" model="product.template">
-    <field name="type">product</field>
-    <field name="categ_id" ref="ol_base.product_category_components"/>
-    <field name="list_price">5.00</field>
-    <field name="uom_po_id" ref="uom.product_uom_unit" />
-  </record>
-  <record id="cbd110_standard_price_us" model="ir.property" forcecreate="True">
-    <field name="name">standard_price</field>
-    <field name="type">float</field>
-    <field name="company_id" ref="base.main_company"/>
-    <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]"/>
-    <field name="res_id" eval="'product.product,{}'.format(ref('cbd110'))"/>
-    <field name="value_float">0.67</field>
-  </record>
-
-  <!-- mPCIe Modules-->
-  <record id="DHXA-222" model="product.product">
-    <field name="default_code">DHXA-222</field>
-    <field name="name">Unex 802.11a/b/g/n 2x2 Wi-Fi/Bluetooth 4.0 Wireless PCIe Module</field>
-    <field name="company_id" eval=""/>
-    <field name="weight">0.0455</field>
-  </record>
-  <record id="DHXA-222_product_template" model="product.template">
-    <field name="type">product</field>
-    <field name="categ_id" ref="ol_base.product_category_components"/>
-    <field name="list_price">39</field>
-  </record>
-
-  <record id="DHXA-222_standard_price_us" model="ir.property" forcecreate="True">
-    <field name="name">standard_price</field>
-    <field name="type">float</field>
-    <field name="company_id" ref="base.main_company"/>
-    <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]"/>
-    <field name="res_id" eval="'product.product,{}'.format(ref('DHXA-222'))"/>
-    <field name="value_float">10.70</field>
-  </record>
-  <record id="DHXA-222_standard_price_eu" model="ir.property" forcecreate="True">
-    <field name="name">standard_price</field>
-    <field name="type">float</field>
-    <field name="company_id" ref="ol_base.onlogic_eu"/>
-    <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]"/>
-    <field name="res_id" eval="'product.product,{}'.format(ref('DHXA-222'))"/>
-    <field name="value_float">12.52</field>
-  </record>
-
-
-  <!-- DNXA-116-K kit product -->
-  <record id="DNXA-116-K" model="product.product">
-    <field name="default_code">DNXA-116-K</field>
-    <field name="name">Unex 802.11a/b/g/n 2x2 Wi-Fi mPCIe Module Kit (DNXA-116) (Phantom)</field>
-    <field name="company_id" eval=""/>
-  </record>
-  <record id="DNXA-116-K_product_template" model="product.template">
-    <field name="type">product</field>
-    <field name="categ_id" ref="ol_base.product_category_components"/>
-    <field name="list_price">40</field>
-  </record>
-
-  <!-- Kit Components-->
-  <!-- mPCIe Modules-->
-  <record id="DNXA-116" model="product.product">
-    <field name="default_code">DNXA-116</field>
-    <field name="name">Unex 802.11a/b/g/n 2x2 Wi-Fi mPCIe Module</field>
-    <field name="company_id" eval=""/>
-    <field name="weight">0.0455</field>
-  </record>
-
-  <record id="DNXA-116_product_template" model="product.template">
-    <field name="type">product</field>
-    <field name="categ_id" ref="ol_base.product_category_components"/>
-    <field name="list_price">39</field>
-  </record>
-  <record id="DNXA-116_standard_price_us" model="ir.property" forcecreate="True">
-    <field name="name">standard_price</field>
-    <field name="type">float</field>
-    <field name="company_id" ref="base.main_company"/>
-    <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]"/>
-    <field name="res_id" eval="'product.product,{}'.format(ref('DNXA-116'))"/>
-    <field name="value_float">13.00</field>
-  </record>
-
-  <record id="DNXA-116_standard_price_eu" model="ir.property" forcecreate="True">
-    <field name="name">standard_price</field>
-    <field name="type">float</field>
-    <field name="company_id" ref="ol_base.onlogic_eu"/>
-    <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]"/>
-    <field name="res_id" eval="'product.product,{}'.format(ref('DNXA-116'))"/>
-    <field name="value_float">13.53</field>
-  </record>
-
+    <record id="mc500g" model="product.product">
+        <!-- General Info -->
+        <field name="name">MC500 Compact Mini-ITX Case (Orange and Silver)</field>
+        <field name="default_code">MC500G</field>
+        <field name="company_id" eval="" />
+
+        <!-- Sales -->
+        <field name="description_sale">As eye-catching as it is functional, the MC500 in orange and silver stands out from the ranks of indistinguishable IPC cases, not just based on its looks, but due to its versatility, durability, and ease of customization.</field>
+
+        <!-- Purchase -->
+        <!-- Nothing yet -->
+
+        <!-- Inventory -->
+        <!-- Nothing yet -->
+
+        <!-- Accounting -->
+        <!-- Nothing yet -->
+    </record>
+
+    <!-- product.template record is automatically created from the product.product-->
+    <record id="mc500g_product_template" model="product.template">
+        <!-- Product type is always set at the template level -->
+        <field name="type">product</field>
+        <field name="categ_id" ref="ol_base.product_category_components" />
+        <field name="list_price">65</field>
+    </record>
+
+    <!-- MC500G company specific values -->
+    <!-- TODO: Get better prices here -->
+    <record id="mc500g_standard_price_us" model="ir.property" forcecreate="True">
+        <field name="name">standard_price</field>
+        <field name="type">float</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
+        <field name="res_id" eval="'product.product,{}'.format(ref('mc500g'))" />
+        <field name="value_float">100</field>
+    </record>
+
+    <record id="mc500g_standard_price_eu" model="ir.property" forcecreate="True">
+        <field name="name">standard_price</field>
+        <field name="type">float</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
+        <field name="res_id" eval="'product.product,{}'.format(ref('mc500g'))" />
+        <field name="value_float">200</field>
+    </record>
+
+    <!-- K300 PLATFORMS -->
+
+    <!-- E3930 -->
+    <record id="e3930_p" model="product.product">
+        <field name="name">Karbon 300 with Atom E3930 and 4GB Memory</field>
+        <field name="default_code">K300-E3930-4-P</field>
+        <field name="company_id" eval="" />
+        <field name="description_sale">Karbon 300 Ultra-Compact Rugged with Atom E3930 and 4GB Memory</field>
+        <field name="weight">2.0870</field>
+    </record>
+    <record id="e3930_p_product_template" model="product.template">
+        <field name="type">product</field>
+        <field name="categ_id" ref="ol_base.product_category_components" />
+        <field name="list_price">486</field>
+    </record>
+
+    <record id="e3930_p_standard_price_us" model="ir.property" forcecreate="True">
+        <field name="name">standard_price</field>
+        <field name="type">float</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
+        <field name="res_id" eval="'product.product,{}'.format(ref('e3930_p'))" />
+        <field name="value_float">253.49</field>
+    </record>
+
+    <record id="e3930_p_standard_price_eu" model="ir.property" forcecreate="True">
+        <field name="name">standard_price</field>
+        <field name="type">float</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
+        <field name="res_id" eval="'product.product,{}'.format(ref('e3930_p'))" />
+        <field name="value_float">237.06</field>
+    </record>
+
+
+    <!-- E3950 -->
+    <record id="e3950_p" model="product.product">
+        <field name="name">Karbon 300 with Atom E3950 and 8GB Memory</field>
+        <field name="default_code">K300-E3950-8-P</field>
+        <field name="company_id" eval="" />
+        <field name="description_sale">Karbon 300 Ultra-Compact Rugged with Atom E3950 and 8GB Memory</field>
+        <field name="weight">2.0870</field>
+    </record>
+    <record id="e3950_p_product_template" model="product.template">
+        <field name="type">product</field>
+        <field name="categ_id" ref="ol_base.product_category_components" />
+        <field name="list_price">586</field>
+    </record>
+
+    <record id="e3950_p_standard_price_1" model="ir.property" forcecreate="True">
+        <field name="name">standard_price</field>
+        <field name="type">float</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
+        <field name="res_id" eval="'product.product,{}'.format(ref('e3950_p'))" />
+        <field name="value_float">322.84</field>
+    </record>
+
+    <record id="e3950_p_standard_price_2" model="ir.property" forcecreate="True">
+        <field name="name">standard_price</field>
+        <field name="type">float</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
+        <field name="res_id" eval="'product.product,{}'.format(ref('e3950_p'))" />
+        <field name="value_float">286.56</field>
+    </record>
+
+    <!-- K300 STORAGE -->
+
+    <!-- 32G -->
+    <record id="ts32gmts800" model="product.product">
+        <field name="name">Transcend M.2 2280-D2-B-M SATA SSD - 32GB - [5S]</field>
+        <field name="default_code">TS32GMTS800</field>
+        <field name="company_id" eval="" />
+        <field name="description_sale">Transcend M.2 SSD with read/write speeds of up to 260/40 MB/s.</field>
+        <field name="weight">0.1364</field>
+    </record>
+
+    <record id="ts32gmts800_standard_price_us" model="ir.property" forcecreate="True">
+        <field name="name">standard_price</field>
+        <field name="type">float</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
+        <field name="res_id" eval="'product.product,{}'.format(ref('ts32gmts800'))" />
+        <field name="value_float">20.2</field>
+    </record>
+
+    <record id="ts32gmts800_standard_price_eu" model="ir.property" forcecreate="True">
+        <field name="name">standard_price</field>
+        <field name="type">float</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
+        <field name="res_id" eval="'product.product,{}'.format(ref('ts32gmts800'))" />
+        <field name="value_float">17.39</field>
+    </record>
+
+    <record id="ts32gmts800_product_template" model="product.template">
+        <field name="categ_id" ref="ol_base.product_category_components" />
+        <field name="type">product</field>
+        <field name="list_price">40</field>
+    </record>
+
+    <!-- 64G -->
+    <record id="ts64gmts800" model="product.product">
+        <field name="name">Transcend M.2 2280-D2-B-M SATA SSD - 64GB - [8J]</field>
+        <field name="default_code">TS64GMTS800</field>
+        <field name="company_id" eval="" />
+        <field name="description_sale">Transcend M.2 SSD with read/write speeds of up to 520/80 MB/s. Features Power Shield to protect data during power outages.</field>
+        <field name="weight">0.1364</field>
+    </record>
+
+    <record id="ts64gmts800_standard_price_us" model="ir.property" forcecreate="True">
+        <field name="name">standard_price</field>
+        <field name="type">float</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
+        <field name="res_id" eval="'product.product,{}'.format(ref('ts64gmts800'))" />
+        <field name="value_float">33.0</field>
+    </record>
+
+    <record id="ts64gmts800_standard_price_eu" model="ir.property" forcecreate="True">
+        <field name="name">standard_price</field>
+        <field name="type">float</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
+        <field name="res_id" eval="'product.product,{}'.format(ref('ts64gmts800'))" />
+        <field name="value_float">31.95</field>
+    </record>
+
+    <record id="ts64gmts800_product_template" model="product.template">
+        <field name="categ_id" ref="ol_base.product_category_components" />
+        <field name="type">product</field>
+        <field name="list_price">67</field>
+    </record>
+
+    <!-- K300 ADAPTER -->
+    <!-- TODO: find and create the EU equivalent adapter -->
+    <record id="gst120a24_cin_k" model="product.product">
+        <field name="name">Cincoze Level VI Power Adapter 120W 24V 5A with 3-pin Terminal Block - US Power Cord</field>
+        <field name="default_code">GST120A24-CIN-K</field>
+        <field name="company_id" eval="" />
+        <field name="description_sale">Cincoze Level VI Power Adapter 120W 24V 5A with 3-pin Terminal Block - US Power Cord</field>
+        <field name="weight">0.8409</field>
+    </record>
+
+    <record id="gst120a24_cin_k_standard_price_us" model="ir.property" forcecreate="True">
+        <field name="name">standard_price</field>
+        <field name="type">float</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
+        <field name="res_id" eval="'product.product,{}'.format(ref('gst120a24_cin_k'))" />
+        <field name="value_float">31.9</field>
+    </record>
+
+    <record id="gst120a24_cin_k_product_template" model="product.template">
+        <field name="categ_id" ref="ol_base.product_category_components" />
+        <!-- NOTE: this will become a phantom type in ls_phantom_kits -->
+        <field name="type">product</field>
+        <field name="list_price">78</field>
+    </record>
+
+    <!-- K300 PORT BLOCKING KIT -->
+
+    <record id="acc101" model="product.product">
+        <field name="name">Computer Port and Dust Blocking Kit</field>
+        <field name="default_code">ACC101</field>
+        <field name="company_id" eval="" />
+        <field name="description_sale">Block dust from, and access to, unused ports with ease using this simple kit. Includes 30 pieces (see description below for specific details).</field>
+        <field name="weight">0.05</field>
+    </record>
+
+    <record id="acc101_standard_price_us" model="ir.property" forcecreate="True">
+        <field name="name">standard_price</field>
+        <field name="type">float</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
+        <field name="res_id" eval="'product.product,{}'.format(ref('acc101'))" />
+        <field name="value_float">1.25</field>
+    </record>
+
+    <record id="acc101_standard_price_us" model="ir.property" forcecreate="True">
+        <field name="name">standard_price</field>
+        <field name="type">float</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]" />
+        <field name="res_id" eval="'product.product,{}'.format(ref('acc101'))" />
+        <field name="value_float">2.25</field>
+    </record>
+
+    <record id="acc101_product_template" model="product.template">
+        <field name="categ_id" ref="ol_base.product_category_components" />
+        <field name="type">product</field>
+        <field name="list_price">10</field>
+    </record>
+
+    <!-- K300 OPERATING SYSTEM -->
+
+    <!-- Windows 10 64 Pro -->
+
+    <record id="win1064_pro" model="product.product">
+        <field name="name">Microsoft Windows 10 Pro - 64-bit</field>
+        <field name="default_code">Win1064-Pro</field>
+        <field name="description_sale"></field>
+        <field name="company_id" eval="" />
+    </record>
+
+    <record id="win1064_pro_product_template" model="product.template">
+        <field name="categ_id" ref="ol_base.product_category_components" />
+        <field name="type">service</field>
+        <field name="list_price">192</field>
+    </record>
+
+    <!-- Ubuntu 18.04 -->
+    <record id="ubuntu1804-64" model="product.product">
+        <field name="name">Ubuntu Desktop 18.04 LTS 64-bit</field>
+        <field name="default_code">ubuntu18.06-64</field>
+        <field name="description_sale"></field>
+        <field name="company_id" eval="" />
+    </record>
+
+    <record id="ubuntu1804-64_product_template" model="product.template">
+        <field name="categ_id" ref="ol_base.product_category_services" />
+        <field name="type">service</field>
+        <field name="list_price">10</field>
+    </record>
+
+    <!-- K300 BUILD -->
+
+    <!-- Standard build -->
+    <record id="k300_standard_build" model="product.product">
+        <field name="name">Standard Build (3-5 business days)</field>
+        <field name="default_code">V_B&amp;T_ECO</field>
+        <field name="description_sale">Standard Assembly &amp; Validation</field>
+        <field name="company_id" eval="" />
+    </record>
+
+    <record id="k300_standard_build_product_template" model="product.template">
+        <field name="categ_id" ref="ol_base.product_category_services" />
+        <field name="type">service</field>
+        <field name="list_price">30</field>
+    </record>
+
+
+    <!-- Rush build -->
+    <record id="k300_rush_build" model="product.product">
+        <field name="name">Expedited Build (1-2 business days) - Integrated CPU</field>
+        <field name="default_code">V_B&amp;T_ICR</field>
+        <field name="description_sale">Expedited Assembly &amp; Validation</field>
+        <field name="company_id" eval="" />
+    </record>
+
+    <record id="k300_rush_build_product_template" model="product.template">
+        <field name="categ_id" ref="ol_base.product_category_services" />
+        <field name="type">service</field>
+        <field name="list_price">210</field>
+    </record>
+
+    <!-- ML210G-12 Components -->
+    <!-- TODO: Add standard prices -->
+    <!-- Motherboard -->
+    <record id="imb-155-p" model="product.product">
+        <field name="default_code">IMB-155-P</field>
+        <field name="name">ASRock IMB-155 Mainboard</field>
+        <field name="company_id" eval="" />
+    </record>
+    <record id="imb-155-p_product_template" model="product.template">
+        <field name="type">product</field>
+        <field name="categ_id" ref="ol_base.product_category_components"/>
+        <field name="list_price">155</field>
+    </record>
+
+    <!-- Assembly and Validation -->
+    <record id="ml210g-12_standard_build" model="product.product">
+        <field name="name">Standard Build (3-5 business days)</field>
+        <field name="default_code">V_B&amp;T_FS</field>
+        <field name="company_id" eval="" />
+    </record>
+    <record id="ml210g-12_standard_build_product_template" model="product.template">
+        <field name="type">service</field>
+        <field name="categ_id" ref="ol_base.product_category_services"/>
+        <field name="list_price">15</field>
+    </record>
+
+    <!-- Case -->
+    <record id="ml210g_case" model="product.product">
+        <field name="default_code">ML210G</field>
+        <field name="name">ML210G Fanless Thin Mini-ITX Case - Orange</field>
+        <field name="company_id" eval="" />
+    </record>
+    <record id="ml210g_case_product_template" model="product.template">
+        <field name="type">product</field>
+        <field name="categ_id" ref="ol_base.product_category_components"/>
+        <field name="list_price">100</field>
+    </record>
+
+    <!-- Memory -->
+    <record id="ts256msk64w6x" model="product.product">
+        <field name="default_code">TS256MSK64W6X</field>
+        <field name="name">Transcend SO-DIMM DDR3L (256x16) 1600 Memory 2GB - [WQ]</field>
+        <field name="company_id" eval="" />
+    </record>
+    <record id="ts256msk64w6x_product_template" model="product.template">
+        <field name="type">product</field>
+        <field name="categ_id" ref="ol_base.product_category_components"/>
+        <field name="list_price">30</field>
+    </record>
+    <record id="ts512msk64w6h" model="product.product">
+        <field name="default_code">TS512MSK64W6H</field>
+        <field name="name">Transcend SO-DIMM DDR3L Low Voltage 1600 Memory 4GB - [7P]</field>
+        <field name="company_id" eval="" />
+    </record>
+    <record id="ts512msk64w6h_product_template" model="product.template">
+        <field name="type">product</field>
+        <field name="categ_id" ref="ol_base.product_category_components"/>
+        <field name="list_price">60</field>
+    </record>
+
+    <!-- Storage -->
+    <record id="ts32gmsa370" model="product.product">
+        <field name="default_code">TS32GMSA370</field>
+        <field name="name">Transcend 370 mSATA SSD - 32 GB - [0J]</field>
+        <field name="company_id" eval="" />
+    </record>
+    <record id="ts32gmsa370_product_template" model="product.template">
+        <field name="type">product</field>
+        <field name="categ_id" ref="ol_base.product_category_components"/>
+        <field name="list_price">46</field>
+    </record>
+    <record id="ts64gmsa370" model="product.product">
+        <field name="default_code">TS64GMSA370</field>
+        <field name="name">Transcend 370 mSATA SSD - 64 GB - [OI]</field>
+        <field name="company_id" eval="" />
+    </record>
+    <record id="ts64gmsa370_product_template" model="product.template">
+        <field name="type">product</field>
+        <field name="categ_id" ref="ol_base.product_category_components"/>
+        <field name="list_price">70</field>
+    </record>
+
+    <!-- Wifi/Bluetooth cards -->
+    <record id="nwk100-01-s" model="product.product">
+        <field name="default_code">NWK100-01-S</field>
+        <field name="name">Extrovert 4G LTE Modem With Installed AT&amp;T SIM (Activation Required)</field>
+        <field name="company_id" eval="" />
+    </record>
+    <record id="nwk100-01-s_product_template" model="product.template">
+        <field name="type">product</field>
+        <field name="categ_id" ref="ol_base.product_category_components"/>
+        <field name="list_price">191</field>
+    </record>
+    <record id="dhxa-222-k" model="product.product">
+        <field name="default_code">DHXA-222-K</field>
+        <field name="name">Atheros Dual Band Wi-Fi and Bluetooth 4.0/HS PCIe Mini Card (DHXA-222)</field>
+        <field name="company_id" eval="" />
+    </record>
+    <record id="dhxa-222-k_product_template" model="product.template">
+        <field name="type">product</field>
+        <field name="categ_id" ref="ol_base.product_category_components"/>
+        <field name="list_price">39</field>
+    </record>
+
+    <!-- Wifi/Bluetooth Antennas -->
+    <record id="kwa-dbv0-8" model="product.product">
+        <field name="default_code">KWA-DBv0-8</field>
+        <field name="name">Wireless High-Gain Dual Band Antenna, 196mm (8")</field>
+        <field name="company_id" eval="" />
+    </record>
+    <record id="kwa-dbv0-8_product_template" model="product.template">
+        <field name="type">product</field>
+        <field name="categ_id" ref="ol_base.product_category_components"/>
+        <field name="list_price">15</field>
+    </record>
+    <record id="ant-a-100" model="product.product">
+        <field name="default_code">ANT-A-100</field>
+        <field name="name">Taoglas T-Bar GSA.8822 2G/3G/4G LTE Adhesive Antenna, SMA(M), 3M RG-174</field>
+        <field name="company_id" eval="" />
+    </record>
+    <record id="ant-a-100_product_template" model="product.template">
+        <field name="type">product</field>
+        <field name="categ_id" ref="ol_base.product_category_components"/>
+        <field name="list_price">20</field>
+    </record>
+
+    <!-- OS -->
+    <record id="ubuntu1604-64" model="product.product">
+        <field name="default_code">ubuntu16.04-64</field>
+        <field name="name">Ubuntu 16.04 LTS 64-bit</field>
+        <field name="company_id" eval="" />
+    </record>
+    <record id="ubuntu1604-64_product_template" model="product.template">
+        <field name="type">service</field>
+        <field name="categ_id" ref="ol_base.product_category_components"/>
+        <field name="list_price">10</field>
+    </record>
+    <!-- Win1064-Pro is defined above in the K300 Operating System section -->
+
+
+    <!-- IMB-155 Motherboard Kit Components -->
+    <!-- Motherboard defined above -->
+
+    <!-- 4GB memory defined above -->
+    <record id="ts1gsk64w6h" model="product.product">
+        <field name="default_code">TS1GMSK64W6H</field>
+        <field name="name">Transcend SO-DIMM DDR3L Low Voltage 1600 Memory 8GB - [32]</field>
+        <field name="company_id" eval="" />
+    </record>
+    <record id="ts1gsk64w6h_product_template" model="product.template">
+        <field name="type">product</field>
+        <field name="categ_id" ref="ol_base.product_category_components"/>
+        <field name="list_price">52</field>
+    </record>
+
+    <!-- Adapter -->
+    <record id="pw-12v5a-l6-k" model="product.product">
+        <field name="default_code">PW-12V5A-L6-K</field>
+        <field name="name">Power Adapter DC 12 V, 5A, 60 W Level VI</field>
+        <field name="company_id" eval="" />
+    </record>
+
+    <!-- This is actually a phantom kit and will be modified in ls_phantom_kits -->
+    <record id="pw-12v5a-l6-k_product_template" model="product.template">
+        <field name="type">product</field>
+        <field name="categ_id" ref="ol_base.product_category_components" />
+        <field name="list_price">22</field>
+    </record>
+
+    <!-- Open Case -->
+    <record id="ct100" model="product.product">
+        <field name="default_code">CT100</field>
+        <field name="name">CT100 Mountable Open Case</field>
+        <field name="company_id" eval="" />
+    </record>
+    <record id="ct100_product_template" model="product.template">
+        <field name="type">product</field>
+        <field name="categ_id" ref="ol_base.product_category_components" />
+        <field name="list_price">29</field>
+    </record>
+
+    <!-- Motherboard Test -->
+    <record id="mobo-test-o" model="product.product">
+        <field name="default_code">Mobo-Test-O</field>
+        <field name="name">MB Test (Apx. 3 business days; Req. purchase of memory)</field>
+        <field name="company_id" eval="" />
+    </record>
+    <record id="mobo-test-o_product_template" model="product.template">
+        <field name="type">service</field>
+        <field name="categ_id" ref="ol_base.product_category_components" />
+        <field name="list_price">20</field>
+    </record>
+
+    <!-- ================================= -->
+    <!-- Services used for various reasons -->
+    <!-- ================================= -->
+    <!-- Install custom BIOS -->
+    <record id="custom_bios_service" model="product.product">
+        <field name="default_code">SV-CustomBIOS</field>
+        <field name="name">Install Custom BIOS</field>
+        <field name="company_id" eval="" />
+    </record>
+    <record id="custom_bios_service_product_template" model="product.template">
+        <field name="type">service</field>
+        <field name="categ_id" ref="ol_base.product_category_services" />
+        <field name="list_price">10</field>
+    </record>
+
+    <!-- Custom Work Instructions -->
+    <record id="custom_work_instructions_service" model="product.product">
+        <field name="default_code">SV-CUWorkInst</field>
+        <field name="name">Custom Production Instructions</field>
+        <field name="company_id" eval="" />
+    </record>
+    <record id="custom_work_instructions_service_product_template" model="product.template">
+        <field name="type">service</field>
+        <field name="categ_id" ref="ol_base.product_category_services" />
+        <field name="list_price">0</field>
+    </record>
+
+    <!-- ===================================== -->
+    <!-- Components to be used in phantom kits -->
+    <!-- ===================================== -->
+    <!-- Cable-->
+    <record id="KWPTCv0-18" model="product.product">
+        <field name="default_code">KWPTCv0-18</field>
+        <field name="name">Wireless Pigtail Cable, 250mm (18")</field>
+        <field name="company_id" eval=""/>
+        <field name="weight">0.0455</field>
+    </record>
+
+    <record id="KWPTCv0-18_product_template" model="product.template">
+        <field name="type">product</field>
+        <field name="categ_id" ref="ol_base.product_category_components"/>
+        <field name="list_price">5.5</field>
+    </record>
+
+    <record id="KWPTCv0-18_standard_price_us" model="ir.property" forcecreate="True">
+        <field name="name">standard_price</field>
+        <field name="type">float</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]"/>
+        <field name="res_id" eval="'product.product,{}'.format(ref('KWPTCv0-18'))"/>
+        <field name="value_float">1.15</field>
+    </record>
+
+    <record id="KWPTCv0-18_standard_price_eu" model="ir.property" forcecreate="True">
+        <field name="name">standard_price</field>
+        <field name="type">float</field>
+        <field name="company_id" ref="ol_base.onlogic_eu"/>
+        <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]"/>
+        <field name="res_id" eval="'product.product,{}'.format(ref('KWPTCv0-18'))"/>
+        <field name="value_float">1.04</field>
+    </record>
+
+    <!-- these cables are used to test PO scheduled dates -->
+    <record id="cbd100" model="product.product">
+        <field name="default_code">CBD100</field>
+        <field name="name">SATA Data Cable, Straight Locking Connectors</field>
+        <field name="company_id" eval=""/>
+        <field name="weight">0.0455</field>
+    </record>
+    <record id="cbd100_product_template" model="product.template">
+        <field name="type">product</field>
+        <field name="categ_id" ref="ol_base.product_category_components"/>
+        <field name="list_price">5.95</field>
+        <field name="uom_po_id" ref="uom.product_uom_unit" />
+    </record>
+    <record id="cbd100_standard_price_us" model="ir.property" forcecreate="True">
+        <field name="name">standard_price</field>
+        <field name="type">float</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]"/>
+        <field name="res_id" eval="'product.product,{}'.format(ref('cbd100'))"/>
+        <field name="value_float">0.89</field>
+    </record>
+    <!-- cable 2 with earlier vendor delay date -->
+    <record id="cbd110" model="product.product">
+        <field name="default_code">CBD110</field>
+        <field name="name">SATA Data Cable, Right-Angle Locking Connectors</field>
+        <field name="company_id" eval=""/>
+        <field name="weight">0.0455</field>
+    </record>
+    <record id="cbd110_product_template" model="product.template">
+        <field name="type">product</field>
+        <field name="categ_id" ref="ol_base.product_category_components"/>
+        <field name="list_price">5.00</field>
+        <field name="uom_po_id" ref="uom.product_uom_unit" />
+    </record>
+    <record id="cbd110_standard_price_us" model="ir.property" forcecreate="True">
+        <field name="name">standard_price</field>
+        <field name="type">float</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]"/>
+        <field name="res_id" eval="'product.product,{}'.format(ref('cbd110'))"/>
+        <field name="value_float">0.67</field>
+    </record>
+
+    <!-- mPCIe Modules-->
+    <record id="DHXA-222" model="product.product">
+        <field name="default_code">DHXA-222</field>
+        <field name="name">Unex 802.11a/b/g/n 2x2 Wi-Fi/Bluetooth 4.0 Wireless PCIe Module</field>
+        <field name="company_id" eval=""/>
+        <field name="weight">0.0455</field>
+    </record>
+    <record id="DHXA-222_product_template" model="product.template">
+        <field name="type">product</field>
+        <field name="categ_id" ref="ol_base.product_category_components"/>
+        <field name="list_price">39</field>
+    </record>
+
+    <record id="DHXA-222_standard_price_us" model="ir.property" forcecreate="True">
+        <field name="name">standard_price</field>
+        <field name="type">float</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]"/>
+        <field name="res_id" eval="'product.product,{}'.format(ref('DHXA-222'))"/>
+        <field name="value_float">10.70</field>
+    </record>
+    <record id="DHXA-222_standard_price_eu" model="ir.property" forcecreate="True">
+        <field name="name">standard_price</field>
+        <field name="type">float</field>
+        <field name="company_id" ref="ol_base.onlogic_eu"/>
+        <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]"/>
+        <field name="res_id" eval="'product.product,{}'.format(ref('DHXA-222'))"/>
+        <field name="value_float">12.52</field>
+    </record>
+
+
+    <!-- DNXA-116-K kit product -->
+    <record id="DNXA-116-K" model="product.product">
+        <field name="default_code">DNXA-116-K</field>
+        <field name="name">Unex 802.11a/b/g/n 2x2 Wi-Fi mPCIe Module Kit (DNXA-116) (Phantom)</field>
+        <field name="company_id" eval=""/>
+    </record>
+    <record id="DNXA-116-K_product_template" model="product.template">
+        <field name="type">product</field>
+        <field name="categ_id" ref="ol_base.product_category_components"/>
+        <field name="list_price">40</field>
+    </record>
+
+    <!-- Kit Components-->
+    <!-- mPCIe Modules-->
+    <record id="DNXA-116" model="product.product">
+        <field name="default_code">DNXA-116</field>
+        <field name="name">Unex 802.11a/b/g/n 2x2 Wi-Fi mPCIe Module</field>
+        <field name="company_id" eval=""/>
+        <field name="weight">0.0455</field>
+    </record>
+
+    <record id="DNXA-116_product_template" model="product.template">
+        <field name="type">product</field>
+        <field name="categ_id" ref="ol_base.product_category_components"/>
+        <field name="list_price">39</field>
+    </record>
+    <record id="DNXA-116_standard_price_us" model="ir.property" forcecreate="True">
+        <field name="name">standard_price</field>
+        <field name="type">float</field>
+        <field name="company_id" ref="base.main_company"/>
+        <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]"/>
+        <field name="res_id" eval="'product.product,{}'.format(ref('DNXA-116'))"/>
+        <field name="value_float">13.00</field>
+    </record>
+
+    <record id="DNXA-116_standard_price_eu" model="ir.property" forcecreate="True">
+        <field name="name">standard_price</field>
+        <field name="type">float</field>
+        <field name="company_id" ref="ol_base.onlogic_eu"/>
+        <field name="fields_id" search="[('model', '=', 'product.product'),('name','=', 'standard_price')]"/>
+        <field name="res_id" eval="'product.product,{}'.format(ref('DNXA-116'))"/>
+        <field name="value_float">13.53</field>
+    </record>
 
 </odoo>

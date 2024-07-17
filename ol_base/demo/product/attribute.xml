@@ -5,44 +5,44 @@
 
     <!-- PLATFORM -->
     <record id="k300_attribute_platform" model="product.attribute">
-      <field name="name">Platform</field>
-      <field name="create_variant">dynamic</field>
-      <field name="display_type">select</field>
+        <field name="name">Platform</field>
+        <field name="create_variant">dynamic</field>
+        <field name="display_type">select</field>
     </record>
 
     <!-- STORAGE -->
     <record id="k300_attribute_storage" model="product.attribute">
-      <field name="name">Primary Storage Drive</field>
-      <field name="create_variant">dynamic</field>
-      <field name="display_type">select</field>
+        <field name="name">Primary Storage Drive</field>
+        <field name="create_variant">dynamic</field>
+        <field name="display_type">select</field>
     </record>
 
     <!-- ADAPTER -->
     <record id="k300_attribute_adapter" model="product.attribute">
-      <field name="name">AC Adapter</field>
-      <field name="create_variant">dynamic</field>
-      <field name="display_type">select</field>
+        <field name="name">AC Adapter</field>
+        <field name="create_variant">dynamic</field>
+        <field name="display_type">select</field>
     </record>
 
     <!-- PORT BLOCKING KIT -->
     <record id="k300_attribute_port_blocking_kit" model="product.attribute">
-      <field name="name">Port Blocking Kit</field>
-      <field name="create_variant">dynamic</field>
-      <field name="display_type">select</field>
+        <field name="name">Port Blocking Kit</field>
+        <field name="create_variant">dynamic</field>
+        <field name="display_type">select</field>
     </record>
 
     <!-- OPERATING SYSTEM -->
     <record id="k300_attribute_operating_system" model="product.attribute">
-      <field name="name">Operating System (Primary Storage Req.)</field>
-      <field name="create_variant">dynamic</field>
-      <field name="display_type">select</field>
+        <field name="name">Operating System (Primary Storage Req.)</field>
+        <field name="create_variant">dynamic</field>
+        <field name="display_type">select</field>
     </record>
 
     <!-- BUILD -->
     <record id="k300_attribute_build" model="product.attribute">
-      <field name="name">Assembly &amp; Validation</field>
-      <field name="create_variant">dynamic</field>
-      <field name="display_type">select</field>
+        <field name="name">Assembly &amp; Validation</field>
+        <field name="create_variant">dynamic</field>
+        <field name="display_type">select</field>
     </record>
 
     <!-- ==================== -->
@@ -51,51 +51,51 @@
 
     <!-- MOTHERBOARD -->
     <record id="ml210g-12_attribute_motherboard" model="product.attribute">
-      <field name="name">Motherboard</field>
-      <field name="create_variant">dynamic</field>
-      <field name="display_type">select</field>
+        <field name="name">Motherboard</field>
+        <field name="create_variant">dynamic</field>
+        <field name="display_type">select</field>
     </record>
 
     <!-- CASE -->
     <record id="ml210g-12_attribute_case" model="product.attribute">
-      <field name="name">Case</field>
-      <field name="create_variant">dynamic</field>
-      <field name="display_type">select</field>
+        <field name="name">Case</field>
+        <field name="create_variant">dynamic</field>
+        <field name="display_type">select</field>
     </record>
 
     <!-- MEMORY -->
     <record id="ml210g-12_attribute_memory" model="product.attribute">
-      <field name="name">Memory</field>
-      <field name="create_variant">dynamic</field>
-      <field name="display_type">select</field>
+        <field name="name">Memory</field>
+        <field name="create_variant">dynamic</field>
+        <field name="display_type">select</field>
     </record>
 
     <!-- STORAGE -->
     <record id="ml210g-12_attribute_storage" model="product.attribute">
-      <field name="name">Primary Storage</field>
-      <field name="create_variant">dynamic</field>
-      <field name="display_type">select</field>
+        <field name="name">Primary Storage</field>
+        <field name="create_variant">dynamic</field>
+        <field name="display_type">select</field>
     </record>
 
     <!-- WIFI/BLUETOOTH CARD -->
     <record id="ml210g-12_attribute_wifi_card" model="product.attribute">
-      <field name="name">Wifi, Bluetooth, and Extrovert 4G LTE Connectivity</field>
-      <field name="create_variant">dynamic</field>
-      <field name="display_type">select</field>
+        <field name="name">Wifi, Bluetooth, and Extrovert 4G LTE Connectivity</field>
+        <field name="create_variant">dynamic</field>
+        <field name="display_type">select</field>
     </record>
 
     <!-- WIFI/BLUETOOTH ANTENNA -->
     <record id="ml210g-12_attribute_wifi_antenna" model="product.attribute">
-      <field name="name">Wifi, Bluetooth, and Extrovert 4G LTE Antennas</field>
-      <field name="create_variant">dynamic</field>
-      <field name="display_type">select</field>
+        <field name="name">Wifi, Bluetooth, and Extrovert 4G LTE Antennas</field>
+        <field name="create_variant">dynamic</field>
+        <field name="display_type">select</field>
     </record>
 
     <!-- BUILD -->
     <record id="ml210g-12_attribute_build" model="product.attribute">
-      <field name="name">Assembly &amp; Validation</field>
-      <field name="create_variant">dynamic</field>
-      <field name="display_type">select</field>
+        <field name="name">Assembly &amp; Validation</field>
+        <field name="create_variant">dynamic</field>
+        <field name="display_type">select</field>
     </record>
 
     <!-- ================================== -->
@@ -104,37 +104,37 @@
 
     <!-- MOTHERBOARD -->
     <record id="imb-155_attribute_motherboard" model="product.attribute">
-      <field name="name">Motherboard</field>
-      <field name="create_variant">dynamic</field>
-      <field name="display_type">select</field>
+        <field name="name">Motherboard</field>
+        <field name="create_variant">dynamic</field>
+        <field name="display_type">select</field>
     </record>
 
     <!-- MEMORY -->
     <record id="imb-155_attribute_memory" model="product.attribute">
-      <field name="name">Memory</field>
-      <field name="create_variant">dynamic</field>
-      <field name="display_type">select</field>
+        <field name="name">Memory</field>
+        <field name="create_variant">dynamic</field>
+        <field name="display_type">select</field>
     </record>
 
     <!-- AC ADAPTER -->
     <record id="imb-155_attribute_adapter" model="product.attribute">
-      <field name="name">AC Adapter</field>
-      <field name="create_variant">dynamic</field>
-      <field name="display_type">select</field>
+        <field name="name">AC Adapter</field>
+        <field name="create_variant">dynamic</field>
+        <field name="display_type">select</field>
     </record>
 
     <!-- OPEN CASE -->
     <record id="imb-155_attribute_open_case" model="product.attribute">
-      <field name="name">Open Case</field>
-      <field name="create_variant">dynamic</field>
-      <field name="display_type">select</field>
+        <field name="name">Open Case</field>
+        <field name="create_variant">dynamic</field>
+        <field name="display_type">select</field>
     </record>
 
     <!-- MOTHERBOARD TEST -->
     <record id="imb-155_attribute_motherboard_test" model="product.attribute">
-      <field name="name">Motherboard Test</field>
-      <field name="create_variant">dynamic</field>
-      <field name="display_type">select</field>
+        <field name="name">Motherboard Test</field>
+        <field name="create_variant">dynamic</field>
+        <field name="display_type">select</field>
     </record>
 
     <!-- =========================== -->
@@ -143,23 +143,23 @@
 
     <!-- PLATFORM -->
     <record id="k300-l33t_attribute_platform" model="product.attribute">
-      <field name="name">Platform</field>
-      <field name="create_variant">dynamic</field>
-      <field name="display_type">select</field>
+        <field name="name">Platform</field>
+        <field name="create_variant">dynamic</field>
+        <field name="display_type">select</field>
     </record>
 
     <!-- ADAPTER -->
     <record id="k300-l33t_attribute_adapter" model="product.attribute">
-      <field name="name">AC Adapter</field>
-      <field name="create_variant">dynamic</field>
-      <field name="display_type">select</field>
+        <field name="name">AC Adapter</field>
+        <field name="create_variant">dynamic</field>
+        <field name="display_type">select</field>
     </record>
 
     <!-- BUILD -->
     <record id="k300-l33t_attribute_build" model="product.attribute">
-      <field name="name">Assembly &amp; Validation</field>
-      <field name="create_variant">dynamic</field>
-      <field name="display_type">select</field>
+        <field name="name">Assembly &amp; Validation</field>
+        <field name="create_variant">dynamic</field>
+        <field name="display_type">select</field>
     </record>
 
     <!-- ==================== -->

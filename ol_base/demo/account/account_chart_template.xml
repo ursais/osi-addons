@@ -1,29 +1,19 @@
 <odoo>
-  <!-- Create the liquidity account template so that the chart template doesn't make one for us -->
-  <record id="us_chart_template_liquidity_transfer" model="account.account">
-    <field name="code">100012</field>
-    <field name="name">Operating</field>
-    <field name="reconcile">False</field>
-    <field name="account_type">asset_current</field>
-  </record>
 
-  <!-- <record id="onlogic_chart_template" model="account.chart.template">
-    <field name="name">OnLogic US Chart of Accounts Demo Template</field>
-    <field name="use_anglo_saxon">True</field>
-    <field name="code_digits">5</field>
-    <field name="bank_account_code_prefix">11020</field>
-    <field name="cash_account_code_prefix">11010</field>
-    <field name="transfer_account_code_prefix">11010</field>
-    <field name="currency_id" ref="base.USD"/>
-  </record> -->
+    <!-- Create the liquidity account template so that the chart template doesn't make one for us -->
+    <record id="us_chart_template_liquidity_transfer" model="account.account">
+        <field name="code">100012</field>
+        <field name="name">Operating</field>
+        <field name="reconcile">False</field>
+        <field name="account_type">asset_current</field>
+    </record>
 
-
-  <!-- Create the liquidity account template so that the chart template doesn't make one for us -->
-  <record id="eu_chart_template_liquidity_transfer" model="account.account">
-    <field name="code">100014</field>
-    <field name="name">Operating</field>
-    <field name="reconcile">False</field>
-    <field name="account_type">asset_current</field>
-  </record>
+    <!-- Create the liquidity account template so that the chart template doesn't make one for us -->
+    <record id="eu_chart_template_liquidity_transfer" model="account.account">
+        <field name="code">100014</field>
+        <field name="name">Operating</field>
+        <field name="reconcile">False</field>
+        <field name="account_type">asset_current</field>
+    </record>
 
 </odoo>

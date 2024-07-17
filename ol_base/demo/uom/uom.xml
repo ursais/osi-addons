@@ -1,20 +1,22 @@
 <odoo>
-  <record id="product_uom_case_of_5" model="uom.uom">
-    <field name="category_id" ref="uom.product_uom_categ_unit"/>
-    <field name="name">Case of 5</field>
-    <field name="factor_inv" eval="5"/>
-    <field name="uom_type">bigger</field>
-  </record>
-  <record id="product_uom_case_of_10" model="uom.uom">
-    <field name="category_id" ref="uom.product_uom_categ_unit"/>
-    <field name="name">Case of 10</field>
-    <field name="factor_inv" eval="10"/>
-    <field name="uom_type">bigger</field>
-  </record>
-  <record id="product_uom_bag_of_5000" model="uom.uom">
-    <field name="category_id" ref="uom.product_uom_categ_unit"/>
-    <field name="name">Bag of 5000</field>
-    <field name="factor_inv" eval="5000"/>
-    <field name="uom_type">bigger</field>
-  </record>
+
+    <record id="product_uom_case_of_5" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Case of 5</field>
+        <field name="factor_inv" eval="5"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_case_of_10" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Case of 10</field>
+        <field name="factor_inv" eval="10"/>
+        <field name="uom_type">bigger</field>
+    </record>
+    <record id="product_uom_bag_of_5000" model="uom.uom">
+        <field name="category_id" ref="uom.product_uom_categ_unit"/>
+        <field name="name">Bag of 5000</field>
+        <field name="factor_inv" eval="5000"/>
+        <field name="uom_type">bigger</field>
+    </record>
+
 </odoo>

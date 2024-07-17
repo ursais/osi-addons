@@ -12,6 +12,7 @@
         <field name="type">selection</field>
         <field name="company_id" ref="base.main_company" />
     </record>
+
     <!-- Set US default: Generate accounting entries based on stock movement in real time -->
     <record id="category_real_time_valuation_us" model="ir.property">
         <field name="fields_id" ref="stock_account.field_product_category__property_valuation" />
@@ -29,6 +30,7 @@
         <field name="type">selection</field>
         <field name="company_id" ref="ol_base.onlogic_eu" />
     </record>
+
     <!-- Set EU default: Generate accounting entries based on stock movement in real time -->
     <record id="category_real_time_valuation_eu" model="ir.property">
         <field name="fields_id" ref="stock_account.field_product_category__property_valuation" />

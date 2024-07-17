@@ -5,17 +5,16 @@
         <field name="group_use_lead">true</field>
 
         <!-- Sales Settings -->
-        <!-- <field name="module_sale_product_configurator">true</field> No Longer a Setting--> 
         <field name="group_product_variant">true</field>
         <field name="group_uom">true</field>
         <field name="group_discount_per_so_line">true</field>
-        <!-- <field name="module_loyalty">true</field> -->
         <field name="group_product_pricelist">true</field>
         <field name="portal_confirmation_pay">true</field>
         <field name="group_sale_delivery_address">true</field>
         <field name="default_invoice_policy">delivery</field>
         <field name="quotation_validity_days">30</field>
         <field name="default_picking_policy">one</field>
+
         <!-- Purchase Settings -->
         <!-- None at the moment -->
 
@@ -25,7 +24,6 @@
         <field name="group_stock_production_lot">true</field>
         <field name="group_stock_multi_locations">true</field>
         <field name="group_stock_adv_location">true</field>
-        <!-- <field name="module_procurement_jit">0</field> No longer a setting-->
 
         <!-- Manufacturing Settings -->
         <!-- None at the moment -->
@@ -44,16 +42,5 @@
     <function model="res.config.settings" name="execute">
         <function eval="[[('id', '=', ref('demo_settings'))]]" model="res.config.settings" name="search" />
     </function>
-
-    <!-- Uninstall modules we don't want -->
-    <!-- <record id="demo_uninstall_settings" model="res.config.settings">
-        <field name="module_account_invoice_extract">false</field>
-    </record> -->
-    <!-- Apply the config -->
-    <!-- <function model="res.config.settings" name="execute">
-        <function eval="[[('id', '=', ref('demo_uninstall_settings'))]]" model="res.config.settings" name="search" />
-    </function> -->
-
-    <!-- FIXME: do company_specific settings here -->
 
 </odoo>

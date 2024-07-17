@@ -1,4 +1,5 @@
 <odoo>
+
     <!-- Company specific admins -->
     <!-- US Admin -->
     <record id="us_company_user" model="res.users">
