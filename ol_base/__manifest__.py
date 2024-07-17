@@ -69,12 +69,9 @@
         "demo/account/account.account.csv",
         "demo/account/account_chart_template.xml",
         "demo/account/load_template.xml",
-        # "demo/account/account.xml", # Needs Work
-        # "demo/account/journal.xml",
         "demo/account/product.xml",
         "demo/account/payment_term.xml",
         "demo/account/payment_method.xml",
-        # "demo/account/tax.xml",
         # products
         "demo/product/attribute.xml",
         "demo/product/components.xml",
@@ -91,12 +88,8 @@
         "demo/delivery/carrier.xml",
         # crm
         "demo/crm/lead.xml",
-        'demo/crm/team.xml',
-        # accounting properties
-        # "demo/ir/partner_properties.xml", # Needs work
-        # "demo/ir/product_properties.xml", # Needs work
+        "demo/crm/team.xml",
         # config parameters
-        "demo/ir/config_parameter.xml", #Will enable if m2x is desired
         # actions which need to be called (ie changing base records once)
         "demo/action/cron.xml",
     ],

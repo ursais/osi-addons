@@ -1,7 +1,9 @@
 <odoo>
-  <!-- Add sales people to team -->
-  <record id="sales_team.team_sales_department" model="crm.team">
-    <field name="user_id" ref="ol_base.sales_director_us"/>
-    <field name="member_ids" eval="[(4, ref('ol_base.sales_user_us'))]"/>
-  </record>
+
+    <!-- Add sales people to team -->
+    <record id="sales_team.team_sales_department" model="crm.team">
+        <field name="user_id" ref="ol_base.sales_director_us"/>
+        <field name="member_ids" eval="[(4, ref('ol_base.sales_user_us'))]"/>
+    </record>
+
 </odoo>

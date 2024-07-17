@@ -1,27 +1,8 @@
 <odoo>
-  <!-- This file must be run after both the account.chart.template
-       AND all the account.account.templates have been created -->
 
-  <!-- Load template for US -->
-  <!-- self, sale_tax_rate, purchase_tax_rate, company -->
-  <!-- <function model="account.chart.template" name="load_demo_chart">
-    <value eval="[ref('ol_base.onlogic_chart_template')]"/>
-    <value eval="15" />
-    <value eval="15" />
-    <value eval="ref('base.main_company')" />
-  </function> -->
-  <!-- Load template for EU -->
-  <!-- self, sale_tax_rate, purchase_tax_rate, company -->
-  <!-- <function model="account.chart.template" name="load_demo_chart">
-    <value eval="[ref('ol_base.onlogic_chart_template')]"/>
-    <value eval="21" />
-    <value eval="21" />
-    <value eval="ref('ol_base.onlogic_eu')" />
-  </function> -->
-
-  <!-- Switch currency back to EUR (template is in USD) -->
-  <record id="ol_base.onlogic_eu" model="res.company">
-    <field name="currency_id" ref="base.EUR"/>
-  </record>
+    <!-- Switch currency back to EUR (template is in USD) -->
+    <record id="ol_base.onlogic_eu" model="res.company">
+        <field name="currency_id" ref="base.EUR"/>
+    </record>
 
 </odoo>
