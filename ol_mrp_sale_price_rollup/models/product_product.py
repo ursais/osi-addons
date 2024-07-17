@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import api, models
+from odoo import api, fields, models
 from odoo.tools import float_round
 
 
@@ -8,12 +8,18 @@ class ProductProduct(models.Model):
 
     _inherit = "product.product"
 
+    bom_lst_price = fields.Float(
+        "BoM List Price",
+        digits="Product Price",
+        help="This is the sum of the extra price of all attributes",
+    )
+
     # METHODS ##########
     """ The methods below are very similar to the compute cost from bom methods """
 
     @api.depends(
         "product_template_attribute_value_ids.price_extra",
-        "lst_price",
+        "bom_lst_price",
     )
     def _compute_product_price_extra(self):
         """Override the price extra method to add the bom_lst_price to extra price."""
@@ -37,7 +43,7 @@ class ProductProduct(models.Model):
             extra_prices = attribute_value_obj.get_attribute_value_extra_prices(
                 product_tmpl_id=product.product_tmpl_id.id, pt_attr_value_ids=value_ids
             )
-            product.price_extra = product.lst_price + sum(extra_prices.values())
+            product.price_extra = product.bom_lst_price + sum(extra_prices.values())
         return result
 
     def button_bom_sale_price(self):
@@ -65,7 +71,7 @@ class ProductProduct(models.Model):
         self.ensure_one()
         bom = self.env["mrp.bom"]._bom_find(self)[self]
         if bom:
-            self.lst_price = self._compute_bom_sale_price(
+            self.bom_lst_price = self._compute_bom_sale_price(
                 bom, boms_to_recompute=boms_to_recompute
             )
         else:
@@ -79,7 +85,7 @@ class ProductProduct(models.Model):
                     bom, boms_to_recompute=boms_to_recompute, byproduct_bom=True
                 )
                 if price:
-                    self.lst_price = price
+                    self.bom_lst_price = price
 
     def _compute_bom_sale_price(
         self,
