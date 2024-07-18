@@ -10,6 +10,8 @@
     "version": "17.0.1.0.0",
     # any module necessary for this one to work correctly
     "depends": [
+        "ol_base",
+        "product_state",
         "sale_product_approval_purchase",
         "sale_product_approval_mrp",
         "sale_product_approval_stock",
@@ -21,9 +23,7 @@
         "data/product_state_data.xml",
     ],
     # only loaded in demo mode
-    "demo": [
-        "demo/product_template.xml",
-    ],
+    "demo": [],
     "application": False,
     "installable": True,
 }
