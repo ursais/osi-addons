@@ -821,20 +821,24 @@ class ProductConfigSession(models.Model):
         return prices
 
     @api.model
-    def get_cfg_price(self, value_ids=None, custom_vals=None):
+    def get_cfg_price(self, value_ids=[], custom_vals=None):
         """Computes the price of the configured product based on the
             configuration passed in via value_ids and custom_values
 
         :param value_ids: list of attribute value_ids
         :param custom_vals: dictionary of custom attribute values
         :returns: final configuration price"""
-
-        if value_ids is None:
+        if not value_ids:
             value_ids = self.value_ids.ids
 
         if custom_vals is None:
             custom_vals = {}
-
+        value_ids = value_ids + self.value_ids.ids
+        if self.env.context.get("tobe_remove_attr", []):
+            value_ids = set(value_ids) - set(
+                self.env.context.get("tobe_remove_attr", [])
+            )
+            value_ids = list(value_ids)
         product_tmpl = self.product_tmpl_id
         self = self.with_context(active_id=product_tmpl.id)
 
@@ -1481,16 +1485,14 @@ class ProductConfigSession(models.Model):
         :param value_ids: list of value ids or mix of ids and list of ids
                            (e.g: [1, 2, 3, [4, 5, 6]])
         :returns: flattened list of ids ([1, 2, 3, 4, 5, 6])"""
-        flat_val_ids = set()
-        if value_ids and value_ids[0]:
-            for val in value_ids:
-                if not val:
-                    continue
-                if isinstance(val, list):
-                    flat_val_ids.add(val[1])
-                elif isinstance(val, int):
-                    flat_val_ids.add(val)
-        return list(flat_val_ids)
+        flatList = []
+        for value in value_ids:
+            if isinstance(value, list):
+                for sub in value:
+                    flatList.append(sub)
+            else:
+                flatList.append(value)
+        return flatList
 
     def formatPrices(self, prices=None, dp="Product Price"):
         if prices is None:
