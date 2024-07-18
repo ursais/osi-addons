@@ -1,38 +1,15 @@
-<odoo>
+<odoo noupdate="1">
 
     <record id="product_state.product_state_sellable" model="product.state">
+        <field name="default">False</field>
         <field name="active">False</field>
     </record>
     <record id="product_state.product_state_obsolete" model="product.state">
         <field name="active">False</field>
     </record>
 
-    <record id="product_state_pre_order" model="product.state">
-        <field name="code">pre_order</field>
-        <field name="name">Pre-Order</field>
-        <field name="sequence">11</field>
-    </record>
-
-    <record id="product_state_active" model="product.state">
-        <field name="code">active</field>
-        <field name="name">Active</field>
-        <field name="sequence">12</field>
-    </record>
-
-    <record id="product_state_discontinued" model="product.state">
-        <field name="code">discontinued</field>
-        <field name="name">Discontinued</field>
-        <field name="sequence">13</field>
-    </record>
-
-    <record id="product_state_canceled" model="product.state">
-        <field name="code">canceled</field>
-        <field name="name">Canceled</field>
-        <field name="sequence">31</field>
-    </record>
-
-    <!-- 'Can be' the setting on the state is 'Approved To' -->
     <record id="product_state.product_state_draft" model="product.state">
+        <field name="default">True</field>
         <field name="approved_purchase" eval="True" />
         <field name="approved_sale" eval="False" />
         <field name="approved_sale_confirm" eval="False" />
@@ -42,7 +19,10 @@
         <field name="approved_ship" eval="False" />
     </record>
 
-    <record id="ol_product_state.product_state_pre_order" model="product.state">
+    <record id="product_state_pre_order" model="product.state">
+        <field name="code">pre_order</field>
+        <field name="name">Pre-Order</field>
+        <field name="sequence">11</field>
         <field name="approved_purchase" eval="True" />
         <field name="approved_sale" eval="True" />
         <field name="approved_sale_confirm" eval="True" />
@@ -52,7 +32,10 @@
         <field name="approved_ship" eval="False" />
     </record>
 
-    <record id="ol_product_state.product_state_active" model="product.state">
+    <record id="product_state_active" model="product.state">
+        <field name="code">active</field>
+        <field name="name">Active</field>
+        <field name="sequence">12</field>
         <field name="approved_purchase" eval="True" />
         <field name="approved_sale" eval="True" />
         <field name="approved_sale_confirm" eval="True" />
@@ -62,7 +45,10 @@
         <field name="approved_ship" eval="True" />
     </record>
 
-    <record id="ol_product_state.product_state_discontinued" model="product.state">
+    <record id="product_state_discontinued" model="product.state">
+        <field name="code">discontinued</field>
+        <field name="name">Discontinued</field>
+        <field name="sequence">13</field>
         <field name="approved_purchase" eval="False" />
         <field name="approved_sale" eval="True" />
         <field name="approved_sale_confirm" eval="True" />
@@ -82,7 +68,10 @@
         <field name="approved_ship" eval="True" />
     </record>
 
-    <record id="ol_product_state.product_state_canceled" model="product.state">
+    <record id="product_state_canceled" model="product.state">
+        <field name="code">canceled</field>
+        <field name="name">Canceled</field>
+        <field name="sequence">31</field>
         <field name="approved_purchase" eval="False" />
         <field name="approved_sale" eval="False" />
         <field name="approved_sale_confirm" eval="False" />
