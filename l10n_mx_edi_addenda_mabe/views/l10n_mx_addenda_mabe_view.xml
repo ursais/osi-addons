@@ -22,7 +22,7 @@
                 t-att-plantaEntrega="record.partner_shipping_id.mabe_plant_code"
                 t-att-calle="record.partner_shipping_id.street_name"
                 t-att-noExterior="record.partner_shipping_id.street_number"
-                t-att-noInterior="record.partner_shipping_id.street_number2"
+                t-att-noInterior="record.partner_shipping_id.street_number2 or 'NA'"
                 t-att-codigoPostal="record.partner_shipping_id.zip"
             />
             <mabe:Detalles>
@@ -35,9 +35,9 @@
                         t-att-unidad="move_line.product_uom_id.name"
                         t-att-cantidad="move_line.quantity"
                         t-att-precioSinIva="move_line.price_unit"
-                        t-att-precioConIva="move_line.price_unit * 1.16"
+                        t-att-precioConIva="round(move_line.price_unit * 1.16)"
                         t-att-importeSinIva="move_line.price_subtotal"
-                        t-att-importeConIva="move_line.price_subtotal * 1.16"
+                        t-att-importeConIva="round(move_line.price_subtotal * 1.16)"
                     />
                     <t t-set="i" t-value="i+1" />
                 </t>
