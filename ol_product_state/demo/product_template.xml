@@ -1,8 +1,0 @@
-<odoo>
-
-    <record id="product_template_product_state" model="product.template">
-        <field name="name">Test Product State</field>
-        <field name="product_state_id" eval="ref('product_state.product_state_draft')"/>
-    </record>
-
-</odoo>
