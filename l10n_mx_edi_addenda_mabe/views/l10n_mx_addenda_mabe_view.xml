@@ -2,7 +2,6 @@
     <template id="l10n_mx_edi_addenda_mabe" name="Addenda Mabe">
         <mabe:Factura
             xmlns:mabe="http://recepcionfe.mabempresa.com/cfd/addenda/v1"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://recepcionfe.mabempresa.com/cfd/addenda/v1 http://recepcionfe.mabempresa.com/cfd/addenda/v1/mabev1.xsd"
             version="1.0"
             tipoDocumento="FACTURA"
@@ -14,10 +13,10 @@
         >
             <mabe:Moneda
                 t-att-tipoMoneda="record.currency_id.name"
-                t-att-tipoCambio="record.currency_id.inverse_rate"
-                t-att-importeConLetra="record.mabe_amount_with_letter"
+                t-att-tipoCambio="record.currency_id.rate"
+                t-att-importeConLetra="record.mabe_amount_with_letter or 'NA'"
             />
-            <mabe:Proveedor t-att-codigo="record.partner_id.ref" />
+            <mabe:Proveedor t-att-codigo="record.partner_id.ref or 'NA'" />
             <mabe:Entrega
                 t-att-plantaEntrega="record.partner_shipping_id.mabe_plant_code"
                 t-att-calle="record.partner_shipping_id.street_name"
