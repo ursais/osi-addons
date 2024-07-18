@@ -1,0 +1,14 @@
+<odoo>
+
+    <record id="mrp_bom_form_view_inherit_rebuild" model="ir.ui.view">
+        <field name="name">mrp.bom.form.view.inherit.rebuild</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view" />
+        <field name="arch" type="xml">
+            <field name="product_tmpl_id" position="after">
+                <field name="scaffolding_bom" />
+            </field>
+        </field>
+    </record>
+
+</odoo>
