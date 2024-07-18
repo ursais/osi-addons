@@ -4,6 +4,7 @@ from odoo.addons.product_configurator.tests.test_product_configurator_test_cases
     ProductConfiguratorTestCases,
 )
 
+
 class TestMRPBOMRebuild(ProductConfiguratorTestCases):
 
     def setUp(self):
@@ -13,7 +14,7 @@ class TestMRPBOMRebuild(ProductConfiguratorTestCases):
         self._configure_product_nxt_step()
         self.product_tmpl_id = self.config_product
 
-    def test01_reset_variant_bom_with_master_bom(self):
+    def test01_reset_variant_bom_with_scaffold_bom(self):
         self.bom_id = self.mrpBom.create(
             {
                 "product_tmpl_id": self.product_tmpl_id.id,
@@ -23,9 +24,9 @@ class TestMRPBOMRebuild(ProductConfiguratorTestCases):
                 "ready_to_produce": "all_available",
             }
         )
-        self.bom_id.product_tmpl_id._reset_all_variants_bom_with_master_bom()
+        self.bom_id.product_tmpl_id._reset_all_variants_bom_with_scaffold_bom()
 
-    def test02_reset_variant_bom_with_master_bom(self):
+    def test02_reset_variant_bom_with_scaffold_bom(self):
         self.bom_id = self.mrpBom.create(
             {
                 "product_tmpl_id": self.product_tmpl_id.id,

@@ -8,12 +8,13 @@
     "version": "17.0.0.1.0",
     # any module necessary for this one to work correctly
     "depends": [
+        "ol_base",
         "product_configurator_mrp",
         "ol_mrp_plm",
     ],
     # always loaded
     "data": [
-        "data/product_data.xml",
+        "data/ir_actions_server.xml",
         "views/mrp_bom_view.xml",
     ],
 }

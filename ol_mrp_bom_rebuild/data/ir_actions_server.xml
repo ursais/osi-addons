@@ -9,7 +9,7 @@
         <field name="state">code</field>
         <field name="code">
 for variant in records:
-    variant._reset_variant_bom_with_master_bom()
+    variant._reset_variant_bom_with_scaffold_bom()
         </field>
     </record>
 
@@ -23,7 +23,7 @@ for variant in records:
         <field name="state">code</field>
         <field name="code">
 for template in records:
-    template._reset_all_variants_bom_with_master_bom()
+    template._reset_all_variants_bom_with_scaffold_bom()
         </field>
     </record>
 
