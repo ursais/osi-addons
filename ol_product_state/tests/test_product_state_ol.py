@@ -9,7 +9,7 @@ class TestProductStateOlValidation(common.TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.env = cls.env(context=dict(cls.env.context, **DISABLED_MAIL_CONTEXT))
-        cls.product_1 = cls.env.ref("ol_product_state.product_template_product_state")
+        cls.product_1 = cls.env.ref("ol_base.mc500g_product_template")
 
         # configure 'New Product Introduction' ECO type stages
         cls.ecostage_progress = cls.env.ref("mrp_plm.ecostage_progress")
@@ -32,21 +32,24 @@ class TestProductStateOlValidation(common.TransactionCase):
                 "product_tmpl_id": self.product_1.id,
             }
         )
+        #First Stage has no product state so product should not change states
+        previous_product_stage = self.product_1.product_state_id
         mrp_eco.action_new_revision()
-        self.assertEqual(self.product_1.product_state_id.name, "In Development")
+        self.assertEqual(self.product_1.product_state_id, previous_product_stage)
 
         # Move ECO to 'In Progress'
-        # Product stage should change to "Normal"
+        # Product stage should change to "Normal" which is set on the "In Progress" ECO Stage
         mrp_eco.stage_id = self.ecostage_progress.id
-        self.assertEqual(self.product_1.product_state_id.name, "Normal")
+        self.assertEqual(self.product_1.product_state_id, mrp_eco.stage_id.product_state_id)
 
         # Move ECO back to 'New'
         # Product should stay in "Normal" since "In Development" has no stage
+        previous_product_stage = self.product_1.product_state_id
         mrp_eco.stage_id = self.env.ref("mrp_plm.ecostage_new").id
-        self.assertEqual(self.product_1.product_state_id.name, "Normal")
+        self.assertEqual(self.product_1.product_state_id, previous_product_stage)
 
         # Move ECO to 'Validated'
-        # Product stage should change to "Obsolete"
+        # Product stage should change to "Obsolete" which is set on the "Validated" ECO Stage
         mrp_eco.stage_id = self.env.ref("mrp_plm.ecostage_validated").id
         mrp_eco.action_apply()
-        self.assertEqual(self.product_1.product_state_id.name, "Obsolete")
+        self.assertEqual(self.product_1.product_state_id, mrp_eco.stage_id.product_state_id)
