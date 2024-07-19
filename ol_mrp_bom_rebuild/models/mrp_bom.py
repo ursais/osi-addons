@@ -16,7 +16,7 @@ class MRPBom(models.Model):
     # END #########
     # METHODS #####
 
-    @api.constrains("product_tmpl_id")
+    @api.constrains("product_tmpl_id", "scaffolding_bom")
     def _check_product_tmpl_scaffolding_bom(self):
         """Constraint ensures only one scaffolding BoM exists per product template"""
         for rec in self:
