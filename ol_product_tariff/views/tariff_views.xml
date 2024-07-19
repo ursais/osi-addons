@@ -1,8 +1,8 @@
 <odoo>
 
     <!-- Tree View -->
-    <record id="view_tarif_code_tree" model="ir.ui.view">
-        <field name="name">helpdesk.rma.view.tree</field>
+    <record id="view_tariff_code_tree" model="ir.ui.view">
+        <field name="name">tariff.code.view.tree</field>
         <field name="model">tariff.code</field>
         <field name="arch" type="xml">
             <tree string="Tariff Code">
