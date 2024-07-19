@@ -137,6 +137,7 @@
                 <field name="config_step_name" />
                 <field name="product_id" />
                 <field name="state" />
+                <field name="company_id" />
             </tree>
         </field>
     </record>
@@ -165,7 +166,12 @@
                         />
                         <field name="config_step_name" />
                         <field name="product_id" />
-                        <field name="product_preset_id" invisible="not product_preset_id" readonly="1" />
+                        <field
+                            name="product_preset_id"
+                            invisible="not product_preset_id"
+                            readonly="1"
+                        />
+                        <field name="company_id" />
                     </group>
                     <notebook>
                         <page name="custom_vals" string="Custom Values">

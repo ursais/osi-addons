@@ -1,4 +1,5 @@
 import logging
+from collections import Counter
 from io import StringIO
 
 from mako.runtime import Context
@@ -6,7 +7,6 @@ from mako.template import Template
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
-from collections import Counter
 
 _logger = logging.getLogger(__name__)
 
@@ -256,8 +256,10 @@ class ProductTemplate(models.Model):
     def configure_product(self):
         """launches a product configurator wizard with a linked
         template in order to configure new product."""
-        return self.with_context(product_tmpl_id_readonly=True).create_config_wizard(
-            click_next=False
+        return (
+            self.with_context(product_tmpl_id_readonly=True)
+            .with_company(self.env.company)
+            .create_config_wizard(click_next=False)
         )
 
     def create_config_wizard(
@@ -358,12 +360,14 @@ class ProductTemplate(models.Model):
                 couter.extend(config_step.attribute_line_ids.ids)
             counter = Counter(couter)
             duplicates = []
-            for k,v in dict(counter).items():
+            for k, v in dict(counter).items():
                 if v > 1:
                     duplicates.append(k)
             if duplicates:
-                duplicates = self.env['product.template.attribute.line'].browse(duplicates)
-                duplicates = ",".join(duplicates.mapped('attribute_id.name'))
+                duplicates = self.env["product.template.attribute.line"].browse(
+                    duplicates
+                )
+                duplicates = ",".join(duplicates.mapped("attribute_id.name"))
                 raise ValidationError(
                     _(
                         "The following attributes have duplicates in Configuration Steps: %s",

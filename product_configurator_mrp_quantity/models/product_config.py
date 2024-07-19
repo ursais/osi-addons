@@ -446,6 +446,8 @@ class ProductConfigSession(models.Model):
             values.update(bom_values)
             mrp_bom_id = mrpBom.create(values)
             if mrp_bom_id and parent_bom:
+                if mrp_bom_id.company_id and not parent_bom.company_id:
+                    mrp_bom_id.company_id = False
                 for operation_line in parent_bom.operation_ids:
                     operation_line.copy(default={"bom_id": mrp_bom_id.id})
             return mrp_bom_id
