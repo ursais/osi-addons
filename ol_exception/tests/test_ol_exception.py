@@ -1,9 +1,9 @@
-from odoo.tests import TransactionCase
 from odoo.exceptions import UserError
+from odoo.tests import common, tagged
 
 
-class TestOLException(TransactionCase):
-
+@tagged("-at_install", "post_install")
+class TestOLException(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -23,7 +23,8 @@ class TestOLException(TransactionCase):
            }
         )
 
-    def test01_exception_with_internal_user(self):
+    def test_exception_with_internal_user(self):
+        """Confirm that a non-admin user receives and exception"""
         self.onlogic_internal_user.groups_id += self.exception_rule_manager
         with self.assertRaises(UserError):
             self.exception_rule.with_user(self.onlogic_internal_user.id).copy()
@@ -33,10 +34,19 @@ class TestOLException(TransactionCase):
                 "exception_type": "by_py_code"
             })
 
-    def test02_exception_with_admin_user(self):
+    def test_exception_with_admin_user(self):
+        """Confirm that an admin user does not receive an exception"""
         self.onlogic_internal_user.groups_id += self.exception_rule_manager
-        self.exception_rule.with_user(self.env.user.id).copy()
-        self.exception_rule.with_user(self.env.user.id).write({
-            "exception_type": "by_py_code"
-        })
+        
+        try:
+            self.exception_rule.with_user(self.env.user.id).copy()
+        except UserError:
+            self.fail("copy() raised UserError unexpectedly!")
+        
+        try:
+            self.exception_rule.with_user(self.env.user.id).write({
+                "exception_type": "by_py_code"
+            })
+        except UserError:
+            self.fail("write() raised UserError unexpectedly!")
         self.exception_rule._get_view()
