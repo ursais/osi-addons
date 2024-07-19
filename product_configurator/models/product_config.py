@@ -341,7 +341,7 @@ class ProductConfigSession(models.Model):
     def _compute_cfg_price(self):
         for session in self:
             if session.product_tmpl_id:
-                price = session.get_cfg_price()
+                price = session.with_company(session.company_id).get_cfg_price()
             else:
                 price = 0.00
             session.price = price
@@ -494,6 +494,9 @@ class ProductConfigSession(models.Model):
         string="Preset",
         domain="[('product_tmpl_id', '=', product_tmpl_id),\
             ('config_preset_ok', '=', True)]",
+    )
+    company_id = fields.Many2one(
+        "res.company", string="Company", default=lambda self: self.env.company
     )
 
     def action_confirm(self, product_id=None):
@@ -931,6 +934,7 @@ class ProductConfigSession(models.Model):
             ("product_tmpl_id", "=", product_tmpl_id),
             ("user_id", "=", self.env.uid),
             ("state", "=", state),
+            ("company_id", "=", self.env.company.id),
         ]
         if parent_id:
             domain.append(("parent_id", "=", parent_id))

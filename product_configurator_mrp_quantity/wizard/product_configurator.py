@@ -253,6 +253,7 @@ class ProductConfigurator(models.TransientModel):
                         "field_name": field_name,
                         "is_m2m": attr_line.multi,
                         "value_ids": attr_line.value_ids.ids,
+                        "active_model": self._name,
                     }
                 ),
                 options=str(

@@ -261,22 +261,23 @@ class ProductConfigurator(models.TransientModel):
             dynamic_fields2 = {}
             for tmpl_attr in product_tmpl_attrb:
                 if not tmpl_attr.custom:
-                    sess_attr = session_attrb.filtered(
+                    sess_attrs = session_attrb.filtered(
                         lambda value: value.attribute_id.id == tmpl_attr.attribute_id.id
                     )
-                    dyn_key = "__attribute_" + str(sess_attr.attribute_id.id)
-                    if (
-                        sess_attr
-                        and sess_attr.attribute_id.id
-                        in config_session_id.product_tmpl_id.config_line_ids.mapped(
-                            "attribute_line_id.attribute_id"
-                        ).ids
-                    ):
-                        tobe_remove_attr.append(sess_attr.id)
-                        dynamic_fields2.update({dyn_key: sess_attr.id})
-                    else:
-                        if sess_attr and dyn_key in dynamic_fields:
+                    for sess_attr in sess_attrs:
+                        dyn_key = "__attribute_" + str(sess_attr.attribute_id.id)
+                        if (
+                            sess_attr
+                            and sess_attr.attribute_id.id
+                            in config_session_id.product_tmpl_id.config_line_ids.mapped(
+                                "attribute_line_id.attribute_id"
+                            ).ids
+                        ):
                             tobe_remove_attr.append(sess_attr.id)
+                            dynamic_fields2.update({dyn_key: sess_attr.id})
+                        else:
+                            if sess_attr and dyn_key in dynamic_fields:
+                                tobe_remove_attr.append(sess_attr.id)
             origin_updated_fields = set(dynamic_fields)
             to_updated_fields = set(dynamic_fields2)
             updated_fields = to_updated_fields - origin_updated_fields
