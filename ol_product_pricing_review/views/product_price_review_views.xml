@@ -30,14 +30,14 @@
                         </group>
                         <group>
                             <field name="user_id" readonly="state in ('reject', 'validated')" />
-                            <field name="origin_vendor_id" options="{'no_create': True}" readonly="state in ('reject', 'validated')" />
-                            <field name="origin_purchase_id" options="{'no_create': True}" readonly="state in ('reject', 'validated')" />
+                            <field name="origin_vendor_id" options="{'no_create': True}" readonly="1" force_save="1" />
+                            <field name="origin_purchase_id" options="{'no_create': True}" readonly="1" force_save="1" />
                         </group>
                     </group>
                     <group>
                         <group string="Proposed Pricing">
                             <field name="origin_last_purchase_currency_id" invisible="1" />
-                            <field name="origin_last_purchase_price" readonly="state in ('reject', 'validated')" widget="monetary" options="{'currency_field': 'origin_last_purchase_currency_id', 'field_digits': True}" />
+                            <field name="origin_last_purchase_price"  readonly="1" force_save="1" widget="monetary" options="{'currency_field': 'origin_last_purchase_currency_id', 'field_digits': True}" />
                             <field name="origin_last_purchase_price_converted" invisible="origin_last_purchase_currency_id == currency_id" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                             <field name="tariff_percent" widget="percentage" readonly="state in ('reject', 'validated')" />
                             <field name="tooling_cost" readonly="state in ('reject', 'validated')" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
@@ -112,13 +112,14 @@
                 <!-- icon="fa-solid fa-check" -->
                 <button name="validate_button" type="object" title="Approve Button" icon="fa-check" groups="ol_product_pricing_review.group_pricing_review_approver" invisible="state == 'reject' or  state == 'validated'" />
                 <button name="reject_button" type="object" title="Reject Button" icon="fa-close" groups="ol_product_pricing_review.group_pricing_review_approver" invisible="state == 'reject' or  state == 'validated'" />
+                <field name="origin_last_purchase_currency_id" invisible="1" />
                 <field name="company_id" optional="show" />
                 <field name="product_id" optional="show" />
                 <field name="default_code" optional="show" />
                 <field name="state" optional="show" />
                 <button name="assign_to_me" type="object" title="Assign to Me Button" icon="fa-user-plus" groups="ol_product_pricing_review.group_pricing_review_approver" invisible="state == 'reject' or  state == 'validated'" />
                 <field name="user_id" optional="show" />
-                <field name="origin_last_purchase_price" avg="Average" optional="show" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                <field name="origin_last_purchase_price" avg="Average" optional="show" widget="monetary" options="{'currency_field': 'origin_last_purchase_currency_id', 'field_digits': True}" />
                 <field name="origin_total_cost" optional="show" avg="Average" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                 <field name="total_cost" optional="show" avg="Average" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                 <field name="cost_delta" optional="show" avg="Average" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
