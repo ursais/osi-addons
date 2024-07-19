@@ -15,6 +15,7 @@
         "sale_exception",
         "purchase_exception",
         "stock_exception",
+        "ol_base",
     ],
     # always loaded
     "data": [
