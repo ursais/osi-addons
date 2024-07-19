@@ -1,6 +1,5 @@
 # Import Odoo libs
 from odoo import api, fields, models
-from odoo.exceptions import UserError
 
 
 class ProductTemplate(models.Model):
@@ -8,7 +7,7 @@ class ProductTemplate(models.Model):
 
     # COLUMNS ##########
 
-    list_price = fields.Float(company_dependent=True)
+    list_price = fields.Float(company_dependent=True, default=0.0)
     based_on = fields.Char(
         string="Based On",
         company_dependent=True,

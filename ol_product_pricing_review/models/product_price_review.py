@@ -555,7 +555,13 @@ class ProductPriceReview(models.Model):
     def validate_button(self):
         """Validate the price review and update corresponding product fields."""
         for rec in self:
-            if rec.product_id and not rec.product_id.disable_price_reviews:
+            if rec.product_id.disable_price_reviews:
+                raise ValidationError(
+                    "The Disable Price Reviews option is enabled on the product."
+                    " Please either reject this price review or update the product "
+                    "to allow price reviews."
+                )
+            elif rec.product_id:
                 # Update Product Values
                 rec.product_id.sudo().write(
                     {
