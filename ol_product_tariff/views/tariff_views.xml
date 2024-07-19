@@ -19,7 +19,7 @@
     <record model="ir.actions.act_window" id="product_tariff_code">
         <field name="name">Tariff Codes</field>
         <field name="res_model">tariff.code</field>
-        <field name="view_id" ref="view_tarif_code_tree" />
+        <field name="view_id" ref="view_tariff_code_tree" />
         <field name="view_mode">tree,form</field>
     </record>
     <record model="ir.actions.act_window" id="product_tariff_code_type">
