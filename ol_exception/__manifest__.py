@@ -11,11 +11,11 @@
     "version": "17.0.0.1.0",
     # any module necessary for this one to work correctly
     "depends": [
+        "ol_base",
         "base_exception",
         "sale_exception",
         "purchase_exception",
         "stock_exception",
-        "ol_base",
     ],
     # always loaded
     "data": [
