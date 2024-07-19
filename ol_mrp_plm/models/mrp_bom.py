@@ -31,18 +31,15 @@ class MRPBom(models.Model):
         if any(
             field in list(vals.keys()) for field in restricted_fields
         ) and not self.user_has_groups("ol_mrp_plm.group_bypass_bom_restiction"):
-            mrp_eco_stages = self.env["mrp.eco.stage"].search(
+            open_mrp_ecos = self.env["mrp.eco"].search(
                 [
-                    (
-                        "product_state_id",
-                        "=",
-                        self.product_tmpl_id.product_state_id.id,
-                    ),
-                    ("allow_bom_edits", "=", True),
+                    ("product_tmpl_id", "=", self.id),
+                    ("stage_id.final_stage", "=", False),
+                    ("stage_id.allow_bom_edits", "=", True),
                 ],
                 limit=1,
             )
-            if not mrp_eco_stages:
+            if not open_mrp_ecos:
                 raise exceptions.ValidationError(
                     _(
                         "Cannot update '%s' BOM because either there are no active"
