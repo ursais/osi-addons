@@ -12,6 +12,7 @@
     "data": [
         "views/account_move.xml",
         "views/l10n_mx_edi_addenda_audi.xml",
+        "views/res_partner_views.xml",
     ],
     "application": False,
 }
