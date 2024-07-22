@@ -41,4 +41,53 @@
         </field>
     </record>
 
+    <record
+        id="mrp_eco_view_form_inherit_ol_mrp_eco_tier_validation"
+        model="ir.ui.view"
+    >
+        <field name="name">mrp.eco.tier.validation.inherit.form</field>
+        <field name="model">mrp.eco</field>
+        <field name="inherit_id" ref="mrp_plm.mrp_eco_view_form" />
+        <field name="arch" type="xml">
+            <field name="stage_id" position="attributes">
+                <attribute name="readonly">True</attribute>
+            </field>
+            <field name="stage_id" position="after">
+                <field name="prev_stage_id" invisible="1" />
+                <field name="next_stage_id" invisible="1" />
+                <button
+                    string="Prev"
+                    name="action_move_to_prev_stage"
+                    type="object"
+                    class="oe_highlight"
+                    invisible="not prev_stage_id"
+                />
+                <button
+                    string="Next"
+                    name="action_move_to_next_stage"
+                    type="object"
+                    class="oe_highlight"
+                    invisible="not next_stage_id"
+                />
+            </field>
+            <field name="approval_ids" position="before">
+                <separator string="Standard Approvals"/>
+            </field>
+            <field name="approval_ids" position="after">
+                <separator string="Tier Approval History"/>
+                <field name="tier_review_history_ids" nolabel="1" readonly="1">
+                    <tree>
+                        <field name="requested_by" />
+                        <field name="name" />
+                        <field name="eco_stage_id" />
+                        <field name="todo_by" />
+                        <field name="done_by" />
+                        <field name="reviewed_date" />
+                        <field name="comment" />
+                    </tree>
+                </field>
+            </field>
+        </field>
+    </record>
+
 </odoo>

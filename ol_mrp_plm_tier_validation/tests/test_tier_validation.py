@@ -1,6 +1,6 @@
 # Import Odoo libs
-from odoo.tests import common, tagged
 from odoo.exceptions import ValidationError
+from odoo.tests import common, tagged
 
 
 @tagged("-at_install", "post_install")
@@ -16,13 +16,9 @@ class TestProductTierValidation(common.TransactionCase):
         )
         # Set states on the stages which tier validation uses
         cls.draft_stage = cls.env.ref("mrp_plm.ecostage_new")
-        cls.draft_stage.write(
-            {"state": "progress"}
-        )
+        cls.draft_stage.write({"state": "progress"})
         cls.normal_stage = cls.env.ref("mrp_plm.ecostage_progress")
-        cls.normal_stage.write(
-            {"state": "approved"}
-        )
+        cls.normal_stage.write({"state": "approved"})
 
         # Get tier definition model
         cls.tier_def_obj = cls.env["tier.definition"]
@@ -38,14 +34,14 @@ class TestProductTierValidation(common.TransactionCase):
             }
         )
 
-    def test_tier_validation_model_name(self):
+    def test01_tier_validation_model_name(self):
         """
         Tests to ensure that the mrp.eco model is now part of the options
           on a tier definition.
         """
         self.assertIn("mrp.eco", self.tier_def_obj._get_tier_validation_model_names())
 
-    def test_validation_eco(self):
+    def test02_validation_eco(self):
         """Testing tier validation process on ECO"""
         # Create an ECO in the 'draft' stage
         eco = self.env["mrp.eco"].create(
@@ -74,3 +70,26 @@ class TestProductTierValidation(common.TransactionCase):
 
         # Confirm the stage changed
         self.assertEqual(eco.state, self.normal_stage.state)
+
+        # Confirm the history create
+        self.assertTrue(eco.tier_review_history_ids)
+        self.assertEqual(eco.id, eco.tier_review_history_ids.eco_id.id)
+        self.assertEqual(self.test_user_1.id, eco.tier_review_history_ids.done_by.id)
+        self.assertEqual(eco.create_uid.id, eco.tier_review_history_ids.requested_by.id)
+
+    def test03_tier_validation_history(self):
+        eco = self.env["mrp.eco"].create(
+            {
+                "name": "Dummy ECO",
+                "type_id": self.eco_type.id,
+                "type": "product",
+                "product_tmpl_id": self.product.id,
+                "stage_id": self.draft_stage.id,
+            }
+        )
+        self.assertFalse(eco.prev_stage_id)
+        self.assertEqual(self.draft_stage.id, eco.stage_id.id)
+        self.assertEqual(self.normal_stage.id, eco.next_stage_id.id)
+        eco.action_move_to_prev_stage()
+        self.assertEqual(self.draft_stage.id, eco.next_stage_id.id)
+        eco.action_move_to_next_stage()
