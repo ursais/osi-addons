@@ -150,7 +150,7 @@ class ProductTemplate(models.Model):
     @api.depends(
         "last_purchase_line_id",
     )
-    def _compute_last_purchase_margin(self, from_review=False):
+    def _compute_last_purchase_margin(self, from_review=False, from_threshold=False):
         """This will compute the last purchase margin."""
         for rec in self:
             # if rec.last_purchase_line_id.state in ("purchase", "done"):
@@ -179,24 +179,30 @@ class ProductTemplate(models.Model):
                     + (rec.default_shipping_cost or 0.0)
                 ) / rec.list_price
 
+            margin_changed = False
             if last_purchase_margin != rec.last_purchase_margin:
                 rec.last_purchase_margin = last_purchase_margin
+                margin_changed = True
 
-                # If margin compute didn't come from a validated review,
-                # then check if a review is needed.
-                if not from_review and not rec.disable_price_reviews:
-                    # Check if last_purchase_margin is within threshold
-                    if rec.enable_margin_threshold:
-                        if (
-                            last_purchase_margin < rec.margin_min
-                            or last_purchase_margin > rec.margin_max
-                        ):
-                            # If outside of threshold then create/update review
-                            self._create_or_update_price_review(rec)
-
-                    # Otherwise if enabled threshold not set then create/update review
-                    elif not rec.enable_margin_threshold:
+            # If margin compute didn't come from a validated review,
+            # then check if a review is needed.
+            if (
+                (margin_changed or from_threshold)
+                and not from_review
+                and not rec.disable_price_reviews
+            ):
+                # Check if last_purchase_margin is within threshold
+                if rec.enable_margin_threshold:
+                    if (
+                        last_purchase_margin < rec.margin_min
+                        or last_purchase_margin > rec.margin_max
+                    ):
+                        # If outside of threshold then create/update review
                         self._create_or_update_price_review(rec)
+
+                # Otherwise if enabled threshold not set then create/update review
+                elif not rec.enable_margin_threshold:
+                    self._create_or_update_price_review(rec)
 
     @api.model
     def _create_or_update_price_review(self, rec):
@@ -224,3 +230,13 @@ class ProductTemplate(models.Model):
                 }
             )
             new_review.onchange_product_id()
+
+    def write(self, vals):
+        """When the Min or Max threshold values change, this might need to trigger
+        a price review. This will trigger the _compute_last_purchase_margin to
+        check and update/create one if needed."""
+        res = super().write(vals)
+        for rec in self:
+            if "margin_min" in vals or "margin_max" in vals:
+                rec._compute_last_purchase_margin(from_threshold=True)
+        return res
