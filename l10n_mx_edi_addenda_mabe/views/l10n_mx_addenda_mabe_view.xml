@@ -2,7 +2,6 @@
     <template id="l10n_mx_edi_addenda_mabe" name="Addenda Mabe">
         <mabe:Factura
             xmlns:mabe="http://recepcionfe.mabempresa.com/cfd/addenda/v1"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
             xsi:schemaLocation="http://recepcionfe.mabempresa.com/cfd/addenda/v1 http://recepcionfe.mabempresa.com/cfd/addenda/v1/mabev1.xsd"
             version="1.0"
             tipoDocumento="FACTURA"
@@ -14,15 +13,15 @@
         >
             <mabe:Moneda
                 t-att-tipoMoneda="record.currency_id.name"
-                t-att-tipoCambio="record.currency_id.inverse_rate"
-                t-att-importeConLetra="record.mabe_amount_with_letter"
+                t-att-tipoCambio="record.currency_id.rate"
+                t-att-importeConLetra="record.mabe_amount_with_letter or 'NA'"
             />
-            <mabe:Proveedor t-att-codigo="record.partner_id.ref" />
+            <mabe:Proveedor t-att-codigo="record.partner_id.ref or 'NA'" />
             <mabe:Entrega
                 t-att-plantaEntrega="record.partner_shipping_id.mabe_plant_code"
                 t-att-calle="record.partner_shipping_id.street_name"
                 t-att-noExterior="record.partner_shipping_id.street_number"
-                t-att-noInterior="record.partner_shipping_id.street_number2"
+                t-att-noInterior="record.partner_shipping_id.street_number2 or 'NA'"
                 t-att-codigoPostal="record.partner_shipping_id.zip"
             />
             <mabe:Detalles>
@@ -35,9 +34,9 @@
                         t-att-unidad="move_line.product_uom_id.name"
                         t-att-cantidad="move_line.quantity"
                         t-att-precioSinIva="move_line.price_unit"
-                        t-att-precioConIva="move_line.price_unit * 1.16"
+                        t-att-precioConIva="round(move_line.price_unit * 1.16)"
                         t-att-importeSinIva="move_line.price_subtotal"
-                        t-att-importeConIva="move_line.price_subtotal * 1.16"
+                        t-att-importeConIva="round(move_line.price_subtotal * 1.16)"
                     />
                     <t t-set="i" t-value="i+1" />
                 </t>
