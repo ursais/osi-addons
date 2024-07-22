@@ -51,8 +51,10 @@ class ProductProduct(models.Model):
                         [("product_id", "=", product.id)], limit=1
                     )
 
-                    # Archive the Variant's BoM
+                    # Temporarily deactivate the variant's BoM
                     variant_bom.write({"active": False})
+
+                    # Create a temporary session to generate a new BoM without committing
                     session = config_session_.create_get_session(
                         product.product_tmpl_id.id
                     )
@@ -77,29 +79,40 @@ class ProductProduct(models.Model):
                     )
                     new_variant_bom.version = variant_bom.version + 1
 
-                    # Compare BOM lines
-                    diff = False
-                    bom_lines1 = variant_bom.bom_line_ids.sorted(
-                        key=lambda x: x.product_id.id
-                    )
-                    bom_lines2 = new_variant_bom.bom_line_ids.sorted(
-                        key=lambda x: x.product_id.id
-                    )
-
-                    if len(bom_lines1) != len(bom_lines2):
-                        diff = True
-
-                    for line1, line2 in zip(bom_lines1, bom_lines2):
-                        if (
-                            line1.product_id != line2.product_id
-                            or line1.product_qty != line2.product_qty
-                            or line1.operation_id != line2.operation_id
-                        ):
-                            diff = True
-
-                    if not diff:
+                    # Compare BOM lines before committing changes
+                    if self._compare_boms(variant_bom, new_variant_bom):
+                        # Keep the new BoM and deactivate the old one permanently
+                        new_variant_bom.version = variant_bom.version + 1
+                    else:
                         # Revert changes if no difference found
                         new_variant_bom.unlink()  # Delete the new BoM
-                        variant_bom.write({"active": True})  # Activate the original BoM
+                        variant_bom.write(
+                            {"active": True}
+                        )  # Reactivate the original BoM
+
+    def _compare_boms(self, bom1, bom2):
+        """Compare two Bills of Materials (BoMs) and return True if they are different,
+        False otherwise."""
+
+        # Sort BoM lines by product ID for both BoMs
+        bom_lines1 = bom1.bom_line_ids.sorted(key=lambda x: x.product_id.id)
+        bom_lines2 = bom2.bom_line_ids.sorted(key=lambda x: x.product_id.id)
+
+        # If the number of lines in both BoMs is different, they are different
+        if len(bom_lines1) != len(bom_lines2):
+            return True
+
+        # Compare each corresponding line in both BoMs
+        for line1, line2 in zip(bom_lines1, bom_lines2):
+            # Check if product, quantity, or operation differs
+            if (
+                line1.product_id != line2.product_id
+                or line1.product_qty != line2.product_qty
+                or line1.operation_id != line2.operation_id
+            ):
+                return True
+
+        # If all lines are identical, the BoMs are the same
+        return False
 
     # END #########
