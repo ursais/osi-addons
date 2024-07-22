@@ -1,0 +1,25 @@
+<odoo>
+
+    <record id="mrp_bom_tree_view_inherit_rebuild" model="ir.ui.view">
+        <field name="name">mrp.bom.tree.view.inherit.rebuild</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_tree_view" />
+        <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="scaffolding_bom" optional="show" />
+            </field>
+        </field>
+    </record>
+
+    <record id="mrp_bom_form_view_inherit_rebuild" model="ir.ui.view">
+        <field name="name">mrp.bom.form.view.inherit.rebuild</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view" />
+        <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="scaffolding_bom" />
+            </field>
+        </field>
+    </record>
+
+</odoo>
