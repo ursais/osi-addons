@@ -11,8 +11,8 @@
         >
             <S:Moneda t-att-tipoMoneda="record.currency_id.name" />
             <S:Proveedor
-                t-att-noProveedor="record.audi_supplier_number"
-                t-att-eMail="record.audi_supplier_email"
+                t-att-noProveedor="record.partner_id.audi_supplier_number"
+                t-att-eMail="record.partner_id.audi_supplier_email"
             />
             <S:Referencias t-att-unidadNegocio="record.audi_business_unit" />
             <S:Solicitante t-att-eMail="record.audi_applicant_email" />
