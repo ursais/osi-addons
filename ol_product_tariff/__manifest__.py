@@ -19,10 +19,13 @@
     ],
     # always loaded
     "data": [
-        "data/tariff_code.xml",
         "views/product_views.xml",
         "views/tariff_views.xml",
         "security/ir_rule.xml",
         "security/ir.model.access.csv",
     ],
+    # only loaded in demo mode
+    "demo": [
+        "demo/tariff_code.xml",
+    ]
 }
