@@ -252,13 +252,17 @@ class ProductConfigurator(models.TransientModel):
 
         tobe_remove_attr = []
         if (
-            self.env.context.get("is_action_previous")
+            (
+                self.env.context.get("is_action_previous")
+                or self.env.context.get("is_preset")
+            )
             and config_session_id
             and config_session_id.value_ids
         ):
             session_attrb = config_session_id.value_ids
             product_tmpl_attrb = config_session_id.product_tmpl_id.attribute_line_ids
             dynamic_fields2 = {}
+            restricted_attrs = []
             for tmpl_attr in product_tmpl_attrb:
                 if not tmpl_attr.custom:
                     sess_attrs = session_attrb.filtered(
@@ -266,6 +270,22 @@ class ProductConfigurator(models.TransientModel):
                     )
                     for sess_attr in sess_attrs:
                         dyn_key = "__attribute_" + str(sess_attr.attribute_id.id)
+                        product_tmpl_configs_attrs = (
+                            config_session_id.product_tmpl_id.config_line_ids.filtered(
+                                lambda line: line.attribute_line_id.attribute_id.id
+                                == sess_attr.attribute_id.id
+                            )
+                        )
+                        product_tmpl_restricted_attrs = (
+                            config_session_id.product_tmpl_id.config_line_ids.mapped(
+                                "domain_id.domain_line_ids"
+                            ).mapped("attribute_id")
+                        )
+                        restricted_attrs = (
+                            product_tmpl_configs_attrs.ids
+                            + product_tmpl_restricted_attrs.ids
+                        )
+                        restricted_attrs = list(set(restricted_attrs))
                         if (
                             sess_attr
                             and sess_attr.attribute_id.id
@@ -278,10 +298,18 @@ class ProductConfigurator(models.TransientModel):
                         else:
                             if sess_attr and dyn_key in dynamic_fields:
                                 tobe_remove_attr.append(sess_attr.id)
+                            if (
+                                self._context.get("is_m2m", False)
+                                and dyn_key in dynamic_fields
+                            ):
+                                remove_value = dynamic_fields.get(dyn_key)
+                                m2m_attrb_value = session_attrb.filtered(
+                                    lambda value: value.id in remove_value
+                                )
+                                tobe_remove_attr.append(m2m_attrb_value.id)
             origin_updated_fields = set(dynamic_fields)
             to_updated_fields = set(dynamic_fields2)
             updated_fields = to_updated_fields - origin_updated_fields
-
             for fi in updated_fields:
                 dynamic_fields.update({fi: None})
                 vals.update({fi: None})
@@ -503,6 +531,9 @@ class ProductConfigurator(models.TransientModel):
         pta_value_ids = preset_id.product_template_attribute_value_ids
         attr_value_ids = pta_value_ids.mapped("product_attribute_value_id")
         self.value_ids = attr_value_ids
+        self.price = (
+            preset_id and preset_id.lst_price or self.product_tmpl_id.list_price
+        )
 
     @api.model
     def get_field_default_attrs(self):
@@ -1091,6 +1122,7 @@ class ProductConfigurator(models.TransientModel):
                 "differentiator": ctx.get("differentiator", 1) + 1,
                 "is_product_configurator": True,
                 "is_action_previous": False,
+                "is_preset": self.product_preset_id and True or False,
             }
         )
         if wizard:

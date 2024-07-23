@@ -342,7 +342,7 @@ class ProductTemplate(models.Model):
                 set(self.attribute_line_ids.ids)
                 - set(self.config_step_line_ids.attribute_line_ids.ids)
             )
-            if miss_attrs:
+            if miss_attrs and self.config_step_line_ids:
                 attrs = [
                     x.attribute_id.name
                     for x in self.env["product.template.attribute.line"].browse(
