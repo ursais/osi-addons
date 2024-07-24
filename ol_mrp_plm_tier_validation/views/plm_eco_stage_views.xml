@@ -16,7 +16,7 @@
         <field name="model">mrp.eco.stage</field>
         <field name="inherit_id" ref="mrp_plm.mrp_eco_stage_view_tree" />
         <field name="arch" type="xml">
-            <field name="final_stage" position="after">
+            <field name="type_ids" position="after">
                 <field name="is_approval_stage" />
             </field>
         </field>
