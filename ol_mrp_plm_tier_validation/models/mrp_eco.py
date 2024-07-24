@@ -49,20 +49,42 @@ class MrpEco(models.Model):
     # END #######
 
     def write(self, vals):
-        """Base Tier Validation does not work with Stages, only States :-(
+        """
+        Override the write method to handle state transitions based on stage changes.
+        Base Tier Validation does not work with Stages, only States :-(
         The base_tier_validation uses the 'state' field on classes, the states are
         defined in _state_from and _state_to in order to trigger the validation checks.
-        Workaround is to signal state transition adding it to the write values"""
+        Workaround is to signal state transition adding it to the write values but we
+        only care to change the state if the new stage is set as an approval stage.
+        We set the state back afterwards to so it's ready for the next stage change."""
         if "stage_id" in vals:
-            stage_id = vals.get("stage_id")
-            stage = self.env["mrp.eco.stage"].browse(stage_id)
-            vals["state"] = stage.state
-        res = super().write(vals)
-        if "stage_id" in vals and vals.get("stage_id") in self._state_from:
-            # If stage is being written and is in the _state_from then that means
-            # validations need to be reset so trigger the restart_validation method,
-            # contained in base_tier_validation and clears reviews.
-            self.restart_validation()
+            # Get the new stage based on the 'stage_id' value
+            new_stage_id = self.env["mrp.eco.stage"].browse(vals.get("stage_id"))
+            # Store the current state
+            current_state = self.state
+            # Determine if the transition is to the next stage
+            to_next_stage = self.stage_id.sequence < new_stage_id.sequence
+            approved = False
+
+            # If the 'state' is not in vals, and we are transitioning to the next stage
+            # and the new stage requires approval, set the state to 'approved' to
+            # trigger the base tier valdionation state change methods to check for
+            # tier validation
+            if "state" not in vals and to_next_stage and new_stage_id.is_approval_stage:
+                vals["state"] = "approved"
+                approved = True
+
+            # Call the super class's write method with the modified vals
+            res = super().write(vals)
+
+            # If we transitioned to the next stage and set the state to approved,
+            # restore the original state
+            if to_next_stage and approved:
+                self.state = current_state
+        else:
+            # If 'stage_id' is not in vals, just call the super class's write method
+            res = super().write(vals)
+
         return res
 
     @api.depends("stage_id")

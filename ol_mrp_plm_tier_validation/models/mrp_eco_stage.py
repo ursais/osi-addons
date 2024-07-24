@@ -10,22 +10,10 @@ class MrpEcoStage(models.Model):
 
     # COLUMNS ###
 
-    state = fields.Selection(
-        [
-            ("confirmed", "To Do"),
-            ("progress", "In Progress"),
-            ("rebase", "Rebase"),
-            ("conflict", "Conflict"),
-            ("done", "Done"),
-            ("approved", "Approved"),
-            ("cancel", "Canceled"),
-        ],
-        string="Approval State",
-        default="progress",
-        required=True,
+    is_approval_stage = fields.Boolean(
+        string="Approval Stage",
         help="""Used by tier validations that need to trigger based on stage changes.
-         Set to 'to_approve'Set to 'Approved' if the ECO stage requires approval
-         before entering this stage.""",
+         Enable if tier validations need checked if the ECO moves to this stage.""",
     )
     company_id = fields.Many2one(
         "res.company", "Company", default=lambda self: self.env.company
