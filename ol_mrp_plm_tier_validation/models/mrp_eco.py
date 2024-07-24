@@ -56,13 +56,21 @@ class MrpEco(models.Model):
         if "stage_id" in vals:
             stage_id = vals.get("stage_id")
             stage = self.env["mrp.eco.stage"].browse(stage_id)
-            vals["state"] = stage.state
+            current_state = self.state
+            current_stage = self.stage_id
+            to_next_stage = current_stage.sequence < stage.sequence
+            if to_next_stage and stage.approval_state:
+                vals["state"] = "approved"
         res = super().write(vals)
-        if "stage_id" in vals and vals.get("stage_id") in self._state_from:
-            # If stage is being written and is in the _state_from then that means
-            # validations need to be reset so trigger the restart_validation method,
-            # contained in base_tier_validation and clears reviews.
-            self.restart_validation()
+        if "stage_id" in vals:
+            to_next_stage = current_stage.sequence < stage.sequence
+            if to_next_stage:
+                self.state = current_state
+            # if vals.get("state") in self._state_from:
+            #     # If stage is being written and is in the _state_from then that means
+            #     # validations need to be reset so trigger the restart_validation method,
+            #     # contained in base_tier_validation and clears reviews.
+            #     self.restart_validation()
         return res
 
     @api.depends("stage_id")

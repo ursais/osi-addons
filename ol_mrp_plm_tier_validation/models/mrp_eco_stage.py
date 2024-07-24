@@ -10,19 +10,25 @@ class MrpEcoStage(models.Model):
 
     # COLUMNS ###
 
-    state = fields.Selection(
-        [
-            ("confirmed", "To Do"),
-            ("progress", "In Progress"),
-            ("rebase", "Rebase"),
-            ("conflict", "Conflict"),
-            ("done", "Done"),
-            ("approved", "Approved"),
-            ("cancel", "Canceled"),
-        ],
+    # state = fields.Selection(
+    #     [
+    #         ("confirmed", "To Do"),
+    #         ("progress", "In Progress"),
+    #         ("rebase", "Rebase"),
+    #         ("conflict", "Conflict"),
+    #         ("done", "Done"),
+    #         ("approved", "Approved"),
+    #         ("cancel", "Canceled"),
+    #     ],
+    #     string="Approval State",
+    #     default="progress",
+    #     required=True,
+    #     help="""Used by tier validations that need to trigger based on stage changes.
+    #      Set to 'to_approve'Set to 'Approved' if the ECO stage requires approval
+    #      before entering this stage.""",
+    # )
+    approval_state = fields.Boolean(
         string="Approval State",
-        default="progress",
-        required=True,
         help="""Used by tier validations that need to trigger based on stage changes.
          Set to 'to_approve'Set to 'Approved' if the ECO stage requires approval
          before entering this stage.""",

@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="mrp_plm.mrp_eco_stage_view_form" />
         <field name="arch" type="xml">
             <field name="type_ids" position="after">
-                <field name="state" />
+                <field name="approval_state" />
             </field>
         </field>
     </record>
@@ -17,7 +17,7 @@
         <field name="inherit_id" ref="mrp_plm.mrp_eco_stage_view_tree" />
         <field name="arch" type="xml">
             <field name="type_ids" position="after">
-                <field name="state" />
+                <field name="approval_state" />
             </field>
         </field>
     </record>
