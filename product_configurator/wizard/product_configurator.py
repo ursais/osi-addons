@@ -245,16 +245,17 @@ class ProductConfigurator(models.TransientModel):
                 dynamic_fields.update({k: available_val_ids_m2m})
                 vals[k] = [[6, 0, available_val_ids_m2m]]
             elif v not in available_val_ids:
-                dynamic_fields.update({k: None})
-                vals[k] = None
+                dynamic_fields.update({k: []})
+                vals[k] = []
+
             else:
                 vals[k] = v
-
         tobe_remove_attr = []
         if (
             (
                 self.env.context.get("is_action_previous")
                 or self.env.context.get("is_preset")
+                or self.env.context.get("is_m2m")
             )
             and config_session_id
             and config_session_id.value_ids
@@ -287,32 +288,54 @@ class ProductConfigurator(models.TransientModel):
                         )
                         restricted_attrs = list(set(restricted_attrs))
                         if (
-                            sess_attr
-                            and sess_attr.attribute_id.id
-                            in config_session_id.product_tmpl_id.config_line_ids.mapped(
-                                "attribute_line_id.attribute_id"
-                            ).ids
+                            self.env.context.get("is_action_previous")
+                            or self.env.context.get("is_preset")
+                            and not self._context.get("is_m2m", False)
                         ):
-                            tobe_remove_attr.append(sess_attr.id)
-                            dynamic_fields2.update({dyn_key: sess_attr.id})
-                        else:
-                            if sess_attr and dyn_key in dynamic_fields:
-                                tobe_remove_attr.append(sess_attr.id)
                             if (
-                                self._context.get("is_m2m", False)
-                                and dyn_key in dynamic_fields
+                                sess_attr
+                                and sess_attr.attribute_id.id
+                                in config_session_id.product_tmpl_id.config_line_ids.mapped(
+                                    "attribute_line_id.attribute_id"
+                                ).ids
                             ):
-                                remove_value = dynamic_fields.get(dyn_key)
-                                m2m_attrb_value = session_attrb.filtered(
-                                    lambda value: value.id in remove_value
-                                )
-                                tobe_remove_attr.append(m2m_attrb_value.id)
+                                if dynamic_fields.get(dyn_key) == None or (
+                                    dynamic_fields.get(dyn_key)
+                                    and int(dynamic_fields.get(dyn_key))
+                                    not in session_attrb.ids
+                                ):
+                                    tobe_remove_attr.append(sess_attr.id)
+                                dynamic_fields2.update({dyn_key: sess_attr.id})
+                            else:
+                                if (
+                                    sess_attr
+                                    and dyn_key in dynamic_fields
+                                    and dynamic_fields.get(dyn_key)
+                                    and (
+                                        int(dynamic_fields.get(dyn_key))
+                                        not in session_attrb.ids
+                                        or dynamic_fields.get(dyn_key) == None
+                                    )
+                                ):
+                                    tobe_remove_attr.append(sess_attr.id)
+                        elif (
+                            self._context.get("is_m2m", False)
+                            and dyn_key in dynamic_fields
+                        ):
+                            remove_value = dynamic_fields.get(dyn_key)
+                            if isinstance(remove_value, int):
+                                remove_value = [remove_value]
+                            m2m_attrb_values = session_attrb.filtered(
+                                lambda value: value.id in remove_value
+                            )
+                            if m2m_attrb_values:
+                                tobe_remove_attr.extend(m2m_attrb_values.ids)
             origin_updated_fields = set(dynamic_fields)
             to_updated_fields = set(dynamic_fields2)
             updated_fields = to_updated_fields - origin_updated_fields
             for fi in updated_fields:
-                dynamic_fields.update({fi: None})
-                vals.update({fi: None})
+                dynamic_fields.update({fi: []})
+                vals.update({fi: []})
         final_cfg_val_ids = list(dynamic_fields.values())
         vals.update(
             self.with_context(tobe_remove_attr=tobe_remove_attr).get_onchange_vals(
@@ -379,7 +402,7 @@ class ProductConfigurator(models.TransientModel):
             cfg_step = self.env["product.config.step.line"]
 
         dynamic_fields = {k: v for k, v in values.items() if k.startswith(field_prefix)}
-        self.dyn_field_2_value = False
+        # self.dyn_field_2_value = False
         # Get the unstored values from the client view
         for k, v in dynamic_fields.items():
             attr_id = int(k.split(field_prefix)[1])

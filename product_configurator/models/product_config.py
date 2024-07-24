@@ -539,7 +539,6 @@ class ProductConfigSession(models.Model):
             attr_id = attr_line.attribute_id.id
             field_name = field_prefix + str(attr_id)
             custom_field_name = custom_field_prefix + str(attr_id)
-
             if field_name not in vals and custom_field_name not in vals:
                 continue
 
@@ -551,12 +550,22 @@ class ProductConfigSession(models.Model):
                     if not vals[field_name]:
                         field_val = None
                     else:
-                        field_val = []
+                        value_ids = self.value_ids.filtered(
+                            lambda value: value.attribute_id.id
+                            == attr_line.attribute_id.id
+                        )
+                        field_val = value_ids and value_ids.ids or []
                         for field_vals in vals[field_name]:
-                            if field_vals[0] == 6:
+                            if field_vals and field_vals[0] == 6:
                                 field_val += field_vals[2] or []
-                            elif field_vals[0] == 4:
+                            elif field_vals and field_vals[0] == 4:
                                 field_val.append(field_vals[1])
+                            elif (
+                                field_vals
+                                and field_vals[0] == 3
+                                and field_vals[1] in field_val
+                            ):
+                                field_val.remove(field_vals[1])
                         # field_val = [
                         #     i[1] for i in vals[field_name] if vals[field_name][0]
                         # ] or vals[field_name][0][1]
