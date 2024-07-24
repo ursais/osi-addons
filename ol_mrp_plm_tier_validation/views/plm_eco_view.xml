@@ -60,14 +60,14 @@
                     name="action_move_to_prev_stage"
                     type="object"
                     class="oe_highlight"
-                    invisible="not prev_stage_id"
+                    invisible="not prev_stage_id or state in ('done')"
                 />
                 <button
                     string="Next"
                     name="action_move_to_next_stage"
                     type="object"
                     class="oe_highlight"
-                    invisible="not next_stage_id"
+                    invisible="not next_stage_id or state in ('done')"
                 />
             </field>
             <field name="approval_ids" position="before">
