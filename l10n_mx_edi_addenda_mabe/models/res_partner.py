@@ -6,11 +6,11 @@ class ResPartner(models.Model):
 
     mabe_plant_code = fields.Selection(
         selection=[
-            ("S001", "[S001] - ESTUFAS 30\""),
+            ("S001", '[S001] - ESTUFAS 30"'),
             ("S002", "[S002] - GO GLOBAL SLP"),
             ("S004", "[S004] - FARGOS SLP"),
             ("S005", "[S005] - IKDS"),
-            ("S006", "[S006] - ESTUFAS 20\" & 24\""),
+            ("S006", '[S006] - ESTUFAS 20" & 24"'),
             ("R001", "[R001] - PLANTA CELAYA"),
             ("R007", "[R007] - REFACCIONES CEL"),
             ("R008", "[R008] - REFRIGERADORES CEL PT QC"),
@@ -33,7 +33,7 @@ class ResPartner(models.Model):
             ("C014", "[C014] - SLC MPT ELECTRONICA"),
             ("Q901", "[Q901] - CMABEID-ESTUFAS SLP"),
             ("Q902", "[Q902] - CMABEID- IKDS LEISER"),
-            ("Q903", "[Q903] - CMABEID- LEISER SLP ESTUFAS 20\" & 24\""),
+            ("Q903", '[Q903] - CMABEID- LEISER SLP ESTUFAS 20" & 24"'),
             ("Q904", "[Q904] - CMABEID-REFRIG. CLYA"),
             ("Q905", "[Q905] - CMABEID- LEISER REGRIGERAD CEL PT QC"),
             ("Q906", "[Q906] - CMABEID- LEISER CLY ANDROMEDA"),
@@ -161,6 +161,6 @@ class ResPartner(models.Model):
             ("T133", "[T133] - MODULO LOS MOCHIS"),
             ("T134", "[T134] - MODULO LA PAZ"),
             ("T135", "[T135] - Corporativo Serviplus"),
-            ("T136", "[T136] - ADR SAN LUIS POTOSI")
+            ("T136", "[T136] - ADR SAN LUIS POTOSI"),
         ]
     )
