@@ -3,6 +3,10 @@ from odoo import fields, models
 
 
 class TierValidationHistory(models.Model):
+    """
+    New object for tier review history on eco's.
+    """
+
     _name = "tier.validation.history"
 
     # COLUMNS ###

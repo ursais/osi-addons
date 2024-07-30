@@ -3,10 +3,17 @@ from odoo import models
 
 
 class TierReview(models.Model):
+    """
+    Add tier review history to eco's.
+    """
+
     _inherit = "tier.review"
+
+    # METHODS #########
 
     def write(self, vals):
         res = super().write(vals)
+        # Create a review history record when the review is rejected/approved.
         for rec in self:
             if (
                 "status" in vals
@@ -31,3 +38,5 @@ class TierReview(models.Model):
                         }
                     )
         return res
+
+    # END ######

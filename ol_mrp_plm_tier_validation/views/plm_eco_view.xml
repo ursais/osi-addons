@@ -23,7 +23,6 @@
         </field>
     </record>
 
-
     <record id="ol_mrp_eco_tier_validation_eco_tree" model="ir.ui.view">
         <field name="name">mrp.eco.tier.validation.inherit.tree</field>
         <field name="model">mrp.eco</field>
@@ -101,4 +100,5 @@
             </field>
         </field>
     </record>
+
 </odoo>
