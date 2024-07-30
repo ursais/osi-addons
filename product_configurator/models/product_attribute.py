@@ -433,9 +433,15 @@ class ProductAttributeValue(models.Model):
                     and self.env.context.get("field_name")
                     and wiz_id.domain_attr_ids
                     and wiz_id.domain_attr_2_ids
+                    and not self.env.context.get("is_m2m", False)
                 ):
                     attrs_split = self.env.context.get("field_name").split(field_prefix)
-                    if attrs_split and len(attrs_split) == 2 and not args[0][2]:
+                    if (
+                        attrs_split
+                        and len(attrs_split) == 2
+                        and args
+                        and not args[0][2]
+                    ):
                         attribute_id = int(attrs_split[1])
                         domain_attr_ids = wiz_id.domain_attr_ids.filtered(
                             lambda l: l.attribute_id.id == attribute_id
