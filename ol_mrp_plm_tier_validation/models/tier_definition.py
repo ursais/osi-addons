@@ -3,7 +3,13 @@ from odoo import api, models
 
 
 class TierDefinition(models.Model):
+    """
+    Add eco model to tier definitions.
+    """
+
     _inherit = "tier.definition"
+
+    # METHODS #########
 
     @api.model
     def _get_tier_validation_model_names(self):
@@ -11,3 +17,5 @@ class TierDefinition(models.Model):
         res = super()._get_tier_validation_model_names()
         res.append("mrp.eco")
         return res
+
+    # END ######

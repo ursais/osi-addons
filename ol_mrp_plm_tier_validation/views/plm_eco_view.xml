@@ -60,14 +60,14 @@
                     name="action_move_to_prev_stage"
                     type="object"
                     class="oe_highlight"
-                    invisible="not prev_stage_id or state in ('done')"
+                    invisible="not prev_stage_id or state in ('done') or not stage_id or stage_id.cancel_stage"
                 />
                 <button
                     string="Next"
                     name="action_move_to_next_stage"
                     type="object"
                     class="oe_highlight"
-                    invisible="not next_stage_id or state in ('done')"
+                    invisible="not next_stage_id or state in ('done') or not stage_id or stage_id.cancel_stage"
                 />
             </field>
             <field name="approval_ids" position="before">
@@ -86,6 +86,17 @@
                         <field name="comment" />
                     </tree>
                 </field>
+            </field>
+        </field>
+    </record>
+
+    <record id="ol_mrp_eco_tier_validation_eco_kanban" model="ir.ui.view">
+        <field name="name">mrp.eco.tier.validation.inherit.kanban</field>
+        <field name="model">mrp.eco</field>
+        <field name="inherit_id" ref="mrp_plm.mrp_eco_kanban" />
+        <field name="arch" type="xml">
+            <field name="stage_id" position="attributes">
+                <attribute name="readonly">1</attribute>
             </field>
         </field>
     </record>

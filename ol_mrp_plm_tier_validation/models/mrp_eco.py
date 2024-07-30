@@ -47,6 +47,7 @@ class MrpEco(models.Model):
     )
 
     # END #######
+    # METHODS #########
 
     def write(self, vals):
         """
@@ -89,31 +90,54 @@ class MrpEco(models.Model):
 
     @api.depends("stage_id")
     def _compute_prev_next_stage(self):
+        """Compute the previous and next stages based on the current stage's sequence.
+
+        This method is called whenever the `stage_id` field is changed. It determines
+        the previous and next stages for the current record (`rec`) by comparing the
+        sequence values of the stages. If the current stage is a cancel stage, the
+        previous and next stages are set to the canceled stage.
+        """
         for rec in self:
+            # Search for stages that belong to the same type and company as the current stage
             stages = self.env["mrp.eco.stage"].search(
                 [
                     ("type_ids", "in", rec.type_id.ids),
                     ("company_id", "=", rec.company_id.id),
                 ]
             )
+            # Filter stages with a sequence less than the current stage's sequence
             prev_stage = stages.filtered(
                 lambda stage: stage.sequence < rec.stage_id.sequence
             )
+            # Filter stages with a sequence greater than the current stage's sequence
             next_stage = stages.filtered(
                 lambda stage: stage.sequence > rec.stage_id.sequence
             )
+            # Set the previous stage to the one with the maximum sequence value
             rec.prev_stage_id = (
                 prev_stage and max(prev_stage, key=lambda s: s.sequence).id or False
             )
+            # Set the next stage to the one with the minimum sequence value
             rec.next_stage_id = (
                 next_stage and min(next_stage, key=lambda s: s.sequence).id or False
             )
 
     def action_move_to_prev_stage(self):
         for rec in self:
+            # Since we are going to a previous stage we need to restart validition
+            # in case new approvals will be needed.
             rec.restart_validation()
             rec.write({"stage_id": rec.prev_stage_id.id})
 
     def action_move_to_next_stage(self):
         for rec in self:
             rec.write({"stage_id": rec.next_stage_id.id})
+
+    def action_new_revision(self):
+        res = super(MrpEco, self).action_new_revision()
+        # Set stage to next stage when new revision button is pressed.
+        for rec in self:
+            rec.write({"stage_id": rec.next_stage_id.id})
+        return res
+
+    # END #######

@@ -3,10 +3,11 @@ from odoo import fields, models
 
 
 class MrpEcoStage(models.Model):
-    _inherit = "mrp.eco.stage"
     """
     Add stage to PLM ECO Stage for Tier Validation Usage
     """
+
+    _inherit = "mrp.eco.stage"
 
     # COLUMNS ###
 
