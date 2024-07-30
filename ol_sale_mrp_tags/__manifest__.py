@@ -9,9 +9,14 @@
     "category": "Stock",
     "version": "17.0.1.0.0",
     # any module necessary for this one to work correctly
-    "depends": ["sale_mrp", "sale_stock"],
+    "depends": [
+        "sale_mrp",
+        "sale_stock",
+    ],
     # always loaded
-    "data": ["views/mrp_production_view.xml",],
+    "data": [
+        "views/mrp_production_view.xml",
+    ],
     "application": False,
     "installable": True,
 }
