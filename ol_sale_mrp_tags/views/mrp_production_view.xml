@@ -1,0 +1,19 @@
+<odoo>
+
+    <record id="mrp_production_form_view_inherit_ol_sale_mrp_tags" model="ir.ui.view">
+        <field name="name">mrp.production.inherit.form</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="after">
+                <field name="mrp_sale_id" invisible="1"/>
+                <field
+                    name="tag_ids"
+                    widget="many2many_tags"
+                    options="{'color_field': 'color'}"
+                />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
