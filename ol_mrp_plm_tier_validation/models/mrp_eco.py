@@ -45,11 +45,6 @@ class MrpEco(models.Model):
         store=True,
         string="Next Stage",
     )
-    stage_canceled_on = fields.Many2one(
-        comodel_name="mrp.eco.stage",
-        store=True,
-        string="Stage Canceled On",
-    )
 
     # END #######
 
@@ -79,10 +74,6 @@ class MrpEco(models.Model):
                 vals["state"] = "approved"
                 approved = True
 
-            # If going to canceled stage, save current stage so we can return
-            if new_stage_id.cancel_stage:
-                vals["stage_canceled_on"] = self.stage_id.id
-
             # Call the super class's write method with the modified vals
             res = super().write(vals)
 
@@ -99,28 +90,24 @@ class MrpEco(models.Model):
     @api.depends("stage_id")
     def _compute_prev_next_stage(self):
         for rec in self:
-            if not rec.stage_id.cancel_stage:
-                stages = self.env["mrp.eco.stage"].search(
-                    [
-                        ("type_ids", "in", rec.type_id.ids),
-                        ("company_id", "=", rec.company_id.id),
-                    ]
-                )
-                prev_stage = stages.filtered(
-                    lambda stage: stage.sequence < rec.stage_id.sequence
-                )
-                next_stage = stages.filtered(
-                    lambda stage: stage.sequence > rec.stage_id.sequence
-                )
-                rec.prev_stage_id = (
-                    prev_stage and max(prev_stage, key=lambda s: s.sequence).id or False
-                )
-                rec.next_stage_id = (
-                    next_stage and min(next_stage, key=lambda s: s.sequence).id or False
-                )
-            else:
-                rec.prev_stage_id = rec.stage_canceled_on.id
-                rec.next_stage_id = rec.stage_canceled_on.id
+            stages = self.env["mrp.eco.stage"].search(
+                [
+                    ("type_ids", "in", rec.type_id.ids),
+                    ("company_id", "=", rec.company_id.id),
+                ]
+            )
+            prev_stage = stages.filtered(
+                lambda stage: stage.sequence < rec.stage_id.sequence
+            )
+            next_stage = stages.filtered(
+                lambda stage: stage.sequence > rec.stage_id.sequence
+            )
+            rec.prev_stage_id = (
+                prev_stage and max(prev_stage, key=lambda s: s.sequence).id or False
+            )
+            rec.next_stage_id = (
+                next_stage and min(next_stage, key=lambda s: s.sequence).id or False
+            )
 
     def action_move_to_prev_stage(self):
         for rec in self:
