@@ -26,7 +26,7 @@
                         t-att-codigoImpuesto="record.audi_tax_code"
                         t-att-cantidad="move_line.quantity"
                         t-att-posicion="i"
-                        t-att-montoLinea="move_line.price_unit * move_line.quantity"
+                        t-att-montoLinea="round(move_line.price_unit * move_line.quantity)"
                         t-att-unidadMedida="move_line.product_uom_id.name"
                     >
                         <t t-set="i" t-value="i+1" />
