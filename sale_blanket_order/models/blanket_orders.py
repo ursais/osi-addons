@@ -476,22 +476,25 @@ class BlanketOrderLine(models.Model):
         comodel_name="product.pricelist.item", compute="_compute_pricelist_item_id"
     )
 
-    def name_get(self):
-        result = []
+    @api.depends(
+        "order_id.name", "date_schedule", "remaining_uom_qty", "product_uom.name"
+    )
+    @api.depends_context("from_sale_order")
+    def _compute_display_name(self):
         if self.env.context.get("from_sale_order"):
             for record in self:
-                res = "[%s]" % record.order_id.name
+                name = "[%s]" % record.order_id.name
                 if record.date_schedule:
                     formatted_date = format_date(record.env, record.date_schedule)
-                    res += " - {}: {}".format(_("Date Scheduled"), formatted_date)
-                res += " ({}: {} {})".format(
+                    name += " - {}: {}".format(_("Date Scheduled"), formatted_date)
+                name += " ({}: {} {})".format(
                     _("remaining"),
                     record.remaining_uom_qty,
                     record.product_uom.name,
                 )
-                result.append((record.id, res))
-            return result
-        return super().name_get()
+                record.display_name = name
+        else:
+            return super()._compute_display_name()
 
     def _get_real_price_currency(self, product, rule_id, qty, uom, pricelist_id):
         """Retrieve the price before applying the pricelist
@@ -555,14 +558,16 @@ class BlanketOrderLine(models.Model):
 
         return product[field_name] * uom_factor * cur_factor, currency_id.id
 
-    def _get_display_price(self, product):
+    def _get_display_price(self):
+        # Copied and adapted from the sale module
         self.ensure_one()
+        self.product_id.ensure_one()
 
         pricelist_price = self.pricelist_item_id._compute_price(
             product=self.product_id,
             quantity=self.original_uom_qty or 1.0,
             uom=self.product_uom,
-            date=self.order_id.validity_date,
+            date=fields.Date.today(),
             currency=self.currency_id,
         )
 
@@ -579,11 +584,7 @@ class BlanketOrderLine(models.Model):
         return max(base_price, pricelist_price)
 
     def _get_pricelist_price_before_discount(self):
-        """Compute the price used as base for the pricelist price computation.
-
-        :return: the product sales price in the order currency (without taxes)
-        :rtype: float
-        """
+        # Copied and adapted from the sale module
         self.ensure_one()
         self.product_id.ensure_one()
 
@@ -591,7 +592,7 @@ class BlanketOrderLine(models.Model):
             product=self.product_id,
             quantity=self.product_uom_qty or 1.0,
             uom=self.product_uom,
-            date=self.order_id.date_order,
+            date=fields.Date.today(),
             currency=self.currency_id,
         )
 
@@ -607,7 +608,7 @@ class BlanketOrderLine(models.Model):
             if self.order_id.partner_id and float_is_zero(
                 self.price_unit, precision_digits=precision
             ):
-                self.price_unit = self._get_display_price(self.product_id)
+                self.price_unit = self._get_display_price()
             if self.product_id.code:
                 name = f"[{name}] {self.product_id.code}"
             if self.product_id.description_sale:
@@ -660,6 +661,7 @@ class BlanketOrderLine(models.Model):
 
     @api.depends("product_id", "product_uom", "original_uom_qty")
     def _compute_pricelist_item_id(self):
+        # Copied and adapted from the sale module
         for line in self:
             if (
                 not line.product_id
@@ -672,7 +674,7 @@ class BlanketOrderLine(models.Model):
                     line.product_id,
                     quantity=line.original_uom_qty or 1.0,
                     uom=line.product_uom,
-                    date=line.order_id.validity_date,
+                    date=fields.Date.today(),
                 )
 
     def _validate(self):
