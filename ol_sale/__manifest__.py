@@ -1,4 +1,3 @@
-# pylint: disable=pointless-statement
 {
     "name": "OnLogic Sale customization",
     "summary": "Sale modules related customization",
@@ -9,7 +8,12 @@
     "category": "Sale",
     "version": "17.0.0.1.0",
     # any module necessary for this one to work correctly
-    "depends": ["sale_management","product_state"],
+    "depends": [
+        "sale_management",
+        "product_state",
+    ],
     # always loaded
-    "data": ["views/sale_order_view.xml"],
+    "data": [
+        "views/sale_order_view.xml",
+    ],
 }

@@ -41,7 +41,7 @@
                     />
                     <button
                         name="set_to_draft"
-                        invisible="state != ['expired', 'done']"
+                        invisible="state not in ['expired', 'done']"
                         string="To Draft"
                         class="btn-secondary"
                         type="object"
@@ -84,7 +84,7 @@
                             type="object"
                             name="action_view_sale_blanket_order_line"
                             class="oe_stat_button"
-                            invisible="line_count == 0"
+                            invisible="not line_count"
                             icon="fa-list"
                         >
                             <field name="line_count" widget="statinfo" string="Lines" />
@@ -143,8 +143,8 @@
                                     <field name="sequence" widget="handle" />
                                     <field
                                         name="product_id"
-                                        required="display_type == False"
-                                        invisible="display_type == True"
+                                        required="not display_type"
+                                        column_invisible="display_type"
                                         context="{
                                             'fld': 'product_id',
                                             'partner_id': parent.partner_id,
@@ -176,8 +176,8 @@
                                             'quantity': original_uom_qty,
                                             'company_id': parent.company_id
                                         }"
-                                        required="display_type == False"
-                                        invisible="display_type == True"
+                                        required="not display_type"
+                                        column_invisible="display_type"
                                     />
                                     <field
                                         name="product_uom"
@@ -191,8 +191,8 @@
                                     />
                                     <field
                                         name="price_unit"
-                                        required="display_type == False"
-                                        invisible="display_type == True"
+                                        required="not display_type"
+                                        column_invisible="display_type"
                                     />
                                     <field name="date_schedule" />
                                     <field name="ordered_uom_qty" optional="hide" />
@@ -205,13 +205,13 @@
                                         domain="[('type_tax_use','=','sale')]"
                                         context="{'default_type_tax_use': 'sale'}"
                                         options="{'no_create': True}"
-                                        required="display_type == False"
-                                        invisible="display_type == True"
+                                        required="not display_type"
+                                        column_invisible="display_type"
                                     />
                                     <field
                                         name="price_subtotal"
                                         widget="monetary"
-                                        invisible="display_type == True"
+                                        column_invisible="display_type"
                                     />
                                     <field name="company_id" invisible="1" />
                                 </tree>
@@ -271,7 +271,7 @@
                                     <t groups="base.group_multi_company">
                                         <field
                                             name="analytic_account_id"
-                                            readonly="sale_count != 0 or state != 'draft'"
+                                            readonly="sale_count != 0 and state != 'draft'"
                                             groups="analytic.group_analytic_accounting"
                                             force_save="1"
                                         />

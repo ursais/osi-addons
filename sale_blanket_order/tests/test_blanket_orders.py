@@ -99,7 +99,7 @@ class TestSaleBlanketOrders(common.TransactionCase):
         blanket_order.line_ids[0].sudo().onchange_product()
         blanket_order.pricelist_id.discount_policy = "with_discount"
         blanket_order.line_ids[0].sudo().onchange_product()
-        blanket_order.line_ids[0].sudo()._get_display_price(self.product)
+        blanket_order.line_ids[0].sudo()._get_display_price()
 
         self.assertEqual(blanket_order.state, "draft")
 
