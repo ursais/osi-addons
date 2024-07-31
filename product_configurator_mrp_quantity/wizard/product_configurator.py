@@ -16,6 +16,40 @@ class ProductConfigurator(models.TransientModel):
             "qty_field": "__qty_",
         }
 
+    def get_form_vals(
+        self,
+        dynamic_fields,
+        domains,
+        cfg_val_ids=None,
+        product_tmpl_id=None,
+        config_session_id=None,
+    ):
+        result = super().get_form_vals(
+            dynamic_fields,
+            domains,
+            cfg_val_ids=cfg_val_ids,
+            product_tmpl_id=product_tmpl_id,
+            config_session_id=config_session_id,
+        )
+        field_prefix = self._prefixes.get("field_prefix")
+        qty_prefix = self._prefixes.get("qty_field")
+        new_val = {}
+        product_tmpl_attrb_value = self.env["product.template.attribute.value"]
+        for k in result:
+            if k.startswith(field_prefix):
+                product_attrs = product_tmpl_attrb_value.search(
+                    [
+                        ("product_tmpl_id", "=", self.product_tmpl_id.id),
+                        ("product_attribute_value_id", "=", int(result.get(k))),
+                        ("is_qty_required", "=", True),
+                    ]
+                )
+                if product_attrs:
+                    qty_field_name = qty_prefix + str(product_attrs.attribute_id.id)
+                    new_val[qty_field_name] = str(product_attrs.default_qty)
+        result.update(new_val)
+        return result
+
     @api.model
     def fields_get(self, allfields=None, write_access=True, attributes=None):
         qty_field_prefix = self._prefixes.get("qty_field")
@@ -38,12 +72,12 @@ class ProductConfigurator(models.TransientModel):
         default_attrs = self.get_field_default_attrs()
 
         attribute_lines = wiz.product_tmpl_id.attribute_line_ids
+        attribute_value_obj = self.env["product.template.attribute.value"]
         for line in attribute_lines:
             attribute = line.attribute_id
             value_ids = line.value_ids.ids
             if line.is_qty_required:
                 selection_vals = [(False, "")]
-                attribute_value_obj = self.env["product.template.attribute.value"]
                 atrr_values = attribute_value_obj.search(
                     [("attribute_line_id", "=", line.id)]
                 )
