@@ -57,6 +57,18 @@ class MrpBom(models.Model):
         readonly=True,
     )
 
+    @api.model
+    def default_get(self, val_list):
+        result = super().default_get(val_list)
+        if result.get("product_tmpl_id"):
+            product_tmpl_id = self.env["product.template"].browse(
+                result.get("product_tmpl_id")
+            )
+            result["company_id"] = (
+                product_tmpl_id and product_tmpl_id.company_id.id or False
+            )
+        return result
+
 
 class MrpBomLine(models.Model):
     _inherit = "mrp.bom.line"
