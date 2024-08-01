@@ -33,7 +33,7 @@ class MRPBom(models.Model):
         ) and not self.user_has_groups("ol_mrp_plm.group_bypass_bom_restiction"):
             open_mrp_ecos = self.env["mrp.eco"].search(
                 [
-                    ("product_tmpl_id", "=", self.id),
+                    ("product_tmpl_id", "=", self.product_tmpl_id.id),
                     ("stage_id.final_stage", "=", False),
                     ("stage_id.allow_bom_edits", "=", True),
                 ],
