@@ -14,7 +14,6 @@
         "ol_base",
         "mrp_plm",
         "product_state",
-        "ol_mrp_plm_tier_validation",
     ],
     # always loaded
     "data": [

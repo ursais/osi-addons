@@ -10,9 +10,11 @@ class PlmEcoStage(models.Model):
     _inherit = "mrp.eco.stage"
 
     # COLUMNS #####
+
     cancel_stage = fields.Boolean(
         string="Cancel Stage",
         help="When the Cancel button is pressed, the ECO will move to this stage"
         " and the product's stage will be reset to it's original stage.",
     )
+
     # END #########
