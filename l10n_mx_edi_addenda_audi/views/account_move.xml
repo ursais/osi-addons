@@ -17,8 +17,6 @@
                             invisible="not audi_flag"
                         />
                         <field name="audi_document_type" invisible="not audi_flag" />
-                        <field name="audi_supplier_email" invisible="not audi_flag" />
-                        <field name="audi_supplier_number" invisible="not audi_flag" />
                     </group>
                 </page>
             </xpath>
