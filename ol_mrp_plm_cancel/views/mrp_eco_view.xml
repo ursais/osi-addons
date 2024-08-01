@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="mrp_plm.mrp_eco_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//button[@name='reject']" position="after">
-                <button string="Cancel" name="action_cancel" type="object" class="oe_highlight" invisible="state == 'cancel' or stage_id.cancel_stage" groups="mrp_plm.group_plm_user" />
+                <button string="Cancel" name="action_cancel" type="object" class="oe_highlight" invisible="state in ('done','cancel')" groups="mrp_plm.group_plm_user" />
             </xpath>
             <field name="tag_ids" position="after">
                 <field name="initial_product_state_id" readonly="1" force_save="1" />

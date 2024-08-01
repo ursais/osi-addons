@@ -24,9 +24,8 @@ class MrpEco(models.Model):
     state = fields.Selection(
         selection_add=[
             ("approved", "Approved"),
-            ("cancel", "Canceled"),
         ],
-        ondelete={"approved": "cascade", "cancel": "cascade"},
+        ondelete={"approved": "cascade"},
     )
     tier_review_history_ids = fields.One2many(
         comodel_name="tier.validation.history",
@@ -108,10 +107,12 @@ class MrpEco(models.Model):
             # Filter stages with a sequence less than the current stage's sequence
             prev_stage = stages.filtered(
                 lambda stage: stage.sequence < rec.stage_id.sequence
+                and not stage.cancel_stage
             )
             # Filter stages with a sequence greater than the current stage's sequence
             next_stage = stages.filtered(
                 lambda stage: stage.sequence > rec.stage_id.sequence
+                and not stage.cancel_stage
             )
             # Set the previous stage to the one with the maximum sequence value
             rec.prev_stage_id = (
@@ -132,12 +133,5 @@ class MrpEco(models.Model):
     def action_move_to_next_stage(self):
         for rec in self:
             rec.write({"stage_id": rec.next_stage_id.id})
-
-    def action_new_revision(self):
-        res = super(MrpEco, self).action_new_revision()
-        # Set stage to next stage when new revision button is pressed.
-        for rec in self:
-            rec.write({"stage_id": rec.next_stage_id.id})
-        return res
 
     # END #######

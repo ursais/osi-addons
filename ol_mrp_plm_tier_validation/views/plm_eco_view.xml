@@ -60,14 +60,14 @@
                     name="action_move_to_prev_stage"
                     type="object"
                     class="oe_highlight"
-                    invisible="not prev_stage_id or state in ('done') or not stage_id or stage_id.cancel_stage"
+                    invisible="not prev_stage_id or state in ('done', 'confirmed', 'cancel') or not stage_id"
                 />
                 <button
                     string="Next"
                     name="action_move_to_next_stage"
                     type="object"
                     class="oe_highlight"
-                    invisible="not next_stage_id or state in ('done') or not stage_id or stage_id.cancel_stage"
+                    invisible="not next_stage_id or state in ('done', 'confirmed', 'cancel') or not stage_id"
                 />
             </field>
             <field name="approval_ids" position="before">

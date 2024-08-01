@@ -13,6 +13,7 @@
         "ol_base",
         "mrp_plm",
         "base_tier_validation",
+        "ol_mrp_plm_cancel",
     ],
     # always loaded
     "data": [

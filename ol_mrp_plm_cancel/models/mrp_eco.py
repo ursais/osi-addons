@@ -11,6 +11,7 @@ class MrpEco(models.Model):
     _inherit = "mrp.eco"
 
     # COLUMNS ###
+
     initial_product_state_id = fields.Many2one(
         "product.state",
         string="Initial Product State",
@@ -23,7 +24,15 @@ class MrpEco(models.Model):
         related="product_tmpl_id.product_state_id",
         help="Shows the current state of the product.",
     )
+    state = fields.Selection(
+        selection_add=[
+            ("cancel", "Canceled"),
+        ],
+        ondelete={"cancel": "cascade"},
+    )
+
     # END #######
+    # METHODS #########
 
     @api.onchange("product_tmpl_id")
     def product_tmpl_id_onchange(self):
@@ -44,6 +53,7 @@ class MrpEco(models.Model):
         )
         if cancel_stage:
             self.stage_id = cancel_stage.id
+            self.state = "cancel"
         else:
             raise ValidationError(
                 _(
@@ -65,3 +75,5 @@ class MrpEco(models.Model):
         ):
             self.product_tmpl_id.product_state_id = self.initial_product_state_id.id
         return res
+
+    # END #######
