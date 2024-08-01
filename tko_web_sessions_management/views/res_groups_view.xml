@@ -5,7 +5,7 @@
         <field name="model">res.groups</field>
         <field name="arch" type="xml">
             <tree string="Groups">
-                <field name="name"/>
+                <field name="full_name"/>
                 <field name="interval_number"/>
                 <field name="interval_type"/>
                 <field name="login_calendar_id"/>
