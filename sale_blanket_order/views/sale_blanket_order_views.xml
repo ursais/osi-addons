@@ -139,12 +139,12 @@
                                             context="{'default_display_type': 'line_note'}"
                                         />
                                     </control>
-                                    <field name="display_type" invisible="1" />
+                                    <field name="display_type" column_invisible="1" />
                                     <field name="sequence" widget="handle" />
                                     <field
                                         name="product_id"
                                         required="not display_type"
-                                        column_invisible="display_type"
+                                        invisible="display_type"
                                         context="{
                                             'fld': 'product_id',
                                             'partner_id': parent.partner_id,
@@ -177,7 +177,7 @@
                                             'company_id': parent.company_id
                                         }"
                                         required="not display_type"
-                                        column_invisible="display_type"
+                                        invisible="display_type"
                                     />
                                     <field
                                         name="product_uom"
@@ -192,7 +192,7 @@
                                     <field
                                         name="price_unit"
                                         required="not display_type"
-                                        column_invisible="display_type"
+                                        invisible="display_type"
                                     />
                                     <field name="date_schedule" />
                                     <field name="ordered_uom_qty" optional="hide" />
@@ -206,12 +206,12 @@
                                         context="{'default_type_tax_use': 'sale'}"
                                         options="{'no_create': True}"
                                         required="not display_type"
-                                        column_invisible="display_type"
+                                        invisible="display_type"
                                     />
                                     <field
                                         name="price_subtotal"
                                         widget="monetary"
-                                        column_invisible="display_type"
+                                        invisible="display_type"
                                     />
                                     <field name="company_id" invisible="1" />
                                 </tree>
