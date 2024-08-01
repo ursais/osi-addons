@@ -51,6 +51,7 @@
         <field name="arch" type="xml">
             <field name="stage_id" position="attributes">
                 <attribute name="readonly">True</attribute>
+                <attribute name="force_save">1</attribute>
             </field>
             <field name="stage_id" position="after">
                 <field name="prev_stage_id" invisible="1" />
