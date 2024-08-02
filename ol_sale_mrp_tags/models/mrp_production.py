@@ -11,9 +11,9 @@ class MRPProduction(models.Model):
 
     # COLUMNS #####
 
-    mrp_sale_id = fields.Many2one("sale.order", string="Sale Order")
+    sale_order_id = fields.Many2one("sale.order", string="Sale Order")
     tag_ids = fields.Many2many(
-        related="mrp_sale_id.tag_ids",
+        related="sale_order_id.tag_ids",
         string="Tags",
         store=False,
     )

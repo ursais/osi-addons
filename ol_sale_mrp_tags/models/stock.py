@@ -18,7 +18,7 @@ class StockMove(models.Model):
 
 class StockRule(models.Model):
     """
-    Override method to set mrp_sale_id for mrp uses.
+    Override method to set sale_order_id for mrp uses.
     """
 
     _inherit = "stock.rule"
@@ -52,7 +52,7 @@ class StockRule(models.Model):
         if values.get("mrp_so_line_id"):
             res.update(
                 {
-                    "mrp_sale_id": values.get("mrp_so_line_id").order_id.id,
+                    "sale_order_id": values.get("mrp_so_line_id").order_id.id,
                 }
             )
         return res

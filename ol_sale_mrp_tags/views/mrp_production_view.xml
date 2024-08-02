@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="mrp.mrp_production_form_view" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='user_id']" position="after">
-                <field name="mrp_sale_id" invisible="1"/>
+                <field name="sale_order_id" invisible="1"/>
                 <field
                     name="tag_ids"
                     widget="many2many_tags"
