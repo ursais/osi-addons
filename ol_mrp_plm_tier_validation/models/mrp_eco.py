@@ -134,4 +134,12 @@ class MrpEco(models.Model):
         for rec in self:
             rec.write({"stage_id": rec.next_stage_id.id})
 
+    def copy(self, default=None):
+        """Override the copy method: When duplicating an ECO,
+        sometimes the prev/next stage don't properly compute but trigging
+        the onchange_type_id will properly set them for the new eco."""
+        res = super().copy(default)
+        res.onchange_type_id()
+        return res
+
     # END #######
