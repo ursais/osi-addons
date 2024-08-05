@@ -1,0 +1,93 @@
+<odoo noupdate="1">
+
+    <record id="product_state_eng_assessment" model="mrp.eco.stage">
+        <field name="name">Engineering Assessment</field>
+        <field name="product_state_id" ref="product_state.product_state_draft"/>
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.new_sku'),ref('ol_mrp_plm.new_service_sku'),ref('ol_mrp_plm.new_virtual_sku'),ref('ol_mrp_plm.new_phantom_sku'),ref('ol_mrp_plm.new_customer_branding_sku'),ref('ol_mrp_plm.new_3rd_party_sku')])]" />
+    </record>
+
+    <record id="product_state_tech_assessment" model="mrp.eco.stage">
+        <field name="name">Technical Assessment (TA)</field>
+        <field name="product_state_id" ref="product_state.product_state_draft"/>
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.new_sku'),ref('ol_mrp_plm.new_service_sku'),ref('ol_mrp_plm.new_virtual_sku'),ref('ol_mrp_plm.new_phantom_sku'),ref('ol_mrp_plm.new_customer_branding_sku'),ref('ol_mrp_plm.new_3rd_party_sku')])]" />
+    </record>
+
+    <record id="product_state_support_and_work_instructions" model="mrp.eco.stage">
+        <field name="name">Support &amp; Work Instructions</field>
+        <field name="product_state_id" ref="ol_product_state.product_state_pre_order"/>
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.new_sku'),ref('ol_mrp_plm.new_service_sku'),ref('ol_mrp_plm.new_virtual_sku'),ref('ol_mrp_plm.new_phantom_sku'),ref('ol_mrp_plm.new_customer_branding_sku'),ref('ol_mrp_plm.new_3rd_party_sku')])]" />
+    </record>
+
+    <record id="product_state_enablement" model="mrp.eco.stage">
+        <field name="name">Enablement</field>
+        <field name="product_state_id" ref="ol_product_state.product_state_pre_order"/>
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.new_sku'),ref('ol_mrp_plm.new_service_sku'),ref('ol_mrp_plm.new_virtual_sku'),ref('ol_mrp_plm.new_phantom_sku'),ref('ol_mrp_plm.new_customer_branding_sku'),ref('ol_mrp_plm.new_3rd_party_sku'),ref('ol_mrp_plm.operations_new_consumable'),ref('ol_mrp_plm.operations_new_component')])]" />
+    </record>
+
+    <record id="product_state_evt" model="mrp.eco.stage">
+        <field name="name">EVT</field>
+        <field name="product_state_id" ref="product_state.product_state_draft"/>
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.new_system'),ref('ol_mrp_plm.new_component')])]" />
+    </record>
+
+    <record id="product_state_dvt" model="mrp.eco.stage">
+        <field name="name">DVT</field>
+        <field name="product_state_id" ref="product_state.product_state_draft"/>
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.new_system'),ref('ol_mrp_plm.new_component')])]" />
+    </record>
+
+    <record id="product_state_pvt" model="mrp.eco.stage">
+        <field name="name">PVT</field>
+        <field name="product_state_id" ref="ol_product_state.product_state_pre_order"/>
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.new_system'),ref('ol_mrp_plm.new_component')])]" />
+    </record>
+
+    <record id="product_state_pre_eco" model="mrp.eco.stage">
+        <field name="name">Pre-ECO</field>
+        <field name="product_state_id" ref="ol_product_state.product_state_active"/>
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.engineering_change_order')])]" />
+    </record>
+
+    <record id="product_state_eco_approval" model="mrp.eco.stage">
+        <field name="name">ECO Approval</field>
+        <field name="product_state_id" ref="ol_product_state.product_state_active"/>
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.engineering_change_order')])]" />
+    </record>
+
+    <record id="product_state_implementation" model="mrp.eco.stage">
+        <field name="name">Implementation</field>
+        <field name="product_state_id" ref="ol_product_state.product_state_pre_order"/>
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.engineering_change_order')])]" />
+    </record>
+
+    <record id="product_state_pre_pcn" model="mrp.eco.stage">
+        <field name="name">Pre-PCN</field>
+        <field name="product_state_id" ref="ol_product_state.product_state_active"/>
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.product_change_notifications')])]" />
+    </record>
+
+    <record id="product_state_pcn_approval" model="mrp.eco.stage">
+        <field name="name">PCN Approval</field>
+        <field name="product_state_id" ref="ol_product_state.product_state_pre_order"/>
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.product_change_notifications')])]" />
+    </record>
+
+    <record id="product_state_discontinuation_approval" model="mrp.eco.stage">
+        <field name="name">Discontinuation Approval</field>
+        <field name="product_state_id" ref="ol_product_state.product_state_active"/>
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.end_of_sale'),ref('ol_mrp_plm.end_of_life')])]" />
+    </record>
+
+    <record id="product_state_eos_approval" model="mrp.eco.stage">
+        <field name="name">EOS Approval</field>
+        <field name="product_state_id" ref="ol_product_state.product_state_discontinued"/>
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.end_of_sale')])]" />
+    </record>
+
+    <record id="product_state_eol_approval" model="mrp.eco.stage">
+        <field name="name">EOL Approval</field>
+        <field name="product_state_id" ref="ol_product_state.product_state_discontinued"/>
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.end_of_life')])]" />
+    </record>
+
+</odoo>
