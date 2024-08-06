@@ -16,8 +16,5 @@ class MrpEcoStage(models.Model):
         help="""Used by tier validations that need to trigger based on stage changes.
          Enable if tier validations need checked if the ECO moves to this stage.""",
     )
-    company_id = fields.Many2one(
-        "res.company", "Company", default=lambda self: self.env.company
-    )
 
     # END #######

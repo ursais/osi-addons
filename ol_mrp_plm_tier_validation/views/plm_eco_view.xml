@@ -52,7 +52,6 @@
             <field name="stage_id" position="attributes">
                 <attribute name="readonly">True</attribute>
                 <attribute name="force_save">1</attribute>
-                <attribute name="domain">[('type_ids','in',type_id),('company_id','=',company_id)]</attribute>
             </field>
             <field name="stage_id" position="after">
                 <field name="prev_stage_id" invisible="1" />
