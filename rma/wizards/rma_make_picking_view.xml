@@ -1,0 +1,137 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_rma_picking" model="ir.ui.view">
+        <field name="name">rma_picking</field>
+        <field name="model">rma_make_picking.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Select lines for picking" name="lines">
+                <separator string="Select lines for picking" />
+                <field name="item_ids">
+                    <tree name="RMA Lines" editable="bottom" create="false">
+                        <field
+                            name="rma_id"
+                            groups="rma.group_rma_groups"
+                            readonly="1"
+                        />
+                        <field name="product_id" readonly="1" />
+                        <field name="product_qty" />
+                        <field name="line_id" invisible="1" />
+                        <field name="uom_id" groups="uom.group_uom" readonly="1" />
+                        <field name="qty_to_receive" readonly="0" />
+                    </tree>
+                </field>
+                <footer>
+                    <button
+                        string="Confirm"
+                        name="action_create_picking"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button
+                        name="action_cancel"
+                        string="Cancel"
+                        class="oe_link"
+                        special="cancel"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rma_picking_out" model="ir.ui.view">
+        <field name="name">Create Delivery</field>
+        <field name="model">rma_make_picking.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Select lines for picking" name="lines">
+                <separator string="Select lines for picking" />
+                <field name="item_ids">
+                    <tree name="RMA Lines" editable="bottom" create="false">
+                        <field name="rma_id" groups="rma.group_rma_groups" />
+                        <field name="product_id" />
+                        <field name="product_qty" />
+                        <field name="line_id" invisible="1" />
+                        <field name="uom_id" groups="uom.group_uom" />
+                        <field name="qty_to_deliver" readonly="0" />
+                    </tree>
+                </field>
+                <footer>
+                    <button
+                        string="Confirm"
+                        name="action_create_picking"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button
+                        name="action_cancel"
+                        string="Cancel"
+                        class="oe_link"
+                        special="cancel"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rma_picking_in" model="ir.actions.act_window">
+        <field name="name">Create Incoming Shipment</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">rma_make_picking.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="view_rma_picking" />
+        <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]" />
+        <field name="context">{'picking_type': 'incoming'}</field>
+        <field name="binding_model_id" ref="rma.model_rma_order_line" />
+    </record>
+
+    <record id="action_rma_picking_out" model="ir.actions.act_window">
+        <field name="name">Create Delivery</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">rma_make_picking.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="view_rma_picking_out" />
+        <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]" />
+        <field name="context">{'picking_type': 'outgoing'}</field>
+        <field name="binding_model_id" ref="rma.model_rma_order_line" />
+    </record>
+
+    <record id="view_rma_line_button_form" model="ir.ui.view">
+        <field name="name">rma.order.line.form</field>
+        <field name="model">rma.order.line</field>
+        <field name="inherit_id" ref="rma.view_rma_line_form" />
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button
+                    name="%(action_rma_picking_in)d"
+                    string="Create Incoming Shipment"
+                    class="oe_highlight"
+                    invisible="qty_to_receive == 0 or qty_to_receive &lt; 0 or state != 'approved' or receipt_policy == 'no'"
+                    type="action"
+                />
+                <button
+                    name="%(action_rma_picking_in)d"
+                    string="Create Incoming Shipment"
+                    invisible="qty_to_receive &gt; 0 or state != 'approved' or receipt_policy == 'no'"
+                    type="action"
+                />
+                <button
+                    name="%(action_rma_picking_out)d"
+                    string="Create Delivery"
+                    class="oe_highlight"
+                    invisible="qty_to_deliver == 0 or qty_to_deliver &lt; 0 or state != 'approved' or delivery_policy == 'no'"
+                    type="action"
+                />
+                <button
+                    name="%(action_rma_picking_out)d"
+                    string="Create Delivery"
+                    invisible="qty_to_deliver &gt; 0 or state != 'approved' or delivery_policy == 'no'"
+                    type="action"
+                />
+            </header>
+        </field>
+    </record>
+
+</odoo>

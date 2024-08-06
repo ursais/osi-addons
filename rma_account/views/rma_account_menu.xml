@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2018 ForgeFlow S.L.
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<odoo>
+
+    <record id="action_rma_account_customer_lines" model="ir.actions.act_window">
+        <field name="name">Customer RMA</field>
+        <field name="res_model">rma.order.line</field>
+        <field name="domain">[('type','=', 'customer')]</field>
+        <field name="context">{"search_default_to_refund":1}</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_rma_supplier_lines" model="ir.actions.act_window">
+        <field name="name">Supplier RMA</field>
+        <field name="res_model">rma.order.line</field>
+        <field name="domain">[('type','=', 'supplier')]</field>
+        <field name="context">{"search_default_to_refund":1, "supplier":1}</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="rma.view_rma_line_supplier_tree" />
+    </record>
+
+    <!-- Accountants menu RMA -->
+    <menuitem
+        id="menu_rma_account"
+        name="Accounting"
+        groups="account.group_account_invoice"
+        sequence="32"
+        parent="rma.menu_rma_root"
+    />
+
+    <menuitem
+        id="menu_rma_customer_refunds"
+        name="Customer RMA to Refund"
+        sequence="20"
+        parent="rma_account.menu_rma_account"
+        groups="rma.group_rma_customer_user"
+        action="action_rma_account_customer_lines"
+    />
+
+    <menuitem
+        id="menu_rma_line_supplier_refunds"
+        name="Supplier RMA to Refund"
+        sequence="20"
+        parent="rma_account.menu_rma_account"
+        groups="rma.group_rma_customer_user"
+        action="action_rma_supplier_lines"
+    />
+
+
+    <menuitem
+        id="menu_rma_line_account_customer"
+        name="Customer RMA to Refund"
+        sequence="20"
+        parent="account.menu_finance_receivables"
+        groups="rma.group_rma_customer_user"
+        action="action_rma_account_customer_lines"
+    />
+
+    <menuitem
+        id="menu_rma_line_account_supplier"
+        name="Supplier RMA to Refund"
+        sequence="20"
+        parent="account.menu_finance_payables"
+        groups="rma.group_rma_supplier_user"
+        action="action_rma_supplier_lines"
+    />
+
+</odoo>

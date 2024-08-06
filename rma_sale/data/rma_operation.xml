@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+
+    <record id="rma_operation_customer_sale" model="rma.operation">
+        <field name="name">Sale after receive</field>
+        <field name="code">SL-C</field>
+        <field name="sale_policy">received</field>
+        <field name="receipt_policy">ordered</field>
+        <field name="delivery_policy">no</field>
+        <field name="refund_policy">no</field>
+        <field name="type">customer</field>
+        <field name="in_route_id" ref="rma.route_rma_customer" />
+        <field name="out_route_id" ref="rma.route_rma_customer" />
+    </record>
+
+    <record id="rma_operation_customer_sale_advanced" model="rma.operation">
+        <field name="name">Advanced Refund</field>
+        <field name="code">AR-C</field>
+        <field name="sale_policy">received</field>
+        <field name="receipt_policy">ordered</field>
+        <field name="delivery_policy">no</field>
+        <field name="refund_policy">received</field>
+        <field name="type">customer</field>
+        <field name="in_route_id" ref="rma.route_rma_customer" />
+        <field name="out_route_id" ref="rma.route_rma_customer" />
+    </record>
+
+</odoo>

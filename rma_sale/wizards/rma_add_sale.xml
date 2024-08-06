@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_rma_add_sale" model="ir.ui.view">
+        <field name="name">rma.add.sale</field>
+        <field name="model">rma_add_sale</field>
+        <field name="arch" type="xml">
+            <form string="Select Sale Order from customer">
+                <separator string="Select Sale Order from customer" />
+                <group>
+                    <field name="partner_id" />
+                </group>
+                <separator string="Select Sale Order Lines to Add" />
+                <group>
+                    <field
+                        name="sale_id"
+                        domain="[
+                           ('partner_id','=',partner_id), (('state','not in',['draft','cancel']))]"
+                        context="{'partner_id': partner_id}"
+                    />
+                </group>
+                <field
+                    name="sale_line_ids"
+                    domain="[('order_id', '=', sale_id)]"
+                    string="Sale Order Lines"
+                >
+                    <tree>
+                        <field name="product_id" invisible="1" />
+                        <field name="order_id" />
+                        <field name="order_partner_id" />
+                        <field name="name" />
+                        <field name="salesman_id" />
+                        <field name="product_uom_qty" string="Qty" />
+                        <field name="qty_delivered" />
+                        <field name="qty_invoiced" />
+                        <field name="qty_to_invoice" />
+                        <field
+                            name="product_uom"
+                            string="Unit of Measure"
+                            groups="uom.group_uom"
+                        />
+                        <field name="price_subtotal" sum="Total" widget="monetary" />
+                    </tree>
+
+                </field>
+                <field name="show_lot_filter" invisible="1" />
+                <field name="lot_domain_ids" widget="many2many_tags" invisible="1" />
+                <div class="oe_grey" invisible="show_lot_filter == False">
+                    The creation of the RMA Lines will be separated according to the lots or serials selected
+                </div>
+                <div class="o_row">
+                    <label
+                        for="lot_ids"
+                        invisible="show_lot_filter == False"
+                        string="Selected Lot/Serial Numbers"
+                    />
+                    <field
+                        name="lot_ids"
+                        widget="many2many_tags"
+                        domain="[('id', 'in', lot_domain_ids)]"
+                        invisible="show_lot_filter == False"
+                        options="{'no_create': True}"
+                    />
+                    <button
+                        name="select_all"
+                        type="object"
+                        string="Select all"
+                        class="oe_inline"
+                        invisible="show_lot_filter == False"
+                    />
+                </div>
+                <footer>
+                    <button
+                        string="Confirm"
+                        name="add_lines"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button
+                        name="action_cancel"
+                        string="Cancel"
+                        class="oe_link"
+                        special="cancel"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rma_add_sale" model="ir.actions.act_window">
+        <field name="name">Add Sale Order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">rma_add_sale</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="view_rma_add_sale" />
+        <field
+            name="groups_id"
+            eval="[(4, ref('rma.group_rma_customer_user')), (4, ref('rma.group_rma_customer_user'))]"
+        />
+    </record>
+
+
+    <record id="view_rma_add_sale_form" model="ir.ui.view">
+        <field name="name">rma.order.form - sale wizard</field>
+        <field name="model">rma.order</field>
+        <field name="inherit_id" ref="rma.view_rma_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button
+                    name="%(action_rma_add_sale)d"
+                    string="Add From Sale Order"
+                    type="action"
+                    invisible="type != 'customer'"
+                />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

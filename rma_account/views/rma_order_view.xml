@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_rma_form" model="ir.ui.view">
+        <field name="name">rma.order.form - rma_account</field>
+        <field name="model">rma.order</field>
+        <field name="inherit_id" ref="rma.view_rma_form" />
+        <field name="arch" type="xml">
+            <button name="action_view_out_shipments" position="after">
+                <button
+                    type="object"
+                    name="action_view_invoice_refund"
+                    class="oe_stat_button"
+                    icon="fa-pencil-square-o"
+                    groups="account.group_account_invoice"
+                >
+                    <field
+                        name="invoice_refund_count"
+                        widget="statinfo"
+                        string="Refunds"
+                    />
+                </button>
+                <button
+                    type="object"
+                    name="action_view_invoice"
+                    class="oe_stat_button"
+                    icon="fa-pencil-square-o"
+                    groups="account.group_account_invoice"
+                >
+                    <field name="invoice_count" widget="statinfo" string="Origin Inv" />
+                </button>
+            </button>
+            <xpath expr="//field[@name='rma_line_ids']/tree" position="inside">
+                <field name="refund_policy" invisible="True" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

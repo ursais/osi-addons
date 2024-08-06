@@ -1,0 +1,100 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_rma_line_supplier_form" model="ir.ui.view">
+        <field name="name">rma.order.line.supplier.form</field>
+        <field name="model">rma.order.line</field>
+        <field name="inherit_id" ref="rma.view_rma_line_supplier_form" />
+        <field name="arch" type="xml">
+            <group name="main_info" position="inside">
+                <field name="commercial_partner_id" invisible="1" />
+                <field
+                    name="account_move_line_id"
+                    options="{'no_create': True}"
+                    context="{'rma': True}"
+                    domain="[('move_id.move_type', 'not in', ['entry','out_invoice','out_refund']),
+                                ('partner_id', '=', commercial_partner_id)]"
+                    invisible="type != 'supplier'"
+                />
+            </group>
+        </field>
+    </record>
+
+    <record id="view_rma_line_form" model="ir.ui.view">
+        <field name="name">rma.order.line.form</field>
+        <field name="model">rma.order.line</field>
+        <field name="inherit_id" ref="rma.view_rma_line_form" />
+        <field name="arch" type="xml">
+            <button name="action_view_out_shipments" position="after">
+                <button
+                    type="object"
+                    name="action_view_invoice"
+                    class="oe_stat_button"
+                    icon="fa-pencil-square-o"
+                    invisible="account_move_line_id == False"
+                    string="Origin Inv"
+                >
+                </button>
+                 <button
+                    type="object"
+                    name="action_view_refunds"
+                    class="oe_stat_button"
+                    icon="fa-pencil-square-o"
+                    invisible="refund_count == 0"
+                    groups="account.group_account_invoice"
+                >
+                        <field name="refund_count" widget="statinfo" string="Refunds" />
+                    </button>
+            </button>
+            <group name="main_info" position="inside">
+                <field name="commercial_partner_id" invisible="1" />
+                <field
+                    name="account_move_line_id"
+                    options="{'no_create': True}"
+                    context="{'rma': True}"
+                    domain="[('move_id.move_type', '!=', 'entry'),
+                                ('partner_id', '=', commercial_partner_id)]"
+                    invisible="type != 'customer'"
+                    readonly="state != 'draft'"
+                />
+            </group>
+            <field name="operation_id" position="after">
+                <field name="refund_policy" />
+            </field>
+            <page name="stock" position="after">
+                <page name="refunds" string="Refunds" invisible="refund_line_ids == []">
+                    <field name="refund_line_ids" nolabel="1" />
+                </page>
+            </page>
+            <field name="delivery_address_id" position="after">
+                <field
+                    name="invoice_address_id"
+                    readonly="state != 'draft'"
+                    groups='rma.group_rma_delivery_invoice_address'
+                />
+            </field>
+            <group name="supplier_rma" position="after">
+                <group name="refund" invisible="refund_policy == 'no'">
+                    <field name="qty_to_refund" />
+                    <field name="qty_refunded" />
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="view_rma_rma_line_filter" model="ir.ui.view">
+        <field name="name">rma.order.line.select</field>
+        <field name="model">rma.order.line</field>
+        <field name="inherit_id" ref="rma.view_rma_rma_line_filter" />
+        <field name="arch" type="xml">
+            <group name="stock_quantities" position="after">
+                <group name="account_quantities" groups="account.group_account_invoice">
+                    <filter
+                        name="to_refund"
+                        string="To Refund"
+                        domain="[('qty_to_refund', '>', 0)]"
+                    />
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

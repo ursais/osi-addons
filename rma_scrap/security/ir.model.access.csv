@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rma_scrap_wizard,rma.order.manager,model_rma_make_scrap_wizard,rma.group_rma_manager,1,1,1,1
+access_rma_scrap_wizard_customer,rma.order.manager,model_rma_make_scrap_wizard,rma.group_rma_customer_user,1,1,1,1
+access_rma_scrap_wizard_supplier,rma.order.manager,model_rma_make_scrap_wizard,rma.group_rma_supplier_user,1,1,1,1
+access_rma_scrap_item_wizard,rma.order.manager,model_rma_make_scrap_item_wizard,rma.group_rma_manager,1,1,1,1
+access_rma_scrap_item_wizard_customer,rma.order.manager,model_rma_make_scrap_item_wizard,rma.group_rma_customer_user,1,1,1,1
+access_rma_scrap_item_wizard_supplier,rma.order.manager,model_rma_make_scrap_item_wizard,rma.group_rma_supplier_user,1,1,1,1

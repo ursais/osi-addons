@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+        <record id="view_rma_form" model="ir.ui.view">
+            <field name="name">rma.order.form</field>
+            <field name="model">rma.order</field>
+            <field name="inherit_id" ref="rma.view_rma_form" />
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button
+                    type="object"
+                    name="action_view_sale_order"
+                    class="oe_stat_button"
+                    icon="fa-pencil-square-o"
+                    groups="sales_team.group_sale_salesman"
+                    invisible="type != 'customer'"
+                >
+                        <field name="sale_count" widget="statinfo" string="Origin SO" />
+                    </button>
+                </div>
+                <xpath expr="//field[@name='rma_line_ids']/tree" position="inside">
+                    <field name="sale_policy" invisible="True" />
+                </xpath>
+            </field>
+        </record>
+</odoo>

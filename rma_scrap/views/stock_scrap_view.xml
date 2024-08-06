@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_stock_scrap_rma_form" model="ir.ui.view">
+        <field name="name">stock.scrap.form - RMA</field>
+        <field name="model">stock.scrap</field>
+        <field name="inherit_id" ref="stock.stock_scrap_form_view" />
+        <field name="arch" type="xml">
+            <button name="action_get_stock_move_lines" position="after">
+                <button
+                    type="object"
+                    name="action_view_rma_line"
+                    class="oe_stat_button"
+                    icon="fa-eject"
+                    string="RMA Line"
+                    groups="stock.group_stock_user"
+                    invisible="rma_line_id == False"
+                >
+                </button>
+                <field name="rma_line_id" invisible="1" />
+            </button>
+        </field>
+    </record>
+</odoo>

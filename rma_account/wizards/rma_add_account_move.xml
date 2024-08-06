@@ -1,0 +1,100 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <record id="view_rma_add_account_move" model="ir.ui.view">
+        <field name="name">rma.add.invoice</field>
+        <field name="model">rma_add_account_move</field>
+        <field name="arch" type="xml">
+            <form string="Select Invoice from customer">
+                <group>
+                    <field name="partner_id" />
+                </group>
+                <separator string="Select Invoices lines to add" />
+                <field
+                    name="line_ids"
+                    domain="[('move_id.partner_id', '=', partner_id)]"
+                >
+                    <tree name="Invoice Lines">
+                        <field name="move_id" />
+                        <field name="name" />
+                        <field
+                            name="account_id"
+                            groups="account.group_account_invoice"
+                        />
+                        <field name="quantity" />
+                        <field name="product_id" />
+                        <field name="product_uom_id" />
+                        <field name="price_unit" />
+                        <field name="discount" groups="base.group_no_one" />
+                        <field name="price_subtotal" />
+                        <field name="currency_id" invisible="1" />
+                    </tree>
+                </field>
+                <footer>
+                    <button
+                        string="Confirm"
+                        name="add_lines"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button
+                        name="action_cancel"
+                        string="Cancel"
+                        class="oe_link"
+                        special="cancel"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_rma_add_account_move_supplier" model="ir.ui.view">
+        <field name="name">rma.add.invoice.supplier</field>
+        <field name="model">rma_add_account_move</field>
+        <field name="arch" type="xml">
+            <form string="Select Invoice from supplier">
+                <group>
+                    <field name="partner_id" />
+                </group>
+                <separator string="Select Invoices lines to add" />
+                <field
+                    name="line_ids"
+                    domain="[('move_id.partner_id', '=', partner_id)]"
+                >
+                    <tree name="Invoice Lines">
+                        <field name="move_id" />
+                        <field name="name" />
+                        <field
+                            name="account_id"
+                            groups="account.group_account_invoice"
+                        />
+                        <field name="quantity" />
+                        <field name="product_id" />
+                        <field name="product_uom_id" />
+                        <field name="price_unit" />
+                        <field name="discount" groups="base.group_no_one" />
+                        <field name="price_subtotal" />
+                        <field name="currency_id" invisible="1" />
+                    </tree>
+                </field>
+                <footer>
+                    <button
+                        string="Confirm"
+                        name="add_lines"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button
+                        name="action_cancel"
+                        string="Cancel"
+                        class="oe_link"
+                        special="cancel"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

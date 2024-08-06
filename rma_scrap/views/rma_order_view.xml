@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_rma_form" model="ir.ui.view">
+        <field name="name">rma.order.form</field>
+        <field name="model">rma.order</field>
+        <field name="inherit_id" ref="rma.view_rma_form" />
+        <field name="arch" type="xml">
+            <button name="action_view_out_shipments" position="after">
+                <button
+                    type="object"
+                    name="action_view_scrap_transfers"
+                    class="oe_stat_button"
+                    icon="fa-truck"
+                    groups="stock.group_stock_user"
+                    invisible="scrap_count == 0"
+                >
+                    <field name="scrap_count" widget="statinfo" string="Scraps" />
+                </button>
+            </button>
+            <xpath expr="//field[@name='rma_line_ids']/tree" position="inside">
+                <field name="scrap_policy" invisible="True" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
