@@ -13,10 +13,20 @@ class ProductConfigSession(models.Model):
                 [
                     ("product_tmpl_id", "=", product_tmpl_id.id),
                     ("product_id", "=", False),
+                    ("scaffolding_bom", "=", True),
                 ],
                 order="sequence asc",
                 limit=1,
             )
+            if not master_bom:
+                master_bom = self.env["mrp.bom"].search(
+                    [
+                        ("product_tmpl_id", "=", product_tmpl_id.id),
+                        ("product_id", "=", False),
+                    ],
+                    order="sequence asc",
+                    limit=1,
+                )
             vals = False
             wizard_values = variant.product_template_attribute_value_ids.mapped(
                 "product_attribute_value_id"
@@ -28,7 +38,8 @@ class ProductConfigSession(models.Model):
                 vals = set(wizard_values.ids).intersection(
                     set(config_component_vals.ids)
                 )
-                # Bypass config component variant creation if not all required vals are set
+                # Bypass config component variant creation
+                # if not all required vals are set
                 do_not_create = False
                 for line in config_component_line.product_tmpl_id.attribute_line_ids:
                     common_vals = set(vals) & set(line.value_ids.ids)
@@ -46,7 +57,8 @@ class ProductConfigSession(models.Model):
                     component_config_session.action_confirm()
                     component_variant = component_config_session.product_id
 
-                    # Look for existing configuration set and if doesn't exist, create it.
+                    # Look for existing configuration set and
+                    # if doesn't exist, create it.
                     bom_line_config_set = self.env[
                         "mrp.bom.line.configuration.set"
                     ].search(

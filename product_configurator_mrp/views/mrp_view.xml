@@ -69,6 +69,18 @@
         >{"search_default_todo": True, "default_company_id": allowed_company_ids[0], "custom_create_variant": True}</field>
     </record>
 
+    <record id="mrp_bom_tree_view" model="ir.ui.view">
+        <field name="name">product.config.mrp.bom.tree.view</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_tree_view" />
+        <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="scaffolding_bom" optional="show" />
+                <field name="existing_scaffolding_bom" optional="hide" />
+            </field>
+        </field>
+    </record>
+
     <record id="mrp_bom_form_view" model="ir.ui.view">
         <field name="name">product.config.mrp.bom.form.view</field>
         <field name="model">mrp.bom</field>
@@ -104,6 +116,19 @@
                     options="{'create_edit': True, 'open': 'True'}"
                 />
              </xpath>
+             <field name="code" position="after">
+                <field name="scaffolding_bom" invisible="product_id" />
+                <field name="existing_scaffolding_bom" invisible="1" />
+            </field>
+             <xpath expr="//form/sheet/group" position="before">
+                <div
+                    invisible="not existing_scaffolding_bom"
+                    class="alert alert-danger text-center"
+                    role="alert"
+                >
+                <p><strong
+                        >There is an active scaffolding BoM for this product.</strong></p></div>
+            </xpath>
         </field>
     </record>
 
