@@ -1,7 +1,7 @@
 # Copyright (C) 2021 Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models
+from odoo import _, api, exceptions, fields, models
 
 
 class MrpProduction(models.Model):
@@ -56,6 +56,18 @@ class MrpBom(models.Model):
         string="Configurable",
         readonly=True,
     )
+    scaffolding_bom = fields.Boolean(
+        string="Scaffolding BoM",
+        help="When checked, this BoM will serve as the main BoM used by the configurator to "
+        "create the product variant BoM’s. Only one BoM per product can be set as a Scaffolding BoM. "
+        "If no scaffolding BoM exists, the configurator will then look for a BoM that doesn’t have a "
+        "Product Variant to use.",
+    )
+    existing_scaffolding_bom = fields.Boolean(
+        string="Existing Scaffolding BoM",
+        compute="_compute_existing_scaffolding_bom",
+        store=True,
+    )
 
     @api.model
     def default_get(self, val_list):
@@ -68,6 +80,52 @@ class MrpBom(models.Model):
                 product_tmpl_id and product_tmpl_id.company_id.id or False
             )
         return result
+
+    @api.constrains("product_tmpl_id", "scaffolding_bom")
+    def _check_product_tmpl_scaffolding_bom(self):
+        """Constraint ensures only one scaffolding BoM exists per product template"""
+        for rec in self:
+            if (
+                self.search_count(
+                    [
+                        ("scaffolding_bom", "=", True),
+                        ("product_tmpl_id", "=", rec.product_tmpl_id.id),
+                    ]
+                )
+                > 1
+            ):
+                raise exceptions.ValidationError(
+                    _(
+                        "You can only have one unarchived Scaffolding BOM for a configurable product."
+                    )
+                )
+
+    @api.depends("scaffolding_bom", "active", "product_tmpl_id")
+    def _compute_existing_scaffolding_bom(self):
+        for rec in self:
+            if (
+                self.search_count(
+                    [
+                        ("scaffolding_bom", "=", True),
+                        ("active", "=", True),
+                        ("product_tmpl_id", "=", rec.product_tmpl_id.id),
+                        ("product_id", "=", False),
+                    ]
+                )
+                >= 1
+            ):
+                rec.existing_scaffolding_bom = True
+            else:
+                rec.existing_scaffolding_bom = False
+
+    @api.onchange("product_id")
+    def onchange_scaffolding_bom_product_id(self):
+        """onchange method to automatically set 'scaffolding_bom'
+        based on 'product_id'."""
+        if self.product_id:
+            self.scaffolding_bom = False
+        else:
+            self.scaffolding_bom = True
 
 
 class MrpBomLine(models.Model):

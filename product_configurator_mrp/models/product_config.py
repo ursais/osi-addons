@@ -42,10 +42,20 @@ class ProductConfigSession(models.Model):
             [
                 ("product_tmpl_id", "=", product_tmpl_id.id),
                 ("product_id", "=", False),
+                ("scaffolding_bom", "=", True),
             ],
             order="sequence asc",
             limit=1,
         )
+        if not parent_bom:
+            parent_bom = self.env["mrp.bom"].search(
+                [
+                    ("product_tmpl_id", "=", product_tmpl_id.id),
+                    ("product_id", "=", False),
+                ],
+                order="sequence asc",
+                limit=1,
+            )
         bom_type = parent_bom and parent_bom.type or "normal"
         bom_lines = []
         if not parent_bom:
