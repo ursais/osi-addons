@@ -13,6 +13,10 @@
             >
                 <field name="is_qty_required" />
             </xpath>
+            <field name="product_tmpl_id" position="after">
+                <field name="dyn_qty_field_value" />
+                <field name="domain_qty_ids" widget="many2many_tags" />
+            </field>
         </field>
     </record>
 

@@ -13,6 +13,7 @@
         "views/product_attribute_view.xml",
         "wizard/product_configurator_view.xml",
         "views/product_config_view.xml",
+        "views/attribute_value_qty_views.xml",
     ],
     "images": ["static/description/cover.png"],
     "development_status": "Beta",

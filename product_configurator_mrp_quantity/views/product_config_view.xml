@@ -15,8 +15,10 @@
                 <page string="Attribute Qty">
                     <field name="session_value_quantity_ids">
                         <tree editable="bottom">
+                            <field name="product_attribute_id" />
                             <field name="attr_value_id" />
                             <field name="qty" />
+                            <field name="attribute_value_qty_id" />
                         </tree>
                     </field>
                 </page>

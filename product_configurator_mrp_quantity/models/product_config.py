@@ -45,6 +45,7 @@ class ProductConfigSession(models.Model):
                     "product_id": result.id,
                     "attr_value_id": qty_value.attr_value_id.id,
                     "qty": qty_value.qty,
+                    "attribute_value_qty_id": qty_value.attribute_value_qty_id.id,
                 }
                 qty_list.append(qty_attr_dict)
             qty_attr_obj.create(qty_list)
@@ -84,6 +85,7 @@ class ProductConfigSession(models.Model):
             product_tmpl_id = self.product_tmpl_id
 
         product_configurator_obj = self.env["product.configurator"]
+        attribute_value_qty_obj = self.env["attribute.value.qty"]
         field_prefix = product_configurator_obj._prefixes.get("field_prefix")
         custom_field_prefix = product_configurator_obj._prefixes.get(
             "custom_field_prefix"
@@ -94,6 +96,7 @@ class ProductConfigSession(models.Model):
         attr_val_dict = {}
         custom_val_dict = {}
         qty_val_dict = {}
+        qty_val_list = []
         for attr_line in product_tmpl_id.attribute_line_ids:
             attr_id = attr_line.attribute_id.id
             field_name = field_prefix + str(attr_id)
@@ -152,7 +155,17 @@ class ProductConfigSession(models.Model):
                     )
                 attr_val_dict.update({attr_id: field_val})
                 if attr_line.is_qty_required and vals.get(qty_field_name):
-                    qty_val_dict.update({attr_id: qty_field_val})
+                    attribute_value_qty_rec = attribute_value_qty_obj.browse(
+                        qty_field_val
+                    )
+                    qty_val_list.append(
+                        {
+                            "product_attribute_id": attribute_value_qty_rec.product_attribute_id.id,
+                            "attr_value_id": attribute_value_qty_rec.product_attribute_value_id.id,
+                            "attribute_value_qty_id": attribute_value_qty_rec.id,
+                            "qty": attribute_value_qty_rec.qty,
+                        }
+                    )
 
                 # Ensure there is no custom value stored if we have switched
                 # from custom value to selected attribute value.
@@ -173,8 +186,16 @@ class ProductConfigSession(models.Model):
                 and not qty_val_dict
                 and attr_line.is_qty_required
             ):
-                existing_session_attrs_nonqtys.write({"qty": vals.get(qty_field_name)})
-        self.update_config(attr_val_dict, custom_val_dict, qty_val_dict)
+                attribute_value_qty_rec = attribute_value_qty_obj.browse(
+                    int(vals.get(qty_field_name))
+                )
+                existing_session_attrs_nonqtys.write(
+                    {
+                        "qty": attribute_value_qty_rec.qty,
+                        "attribute_value_qty_id": attribute_value_qty_rec.id,
+                    }
+                )
+        self.update_config(attr_val_dict, custom_val_dict, qty_val_list)
 
     def update_config(
         self, attr_val_dict=None, custom_val_dict=None, qty_val_dict=None
@@ -228,20 +249,18 @@ class ProductConfigSession(models.Model):
         if value_ids != self.value_ids.ids:
             update_vals.update({"value_ids": [(6, 0, value_ids)]})
         if qty_val_dict:
-            if self.session_value_quantity_ids:
-                self.session_value_quantity_ids.unlink()
             session_qty_list = []
-            for k, v in qty_val_dict.items():
-                attr_value_id = (
-                    attr_val_dict
-                    and attr_val_dict.get(k)
-                    or self.value_ids.filtered(
-                        lambda value_id: value_id.attribute_id.id == k
-                    ).id
+            dict_qty = {}
+            for qty_val in qty_val_dict:
+                existing_session_ids = self.session_value_quantity_ids.filtered(
+                    lambda l: l.product_attribute_id.id
+                    == qty_val.get("product_attribute_id")
+                    and l.attr_value_id.id == qty_val.get("attr_value_id")
+                    and l.attribute_value_qty_id.id
+                    != qty_val.get("attribute_value_qty_id")
                 )
-                session_qty_list.append(
-                    (0, 0, {"attr_value_id": attr_value_id, "qty": v})
-                )
+                existing_session_ids.unlink()
+                session_qty_list.append((0, 0, qty_val))
             update_vals.update({"session_value_quantity_ids": session_qty_list})
         # Remove all custom values included in the custom_vals dict
         self.custom_value_ids.filtered(
@@ -403,6 +422,7 @@ class ProductConfigSession(models.Model):
                         lambda local_session: local_session.attr_value_id.product_id.id
                         == parent_bom_product.id
                     )
+
                     parent_bom_line_vals = {
                         "product_id": parent_bom_product.id,
                         "product_qty": local_session_attr_qty_value.qty > 0
@@ -461,4 +481,6 @@ class ProductConfigSessionValueQty(models.Model):
 
     session_id = fields.Many2one("product.config.session", ondelete="cascade")
     attr_value_id = fields.Many2one("product.attribute.value")
+    product_attribute_id = fields.Many2one("product.attribute")
     qty = fields.Integer(string="Quantity")
+    attribute_value_qty_id = fields.Many2one("attribute.value.qty", ondelete="cascade")

@@ -11,6 +11,7 @@ class ProductProductAttributeValueQty(models.Model):
     )
     attr_value_id = fields.Many2one("product.attribute.value", required=True)
     qty = fields.Integer(string="Quantity")
+    attribute_value_qty_id = fields.Many2one("attribute.value.qty", ondelete="cascade")
 
     @api.depends("attr_value_id", "qty")
     def _compute_display_name(self):
