@@ -24,7 +24,7 @@
     <record id="computer_processor_attribute" model="attribute.attribute">
         <field name="nature">custom</field>
         <field name="field_description">Processor</field>
-        <field name="name">x_processor</field>
+        <field name="name">x_proc</field>
         <field name="attribute_type">select</field>
         <field name="attribute_group_id" ref="computer_technical_attribute_group" />
         <field name="attribute_set_ids" eval="[(4, ref('computer_attribute_set'))]" />

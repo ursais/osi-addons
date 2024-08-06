@@ -1,0 +1,15 @@
+<odoo>
+    <record id="attribute_value_qty_list" model="ir.ui.view">
+        <field name="name">attribute.value.qty</field>
+        <field name="model">attribute.value.qty</field>
+        <field name="arch" type="xml">
+             <tree create="false">
+                <field name="product_tmpl_id" />
+                <field name="product_attribute_id" />
+                <field name="product_attribute_value_id" />
+                <field name="qty" />
+                <field name="company_id" optional="hide" />
+            </tree>
+        </field>
+    </record>
+</odoo>

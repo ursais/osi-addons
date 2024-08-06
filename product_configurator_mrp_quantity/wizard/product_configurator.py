@@ -1,11 +1,17 @@
 from lxml import etree
 
-from odoo import _, api, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
 class ProductConfigurator(models.TransientModel):
     _inherit = "product.configurator"
+
+    dyn_qty_field_value = fields.Char()
+    domain_qty_ids = fields.Many2many(
+        "attribute.value.qty",
+        string="Domain",
+    )
 
     @property
     def _prefixes(self):
@@ -15,40 +21,6 @@ class ProductConfigurator(models.TransientModel):
             "custom_field_prefix": "__custom_",
             "qty_field": "__qty_",
         }
-
-    def get_form_vals(
-        self,
-        dynamic_fields,
-        domains,
-        cfg_val_ids=None,
-        product_tmpl_id=None,
-        config_session_id=None,
-    ):
-        result = super().get_form_vals(
-            dynamic_fields,
-            domains,
-            cfg_val_ids=cfg_val_ids,
-            product_tmpl_id=product_tmpl_id,
-            config_session_id=config_session_id,
-        )
-        field_prefix = self._prefixes.get("field_prefix")
-        qty_prefix = self._prefixes.get("qty_field")
-        new_val = {}
-        product_tmpl_attrb_value = self.env["product.template.attribute.value"]
-        for k in result:
-            if k.startswith(field_prefix):
-                product_attrs = product_tmpl_attrb_value.search(
-                    [
-                        ("product_tmpl_id", "=", self.product_tmpl_id.id),
-                        ("product_attribute_value_id", "=", int(result.get(k))),
-                        ("is_qty_required", "=", True),
-                    ]
-                )
-                if product_attrs:
-                    qty_field_name = qty_prefix + str(product_attrs.attribute_id.id)
-                    new_val[qty_field_name] = str(product_attrs.default_qty)
-        result.update(new_val)
-        return result
 
     @api.model
     def fields_get(self, allfields=None, write_access=True, attributes=None):
@@ -77,24 +49,19 @@ class ProductConfigurator(models.TransientModel):
             attribute = line.attribute_id
             value_ids = line.value_ids.ids
             if line.is_qty_required:
-                selection_vals = [(False, "")]
-                atrr_values = attribute_value_obj.search(
-                    [("attribute_line_id", "=", line.id)]
-                )
-                default_qty = min(atrr_values.mapped("default_qty"))
-                maximum_qty = max(atrr_values.mapped("maximum_qty"))
-                for i in range(default_qty, maximum_qty + 1):
-                    selection_vals.append((str(i), i))
                 res[qty_field_prefix + str(attribute.id)] = dict(
                     default_attrs,
-                    type="selection",
+                    type="many2one",
+                    domain=[("product_tmpl_id", "=", wiz.product_tmpl_id.id)],
                     string="Qty",
-                    selection=selection_vals,
+                    relation="attribute.value.qty",
                 )
         return res
 
     @api.model_create_multi
     def create(self, vals_list):
+        attribute_value_qty_obj = self.env["attribute.value.qty"]
+        qty_prefix = self._prefixes.get("qty_field")
         for vals in vals_list:
             if "product_id" in vals:
                 product = self.env["product.product"].browse(vals["product_id"])
@@ -115,14 +82,112 @@ class ProductConfigurator(models.TransientModel):
                                 0,
                                 0,
                                 {
+                                    "product_attribute_id": attr.attr_value_id.attribute_id.id,
                                     "attr_value_id": attr.attr_value_id.id,
                                     "qty": int(attr.qty),
+                                    "attribute_value_qty_id": attr.attribute_value_qty_id.id,
                                 },
                             )
                         )
                 if attr_qty_list:
                     vals.update({"session_value_quantity_ids": attr_qty_list})
         return super().create(vals_list)
+
+    def apply_onchange_values(self, values, field_name, field_onchange):
+        result = super().apply_onchange_values(values, field_name, field_onchange)
+        field_prefix = self._prefixes.get("field_prefix")
+        qty_prefix = self._prefixes.get("qty_field")
+        template_attribute_line = self.env["product.template.attribute.line"]
+        attribute_value_qty_obj = self.env["attribute.value.qty"]
+        for value in result.get("value"):
+            if value.startswith(field_prefix):
+                attr_id = value.split(field_prefix)[1]
+                attr_id = int(attr_id)
+                template_attr_line_id = template_attribute_line.search(
+                    [
+                        ("product_tmpl_id", "=", self.product_tmpl_id.id),
+                        ("attribute_id", "=", attr_id),
+                        ("is_qty_required", "=", True),
+                    ],
+                    limit=1,
+                )
+                if template_attr_line_id:
+                    attr_value_id = result.get("value")[value]
+                    attribute_value_qty = attribute_value_qty_obj.search(
+                        [
+                            ("product_attribute_value_id", "=", int(attr_value_id)),
+                            ("product_tmpl_id", "=", self.product_tmpl_id.id),
+                            ("product_attribute_id", "=", attr_id),
+                        ]
+                    )
+                    self.dyn_qty_field_value = qty_prefix + str(attr_id)
+                    self.domain_qty_ids = attribute_value_qty.ids
+        return result
+
+    def get_form_vals(
+        self,
+        dynamic_fields,
+        domains,
+        cfg_val_ids=None,
+        product_tmpl_id=None,
+        config_session_id=None,
+    ):
+        vals = super().get_form_vals(
+            dynamic_fields,
+            domains,
+            cfg_val_ids=cfg_val_ids,
+            product_tmpl_id=product_tmpl_id,
+            config_session_id=config_session_id,
+        )
+        field_prefix = self._prefixes.get("field_prefix")
+        qty_prefix = self._prefixes.get("qty_field")
+        new_val = {}
+        attribute_value_qty_obj = self.env["attribute.value.qty"]
+        product_template_attribute_value = self.env["product.template.attribute.value"]
+        qty_field_value = False
+        for k, v in dynamic_fields.items():
+            if k.startswith(field_prefix) and config_session_id:
+                template_attribute_value_qty = product_template_attribute_value.search(
+                    [
+                        ("product_tmpl_id", "=", self.product_tmpl_id.id),
+                        ("product_attribute_value_id", "=", int(v)),
+                        ("is_qty_required", "=", True),
+                    ]
+                )
+                product_attrs = attribute_value_qty_obj.search(
+                    [
+                        ("product_tmpl_id", "=", self.product_tmpl_id.id),
+                        ("product_attribute_value_id", "=", int(v)),
+                        ("qty", "=", int(template_attribute_value_qty.default_qty)),
+                    ]
+                )
+                attrb_id = k.split(field_prefix)[1]
+                qty_field_name = qty_prefix + str(attrb_id)
+                is_qty_attrb = (
+                    config_session_id.product_tmpl_id.attribute_line_ids.filtered(
+                        lambda line: line.attribute_id.id == int(attrb_id)
+                        and line.is_qty_required
+                    )
+                )
+                if (
+                    product_attrs
+                    and is_qty_attrb
+                    and self.domain_qty_ids.mapped("product_attribute_value_id").id
+                    != int(v)
+                ):
+                    qty_field_value = product_attrs.id
+                    vals[qty_field_name] = qty_field_value
+        return vals
+
+    def onchange(self, values, field_name, field_onchange):
+        onchange_values = super().onchange(values, field_name, field_onchange)
+        vals = onchange_values.get("value", {})
+        qty_prefix = self._prefixes.get("qty_field")
+        for key, val in vals.items():
+            if isinstance(val, int) and key.startswith(qty_prefix):
+                att_qty_val = self.env["attribute.value.qty"].browse(val)
+                vals[key] = (att_qty_val.id, str(att_qty_val.qty))
+        return onchange_values
 
     # ============================
     # OVERRIDE Methods
@@ -355,7 +420,25 @@ class ProductConfigurator(models.TransientModel):
                 xml_dynamic_form.append(node)
             if attr_line.is_qty_required and qty_field in dynamic_fields:
                 node = etree.Element(
-                    "field", name=qty_field, on_change="1", attrib=attrs
+                    "field",
+                    name=qty_field,
+                    attrib=attrs,
+                    context=str(
+                        {
+                            "active_id": wiz.product_tmpl_id.id,
+                            "wizard_id": wiz.id,
+                            "field_name": qty_field,
+                            # "value_ids": self.env['attribute.value.qty'].search([]).ids,
+                            "active_model": self._name,
+                        }
+                    ),
+                    options=str(
+                        {
+                            "no_create": True,
+                            "no_create_edit": True,
+                            "no_open": True,
+                        }
+                    ),
                 )
                 # self.setup_modifiers(node) # TODO: NC: Need to improve this method
                 xml_dynamic_form.append(node)
@@ -411,7 +494,7 @@ class ProductConfigurator(models.TransientModel):
                 active_id=self.product_tmpl_id.id,
             )
             qty_field_values = self.session_value_quantity_ids.filtered(
-                lambda l: l.attr_value_id.attribute_id.id == attr_id
+                lambda l: l.product_attribute_id.id == attr_id
             )
             if not attr_line.custom and not vals:
                 continue
@@ -442,6 +525,13 @@ class ProductConfigurator(models.TransientModel):
 
             if qty_field_values:
                 for attr_qty in qty_field_values:
-                    dynamic_vals.update({qty_field_name: str(attr_qty.qty)})
+                    dynamic_vals.update(
+                        {
+                            qty_field_name: (
+                                attr_qty.attribute_value_qty_id.id,
+                                str(attr_qty.attribute_value_qty_id.qty),
+                            )
+                        }
+                    )
             res[0].update(dynamic_vals)
         return res

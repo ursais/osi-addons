@@ -19,6 +19,9 @@ class ProductAttributePrice(models.Model):
     )
     default_qty = fields.Integer("Default Quantity", default=1)
     maximum_qty = fields.Integer("Max Quantity", default=1)
+    attribute_value_qty_ids = fields.One2many(
+        "attribute.value.qty", "template_attri_value_id", string="Value Quantity"
+    )
 
     @api.constrains("default_qty", "maximum_qty")
     def _check_default_qty_maximum_qty(self):
@@ -27,3 +30,33 @@ class ProductAttributePrice(models.Model):
                 raise ValidationError(
                     _("Maximum Qty can't be smaller then Default Qty")
                 )
+
+    def update_attribute_value_qty(self):
+        attribute_value_qty_obj = self.env["attribute.value.qty"]
+        for result in self:
+            if result.is_qty_required:
+                val_list = []
+                existing_rec = attribute_value_qty_obj.search(
+                    [
+                        ("product_tmpl_id", "=", result.product_tmpl_id.id),
+                        ("product_attribute_id", "=", result.attribute_id.id),
+                        (
+                            "product_attribute_value_id",
+                            "=",
+                            result.product_attribute_value_id.id,
+                        ),
+                    ]
+                )
+                existing_rec.unlink()
+                for i in range(result.default_qty, result.maximum_qty + 1):
+                    val_list.append(
+                        {
+                            "name": result.product_tmpl_id.name,
+                            "product_tmpl_id": result.product_tmpl_id.id,
+                            "product_attribute_id": result.attribute_id.id,
+                            "product_attribute_value_id": result.product_attribute_value_id.id,
+                            "template_attri_value_id": result.id,
+                            "qty": i,
+                        }
+                    )
+                attribute_value_qty_obj.create(val_list)
