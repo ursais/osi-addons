@@ -43,7 +43,6 @@
         "room",
         "sale_management",
         "sale_subscription",
-        "sale_timesheet",
         "stock",
         "stock_barcode",
         "timesheet_grid",
