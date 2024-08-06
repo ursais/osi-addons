@@ -15,6 +15,5 @@
     # always loaded
     "data": [
         "data/ir_actions_server.xml",
-        "views/mrp_bom_view.xml",
     ],
 }
