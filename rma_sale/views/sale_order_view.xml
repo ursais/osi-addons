@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+        <record id="view_order_form" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="arch" type="xml">
+                <xpath
+                expr="//notebook/page/field[@name='order_line']/form/group/group/field[@name='price_unit']"
+                position="after"
+            >
+                    <field
+                    name="rma_line_id"
+                    options="{'no_create': True}"
+                    groups="rma.group_rma_customer_user,rma.group_rma_supplier_user"
+                />
+                </xpath>
+            </field>
+        </record>
+
+
+
+        <record id="view_order_form_inherit_sale_rma" model="ir.ui.view">
+            <field name="name">sale.order.form.sale.rma</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="arch" type="xml">
+                <data>
+                   <xpath
+                    expr="//button[@name='action_view_invoice']"
+                    position="before"
+                >
+                       <button
+                        type="object"
+                        name="action_view_rma"
+                        class="oe_stat_button"
+                        icon="fa-dropbox"
+                        invisible="rma_count == 0"
+                        groups="rma.group_rma_customer_user"
+                    >
+                           <field name="rma_count" widget="statinfo" string="RMA" />
+                       </button>
+                    </xpath>
+                </data>
+           </field>
+        </record>
+
+</odoo>

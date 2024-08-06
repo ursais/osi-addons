@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <record id="view_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.form - rma</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    type="object"
+                    name="action_open_partner_rma"
+                    class="oe_stat_button"
+                    icon="fa-dropbox"
+                    context="{'res_partner_search_mode': 'customer'}"
+                    groups="rma.group_rma_customer_user,rma.group_rma_supplier_user"
+                >
+                            <field
+                        name="rma_line_count"
+                        widget="statinfo"
+                        string="RMAs"
+                    />
+                </button>
+            </div>
+        </field>
+    </record>
+
+</odoo>

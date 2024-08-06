@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rma_order_line_make_sale_order_customer_user_item,rma.order.line.make.sale.order.customer.user,model_rma_order_line_make_sale_order,rma.group_rma_customer_user,1,1,1,1
+access_rma_order_line_make_sale_order_supplier_user_item,rma.order.line.make.sale.order.supplier.user,model_rma_order_line_make_sale_order,rma.group_rma_supplier_user,1,1,1,1
+access_rma_order_line_make_sale_order_item_customer_user_item,rma.order.line.make.sale.order.item.customer.user,model_rma_order_line_make_sale_order_item,rma.group_rma_customer_user,1,1,1,1
+access_rma_order_line_make_sale_order_item_supplier_user_item,rma.order.line.make.sale.order.item.supplier.user,model_rma_order_line_make_sale_order_item,rma.group_rma_supplier_user,1,1,1,1
+access_rma_add_sale_customer_user_item,rma.add.sale.customer.user,model_rma_add_sale,rma.group_rma_customer_user,1,1,1,1
+access_rma_add_sale_supplier_user_item,rma.add.sale.supplier.user,model_rma_add_sale,rma.group_rma_supplier_user,1,1,1,1

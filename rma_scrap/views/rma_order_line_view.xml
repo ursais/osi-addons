@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+        <record id="view_rma_line_form" model="ir.ui.view">
+            <field name="name">rma.order.line.form</field>
+            <field name="model">rma.order.line</field>
+            <field name="inherit_id" ref="rma.view_rma_line_form" />
+            <field name="arch" type="xml">
+                <button name='action_view_out_shipments' position="after">
+                    <button
+                    type="object"
+                    name="action_view_scrap_transfers"
+                    class="oe_stat_button"
+                    icon="fa-truck"
+                    groups="stock.group_stock_user"
+                    invisible="scrap_count == 0 or state == 'draft'"
+                >
+                        <field name="scrap_count" widget="statinfo" string="Scraps" />
+                    </button>
+                </button>
+                <group name="quantities" position="inside">
+                    <group>
+                        <field name="qty_to_scrap" />
+                        <field name="qty_in_scrap" />
+                        <field name="qty_scrap" />
+                    </group>
+                </group>
+                <field name="delivery_policy" position="after">
+                    <field name="scrap_policy" />
+                </field>
+            </field>
+        </record>
+
+    <record id="view_rma_rma_line_filter" model="ir.ui.view">
+        <field name="name">rma.order.line.select - rma_scrap</field>
+        <field name="model">rma.order.line</field>
+        <field name="inherit_id" ref="rma.view_rma_rma_line_filter" />
+        <field name="arch" type="xml">
+            <group name="stock_quantities" position="after">
+                <group name="scrap_quantities" groups="stock.group_stock_user">
+                    <filter
+                        domain="[('state','!=', 'done'),('qty_to_scrap','>',0.0)]"
+                        help="To Scrap"
+                        name="to_scrap"
+                    />
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>

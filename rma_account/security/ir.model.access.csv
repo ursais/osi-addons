@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_move_customer_user,access_account_move,account.model_account_move,rma.group_rma_customer_user,1,0,0,0
+access_account_move_supplier_user,access_account_move,account.model_account_move,rma.group_rma_supplier_user,1,0,0,0
+access_account_move_line_customer_user,access_account_move_line,account.model_account_move_line,rma.group_rma_customer_user,1,0,0,0
+access_account_move_line_supplier_user,access_account_move_line,account.model_account_move_line,rma.group_rma_supplier_user,1,0,0,0
+access_rma_refund_customer_user_item,rma.refund.customer.user,model_rma_refund,rma.group_rma_customer_user,1,1,1,1
+access_rma_refund_supplier_user_item,rma.refund.supplier.user,model_rma_refund,rma.group_rma_supplier_user,1,1,1,1
+access_rma_refund_item_customer_user_item,rma.refund.item.customer.user,model_rma_refund_item,rma.group_rma_customer_user,1,1,1,1
+access_rma_refund_item_supplier_user_item,rma.refund.item.supplier.user,model_rma_refund_item,rma.group_rma_supplier_user,1,1,1,1
+access_rma_add_account_move_customer_user_item,rma.add.account.move.customer.user,model_rma_add_account_move,rma.group_rma_customer_user,1,1,1,1
+access_rma_add_account_move_supplier_user_item,rma.add.account.move.supplier.user,model_rma_add_account_move,rma.group_rma_supplier_user,1,1,1,1

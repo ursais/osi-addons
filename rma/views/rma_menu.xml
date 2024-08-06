@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <menuitem
+        id="menu_rma_root"
+        name="RMA"
+        groups="rma.group_rma_customer_user,rma.group_rma_supplier_user,rma.group_rma_manager"
+        web_icon="rma,static/description/icon.png"
+        sequence="100"
+    />
+
+    <!-- Customer RMA -->
+    <menuitem
+        id="menu_customer_rma"
+        name="Customer RMA"
+        groups="rma.group_rma_customer_user,rma.group_rma_supplier_user"
+        sequence="30"
+        parent="menu_rma_root"
+    />
+
+    <menuitem
+        id="menu_rma_act_customer"
+        sequence="50"
+        parent="menu_customer_rma"
+        groups="rma.group_rma_groups"
+        action="action_rma_customer"
+    />
+
+    <menuitem
+        id="menu_rma_line_customer"
+        sequence="20"
+        parent="menu_customer_rma"
+        groups="rma.group_rma_customer_user"
+        action="action_rma_customer_lines"
+    />
+
+    <!-- Supplier RMA -->
+    <menuitem
+        id="menu_supplier_rma"
+        name="Supplier RMA"
+        groups="rma.group_rma_customer_user,rma.group_rma_supplier_user"
+        sequence="31"
+        parent="menu_rma_root"
+    />
+
+    <menuitem
+        id="menu_rma_act_supplier"
+        sequence="50"
+        parent="menu_supplier_rma"
+        groups="rma.group_rma_groups"
+        action="action_rma_supplier"
+    />
+
+    <menuitem
+        id="menu_rma_line_supplier"
+        sequence="20"
+        parent="menu_supplier_rma"
+        groups="rma.group_rma_supplier_user"
+        action="action_rma_supplier_lines"
+    />
+
+    <!--    Settings-->
+    <menuitem
+        id="menu_rma_config"
+        name="Configuration"
+        groups="rma.group_rma_manager"
+        sequence="999"
+        parent="menu_rma_root"
+    />
+
+    <menuitem
+        id="menu_rma_global_settings"
+        name="Settings"
+        parent="rma.menu_rma_config"
+        sequence="1"
+        action="action_rma_config_settings"
+        groups="base.group_system"
+    />
+
+    <menuitem
+        id="menu_rma_operation_customer"
+        name="Customer Operations"
+        groups="rma.group_rma_manager"
+        sequence="35"
+        parent="rma.menu_rma_config"
+        action="action_rma_operation_customer"
+    />
+
+    <menuitem
+        id="menu_rma_operation_supplier"
+        name="Supplier Operations"
+        groups="rma.group_rma_manager"
+        sequence="40"
+        parent="rma.menu_rma_config"
+        action="action_rma_operation_supplier"
+    />
+
+    <!-- Master data menus-->
+
+    <menuitem
+        id="menu_rma_rma_control"
+        name="Master Data"
+        parent="menu_rma_root"
+        sequence="50"
+    />
+    <menuitem
+        id="menu_rma_config_warehouse"
+        name="Warehouse"
+        parent="rma.menu_rma_rma_control"
+        sequence="10"
+    />
+    <menuitem
+        id="menu_rma_config_stock"
+        name="Products"
+        action="stock.product_template_action_product"
+        parent="rma.menu_rma_config_warehouse"
+        sequence="10"
+    />
+    <menuitem
+        id="rma_product_product_menu"
+        name="Product Variants"
+        action="stock.stock_product_normal_action"
+        parent="rma.menu_rma_config_warehouse"
+        sequence="20"
+        groups="product.group_product_variant"
+    />
+
+    <menuitem
+        id="menu_rma_config_partners"
+        name="Partners"
+        parent="rma.menu_rma_rma_control"
+        sequence="20"
+    />
+    <menuitem
+        id="rma_res_partner_menu_customer"
+        name="Customers"
+        parent="rma.menu_rma_config_partners"
+        action="base.action_partner_form"
+        sequence="50"
+    />
+    <menuitem
+        id="rma_res_partner_menu_suppliers"
+        name="Suppliers"
+        parent="rma.menu_rma_config_partners"
+        action="base.action_partner_supplier_form"
+        sequence="60"
+    />
+</odoo>

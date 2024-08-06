@@ -1,0 +1,96 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="invoice_form" model="ir.ui.view">
+        <field name="name">account.move.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    type="object"
+                    name="action_view_used_in_rma"
+                    class="oe_stat_button"
+                    icon="fa-eject"
+                    invisible="used_in_rma_count == 0"
+                    groups="rma.group_rma_customer_user,rma.group_rma_supplier_user"
+                >
+                    <field name="used_in_rma_count" widget="statinfo" string="RMA" />
+                </button>
+                <button
+                    type="object"
+                    name="action_view_rma"
+                    class="oe_stat_button"
+                    icon="fa-list"
+                    invisible="rma_count == 0"
+                    groups="rma.group_rma_customer_user,rma.group_rma_supplier_user"
+                >
+                    <field name="rma_count" widget="statinfo" string="RMA" />
+                </button>
+            </div>
+            <!-- Add link to rma_line_id to account.move.line -->
+            <xpath
+                expr="//field[@name='invoice_line_ids']/tree/field[@name='company_id']"
+                position="after"
+            >
+                <field name="rma_line_id" invisible="1" />
+            </xpath>
+            <xpath
+                expr="//field[@name='line_ids']/tree/field[@name='company_id']"
+                position="after"
+            >
+                <field name="rma_line_id" invisible="1" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_invoice_line_form" model="ir.ui.view">
+        <field name="name">rma.invoice.line.form</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_form" />
+        <field eval="16" name="priority" />
+        <field name="arch" type="xml">
+            <data>
+                <field name="name" position="after">
+                    <field name="rma_line_count" invisible="1" />
+                    <field name="rma_line_id" string="RMA line originated" />
+                </field>
+                <xpath expr="//notebook" position="inside">
+                    <page string="RMA Lines" invisible="rma_line_count == 0">
+                        <group>
+                            <field name="rma_line_id" />
+                        </group>
+                        <group name="rma_line" string="RMA Lines">
+	                        <field name="rma_line_ids" colspan="4" nolabel="1" />
+                        </group>
+                    </page>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+    <record id="view_invoice_supplier_rma_form" model="ir.ui.view">
+        <field name="name">account.move.supplier.rma</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <field name="invoice_vendor_bill_id" position="after">
+                 <field
+                    name="add_rma_line_id"
+                    context="{'rma': True}"
+                    domain="[('type', '=', 'supplier'),('partner_id', '=', partner_id)]"
+                    readonly="state != 'draft'"
+                    invisible="payment_state == 'paid' or move_type != 'in_refund'"
+                    class="oe_edit_only"
+                    options="{'no_create': True}"
+                />
+            </field>
+        </field>
+    </record>
+
+    <record id="action_invoice_line" model="ir.actions.act_window">
+        <field name="name">Invoice Line</field>
+        <field name="res_model">account.move.line</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account.view_move_line_form" />
+    </record>
+</odoo>

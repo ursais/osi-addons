@@ -1,0 +1,45 @@
+<?xml version="1.0" ?>
+<odoo noupdate="1">
+    <record id="rma_operation_customer_replace" model="rma.operation">
+        <field name="name">Replace After Receive</field>
+        <field name="code">RPL-C</field>
+        <field name="receipt_policy">ordered</field>
+        <field name="delivery_policy">received</field>
+        <field name="type">customer</field>
+        <field name="in_route_id" ref="rma.route_rma_customer" />
+        <field name="out_route_id" ref="rma.route_rma_customer" />
+    </record>
+
+    <record id="rma_operation_supplier_replace" model="rma.operation">
+        <field name="name">Replace</field>
+        <field name="code">RPL-S</field>
+        <field name="receipt_policy">ordered</field>
+        <field name="delivery_policy">ordered</field>
+        <field name="type">supplier</field>
+        <field name="in_route_id" ref="rma.route_rma_supplier" />
+        <field name="out_route_id" ref="rma.route_rma_supplier" />
+    </record>
+
+    <record id="rma_operation_ds_replace" model="rma.operation">
+        <field name="name">Dropship - Deliver to vendor</field>
+        <field name="code">DS-RPL-C</field>
+        <field name="receipt_policy">ordered</field>
+        <field name="delivery_policy">no</field>
+        <field name="type">customer</field>
+        <field name="customer_to_supplier" eval="True" />
+        <field name="out_route_id" ref="rma.route_rma_dropship" />
+        <field name="in_route_id" ref="rma.route_rma_dropship" />
+    </record>
+
+    <record id="rma_operation_ds_replace_supplier" model="rma.operation">
+        <field name="name">Dropship - Deliver to customer</field>
+        <field name="code">DS-RPL-S</field>
+        <field name="receipt_policy">no</field>
+        <field name="delivery_policy">ordered</field>
+        <field name="type">supplier</field>
+        <field name="supplier_to_customer" eval="True" />
+        <field name="out_route_id" ref="rma.route_rma_dropship" />
+        <field name="in_route_id" ref="rma.route_rma_dropship" />
+    </record>
+
+</odoo>

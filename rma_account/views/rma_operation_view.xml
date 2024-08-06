@@ -1,0 +1,30 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="rma_operation_tree" model="ir.ui.view">
+        <field name="name">rma.operation.tree</field>
+        <field name="model">rma.operation</field>
+        <field name="inherit_id" ref="rma.rma_operation_tree" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="refund_policy" />
+            </field>
+        </field>
+    </record>
+
+    <record id="rma_operation_form" model="ir.ui.view">
+        <field name="name">rma.operation.form</field>
+        <field name="model">rma.operation</field>
+        <field name="inherit_id" ref="rma.rma_operation_form" />
+        <field name="arch" type="xml">
+            <field name="receipt_policy" position="before">
+                <field name="refund_policy" />
+                <field name="valid_refund_journal_ids" invisible="1" />
+                <field name="refund_journal_id" />
+            </field>
+            <field name="customer_to_supplier" position="before">
+                <field name="automated_refund" />
+                <field name="refund_free_of_charge" />
+            </field>
+        </field>
+    </record>
+</odoo>

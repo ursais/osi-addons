@@ -1,0 +1,77 @@
+<?xml version="1.0" ?>
+<!-- Copyright 2016 ForgeFlow
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl-3.0) -->
+<odoo>
+    <record id="view_rma_order_line_make_supplier_rma" model="ir.ui.view">
+        <field name="name">RMA Line Make Supplier RMA</field>
+        <field name="model">rma.order.line.make.supplier.rma</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+             <form string="Create Supplier RMA">
+                 <separator string="Existing Supplier RMA to update:" />
+                 <newline />
+                 <group>
+                    <field
+                        name="supplier_rma_id"
+                        domain="[('partner_id', '=', partner_id)]"
+                    />
+                 </group>
+                 <newline />
+                 <separator string="New RMA details:" />
+                 <newline />
+                 <group>
+                     <field name="partner_id" />
+                 </group>
+                 <newline />
+                 <group>
+                     <field name="item_ids" nolabel="1" colspan="2">
+                          <tree name="Details" editable="bottom" create="false">
+                              <field name="line_id" options="{'no_open': true}" />
+                              <field name="product_id" />
+                              <field name="name" />
+                              <field name="operation_id" />
+                              <field name="product_qty" />
+                              <field name="uom_id" groups="uom.group_uom" />
+                          </tree>
+                     </field>
+                 </group>
+                 <newline />
+                 <footer colspan="2">
+                     <button
+                        name="make_supplier_rma"
+                        string="Create/Update Supplier RMA"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                     <button special="cancel" string="Cancel" class="oe_link" />
+                 </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rma_order_line_make_supplier_rma" model="ir.actions.act_window">
+        <field name="name">Create Supplier RMA</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">rma.order.line.make.supplier.rma</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_rma_order_line_make_supplier_rma" />
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="rma.model_rma_order_line" />
+    </record>
+
+    <record id="view_rma_line_supplier_rma_button_form" model="ir.ui.view">
+    <field name="name">rma.order.line.supplier.rma.form</field>
+    <field name="model">rma.order.line</field>
+    <field name="inherit_id" ref="rma.view_rma_line_form" />
+    <field name="arch" type="xml">
+        <header position="inside">
+            <button
+                    name="%(action_rma_order_line_make_supplier_rma)d"
+                    string="Create Supplier RMA"
+                    invisible="type != 'customer' or state != 'approved'"
+                    type="action"
+                />
+        </header>
+    </field>
+    </record>
+</odoo>

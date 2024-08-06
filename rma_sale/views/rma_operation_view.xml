@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+        <record id="rma_operation_tree" model="ir.ui.view">
+            <field name="name">rma.operation.tree</field>
+            <field name="model">rma.operation</field>
+            <field name="inherit_id" ref="rma.rma_operation_tree" />
+            <field name="arch" type="xml">
+                <field name="delivery_policy" position="after">
+                    <field name="sale_policy" />
+                </field>
+            </field>
+        </record>
+
+        <record id="rma_operation_form" model="ir.ui.view">
+            <field name="name">rma.operation.form</field>
+            <field name="model">rma.operation</field>
+            <field name="inherit_id" ref="rma.rma_operation_form" />
+            <field name="arch" type="xml">
+                <field name="delivery_policy" position="after">
+                    <field name="sale_policy" />
+                </field>
+                <field name="company_id" position="after">
+                    <field name="auto_confirm_rma_sale" />
+                    <field name="free_of_charge_rma_sale" />
+                </field>
+            </field>
+        </record>
+
+</odoo>

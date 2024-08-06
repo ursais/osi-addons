@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_move_form" model="ir.ui.view">
+        <field name="name">rma.move.form</field>
+        <field name="model">stock.move</field>
+         <field name="inherit_id" ref="stock.view_move_form" />
+        <field name="arch" type="xml">
+            <group name="origin_grp" position="after">
+                <group name="rma">
+                    <field name="rma_line_id" />
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="stock_location_route_form_view_inherit_rma_stock" model="ir.ui.view">
+        <field name="name">stock.route.form</field>
+        <field name="inherit_id" ref="stock.stock_location_route_form_view" />
+        <field name="model">stock.route</field>
+        <field name="arch" type="xml">
+            <label for="warehouse_selectable" position="before">
+                <field name="rma_selectable" string="RMA Order Lines" />
+            </label>
+        </field>
+    </record>
+</odoo>
