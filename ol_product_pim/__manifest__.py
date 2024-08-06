@@ -11,7 +11,7 @@
     "version": "17.0.0.1.0",
     # any module necessary for this one to work correctly
     "depends": [
-        # "ol_base",
+        "ol_base",
         "product_attribute_set",
     ],
     # always loaded
@@ -20,5 +20,6 @@
         "data/attribute.group.csv",
         "data/attribute.attribute.csv",
         "data/attribute.option.csv",
+        "views/product_template_views.xml",
     ],
 }
