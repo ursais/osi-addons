@@ -173,10 +173,12 @@ class ProductTemplate(models.Model):
             if rec.list_price:
                 last_purchase_margin = (
                     rec.list_price
-                    - (rec.last_purchase_price_converted * (1 + rec.tariff_percent))
-                    + rec.tooling_cost
-                    + rec.defrayment_cost
-                    + (rec.default_shipping_cost or 0.0)
+                    - (
+                        (rec.last_purchase_price_converted * (1 + rec.tariff_percent))
+                        + rec.tooling_cost
+                        + rec.defrayment_cost
+                        + (rec.default_shipping_cost or 0.0)
+                    )
                 ) / rec.list_price
 
             margin_changed = False
