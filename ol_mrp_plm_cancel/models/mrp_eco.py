@@ -47,7 +47,10 @@ class MrpEco(models.Model):
         ValidationError will show if no stage is set to be a cancel stage."""
 
         cancel_stage = self.env["mrp.eco.stage"].search(
-            [("type_ids", "in", [self.type_id.id]), ("cancel_stage", "=", True)],
+            [
+                ("type_ids", "in", [self.type_id.id]),
+                ("cancel_stage", "=", True),
+            ],
             order="sequence asc",
             limit=1,
         )

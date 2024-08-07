@@ -18,7 +18,6 @@
     # always loaded
     "data": [
         "security/ir.model.access.csv",
-        "security/mrp_plm.xml",
         "views/plm_eco_stage_views.xml",
         "views/plm_eco_view.xml",
     ],

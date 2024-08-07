@@ -101,9 +101,6 @@ class MrpEco(models.Model):
             stages = self.env["mrp.eco.stage"].search(
                 [
                     ("type_ids", "in", rec.type_id.ids),
-                    "|",
-                    ("company_id", "=", rec.company_id.id),
-                    ("company_id", "=", False),
                 ]
             )
             # Filter stages with a sequence less than the current stage's sequence
