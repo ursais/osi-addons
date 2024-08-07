@@ -349,6 +349,11 @@ class ProductPriceReview(models.Model):
 
     @api.depends("origin_last_purchase_price")
     def _compute_origin_last_purchase_price_converted(self):
+        """
+        Compute the converted last purchase price based on the origin currency.
+        If the origin currency differs from the company's currency, convert the price.
+        Otherwise, use the origin last purchase price directly.
+        """
         for rec in self:
             if (
                 rec.origin_last_purchase_currency_id
@@ -373,6 +378,11 @@ class ProductPriceReview(models.Model):
         "origin_default_shipping_cost",
     )
     def _compute_last_purchase_margin(self):
+        """
+        Compute the last purchase margin as a percentage.
+        The margin is calculated based on the list price, converted last purchase price,
+        tariff, tooling cost, defrayment cost, and default shipping cost.
+        """
         for rec in self:
             last_purchase_margin = 0
             if rec.product_id.list_price:
@@ -393,6 +403,11 @@ class ProductPriceReview(models.Model):
         "origin_total_cost",
     )
     def _compute_origin_margins(self):
+        """
+        Compute the origin margins.
+        The margin is calculated as the difference between the final price and the
+        total cost. The margin percentage is the margin divided by the final price.
+        """
         for rec in self:
             origin_margin = 0.0
             origin_margin_percent = 0
@@ -411,6 +426,10 @@ class ProductPriceReview(models.Model):
         "default_shipping_cost",
     )
     def _compute_total_cost(self):
+        """
+        Compute the total cost by summing up the converted last purchase price with
+        tariff, tooling cost, defrayment cost, and default shipping cost.
+        """
         for rec in self:
             rec.total_cost = (
                 rec.origin_last_purchase_price_converted * (1 + rec.tariff_percent)
@@ -424,6 +443,10 @@ class ProductPriceReview(models.Model):
         "origin_total_cost",
     )
     def _compute_cost_delta(self):
+        """
+        Compute the cost delta, which is the difference between the origin total cost
+        and the current total cost.
+        """
         for rec in self:
             cost_delta = 0.0
             if rec.total_cost:
@@ -435,6 +458,12 @@ class ProductPriceReview(models.Model):
         "total_cost",
     )
     def _compute_calculated_price(self):
+        """
+        Compute the calculated price based on the total cost and margins.
+        Raises a validation error if the suggested or override margin is 100%.
+        If an override margin is provided, it is used for the calculation.
+        Otherwise, the suggested margin is used.
+        """
         for rec in self:
             if rec.suggested_margin == 1.0:
                 raise ValidationError("The suggested margin cannot be 100%")

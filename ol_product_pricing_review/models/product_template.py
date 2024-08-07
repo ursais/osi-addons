@@ -242,3 +242,5 @@ class ProductTemplate(models.Model):
             if "margin_min" in vals or "margin_max" in vals:
                 rec._compute_last_purchase_margin(from_threshold=True)
         return res
+
+    # END ##########
