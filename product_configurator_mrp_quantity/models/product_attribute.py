@@ -7,6 +7,74 @@ class ProductAttributeLine(models.Model):
 
     is_qty_required = fields.Boolean(string="Qty Required", copy=False)
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        result = super().create(vals_list)
+        template_attribute_value_obj = self.env["product.template.attribute.value"]
+        attribute_value_qty_obj = self.env["attribute.value.qty"]
+        for val in vals_list:
+            if result.is_qty_required and result.value_ids:
+                qty_list = []
+                for attr_value in result.value_ids:
+                    template_attri_value_id = template_attribute_value_obj.search(
+                        [
+                            ("product_tmpl_id", "=", result.product_tmpl_id.id),
+                            ("attribute_line_id", "=", result.id),
+                            ("product_attribute_value_id", "=", attr_value.id),
+                            ("attribute_id", "=", result.attribute_id.id),
+                        ]
+                    )
+                    qty_list.append(
+                        {
+                            "product_tmpl_id": result.product_tmpl_id.id,
+                            "product_attribute_id": result.attribute_id.id,
+                            "product_attribute_value_id": attr_value.id,
+                            "qty": template_attri_value_id.default_qty,
+                            "template_attri_value_id": template_attri_value_id.id,
+                        }
+                    )
+                attribute_value_qty_obj.create(qty_list)
+        return result
+
+    def write(self, values):
+        result = super().write(values)
+        template_attribute_value_obj = self.env["product.template.attribute.value"]
+        attribute_value_qty_obj = self.env["attribute.value.qty"]
+        attribute_value_line_domain = [
+            ("product_tmpl_id", "=", self.product_tmpl_id.id),
+            ("attribute_line_id", "=", self.id),
+            ("attribute_id", "=", self.attribute_id.id),
+        ]
+        if values.get("is_qty_required") and self.value_ids:
+            qty_list = []
+            for attr_value in self.value_ids:
+                attribute_value_line_domain += [
+                    ("product_attribute_value_id", "=", attr_value.id)
+                ]
+                template_attri_value_id = template_attribute_value_obj.search(
+                    attribute_value_line_domain
+                )
+                qty_list.append(
+                    {
+                        "product_tmpl_id": self.product_tmpl_id.id,
+                        "product_attribute_id": self.attribute_id.id,
+                        "product_attribute_value_id": attr_value.id,
+                        "qty": template_attri_value_id.default_qty,
+                        "template_attri_value_id": template_attri_value_id.id,
+                    }
+                )
+            attribute_value_qty_obj.create(qty_list)
+        elif values.get("is_qty_required") == False:
+            for attr_value in self.value_ids:
+                attribute_value_line_domain += [
+                    ("product_attribute_value_id", "=", attr_value.id)
+                ]
+                template_attri_value_id = template_attribute_value_obj.search(
+                    attribute_value_line_domain
+                )
+                template_attri_value_id.attribute_value_qty_ids.unlink()
+        return result
+
 
 class ProductAttributePrice(models.Model):
     _inherit = "product.template.attribute.value"

@@ -1,3 +1,5 @@
+import ast
+
 from lxml import etree
 
 from odoo import _, api, fields, models
@@ -12,6 +14,8 @@ class ProductConfigurator(models.TransientModel):
         "attribute.value.qty",
         string="Domain",
     )
+    domains_dict = fields.Text("Domains")
+    value_qty_dict = fields.Text("Value Qty")
 
     @property
     def _prefixes(self):
@@ -120,8 +124,17 @@ class ProductConfigurator(models.TransientModel):
                             ("product_attribute_id", "=", attr_id),
                         ]
                     )
-                    self.dyn_qty_field_value = qty_prefix + str(attr_id)
+                    qty_field_name = qty_prefix + str(attr_id)
+                    self.dyn_qty_field_value = qty_field_name
                     self.domain_qty_ids = attribute_value_qty.ids
+                    domains_dict = (
+                        self.domains_dict and ast.literal_eval(self.domains_dict) or {}
+                    )
+                    if qty_field_name in domains_dict:
+                        domains_dict[qty_field_name] = attribute_value_qty.ids
+                    else:
+                        domains_dict.update({qty_field_name: attribute_value_qty.ids})
+                    self.domains_dict = domains_dict
         return result
 
     def get_form_vals(
@@ -169,14 +182,23 @@ class ProductConfigurator(models.TransientModel):
                         and line.is_qty_required
                     )
                 )
-                if (
-                    product_attrs
-                    and is_qty_attrb
-                    and self.domain_qty_ids.mapped("product_attribute_value_id").id
-                    != int(v)
-                ):
+                if is_qty_attrb and product_attrs:
+                    value_qty_dict = (
+                        self.value_qty_dict
+                        and ast.literal_eval(self.value_qty_dict)
+                        or {}
+                    )
                     qty_field_value = product_attrs.id
-                    vals[qty_field_name] = qty_field_value
+                    if not value_qty_dict.get(qty_field_name):
+                        vals[qty_field_name] = qty_field_value
+                        value_qty_dict.update({qty_field_name: qty_field_value})
+                    elif (
+                        value_qty_dict.get(qty_field_name)
+                        and value_qty_dict.get(qty_field_name) != qty_field_value
+                    ):
+                        vals[qty_field_name] = qty_field_value
+                        value_qty_dict[qty_field_name] = qty_field_value
+                    self.value_qty_dict = value_qty_dict
         return vals
 
     def onchange(self, values, field_name, field_onchange):
