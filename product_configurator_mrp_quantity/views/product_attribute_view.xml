@@ -47,7 +47,13 @@
                 />
             </xpath>
             <field name="exclude_for" position="after">
-                <field name="attribute_value_qty_ids" widget="one2many" mode="tree" />
+                <field
+                    name="attribute_value_qty_ids"
+                    widget="one2many"
+                    mode="tree"
+                    invisible="not is_qty_required"
+                    groups="product_configurator.group_product_configurator_manager"
+                />
             </field>
         </field>
     </record>

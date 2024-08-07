@@ -1,3 +1,5 @@
+import ast
+
 from odoo import api, fields, models
 
 
@@ -40,13 +42,18 @@ class AttributeValueQty(models.Model):
                 qty_attr_id
                 and wiz_id.dyn_qty_field_value == self._context.get("field_name")
                 and wiz_id.domain_qty_ids
+                and wiz_id.domain_qty_ids.mapped("product_attribute_id").id
+                == qty_attr_id
             ):
                 args = [("id", "in", wiz_id.domain_qty_ids.ids)]
-            if qty_attr_id and wiz_id.dyn_qty_field_value != self._context.get(
+            elif qty_attr_id and wiz_id.dyn_qty_field_value != self._context.get(
                 "field_name"
             ):
                 value_id = wiz_id.value_ids.filtered(
                     lambda val: val.attribute_id.id == int(qty_attr_id)
+                )
+                domains_dict = (
+                    wiz_id.domains_dict and ast.literal_eval(wiz_id.domains_dict) or {}
                 )
                 domain_ids = self.search(
                     [
@@ -54,8 +61,10 @@ class AttributeValueQty(models.Model):
                         ("product_attribute_value_id", "=", value_id.id),
                         ("product_attribute_id", "=", int(qty_attr_id)),
                     ]
-                )
-                args = [("id", "in", domain_ids.ids)]
+                ).ids
+                if not domain_ids and domains_dict:
+                    domain_ids = domains_dict[self._context.get("field_name")]
+                args = [("id", "in", domain_ids)]
         return super().name_search(name=name, args=args, operator=operator, limit=limit)
 
     @api.model
