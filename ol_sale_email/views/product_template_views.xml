@@ -1,0 +1,16 @@
+<odoo>
+
+    <record id="ol_sale_email_product_template_form_view_inherit" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.ol_sale_email</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view" />
+        <field name="arch" type="xml">
+            <group name="sale" position="before">
+                <group name="allow_backorder">
+                    <field name="allow_backorder" />
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>

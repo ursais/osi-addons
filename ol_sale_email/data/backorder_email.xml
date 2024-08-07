@@ -1,0 +1,66 @@
+<odoo>
+
+    <record id="backorder_email_template" model="mail.template">
+        <field name="name">OnLogic Backorder Email</field>
+        <field name="model_id" ref="sale.model_sale_order" />
+        <field
+            name="email_from"
+        >{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
+        <field name="partner_to">{{ object.partner_id.id }}</field>
+        <field
+            name="subject"
+        >Your Order {{ object.name or 'n/a' }} Has Been Backordered</field>
+        <field name="body_html" type="html">
+
+            <!-- Body -->
+            <div style="font-weight: 500; font-size: 20px; display: block;">
+                <tag>Your order is pending</tag>
+            </div>
+            <div style="font-size:16px; line-height:28px; margin-top:30px">
+                <t t-esc="object.partner_id.name" />,
+            </div>
+            <p style="font-size: 16px; line-height: 28px; margin-top: 30px;">
+                <tag>Thank you for choosing OnLogic! We wanted to let you know that
+                    your order may be delayed due to component availability. Our team
+                    is working diligently to meet the expected delivery date. You will
+                    hear from us soon if there are any changes to the date.</tag>
+                <br /><br />
+                <tag>If you have questions, please email</tag>
+                <a
+                    t-attf-href="mailto:{{ object.company_id.email }}"
+                    style="color:#1E7EC8;"
+                >
+                    <t t-esc="object.company_id.email" />
+                </a>
+                <tag>or give us a call at</tag>
+                <t
+                    t-esc="object.company_id.phone"
+                    t-options='{"widget": "phone_formatter", "company_id": object.company_id.id}'
+                />
+                <!-- ,
+                <t t-esc="object.company_id.hours_of_operation" /> -->
+                .
+                <br /><br />
+                <t t-if="object.partner_id.lang == 'de_DE'">
+                    <tag>Produkt(e) unter Bestellnummer</tag>
+                    <span style="font-weight: 500;"><t t-esc="object.name" /></span>
+                    <tag
+                    >das/die potenziell von der Komponentenverfügbarkeit abhängig ist/sind.</tag>
+                </t>
+                <t t-else="">
+                    <tag>Product(s) in order number</tag>
+                    <span style="font-weight: 500;"><t t-esc="object.name" /></span>
+                    <tag>that are potentially impacted by component availability.</tag>
+                </t>
+            </p>
+            <p style="font-size: 16px; line-height: 28px;">
+                <br /><br />
+                <tag style="font-size: 16px; line-height: 28px;">The OnLogic Team</tag>
+            </p>
+
+        </field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="auto_delete" eval="False" />
+    </record>
+
+</odoo>
