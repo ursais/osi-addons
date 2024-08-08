@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="excep_component_outof_stock" model="exception.rule">
+        <field name="name">Component Out of Stock</field>
+        <field name="description">Component Out of Stock Exception</field>
+        <field name="sequence">50</field>
+        <field name="model">sale.order</field>
+        <field name="exception_type">by_domain</field>
+        <field name="domain">[
+            ("order_line.bom_id.bom_line_ids.product_tmpl_id.detailed_type", "=","product"),
+            ("order_line.bom_id.bom_line_ids.product_tmpl_id.allow_backorder", "!=", True),
+            ("order_line.bom_id.bom_line_ids.product_id.qty_available", "&lt;=", 0)
+        ]</field>
+        <field name="active" eval="True" />
+    </record>
+
+</odoo>

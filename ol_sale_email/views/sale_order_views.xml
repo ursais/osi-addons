@@ -1,0 +1,32 @@
+<odoo>
+
+    <record id="ol_sale_email_view_order_form_inherit" model="ir.ui.view">
+        <field name="name">ol_sale_email.backorder</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_view_invoice']" position="before">
+                <field name="to_send_backorder_email" invisible="1" />
+                <button
+                    type="object"
+                    name="toggle_backorder_email"
+                    class="oe_stat_button"
+                    icon="fa-envelope"
+                >
+                    <div class="o_field_widget o_stat_info">
+                        <span
+                            class="o_stat_text"
+                            invisible="to_send_backorder_email"
+                        >Don't Send</span>
+                        <span
+                            class="o_stat_text"
+                            invisible="not to_send_backorder_email"
+                        >Send</span>
+                        <span class="o_stat text">BO. Email</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
