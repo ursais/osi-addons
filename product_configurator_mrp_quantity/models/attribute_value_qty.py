@@ -43,7 +43,7 @@ class AttributeValueQty(models.Model):
                 and wiz_id.dyn_qty_field_value == self._context.get("field_name")
                 and wiz_id.domain_qty_ids
                 and wiz_id.domain_qty_ids.mapped("product_attribute_id").id
-                == qty_attr_id
+                == int(qty_attr_id)
             ):
                 args = [("id", "in", wiz_id.domain_qty_ids.ids)]
             elif qty_attr_id and wiz_id.dyn_qty_field_value != self._context.get(

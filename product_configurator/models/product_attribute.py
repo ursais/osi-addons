@@ -1,4 +1,4 @@
-from ast import literal_eval
+import ast
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -105,7 +105,7 @@ class ProductAttribute(models.Model):
         if self.custom_type in ("integer", "float"):
             minv = self.min_val
             maxv = self.max_val
-            val = literal_eval(str(val))
+            val = ast.literal_eval(str(val))
             if minv and maxv and (val < minv or val > maxv):
                 raise ValidationError(
                     _(
@@ -428,6 +428,11 @@ class ProductAttributeValue(models.Model):
 
             else:
                 field_prefix = wiz_id._prefixes.get("field_prefix")
+                dyn_restricted_attrs_dicts = (
+                    wiz_id.dyn_restricted_attrs_dicts
+                    and ast.literal_eval(wiz_id.dyn_restricted_attrs_dicts)
+                    or {}
+                )
                 if (
                     field_prefix
                     and self.env.context.get("field_name")
@@ -453,6 +458,18 @@ class ProductAttributeValue(models.Model):
                             args[0][2] = domain_attr_ids.ids
                         if domain_attr_2_ids.ids:
                             args[0][2] = domain_attr_2_ids.ids
+                elif dyn_restricted_attrs_dicts.get(
+                    self.env.context.get("field_name"), False
+                ):
+                    args = [
+                        (
+                            "id",
+                            "in",
+                            dyn_restricted_attrs_dicts.get(
+                                self.env.context.get("field_name")
+                            ),
+                        )
+                    ]
 
         product_tmpl_id = self.env.context.get("_cfg_product_tmpl_id")
         if product_tmpl_id:

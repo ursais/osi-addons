@@ -1,3 +1,5 @@
+import json
+
 from lxml import etree
 
 from odoo import _, api, fields, models, tools
@@ -238,11 +240,12 @@ class ProductConfigurator(models.TransientModel):
                 continue
             available_val_ids = domains[k][0][2]
             available_val_ids_m2m = []
-            if isinstance(v, list) and self.env.context.get("is_m2m"):
-                for sub_value in v:
-                    available_val_ids_m2m.append(sub_value[1])
-                dynamic_fields.update({k: available_val_ids_m2m})
-                vals[k] = [[6, 0, available_val_ids_m2m]]
+            if isinstance(v, list) or self.env.context.get("is_m2m"):
+                if isinstance(v, list):
+                    for sub_value in v:
+                        available_val_ids_m2m.append(sub_value[1])
+                    dynamic_fields.update({k: available_val_ids_m2m})
+                    vals[k] = [[6, 0, available_val_ids_m2m]]
             elif v not in available_val_ids:
                 dynamic_fields.update({k: []})
                 vals[k] = []
@@ -358,6 +361,7 @@ class ProductConfigurator(models.TransientModel):
             state = self.state
 
         cfg_vals = self.env["product.attribute.value"]
+        config_line_ids = product_tmpl_id.config_line_ids
         # TODO: VP Need to Check
         # if values.get("value_ids", []):
         #     cfg_vals = self.env["product.attribute.value"].browse(
@@ -404,6 +408,20 @@ class ProductConfigurator(models.TransientModel):
                 valve_ids = product_tmpl_id.config_line_ids.filtered(
                     lambda line: int(v) in line.domain_id.domain_line_ids.value_ids.ids
                 ).mapped("value_ids")
+                dyn_restricted_attrs_dicts = (
+                    self.dyn_restricted_attrs_dicts
+                    and json.loads(self.dyn_restricted_attrs_dicts)
+                    or {}
+                )
+                field_name = field_prefix + str(valve_ids.mapped("attribute_id").id)
+                if attr_id and valve_ids.filtered(
+                    lambda value: value.attribute_id.id != attr_id
+                ):
+                    if field_name in dyn_restricted_attrs_dicts:
+                        dyn_restricted_attrs_dicts[field_name] = valve_ids.ids
+                    else:
+                        dyn_restricted_attrs_dicts.update({field_name: valve_ids.ids})
+                self.dyn_restricted_attrs_dicts = json.dumps(dyn_restricted_attrs_dicts)
             is_custom = self.product_tmpl_id.attribute_line_ids.filtered(
                 lambda l: l.attribute_id.id == valve_ids.mapped("attribute_id").id
                 and l.custom
@@ -420,6 +438,7 @@ class ProductConfigurator(models.TransientModel):
                 )
 
             line_attributes = cfg_step.attribute_line_ids.mapped("attribute_id")
+
             if not cfg_step or attr_id in line_attributes.ids:
                 view_attribute_ids.add(attr_id)
             else:
@@ -537,6 +556,7 @@ class ProductConfigurator(models.TransientModel):
         string="Domain",
     )
     dyn_field_2_value = fields.Char()
+    dyn_restricted_attrs_dicts = fields.Text()
 
     @api.onchange("state")
     def _onchange_state(self):
