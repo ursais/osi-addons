@@ -1,0 +1,59 @@
+<odoo noupdate="1">
+
+    <record id="new_sku" model="mrp.eco.type">
+        <field name="name">New SKU (Physical Component)</field>
+    </record>
+
+    <record id="new_service_sku" model="mrp.eco.type">
+        <field name="name">New Service SKU (same as Physical Component)</field>
+    </record>
+
+    <record id="new_virtual_sku" model="mrp.eco.type">
+        <field name="name">New Virtual SKU (same as Physical Component)</field>
+    </record>
+
+    <record id="new_phantom_sku" model="mrp.eco.type">
+        <field name="name">New Phantom SKU (same as Physical Component)</field>
+    </record>
+
+    <record id="new_customer_branding_sku" model="mrp.eco.type">
+        <field name="name">New Customer Branding SKU (same as Physical Component)</field>
+    </record>
+
+    <record id="new_3rd_party_sku" model="mrp.eco.type">
+        <field name="name">New 3rd Party SKU (Physical Component)</field>
+    </record>
+
+    <record id="new_system" model="mrp.eco.type">
+        <field name="name">New System</field>
+    </record>
+
+    <record id="new_component" model="mrp.eco.type">
+        <field name="name">New Component - If Engineering Project Managed (same as new system)</field>
+    </record>
+
+    <record id="operations_new_consumable" model="mrp.eco.type">
+        <field name="name">Operations - New SKU (Consumable)</field>
+    </record>
+
+    <record id="operations_new_component" model="mrp.eco.type">
+        <field name="name">Operations - New SKU (PCBA Component)</field>
+    </record>
+
+    <record id="engineering_change_order" model="mrp.eco.type">
+        <field name="name">Engineering Change Orders (ECOs)</field>
+    </record>
+
+    <record id="product_change_notifications" model="mrp.eco.type">
+        <field name="name">Product Change Notifications (PCNs)</field>
+    </record>
+
+    <record id="end_of_sale" model="mrp.eco.type">
+        <field name="name">End of Sale (Systems)</field>
+    </record>
+
+    <record id="end_of_life" model="mrp.eco.type">
+        <field name="name">End of Life (Conponents)</field>
+    </record>
+
+</odoo>

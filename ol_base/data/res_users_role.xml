@@ -1,0 +1,48 @@
+<odoo noupdate="1">
+
+    <record id="role_engineering" model="res.users.role">
+        <field name="name">Engineering</field>
+        <field name="implied_ids" eval="[(6, 0, [ref('mrp_plm.group_plm_manager')])]" />
+    </record>
+
+    <record id="role_operations" model="res.users.role">
+        <field name="name">Operations</field>
+        <field name="implied_ids" eval="[(6, 0, [ref('mrp_plm.group_plm_manager'), ref('mrp.group_mrp_manager')])]" />
+    </record>
+
+    <record id="role_sales" model="res.users.role">
+        <field name="name">Sales</field>
+        <field name="implied_ids" eval="[(6, 0, [ref('sales_team.group_sale_manager')])]" />
+    </record>
+
+    <record id="role_product_management" model="res.users.role">
+        <field name="name">Product Management</field>
+        <field name="implied_ids" eval="[(6, 0, [ref('stock.group_stock_manager')])]" />
+    </record>
+
+    <record id="role_mrb" model="res.users.role">
+        <field name="name">Materials Review Board (MRB)</field>
+        <field name="implied_ids" eval="[(6, 0, [ref('stock.group_stock_manager'), ref('mrp.group_mrp_manager'), ])]" />
+    </record>
+
+    <record id="role_pm_rep" model="res.users.role">
+        <field name="name">PM Rep</field>
+        <field name="implied_ids" eval="[(6, 0, [ref('project.group_project_manager')])]" />
+    </record>
+
+    <record id="role_engineering_rep" model="res.users.role">
+        <field name="name">Engineering Rep</field>
+        <field name="implied_ids" eval="[(6, 0, [ref('mrp.group_mrp_manager')])]" />
+    </record>
+
+    <record id="role_representative" model="res.users.role">
+        <field name="name">Representative</field>
+        <field name="implied_ids" eval="[(6, 0, [ref('stock.group_stock_manager'), ref('mrp_plm.group_plm_manager')])]" />
+    </record>
+
+    <record id="role_supply_chain" model="res.users.role">
+        <field name="name">Supply Chain</field>
+        <field name="implied_ids" eval="[(6, 0, [ref('stock.group_stock_manager'), ref('sales_team.group_sale_manager')])]" />
+    </record>
+
+</odoo>
