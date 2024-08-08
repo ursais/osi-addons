@@ -14,6 +14,7 @@
     "version": "1.5",
     # any module necessary for this one to work correctly
     "depends": [
+        # Core/Enterprise Modules
         "account_accountant",
         "account_consolidation",
         "approvals",
@@ -46,6 +47,8 @@
         "stock",
         "stock_barcode",
         "timesheet_grid",
+        # OCA Modules
+        "base_user_role_company",
     ],
     # always loaded
     "data": [
