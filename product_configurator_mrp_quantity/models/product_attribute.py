@@ -13,27 +13,28 @@ class ProductAttributeLine(models.Model):
         template_attribute_value_obj = self.env["product.template.attribute.value"]
         attribute_value_qty_obj = self.env["attribute.value.qty"]
         for val in vals_list:
-            if result.is_qty_required and result.value_ids:
-                qty_list = []
-                for attr_value in result.value_ids:
-                    template_attri_value_id = template_attribute_value_obj.search(
-                        [
-                            ("product_tmpl_id", "=", result.product_tmpl_id.id),
-                            ("attribute_line_id", "=", result.id),
-                            ("product_attribute_value_id", "=", attr_value.id),
-                            ("attribute_id", "=", result.attribute_id.id),
-                        ]
-                    )
-                    qty_list.append(
-                        {
-                            "product_tmpl_id": result.product_tmpl_id.id,
-                            "product_attribute_id": result.attribute_id.id,
-                            "product_attribute_value_id": attr_value.id,
-                            "qty": template_attri_value_id.default_qty,
-                            "template_attri_value_id": template_attri_value_id.id,
-                        }
-                    )
-                attribute_value_qty_obj.create(qty_list)
+            for attribute in result:
+                if attribute.is_qty_required and attribute.value_ids:
+                    qty_list = []
+                    for attr_value in attribute.value_ids:
+                        template_attri_value_id = template_attribute_value_obj.search(
+                            [
+                                ("product_tmpl_id", "=", attribute.product_tmpl_id.id),
+                                ("attribute_line_id", "=", attribute.id),
+                                ("product_attribute_value_id", "=", attr_value.id),
+                                ("attribute_id", "=", attribute.attribute_id.id),
+                            ]
+                        )
+                        qty_list.append(
+                            {
+                                "product_tmpl_id": attribute.product_tmpl_id.id,
+                                "product_attribute_id": attribute.attribute_id.id,
+                                "product_attribute_value_id": attr_value.id,
+                                "qty": template_attri_value_id.default_qty,
+                                "template_attri_value_id": template_attri_value_id.id,
+                            }
+                        )
+                    attribute_value_qty_obj.create(qty_list)
         return result
 
     def write(self, values):

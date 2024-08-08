@@ -44,13 +44,13 @@ class MRPBoM(models.Model):
                             prod_vals = prod.mapped(
                                 "attribute_line_ids.value_ids"
                             ).filtered(
-                                lambda m, attribute_line: m.attribute_id
+                                lambda m, attribute_line=attribute_line: m.attribute_id
                                 == attribute_line.attribute_id
                             )
                             bom_tmpl_values = bom.product_tmpl_id.mapped(
                                 "attribute_line_ids.value_ids"
                             ).filtered(
-                                lambda m, attribute_line: m.attribute_id
+                                lambda m, attribute_line=attribute_line: m.attribute_id
                                 == attribute_line.attribute_id
                             )
                             # If bom prod has all vals that conf comp has then add it

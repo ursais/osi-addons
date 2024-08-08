@@ -157,9 +157,14 @@ class ProductConfigurator(models.TransientModel):
         new_val = {}
         attribute_value_qty_obj = self.env["attribute.value.qty"]
         product_template_attribute_value = self.env["product.template.attribute.value"]
+        product_template_attribute_line = self.env["product.template.attribute.line"]
         qty_field_value = False
         for k, v in dynamic_fields.items():
-            if k.startswith(field_prefix) and config_session_id:
+            attrb_id = k.split(field_prefix)[1]
+            attribute_line = product_template_attribute_line.search(
+                [("attribute_id", "=", int(attrb_id)), ("is_qty_required", "=", True)]
+            )
+            if k.startswith(field_prefix) and config_session_id and attribute_line:
                 template_attribute_value_qty = product_template_attribute_value.search(
                     [
                         ("product_tmpl_id", "=", self.product_tmpl_id.id),
@@ -174,7 +179,6 @@ class ProductConfigurator(models.TransientModel):
                         ("qty", "=", int(template_attribute_value_qty.default_qty)),
                     ]
                 )
-                attrb_id = k.split(field_prefix)[1]
                 qty_field_name = qty_prefix + str(attrb_id)
                 is_qty_attrb = (
                     config_session_id.product_tmpl_id.attribute_line_ids.filtered(
