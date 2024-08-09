@@ -20,6 +20,11 @@
         <field name="implied_ids" eval="[(6, 0, [ref('stock.group_stock_manager')])]" />
     </record>
 
+    <record id="role_project_management" model="res.users.role">
+        <field name="name">Project Management</field>
+        <field name="implied_ids" eval="[(6, 0, [ref('project.group_project_manager')])]" />
+    </record>
+
     <record id="role_mrb" model="res.users.role">
         <field name="name">Materials Review Board (MRB)</field>
         <field name="implied_ids" eval="[(6, 0, [ref('stock.group_stock_manager'), ref('mrp.group_mrp_manager'), ])]" />
