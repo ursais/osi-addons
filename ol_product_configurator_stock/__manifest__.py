@@ -10,6 +10,7 @@
     "onlogic": True,
     "category": "Sale",
     "version": "17.0.0.1.0",
+    "license": "AGPL-3",
     # any module necessary for this one to work correctly
     "depends": [
         "ol_base",
