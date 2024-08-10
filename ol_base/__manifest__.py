@@ -11,7 +11,8 @@
     "author": "OnLogic",
     "website": "https://www.onlogic.com",
     "category": "Technical Settings",
-    "version": "1.5",
+    "version": "17.0.0.1.0",
+    "license": "AGPL-3",
     # any module necessary for this one to work correctly
     "depends": [
         # Core/Enterprise Modules

@@ -18,7 +18,7 @@ class ProductPriceReview(models.Model):
 
     # General fields on Price Review
     pa = fields.Char(
-        string="Price Adjustment", requierd=True, readonly=True, default="New..."
+        string="Price Adjustment", required=True, readonly=True, default="New..."
     )
     product_id = fields.Many2one(
         "product.product",
