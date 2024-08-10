@@ -7,4 +7,4 @@ from odoo import fields, models
 class ProductState(models.Model):
     _inherit = "product.state"
 
-    approved_purchase = fields.Boolean(string="Approved to be Purchased", default=True)
+    approved_purchase = fields.Boolean(string="Approved to be Purchased")

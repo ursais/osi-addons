@@ -13,7 +13,6 @@ class MRPProduction(models.Model):
     mo_exceptions = fields.Boolean(
         related="product_id.mrp_ok",
         string="MO Exceptions",
-        default=True,
     )
     bom_mo_exception = fields.Boolean(
         compute="_compute_bom_exception", string="BoM Exception"

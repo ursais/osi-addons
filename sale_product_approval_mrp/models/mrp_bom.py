@@ -33,4 +33,4 @@ class MRPBoM(models.Model):
 class MRPBoMLine(models.Model):
     _inherit = "mrp.bom.line"
 
-    approved_bom_ok = fields.Boolean(related="product_id.bom_ok", default=True)
+    approved_bom_ok = fields.Boolean(related="product_id.bom_ok")

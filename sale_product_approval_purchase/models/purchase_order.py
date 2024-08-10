@@ -14,7 +14,6 @@ class PurchaseOrderLine(models.Model):
         related="product_id.purchase_ok",
         string="Approved for Purchase",
         store=True,
-        default=True,
     )
 
 
