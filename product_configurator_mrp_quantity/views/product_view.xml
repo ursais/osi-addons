@@ -13,6 +13,8 @@
                 <field
                     name="is_qty_required"
                     column_invisible="not context.get('default_config_ok', False)"
+                    readonly="multi"
+                    force_save="1"
                 />
             </xpath>
         </field>
