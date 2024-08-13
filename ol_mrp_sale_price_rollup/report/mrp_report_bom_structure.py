@@ -68,7 +68,7 @@ class ReportBomStructure(models.AbstractModel):
                 # Use the product template instead of the variant
                 prod_price = (
                     bom.product_tmpl_id.uom_id._compute_price(
-                        bom.product_tmpl_id.with_company(company).lst_price,
+                        bom.product_tmpl_id.with_company(company).list_price,
                         bom.product_uom_id,
                     )
                     * current_quantity
