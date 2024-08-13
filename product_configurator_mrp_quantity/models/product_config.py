@@ -69,6 +69,20 @@ class ProductConfigSession(models.Model):
         values.update({"product_attribute_value_qty_ids": attrs_value_qty_list})
         return values
 
+    @api.model
+    def get_cfg_price(self, value_ids=[], custom_vals=None):
+        price = super().get_cfg_price(value_ids=value_ids, custom_vals=custom_vals)
+        updated_price = price
+        if self.session_value_quantity_ids:
+            for session_value in self.session_value_quantity_ids:
+                updated_price = (
+                    updated_price - session_value.attr_value_id.product_id.lst_price
+                )
+                updated_price = updated_price + (
+                    session_value.attr_value_id.product_id.lst_price * session_value.qty
+                )
+        return updated_price
+
     # ============================
     # OVERRIDE Methods
     # ============================

@@ -1,4 +1,5 @@
 import ast
+import json
 
 from lxml import etree
 
@@ -16,6 +17,7 @@ class ProductConfigurator(models.TransientModel):
     )
     domains_dict = fields.Text("Domains")
     value_qty_dict = fields.Text("Value Qty")
+    values_dict = fields.Text("Values")
 
     @property
     def _prefixes(self):
@@ -99,42 +101,50 @@ class ProductConfigurator(models.TransientModel):
 
     def apply_onchange_values(self, values, field_name, field_onchange):
         result = super().apply_onchange_values(values, field_name, field_onchange)
-        field_prefix = self._prefixes.get("field_prefix")
-        qty_prefix = self._prefixes.get("qty_field")
-        template_attribute_line = self.env["product.template.attribute.line"]
-        attribute_value_qty_obj = self.env["attribute.value.qty"]
-        for value in result.get("value"):
-            if value.startswith(field_prefix):
-                attr_id = value.split(field_prefix)[1]
-                attr_id = int(attr_id)
-                template_attr_line_id = template_attribute_line.search(
-                    [
-                        ("product_tmpl_id", "=", self.product_tmpl_id.id),
-                        ("attribute_id", "=", attr_id),
-                        ("is_qty_required", "=", True),
-                    ],
-                    limit=1,
-                )
-                if template_attr_line_id:
-                    attr_value_id = result.get("value")[value]
-                    attribute_value_qty = attribute_value_qty_obj.search(
+        if not self._context.get("is_qty_required"):
+            qty_prefix = self._prefixes.get("qty_field")
+            field_prefix = self._prefixes.get("field_prefix")
+            template_attribute_line = self.env["product.template.attribute.line"]
+            attribute_value_qty_obj = self.env["attribute.value.qty"]
+            values_dict = self.values_dict and ast.literal_eval(self.values_dict) or {}
+            for value in result.get("value"):
+                if value.startswith(field_prefix):
+                    values_dict.update({value: result.get("value")[value]})
+                    attr_id = value.split(field_prefix)[1]
+                    attr_id = int(attr_id)
+                    template_attr_line_id = template_attribute_line.search(
                         [
-                            ("product_attribute_value_id", "=", int(attr_value_id)),
                             ("product_tmpl_id", "=", self.product_tmpl_id.id),
-                            ("product_attribute_id", "=", attr_id),
-                        ]
+                            ("attribute_id", "=", attr_id),
+                            ("is_qty_required", "=", True),
+                        ],
+                        limit=1,
                     )
-                    qty_field_name = qty_prefix + str(attr_id)
-                    self.dyn_qty_field_value = qty_field_name
-                    self.domain_qty_ids = attribute_value_qty.ids
-                    domains_dict = (
-                        self.domains_dict and ast.literal_eval(self.domains_dict) or {}
-                    )
-                    if qty_field_name in domains_dict:
-                        domains_dict[qty_field_name] = attribute_value_qty.ids
-                    else:
-                        domains_dict.update({qty_field_name: attribute_value_qty.ids})
-                    self.domains_dict = domains_dict
+                    if template_attr_line_id:
+                        attr_value_id = result.get("value")[value]
+                        attribute_value_qty = attribute_value_qty_obj.search(
+                            [
+                                ("product_attribute_value_id", "=", int(attr_value_id)),
+                                ("product_tmpl_id", "=", self.product_tmpl_id.id),
+                                ("product_attribute_id", "=", attr_id),
+                            ]
+                        )
+                        qty_field_name = qty_prefix + str(attr_id)
+                        self.dyn_qty_field_value = qty_field_name
+                        self.domain_qty_ids = attribute_value_qty.ids
+                        domains_dict = (
+                            self.domains_dict
+                            and ast.literal_eval(self.domains_dict)
+                            or {}
+                        )
+                        if qty_field_name in domains_dict:
+                            domains_dict[qty_field_name] = attribute_value_qty.ids
+                        else:
+                            domains_dict.update(
+                                {qty_field_name: attribute_value_qty.ids}
+                            )
+                        self.domains_dict = domains_dict
+                self.values_dict = json.dumps(values_dict)
         return result
 
     def get_form_vals(
@@ -162,7 +172,11 @@ class ProductConfigurator(models.TransientModel):
         for k, v in dynamic_fields.items():
             attrb_id = k.split(field_prefix)[1]
             attribute_line = product_template_attribute_line.search(
-                [("attribute_id", "=", int(attrb_id)), ("is_qty_required", "=", True)]
+                [
+                    ("attribute_id", "=", int(attrb_id)),
+                    ("product_tmpl_id", "=", self.product_tmpl_id.id),
+                    ("is_qty_required", "=", True),
+                ]
             )
             if k.startswith(field_prefix) and config_session_id and attribute_line:
                 template_attribute_value_qty = product_template_attribute_value.search(
@@ -193,12 +207,16 @@ class ProductConfigurator(models.TransientModel):
                         or {}
                     )
                     qty_field_value = product_attrs.id
+                    attribute_value_qty_rec = attribute_value_qty_obj.browse(
+                        value_qty_dict.get(qty_field_name)
+                    )
                     if not value_qty_dict.get(qty_field_name):
                         vals[qty_field_name] = qty_field_value
                         value_qty_dict.update({qty_field_name: qty_field_value})
                     elif (
                         value_qty_dict.get(qty_field_name)
-                        and value_qty_dict.get(qty_field_name) != qty_field_value
+                        and int(v)
+                        != attribute_value_qty_rec.product_attribute_value_id.id
                     ):
                         vals[qty_field_name] = qty_field_value
                         value_qty_dict[qty_field_name] = qty_field_value
@@ -209,10 +227,60 @@ class ProductConfigurator(models.TransientModel):
         onchange_values = super().onchange(values, field_name, field_onchange)
         vals = onchange_values.get("value", {})
         qty_prefix = self._prefixes.get("qty_field")
+        field_prefix = self._prefixes.get("field_prefix")
+        attribute_value_qty_obj = self.env["attribute.value.qty"]
+        attribute_value_obj = self.env["product.attribute.value"]
+        qty = 1
+        product_price = 1
         for key, val in vals.items():
             if isinstance(val, int) and key.startswith(qty_prefix):
-                att_qty_val = self.env["attribute.value.qty"].browse(val)
+                att_qty_val = attribute_value_qty_obj.browse(val)
+                attribute_value = att_qty_val.product_attribute_value_id
                 vals[key] = (att_qty_val.id, str(att_qty_val.qty))
+
+        value_qty_dict = (
+            self.value_qty_dict and ast.literal_eval(self.value_qty_dict) or {}
+        )
+        values_dict = self.values_dict and ast.literal_eval(self.values_dict) or {}
+        if not onchange_values and values:
+            for value in values:
+                if value.startswith(qty_prefix):
+                    if value_qty_dict.get(value):
+                        value_qty_dict[value] = values.get(value)
+                    self.with_context(is_abc=True).value_qty_dict = json.dumps(
+                        value_qty_dict
+                    )
+        values_dict.update(value_qty_dict)
+        self.values_dict = json.dumps(values_dict)
+        update_price = self.product_tmpl_id.list_price
+        for value_line in values_dict:
+            if value_line.startswith(field_prefix):
+                if isinstance(values_dict.get(value_line), int):
+                    product_attribute_value = attribute_value_obj.browse(
+                        values_dict[value_line]
+                    )
+                    update_price += product_attribute_value.product_id.lst_price
+                elif isinstance(values_dict.get(value_line), list):
+                    # Many2Many Values
+                    data_list = values_dict[value_line][0][2]
+                    product_attribute_values = attribute_value_obj.browse(data_list)
+                    for product_attribute_value in product_attribute_values:
+                        update_price += product_attribute_value.product_id.lst_price
+            if value_line.startswith(qty_prefix):
+                qty_rec = attribute_value_qty_obj.browse(values_dict[value_line])
+                update_price = (
+                    update_price
+                    - qty_rec.product_attribute_value_id.product_id.lst_price
+                )
+                update_price = update_price + (
+                    qty_rec.product_attribute_value_id.product_id.lst_price
+                    * qty_rec.qty
+                )
+
+        if onchange_values.get("value", False):
+            onchange_values.get("value")["price"] = update_price
+        elif not onchange_values.get("value"):
+            onchange_values.update({"value": {"price": update_price}})
         return onchange_values
 
     # ============================
@@ -448,12 +516,14 @@ class ProductConfigurator(models.TransientModel):
                 node = etree.Element(
                     "field",
                     name=qty_field,
+                    on_change="1",
                     attrib=attrs,
                     context=str(
                         {
                             "active_id": wiz.product_tmpl_id.id,
                             "wizard_id": wiz.id,
                             "field_name": qty_field,
+                            "is_qty_required": attr_line.is_qty_required,
                             # "value_ids": self.env['attribute.value.qty'].search([]).ids,
                             "active_model": self._name,
                         }

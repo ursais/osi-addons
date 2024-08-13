@@ -16,17 +16,6 @@
         />
         <field name="type">form</field>
         <field name="arch" type="xml">
-            <xpath expr="//sheet" position="inside">
-                <div class="oe_button_box" name="button_box">
-                    <button
-                        name="update_attribute_value_qty"
-                        type="object"
-                        string="Update Qty"
-                        groups="product_configurator.group_product_configurator_manager"
-                        invisible="not is_qty_required"
-                    />
-                </div>
-            </xpath>
             <xpath expr="//field[@name='price_extra']" position="after">
                 <field
                     name="is_qty_required"

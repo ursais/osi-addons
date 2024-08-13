@@ -53,3 +53,18 @@ class ProductProduct(models.Model):
             "CREATE UNIQUE INDEX IF NOT EXISTS product_product_combination_qty_attrs_unique ON %s (product_tmpl_id, combination_indices,qty_combination_indices) WHERE active is true"
             % self._table
         )
+
+    @api.depends("list_price", "price_extra")
+    @api.depends_context("uom")
+    def _compute_product_lst_price(self):
+        super()._compute_product_lst_price()
+        for product in self:
+            if product.config_ok:
+                updated_price = product.price_extra
+                for attr_val_qty in product.product_attribute_value_qty_ids:
+                    updated_price -= attr_val_qty.attr_value_id.product_id.lst_price
+                    updated_price += (
+                        attr_val_qty.attr_value_id.product_id.lst_price
+                        * attr_val_qty.qty
+                    )
+                product.lst_price = updated_price + product.product_tmpl_id.list_price
