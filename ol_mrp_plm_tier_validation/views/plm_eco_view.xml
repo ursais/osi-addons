@@ -60,8 +60,9 @@
                     string="Prev"
                     name="action_move_to_prev_stage"
                     type="object"
-                    class="oe_highlight"
+                    class="btn_secondary"
                     invisible="not prev_stage_id or state in ('done', 'confirmed', 'cancel') or not stage_id"
+                    confirm="Moving to the previous stage will reset any approvals, continue?"
                 />
                 <button
                     string="Next"
@@ -78,6 +79,7 @@
                 <separator string="Tier Approval History"/>
                 <field name="tier_review_history_ids" nolabel="1" readonly="1">
                     <tree>
+                        <field name="status" />
                         <field name="requested_by" />
                         <field name="name" />
                         <field name="eco_stage_id" />

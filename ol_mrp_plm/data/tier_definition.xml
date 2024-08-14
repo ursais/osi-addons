@@ -124,7 +124,7 @@
         <field name="approve_sequence">True</field>
         <field name="approve_sequence_bypass">True</field>
     </record>
-        
+
     <record id="tier_def_plm_flow_4_eco_implementation" model="tier.definition">
         <field name="name">PLM: ECO Approval to Implementation (MRB)</field>
         <field name="sequence">12</field>

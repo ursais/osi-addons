@@ -35,6 +35,7 @@ class TierReview(models.Model):
                             "done_by": rec.done_by.id,
                             "reviewed_date": rec.reviewed_date,
                             "comment": rec.comment,
+                            "status": rec.status,
                         }
                     )
         return res
