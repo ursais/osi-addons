@@ -17,8 +17,16 @@ class TierValidationHistory(models.Model):
     name = fields.Char(related="definition_id.name")
     eco_stage_id = fields.Many2one("mrp.eco.stage", string="ECO Stage")
     todo_by = fields.Char(string="Todo by")
-    done_by = fields.Many2one("res.users", string="Requested By")
+    done_by = fields.Many2one("res.users", string="Done By")
     reviewed_date = fields.Date(string="Approval Date")
     comment = fields.Char()
+    status = fields.Selection(
+        [
+            ("waiting", "Waiting"),
+            ("pending", "Pending"),
+            ("rejected", "Rejected"),
+            ("approved", "Approved"),
+        ],
+    )
 
     # END #######
