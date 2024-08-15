@@ -1,8 +1,8 @@
 {
-    "name": "DO NOT USE (MODULE RENAMED) Onlogic Product PIM",
-    "summary": "Onlogic Product PIM",
+    "name": "Onlogic PIM",
+    "summary": "Onlogic PIM",
     "description": """
-    Onlogic Product PIM
+    Onlogic PIM
     """,
     "author": "OnLogic",
     "website": "https://www.onlogic.com",
