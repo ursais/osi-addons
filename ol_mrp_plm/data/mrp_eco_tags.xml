@@ -1,0 +1,53 @@
+<odoo noupdate="1">
+
+    <record id="mrp_plm_tag_1" model="mrp.eco.tag">
+        <field name="name">Physical</field>
+        <field name="color">1</field>
+    </record>
+
+    <record id="mrp_plm_tag_2" model="mrp.eco.tag">
+        <field name="name">Service</field>
+        <field name="color">2</field>
+    </record>
+
+    <record id="mrp_plm_tag_3" model="mrp.eco.tag">
+        <field name="name">Virtual</field>
+        <field name="color">3</field>
+    </record>
+
+    <record id="mrp_plm_tag_4" model="mrp.eco.tag">
+        <field name="name">Phantom</field>
+        <field name="color">4</field>
+    </record>
+
+    <record id="mrp_plm_tag_5" model="mrp.eco.tag">
+        <field name="name">Customer Branding</field>
+        <field name="color">5</field>
+    </record>
+
+    <record id="mrp_plm_tag_6" model="mrp.eco.tag">
+        <field name="name">3rd Party System</field>
+        <field name="color">6</field>
+    </record>
+
+    <record id="mrp_plm_tag_7" model="mrp.eco.tag">
+        <field name="name">Consumable</field>
+        <field name="color">7</field>
+    </record>
+
+    <record id="mrp_plm_tag_8" model="mrp.eco.tag">
+        <field name="name">PCBA Component</field>
+        <field name="color">8</field>
+    </record>
+
+    <record id="mrp_plm_tag_9" model="mrp.eco.tag">
+        <field name="name">Component</field>
+        <field name="color">9</field>
+    </record>
+
+    <record id="mrp_plm_tag_10" model="mrp.eco.tag">
+        <field name="name">System</field>
+        <field name="color">10</field>
+    </record>
+
+</odoo>
