@@ -22,6 +22,7 @@
     "data": [
         "security/bom_restiction_group.xml",
         "views/mrp_eco_stage.xml",
+        "data/mrp_eco_tags.xml",
         "data/plm_types.xml",
         "data/plm_stages.xml",
         "data/tier_definition.xml",
