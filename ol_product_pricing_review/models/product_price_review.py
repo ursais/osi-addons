@@ -12,12 +12,11 @@ class ProductPriceReview(models.Model):
     _name = "product.price.review"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Manages and keep record and track the changes in product price."
-    _rec_name = "pa"
 
     # COLUMNS ##########
 
     # General fields on Price Review
-    pa = fields.Char(
+    name = fields.Char(
         string="Price Adjustment", required=True, readonly=True, default="New..."
     )
     product_id = fields.Many2one(
@@ -238,91 +237,48 @@ class ProductPriceReview(models.Model):
         """Update fields based on selected product for historical documentation."""
         for rec in self:
             if rec.product_id:
+                product = rec.product_id.with_company(rec.company_id)
+
                 # Populate historical fields on price review
-                rec.origin_final_price = rec.product_id.with_company(
-                    rec.company_id
-                ).list_price
-                rec.origin_purchase_line_id = rec.product_id.with_company(
-                    rec.company_id
-                ).last_purchase_line_id.id
-                rec.origin_vendor_id = rec.product_id.with_company(
-                    rec.company_id
-                ).last_purchase_line_id.order_id.partner_id.id
-                rec.origin_purchase_id = rec.product_id.with_company(
-                    rec.company_id
-                ).last_purchase_line_id.order_id.id
-                rec.origin_last_purchase_price = rec.product_id.with_company(
-                    rec.company_id
-                ).last_purchase_line_id.price_unit
-                rec.origin_last_purchase_currency_id = rec.product_id.with_company(
-                    rec.company_id
-                ).last_purchase_line_id.order_id.currency_id
-                rec.origin_tariff_percent = rec.product_id.with_company(
-                    rec.company_id
-                ).tariff_percent
-                rec.origin_tooling_cost = rec.product_id.with_company(
-                    rec.company_id
-                ).tooling_cost
-                rec.origin_defrayment_cost = rec.product_id.with_company(
-                    rec.company_id
-                ).defrayment_cost
-                rec.origin_carrier_multiplier_id = rec.product_id.with_company(
-                    rec.company_id
-                ).carrier_multiplier_id
-                rec.origin_default_shipping_cost = rec.product_id.with_company(
-                    rec.company_id
-                ).default_shipping_cost
-                rec.origin_total_cost = rec.product_id.with_company(
-                    rec.company_id
-                ).total_cost
-                rec.origin_suggested_margin = rec.product_id.with_company(
-                    rec.company_id
-                ).suggested_margin
-                rec.origin_override_margin = rec.product_id.with_company(
-                    rec.company_id
-                ).override_margin
-                rec.origin_override_price = rec.product_id.with_company(
-                    rec.company_id
-                ).override_price
-                rec.origin_special_price = rec.product_id.with_company(
-                    rec.company_id
-                ).special_price
-                rec.origin_based_on = rec.product_id.with_company(
-                    rec.company_id
-                ).based_on
-                if rec.product_id.with_company(rec.company_id).charm_price:
-                    rec.origin_charm_price = rec.product_id.with_company(
-                        rec.company_id
-                    ).charm_price
+                rec.origin_final_price = product.list_price
+                rec.origin_purchase_line_id = product.last_purchase_line_id.id
+                rec.origin_vendor_id = (
+                    product.last_purchase_line_id.order_id.partner_id.id
+                )
+                rec.origin_purchase_id = product.last_purchase_line_id.order_id.id
+                rec.origin_last_purchase_price = (
+                    product.last_purchase_line_id.price_unit
+                )
+                rec.origin_last_purchase_currency_id = (
+                    product.last_purchase_line_id.order_id.currency_id
+                )
+                rec.origin_tariff_percent = product.tariff_percent
+                rec.origin_tooling_cost = product.tooling_cost
+                rec.origin_defrayment_cost = product.defrayment_cost
+                rec.origin_carrier_multiplier_id = product.carrier_multiplier_id
+                rec.origin_default_shipping_cost = product.default_shipping_cost
+                rec.origin_total_cost = product.total_cost
+                rec.origin_suggested_margin = product.suggested_margin
+                rec.origin_override_margin = product.override_margin
+                rec.origin_override_price = product.override_price
+                rec.origin_special_price = product.special_price
+                rec.origin_based_on = product.based_on
+
+                if product.charm_price:
+                    rec.origin_charm_price = product.charm_price
                 else:
                     rec.origin_charm_price = "none"
 
                 # Populate proposed pricing fields so user doesn't have to reset them.
-                rec.tariff_percent = rec.product_id.with_company(
-                    rec.company_id
-                ).tariff_percent
-                rec.tooling_cost = rec.product_id.with_company(
-                    rec.company_id
-                ).tooling_cost
-                rec.defrayment_cost = rec.product_id.with_company(
-                    rec.company_id
-                ).defrayment_cost
-                rec.carrier_multiplier_id = rec.product_id.with_company(
-                    rec.company_id
-                ).carrier_multiplier_id
-                rec.override_margin = rec.product_id.with_company(
-                    rec.company_id
-                ).override_margin
-                rec.charm_price = rec.product_id.with_company(
-                    rec.company_id
-                ).charm_price
-                rec.override_price = rec.product_id.with_company(
-                    rec.company_id
-                ).override_price
-                rec.special_price = rec.product_id.with_company(
-                    rec.company_id
-                ).special_price
-                rec.based_on = rec.product_id.with_company(rec.company_id).based_on
+                rec.tariff_percent = product.tariff_percent
+                rec.tooling_cost = product.tooling_cost
+                rec.defrayment_cost = product.defrayment_cost
+                rec.carrier_multiplier_id = product.carrier_multiplier_id
+                rec.override_margin = product.override_margin
+                rec.charm_price = product.charm_price
+                rec.override_price = product.override_price
+                rec.special_price = product.special_price
+                rec.based_on = product.based_on
 
     @api.onchange("user_id")
     def onchange_user_id(self):
