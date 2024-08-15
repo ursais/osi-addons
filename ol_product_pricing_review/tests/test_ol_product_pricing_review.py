@@ -143,4 +143,27 @@ class TestOlProductPriceReview(common.TransactionCase):
             }
         )
         product_price_review01.onchange_product_id()
+
+        # Assert that the review is in the correct initial state
+        self.assertEqual(product_price_review01.state, "new")
+        self.assertEqual(
+            product_price_review01.product_id.id,
+            test_product_tmpl2.product_variant_id.id,
+        )
+
+        # Validate the price review
         product_price_review01.validate_button()
+
+        # Assert that the review has been validated
+        self.assertEqual(product_price_review01.state, "validated")
+
+        # Verify product fields updated after review validation
+        self.assertEqual(product_price_review01.product_id.tariff_percent, 1.0)
+        self.assertEqual(product_price_review01.product_id.tooling_cost, 2.0)
+        self.assertEqual(product_price_review01.product_id.defrayment_cost, 5.0)
+        self.assertEqual(product_price_review01.product_id.override_price, 102.0)
+        self.assertEqual(product_price_review01.product_id.special_price, 107.0)
+        self.assertEqual(product_price_review01.product_id.total_cost, 44.50)
+        self.assertEqual(
+            product_price_review01.product_id.last_purchase_margin, 1.4158878504672898
+        )

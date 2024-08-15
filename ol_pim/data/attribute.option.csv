@@ -1,0 +1,1956 @@
+id,attribute_id/id,name,sequence
+attribute_option_at_t,ol_product_pim.attribute_additional_features,4G LTE,10
+attribute_option_vesa_mount_misd_75_100,ol_product_pim.attribute_additional_features,CAN Bus,20
+attribute_option_vesa_mount_included_misd_75_100,ol_product_pim.attribute_additional_features,CEC,30
+attribute_option_vesa_mount_with_bracket_misd_75_100,ol_product_pim.attribute_additional_features,DIO,40
+attribute_option_vibration_shock,ol_product_pim.attribute_additional_features,GPU Expansion,50
+attribute_option_0_1,ol_product_pim.attribute_additional_features,Ignition Sensing,60
+attribute_option_1_0,ol_product_pim.attribute_additional_features,Remote Management: Intel vPro,70
+attribute_option_5_0,ol_product_pim.attribute_additional_features,User-Programmable OnLogic Microcontroller (MCU),
+attribute_option_intel_vpro,ol_product_pim.attribute_additional_features,Automotive Ignition Power Sensing,
+attribute_option_300_1,ol_product_pim.attribute_additional_features,Onboard TPM 2.0 module (Infineon SLB9672),
+attribute_option_350_1,ol_product_pim.attribute_brand,AMD,10
+attribute_option_400_1,ol_product_pim.attribute_brand,Apacer,20
+attribute_option_500_1,ol_product_pim.attribute_brand,Artesyn,30
+attribute_option_600_1,ol_product_pim.attribute_brand,ASRock,40
+attribute_option_700_1,ol_product_pim.attribute_brand,AWS,50
+attribute_option_800_1,ol_product_pim.attribute_brand,Cincoze,60
+attribute_option_1000_1,ol_product_pim.attribute_brand,CoolJag,70
+attribute_option_1200_1,ol_product_pim.attribute_brand,Extrovert,90
+attribute_option_1300_1,ol_product_pim.attribute_brand,Google,100
+attribute_option_1400_1,ol_product_pim.attribute_brand,IGEL,110
+attribute_option_5000_1,ol_product_pim.attribute_brand,Inductive Automation,120
+attribute_option_hsdpa,ol_product_pim.attribute_brand,Innodisk,130
+attribute_option_hspa,ol_product_pim.attribute_brand,Intel,140
+attribute_option_umtsdchspa,ol_product_pim.attribute_brand,Jetway,150
+attribute_option_vesa_mount_misd_75_100,ol_product_pim.attribute_brand,Kingston,160
+attribute_option_vesa_mount_included_misd_75_100,ol_product_pim.attribute_brand,Mean Well,170
+attribute_option_vesa_mount_with_bracket_misd_75_100,ol_product_pim.attribute_brand,Microsoft,180
+attribute_option_4g_lte_north_america_2_4_5_7_17,ol_product_pim.attribute_brand,Mitac,190
+attribute_option_4g_lte_b1_b2_b3_b4_b5_b7_b12_b13_b20_b25_b26_b29_b30_b41,ol_product_pim.attribute_brand,MSI,210
+attribute_option_gsm_850_900_1800_1900,ol_product_pim.attribute_brand,Neousys,220
+attribute_option_hspa_umts_b1_b2_b3_b4_b5_b8,ol_product_pim.attribute_brand,Nvidia,230
+attribute_option_lte_multiregional_2_3_4_5_8_12_13_20_28,ol_product_pim.attribute_brand,OnLogic,240
+attribute_option_umtsdchspa_850_900_aws_1900_2100,ol_product_pim.attribute_brand,Phoenix,250
+attribute_option_~17:9,ol_product_pim.attribute_brand,PicoPSU,260
+attribute_option_16_10,ol_product_pim.attribute_brand,PNY,270
+attribute_option_16_9,ol_product_pim.attribute_brand,Samsung,280
+attribute_option_5_4,ol_product_pim.attribute_brand,Seagate,290
+attribute_option_5_3,ol_product_pim.attribute_brand,Seasonic,300
+attribute_option_4_3,ol_product_pim.attribute_brand,SparkLAN,310
+attribute_option_cat_4_150_mbs_dl_44_50_mbs_ul,ol_product_pim.attribute_brand,Sparkle,320
+attribute_option_cat_6_300_mbs_dl_44_50mbs_ul,ol_product_pim.attribute_brand,Super Silence,330
+attribute_option_cat_m1_halfduplex_300_kbs_dl_44_375kbs_ul,ol_product_pim.attribute_brand,Taoglas,340
+attribute_option_nbiot_272_kbs_dl_44_625_kbs_ul,ol_product_pim.attribute_brand,Thinmanager,350
+attribute_option_side_a_c13_side_b_bs1363,ol_product_pim.attribute_brand,Transcend,360
+attribute_option_side_a_c13_side_b_cee_77,ol_product_pim.attribute_brand,Unex,370
+attribute_option_side_a_c13_side_b_nema_515p,ol_product_pim.attribute_brand,Western Digital,380
+attribute_option_33v_rail,ol_product_pim.attribute_brand,Wingsonic Ltd.,390
+attribute_option_5v_rail,ol_product_pim.attribute_brand,Zotac,400
+attribute_option_12v_rail,ol_product_pim.attribute_cable_connectors,3-pin Fan Header,10
+attribute_option_no-notify,ol_product_pim.attribute_cable_connectors,4-pin Fan Connector,20
+attribute_option_notify,ol_product_pim.attribute_cable_connectors,ATX 20-pin,30
+attribute_option_nvidia_jetson_agx_xavier,ol_product_pim.attribute_cable_connectors,ATX 24-pin,40
+attribute_option_intel_uhd_graphics_770,ol_product_pim.attribute_cable_connectors,Berg,50
+attribute_option_up_to_intel_uhd_graphics_770,ol_product_pim.attribute_cable_connectors,DB9,60
+attribute_option_intel_uhd_graphics_for_12th_gen_intel®_processors_up_to_32eu,ol_product_pim.attribute_cable_connectors,DC Jack,70
+attribute_option_1_m2_2260_pcie_x4_sata,ol_product_pim.attribute_cable_connectors,DisplayPort,80
+attribute_option_1_m2_2280_pcie_gen_40_x4_sata,ol_product_pim.attribute_cable_connectors,DVI-D,90
+attribute_option_1_m2_2280_pcie_x2_sata,ol_product_pim.attribute_cable_connectors,DVI-I,100
+attribute_option_1_m2_2280_pcie_x4_sata,ol_product_pim.attribute_cable_connectors,eSATA,110
+attribute_option_1_m2_2280_mkey_pcie_gen_40_x4_sata,ol_product_pim.attribute_cable_connectors,HDMI,120
+attribute_option_1_m2_2280_mkey_pcie_x4_sata,ol_product_pim.attribute_cable_connectors,IEC 60320 C16,
+attribute_option_1_m2_2280603042_bkey_pcie_x2_usb_30_sata,ol_product_pim.attribute_cable_connectors,M12 8-pin,130
+attribute_option_1_m2_304222602280_bkey_pcie_x2_usb_20_sata,ol_product_pim.attribute_cable_connectors,Mini-DisplayPort,140
+attribute_option_2_m2_2280_pcie_x1_sata,ol_product_pim.attribute_cable_connectors,Mini-SAS HD SFF-8643,150
+attribute_option_coming_soon_1_m2_2280_pcie_gen_40_x4_sata,ol_product_pim.attribute_cable_connectors,Molex,160
+attribute_option_1_fullsize_mpcie_pcie_x1_usb_20,ol_product_pim.attribute_cable_connectors,OCuLink SFF-8611,170
+attribute_option_1_m2_2230_ekey_pcie_x1_usb_20,ol_product_pim.attribute_cable_connectors,P2,180
+attribute_option_1_m2_2230_ekey_pcie_usb_20_cnvi,ol_product_pim.attribute_cable_connectors,P4,190
+attribute_option_1_m2_22426080_bkey_pcie_x1_usb_30_usb_20,ol_product_pim.attribute_cable_connectors,RJ-45,200
+attribute_option_1_m2_2280_mkey_pcie_x4_sata,ol_product_pim.attribute_cable_connectors,USB,210
+attribute_option_1_m2_2280_mkey_pcie_gen_4_x4_sata,ol_product_pim.attribute_cable_connectors,USB 3.0 Pin Header (2mm),220
+attribute_option_1_m2_22803042_bkey_pcie_x2_usb_30_sata,ol_product_pim.attribute_cable_connectors,USB Pin Header (2mm),230
+attribute_option_1_m2_2280603042_bkey_pcie_x2_usb_30_sata,ol_product_pim.attribute_cable_connectors,USB Pin Header (2.54mm),240
+attribute_option_1_m2_304222602280_bkey_pcie_x2_usb_20_sata,ol_product_pim.attribute_cable_connectors,USB-A,250
+attribute_option_1_m2_30423052_bkey_usb_30_usb_20,ol_product_pim.attribute_cable_connectors,USB-C,260
+attribute_option_1_m2_3042305222602280_bkey_pcie_x1_usb_30_usb_20,ol_product_pim.attribute_cable_connectors,SATA,270
+attribute_option_1_m2_304230522280_bkey_pcie_x2_usb_20_usb_30_sata,ol_product_pim.attribute_cable_connectors,SATA Power,280
+"attribute_option_1_m2_3042/52/2260/80_bkey_pcie_x1,_usb_30,_usb_20,_sim",ol_product_pim.attribute_cable_connectors,SATA Locking,290
+attribute_option_1_mpcie_pcie_x1_usb_20,ol_product_pim.attribute_cable_connectors,U.FL-R-SMT,300
+attribute_option_1_pcie_x16_slot_optional_supporting_x16_x8_and_x4_cards,ol_product_pim.attribute_cable_connectors,VGA,310
+attribute_option_2_mpcie_1_fullsize_shared_with_msata_1_fullsize_with_nanosim_holder,ol_product_pim.attribute_cable_dc_connector,2-pin Terminal Block,10
+attribute_option_2_mpcie_fullsize_usb_signals_only,ol_product_pim.attribute_cable_dc_connector,3-pin Terminal Block,20
+attribute_option_2_pcie_30_x16_slots_slot4_share_with_slot3_x16x8_slot6_share_with_slot5_x16x8,ol_product_pim.attribute_cable_dc_connector,4-pin DIN,30
+attribute_option_2_pcie_x8_slots_optional_supporting_x16_x8_and_x4_cards,ol_product_pim.attribute_cable_dc_connector,4-pin Mini-DIN,40
+attribute_option_3_pcie_30_x8_slots_slot2_x8_slot3_share_with_slot3_x0x8_slot5_share_with_slot6_x0x8,ol_product_pim.attribute_cable_dc_connector,4-pin Terminal Block,50
+attribute_option_7_pcie_gen_40_x16_slots_slot_2_shared_with_m2_oculink_and_minisas_hd,ol_product_pim.attribute_cable_dc_connector,5-pin Terminal Block,60
+"attribute_option_m.2_2242/60/80_bkey_pcie_x1,_usb_3.0,_usb_2.0",ol_product_pim.attribute_cable_dc_connector,5.5 mm OD x 1.7 mm ID,70
+attribute_option_pcie_slots_support_x4_x8_or_x16_cards,ol_product_pim.attribute_cable_dc_connector,5.5 mm OD x 1.7 mm ID x 11 mm Length,80
+attribute_option_1_m2_2280/2260_mkey_pcie_gen_3_x1/_sata_iii,ol_product_pim.attribute_cable_dc_connector,5.5 mm OD x 2.1 mm ID x 12 mm Length,90
+"attribute_option_1_m2_2280/3042/3052_bkey_pcie_gen_3_x1,_usb_32,_usb_20",ol_product_pim.attribute_cable_dc_connector,5.5 mm OD x 2.5 mm ID,100
+attribute_option_1_m2_2230_ekey_wifi_pcie_x1/_usb_20,ol_product_pim.attribute_cable_dc_connector,5.5 mm x 2.5 mm Locking,110
+attribute_option_3ffsim_slot_mapped_to_the_bkey,ol_product_pim.attribute_cable_dc_connector,6-pin Molex,120
+attribute_option_industrial_control_automation,ol_product_pim.attribute_cable_dc_connector,7.4 mm OD x 0.6 mm ID,130
+attribute_option_scada_servers_hmis_with_ignition_by_inductive_automation,ol_product_pim.attribute_cable_dc_connector,7.4 mm OD x 5 mm ID,140
+attribute_option_computers_with_4g_from_at_t,ol_product_pim.attribute_cable_dc_connector,Molex 39-01-2085,
+attribute_option_embedded_computers_with_intel_core_i3_i5_and_i7_processors,ol_product_pim.attribute_cable_type,Adapter cable,10
+attribute_option_fanless_skylake_computers_motherboards,ol_product_pim.attribute_cable_type,IDE cable,20
+attribute_option_helix_500_600_series,ol_product_pim.attribute_cable_type,I/O cable,30
+attribute_option_fanless,ol_product_pim.attribute_cable_type,Pin header cable,40
+attribute_option_actively_cooled,ol_product_pim.attribute_cable_type,Power cable,50
+attribute_option_hybrid_fanlessactively_cooled,ol_product_pim.attribute_cable_type,SATA data cable,60
+attribute_option_30_day_warranty,ol_product_pim.attribute_cable_type,SATA power cable,70
+attribute_option_60_day_warranty,ol_product_pim.attribute_case_color,Black,10
+attribute_option_1_year_warranty,ol_product_pim.attribute_case_color,Black and Gray,20
+attribute_option_2_year_warranty,ol_product_pim.attribute_case_color,Black and Silver,30
+attribute_option_2_year_limited_warranty,ol_product_pim.attribute_case_color,Gray,40
+attribute_option_3_year_warranty,ol_product_pim.attribute_case_color,Orange,50
+attribute_option_3_year_limited_warranty,ol_product_pim.attribute_case_color,Orange and Silver,60
+attribute_option_5_year_warranty,ol_product_pim.attribute_case_color,Red,70
+attribute_option_lifetime_warranty,ol_product_pim.attribute_case_color,Silver,80
+attribute_option_2_years_included;_3_or_5_year_options_available,ol_product_pim.attribute_case_material,Aluminum,10
+attribute_option_portfolio,ol_product_pim.attribute_case_material,Aluminum Extrusion,20
+attribute_option_tier_1,ol_product_pim.attribute_case_material,Cast Aluminum,30
+attribute_option_tier_2,ol_product_pim.attribute_case_material,Plastic,40
+attribute_option_verizon,ol_product_pim.attribute_case_material,Steel,50
+attribute_option_vodafone,ol_product_pim.attribute_case_mounting,"VESA Mount (MIS-D 75, 100)",60
+attribute_option_aws_iot_greengrass,ol_product_pim.attribute_case_mounting,"VESA Mount (included) (MIS-D 75, 100)",110
+attribute_option_aws_iot_sitewise,ol_product_pim.attribute_case_mounting,"VESA Mount (with bracket) (MIS-D 75, 100)",160
+attribute_option_azure_iot_edge,ol_product_pim.attribute_case_mounting,DIN Mount,10
+attribute_option_ignition,ol_product_pim.attribute_case_mounting,DIN Mount (included),20
+attribute_option_red_hat,ol_product_pim.attribute_case_mounting,Rackmount,30
+attribute_option_thinmanager,ol_product_pim.attribute_case_mounting,VESA Mount,40
+attribute_option_ubuntu,ol_product_pim.attribute_case_mounting,VESA Mount (MIS-D 75),50
+attribute_option_amd,ol_product_pim.attribute_case_mounting,VESA Mount (MIS-D 100),70
+attribute_option_aws,ol_product_pim.attribute_case_mounting,VESA Mount (MIS-D 200),80
+attribute_option_inductive_automation,ol_product_pim.attribute_case_mounting,VESA Mount (included),90
+attribute_option_intel,ol_product_pim.attribute_case_mounting,VESA Mount (included) (MIS-D 75),100
+attribute_option_microsoft_azure,ol_product_pim.attribute_case_mounting,VESA Mount (included) (MIS-D 100),120
+attribute_option_raspberry_pi,ol_product_pim.attribute_case_mounting,VESA Mount (included) (MIS-D 200),130
+attribute_option_red_hat,ol_product_pim.attribute_case_mounting,VESA Mount (with bracket),140
+attribute_option_thinmanager,ol_product_pim.attribute_case_mounting,VESA Mount (with bracket) (MIS-D 75),150
+attribute_option_ubuntu,ol_product_pim.attribute_case_mounting,VESA Mount (with bracket) (MIS-D 100),170
+attribute_option_industrial_fanless,ol_product_pim.attribute_case_mounting,VESA Mount (with bracket) (MIS-D 200),180
+attribute_option_industrial_fanned,ol_product_pim.attribute_case_mounting,Wall Mount,190
+attribute_option_rugged,ol_product_pim.attribute_case_mounting,Wall Mount (included),200
+attribute_option_panel_pc,ol_product_pim.attribute_case_mounting,Wall Mount (kit included),210
+attribute_option_rackmount,ol_product_pim.attribute_case_mounting,Wall Mount (with damping bracket),220
+attribute_option_server,ol_product_pim.attribute_case_port_punchouts,1 Antenna Hole,10
+attribute_option_din_mount,ol_product_pim.attribute_case_port_punchouts,2 Antenna Holes,20
+attribute_option_din_mount_included,ol_product_pim.attribute_case_port_punchouts,3 Antenna Holes,30
+attribute_option_rackmount,ol_product_pim.attribute_case_port_punchouts,4 Antenna Holes,40
+attribute_option_vesa_mount,ol_product_pim.attribute_case_port_punchouts,5 Antenna Holes,50
+attribute_option_vesa_mount_misd_75,ol_product_pim.attribute_case_port_punchouts,6 Antenna Holes,60
+attribute_option_vesa_mount_misd_100,ol_product_pim.attribute_case_port_punchouts,8 Antenna Holes,65
+attribute_option_vesa_mount_misd_200,ol_product_pim.attribute_case_port_punchouts,12 Antenna Holes,70
+attribute_option_vesa_mount_included,ol_product_pim.attribute_case_port_punchouts,1 Serial,80
+attribute_option_vesa_mount_included_misd_75,ol_product_pim.attribute_case_port_punchouts,2 Serial,90
+attribute_option_vesa_mount_included_misd_100,ol_product_pim.attribute_case_port_punchouts,1 USB,100
+attribute_option_vesa_mount_included_misd_200,ol_product_pim.attribute_case_port_punchouts,2 USB,110
+attribute_option_vesa_mount_with_bracket,ol_product_pim.attribute_case_port_punchouts,DC Jack,120
+attribute_option_vesa_mount_with_bracket_misd_75,ol_product_pim.attribute_case_port_punchouts,7x SMA Punchouts,130
+attribute_option_vesa_mount_with_bracket_misd_100,ol_product_pim.attribute_case_type_chassis,Automotive,10
+attribute_option_vesa_mount_with_bracket_misd_200,ol_product_pim.attribute_case_type_chassis,Compact,20
+attribute_option_wall_mount,ol_product_pim.attribute_case_type_chassis,Customizable,30
+attribute_option_wall_mount_included,ol_product_pim.attribute_case_type_chassis,Expandable,40
+attribute_option_wall_mount_kit_included,ol_product_pim.attribute_case_type_chassis,Fanless,50
+attribute_option_wall_mount_with_damping_bracket,ol_product_pim.attribute_case_type_chassis,Modular,60
+attribute_option_automotive,ol_product_pim.attribute_case_type_chassis,Rackmount,70
+attribute_option_cold,ol_product_pim.attribute_case_type_chassis,Ruggedized,80
+attribute_option_dust,ol_product_pim.attribute_case_type_chassis,Storage-Oriented,90
+attribute_option_55_mm_od_x_21_mm_id_x_12_mm_length,ol_product_pim.attribute_connectivity,HSDPA+,90
+attribute_option_55_mm_od_x_25_mm_id,ol_product_pim.attribute_connectivity,HSPA+,100
+attribute_option_55_mm_x_25_mm_locking,ol_product_pim.attribute_connectivity,UMTS/DC-HSPA+,150
+attribute_option_6pin_molex,ol_product_pim.attribute_connectivity,2G,10
+attribute_option_74_mm_od_x_06_mm_id,ol_product_pim.attribute_connectivity,3G,20
+attribute_option_74_mm_od_x_5_mm_id,ol_product_pim.attribute_connectivity,3.75G,30
+attribute_option_molex_39012085,ol_product_pim.attribute_connectivity,4G LTE,40
+attribute_option_magento,ol_product_pim.attribute_connectivity,Bluetooth,50
+attribute_option_bluestone,ol_product_pim.attribute_connectivity,EGPRS,60
+attribute_option_c13_to_c14,ol_product_pim.attribute_connectivity,GPS,70
+attribute_option_c5_to_c6,ol_product_pim.attribute_connectivity,GSM,80
+attribute_option_c7_to_c8,ol_product_pim.attribute_connectivity,LTE,110
+attribute_option_0,ol_product_pim.attribute_connectivity,LTE-A,120
+attribute_option_1,ol_product_pim.attribute_connectivity,SMS,130
+attribute_option_5,ol_product_pim.attribute_connectivity,UMTS,140
+attribute_option_6,ol_product_pim.attribute_connectivity,VoLTE,160
+attribute_option_10,ol_product_pim.attribute_connectivity,Wi-Fi,170
+attribute_option_none,ol_product_pim.attribute_connectivity,ZigBee,180
+attribute_option_01,ol_product_pim.attribute_system_cooling_type,Fanless,10
+attribute_option_1e,ol_product_pim.attribute_system_cooling_type,Actively Cooled,20
+attribute_option_2,ol_product_pim.attribute_system_cooling_type,Hybrid Fanless/Actively Cooled,30
+attribute_option_3,ol_product_pim.attribute_data_rate,Cat 4 (150 Mb/s DL&#44; 50 Mb/s UL),10
+attribute_option_4,ol_product_pim.attribute_data_rate,Cat 6 (300 Mb/s DL&#44; 50Mb/s UL),20
+attribute_option_5ee,ol_product_pim.attribute_data_rate,Cat M1 Half-duplex (300 Kb/s DL&#44; 375Kb/s UL),30
+attribute_option_automotive_intelligence,ol_product_pim.attribute_data_rate,NB-IoT (27.2 Kb/s DL&#44; 62.5 Kb/s UL),40
+attribute_option_peripheral_power_out,ol_product_pim.attribute_display_aspect_ratio,~17:9,10
+attribute_option_wide_input,ol_product_pim.attribute_display_aspect_ratio,16:10,20
+attribute_option_ballbearing,ol_product_pim.attribute_display_aspect_ratio,16:9,30
+attribute_option_dual_ballbearing,ol_product_pim.attribute_display_aspect_ratio,5:4,40
+attribute_option_hydraulic_bearing,ol_product_pim.attribute_display_aspect_ratio,5:3,50
+attribute_option_vapobearingmaglev,ol_product_pim.attribute_display_aspect_ratio,4:3,60
+attribute_option_amt_support,ol_product_pim.attribute_display_contrast_ratio,300:1,10
+attribute_option_ecc_memory_supported,ol_product_pim.attribute_display_contrast_ratio,350:1,20
+attribute_option_embedded_lifecycle,ol_product_pim.attribute_display_contrast_ratio,400:1,30
+attribute_option_embedded_options_available,ol_product_pim.attribute_display_contrast_ratio,500:1,40
+attribute_option_hyperthreading_technology,ol_product_pim.attribute_display_contrast_ratio,600:1,50
+attribute_option_adapter_cable,ol_product_pim.attribute_display_contrast_ratio,700:1,60
+attribute_option_ide_cable,ol_product_pim.attribute_display_contrast_ratio,800:1,70
+attribute_option_io_cable,ol_product_pim.attribute_display_contrast_ratio,1000:1,80
+attribute_option_pin_header_cable,ol_product_pim.attribute_display_contrast_ratio,1200:1,90
+attribute_option_power_cable,ol_product_pim.attribute_display_contrast_ratio,1300:1,100
+attribute_option_sata_data_cable,ol_product_pim.attribute_display_contrast_ratio,1400:1,110
+attribute_option_sata_power_cable,ol_product_pim.attribute_display_contrast_ratio,5000:1,120
+attribute_option_single_channel,ol_product_pim.attribute_display_mounting_options,"VESA Mount (MIS-D 75, 100)",60
+attribute_option_dual_channel,ol_product_pim.attribute_display_mounting_options,"VESA Mount (included) (MIS-D 75, 100)",110
+attribute_option_triple_channel,ol_product_pim.attribute_display_mounting_options,"VESA Mount (with bracket) (MIS-D 75, 100)",160
+attribute_option_quad_channel,ol_product_pim.attribute_display_mounting_options,Panel Mount,10
+attribute_option_multi_channel,ol_product_pim.attribute_display_mounting_options,Panel Mount (10 LVDS clips included with screen),20
+attribute_option_4wire_resistive,ol_product_pim.attribute_display_mounting_options,Panel Mount (kit included),30
+attribute_option_5wire_resistive,ol_product_pim.attribute_display_mounting_options,VESA Mount,40
+attribute_option_5wire_resistive_or_capacitive,ol_product_pim.attribute_display_mounting_options,VESA Mount (MIS-D 75),50
+attribute_option_5wire_resistive_or_projected_capacitive,ol_product_pim.attribute_display_mounting_options,VESA Mount (MIS-D 100),70
+attribute_option_5point_capacitive,ol_product_pim.attribute_display_mounting_options,VESA Mount (MIS-D 200),80
+attribute_option_capacitive,ol_product_pim.attribute_display_mounting_options,VESA Mount (included),90
+attribute_option_ir,ol_product_pim.attribute_display_mounting_options,VESA Mount (included) (MIS-D 75),100
+attribute_option_none,ol_product_pim.attribute_display_mounting_options,VESA Mount (included) (MIS-D 100),120
+attribute_option_projected_capacitive,ol_product_pim.attribute_display_mounting_options,VESA Mount (included) (MIS-D 200),130
+attribute_option_saw,ol_product_pim.attribute_display_mounting_options,VESA Mount (with bracket),140
+attribute_option_wired,ol_product_pim.attribute_display_mounting_options,VESA Mount (with bracket) (MIS-D 75),150
+attribute_option_wireless,ol_product_pim.attribute_display_mounting_options,VESA Mount (with bracket) (MIS-D 100),170
+attribute_option_2g,ol_product_pim.attribute_display_mounting_options,VESA Mount (with bracket) (MIS-D 200),180
+attribute_option_3g,ol_product_pim.attribute_display_output_type,DisplayPort,10
+attribute_option_375g,ol_product_pim.attribute_display_output_type,DVI-D Port,20
+attribute_option_4g_lte,ol_product_pim.attribute_display_output_type,DVI-I Port,30
+attribute_option_bluetooth,ol_product_pim.attribute_display_output_type,HDMI,40
+attribute_option_egprs,ol_product_pim.attribute_display_output_type,VGA,50
+attribute_option_gps,ol_product_pim.attribute_display_resolution,480 x 272,10
+attribute_option_gsm,ol_product_pim.attribute_display_resolution,640 x 480 (VGA),20
+attribute_option_lte,ol_product_pim.attribute_display_resolution,800 x 480 (WVGA),30
+attribute_option_ltea,ol_product_pim.attribute_display_resolution,800 x 600 (SVGA),40
+attribute_option_sms,ol_product_pim.attribute_display_resolution,1024 x 600,50
+attribute_option_umts,ol_product_pim.attribute_display_resolution,1024 x 768 (XGA),60
+attribute_option_volte,ol_product_pim.attribute_display_resolution,1280 x 1024 (SXGA),70
+attribute_option_wifi,ol_product_pim.attribute_display_resolution,1280 x 720 (HD 720),80
+attribute_option_zigbee,ol_product_pim.attribute_display_resolution,1280 x 768 (WXGA),90
+attribute_option_ddr2_dimm_nonecc,ol_product_pim.attribute_display_resolution,1280 x 800 (WXGA),100
+attribute_option_ddr2_onboard,ol_product_pim.attribute_display_resolution,1366 x 768,110
+attribute_option_ddr2_sodimm_nonecc,ol_product_pim.attribute_display_resolution,1600 x 1200 (UXGA),120
+attribute_option_ddr3_dimm_ecc,ol_product_pim.attribute_display_resolution,1920 x 1080 (HD 1080),130
+attribute_option_ddr3_dimm_nonecc,ol_product_pim.attribute_display_resolution,1920 x 1200 (WUXGA),140
+attribute_option_ddr3_onboard,ol_product_pim.attribute_display_resolution,2048 x 1152,150
+attribute_option_ddr3_sodimm_ecc,ol_product_pim.attribute_display_resolution,2560 x 1440 (QHD),160
+attribute_option_ddr3_sodimm_nonecc,ol_product_pim.attribute_display_resolution,4096 x 2160 (4K),170
+attribute_option_ddr3l_dimm_nonecc,ol_product_pim.attribute_display_touchscreen_type,4-Wire Resistive,10
+attribute_option_ddr3l_sodimm_nonecc,ol_product_pim.attribute_display_touchscreen_type,5-Wire Resistive,20
+attribute_option_ddr3l_sdram,ol_product_pim.attribute_display_touchscreen_type,5-Wire Resistive or Capacitive,30
+attribute_option_ddr4,ol_product_pim.attribute_display_touchscreen_type,5-Wire Resistive or Projected Capacitive,40
+attribute_option_ddr4_ecc_udimm,ol_product_pim.attribute_display_touchscreen_type,5-Point Capacitive,50
+attribute_option_ddr4_eccnonecc_udimm,ol_product_pim.attribute_display_touchscreen_type,Capacitive,60
+attribute_option_ddr4_rdimm_ecc,ol_product_pim.attribute_display_touchscreen_type,IR,70
+attribute_option_ddr4_sodimm_ecc,ol_product_pim.attribute_display_touchscreen_type,None,80
+attribute_option_ddr4_sodimm_nonecc,ol_product_pim.attribute_display_touchscreen_type,Projected Capacitive,90
+attribute_option_ddr4_sodimm_noneccddr4_sodimm_ecc,ol_product_pim.attribute_display_touchscreen_type,SAW,100
+attribute_option_ddr5,ol_product_pim.attribute_drivers_supported,Windows 7,10
+attribute_option_ddr5_udimm_nonecc_or_ecc,ol_product_pim.attribute_drivers_supported,Windows Embedded 7,20
+attribute_option_lpddr4,ol_product_pim.attribute_drivers_supported,Windows 8.1,30
+attribute_option_lpddr4x,ol_product_pim.attribute_drivers_supported,Windows 10,40
+attribute_option_xrdimm,ol_product_pim.attribute_drivers_supported,Ubuntu,50
+attribute_option_2_4pin_terminal_block,ol_product_pim.attribute_eu_product_tax_code,[SE050000] Engineering Services,
+attribute_option_5pin_terminal_block,ol_product_pim.attribute_eu_product_tax_code,"[PC070000] Hardware, Labor, and Services used in producing a system",
+attribute_option_5pin_usb_mini,ol_product_pim.attribute_eu_product_tax_code,[ON020000] Non-Taxable (CAUTION),
+attribute_option_6pin_terminal_block,ol_product_pim.attribute_eu_product_tax_code,[FR020200] Shipping & Freight,
+attribute_option_20pin_atx,ol_product_pim.attribute_eu_product_tax_code,[DC011000] Software,
+attribute_option_24pin_atx,ol_product_pim.attribute_eu_product_tax_code,[S0000000] Standalone Services not used in producing a system,
+attribute_option_948_vdc,ol_product_pim.attribute_eu_product_tax_code,"[SR060000] Support Service, Labor, and Parts",
+attribute_option_100240_vac,ol_product_pim.attribute_eu_product_tax_code,[NOTAVATAX2] Taxable Goods,
+attribute_option_c13c14_coupler,ol_product_pim.attribute_eu_product_tax_code,[NOTAVATAX7] Taxable Goods EU,
+attribute_option_dc_jack,ol_product_pim.attribute_eu_product_tax_code,[SW019478] Warranty,
+attribute_option_m12,ol_product_pim.attribute_expansion_mobile_carriers,AT&T,10
+attribute_option_poe_pd_8023at_optional,ol_product_pim.attribute_expansion_mobile_carriers,Verizon,20
+attribute_option_3pin_fan_header,ol_product_pim.attribute_expansion_mobile_carriers,Vodafone,30
+attribute_option_4pin_fan_connector,ol_product_pim.attribute_expansion_options,"1 Full-size mPCIe (PCIe x1, USB 2.0)",50
+attribute_option_atx_20pin,ol_product_pim.attribute_expansion_options,"1 M.2 2230 E-key (PCIe x1, USB 2.0)",120
+attribute_option_atx_24pin,ol_product_pim.attribute_expansion_options,"1 M.2 2230 E-key (PCIe, USB 2.0, CNVi)",130
+attribute_option_berg,ol_product_pim.attribute_expansion_options,"1 M.2 2242/60/80 B-key (PCIe x1, USB 3.0, USB 2.0)",200
+attribute_option_db9,ol_product_pim.attribute_expansion_options,"1 M.2 2280 M-key (PCIe x4, SATA)",250
+attribute_option_dc_jack,ol_product_pim.attribute_expansion_options,"1 M.2 2280 M-key (PCIe Gen 4 x4, SATA)",251
+attribute_option_displayport,ol_product_pim.attribute_expansion_options,"1 M.2 2280/3042 B-key (PCIe x2, USB 3.0, SATA)",260
+attribute_option_dvid,ol_product_pim.attribute_expansion_options,"1 M.2 2280/60/3042 B-key (PCIe x2, USB 3.0, SATA)",270
+attribute_option_dvii,ol_product_pim.attribute_expansion_options,"1 M.2 3042/2260/2280 B-key (PCIe x2, USB 2.0, SATA)",280
+attribute_option_esata,ol_product_pim.attribute_expansion_options,"1 M.2 3042/3052 B-key (USB 3.0, USB 2.0)",281
+attribute_option_hdmi,ol_product_pim.attribute_expansion_options,"1 M.2 3042/3052/2260/2280 B-key (PCIe x1, USB 3.0, USB 2.0)",290
+attribute_option_iec_60320_c16,ol_product_pim.attribute_expansion_options,"1 M.2 3042/3052/2280 B-key (PCIe x2, USB 2.0, USB 3.0, SATA)",291
+attribute_option_m12_8pin,ol_product_pim.attribute_expansion_options,"1 M.2 3042/52/2260/80 B-key (PCIe x1, USB 3.0, USB 2.0, SIM)",292
+attribute_option_minidisplayport,ol_product_pim.attribute_expansion_options,"1 mPCIe (PCIe x1, USB 2.0)",350
+attribute_option_minisas_hd_sff8643,ol_product_pim.attribute_expansion_options,"1 PCIe x16 slot (optional, supporting x16, x8, and x4 cards)",560
+attribute_option_molex,ol_product_pim.attribute_expansion_options,"2 mPCIe (1 full-size shared with mSATA, 1 full-size with Nano-SIM holder)",740
+attribute_option_oculink_sff8611,ol_product_pim.attribute_expansion_options,"2 mPCIe (full-size, USB signals only)",760
+attribute_option_p2,ol_product_pim.attribute_expansion_options,"2 PCIe 3.0 x16 slots (slot4: share with slot3, X16/x8, Slot6: share with slot5, X16/x8)",780
+attribute_option_p4,ol_product_pim.attribute_expansion_options,"2 PCIe x8 slots (optional, supporting x16, x8, and x4 cards)",850
+attribute_option_rj45,ol_product_pim.attribute_expansion_options,"3 PCIe 3.0 x8 slots (slot2: x8, slot3: share with slot3, X0/x8, Slot5: share with slot6, X0/x8)",950
+attribute_option_usb,ol_product_pim.attribute_expansion_options,"7 PCIe Gen 4.0 x16 slots (Slot 2 shared with M.2, OCuLink, and Mini-SAS HD)",1000
+attribute_option_usb_30_pin_header_2mm,ol_product_pim.attribute_expansion_options,"M.2 2242/60/80 B-key (PCIe x1, USB 3.0, USB 2.0)",1010
+attribute_option_usb_pin_header_2mm,ol_product_pim.attribute_expansion_options,"PCIe slots support x4, x8 or x16 cards",1030
+attribute_option_usb_pin_header_254mm,ol_product_pim.attribute_expansion_options,1 M.2 2280/2260 M-key (PCIe Gen 3 x1/ SATA III),
+attribute_option_usba,ol_product_pim.attribute_expansion_options,"1 M.2 2280/3042/3052 B-Key (PCIe Gen 3 x1, USB 3.2, USB 2.0)",
+attribute_option_usbc,ol_product_pim.attribute_expansion_options,1 M.2 2230 E-key (Wi-Fi) (PCIe x1/ USB 2.0),
+attribute_option_sata,ol_product_pim.attribute_expansion_options,3FF-Sim slot (Mapped to the B-Key),
+attribute_option_sata_power,ol_product_pim.attribute_expansion_options,1 Cincoze Modular I/O slot,10
+attribute_option_sata_locking,ol_product_pim.attribute_expansion_options,1 Cincoze Module slot,20
+attribute_option_uflrsmt,ol_product_pim.attribute_expansion_options,1 Full-height mPCIe (shared with mSATA),30
+attribute_option_vga,ol_product_pim.attribute_expansion_options,1 Full-size mPCIe,40
+attribute_option_15,ol_product_pim.attribute_expansion_options,1 Full-size mPCIe (shared with mSATA),60
+attribute_option_30,ol_product_pim.attribute_expansion_options,1 Full-size mPCIe (USB signal only),70
+attribute_option_60,ol_product_pim.attribute_expansion_options,1 Half-size mPCIe,80
+attribute_option_pin7_power,ol_product_pim.attribute_expansion_options,1 Half-size mPCIe (N3710 version only),90
+attribute_option_3d_nand_flash,ol_product_pim.attribute_expansion_options,1 Half-size mPCIe (shared with mSATA),100
+attribute_option_emlc_nand_flash,ol_product_pim.attribute_expansion_options,1 M.2,110
+attribute_option_mlc_nand_flash,ol_product_pim.attribute_expansion_options,"1 M.2 (Key M, 2242/2260/2280) with PCIe Gen3 x4 for SSD",115
+attribute_option_slc_nand_flash,ol_product_pim.attribute_expansion_options,"1 M.2 (Key E, 2230) with PCIe x1, USB 2.0 and CNVi for Wireless",120
+attribute_option_panel_mount,ol_product_pim.attribute_expansion_options,"1 M.2 (Key B, 3042/3052) with PCIe x1, USB 3.2 Gen1, USB 2.0 and SIM for 4G/5G",125
+attribute_option_panel_mount_10_lvds_clips_included_with_screen,ol_product_pim.attribute_expansion_options,1 M.2 2230 E-key,130
+attribute_option_panel_mount_kit_included,ol_product_pim.attribute_expansion_options,1 M.2 2230 E-key (Pre-populated with Intel wireless card),140
+attribute_option_vesa_mount,ol_product_pim.attribute_expansion_options,1 M.2 2230 slot,150
+attribute_option_vesa_mount_misd_75,ol_product_pim.attribute_expansion_options,1 M.2 2230/60/80 M-key (PCIe x2),160
+attribute_option_vesa_mount_misd_100,ol_product_pim.attribute_expansion_options,1 M.2 2242,170
+attribute_option_vesa_mount_misd_200,ol_product_pim.attribute_expansion_options,1 M.2 2242 B-key,180
+attribute_option_vesa_mount_included,ol_product_pim.attribute_expansion_options,1 M.2 2242/2280,190
+attribute_option_vesa_mount_included_misd_75,ol_product_pim.attribute_expansion_options,1 M.2 2242/60/80 M-key,210
+attribute_option_vesa_mount_included_misd_100,ol_product_pim.attribute_expansion_options,1 M.2 2242/60/80/110 M-key,220
+attribute_option_vesa_mount_included_misd_200,ol_product_pim.attribute_expansion_options,1 M.2 2260/2280,230
+attribute_option_vesa_mount_with_bracket,ol_product_pim.attribute_expansion_options,1 M.2 2280 M-key,240
+attribute_option_vesa_mount_with_bracket_misd_75,ol_product_pim.attribute_expansion_options,1 M.2 2280 M-key (PCIe Gen 4 x4),241
+attribute_option_vesa_mount_with_bracket_misd_100,ol_product_pim.attribute_expansion_options,1 M.2 2280/2260/2242/2230 M-key (PCIe Gen 3 x4),242
+attribute_option_vesa_mount_with_bracket_misd_200,ol_product_pim.attribute_expansion_options,1 MezIO™ expansion port,300
+attribute_option_aes_encryption,ol_product_pim.attribute_expansion_options,1 mPCIe,310
+attribute_option_ecc,ol_product_pim.attribute_expansion_options,1 mPCIe (full-size with USIM),320
+attribute_option_host_power_loss_protection,ol_product_pim.attribute_expansion_options,1 mPCIe (full-size),330
+attribute_option_ncq,ol_product_pim.attribute_expansion_options,1 mPCIe (full/half-size),340
+attribute_option_power_shield,ol_product_pim.attribute_expansion_options,1 mPCIe (shared with mSATA),360
+attribute_option_smart,ol_product_pim.attribute_expansion_options,1 Neousys MezIO Module,370
+attribute_option_trim,ol_product_pim.attribute_expansion_options,1 PCI or 1 PCIe x4 (P2102E Only),380
+attribute_option_black,ol_product_pim.attribute_expansion_options,1 PCI slot,390
+attribute_option_black_and_gray,ol_product_pim.attribute_expansion_options,1 PCI slot (optional riser card),400
+attribute_option_black_and_silver,ol_product_pim.attribute_expansion_options,1 PCIe 3.0 x4 slot,410
+attribute_option_gray,ol_product_pim.attribute_expansion_options,1 PCIe 3.0 x4 slot (x4 lanes),420
+attribute_option_orange,ol_product_pim.attribute_expansion_options,1 PCIe 3.0 x8 slot (x8 lanes),430
+attribute_option_orange_and_silver,ol_product_pim.attribute_expansion_options,1 PCIe Gen 3.0 x16 slot,440
+attribute_option_red,ol_product_pim.attribute_expansion_options,1 PCIe Gen 3.0 x16 slot (x8 PCIe lanes),450
+attribute_option_silver,ol_product_pim.attribute_expansion_options,1 PCIe Gen 3.0 x4 slot,460
+attribute_option_1_antenna_hole,ol_product_pim.attribute_expansion_options,1 PCIe Gen 4.0 x16 slot,470
+attribute_option_2_antenna_holes,ol_product_pim.attribute_expansion_options,1 PCIe Gen 4.0 x16 slot (shared with PCIe x4 storage options),480
+attribute_option_3_antenna_holes,ol_product_pim.attribute_expansion_options,1 PCIe Gen 4.0 x16 or 2 PCIe Gen 4 x8,485
+attribute_option_4_antenna_holes,ol_product_pim.attribute_expansion_options,"1 PCIe Gen 4.0 x16 Full Height, Fully Length slot (up to 150W)",487
+attribute_option_5_antenna_holes,ol_product_pim.attribute_expansion_options,1 PCIe Gen 4.0 x16 Full Height,489
+attribute_option_6_antenna_holes,ol_product_pim.attribute_expansion_options,1 PCIe x1 slot,490
+attribute_option_8_antenna_holes,ol_product_pim.attribute_expansion_options,1 PCIe x1 slot (AU912),500
+attribute_option_12_antenna_holes,ol_product_pim.attribute_expansion_options,1 PCIe x1 slot (optional riser card),510
+attribute_option_1_serial,ol_product_pim.attribute_expansion_options,1 PCIe x16 slot,520
+attribute_option_2_serial,ol_product_pim.attribute_expansion_options,1 PCIe x16 slot (AU912),530
+attribute_option_1_usb,ol_product_pim.attribute_expansion_options,1 PCIe x16 slot (AU972),540
+attribute_option_2_usb,ol_product_pim.attribute_expansion_options,1 PCIe x16 slot (optional riser card),550
+attribute_option_dc_jack,ol_product_pim.attribute_expansion_options,"1 PCIe x16 in x16 PCIe slot with dual height (4.4' H x 9.5"" L)",552
+attribute_option_7x_sma_punchouts,ol_product_pim.attribute_expansion_options,"1 PCIe x16 in x16 PCIe slot with single slot height (4.4"" H x 9.5"" L)",554
+attribute_option_am4,ol_product_pim.attribute_expansion_options,1 PCIe x4 slot,570
+attribute_option_am4_pga_1331,ol_product_pim.attribute_expansion_options,1 PCIe x8 slot,580
+attribute_option_amd_r_series,ol_product_pim.attribute_expansion_options,1 PCIe x8 slot (AU910),590
+attribute_option_fcbga1449,ol_product_pim.attribute_expansion_options,1 PCIe x8 slot (AU972),600
+attribute_option_fcbga1528,ol_product_pim.attribute_expansion_options,1 PCIe x8 slot (optional riser card),610
+attribute_option_fclga1151,ol_product_pim.attribute_expansion_options,1 PCIe x8 slot (PCIe x4 lanes),620
+attribute_option_fclga1200,ol_product_pim.attribute_expansion_options,1 SIM Card header,630
+attribute_option_fclga14c,ol_product_pim.attribute_expansion_options,1 SIM Card socket,640
+attribute_option_fclga1700,ol_product_pim.attribute_expansion_options,1 SIM Card socket (external),650
+attribute_option_fp6,ol_product_pim.attribute_expansion_options,2 Cincoze CFM slots,670
+attribute_option_fs1r2,ol_product_pim.attribute_expansion_options,2 Cincoze Modular I/O slots,680
+attribute_option_g1_rpga988a,ol_product_pim.attribute_expansion_options,2 Full-size mPCIe,690
+attribute_option_g2_rpga988b,ol_product_pim.attribute_expansion_options,2 Full-size mPCIe (shared with mSATA),700
+attribute_option_g3_rpga947,ol_product_pim.attribute_expansion_options,2 I/O Expansion slots,710
+attribute_option_lga1150,ol_product_pim.attribute_expansion_options,2 M.2 2242/60/80,720
+attribute_option_lga1151,ol_product_pim.attribute_expansion_options,2 mPCIe (1 full or half-size mux mSATA and 1 full-size),730
+attribute_option_lga1155,ol_product_pim.attribute_expansion_options,2 mPCIe (full or half-size),750
+attribute_option_lga1156,ol_product_pim.attribute_expansion_options,2 mPCIe (full-size),770
+attribute_option_lga1200,ol_product_pim.attribute_expansion_options,2 PCIe 3.0 x16 slots (x16 lanes),790
+attribute_option_lga1700,ol_product_pim.attribute_expansion_options,2 PCIe 3.0 x8 slots (x8 lanes redirected from x16 slots when used),800
+attribute_option_lga3647,ol_product_pim.attribute_expansion_options,2 PCIe x16 slots,810
+attribute_option_m_fcpga478,ol_product_pim.attribute_expansion_options,2 PCIe x16 slots (x8 PCIe lanes each),820
+attribute_option_onboard_bga,ol_product_pim.attribute_expansion_options,"2 PCIe x16 (8 lanes each) with single slot height (4.4"" H x 9.5"" L)",822
+attribute_option_sp3,ol_product_pim.attribute_expansion_options,2 PCIe x4 slots,830
+attribute_option_none,ol_product_pim.attribute_expansion_options,2 PCIe x8 slots,840
+attribute_option_525,ol_product_pim.attribute_expansion_options,2 PCIe x8 slots (Optional),860
+attribute_option_slimline,ol_product_pim.attribute_expansion_options,2 PCIe x8 slots (x4 PCIe lanes each),870
+attribute_option_ieee_80211abg,ol_product_pim.attribute_expansion_options,2 SIM card sockets (external),880
+attribute_option_ieee_80211abgn,ol_product_pim.attribute_expansion_options,2 SIM Card sockets (internal),890
+attribute_option_ieee_80211abgnac,ol_product_pim.attribute_expansion_options,3 Cincoze Modular I/O slots,900
+attribute_option_ieee_80211agn,ol_product_pim.attribute_expansion_options,3 mPCIe (full-size shared with mSATA),910
+attribute_option_ieee_80211bg,ol_product_pim.attribute_expansion_options,3 mPCIe (full-size),920
+attribute_option_ieee_80211bgn,ol_product_pim.attribute_expansion_options,3 PCI slots,930
+attribute_option_ieee_8023,ol_product_pim.attribute_expansion_options,3 PCI slots (Nuvo-6032),940
+attribute_option_ieee_8023uabz,ol_product_pim.attribute_expansion_options,3 SIM Card Sockets (internal),960
+attribute_option_ieee_8023ab,ol_product_pim.attribute_expansion_options,4 Cincoze Modular I/O slots,970
+attribute_option_ieee_8023af,ol_product_pim.attribute_expansion_options,4 mPCIe (full-size),980
+attribute_option_ieee_8023at,ol_product_pim.attribute_expansion_options,6 PCIe Gen 4.0 x16 slots,990
+attribute_option_ieee_8023u,ol_product_pim.attribute_expansion_options,Coming Soon - 1 PCIe Gen 4.0 x16 slot,1010
+attribute_option_zigbee_802154,ol_product_pim.attribute_expansion_options,Front accessible ModBay,1020
+attribute_option_35,ol_product_pim.attribute_expansion_options,"Face Plate Expansion (LAN x 2, or COM x 2, or LAN + COM)",
+attribute_option_4x4,ol_product_pim.attribute_expansion_options,SATA 3 Storage,1040
+attribute_option_atx,ol_product_pim.attribute_expansion_options,Wi-Fi/4G/Bluetooth Compatible,1050
+attribute_option_microatx,ol_product_pim.attribute_fan_bearing_type,Ball-bearing,10
+attribute_option_miniitx,ol_product_pim.attribute_fan_bearing_type,Dual ball-bearing,20
+attribute_option_nanoitx,ol_product_pim.attribute_fan_bearing_type,Hydraulic Bearing,30
+attribute_option_nuc,ol_product_pim.attribute_fan_bearing_type,Vapo-bearing/MagLev,40
+attribute_option_picoitx,ol_product_pim.attribute_graphics_gpu,Intel® UHD Graphics 770,635
+attribute_option_thin_miniitx,ol_product_pim.attribute_graphics_gpu,Up to Intel® UHD Graphics 770 (processor dependent),637
+attribute_option_utx,ol_product_pim.attribute_graphics_gpu,Intel® UHD Graphics for 12th Gen Intel® Processors up to 32EU,
+attribute_option_usb_20_on_mini_pcie,ol_product_pim.attribute_graphics_gpu,AMD Radeon™ E6460,10
+attribute_option_usb_30_on_mini_pcie,ol_product_pim.attribute_graphics_gpu,AMD Radeon™ Graphics,20
+attribute_option_mini_pcie_full_height,ol_product_pim.attribute_graphics_gpu,AMD Radeon™ HD 6250,30
+attribute_option_ac,ol_product_pim.attribute_graphics_gpu,AMD Radeon™ HD 6310,40
+attribute_option_dc,ol_product_pim.attribute_graphics_gpu,AMD Radeon™ HD 7000G,50
+attribute_option_atatx,ol_product_pim.attribute_graphics_gpu,AMD Radeon™ HD 7520G,60
+attribute_option_atx12v,ol_product_pim.attribute_graphics_gpu,AMD Radeon™ HD 7660G,70
+attribute_option_atx12v_v10,ol_product_pim.attribute_graphics_gpu,AMD Radeon™ HD 8000,80
+attribute_option_atx12v_v13,ol_product_pim.attribute_graphics_gpu,AMD Radeon™ HD 8210E,90
+attribute_option_atx12v_v2,ol_product_pim.attribute_graphics_gpu,AMD Radeon™ HD 8280E,100
+attribute_option_eps12v,ol_product_pim.attribute_graphics_gpu,AMD Radeon™ HD 8330E,110
+attribute_option_small_form_factor_cfx,ol_product_pim.attribute_graphics_gpu,AMD Radeon™ HD 8400E,120
+attribute_option_small_form_factor_tfx,ol_product_pim.attribute_graphics_gpu,AMD Radeon™ HD E6460,130
+attribute_option_small_form_factor_sfx,ol_product_pim.attribute_graphics_gpu,AMD Radeon™ Vega 11 Graphics,140
+attribute_option_bop_brown_out_protection,ol_product_pim.attribute_graphics_gpu,AMD Radeon™ Vega 3 Graphics (R1505G),150
+attribute_option_ocp_over_current_protection,ol_product_pim.attribute_graphics_gpu,AMD Radeon™ Vega 8 Graphics,160
+attribute_option_opp_over_power_protection,ol_product_pim.attribute_graphics_gpu,AMD Radeon™ Vega 8 Graphics (V1605B),170
+attribute_option_otp_over_temperature_protection,ol_product_pim.attribute_graphics_gpu,AMD RX Vega M GH Graphics (8809G),180
+attribute_option_ovp_over_voltage_protection,ol_product_pim.attribute_graphics_gpu,AMD RX Vega M GL Graphics (8705G),190
+attribute_option_scp_short_circuit_protection,ol_product_pim.attribute_graphics_gpu,ASPEED AST2300,200
+attribute_option_uvp_under_voltage_protection,ol_product_pim.attribute_graphics_gpu,ASPEED AST2500,210
+attribute_option_ddr_ddr1,ol_product_pim.attribute_graphics_gpu,Intel 3rd Generation HD Graphics,220
+attribute_option_ddr2,ol_product_pim.attribute_graphics_gpu,Intel 4th Generation HD Graphics,230
+attribute_option_ddr3,ol_product_pim.attribute_graphics_gpu,Intel 8th Generation HD Graphics,240
+attribute_option_ddr4,ol_product_pim.attribute_graphics_gpu,Intel 9th Generation HD Graphics,250
+attribute_option_sdram,ol_product_pim.attribute_graphics_gpu,Intel Gen9 Graphics DX 12,260
+attribute_option_automotive,ol_product_pim.attribute_graphics_gpu,Intel GMA 2500,270
+attribute_option_compact,ol_product_pim.attribute_graphics_gpu,Intel GMA 3150,280
+attribute_option_customizable,ol_product_pim.attribute_graphics_gpu,Intel GMA 3600,290
+attribute_option_expandable,ol_product_pim.attribute_graphics_gpu,Intel GMA 3650,300
+attribute_option_fanless,ol_product_pim.attribute_graphics_gpu,Intel GMA 4500MHD,310
+attribute_option_modular,ol_product_pim.attribute_graphics_gpu,Intel GMA 950,320
+attribute_option_rackmount,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics,330
+attribute_option_ruggedized,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics (CPU dependent),340
+attribute_option_storageoriented,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics 2000,350
+attribute_option_nonmodular,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics 2000/3000/4000 (CPU-dependent),360
+attribute_option_semimodular,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics 2500,370
+attribute_option_fullmodular,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics 3000,380
+attribute_option_ecc_buffered,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics 400 (Celeron N3160),390
+attribute_option_nonecc_nonbuffered,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics 4000,400
+attribute_option_1,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics 4000 (CPU-dependent),410
+attribute_option_2,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics 405,420
+attribute_option_4,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics 405 (Pentium N3710),430
+attribute_option_6,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics 4400,440
+attribute_option_8,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics 4600,450
+attribute_option_10,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics 500,460
+attribute_option_12,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics 5000,470
+attribute_option_16,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics 505,480
+attribute_option_18,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics 510,490
+attribute_option_20,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics 510 or 530 (CPU dependent),500
+attribute_option_22,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics 520,510
+attribute_option_24,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics 530,520
+attribute_option_32,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics 5500,530
+attribute_option_64,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics 620,540
+attribute_option_amt_support,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics 630,550
+attribute_option_amt_110_support,ol_product_pim.attribute_graphics_gpu,Intel HD Graphics P530,560
+attribute_option_amt_120_support,ol_product_pim.attribute_graphics_gpu,Intel Iris Pro Graphics P580,570
+attribute_option_amt_support_with_i5_processor,ol_product_pim.attribute_graphics_gpu,Intel Iris XE Graphics,580
+attribute_option_cpu_voltage_monitoring,ol_product_pim.attribute_graphics_gpu,"Intel Iris Xe (i5, i7) - Dual Channel memory required",584
+attribute_option_infinion_slb9670vq20,ol_product_pim.attribute_graphics_gpu,Intel UHD Graphics,590
+attribute_option_ipmi_v20,ol_product_pim.attribute_graphics_gpu,Intel UHD Graphics 610,600
+attribute_option_nmi,ol_product_pim.attribute_graphics_gpu,Intel UHD Graphics 620,610
+attribute_option_onboard_tpm_2.0_embedded,ol_product_pim.attribute_graphics_gpu,Intel UHD Graphics 630,620
+attribute_option_ptt_in_bios,ol_product_pim.attribute_graphics_gpu,Intel UHD Graphics P630,630
+attribute_option_redfish,ol_product_pim.attribute_graphics_gpu,"Intel UHD Graphics (Celeron, i3)",634
+attribute_option_smart_fan_control,ol_product_pim.attribute_graphics_gpu,Mali-400MP,640
+attribute_option_system_power_management,ol_product_pim.attribute_graphics_gpu,NVIDIA GeForce GTX 1050 (optional),650
+attribute_option_tpm,ol_product_pim.attribute_graphics_gpu,NVIDIA GeForce GTX 1060 (optional),660
+attribute_option_tpm_optional,ol_product_pim.attribute_graphics_gpu,NVIDIA GeForce GTX 1080 (optional),670
+attribute_option_tpm_20_support,ol_product_pim.attribute_graphics_gpu,NVIDIA GeForce RTX 2070 (optional),680
+attribute_option_wake_on_lan,ol_product_pim.attribute_graphics_gpu,NVIDIA GeForce RTX 2080 (optional),690
+attribute_option_wake_on_pci,ol_product_pim.attribute_graphics_gpu,NVIDIA GF119,700
+attribute_option_wake_on_usb,ol_product_pim.attribute_graphics_gpu,NVIDIA GT 610M,710
+attribute_option_watchdog_timer,ol_product_pim.attribute_graphics_gpu,NVIDIA GT730M GPU,720
+attribute_option_singlerail,ol_product_pim.attribute_graphics_gpu,NVIDIA ION2,730
+attribute_option_multirail,ol_product_pim.attribute_graphics_gpu,NVIDIA Quadro P600,740
+attribute_option_80_plus,ol_product_pim.attribute_graphics_gpu,NVIDIA Volta GPU,750
+attribute_option_80_plus_bronze,ol_product_pim.attribute_graphics_gpu,Optional GPU,760
+attribute_option_80_plus_silver,ol_product_pim.attribute_graphics_gpu,(Processor Dependent),770
+attribute_option_80_plus_gold,ol_product_pim.attribute_graphics_gpu,Silicon Sil9024A,780
+attribute_option_80_plus_platinum,ol_product_pim.attribute_graphics_gpu,VIA Chrome645/640 HD,790
+attribute_option_80_plus_titanium,ol_product_pim.attribute_graphics_gpu,VIA Chrome9,800
+attribute_option_ac,ol_product_pim.attribute_graphics_gpu,VIA UniChrome Pro,810
+attribute_option_dc,ol_product_pim.attribute_hardware_line,Industrial (Fanless),10
+attribute_option_1aeee461-21b3-428e-8024-b3230d0db9ae,ol_product_pim.attribute_hardware_line,Industrial (Fanned),20
+attribute_option_a0537563-651d-439e-afb6-83e8cc304d6e,ol_product_pim.attribute_hardware_line,Rugged,30
+attribute_option_0b9a12d1-dde5-4955-8600-a609d10a8da1,ol_product_pim.attribute_hardware_line,Panel PC,40
+attribute_option_2bba4056-1c6a-4063-b17e-bc53e926a260,ol_product_pim.attribute_hardware_line,Rackmount,50
+attribute_option_06ca54c9-affe-4aca-ae1c-b5bafa22aad8,ol_product_pim.attribute_hardware_line,Server,60
+attribute_option_507f4bed-9508-4552-a8e6-82e6a8ae4c92,ol_product_pim.attribute_hardware_type,Edge Devices and IoT Gateways,10
+attribute_option_a89ff3e4-193c-484d-b93e-a745777a761e,ol_product_pim.attribute_hardware_type,Edge Servers,20
+attribute_option_af3a309a-26d9-4b1d-9118-23274c1a36a1,ol_product_pim.attribute_hardware_type,HMIs,30
+attribute_option_57527665-eb36-41fe-ab26-63ae6ff311b0,ol_product_pim.attribute_hardware_type,SCADA Controllers,40
+attribute_option_64ae4d99-e3af-4763-bbe6-c858d912eea2,ol_product_pim.attribute_input_voltage_type,AC,
+attribute_option_043cbd22-b0bf-432b-8590-fb85ba583119,ol_product_pim.attribute_input_voltage_type,DC,
+attribute_option_f2221929-cb42-4008-898b-5e639f60822f,ol_product_pim.attribute_interface_type,Mini PCIe (Full Height),
+attribute_option_a2fc90ba-0234-4fbe-a04f-ae25f87c2fc0,ol_product_pim.attribute_lan_controller,1 Intel GPY115 or 2 Intel GPY115,10
+attribute_option_61f072a8-659d-4cc6-8c5e-93a4892fe4e2,ol_product_pim.attribute_lan_controller,1 Intel X710 Controller (2 x 10GbE ports),12
+attribute_option_c9c4c931-1225-4de9-965d-4a82d384a4cd,ol_product_pim.attribute_lan_controller,1 MaxLinear GPY115 or 2 MaxLinear GPY115,20
+attribute_option_07ae5352-0011-48f2-b270-9022c75a8f55,ol_product_pim.attribute_lan_controller,2 10GbE by Intel X550-AT2,30
+attribute_option_35a8bf37-f971-4b4b-8d2d-3994a05c9046,ol_product_pim.attribute_lan_controller,2 10GbE by Intel X557-AT2,40
+attribute_option_0a1acf59-4b28-4061-8539-6915a9a08a4f,ol_product_pim.attribute_lan_controller,2 Intel i210 Controllers (2x 1GbE ports),42
+attribute_option_2c363869-c8b5-45d8-adea-f6176a20cddb,ol_product_pim.attribute_lan_controller,2 Intel i225-LM/i225V (vPro not supported),44
+attribute_option_7dcdcd8c-cfd8-4b06-abbb-f64c5931c293,ol_product_pim.attribute_lan_controller,2 GbE by Intel I210,50
+attribute_option_59b916ed-2348-4ad4-9a56-3d2adbc768a1,ol_product_pim.attribute_lan_controller,4 GbE by Intel I350-AM4,60
+attribute_option_5fb6ebac-ab61-42d4-a6d0-1ec8da7fb7c3,ol_product_pim.attribute_lan_controller,Intel 82541PI 10/100/1000,70
+attribute_option_c65a9c33-e580-4dd4-a81c-f8c3a3614f4f,ol_product_pim.attribute_lan_controller,Intel 82574IT 10/100/1000,80
+attribute_option_e1d6e09e-b0be-4353-ab75-6536c5304448,ol_product_pim.attribute_lan_controller,Intel 82574L 10/100/1000,90
+attribute_option_fe9f3d04-d80c-4726-a6fa-e491ef3663e5,ol_product_pim.attribute_lan_controller,Intel 82574LM GbE,100
+attribute_option_e4a62efd-30db-4626-a921-e30ebf5a758e,ol_product_pim.attribute_lan_controller,Intel 82579L GbE,110
+attribute_option_63c28ecf-be99-427c-86f4-81435c21af0d,ol_product_pim.attribute_lan_controller,Intel 82579LM PCIe GbE,120
+attribute_option_5e42fd7b-2799-4df9-bc96-51753d3087f8,ol_product_pim.attribute_lan_controller,Intel 82579LM PCIe GbE w/ iAMT,130
+attribute_option_69bc284a-bb25-4b7a-bf47-a2c1b7304e00,ol_product_pim.attribute_lan_controller,Intel 82579V PCIe 10/100/1000,140
+attribute_option_6114cb9e-8925-4812-82e3-6cfb882f7a7c,ol_product_pim.attribute_lan_controller,Intel 82583V 10/100/1000,150
+attribute_option_3388f4a3-2da3-4a04-9df8-3032fbf4a6a0,ol_product_pim.attribute_lan_controller,Intel 82583V PCIe GbE,160
+attribute_option_ef82edf7-d253-44aa-8e8d-ddc3f95c5572,ol_product_pim.attribute_lan_controller,Intel I210 GbE,170
+attribute_option_dfbe6c1f-e500-4545-be38-e8eff9fbd50c,ol_product_pim.attribute_lan_controller,Intel I210-AT GbE,180
+attribute_option_b8c9714e-2d44-4117-ae87-2d4de266b752,ol_product_pim.attribute_lan_controller,Intel I210-IT GbE,190
+attribute_option_95900389-8cb3-4eaf-a5a4-266203bfdf97,ol_product_pim.attribute_lan_controller,Intel I211-AT GbE,200
+attribute_option_10869643-62fe-42e7-9c95-dd4e46d1ed8c,ol_product_pim.attribute_lan_controller,Intel I211-AT GbE (when configured w/ i5),210
+attribute_option_f2ec8f39-128e-490c-a394-35f5063067ce,ol_product_pim.attribute_lan_controller,Intel I217-LM GbE,220
+attribute_option_e48cef2d-c7c6-4658-9d64-d188b34543c6,ol_product_pim.attribute_lan_controller,Intel I217-LM GbE with Intel AMT,230
+attribute_option_component,ol_product_pim.attribute_lan_controller,Intel I217-LML GbE with iAMT 9.0,240
+attribute_option_system,ol_product_pim.attribute_lan_controller,Intel I218 GbE,250
+attribute_option_bundle,ol_product_pim.attribute_lan_controller,Intel I218-LM GbE,260
+attribute_option_service,ol_product_pim.attribute_lan_controller,Intel I218-LM GbE with AMT,270
+attribute_option_virtual,ol_product_pim.attribute_lan_controller,Intel I218-V GbE,280
+attribute_option_consumable,ol_product_pim.attribute_lan_controller,Intel I219 GbE,290
+attribute_option_us,ol_product_pim.attribute_lan_controller,Intel I219-LM GbE,300
+attribute_option_eu,ol_product_pim.attribute_lan_controller,Intel I219-LM GbE (when configured w/ i5),310
+attribute_option_in_development,ol_product_pim.attribute_lan_controller,Intel I219-V,320
+attribute_option_coming_soon,ol_product_pim.attribute_lan_controller,Intel I219-V GbE (when configured w/ i3),330
+attribute_option_preorder,ol_product_pim.attribute_lan_controller,Intel I219LM with 10/100/1000 Mbps,340
+attribute_option_available,ol_product_pim.attribute_lan_controller,Intel I225-IT 2.5 GbE,345
+attribute_option_discontinued,ol_product_pim.attribute_lan_controller,Intel I225-LM 2.5 GbE,346
+attribute_option_end_of_life,ol_product_pim.attribute_lan_controller,Intel I225-LM with 10/100/1000/2500 Mbps,350
+attribute_option_canceled,ol_product_pim.attribute_lan_controller,Intel I350,360
+attribute_option_no-backorder,ol_product_pim.attribute_lan_controller,Intel I350 10/100/1000,370
+attribute_option_no-notify,ol_product_pim.attribute_lan_controller,Intel I350-AM4,380
+attribute_option_notify,ol_product_pim.attribute_lan_controller,Intel Integrated Gb LAN,390
+attribute_option_in_development,ol_product_pim.attribute_lan_controller,Intel W82577LM 10/100/1000,400
+attribute_option_coming_soon,ol_product_pim.attribute_lan_controller,Intel WG82574L GbE,410
+attribute_option_preorder,ol_product_pim.attribute_lan_controller,Intel WG82579LM GbE,420
+attribute_option_available,ol_product_pim.attribute_lan_controller,Intel WG82583V PCIe GbE,430
+attribute_option_discontinued,ol_product_pim.attribute_lan_controller,Intel X722,440
+attribute_option_end_of_life,ol_product_pim.attribute_lan_controller,LAN1 supports NCSI,450
+attribute_option_canceled,ol_product_pim.attribute_lan_controller,Realtek 8111GN-CG PCIe Gb,460
+attribute_option_no-backorder,ol_product_pim.attribute_lan_controller,Realtek R8111FPV (DASH) with 10/100/1000 Mbps,470
+attribute_option_canceled,ol_product_pim.attribute_lan_controller,Realtek RT8111G,480
+attribute_option_pending,ol_product_pim.attribute_lan_controller,Realtek RT8111G-CG,490
+attribute_option_rejected,ol_product_pim.attribute_lan_controller,Realtek RTL8110SC 10/100/1000,500
+attribute_option_approved,ol_product_pim.attribute_lan_controller,Realtek RTL8111 10/100/1000,510
+attribute_option_4g_lte,ol_product_pim.attribute_lan_controller,Realtek RTL8111B PCIe 10/100/1000,520
+attribute_option_can_bus,ol_product_pim.attribute_lan_controller,Realtek RTL8111C 10/100/1000,530
+attribute_option_cec,ol_product_pim.attribute_lan_controller,Realtek RTL8111DL 10/100/1000,540
+attribute_option_dio,ol_product_pim.attribute_lan_controller,Realtek RTL8111DP GbE,550
+attribute_option_gpu_expansion,ol_product_pim.attribute_lan_controller,Realtek RTL8111E 10/100/1000,560
+attribute_option_ignition_sensing,ol_product_pim.attribute_lan_controller,Realtek RTL8111EVL PCI-E 10/100/1000,570
+attribute_option_remote_management:_intel_vpro,ol_product_pim.attribute_lan_controller,Realtek RTL8111F 10/100/1000,580
+attribute_option_userprogrammable_onlogic_microcontroller_mcu,ol_product_pim.attribute_lan_controller,Realtek RTL8111G,590
+attribute_option_automotive_ignition_power_sensing,ol_product_pim.attribute_lan_controller,Realtek RTL8111GN 10/100/1000,600
+attribute_option_onboard_tpm_20_module_infineon_slb9672,ol_product_pim.attribute_lan_controller,Realtek RTL8111H,610
+attribute_option_edge_devices_and_iot_gateways,ol_product_pim.attribute_lan_controller,Realtek RTL8111H-CG with 10/100/1000 Mbps,620
+attribute_option_edge_servers,ol_product_pim.attribute_lan_controller,Realtek RTL8125BG with 10/100/1000/2500 Mbps,630
+attribute_option_hmis,ol_product_pim.attribute_lan_controller,Realtek RTL8139D 10/100,640
+attribute_option_scada_controllers,ol_product_pim.attribute_lan_controller,Realtek RTL8153,645
+attribute_option_education,ol_product_pim.attribute_lan_controller,Realtek RTL8211E,650
+attribute_option_government,ol_product_pim.attribute_lan_controller,VIA VT6103 10/100,660
+attribute_option_human_machine_interface,ol_product_pim.attribute_lan_controller,VIA VT6113 10/100 base-TX PHY,670
+attribute_option_image_processing,ol_product_pim.attribute_lan_controller,VIA VT6122 10/100/1000,680
+attribute_option_internet_of_things,ol_product_pim.attribute_lan_controller,VIA VT6130 PCIe 10/100/1000,690
+attribute_option_machine_vision,ol_product_pim.attribute_lan_controller,VIA VT6656,700
+attribute_option_medical_medical_imaging,ol_product_pim.attribute_lan_controller,WG82579LM PCIe GbE w/ iAMT,710
+attribute_option_network_attached_storage,ol_product_pim.attribute_manufacturer_component_warranty,30 Day Warranty,10
+attribute_option_pointofuse_kiosk,ol_product_pim.attribute_manufacturer_component_warranty,60 Day Warranty,20
+attribute_option_surveillance_security,ol_product_pim.attribute_manufacturer_component_warranty,1 Year Warranty,30
+attribute_option_thin_client,ol_product_pim.attribute_manufacturer_component_warranty,2 Year Warranty,40
+attribute_option_workstation,ol_product_pim.attribute_manufacturer_component_warranty,2 Year Limited Warranty,50
+attribute_option_low_profile,ol_product_pim.attribute_manufacturer_component_warranty,3 Year Warranty,60
+attribute_option_nuc,ol_product_pim.attribute_manufacturer_component_warranty,3 Year Limited Warranty,70
+attribute_option_mini_pc,ol_product_pim.attribute_manufacturer_component_warranty,5 Year Warranty,80
+attribute_option_1u_rackmount,ol_product_pim.attribute_manufacturer_component_warranty,Lifetime Warranty,90
+attribute_option_15u_rackmount,ol_product_pim.attribute_manufacturer_component_warranty,2 years included; 3 or 5 year options available,100
+attribute_option_2u_rackmount,ol_product_pim.attribute_memory_buffer,ECC (Buffered),
+attribute_option_4u_rackmount,ol_product_pim.attribute_memory_buffer,Non-ECC (Non-Buffered),
+attribute_option_pal,ol_product_pim.attribute_memory_channels,Single Channel,10
+attribute_option_ntsc,ol_product_pim.attribute_memory_channels,Dual Channel,20
+attribute_option_secam,ol_product_pim.attribute_memory_channels,Triple Channel,30
+attribute_option_displayport,ol_product_pim.attribute_memory_channels,Quad Channel,40
+attribute_option_dvid,ol_product_pim.attribute_memory_channels,Multi Channel,50
+attribute_option_dvid,ol_product_pim.attribute_memory_type,DDR2 DIMM (non-ECC),10
+attribute_option_dvii,ol_product_pim.attribute_memory_type,DDR2 Onboard,20
+attribute_option_hdmi,ol_product_pim.attribute_memory_type,DDR2 SO-DIMM (non-ECC),30
+attribute_option_minidisplayport,ol_product_pim.attribute_memory_type,DDR3 DIMM (ECC),40
+attribute_option_vga,ol_product_pim.attribute_memory_type,DDR3 DIMM (non-ECC),50
+attribute_option_displayport,ol_product_pim.attribute_memory_type,DDR3 Onboard,60
+attribute_option_dvid_port,ol_product_pim.attribute_memory_type,DDR3 SO-DIMM (ECC),70
+attribute_option_dvii_port,ol_product_pim.attribute_memory_type,DDR3 SO-DIMM (non-ECC),80
+attribute_option_hdmi,ol_product_pim.attribute_memory_type,DDR3L DIMM (non-ECC),90
+attribute_option_vga,ol_product_pim.attribute_memory_type,DDR3L SO-DIMM (non-ECC),100
+attribute_option_windows_7,ol_product_pim.attribute_memory_type,DDR3L SDRAM,110
+attribute_option_windows_embedded_7,ol_product_pim.attribute_memory_type,DDR4,120
+attribute_option_windows_81,ol_product_pim.attribute_memory_type,DDR4 ECC UDIMM,130
+attribute_option_windows_10,ol_product_pim.attribute_memory_type,DDR4 ECC/non-ECC UDIMM,140
+attribute_option_ubuntu,ol_product_pim.attribute_memory_type,DDR4 R-DIMM (ECC),150
+attribute_option_1,ol_product_pim.attribute_memory_type,DDR4 SO-DIMM (ECC),160
+attribute_option_ateverex,ol_product_pim.attribute_memory_type,DDR4 SO-DIMM (non-ECC),170
+attribute_option_asrock_2mm_areverex_proprietary,ol_product_pim.attribute_memory_type,DDR4 SO-DIMM (non-ECC)/DDR4 SO-DIMM (ECC),180
+attribute_option_dtkintel,ol_product_pim.attribute_memory_type,DDR5,183
+attribute_option_amd_embedded_gseries,ol_product_pim.attribute_memory_type,DDR5 UDIMM (non-ECC or ECC),185
+attribute_option_amd_eontario,ol_product_pim.attribute_memory_type,LPDDR4,190
+attribute_option_amd_epyc,ol_product_pim.attribute_memory_type,LPDDR4x,200
+attribute_option_amd_ryzen,ol_product_pim.attribute_memory_type,XR-DIMM,210
+attribute_option_arm,ol_product_pim.attribute_mobile_frequency_bands,"4G LTE - North America (2, 4, 5, 7, 17)",10
+attribute_option_cortexa9,ol_product_pim.attribute_mobile_frequency_bands,"4G LTE (B1, B2, B3, B4, B5, B7, B12, B13, B20, B25, B26, B29, B30, B41)",20
+attribute_option_intel_atom,ol_product_pim.attribute_mobile_frequency_bands,"GSM (850, 900, 1800, 1900)",30
+attribute_option_intel_apollo_lake,ol_product_pim.attribute_mobile_frequency_bands,"HSPA+/UMTS (B1, B2, B3, B4, B5, B8)",40
+attribute_option_intel_arrandale,ol_product_pim.attribute_mobile_frequency_bands,"LTE - Multi-Regional (2, 3, 4, 5, 8, 12, 13, 20, 28)",50
+attribute_option_intel_bay_trail,ol_product_pim.attribute_mobile_frequency_bands,"UMTS/DC-HSPA+ (850, 900, AWS, 1900, 2100)",60
+attribute_option_intel_braswell,ol_product_pim.attribute_motherboard_chipset,AMD A50M FCH,10
+attribute_option_intel_broadwell,ol_product_pim.attribute_motherboard_chipset,AMD A55E,20
+attribute_option_intel_haswell,ol_product_pim.attribute_motherboard_chipset,AMD A55E FCH,30
+attribute_option_intel_ivy_bridge,ol_product_pim.attribute_motherboard_chipset,AMD A75 FCH,40
+attribute_option_intel_sandy_bridge,ol_product_pim.attribute_motherboard_chipset,AMD B450,50
+attribute_option_intel_skylake,ol_product_pim.attribute_motherboard_chipset,AMD Hudson E1 FCH,60
+attribute_option_via,ol_product_pim.attribute_motherboard_chipset,AMD Hudson M1 FCH,70
+attribute_option_am3352,ol_product_pim.attribute_motherboard_chipset,AMD Premium X570,80
+attribute_option_amd_epyc_7282,ol_product_pim.attribute_motherboard_chipset,Freescale Semiconductor,90
+attribute_option_amd_epyc_7452,ol_product_pim.attribute_motherboard_chipset,ICH10R,100
+attribute_option_amd_fusion_t40e,ol_product_pim.attribute_motherboard_chipset,Intel 945GSE/ICH7M,110
+attribute_option_amd_fusion_t56n,ol_product_pim.attribute_motherboard_chipset,Intel C226,120
+attribute_option_amd_gx210ha,ol_product_pim.attribute_motherboard_chipset,Intel C236,130
+attribute_option_amd_gx217ga,ol_product_pim.attribute_motherboard_chipset,Intel C246,140
+attribute_option_amd_gx415ga,ol_product_pim.attribute_motherboard_chipset,Intel C621,150
+attribute_option_amd_gx420ca,ol_product_pim.attribute_motherboard_chipset,Intel GM45/ICH9M,160
+attribute_option_amd_r272f,ol_product_pim.attribute_motherboard_chipset,Intel GM45/ICH9ME,170
+attribute_option_amd_r464l,ol_product_pim.attribute_motherboard_chipset,Intel GME965/ICH8M,180
+attribute_option_amd_ryzen,ol_product_pim.attribute_motherboard_chipset,Intel H110,190
+attribute_option_amd_ryzen_3_4300u,ol_product_pim.attribute_motherboard_chipset,Intel H310,200
+attribute_option_amd_ryzen_5_3600,ol_product_pim.attribute_motherboard_chipset,Intel H410,210
+attribute_option_amd_ryzen_7_3700x,ol_product_pim.attribute_motherboard_chipset,Intel H61,220
+attribute_option_amd_ryzen_7_4800u,ol_product_pim.attribute_motherboard_chipset,Intel H77,230
+"attribute_option_amd_ryzen™_7_4800u,_amd_ryzen_v2516,_amd_ryzen_v2718",ol_product_pim.attribute_motherboard_chipset,Intel H81,240
+attribute_option_amd_ryzen_9_3900x,ol_product_pim.attribute_motherboard_chipset,Intel HM55,250
+attribute_option_amd_ryzen_9_3950x,ol_product_pim.attribute_motherboard_chipset,Intel HM65,260
+attribute_option_amd_ryzen_embedded_v1605b,ol_product_pim.attribute_motherboard_chipset,Intel HM76,270
+attribute_option_amd_ryzen_r1505g,ol_product_pim.attribute_motherboard_chipset,Intel ICH10R,280
+attribute_option_amd_ryzen_v1605b,ol_product_pim.attribute_motherboard_chipset,Intel ICH8M,290
+attribute_option_amd_ryzen_v1807b,ol_product_pim.attribute_motherboard_chipset,Intel ICH9R,300
+attribute_option_broadcom_bcm2711_with_arm_cortexa72,ol_product_pim.attribute_motherboard_chipset,Intel MCP,310
+attribute_option_cortexa7,ol_product_pim.attribute_motherboard_chipset,Intel NM10,320
+attribute_option_cortexa8,ol_product_pim.attribute_motherboard_chipset,Intel NM70,330
+attribute_option_cortexa9,ol_product_pim.attribute_motherboard_chipset,Intel Q170,340
+attribute_option_freescale_cortexa8_imx537,ol_product_pim.attribute_motherboard_chipset,Intel Q370,350
+attribute_option_freescale_imx6,ol_product_pim.attribute_motherboard_chipset,Intel Q470,360
+attribute_option_intel_11th_gen_tiger_lakeup3,ol_product_pim.attribute_motherboard_chipset,Intel Q77,370
+attribute_option_intel_12th_gen_alder_laken<br>intel_n97<br>intel_n200<br>intel_atom_x7425e_w/_intel_tsn;_tcc_support<br>intel_i3n305,ol_product_pim.attribute_motherboard_chipset,Intel Q87,380
+attribute_option_intel_8th_gen_whiskey_lakeu,ol_product_pim.attribute_motherboard_chipset,Intel QM57,390
+attribute_option_intel_8th9th_gen_coffee_lake,ol_product_pim.attribute_motherboard_chipset,Intel QM67,400
+attribute_option_intel_alder_lake_core_i3i5i7i9,ol_product_pim.attribute_motherboard_chipset,Intel QM77,410
+attribute_option_intel_alder_lake_12th_gen_celeron_7305e,ol_product_pim.attribute_motherboard_chipset,Intel QM87,420
+attribute_option_intel_alder_lake_12th_gen_i31220pe,ol_product_pim.attribute_motherboard_chipset,Intel QS77,430
+attribute_option_intel_alder_lake_12th_gen_i51250pe,ol_product_pim.attribute_motherboard_chipset,Intel R680E,434
+attribute_option_intel_alder_lake_12th_gen_i71270pe,ol_product_pim.attribute_motherboard_chipset,Mobile Intel HM175,440
+attribute_option_intel_atom_d2500,ol_product_pim.attribute_motherboard_chipset,Shared with CPU,450
+attribute_option_intel_atom_d2550,ol_product_pim.attribute_motherboard_chipset,VIA CN700/VT8237R,460
+attribute_option_intel_atom_d2700,ol_product_pim.attribute_motherboard_chipset,VIA CX700,470
+attribute_option_intel_atom_d525,ol_product_pim.attribute_motherboard_chipset,VIA VX11H,480
+attribute_option_intel_atom_e3815,ol_product_pim.attribute_motherboard_chipset,VIA VX855,490
+attribute_option_intel_atom_e3826,ol_product_pim.attribute_motherboard_chipset,VIA VX900,500
+attribute_option_intel_atom_e3845,ol_product_pim.attribute_motherboard_chipset,VIA VX900H,510
+attribute_option_intel_atom_e3930,ol_product_pim.attribute_motherboard_chipset,W480E,520
+attribute_option_intel_atom_e3940,ol_product_pim.attribute_motherboard_chipset,W680,530
+attribute_option_intel_atom_e3950,ol_product_pim.attribute_motherboard_form_factor,"3.5""",10
+attribute_option_intel_atom_n2600,ol_product_pim.attribute_motherboard_form_factor,4x4,20
+attribute_option_intel_atom_n270,ol_product_pim.attribute_motherboard_form_factor,ATX,30
+attribute_option_intel_atom_n2800,ol_product_pim.attribute_motherboard_form_factor,Micro-ATX,40
+attribute_option_intel_atom_x6211e,ol_product_pim.attribute_motherboard_form_factor,Mini-ITX,50
+attribute_option_intel_atom_x6425e,ol_product_pim.attribute_motherboard_form_factor,Nano-ITX,60
+attribute_option_intel_alder_lake_12th_gen_celeron_7305,ol_product_pim.attribute_motherboard_form_factor,NUC,70
+attribute_option_intel_alder_lake_12th_gen_i312300hl,ol_product_pim.attribute_motherboard_form_factor,Pico-ITX,80
+attribute_option_intel_alder_lake_12th_gen_i512600hl,ol_product_pim.attribute_motherboard_form_factor,Thin Mini-ITX,90
+attribute_option_intel_alder_lake_12th_gen_i712800hl,ol_product_pim.attribute_motherboard_form_factor,UTX,100
+attribute_option_intel_broadwell,ol_product_pim.attribute_motherboard_raid_support,0+1,80
+attribute_option_intel_celeron_1020e,ol_product_pim.attribute_motherboard_raid_support,1+0,90
+attribute_option_intel_celeron_1037u,ol_product_pim.attribute_motherboard_raid_support,5+0,140
+attribute_option_intel_celeron_1047ue,ol_product_pim.attribute_motherboard_raid_support,0,10
+attribute_option_intel_celeron_2980u,ol_product_pim.attribute_motherboard_raid_support,1,20
+attribute_option_intel_celeron_3955u,ol_product_pim.attribute_motherboard_raid_support,5,30
+attribute_option_intel_celeron_827e,ol_product_pim.attribute_motherboard_raid_support,6,40
+attribute_option_intel_celeron_847,ol_product_pim.attribute_motherboard_raid_support,10,50
+attribute_option_intel_celeron_g1820te,ol_product_pim.attribute_motherboard_raid_support,None,60
+attribute_option_intel_celeron_j1900,ol_product_pim.attribute_motherboard_raid_support,0/1,70
+attribute_option_intel_celeron_n2820,ol_product_pim.attribute_motherboard_raid_support,1E,100
+attribute_option_intel_celeron_n2930,ol_product_pim.attribute_motherboard_raid_support,2,110
+attribute_option_intel_celeron_n2980u,ol_product_pim.attribute_motherboard_raid_support,3,120
+attribute_option_intel_celeron_n3150,ol_product_pim.attribute_motherboard_raid_support,4,130
+attribute_option_intel_celeron_n3160,ol_product_pim.attribute_motherboard_raid_support,5EE,150
+attribute_option_intel_celeron_n3350,ol_product_pim.attribute_network_standards,IEEE 802.11a/b/g,10
+attribute_option_intel_celeron_n4200,ol_product_pim.attribute_network_standards,IEEE 802.11a/b/g/n,20
+attribute_option_intel_celeron_n6211,ol_product_pim.attribute_network_standards,IEEE 802.11a/b/g/n/ac,30
+attribute_option_intel_comet_lake,ol_product_pim.attribute_network_standards,IEEE 802.11a/g/n,40
+attribute_option_intel_comet_lake_core_i3i5i7i9,ol_product_pim.attribute_network_standards,IEEE 802.11b/g,50
+attribute_option_intel_core_2980u,ol_product_pim.attribute_network_standards,IEEE 802.11b/g/n,60
+attribute_option_intel_core_i_i33217u,ol_product_pim.attribute_network_standards,IEEE 802.3,70
+attribute_option_intel_core_i_i5520m,ol_product_pim.attribute_network_standards,IEEE 802.3/u/ab/z,80
+attribute_option_intel_core_i_i72610ue,ol_product_pim.attribute_network_standards,IEEE 802.3ab,90
+attribute_option_intel_core_i3_to_i9_13th_gen,ol_product_pim.attribute_network_standards,IEEE 802.3af,100
+attribute_option_intel_core_i33217u,ol_product_pim.attribute_network_standards,IEEE 802.3at,110
+attribute_option_intel_core_i34000m,ol_product_pim.attribute_network_standards,IEEE 802.3u,120
+attribute_option_intel_core_i34010u,ol_product_pim.attribute_network_standards,ZigBee 802.15.4,130
+attribute_option_intel_core_i34330te,ol_product_pim.attribute_networking_type,Wired,
+attribute_option_intel_core_i35010u,ol_product_pim.attribute_networking_type,Wireless,
+attribute_option_intel_core_i36100u,ol_product_pim.attribute_optical_drive_bay,None,10
+attribute_option_intel_core_i37100u,ol_product_pim.attribute_optical_drive_bay,"5.25""",20
+attribute_option_intel_core_i38145ue,ol_product_pim.attribute_optical_drive_bay,Slimline,30
+attribute_option_intel_core_i53610me,ol_product_pim.attribute_partner_series,AMD,10
+attribute_option_intel_core_i54200m,ol_product_pim.attribute_partner_series,AWS,20
+attribute_option_intel_core_i54250u,ol_product_pim.attribute_partner_series,Inductive Automation,30
+attribute_option_intel_core_i54300u,ol_product_pim.attribute_partner_series,Intel,40
+attribute_option_intel_core_i54570te,ol_product_pim.attribute_partner_series,Microsoft Azure,50
+attribute_option_intel_core_i55300u,ol_product_pim.attribute_partner_series,Raspberry Pi,60
+attribute_option_intel_core_i56300u,ol_product_pim.attribute_partner_series,Red Hat,70
+attribute_option_intel_core_i57300u,ol_product_pim.attribute_partner_series,ThinManager,80
+attribute_option_intel_core_i58265u,ol_product_pim.attribute_partner_series,Ubuntu,90
+attribute_option_intel_core_i58365ue,ol_product_pim.attribute_power_automotive_features,Automotive Intelligence,10
+attribute_option_intel_core_i73517ue,ol_product_pim.attribute_power_automotive_features,Peripheral Power Out,20
+attribute_option_intel_core_i73610qe,ol_product_pim.attribute_power_automotive_features,Wide Input,30
+attribute_option_intel_core_i73612qm,ol_product_pim.attribute_power_cable_connectors,Side A: C13 / Side B: BS1363,10
+attribute_option_intel_core_i74650_or_i54300u,ol_product_pim.attribute_power_cable_connectors,Side A: C13 / Side B: CEE 7/7,20
+attribute_option_intel_core_i74650u,ol_product_pim.attribute_power_cable_connectors,Side A: C13 / Side B: NEMA 5-15-P,30
+attribute_option_intel_core_i74700eq,ol_product_pim.attribute_power_cable_coupler,C13 to C14,30
+attribute_option_intel_core_i74765t,ol_product_pim.attribute_power_cable_coupler,C5 to C6,10
+attribute_option_intel_core_i74770te,ol_product_pim.attribute_power_cable_coupler,C7 to C8,20
+attribute_option_intel_core_i76600u,ol_product_pim.attribute_power_input_connectors,2-pin Terminal Block,10
+attribute_option_intel_core_i78565u,ol_product_pim.attribute_power_input_connectors,3-pin Terminal Block,20
+attribute_option_intel_core_i78665ue,ol_product_pim.attribute_power_input_connectors,2 3-pin Terminal Block,30
+attribute_option_intel_core_i78705g,ol_product_pim.attribute_power_input_connectors,4-pin,40
+attribute_option_intel_core_i78809g,ol_product_pim.attribute_power_input_connectors,4-pin ATX,50
+attribute_option_intel_haswell_g3320te,ol_product_pim.attribute_power_input_connectors,4-pin DC Jack,60
+attribute_option_intel_j3455,ol_product_pim.attribute_power_input_connectors,4-pin DIN,70
+attribute_option_intel_pentium_j6425,ol_product_pim.attribute_power_input_connectors,4-pin Mini-DIN,80
+attribute_option_intel_pentium_j6426,ol_product_pim.attribute_power_input_connectors,4-pin Terminal Block,90
+attribute_option_intel_pentium_n3710,ol_product_pim.attribute_power_input_connectors,4-pin Terminal Block (Optional),100
+attribute_option_intel_pentium_n4200,ol_product_pim.attribute_power_input_connectors,2 4-pin Terminal Block,110
+attribute_option_intel_celeron_n6211;_pentium_j6426_optional_contact_us,ol_product_pim.attribute_power_input_connectors,5-pin Terminal Block,120
+attribute_option_intel_xeon_d1541_processor,ol_product_pim.attribute_power_input_connectors,5-pin USB Mini,130
+attribute_option_intel_xeon_e31240lv3,ol_product_pim.attribute_power_input_connectors,6-pin Terminal Block,140
+attribute_option_intel_xeon_e31265l_v2,ol_product_pim.attribute_power_input_connectors,20-pin ATX,150
+attribute_option_intel_xeon_e31275v3,ol_product_pim.attribute_power_input_connectors,24-pin ATX,160
+attribute_option_intel_xeon_e31585_v5,ol_product_pim.attribute_power_input_connectors,9-48 VDC,170
+attribute_option_mtk6582,ol_product_pim.attribute_power_input_connectors,100-240 VAC,180
+attribute_option_nxp_imx_6_duallite,ol_product_pim.attribute_power_input_connectors,C13-C14 Coupler,190
+attribute_option_socket_lga_1700_raptor/alder_lake_s		,ol_product_pim.attribute_power_input_connectors,DC Jack,200
+attribute_option_via_c7,ol_product_pim.attribute_power_input_connectors,M12,210
+attribute_option_via_eden_ulv,ol_product_pim.attribute_power_input_connectors,PoE PD 802.3at (Optional),
+attribute_option_via_eden_x2,ol_product_pim.attribute_processor,NVIDIA® Jetson AGX Xavier,1170
+attribute_option_via_nano_e,ol_product_pim.attribute_processor,AM3352,10
+attribute_option_via_nano_ulv_u3300,ol_product_pim.attribute_processor,AMD EPYC™ 7282,20
+attribute_option_via_nano_x2_e_l4350e,ol_product_pim.attribute_processor,AMD EPYC™ 7452,30
+attribute_option_via_quadcore_e_l4700e,ol_product_pim.attribute_processor,AMD Fusion T40E,40
+attribute_option_amd,ol_product_pim.attribute_processor,AMD Fusion T56N,50
+attribute_option_apacer,ol_product_pim.attribute_processor,AMD GX-210HA,60
+attribute_option_artesyn,ol_product_pim.attribute_processor,AMD GX-217GA,70
+attribute_option_asrock,ol_product_pim.attribute_processor,AMD GX-415GA,80
+attribute_option_aws,ol_product_pim.attribute_processor,AMD GX-420CA,90
+attribute_option_cincoze,ol_product_pim.attribute_processor,AMD R-272F,100
+attribute_option_cooljag,ol_product_pim.attribute_processor,AMD R-464L,110
+attribute_option_extrovert,ol_product_pim.attribute_processor,AMD Ryzen,120
+attribute_option_google,ol_product_pim.attribute_processor,AMD Ryzen™ 3 4300U,130
+attribute_option_igel,ol_product_pim.attribute_processor,AMD Ryzen™ 5 3600,140
+attribute_option_inductive_automation,ol_product_pim.attribute_processor,AMD Ryzen™ 7 3700X,150
+attribute_option_innodisk,ol_product_pim.attribute_processor,AMD Ryzen™ 7 4800U,160
+attribute_option_intel,ol_product_pim.attribute_processor,"AMD Ryzen™ 7 4800U, AMD Ryzen V2516, AMD Ryzen V2718",165
+attribute_option_jetway,ol_product_pim.attribute_processor,AMD Ryzen™ 9 3900X,170
+attribute_option_kingston,ol_product_pim.attribute_processor,AMD Ryzen™ 9 3950X,180
+attribute_option_mean_well,ol_product_pim.attribute_processor,AMD Ryzen™ Embedded V1605B,190
+attribute_option_microsoft,ol_product_pim.attribute_processor,AMD Ryzen™ R1505G,200
+attribute_option_mitac,ol_product_pim.attribute_processor,AMD Ryzen™ V1605B,210
+attribute_option_msi,ol_product_pim.attribute_processor,AMD Ryzen™ V1807B,220
+attribute_option_neousys,ol_product_pim.attribute_processor,Broadcom BCM2711 with ARM Cortex-A72,230
+attribute_option_nvidia,ol_product_pim.attribute_processor,Cortex-A7,240
+attribute_option_onlogic,ol_product_pim.attribute_processor,Cortex-A8,250
+attribute_option_phoenix,ol_product_pim.attribute_processor,Cortex-A9,260
+attribute_option_picopsu,ol_product_pim.attribute_processor,Freescale Cortex-A8 iMX537,270
+attribute_option_pny,ol_product_pim.attribute_processor,Freescale i.MX6,280
+attribute_option_samsung,ol_product_pim.attribute_processor,Intel 11th Gen (Tiger Lake-UP3),290
+attribute_option_seagate,ol_product_pim.attribute_processor,Intel 12th Gen Alder Lake-N<br>Intel N97<br>Intel N200<br>Intel Atom x7425E (w/ Intel TSN; TCC support)<br>Intel i3-N305,
+attribute_option_seasonic,ol_product_pim.attribute_processor,Intel 8th Gen (Whiskey Lake-U),300
+attribute_option_sparklan,ol_product_pim.attribute_processor,Intel 8th/9th Gen (Coffee Lake),310
+attribute_option_sparkle,ol_product_pim.attribute_processor,Intel Alder Lake Core i3/i5/i7/i9,320
+attribute_option_super_silence,ol_product_pim.attribute_processor,Intel Alder Lake 12th Gen Celeron 7305E,322
+attribute_option_taoglas,ol_product_pim.attribute_processor,Intel Alder Lake 12th Gen i3-1220PE,324
+attribute_option_thinmanager,ol_product_pim.attribute_processor,Intel Alder Lake 12th Gen i5-1250PE,326
+attribute_option_transcend,ol_product_pim.attribute_processor,Intel Alder Lake 12th Gen i7-1270PE,328
+attribute_option_unex,ol_product_pim.attribute_processor,Intel Atom D2500,330
+attribute_option_western_digital,ol_product_pim.attribute_processor,Intel Atom D2550,340
+attribute_option_wingsonic_ltd,ol_product_pim.attribute_processor,Intel Atom D2700,350
+attribute_option_zotac,ol_product_pim.attribute_processor,Intel Atom D525,360
+attribute_option_amd_a50m_fch,ol_product_pim.attribute_processor,Intel Atom E3815,370
+attribute_option_amd_a55e,ol_product_pim.attribute_processor,Intel Atom E3826,380
+attribute_option_amd_a55e_fch,ol_product_pim.attribute_processor,Intel Atom E3845,390
+attribute_option_amd_a75_fch,ol_product_pim.attribute_processor,Intel Atom E3930,400
+attribute_option_amd_b450,ol_product_pim.attribute_processor,Intel Atom E3940,410
+attribute_option_amd_hudson_e1_fch,ol_product_pim.attribute_processor,Intel Atom E3950,420
+attribute_option_amd_hudson_m1_fch,ol_product_pim.attribute_processor,Intel Atom N2600,430
+attribute_option_amd_premium_x570,ol_product_pim.attribute_processor,Intel Atom N270,440
+attribute_option_freescale_semiconductor,ol_product_pim.attribute_processor,Intel Atom N2800,450
+attribute_option_ich10r,ol_product_pim.attribute_processor,Intel Atom x6211E,460
+attribute_option_intel_945gseich7m,ol_product_pim.attribute_processor,Intel Atom x6425E,470
+attribute_option_intel_c226,ol_product_pim.attribute_processor,Intel Alder Lake 12th Gen Celeron 7305,471
+attribute_option_intel_c236,ol_product_pim.attribute_processor,Intel Alder Lake 12th Gen i3-12300HL,472
+attribute_option_intel_c246,ol_product_pim.attribute_processor,Intel Alder Lake 12th Gen i5-12600HL,473
+attribute_option_intel_c621,ol_product_pim.attribute_processor,Intel Alder Lake 12th Gen i7-12800HL,474
+attribute_option_intel_gm45ich9m,ol_product_pim.attribute_processor,Intel Broadwell,480
+attribute_option_intel_gm45ich9me,ol_product_pim.attribute_processor,Intel Celeron 1020E,490
+attribute_option_intel_gme965ich8m,ol_product_pim.attribute_processor,Intel Celeron 1037U,500
+attribute_option_intel_h110,ol_product_pim.attribute_processor,Intel Celeron 1047UE,510
+attribute_option_intel_h310,ol_product_pim.attribute_processor,Intel Celeron 2980U,520
+attribute_option_intel_h410,ol_product_pim.attribute_processor,Intel Celeron 3955U,530
+attribute_option_intel_h61,ol_product_pim.attribute_processor,Intel Celeron 827E,540
+attribute_option_intel_h77,ol_product_pim.attribute_processor,Intel Celeron 847,550
+attribute_option_intel_h81,ol_product_pim.attribute_processor,Intel Celeron G1820TE,560
+attribute_option_intel_hm55,ol_product_pim.attribute_processor,Intel Celeron J1900,570
+attribute_option_intel_hm65,ol_product_pim.attribute_processor,Intel Celeron N2820,580
+attribute_option_intel_hm76,ol_product_pim.attribute_processor,Intel Celeron N2930,590
+attribute_option_intel_ich10r,ol_product_pim.attribute_processor,Intel Celeron N2980U,600
+attribute_option_intel_ich8m,ol_product_pim.attribute_processor,Intel Celeron N3150,610
+attribute_option_intel_ich9r,ol_product_pim.attribute_processor,Intel Celeron N3160,620
+attribute_option_intel_mcp,ol_product_pim.attribute_processor,Intel Celeron N3350,630
+attribute_option_intel_nm10,ol_product_pim.attribute_processor,Intel Celeron N4200,640
+attribute_option_intel_nm70,ol_product_pim.attribute_processor,Intel Celeron N6211,650
+attribute_option_intel_q170,ol_product_pim.attribute_processor,Intel Comet Lake,660
+attribute_option_intel_q370,ol_product_pim.attribute_processor,Intel Comet Lake Core i3/i5/i7/i9,670
+attribute_option_intel_q470,ol_product_pim.attribute_processor,Intel Core 2980U,680
+attribute_option_intel_q77,ol_product_pim.attribute_processor,Intel Core i i3-3217U,690
+attribute_option_intel_q87,ol_product_pim.attribute_processor,Intel Core i i5-520M,700
+attribute_option_intel_qm57,ol_product_pim.attribute_processor,Intel Core i i7-2610UE,710
+attribute_option_intel_qm67,ol_product_pim.attribute_processor,Intel Core i3 to i9 13th Gen,715
+attribute_option_intel_qm77,ol_product_pim.attribute_processor,Intel Core i3-3217U,720
+attribute_option_intel_qm87,ol_product_pim.attribute_processor,Intel Core i3-4000M,730
+attribute_option_intel_qs77,ol_product_pim.attribute_processor,Intel Core i3-4010U,740
+attribute_option_intel_r680e,ol_product_pim.attribute_processor,Intel Core i3-4330TE,750
+attribute_option_mobile_intel_hm175,ol_product_pim.attribute_processor,Intel Core i3-5010U,760
+attribute_option_shared_with_cpu,ol_product_pim.attribute_processor,Intel Core i3-6100U,770
+attribute_option_via_cn700vt8237r,ol_product_pim.attribute_processor,Intel Core i3-7100U,780
+attribute_option_via_cx700,ol_product_pim.attribute_processor,Intel Core i3-8145UE,790
+attribute_option_via_vx11h,ol_product_pim.attribute_processor,Intel Core i5 4200M,800
+attribute_option_via_vx855,ol_product_pim.attribute_processor,Intel Core i5-3427U,810
+attribute_option_via_vx900,ol_product_pim.attribute_processor,Intel Core i5-3610ME,820
+attribute_option_via_vx900h,ol_product_pim.attribute_processor,Intel Core i5-4200M,830
+attribute_option_w480e,ol_product_pim.attribute_processor,Intel Core i5-4250U,840
+attribute_option_w680,ol_product_pim.attribute_processor,Intel Core i5-4300U,850
+attribute_option_bsmi,ol_product_pim.attribute_processor,Intel Core i5-4570TE,860
+attribute_option_can_ices003a_/_nmb003a_class_a,ol_product_pim.attribute_processor,Intel Core i5-5300U,870
+attribute_option_ccc,ol_product_pim.attribute_processor,Intel Core i5-6300U,880
+attribute_option_ce,ol_product_pim.attribute_processor,Intel Core i5-7300U,890
+attribute_option_cispr_11,ol_product_pim.attribute_processor,Intel Core i5-8265U,900
+attribute_option_cispr_32,ol_product_pim.attribute_processor,Intel Core i5-8365UE,910
+attribute_option_cispr_32_/_35_en_55032_/_en_55035_class_a,ol_product_pim.attribute_processor,Intel Core i7-3517UE,920
+attribute_option_cispr_35,ol_product_pim.attribute_processor,Intel Core i7-3610QE,930
+attribute_option_emark,ol_product_pim.attribute_processor,Intel Core i7-3612QM,940
+attribute_option_en_300_2202,ol_product_pim.attribute_processor,Intel Core i7-4650 or i5-4300U,950
+attribute_option_en_300_328,ol_product_pim.attribute_processor,Intel Core i7-4650U,960
+attribute_option_en_300_440,ol_product_pim.attribute_processor,Intel Core i7-4700EQ,970
+attribute_option_en_301_328,ol_product_pim.attribute_processor,Intel Core i7-4765T,980
+attribute_option_en_301_4891,ol_product_pim.attribute_processor,Intel Core i7-4770TE,990
+attribute_option_en_301_48917,ol_product_pim.attribute_processor,Intel Core i7-6600U,1000
+attribute_option_en_301_48952,ol_product_pim.attribute_processor,Intel Core i7-8565U,1010
+attribute_option_en_301_893,ol_product_pim.attribute_processor,Intel Core i7-8665UE,1020
+attribute_option_en_301_9081,ol_product_pim.attribute_processor,Intel Core i7-8705G,1030
+attribute_option_en_301_90813,ol_product_pim.attribute_processor,Intel Core i7-8809G,1040
+attribute_option_en_301_9082,ol_product_pim.attribute_processor,Intel Haswell G3320TE,1050
+attribute_option_en_455452,ol_product_pim.attribute_processor,Intel J3455,1060
+attribute_option_en_5012132,ol_product_pim.attribute_processor,Intel Pentium J6425,1070
+attribute_option_en_50566,ol_product_pim.attribute_processor,Intel Pentium J6426,1080
+attribute_option_en_55011,ol_product_pim.attribute_processor,Intel Pentium N3710,1090
+attribute_option_en_55022,ol_product_pim.attribute_processor,Intel Pentium N4200,1100
+attribute_option_en_55024,ol_product_pim.attribute_processor,Intel Celeron N6211; Pentium J6426 (optional - contact us),1102
+attribute_option_en_55032,ol_product_pim.attribute_processor,Intel Xeon D1541 Processor,1110
+attribute_option_en_55035,ol_product_pim.attribute_processor,Intel Xeon E3-1240Lv3,1120
+attribute_option_en_6060112,ol_product_pim.attribute_processor,Intel Xeon E3-1265L v2,1130
+attribute_option_en_6060112_4th_ed.,ol_product_pim.attribute_processor,Intel Xeon E3-1275v3,1140
+attribute_option_en_609501,ol_product_pim.attribute_processor,Intel Xeon E3-1585 v5,1150
+attribute_option_en_60945_ed._4,ol_product_pim.attribute_processor,MTK6582,1160
+attribute_option_en_61373,ol_product_pim.attribute_processor,NXP i.MX 6 DualLite,1180
+attribute_option_en_62311:2020,ol_product_pim.attribute_processor,Socket LGA 1700 - Raptor/Alder Lake S		,1184
+attribute_option_en_623681,ol_product_pim.attribute_processor,VIA C7,1190
+attribute_option_en_632681,ol_product_pim.attribute_processor,VIA Eden ULV,1200
+attribute_option_energy_star,ol_product_pim.attribute_processor,VIA Eden X2,1210
+attribute_option_etl,ol_product_pim.attribute_processor,VIA Nano E,1220
+attribute_option_etl_listed_configurations_available,ol_product_pim.attribute_processor,VIA Nano ULV (U3300),1230
+attribute_option_etsi_en_301_328,ol_product_pim.attribute_processor,VIA Nano X2 E (L4350E),1240
+"attribute_option_etsi_en_301_489_parts_1,_17,_52",ol_product_pim.attribute_processor,VIA QuadCore E (L4700E),1250
+attribute_option_etsi_en_301_893,ol_product_pim.attribute_processor_family,AMD Embedded G-series,10
+attribute_option_etsi_en_300_908,ol_product_pim.attribute_processor_family,AMD e-Ontario,20
+attribute_option_etsi_en_301_908,ol_product_pim.attribute_processor_family,AMD EPYC™,30
+attribute_option_etsi_en_300_328,ol_product_pim.attribute_processor_family,AMD Ryzen™,40
+attribute_option_fcc_47_cfr_part_15_class_a,ol_product_pim.attribute_processor_family,ARM,50
+attribute_option_fcc_47_cfr_part_15_subpart_b,ol_product_pim.attribute_processor_family,Cortex-A9,60
+attribute_option_fcc/ce_class_b_upon_request,ol_product_pim.attribute_processor_family,Intel Atom,70
+attribute_option_iec_60050,ol_product_pim.attribute_processor_family,Intel Apollo Lake,80
+attribute_option_iec_60068227,ol_product_pim.attribute_processor_family,Intel Arrandale,90
+attribute_option_iec_6006826,ol_product_pim.attribute_processor_family,Intel Bay Trail,100
+attribute_option_iec_60068264,ol_product_pim.attribute_processor_family,Intel Braswell,110
+attribute_option_iec_6060112_4th_edition,ol_product_pim.attribute_processor_family,Intel Broadwell,120
+attribute_option_iec_60945,ol_product_pim.attribute_processor_family,Intel Haswell,130
+attribute_option_iec_60945_ed_4,ol_product_pim.attribute_processor_family,Intel Ivy Bridge,140
+attribute_option_iec_609501,ol_product_pim.attribute_processor_family,Intel Sandy Bridge,150
+attribute_option_iec_623681,ol_product_pim.attribute_processor_family,Intel Skylake,160
+attribute_option_iec/ul/en_623681,ol_product_pim.attribute_processor_family,VIA,170
+attribute_option_ices003_class_a,ol_product_pim.attribute_processor_features,Intel vPro®,60
+attribute_option_en_iec_6100032,ol_product_pim.attribute_processor_features,AMT Support,10
+attribute_option_cul,ol_product_pim.attribute_processor_features,ECC Memory Supported,20
+attribute_option_iec,ol_product_pim.attribute_processor_features,Embedded Lifecycle,30
+attribute_option_ised,ol_product_pim.attribute_processor_features,Embedded Options Available,40
+attribute_option_kc,ol_product_pim.attribute_processor_features,Hyper-Threading Technology,50
+attribute_option_lps,ol_product_pim.attribute_processor_generation,2nd Generation,10
+attribute_option_milstd810f_test,ol_product_pim.attribute_processor_generation,3rd Generation,20
+attribute_option_milstd810g,ol_product_pim.attribute_processor_generation,4th Generation,30
+attribute_option_milstd810g_test,ol_product_pim.attribute_processor_generation,5th Generation,40
+attribute_option_rcm,ol_product_pim.attribute_processor_generation,6th Generation,50
+attribute_option_reach,ol_product_pim.attribute_processor_generation,7th Generation,60
+attribute_option_rohs_3_2015863eu,ol_product_pim.attribute_processor_generation,8th Generation,70
+attribute_option_tuv_listed,ol_product_pim.attribute_processor_generation,9th Generation,80
+attribute_option_ukca,ol_product_pim.attribute_processor_generation,10th Generation,90
+attribute_option_ul_508,ol_product_pim.attribute_processor_generation,Alder Lake,95
+attribute_option_ul_609501,ol_product_pim.attribute_processor_generation,Apollo Lake,100
+attribute_option_ul_623681,ol_product_pim.attribute_processor_generation,Arrandale,110
+attribute_option_ul/en/iec_623681_ul_e490677_nrtl_+_cb,ol_product_pim.attribute_processor_generation,Avoton,120
+attribute_option_ul/en/iec_609501ul_e490677_nrtl_+_cb,ol_product_pim.attribute_processor_generation,Bay Trail,130
+attribute_option_ul_recognized_component,ol_product_pim.attribute_processor_generation,Braswell,140
+attribute_option_ul_etl_listed_configurations,ol_product_pim.attribute_processor_generation,Broadwell,150
+attribute_option_ul_iec_en_610101,ol_product_pim.attribute_processor_generation,Cascade Lake,160
+attribute_option_ul_iec_en_610102201,ol_product_pim.attribute_processor_generation,Cedarview,170
+attribute_option_un_reg10,ol_product_pim.attribute_processor_generation,Coffee Lake,180
+attribute_option_vcci,ol_product_pim.attribute_processor_generation,Comet Lake,190
+attribute_option_weee,ol_product_pim.attribute_processor_generation,Cortex-A7,200
+attribute_option_ul/iec/en_623681_ul_e490677_nrtl_+_cb_ul/iec/en_609501ul_e490677_nrtl_+_cb,ol_product_pim.attribute_processor_generation,Cortex-A8,210
+attribute_option_cispr_32/35_en_55032/55035,ol_product_pim.attribute_processor_generation,Cortex-A9,220
+attribute_option_weee_directive_2012/19/eu,ol_product_pim.attribute_processor_generation,Elkhart Lake,230
+attribute_option_reach_cmrt_compliant,ol_product_pim.attribute_processor_generation,eOntario,240
+attribute_option_immunity_per_iso_76372_iso_167502,ol_product_pim.attribute_processor_generation,eTrinity,250
+attribute_option_iec_6060112_/_en_55011,ol_product_pim.attribute_processor_generation,G Series,260
+attribute_option_contact,ol_product_pim.attribute_processor_generation,Gold Processor Series,270
+attribute_option_480_x_272,ol_product_pim.attribute_processor_generation,Gold Series,280
+attribute_option_640_x_480_vga,ol_product_pim.attribute_processor_generation,Haswell,290
+attribute_option_800_x_480_wvga,ol_product_pim.attribute_processor_generation,Ivy Bridge,300
+attribute_option_800_x_600_svga,ol_product_pim.attribute_processor_generation,Jetson AGX Xavier,310
+attribute_option_1024_x_600,ol_product_pim.attribute_processor_generation,Kabini SOC,320
+attribute_option_1024_x_768_xga,ol_product_pim.attribute_processor_generation,Kaby Lake,330
+attribute_option_1280_x_1024_sxga,ol_product_pim.attribute_processor_generation,Kaby Lake G,340
+attribute_option_1280_x_720_hd_720,ol_product_pim.attribute_processor_generation,Penryn,350
+attribute_option_1280_x_768_wxga,ol_product_pim.attribute_processor_generation,Pineview,360
+attribute_option_1280_x_800_wxga,ol_product_pim.attribute_processor_generation,Raptor Lake (13th Gen),362
+attribute_option_1366_x_768,ol_product_pim.attribute_processor_generation,Raspberry Pi CM4,365
+attribute_option_1600_x_1200_uxga,ol_product_pim.attribute_processor_generation,Renoir,370
+attribute_option_1920_x_1080_hd_1080,ol_product_pim.attribute_processor_generation,Rome,380
+attribute_option_1920_x_1200_wuxga,ol_product_pim.attribute_processor_generation,Sandy Bridge,390
+attribute_option_2048_x_1152,ol_product_pim.attribute_processor_generation,Skylake,400
+attribute_option_2560_x_1440_qhd,ol_product_pim.attribute_processor_generation,Tiger Lake,410
+attribute_option_4096_x_2160_4k,ol_product_pim.attribute_processor_generation,Trinity,420
+attribute_option_2nd_generation,ol_product_pim.attribute_processor_generation,Whiskey Lake,430
+attribute_option_3rd_generation,ol_product_pim.attribute_processor_generation,Zen,440
+attribute_option_4th_generation,ol_product_pim.attribute_processor_generation,Zen 2,450
+attribute_option_5th_generation,ol_product_pim.attribute_processor_socket,AM4,10
+attribute_option_6th_generation,ol_product_pim.attribute_processor_socket,AM4 PGA 1331,20
+attribute_option_7th_generation,ol_product_pim.attribute_processor_socket,AMD R Series,30
+attribute_option_8th_generation,ol_product_pim.attribute_processor_socket,FCBGA1449,40
+attribute_option_9th_generation,ol_product_pim.attribute_processor_socket,FCBGA1528,50
+attribute_option_10th_generation,ol_product_pim.attribute_processor_socket,FCLGA1151,60
+attribute_option_alder_lake,ol_product_pim.attribute_processor_socket,FCLGA1200,70
+attribute_option_apollo_lake,ol_product_pim.attribute_processor_socket,FCLGA14C,80
+attribute_option_arrandale,ol_product_pim.attribute_processor_socket,FCLGA1700,85
+attribute_option_avoton,ol_product_pim.attribute_processor_socket,FP6,90
+attribute_option_bay_trail,ol_product_pim.attribute_processor_socket,FS1R2,100
+attribute_option_braswell,ol_product_pim.attribute_processor_socket,G1 (rPGA988A),110
+attribute_option_broadwell,ol_product_pim.attribute_processor_socket,G2 (rPGA988B),120
+attribute_option_cascade_lake,ol_product_pim.attribute_processor_socket,G3 (rPGA947),130
+attribute_option_cedarview,ol_product_pim.attribute_processor_socket,LGA1150,140
+attribute_option_coffee_lake,ol_product_pim.attribute_processor_socket,LGA1151,150
+attribute_option_comet_lake,ol_product_pim.attribute_processor_socket,LGA1155,160
+attribute_option_cortexa7,ol_product_pim.attribute_processor_socket,LGA1156,170
+attribute_option_cortexa8,ol_product_pim.attribute_processor_socket,LGA1200,180
+attribute_option_cortexa9,ol_product_pim.attribute_processor_socket,LGA1700,185
+attribute_option_elkhart_lake,ol_product_pim.attribute_processor_socket,LGA3647,190
+attribute_option_eontario,ol_product_pim.attribute_processor_socket,M (FCPGA478),200
+attribute_option_etrinity,ol_product_pim.attribute_processor_socket,Onboard (BGA),210
+attribute_option_g_series,ol_product_pim.attribute_processor_socket,SP3,220
+attribute_option_kaby_lake,ol_product_pim.attribute_power_form_factor,AT/ATX,10
+attribute_option_kaby_lake_g,ol_product_pim.attribute_power_form_factor,ATX12V,20
+attribute_option_penryn,ol_product_pim.attribute_power_form_factor,ATX12V v1.0,30
+attribute_option_pineview,ol_product_pim.attribute_power_form_factor,ATX12V v1.3,40
+attribute_option_raptor_lake_13th_gen,ol_product_pim.attribute_power_form_factor,ATX12V v2,50
+attribute_option_raspberry_pi_cm4,ol_product_pim.attribute_power_form_factor,EPS12V,60
+attribute_option_renoir,ol_product_pim.attribute_power_form_factor,Small Form Factor - CFX,70
+attribute_option_rome,ol_product_pim.attribute_power_form_factor,Small Form Factor - TFX,80
+attribute_option_sandy_bridge,ol_product_pim.attribute_power_form_factor,Small Form Factor - SFX,90
+attribute_option_skylake,ol_product_pim.attribute_psu_modularity,Non-Modular,10
+attribute_option_tiger_lake,ol_product_pim.attribute_psu_modularity,Semi-Modular,20
+attribute_option_trinity,ol_product_pim.attribute_psu_modularity,Full-Modular,30
+attribute_option_whiskey_lake,ol_product_pim.attribute_psu_protection,BOP - Brown Out Protection,10
+attribute_option_zen,ol_product_pim.attribute_psu_protection,OCP - Over Current Protection,20
+attribute_option_zen_2,ol_product_pim.attribute_psu_protection,OPP - Over Power Protection,30
+attribute_option_1_intel_gpy115_or_2_intel_gpy115,ol_product_pim.attribute_psu_protection,OTP - Over Temperature Protection,40
+attribute_option_1_intel_x710_controller_2_x_10gbe_ports,ol_product_pim.attribute_psu_protection,OVP - Over Voltage Protection,50
+attribute_option_1_maxlinear_gpy115_or_2_maxlinear_gpy115,ol_product_pim.attribute_psu_protection,SCP - Short Circuit Protection,60
+attribute_option_2_10gbe_by_intel_x550at2,ol_product_pim.attribute_psu_protection,UVP - Under Voltage Protection,70
+attribute_option_2_10gbe_by_intel_x557at2,ol_product_pim.attribute_psu_rails,+3.3V Rail,10
+attribute_option_2_intel_i210_controllers_2x_1gbe_ports,ol_product_pim.attribute_psu_rails,+5V Rail,20
+attribute_option_2_intel_i225lm/i225v_vpro_not_supported,ol_product_pim.attribute_psu_rails,+12V Rail,30
+attribute_option_2_gbe_by_intel_i210,ol_product_pim.attribute_psu_rails,Single-Rail,40
+attribute_option_4_gbe_by_intel_i350am4,ol_product_pim.attribute_psu_rails,Multi-Rail,50
+attribute_option_intel_82541pi_101001000,ol_product_pim.attribute_psu_rating,80 PLUS,10
+attribute_option_intel_82574it_101001000,ol_product_pim.attribute_psu_rating,80 PLUS Bronze,20
+attribute_option_intel_82574l_101001000,ol_product_pim.attribute_psu_rating,80 PLUS Silver,30
+attribute_option_intel_82574lm_gbe,ol_product_pim.attribute_psu_rating,80 PLUS Gold,40
+attribute_option_intel_82579l_gbe,ol_product_pim.attribute_psu_rating,80 PLUS Platinum,50
+attribute_option_intel_82579lm_pcie_gbe,ol_product_pim.attribute_psu_rating,80 PLUS Titanium,60
+attribute_option_intel_i210_gbe,ol_product_pim.attribute_recommended_applications,Education,10
+attribute_option_intel_i210at_gbe,ol_product_pim.attribute_recommended_applications,Government,20
+attribute_option_intel_i210it_gbe,ol_product_pim.attribute_recommended_applications,Human Machine Interface,30
+attribute_option_intel_i211at_gbe,ol_product_pim.attribute_recommended_applications,Image Processing,40
+attribute_option_intel_i211at_gbe_when_configured_w_i5,ol_product_pim.attribute_recommended_applications,Internet of Things,50
+attribute_option_intel_i217lm_gbe,ol_product_pim.attribute_recommended_applications,Machine Vision,60
+attribute_option_intel_i217lm_gbe_with_intel_amt,ol_product_pim.attribute_recommended_applications,Medical / Medical Imaging,70
+attribute_option_intel_i217lml_gbe_with_iamt_90,ol_product_pim.attribute_recommended_applications,Network Attached Storage,80
+attribute_option_intel_i218_gbe,ol_product_pim.attribute_recommended_applications,Point-of-Use / Kiosk,90
+attribute_option_intel_i218lm_gbe,ol_product_pim.attribute_recommended_applications,Surveillance / Security,100
+attribute_option_intel_i218lm_gbe_with_amt,ol_product_pim.attribute_recommended_applications,Thin Client,110
+attribute_option_intel_i218v_gbe,ol_product_pim.attribute_recommended_applications,Workstation,120
+attribute_option_intel_i219_gbe,ol_product_pim.attribute_regions,US,10
+attribute_option_intel_i219lm_gbe,ol_product_pim.attribute_regions,EU,20
+attribute_option_intel_i219lm_gbe_when_configured_w_i5,ol_product_pim.attribute_regulatory_certifications,BSMI,10
+attribute_option_intel_i219v,ol_product_pim.attribute_regulatory_certifications,CAN ICES-003(A) / NMB-003(A) (Class A),12
+attribute_option_intel_i219v_gbe_when_configured_w_i3,ol_product_pim.attribute_regulatory_certifications,CCC,20
+attribute_option_intel_i219lm_with_101001000_mbps,ol_product_pim.attribute_regulatory_certifications,CE,30
+attribute_option_intel_i225it_25_gbe,ol_product_pim.attribute_regulatory_certifications,CISPR 11,40
+attribute_option_intel_i225lm_25_gbe,ol_product_pim.attribute_regulatory_certifications,CISPR 32,50
+attribute_option_intel_i225lm_with_1010010002500_mbps,ol_product_pim.attribute_regulatory_certifications,CISPR 32 / 35 (EN 55032 / EN 55035 Class A),54
+attribute_option_intel_i350,ol_product_pim.attribute_regulatory_certifications,CISPR 35,60
+attribute_option_intel_i350_101001000,ol_product_pim.attribute_regulatory_certifications,E-Mark,70
+attribute_option_intel_i350am4,ol_product_pim.attribute_regulatory_certifications,EN 300 220-2,80
+attribute_option_intel_integrated_gb_lan,ol_product_pim.attribute_regulatory_certifications,EN 300 328,90
+attribute_option_intel_w82577lm_101001000,ol_product_pim.attribute_regulatory_certifications,EN 300 440,100
+attribute_option_intel_wg82574l_gbe,ol_product_pim.attribute_regulatory_certifications,EN 301 328,110
+attribute_option_intel_wg82579lm_gbe,ol_product_pim.attribute_regulatory_certifications,EN 301 489-1,120
+attribute_option_intel_wg82583v_pcie_gbe,ol_product_pim.attribute_regulatory_certifications,EN 301 489-17,130
+attribute_option_intel_x722,ol_product_pim.attribute_regulatory_certifications,EN 301 489-52,135
+attribute_option_lan1_supports_ncsi,ol_product_pim.attribute_regulatory_certifications,EN 301 893,140
+attribute_option_realtek_8111gncg_pcie_gb,ol_product_pim.attribute_regulatory_certifications,EN 301 908-1,150
+attribute_option_realtek_r8111fpv_dash_with_101001000_mbps,ol_product_pim.attribute_regulatory_certifications,EN 301 908-13,160
+attribute_option_realtek_rt8111g,ol_product_pim.attribute_regulatory_certifications,EN 301 908-2,170
+attribute_option_realtek_rt8111gcg,ol_product_pim.attribute_regulatory_certifications,EN 45545-2,180
+attribute_option_realtek_rtl8110sc_101001000,ol_product_pim.attribute_regulatory_certifications,EN 50121-3-2,190
+attribute_option_realtek_rtl8111_101001000,ol_product_pim.attribute_regulatory_certifications,EN 50566,200
+attribute_option_realtek_rtl8111b_pcie_101001000,ol_product_pim.attribute_regulatory_certifications,EN 55011,210
+attribute_option_realtek_rtl8111c_101001000,ol_product_pim.attribute_regulatory_certifications,EN 55022,220
+attribute_option_realtek_rtl8111dl_101001000,ol_product_pim.attribute_regulatory_certifications,EN 55024,230
+attribute_option_realtek_rtl8111dp_gbe,ol_product_pim.attribute_regulatory_certifications,EN 55032,240
+attribute_option_realtek_rtl8111e_101001000,ol_product_pim.attribute_regulatory_certifications,EN 55035,250
+attribute_option_realtek_rtl8111evl_pcie_101001000,ol_product_pim.attribute_regulatory_certifications,EN 60601-1-2,260
+attribute_option_realtek_rtl8111f_101001000,ol_product_pim.attribute_regulatory_certifications,EN 60601-1-2 4th ed.,264
+attribute_option_realtek_rtl8111g,ol_product_pim.attribute_regulatory_certifications,EN 60950-1,270
+attribute_option_realtek_rtl8111gn_101001000,ol_product_pim.attribute_regulatory_certifications,EN 60945 Ed. 4,274
+attribute_option_realtek_rtl8111h,ol_product_pim.attribute_regulatory_certifications,EN 61373,280
+attribute_option_realtek_rtl8111hcg_with_101001000_mbps,ol_product_pim.attribute_regulatory_certifications,EN 62311:2020,284
+attribute_option_realtek_rtl8125bg_with_1010010002500_mbps,ol_product_pim.attribute_regulatory_certifications,EN 62368-1,290
+attribute_option_realtek_rtl8139d_10100,ol_product_pim.attribute_regulatory_certifications,EN 63268-1,295
+attribute_option_realtek_rtl8153,ol_product_pim.attribute_regulatory_certifications,Energy Star,300
+attribute_option_realtek_rtl8211e,ol_product_pim.attribute_regulatory_certifications,ETL,305
+attribute_option_via_vt6103_10100,ol_product_pim.attribute_regulatory_certifications,ETL Listed Configurations available,310
+attribute_option_via_vt6113_10100_basetx_phy,ol_product_pim.attribute_regulatory_certifications,ETSI EN 301 328,311
+attribute_option_via_vt6122_101001000,ol_product_pim.attribute_regulatory_certifications,"ETSI EN 301 489 (parts 1, 17, 52)",312
+attribute_option_via_vt6130_pcie_101001000,ol_product_pim.attribute_regulatory_certifications,ETSI EN 301 893,313
+attribute_option_via_vt6656,ol_product_pim.attribute_regulatory_certifications,ETSI EN 300 908,314
+attribute_option_wg82579lm_pcie_gbe_w_iamt,ol_product_pim.attribute_regulatory_certifications,ETSI EN 301 908,315
+attribute_option_amd_radeon_e6460,ol_product_pim.attribute_regulatory_certifications,ETSI EN 300 328,316
+attribute_option_amd_radeon_graphics,ol_product_pim.attribute_regulatory_certifications,FCC 47 CFR Part 15 (Class A),317
+attribute_option_amd_radeon_hd_6250,ol_product_pim.attribute_regulatory_certifications,FCC 47 CFR Part 15 Subpart B,320
+attribute_option_amd_radeon_hd_6310,ol_product_pim.attribute_regulatory_certifications,FCC/CE Class B upon request,324
+attribute_option_amd_radeon_hd_7000g,ol_product_pim.attribute_regulatory_certifications,IEC 60050,330
+attribute_option_amd_radeon_hd_7520g,ol_product_pim.attribute_regulatory_certifications,IEC 60068-2-27,340
+attribute_option_amd_radeon_hd_7660g,ol_product_pim.attribute_regulatory_certifications,IEC 60068-2-6,350
+attribute_option_amd_radeon_hd_8000,ol_product_pim.attribute_regulatory_certifications,IEC 60068-2-64,360
+attribute_option_amd_radeon_hd_8210e,ol_product_pim.attribute_regulatory_certifications,IEC 60601-1-2 (4th edition),363
+attribute_option_amd_radeon_hd_8280e,ol_product_pim.attribute_regulatory_certifications,IEC 60945,366
+attribute_option_amd_radeon_hd_8330e,ol_product_pim.attribute_regulatory_certifications,IEC 60945 Ed. 4,370
+attribute_option_amd_radeon_hd_8400e,ol_product_pim.attribute_regulatory_certifications,IEC 60950-1,380
+attribute_option_amd_radeon_hd_e6460,ol_product_pim.attribute_regulatory_certifications,IEC 62368-1,390
+attribute_option_amd_radeon_vega_11_graphics,ol_product_pim.attribute_regulatory_certifications,IEC/UL/EN 62368-1,391
+attribute_option_amd_radeon_vega_3_graphics_r1505g,ol_product_pim.attribute_regulatory_certifications,ICES-003 Class A,392
+attribute_option_amd_radeon_vega_8_graphics,ol_product_pim.attribute_regulatory_certifications,EN IEC 61000-3-2,393
+attribute_option_amd_radeon_vega_8_graphics_v1605b,ol_product_pim.attribute_regulatory_certifications,cUL,394
+attribute_option_amd_rx_vega_m_gh_graphics_8809g,ol_product_pim.attribute_regulatory_certifications,IEC,395
+attribute_option_amd_rx_vega_m_gl_graphics_8705g,ol_product_pim.attribute_regulatory_certifications,ISED,400
+attribute_option_aspeed_ast2300,ol_product_pim.attribute_regulatory_certifications,KC,410
+attribute_option_aspeed_ast2500,ol_product_pim.attribute_regulatory_certifications,LPS,420
+attribute_option_intel_3rd_generation_hd_graphics,ol_product_pim.attribute_regulatory_certifications,MIL-STD-810F Test,430
+attribute_option_intel_4th_generation_hd_graphics,ol_product_pim.attribute_regulatory_certifications,MIL-STD-810G,440
+attribute_option_intel_8th_generation_hd_graphics,ol_product_pim.attribute_regulatory_certifications,MIL-STD-810G Test,450
+attribute_option_intel_9th_generation_hd_graphics,ol_product_pim.attribute_regulatory_certifications,RCM,460
+attribute_option_intel_gen9_graphics_dx_12,ol_product_pim.attribute_regulatory_certifications,REACH,470
+attribute_option_intel_gma_2500,ol_product_pim.attribute_regulatory_certifications,RoHS 3 (2015/863/EU),480
+attribute_option_intel_gma_3150,ol_product_pim.attribute_regulatory_certifications,TUV Listed,490
+attribute_option_intel_gma_3600,ol_product_pim.attribute_regulatory_certifications,UKCA,495
+attribute_option_intel_gma_3650,ol_product_pim.attribute_regulatory_certifications,UL 508,500
+attribute_option_intel_gma_4500mhd,ol_product_pim.attribute_regulatory_certifications,UL 60950-1,510
+attribute_option_intel_gma_950,ol_product_pim.attribute_regulatory_certifications,UL 62368-1,520
+attribute_option_intel_hd_graphics,ol_product_pim.attribute_regulatory_certifications,UL/EN/IEC 62368-1 (UL E490677) NRTL + CB,522
+attribute_option_intel_hd_graphics_cpu_dependent,ol_product_pim.attribute_regulatory_certifications,UL/EN/IEC 60950-1(UL E490677) NRTL + CB,524
+attribute_option_intel_hd_graphics_2000,ol_product_pim.attribute_regulatory_certifications,UL Recognized Component,530
+attribute_option_intel_hd_graphics_200030004000_cpudependent,ol_product_pim.attribute_regulatory_certifications,UL/ETL Listed configurations available,535
+attribute_option_intel_hd_graphics_2500,ol_product_pim.attribute_regulatory_certifications,UL/IEC/EN 61010-1,536
+attribute_option_intel_hd_graphics_3000,ol_product_pim.attribute_regulatory_certifications,UL/IEC/EN 61010-2-201,539
+attribute_option_intel_hd_graphics_400_celeron_n3160,ol_product_pim.attribute_regulatory_certifications,UN Reg.10,540
+attribute_option_intel_hd_graphics_4000,ol_product_pim.attribute_regulatory_certifications,VCCI,550
+attribute_option_intel_hd_graphics_4000_cpudependent,ol_product_pim.attribute_regulatory_certifications,WEEE,560
+attribute_option_intel_hd_graphics_405,ol_product_pim.attribute_regulatory_certifications,UL/IEC/EN 62368-1 (UL E490677) NRTL + CB UL/IEC/EN 60950-1(UL E490677) NRTL + CB,
+attribute_option_intel_hd_graphics_405_pentium_n3710,ol_product_pim.attribute_regulatory_certifications,CISPR 32/35 & EN 55032/55035,
+attribute_option_intel_hd_graphics_4400,ol_product_pim.attribute_regulatory_certifications,WEEE Directive (2012/19/EU),
+attribute_option_intel_hd_graphics_4600,ol_product_pim.attribute_regulatory_certifications,REACH & CMRT Compliant,
+attribute_option_intel_hd_graphics_500,ol_product_pim.attribute_regulatory_certifications,Immunity per ISO 7637-2 & ISO 16750-2,
+attribute_option_intel_hd_graphics_5000,ol_product_pim.attribute_regulatory_certifications,IEC 60601-1-2 / EN 55011,
+attribute_option_intel_hd_graphics_505,ol_product_pim.attribute_regulatory_certifications,Contact us for more information,570
+attribute_option_intel_hd_graphics_510,ol_product_pim.attribute_reporting_category_category,Components,
+attribute_option_intel_hd_graphics_510_or_530_cpu_dependent,ol_product_pim.attribute_reporting_category_category,Industrial,
+attribute_option_intel_hd_graphics_520,ol_product_pim.attribute_reporting_category_category,Rugged,
+attribute_option_intel_hd_graphics_530,ol_product_pim.attribute_reporting_category_category,Server,
+attribute_option_intel_hd_graphics_5500,ol_product_pim.attribute_reporting_category_category,Manufacturing SKUs,
+attribute_option_intel_hd_graphics_620,ol_product_pim.attribute_reporting_category_category,Services,
+attribute_option_intel_hd_graphics_630,ol_product_pim.attribute_reporting_category_category,ARM,
+attribute_option_intel_hd_graphics_p530,ol_product_pim.attribute_reporting_category_category,Not Categorized,
+attribute_option_intel_iris_pro_graphics_p580,ol_product_pim.attribute_reporting_category_category,Panel,
+attribute_option_intel_iris_xe_graphics,ol_product_pim.attribute_reporting_category_category,Panel by Cincoze,
+"attribute_option_intel_iris_xe_i5,_i7__dual_channel_memory_required",ol_product_pim.attribute_reporting_category_line,Components,
+attribute_option_intel_uhd_graphics,ol_product_pim.attribute_reporting_category_line,Coolers,
+attribute_option_intel_uhd_graphics_610,ol_product_pim.attribute_reporting_category_line,Display,
+attribute_option_intel_uhd_graphics_620,ol_product_pim.attribute_reporting_category_line,Engineering Parts,
+attribute_option_intel_uhd_graphics_630,ol_product_pim.attribute_reporting_category_line,Fanless,
+attribute_option_intel_uhd_graphics_p630,ol_product_pim.attribute_reporting_category_line,Fanned,
+"attribute_option_intel_uhd_graphics_celeron,_i3",ol_product_pim.attribute_reporting_category_line,Fanned Rackmounts,
+attribute_option_mali400mp,ol_product_pim.attribute_reporting_category_line,Industrial Displays,
+attribute_option_nvidia_geforce_gtx_1050_optional,ol_product_pim.attribute_reporting_category_line,Legacy Industrial,
+attribute_option_nvidia_geforce_gtx_1060_optional,ol_product_pim.attribute_reporting_category_line,Legacy Rugged,
+attribute_option_nvidia_geforce_gtx_1080_optional,ol_product_pim.attribute_reporting_category_line,Memory,
+attribute_option_nvidia_geforce_rtx_2070_optional,ol_product_pim.attribute_reporting_category_line,Motherboard Kits,
+attribute_option_nvidia_geforce_rtx_2080_optional,ol_product_pim.attribute_reporting_category_line,Operating Systems,
+attribute_option_nvidia_gf119,ol_product_pim.attribute_reporting_category_line,Other,
+attribute_option_nvidia_gt_610m,ol_product_pim.attribute_reporting_category_line,Packaging,
+attribute_option_nvidia_gt730m_gpu,ol_product_pim.attribute_reporting_category_line,Panels,
+attribute_option_nvidia_ion2,ol_product_pim.attribute_reporting_category_line,Performance,
+attribute_option_nvidia_quadro_p600,ol_product_pim.attribute_reporting_category_line,Power Supplies,
+attribute_option_nvidia_volta_gpu,ol_product_pim.attribute_reporting_category_line,Processor,
+attribute_option_optional_gpu,ol_product_pim.attribute_reporting_category_line,Rugged By Cincoze,
+attribute_option_processor_dependent,ol_product_pim.attribute_reporting_category_line,Rugged By Neousys,
+attribute_option_silicon_sil9024a,ol_product_pim.attribute_reporting_category_line,Rugged By OnLogic,
+attribute_option_via_chrome645640_hd,ol_product_pim.attribute_reporting_category_line,Storage,
+attribute_option_via_chrome9,ol_product_pim.attribute_reporting_category_line,1U & 1.5U Rackmount,
+attribute_option_via_unichrome_pro,ol_product_pim.attribute_reporting_category_line,Mid Tier,
+attribute_option_1_25_hddssd,ol_product_pim.attribute_reporting_category_line,Gateway,
+attribute_option_1_25_hddssd_nuvo6002,ol_product_pim.attribute_reporting_category_line,Small Form Factor,
+attribute_option_1_m2_2242_pcie_x4,ol_product_pim.attribute_reporting_category_line,Entry,
+attribute_option_1_m2_224260_mkey_pcie_x4_for_nvme_ssd,ol_product_pim.attribute_reporting_category_line,High Performance,
+attribute_option_1_m2_22426080_bkey,ol_product_pim.attribute_reporting_category_line,Standalone,
+attribute_option_1_m2_22426080_mkey,ol_product_pim.attribute_reporting_category_line,4U Rackmount,
+attribute_option_1_m2_22426080_mkey_sata,ol_product_pim.attribute_reporting_category_line,2U Rackmount,
+attribute_option_1_m2_224280,ol_product_pim.attribute_reporting_category_line,Rugged Jetson,
+attribute_option_1_m2_2260_mkey_pcie_x4_for_nvme_ssd,ol_product_pim.attribute_reporting_category_line,Jetson,
+attribute_option_1_m2_2280,ol_product_pim.attribute_reporting_category_line,Support & Warranty,
+attribute_option_1_m2_2280_bkey_sata,ol_product_pim.attribute_reporting_category_line,Panel PC,
+attribute_option_1_m2_2280_pcie_gen_40_x4,ol_product_pim.attribute_reporting_category_line,Raspberry Pi,
+attribute_option_1_m2_2280_pcie_x4,ol_product_pim.attribute_reporting_category_line,Custom Imaging and BIOS,
+attribute_option_1_m2_2280_sata,ol_product_pim.attribute_reporting_category_series,Extended Support Program,
+attribute_option_1_m2_2280_mkey,ol_product_pim.attribute_reporting_category_series,BIOS,
+attribute_option_1_m2_2280_mkey_pcie_gen_30_x4_for_nvme_ssd,ol_product_pim.attribute_reporting_category_series,Accessories,
+attribute_option_1_m2_2280_mkey_pcie_x2_for_nvme_ssd,ol_product_pim.attribute_reporting_category_series,Axial Series,
+attribute_option_1_m.2_mkey_2280_for_sata/nvme_pcie_gen_4,ol_product_pim.attribute_reporting_category_series,Barebones,
+attribute_option_1_msata_mux_with_mpcie,ol_product_pim.attribute_reporting_category_series,Cables,
+attribute_option_1_msata_shared_with_fullsize_mpcie_slot,ol_product_pim.attribute_reporting_category_series,Chassis,
+attribute_option_1_msata_shared_with_mpcie,ol_product_pim.attribute_reporting_category_series,CL100 Series,
+attribute_option_1_msata_shared_with_sata2,ol_product_pim.attribute_reporting_category_series,CL200 Series,
+attribute_option_1_sata_25_drive,ol_product_pim.attribute_reporting_category_series,CS Series,
+attribute_option_18_ssd,ol_product_pim.attribute_reporting_category_series,Components,
+attribute_option_10_sata_6_gbs,ol_product_pim.attribute_reporting_category_series,CV Series,
+attribute_option_2_35_hdd,ol_product_pim.attribute_reporting_category_series,DA Series,
+attribute_option_2_m2_2280_pcie_x4,ol_product_pim.attribute_reporting_category_series,DC Series,
+attribute_option_2_microsdhc_cards_up_to_32_gb_1_external_1_internal,ol_product_pim.attribute_reporting_category_series,DE Series,
+attribute_option_2_msata_1_shared_with_mpcie,ol_product_pim.attribute_reporting_category_series,DI Series,
+attribute_option_2_msata_shared_with_mpcie,ol_product_pim.attribute_reporting_category_series,Displays,
+"attribute_option_2_msata_socket_sata_30,_shared_by_minipcie_socket",ol_product_pim.attribute_reporting_category_series,D Series,
+attribute_option_2_sata_6_gbs,ol_product_pim.attribute_reporting_category_series,DS Series,
+attribute_option_2_sata_6_gbs_sata2_shared_w_msata,ol_product_pim.attribute_reporting_category_series,DX Series,
+attribute_option_2_sata_iii_25_drives,ol_product_pim.attribute_reporting_category_series,Expansion,
+attribute_option_2_sata_iii_connectors_for_25_hddssd_externally_accessible_hot_swap_optional,ol_product_pim.attribute_reporting_category_series,FR200 Series,
+"attribute_option_2_25""_sata_hdd/ssd_bay_sata_30",ol_product_pim.attribute_reporting_category_series,GM Series,
+attribute_option_2_sodimm_2_32gb_max_dualchannel_64_gb_total,ol_product_pim.attribute_reporting_category_series,GP Series,
+attribute_option_25_hdd,ol_product_pim.attribute_reporting_category_series,Hardware,
+attribute_option_25_hddsdd_externally_accessible,ol_product_pim.attribute_reporting_category_series,Helix Series,
+attribute_option_25_hddssd,ol_product_pim.attribute_reporting_category_series,HX300 Series,
+attribute_option_25_hotswap_hddssd,ol_product_pim.attribute_reporting_category_series,HX400 Series,
+attribute_option_25_pc_hdd,ol_product_pim.attribute_reporting_category_series,HX500 Series,
+attribute_option_25_ssd,ol_product_pim.attribute_reporting_category_series,HX600 Series,
+attribute_option_3_25_hddssd,ol_product_pim.attribute_reporting_category_series,IGT Series,
+attribute_option_3_25_hddssd_nuvo6032,ol_product_pim.attribute_reporting_category_series,IMB Series,
+attribute_option_3_msata_slots_shared_by_mpcie,ol_product_pim.attribute_reporting_category_series,Internal Power Supplies,
+attribute_option_35_hdd,ol_product_pim.attribute_reporting_category_series,K300 Series,
+attribute_option_35_hotswap_hdd,ol_product_pim.attribute_reporting_category_series,K400 Series,
+attribute_option_4_25_hddssd,ol_product_pim.attribute_reporting_category_series,K700 Series,
+attribute_option_4_25_hot_swappable_sata_iii_hddssd_bays_max_height_15_mm,ol_product_pim.attribute_reporting_category_series,K800 Series,
+attribute_option_4_msata_shared_with_mpcie,ol_product_pim.attribute_reporting_category_series,Legacy Industrial,
+attribute_option_4_sata_6_gbs,ol_product_pim.attribute_reporting_category_series,Legacy Rugged,
+attribute_option_40pin_ide_module,ol_product_pim.attribute_reporting_category_series,MC500 Series,
+attribute_option_44pin_ide_module,ol_product_pim.attribute_reporting_category_series,MC600 Series,
+attribute_option_4gb_emmc_flash,ol_product_pim.attribute_reporting_category_series,MC800 Series,
+attribute_option_6_sata_6_gbs,ol_product_pim.attribute_reporting_category_series,MC850 Series,
+attribute_option_8_hotswap_25_sata3_ssd,ol_product_pim.attribute_reporting_category_series,Memory,
+attribute_option_8_sata_6_gbs,ol_product_pim.attribute_reporting_category_series,MK100 Series,
+attribute_option_8mb_nor_flash,ol_product_pim.attribute_reporting_category_series,MK150 Series,
+attribute_option_cfast,ol_product_pim.attribute_reporting_category_series,MK200 Series,
+attribute_option_cfast_externally_accessible,ol_product_pim.attribute_reporting_category_series,MK400 Series,
+attribute_option_cfastsim_externally_accessible,ol_product_pim.attribute_reporting_category_series,ML100 Series,
+attribute_option_compactflash,ol_product_pim.attribute_reporting_category_series,ML200 Series,
+attribute_option_compactflash_externally_accessible,ol_product_pim.attribute_reporting_category_series,ML250 Series,
+attribute_option_dual_25_hotswap_hddsdd,ol_product_pim.attribute_reporting_category_series,ML300 Series,
+attribute_option_esata,ol_product_pim.attribute_reporting_category_series,ML400 Series,
+attribute_option_m2_22426080,ol_product_pim.attribute_reporting_category_series,ML500 Series,
+attribute_option_m2_2260_ssd,ol_product_pim.attribute_reporting_category_series,ML600 Series,
+attribute_option_m2_226080,ol_product_pim.attribute_reporting_category_series,Motherboards,
+attribute_option_microsd,ol_product_pim.attribute_reporting_category_series,M1000 Series,
+attribute_option_microsd_card,ol_product_pim.attribute_reporting_category_series,Other,
+attribute_option_msata,ol_product_pim.attribute_reporting_category_series,PD Series,
+attribute_option_msata_fullsize,ol_product_pim.attribute_reporting_category_series,PH Series,
+attribute_option_msata_halfsize,ol_product_pim.attribute_reporting_category_series,NC100 Series,
+attribute_option_msata_shared_with_mpcie_slot,ol_product_pim.attribute_reporting_category_series,NC200 Series,
+attribute_option_onboard_emmc_up_to_32gb,ol_product_pim.attribute_reporting_category_series,NUC Series,
+attribute_option_sata_3_gbs,ol_product_pim.attribute_reporting_category_series,NRU Series,
+attribute_option_sata_6_gbs,ol_product_pim.attribute_reporting_category_series,Nuvis Series,
+attribute_option_sata_flash_module,ol_product_pim.attribute_reporting_category_series,Nuvo Series,
+attribute_option_sd_card,ol_product_pim.attribute_reporting_category_series,Onyx Series,
+attribute_option_sim_card,ol_product_pim.attribute_reporting_category_series,Operating Systems,
+attribute_option_sim_card_externally_accessible,ol_product_pim.attribute_reporting_category_series,P100 Series,
+attribute_option_slimsata,ol_product_pim.attribute_reporting_category_series,P1000 Series,
+attribute_option_up_to_4_2.5”_nvme,ol_product_pim.attribute_reporting_category_series,P2000 Series,
+attribute_option_up_to_4_2.5”_sata,ol_product_pim.attribute_reporting_category_series,P Series,
+attribute_option_1_cincoze_modular_io_slot,ol_product_pim.attribute_reporting_category_series,Packaging,
+attribute_option_1_cincoze_module_slot,ol_product_pim.attribute_reporting_category_series,POC Series,
+attribute_option_1_fullheight_mpcie_shared_with_msata,ol_product_pim.attribute_reporting_category_series,Printed Matter,
+attribute_option_1_fullsize_mpcie,ol_product_pim.attribute_reporting_category_series,Processors,
+attribute_option_1_fullsize_mpcie_shared_with_msata,ol_product_pim.attribute_reporting_category_series,Storage,
+attribute_option_1_fullsize_mpcie_usb_signal_only,ol_product_pim.attribute_reporting_category_series,Tacton Series,
+attribute_option_1_halfsize_mpcie,ol_product_pim.attribute_reporting_category_series,MZ1 Series,
+attribute_option_1_halfsize_mpcie_n3710_version_only,ol_product_pim.attribute_reporting_category_series,AGX Series,
+attribute_option_1_halfsize_mpcie_shared_with_msata,ol_product_pim.attribute_reporting_category_series,NX Series,
+attribute_option_1_m2,ol_product_pim.attribute_reporting_category_series,Nano Series,
+"attribute_option_1_m2_key_m,_2242/2260/2280_with_pcie_gen3_x4_for_ssd",ol_product_pim.attribute_reporting_category_series,Warranty,
+"attribute_option_1_m2_key_e,_2230_with_pcie_x1,_usb_20_and_cnvi_for_wireless",ol_product_pim.attribute_reporting_category_system,"2.5"" HDD",
+"attribute_option_1_m2_key_b,_3042/3052_with_pcie_x1,_usb_32_gen1,_usb_20_and_sim_for_4g/5g",ol_product_pim.attribute_reporting_category_system,"2.5"" SSD",
+attribute_option_1_m2_2230_ekey,ol_product_pim.attribute_reporting_category_system,"3.5"" HDD",
+attribute_option_1_m2_2230_ekey_prepopulated_with_intel_wireless_card,ol_product_pim.attribute_reporting_category_system,AC101,
+attribute_option_1_m2_2230_slot,ol_product_pim.attribute_reporting_category_system,Antennas,
+attribute_option_1_m2_22306080_mkey_pcie_x2,ol_product_pim.attribute_reporting_category_system,Bag,
+attribute_option_1_m2_2242,ol_product_pim.attribute_reporting_category_system,Barebones,
+attribute_option_1_m2_2242_bkey,ol_product_pim.attribute_reporting_category_system,Battery,
+attribute_option_1_m2_22422280,ol_product_pim.attribute_reporting_category_system,Box,
+attribute_option_1_m2_22426080_mkey,ol_product_pim.attribute_reporting_category_system,Button Board,
+attribute_option_1_m2_22426080110_mkey,ol_product_pim.attribute_reporting_category_system,CAN,
+attribute_option_1_m2_22602280,ol_product_pim.attribute_reporting_category_system,Case Components,
+attribute_option_1_m2_2280_mkey,ol_product_pim.attribute_reporting_category_system,Chassis,
+attribute_option_1_m2_2280_mkey_pcie_gen_4_x4,ol_product_pim.attribute_reporting_category_system,CL100,
+attribute_option_1_m.2_2280/2260/2242/2230_mkey_pcie_gen_3_x4,ol_product_pim.attribute_reporting_category_system,CL100 (TM700),
+attribute_option_1_mezio_expansion_port,ol_product_pim.attribute_reporting_category_system,CL200G-10,
+attribute_option_1_mpcie,ol_product_pim.attribute_reporting_category_system,CL200G-10 (Other),
+attribute_option_1_mpcie_fullsize_with_usim,ol_product_pim.attribute_reporting_category_system,CL200G-11,
+attribute_option_1_mpcie_fullsize,ol_product_pim.attribute_reporting_category_system,CL210G-10,
+attribute_option_1_mpcie_fullhalfsize,ol_product_pim.attribute_reporting_category_system,CL210G-10 (Other),
+attribute_option_1_mpcie_shared_with_msata,ol_product_pim.attribute_reporting_category_system,CL210G-10 (IGL200),
+attribute_option_1_neousys_mezio_module,ol_product_pim.attribute_reporting_category_system,CL210G-10 (IGN600),
+attribute_option_1_pci_or_1_pcie_x4_p2102e_only,ol_product_pim.attribute_reporting_category_system,CL210G-10 (TM110),
+attribute_option_1_pci_slot,ol_product_pim.attribute_reporting_category_system,CL210G-11,
+attribute_option_1_pci_slot_optional_riser_card,ol_product_pim.attribute_reporting_category_system,CL210G-11 (IGL200),
+attribute_option_1_pcie_30_x4_slot,ol_product_pim.attribute_reporting_category_system,CL210G-11 (Other),
+attribute_option_1_pcie_30_x4_slot_x4_lanes,ol_product_pim.attribute_reporting_category_system,CL250,
+attribute_option_1_pcie_30_x8_slot_x8_lanes,ol_product_pim.attribute_reporting_category_system,CL250 (IGN610),
+attribute_option_1_pcie_gen_30_x16_slot,ol_product_pim.attribute_reporting_category_system,CL250 (TM710),
+attribute_option_1_pcie_gen_30_x16_slot_x8_pcie_lanes,ol_product_pim.attribute_reporting_category_system,Components,
+attribute_option_1_pcie_gen_30_x4_slot,ol_product_pim.attribute_reporting_category_system,Compute,
+attribute_option_1_pcie_gen_40_x16_slot,ol_product_pim.attribute_reporting_category_system,CPU Cooler,
+attribute_option_1_pcie_gen_40_x16_slot_shared_with_pcie_x4_storage_options,ol_product_pim.attribute_reporting_category_system,CS-P1001,
+attribute_option_1_pcie_gen_40_x16_or_2_pcie_gen_4_x8,ol_product_pim.attribute_reporting_category_system,CS-P1101,
+"attribute_option_1_pcie_gen_4.0_x16_full_height,_fully_length_slot_up_to_150w",ol_product_pim.attribute_reporting_category_system,CS-P2002,
+attribute_option_1_pcie_gen_4.0_x16_full_height,ol_product_pim.attribute_reporting_category_system,CS-P2102,
+attribute_option_1_pcie_x1_slot,ol_product_pim.attribute_reporting_category_system,CV-P1001,
+attribute_option_1_pcie_x1_slot_au912,ol_product_pim.attribute_reporting_category_system,CV-P1101,
+attribute_option_1_pcie_x1_slot_optional_riser_card,ol_product_pim.attribute_reporting_category_system,CV-P1101 (TM410),
+attribute_option_1_pcie_x16_slot,ol_product_pim.attribute_reporting_category_system,CV-P2002,
+attribute_option_1_pcie_x16_slot_au912,ol_product_pim.attribute_reporting_category_system,CV-P2102,
+attribute_option_1_pcie_x16_slot_au972,ol_product_pim.attribute_reporting_category_system,D210-11KS,
+attribute_option_1_pcie_x16_slot_optional_riser_card,ol_product_pim.attribute_reporting_category_system,DA-1000,
+"attribute_option_1_pcie_x16_in_x16_pcie_slot_with_dual_height_4.4'_h_x_9.5""_l",ol_product_pim.attribute_reporting_category_system,DA-1100,
+"attribute_option_1_pcie_x16_in_x16_pcie_slot_with_single_slot_height_4.4""_h_x_9.5""_l",ol_product_pim.attribute_reporting_category_system,DC-1100,
+attribute_option_1_pcie_x4_slot,ol_product_pim.attribute_reporting_category_system,DC-1100 (TM300),
+attribute_option_1_pcie_x8_slot,ol_product_pim.attribute_reporting_category_system,DC-1200,
+attribute_option_1_pcie_x8_slot_au910,ol_product_pim.attribute_reporting_category_system,DE-1000,
+attribute_option_1_pcie_x8_slot_au972,ol_product_pim.attribute_reporting_category_system,DE-1001,
+attribute_option_1_pcie_x8_slot_optional_riser_card,ol_product_pim.attribute_reporting_category_system,DI-1000,
+attribute_option_1_pcie_x8_slot_pcie_x4_lanes,ol_product_pim.attribute_reporting_category_system,DI-1100,
+attribute_option_1_sim_card_header,ol_product_pim.attribute_reporting_category_system,DIO,
+attribute_option_1_sim_card_socket,ol_product_pim.attribute_reporting_category_system,DS-1000,
+attribute_option_1_sim_card_socket_external,ol_product_pim.attribute_reporting_category_system,DS-1001,
+attribute_option_2_cincoze_cfm_slots,ol_product_pim.attribute_reporting_category_system,DS-1002,
+attribute_option_2_cincoze_modular_io_slots,ol_product_pim.attribute_reporting_category_system,DS-1100,
+attribute_option_2_fullsize_mpcie,ol_product_pim.attribute_reporting_category_system,DS-1101,
+attribute_option_2_fullsize_mpcie_shared_with_msata,ol_product_pim.attribute_reporting_category_system,DS-1102,
+attribute_option_2_io_expansion_slots,ol_product_pim.attribute_reporting_category_system,DS-1200,
+attribute_option_2_m2_22426080,ol_product_pim.attribute_reporting_category_system,DS-1201,
+attribute_option_2_mpcie_1_full_or_halfsize_mux_msata_and_1_fullsize,ol_product_pim.attribute_reporting_category_system,DS-1202,
+attribute_option_2_mpcie_full_or_halfsize,ol_product_pim.attribute_reporting_category_system,DS-1300,
+attribute_option_2_mpcie_fullsize,ol_product_pim.attribute_reporting_category_system,DS-1301,
+attribute_option_2_pcie_30_x16_slots_x16_lanes,ol_product_pim.attribute_reporting_category_system,DS-1302,
+attribute_option_2_pcie_30_x8_slots_x8_lanes_redirected_from_x16_slots_when_used,ol_product_pim.attribute_reporting_category_system,DX-1000,
+attribute_option_2_pcie_x16_slots,ol_product_pim.attribute_reporting_category_system,DX-1100,
+attribute_option_2_pcie_x16_slots_x8_pcie_lanes_each,ol_product_pim.attribute_reporting_category_system,DX-1100 (GRL200),
+"attribute_option_2_pcie_x16_8_lanes_each_with_single_slot_height_4.4""_h_x_9.5""_l",ol_product_pim.attribute_reporting_category_system,External Components,
+attribute_option_2_pcie_x4_slots,ol_product_pim.attribute_reporting_category_system,Fan,
+attribute_option_2_pcie_x8_slots,ol_product_pim.attribute_reporting_category_system,Foam,
+attribute_option_2_pcie_x8_slots_optional,ol_product_pim.attribute_reporting_category_system,FR201,
+attribute_option_2_pcie_x8_slots_x4_pcie_lanes_each,ol_product_pim.attribute_reporting_category_system,FR201 (IGN800),
+attribute_option_2_sim_card_sockets_external,ol_product_pim.attribute_reporting_category_system,FR202,
+attribute_option_2_sim_card_sockets_internal,ol_product_pim.attribute_reporting_category_system,FR202 (IGN802),
+attribute_option_3_cincoze_modular_io_slots,ol_product_pim.attribute_reporting_category_system,Gasket,
+attribute_option_3_mpcie_fullsize_shared_with_msata,ol_product_pim.attribute_reporting_category_system,GM-1000,
+attribute_option_3_mpcie_fullsize,ol_product_pim.attribute_reporting_category_system,GP-3001,
+attribute_option_3_pci_slots,ol_product_pim.attribute_reporting_category_system,GP-3002,
+attribute_option_3_pci_slots_nuvo6032,ol_product_pim.attribute_reporting_category_system,GPU,
+attribute_option_3_sim_card_sockets_internal,ol_product_pim.attribute_reporting_category_system,Half-Height mSATA,
+attribute_option_4_cincoze_modular_io_slots,ol_product_pim.attribute_reporting_category_system,Hardware,
+attribute_option_4_mpcie_fullsize,ol_product_pim.attribute_reporting_category_system,Hot Swap,
+attribute_option_6_pcie_gen_40_x16_slots,ol_product_pim.attribute_reporting_category_system,HX310,
+attribute_option_coming_soon_1_pcie_gen_40_x16_slot,ol_product_pim.attribute_reporting_category_system,HX330,
+attribute_option_front_accessible_modbay,ol_product_pim.attribute_reporting_category_system,HX330 (TM260),
+"attribute_option_face_plate_expansion_lan_x_2,_or_com_x_2,_or_lan_+_com",ol_product_pim.attribute_reporting_category_system,HX500,
+attribute_option_sata_3_storage,ol_product_pim.attribute_reporting_category_system,HX500 (IGN700),
+attribute_option_wifi4gbluetooth_compatible,ol_product_pim.attribute_reporting_category_system,HX511,
+attribute_option_ai_computers,ol_product_pim.attribute_reporting_category_system,HX600,
+attribute_option_automation_computers,ol_product_pim.attribute_reporting_category_system,HX610,
+attribute_option_building_automation,ol_product_pim.attribute_reporting_category_system,IGT-20,
+attribute_option_deep_learning_computers,ol_product_pim.attribute_reporting_category_system,Ignition,
+attribute_option_digital_signage_media_players,ol_product_pim.attribute_reporting_category_system,Industrial (Other),
+attribute_option_edge_computers,ol_product_pim.attribute_reporting_category_system,Insert,
+attribute_option_edgeiq_edge_devices,ol_product_pim.attribute_reporting_category_system,Internal Brackets,
+attribute_option_embedded_computers,ol_product_pim.attribute_reporting_category_system,Internal Power Supplies,
+attribute_option_firewall_appliance,ol_product_pim.attribute_reporting_category_system,K300,
+attribute_option_gateways_for_iot,ol_product_pim.attribute_reporting_category_system,K300 (CKT110),
+attribute_option_hmi_panels,ol_product_pim.attribute_reporting_category_system,K300 (IGL300),
+attribute_option_igel_thin_clients,ol_product_pim.attribute_reporting_category_system,K300 (IGN200),
+attribute_option_ignition_edge_gateways,ol_product_pim.attribute_reporting_category_system,K410,
+attribute_option_in_vehicle_computer_systems,ol_product_pim.attribute_reporting_category_system,K410 (IGN210),
+attribute_option_industrial_controllers,ol_product_pim.attribute_reporting_category_system,K430,
+attribute_option_industrial_thin_clients,ol_product_pim.attribute_reporting_category_system,K700-SE,
+attribute_option_industrial_workstation_pcs,ol_product_pim.attribute_reporting_category_system,K700-SE-2,
+attribute_option_iot_gateways,ol_product_pim.attribute_reporting_category_system,K700-SE (GRL400),
+attribute_option_kiosk_computers,ol_product_pim.attribute_reporting_category_system,K700-SE (IGN400),
+attribute_option_machine_vision_computers,ol_product_pim.attribute_reporting_category_system,K700-X2,
+attribute_option_medical_pcs,ol_product_pim.attribute_reporting_category_system,K700-X2-2,
+attribute_option_mini_servers,ol_product_pim.attribute_reporting_category_system,K801,
+attribute_option_nvr_pcs,ol_product_pim.attribute_reporting_category_system,K802,
+attribute_option_rhel_certified_hardware,ol_product_pim.attribute_reporting_category_system,K803,
+attribute_option_robotics_computers,ol_product_pim.attribute_reporting_category_system,K804,
+attribute_option_thinmanager_thin_clients,ol_product_pim.attribute_reporting_category_system,Keyboard,
+attribute_option_warehouse_computers,ol_product_pim.attribute_reporting_category_system,Kit,
+attribute_option_1u_rackmount_pc,ol_product_pim.attribute_reporting_category_system,Label,
+attribute_option_2u_rackmount_pc,ol_product_pim.attribute_reporting_category_system,LCD,
+attribute_option_aetina_ai_computers,ol_product_pim.attribute_reporting_category_system,M.2 2242,
+attribute_option_amd_computers,ol_product_pim.attribute_reporting_category_system,M.2 2260,
+attribute_option_amd_ryzen_computers,ol_product_pim.attribute_reporting_category_system,M.2 2280,
+attribute_option_amd_servers,ol_product_pim.attribute_reporting_category_system,MC500-10,
+attribute_option_arm_computers,ol_product_pim.attribute_reporting_category_system,MC500-11,
+attribute_option_asrock,ol_product_pim.attribute_reporting_category_system,MC500-30,
+attribute_option_aws_greengrass_compatible_iot_edge_gateways,ol_product_pim.attribute_reporting_category_system,MC500-50,
+attribute_option_backplates,ol_product_pim.attribute_reporting_category_system,MC500-51,
+attribute_option_can_bus,ol_product_pim.attribute_reporting_category_system,MC500-52,
+attribute_option_cec,ol_product_pim.attribute_reporting_category_system,MC500 (Other),
+attribute_option_cincoze_rugged_computers,ol_product_pim.attribute_reporting_category_system,MC510-10,
+attribute_option_cl100_series,ol_product_pim.attribute_reporting_category_system,MC510-40,
+attribute_option_cl200_series,ol_product_pim.attribute_reporting_category_system,MC510-40 (TM800),
+attribute_option_computer_finder_page,ol_product_pim.attribute_reporting_category_system,MC510-50,
+attribute_option_computers_with_4g,ol_product_pim.attribute_reporting_category_system,MC510-50 (GRL100),
+attribute_option_computers_with_4g_from_verizon,ol_product_pim.attribute_reporting_category_system,MC600-10,
+attribute_option_computers_with_intel_atom,ol_product_pim.attribute_reporting_category_system,MC600-11,
+attribute_option_computers_with_intel_ptt,ol_product_pim.attribute_reporting_category_system,MC600-50,
+attribute_option_computers_with_pcie,ol_product_pim.attribute_reporting_category_system,MC600-51,
+attribute_option_cpu_coolers_fans,ol_product_pim.attribute_reporting_category_system,MC600-52,
+attribute_option_data_storage_i/o_cables,ol_product_pim.attribute_reporting_category_system,MC600 (Other),
+attribute_option_din_rail_computer,ol_product_pim.attribute_reporting_category_system,MC610-10,
+attribute_option_din_rail_power_supplies,ol_product_pim.attribute_reporting_category_system,MC610-50,
+attribute_option_dual_lan_mini_pcs,ol_product_pim.attribute_reporting_category_system,MC610-50 (TM610),
+attribute_option_edge_server_systems,ol_product_pim.attribute_reporting_category_system,MC800 (Other),
+attribute_option_edge_servers,ol_product_pim.attribute_reporting_category_system,MC850-40,
+attribute_option_embedded_computers_with_gpu,ol_product_pim.attribute_reporting_category_system,MC850-50,
+attribute_option_embedded_miniitx_computers,ol_product_pim.attribute_reporting_category_system,MC850-51,
+attribute_option_embedded_servers_with_intel_xeon,ol_product_pim.attribute_reporting_category_system,MC850-52,
+attribute_option_ethernet_switches,ol_product_pim.attribute_reporting_category_system,MC850-53,
+attribute_option_extended_life,ol_product_pim.attribute_reporting_category_system,MC850-54,
+attribute_option_fanless,ol_product_pim.attribute_reporting_category_system,MC850-70,
+attribute_option_fanless_industrial_computers,ol_product_pim.attribute_reporting_category_system,MK100B-10,
+attribute_option_fanless_rackmount_computers,ol_product_pim.attribute_reporting_category_system,MK100B-40,
+attribute_option_fanned_industrial_computers,ol_product_pim.attribute_reporting_category_system,MK100B-50,
+attribute_option_fanned_rackmount_computers,ol_product_pim.attribute_reporting_category_system,MK100B-51,
+attribute_option_hotswap,ol_product_pim.attribute_reporting_category_system,MK100B-52,
+attribute_option_industrial_computers,ol_product_pim.attribute_reporting_category_system,MK100B-53,
+attribute_option_industrial_displays,ol_product_pim.attribute_reporting_category_system,MK100B-54,
+attribute_option_industrial_mini_pcs,ol_product_pim.attribute_reporting_category_system,MK100B-70,
+attribute_option_industrial_pcs_with_gpu,ol_product_pim.attribute_reporting_category_system,MK100 (Other),
+attribute_option_industrial_touchscreens,ol_product_pim.attribute_reporting_category_system,MK101B-30,
+attribute_option_intel_celeron_computers,ol_product_pim.attribute_reporting_category_system,MK150B-10,
+attribute_option_intel_core_i5_computers,ol_product_pim.attribute_reporting_category_system,MK150B-30,
+attribute_option_intel_core_i7_computers,ol_product_pim.attribute_reporting_category_system,MK150B-40,
+attribute_option_intel_embedded_systems,ol_product_pim.attribute_reporting_category_system,MK150B-50,
+attribute_option_intel_i9_processor_computers,ol_product_pim.attribute_reporting_category_system,MK150B-51,
+attribute_option_intel_processor,ol_product_pim.attribute_reporting_category_system,MK150B-52,
+attribute_option_mc500_series,ol_product_pim.attribute_reporting_category_system,MK150B-53,
+attribute_option_mc600_series,ol_product_pim.attribute_reporting_category_system,MK150B-54,
+attribute_option_mc850_series,ol_product_pim.attribute_reporting_category_system,MK150B-70,
+attribute_option_microsoft_azure_certified_embedded_computers,ol_product_pim.attribute_reporting_category_system,MK150 (Other),
+attribute_option_mini_itx,ol_product_pim.attribute_reporting_category_system,MK200-60,
+attribute_option_miniitx_cases,ol_product_pim.attribute_reporting_category_system,MK200-70,
+attribute_option_ml100_series,ol_product_pim.attribute_reporting_category_system,MK200 (Other),
+attribute_option_ml200_series,ol_product_pim.attribute_reporting_category_system,MK400-60,
+attribute_option_ml300_series,ol_product_pim.attribute_reporting_category_system,MK400-70,
+attribute_option_ml400_series,ol_product_pim.attribute_reporting_category_system,MK400 (Other),
+attribute_option_ml500_series,ol_product_pim.attribute_reporting_category_system,ML100G-10,
+attribute_option_ml600_series,ol_product_pim.attribute_reporting_category_system,ML100G-10 (TM100),
+attribute_option_mounting_hardware,ol_product_pim.attribute_reporting_category_system,ML100G-30,
+attribute_option_movidius,ol_product_pim.attribute_reporting_category_system,ML100G-31,
+attribute_option_msata_ssds,ol_product_pim.attribute_reporting_category_system,ML100G-40,
+attribute_option_nc100_series,ol_product_pim.attribute_reporting_category_system,ML100G-40 (IGL160),
+attribute_option_neousys_rugged_computers,ol_product_pim.attribute_reporting_category_system,ML100G-40 (IGN510),
+attribute_option_networking,ol_product_pim.attribute_reporting_category_system,ML100G-41,
+attribute_option_nuc,ol_product_pim.attribute_reporting_category_system,ML100G-50,
+attribute_option_oem_hardware_services,ol_product_pim.attribute_reporting_category_system,ML100G-51,
+attribute_option_panel_pcs,ol_product_pim.attribute_reporting_category_system,ML100G-51 (IGN500),
+attribute_option_pheonix_connector,ol_product_pim.attribute_reporting_category_system,ML100G-52,
+attribute_option_processors,ol_product_pim.attribute_reporting_category_system,ML100G-53,
+attribute_option_power_cables,ol_product_pim.attribute_reporting_category_system,ML100G-53 (TM120),
+attribute_option_power_over_ethernet_computers,ol_product_pim.attribute_reporting_category_system,ML200 (Other),
+attribute_option_rackmount_computer_cases,ol_product_pim.attribute_reporting_category_system,ML210G-10,
+attribute_option_rackmount_computers,ol_product_pim.attribute_reporting_category_system,ML210G-10 (TM200),
+attribute_option_rackmount_servers,ol_product_pim.attribute_reporting_category_system,ML210G-11,
+attribute_option_readytoship_computers,ol_product_pim.attribute_reporting_category_system,ML210G-12,
+attribute_option_riser_cards,ol_product_pim.attribute_reporting_category_system,ML210G-50,
+attribute_option_rugged_computers,ol_product_pim.attribute_reporting_category_system,ML210G-51,
+attribute_option_rugged_display_computers,ol_product_pim.attribute_reporting_category_system,ML250 (Other),
+attribute_option_rugged_pcs_with_gpu,ol_product_pim.attribute_reporting_category_system,ML300 (Other),
+attribute_option_silent_computers,ol_product_pim.attribute_reporting_category_system,ML340G-10,
+attribute_option_small_form_factor_motherboard,ol_product_pim.attribute_reporting_category_system,ML340G-50,
+attribute_option_small_pc_cases,ol_product_pim.attribute_reporting_category_system,ML340G-51,
+attribute_option_solid_state_computers,ol_product_pim.attribute_reporting_category_system,ML350G-10,
+attribute_option_solid_state_drives,ol_product_pim.attribute_reporting_category_system,ML350G-10 (GRL600),
+attribute_option_special_offers,ol_product_pim.attribute_reporting_category_system,ML350G-10 (IGL100),
+attribute_option_ubuntu_linux_computers,ol_product_pim.attribute_reporting_category_system,ML350G-10 (IGN100),
+attribute_option_wide_temperature_computers,ol_product_pim.attribute_reporting_category_system,ML350G-10 (TM250),
+attribute_option_wired_networking,ol_product_pim.attribute_reporting_category_system,ML400B-50,
+attribute_option_wireless_network_cards,ol_product_pim.attribute_reporting_category_system,ML400G-10,
+attribute_option_25_hdd,ol_product_pim.attribute_reporting_category_system,ML400G-12,
+attribute_option_25_ssd,ol_product_pim.attribute_reporting_category_system,ML400G-14,
+attribute_option_emmc,ol_product_pim.attribute_reporting_category_system,ML400G-30,
+attribute_option_hot_swap,ol_product_pim.attribute_reporting_category_system,ML400G-50,
+attribute_option_nvme,ol_product_pim.attribute_reporting_category_system,ML400G-51,
+attribute_option_msata,ol_product_pim.attribute_reporting_category_system,ML400G-52,
+attribute_option_m2_sata,ol_product_pim.attribute_reporting_category_system,ML400 (Other),
+attribute_option_8ec17d3f-bb3a-4968-bf3c-4b4d98c94016,ol_product_pim.attribute_reporting_category_system,ML450G-10,
+attribute_option_10b4537e-1194-47f4-bbc6-cacb5f867bd0,ol_product_pim.attribute_reporting_category_system,ML450G-11,
+attribute_option_e7979bf5-31b6-44c1-b368-57c207075a7d,ol_product_pim.attribute_reporting_category_system,ML450G-12,
+attribute_option_7609216d-5ae7-4375-ad04-d157e5d64fcd,ol_product_pim.attribute_reporting_category_system,ML450G-50,
+attribute_option_5ccc1dd6-091b-407f-96fd-ca4ba9d67c7f,ol_product_pim.attribute_reporting_category_system,ML450G-51,
+attribute_option_90b5059d-2658-43b1-b156-7582dcce2f37,ol_product_pim.attribute_reporting_category_system,ML450G-52,
+attribute_option_c8d434ab-efc2-41fd-9779-122ac4e444ab,ol_product_pim.attribute_reporting_category_system,ML450G-53,
+attribute_option_95cf857e-7161-11e8-89d7-0242ac120002,ol_product_pim.attribute_reporting_category_system,ML500G-30,
+attribute_option_99788c69-137a-49b9-827b-4a50dcb7568a,ol_product_pim.attribute_reporting_category_system,ML500G-50,
+attribute_option_4e127d7c-c069-4263-bfec-9ec9bb30e32a,ol_product_pim.attribute_reporting_category_system,ML500G-51,
+attribute_option_8ec17d3f-bb3a-4968-bf3c-4b4d98c94016,ol_product_pim.attribute_reporting_category_system,ML500 (Other),
+attribute_option_10b4537e-1194-47f4-bbc6-cacb5f867bd0,ol_product_pim.attribute_reporting_category_system,ML510G-50,
+attribute_option_e7979bf5-31b6-44c1-b368-57c207075a7d,ol_product_pim.attribute_reporting_category_system,ML510G-50 (GRL500),
+attribute_option_7609216d-5ae7-4375-ad04-d157e5d64fcd,ol_product_pim.attribute_reporting_category_system,ML600G-10,
+attribute_option_5ccc1dd6-091b-407f-96fd-ca4ba9d67c7f,ol_product_pim.attribute_reporting_category_system,ML600G-30,
+attribute_option_90b5059d-2658-43b1-b156-7582dcce2f37,ol_product_pim.attribute_reporting_category_system,ML600G-50,
+attribute_option_c8d434ab-efc2-41fd-9779-122ac4e444ab,ol_product_pim.attribute_reporting_category_system,ML600G-51,
+attribute_option_95cf857e-7161-11e8-89d7-0242ac120002,ol_product_pim.attribute_reporting_category_system,ML600G-52,
+attribute_option_99788c69-137a-49b9-827b-4a50dcb7568a,ol_product_pim.attribute_reporting_category_system,ML600G-53,
+attribute_option_4e127d7c-c069-4263-bfec-9ec9bb30e32a,ol_product_pim.attribute_reporting_category_system,Mounting Brackets,
+attribute_option_components,ol_product_pim.attribute_reporting_category_system,mSATA,
+attribute_option_industrial,ol_product_pim.attribute_reporting_category_system,NC100-50,
+attribute_option_rugged,ol_product_pim.attribute_reporting_category_system,NC200 (Other),
+attribute_option_server,ol_product_pim.attribute_reporting_category_system,NG100W-10,
+attribute_option_manufacturing_skus,ol_product_pim.attribute_reporting_category_system,NRU-120S,
+attribute_option_services,ol_product_pim.attribute_reporting_category_system,Nuvis-3304af,
+attribute_option_arm,ol_product_pim.attribute_reporting_category_system,Nuvis-3616VR,
+attribute_option_not_categorized,ol_product_pim.attribute_reporting_category_system,Nuvis-5306RT,
+attribute_option_panel,ol_product_pim.attribute_reporting_category_system,Nuvo-1000,
+attribute_option_panel_by_cincoze,ol_product_pim.attribute_reporting_category_system,Nuvo-1300af,
+attribute_option_components,ol_product_pim.attribute_reporting_category_system,Nuvo-2510VTC,
+attribute_option_coolers,ol_product_pim.attribute_reporting_category_system,Nuvo-3000,
+attribute_option_display,ol_product_pim.attribute_reporting_category_system,Nuvo-3000LP,
+attribute_option_engineering_parts,ol_product_pim.attribute_reporting_category_system,Nuvo-3000TB,
+attribute_option_fanless,ol_product_pim.attribute_reporting_category_system,Nuvo-3100VTC,
+attribute_option_fanned,ol_product_pim.attribute_reporting_category_system,Nuvo-4000,
+attribute_option_fanned_rackmounts,ol_product_pim.attribute_reporting_category_system,Nuvo-5000,
+attribute_option_industrial_displays,ol_product_pim.attribute_reporting_category_system,Nuvo-5000LP,
+attribute_option_legacy_industrial,ol_product_pim.attribute_reporting_category_system,Nuvo-5026E,
+attribute_option_legacy_rugged,ol_product_pim.attribute_reporting_category_system,Nuvo-5095GC,
+attribute_option_memory,ol_product_pim.attribute_reporting_category_system,Nuvo-5100VTC,
+attribute_option_motherboard_kits,ol_product_pim.attribute_reporting_category_system,Nuvo-5501,
+attribute_option_operating_systems,ol_product_pim.attribute_reporting_category_system,Nuvo-6000,
+attribute_option_other,ol_product_pim.attribute_reporting_category_system,Nuvo-6108GC,
+attribute_option_packaging,ol_product_pim.attribute_reporting_category_system,Nuvo-7000E,
+attribute_option_panels,ol_product_pim.attribute_reporting_category_system,Nuvo-7000DE,
+attribute_option_performance,ol_product_pim.attribute_reporting_category_system,Nuvo-7000LP,
+attribute_option_power_supplies,ol_product_pim.attribute_reporting_category_system,Nuvo-7100VTC,
+attribute_option_processor,ol_product_pim.attribute_reporting_category_system,Nuvo-7160GC,
+attribute_option_rugged_by_cincoze,ol_product_pim.attribute_reporting_category_system,Nuvo-7200VTC,
+attribute_option_rugged_by_neousys,ol_product_pim.attribute_reporting_category_system,Nuvo-7501,
+attribute_option_rugged_by_onlogic,ol_product_pim.attribute_reporting_category_system,Nuvo-8108GC,
+attribute_option_storage,ol_product_pim.attribute_reporting_category_system,Nuvo-8208GC,
+attribute_option_1u_15u_rackmount,ol_product_pim.attribute_reporting_category_system,Motherboard Kits,
+attribute_option_mid_tier,ol_product_pim.attribute_reporting_category_system,Other,
+attribute_option_gateway,ol_product_pim.attribute_reporting_category_system,Overlay,
+attribute_option_small_form_factor,ol_product_pim.attribute_reporting_category_system,P1001,
+attribute_option_entry,ol_product_pim.attribute_reporting_category_system,P100-10AS,
+attribute_option_high_performance,ol_product_pim.attribute_reporting_category_system,P1001 (TM400),
+attribute_option_standalone,ol_product_pim.attribute_reporting_category_system,P1101,
+attribute_option_4u_rackmount,ol_product_pim.attribute_reporting_category_system,P1101 (IGL500),
+attribute_option_2u_rackmount,ol_product_pim.attribute_reporting_category_system,P1101 (IGN310),
+attribute_option_rugged_jetson,ol_product_pim.attribute_reporting_category_system,P2002,
+attribute_option_jetson,ol_product_pim.attribute_reporting_category_system,P2002 (IGN300),
+attribute_option_support_warranty,ol_product_pim.attribute_reporting_category_system,P2102,
+attribute_option_panel_pc,ol_product_pim.attribute_reporting_category_system,P2102 (IGN320),
+attribute_option_raspberry_pi,ol_product_pim.attribute_reporting_category_system,Pad,
+attribute_option_custom_imaging_and_bios,ol_product_pim.attribute_reporting_category_system,Pigtail,
+attribute_option_extended_support_program,ol_product_pim.attribute_reporting_category_system,PoE,
+attribute_option_bios,ol_product_pim.attribute_reporting_category_system,POC-100,
+attribute_option_accessories,ol_product_pim.attribute_reporting_category_system,POC-120,
+attribute_option_axial_series,ol_product_pim.attribute_reporting_category_system,POC-200,
+attribute_option_barebones,ol_product_pim.attribute_reporting_category_system,POC-300,
+attribute_option_cables,ol_product_pim.attribute_reporting_category_system,POC-351VTC,
+attribute_option_chassis,ol_product_pim.attribute_reporting_category_system,POC-500,
+attribute_option_cl100_series,ol_product_pim.attribute_reporting_category_system,Power,
+attribute_option_cl200_series,ol_product_pim.attribute_reporting_category_system,Printed Matter,
+attribute_option_cs_series,ol_product_pim.attribute_reporting_category_system,Riser,
+attribute_option_components,ol_product_pim.attribute_reporting_category_system,Rugged (Other),
+attribute_option_cv_series,ol_product_pim.attribute_reporting_category_system,Screw,
+attribute_option_da_series,ol_product_pim.attribute_reporting_category_system,Serial,
+attribute_option_dc_series,ol_product_pim.attribute_reporting_category_system,SV-PremServPack,
+attribute_option_de_series,ol_product_pim.attribute_reporting_category_system,SV-PremServPack-Annual,
+attribute_option_di_series,ol_product_pim.attribute_reporting_category_system,Sleeve,
+attribute_option_displays,ol_product_pim.attribute_reporting_category_system,Terminal Block,
+attribute_option_d_series,ol_product_pim.attribute_reporting_category_system,Thermal,
+attribute_option_ds_series,ol_product_pim.attribute_reporting_category_system,TPM,
+attribute_option_dx_series,ol_product_pim.attribute_reporting_category_system,Ubuntu,
+attribute_option_expansion,ol_product_pim.attribute_reporting_category_system,USB,
+attribute_option_fr200_series,ol_product_pim.attribute_reporting_category_system,Wireless,
+attribute_option_gm_series,ol_product_pim.attribute_reporting_category_system,HX401,
+attribute_option_gp_series,ol_product_pim.attribute_reporting_category_system,TC401,
+attribute_option_hardware,ol_product_pim.attribute_reporting_category_system,TN401,
+attribute_option_helix_series,ol_product_pim.attribute_reporting_category_system,M1001,
+attribute_option_hx300_series,ol_product_pim.attribute_reporting_category_system,M1101,
+attribute_option_hx400_series,ol_product_pim.attribute_reporting_category_system,GP-3100,
+attribute_option_hx500_series,ol_product_pim.attribute_reporting_category_system,RGS-8805GC,
+attribute_option_hx600_series,ol_product_pim.attribute_reporting_category_system,MZ1-AS,
+attribute_option_igt_series,ol_product_pim.attribute_reporting_category_system,JETAGX64-F,
+attribute_option_imb_series,ol_product_pim.attribute_reporting_category_system,JETAGX32-F,
+attribute_option_internal_power_supplies,ol_product_pim.attribute_reporting_category_system,JETNX16-F,
+attribute_option_k300_series,ol_product_pim.attribute_reporting_category_system,JETNX8-F,
+attribute_option_k400_series,ol_product_pim.attribute_reporting_category_system,JETNAN8-F,
+attribute_option_k700_series,ol_product_pim.attribute_reporting_category_system,JETNAN4-F,
+attribute_option_k800_series,ol_product_pim.attribute_reporting_category_system,JETAGX64,
+attribute_option_legacy_industrial,ol_product_pim.attribute_reporting_category_system,JETAGX32,
+attribute_option_legacy_rugged,ol_product_pim.attribute_reporting_category_system,JETNX16,
+attribute_option_mc500_series,ol_product_pim.attribute_reporting_category_system,JETNX8,
+attribute_option_mc600_series,ol_product_pim.attribute_reporting_category_system,JETNAN8,
+attribute_option_mc800_series,ol_product_pim.attribute_reporting_category_system,JETNAN4,
+attribute_option_mc850_series,ol_product_pim.attribute_reporting_category_system,MC510-55,
+attribute_option_memory,ol_product_pim.attribute_reporting_category_system,MC610-55,
+attribute_option_mk100_series,ol_product_pim.attribute_reporting_category_system,Back Plates,
+attribute_option_mk150_series,ol_product_pim.attribute_reporting_category_system,OnLogic Power Supplies,
+attribute_option_mk200_series,ol_product_pim.attribute_reporting_category_system,Mid Plates,
+attribute_option_mk400_series,ol_product_pim.attribute_reporting_category_system,Front Plates,
+attribute_option_ml100_series,ol_product_pim.attribute_reporting_category_system,5 Year,
+attribute_option_ml200_series,ol_product_pim.attribute_reporting_category_system,3 Year to 5 Year Upgrade,
+attribute_option_ml250_series,ol_product_pim.attribute_reporting_category_system,3 Year,
+attribute_option_ml300_series,ol_product_pim.attribute_reporting_category_system,2 Year,
+attribute_option_ml400_series,ol_product_pim.attribute_rs_232_pin_header_type,1,10
+attribute_option_ml500_series,ol_product_pim.attribute_rs_232_pin_header_type,AT/Everex,20
+attribute_option_ml600_series,ol_product_pim.attribute_rs_232_pin_header_type,ASrock 2mm AR/Everex Proprietary,30
+attribute_option_motherboards,ol_product_pim.attribute_rs_232_pin_header_type,DTK/Intel,40
+attribute_option_m1000_series,ol_product_pim.attribute_series,CL100_series,10
+attribute_option_other,ol_product_pim.attribute_series,CL200_series,20
+attribute_option_pd_series,ol_product_pim.attribute_series,FR200_series,30
+attribute_option_ph_series,ol_product_pim.attribute_series,Helix-300_series,40
+attribute_option_nc100_series,ol_product_pim.attribute_series,Helix-500-600_series,50
+attribute_option_nc200_series,ol_product_pim.attribute_series,Karbon-300-700_series,60
+attribute_option_nuc_series,ol_product_pim.attribute_series,Karbon-400_series,70
+attribute_option_nru_series,ol_product_pim.attribute_series,Karbon-800_series,80
+attribute_option_nuvis_series,ol_product_pim.attribute_series,MC500_series,90
+attribute_option_nuvo_series,ol_product_pim.attribute_series,MC600_series,100
+attribute_option_onyx_series,ol_product_pim.attribute_series,MC850_series,110
+attribute_option_operating_systems,ol_product_pim.attribute_series,ML100_series,120
+attribute_option_p100_series,ol_product_pim.attribute_series,ML200_series,130
+attribute_option_p1000_series,ol_product_pim.attribute_series,ML300_series,140
+attribute_option_p2000_series,ol_product_pim.attribute_series,ML400_series,150
+attribute_option_p_series,ol_product_pim.attribute_series,ML500_series,160
+attribute_option_packaging,ol_product_pim.attribute_series,ML600_series,170
+attribute_option_poc_series,ol_product_pim.attribute_series,NC100_series,180
+attribute_option_printed_matter,ol_product_pim.attribute_signal_type,USB 2.0 (on Mini PCIe),
+attribute_option_processors,ol_product_pim.attribute_signal_type,USB 3.0 (on Mini PCIe),
+attribute_option_storage,ol_product_pim.attribute_size,Low Profile,10
+attribute_option_tacton_series,ol_product_pim.attribute_size,NUC,20
+attribute_option_mz1_series,ol_product_pim.attribute_size,Mini PC,30
+attribute_option_agx_series,ol_product_pim.attribute_size,1U Rackmount,40
+attribute_option_nx_series,ol_product_pim.attribute_size,1.5U Rackmount,50
+attribute_option_nano_series,ol_product_pim.attribute_size,2U Rackmount,60
+attribute_option_warranty,ol_product_pim.attribute_size,4U Rackmount,70
+"attribute_option_25""_hdd",ol_product_pim.attribute_software_certifications,AWS IoT Greengrass,10
+"attribute_option_25""_ssd",ol_product_pim.attribute_software_certifications,AWS IoT SiteWise,20
+"attribute_option_35""_hdd",ol_product_pim.attribute_software_certifications,Azure IoT Edge,30
+attribute_option_ac101,ol_product_pim.attribute_software_certifications,Ignition,30
+attribute_option_antennas,ol_product_pim.attribute_software_certifications,Red Hat,40
+attribute_option_bag,ol_product_pim.attribute_software_certifications,ThinManager,50
+attribute_option_barebones,ol_product_pim.attribute_software_certifications,Ubuntu,60
+attribute_option_battery,ol_product_pim.attribute_solution_categories,Industrial Control & Automation,155
+attribute_option_box,ol_product_pim.attribute_solution_categories,SCADA Servers & HMIs with Ignition by Inductive Automation,260
+attribute_option_button_board,ol_product_pim.attribute_solution_categories,AI Computers,5
+attribute_option_can,ol_product_pim.attribute_solution_categories,Automation Computers,10
+attribute_option_case_components,ol_product_pim.attribute_solution_categories,Building Automation,20
+attribute_option_chassis,ol_product_pim.attribute_solution_categories,Deep Learning Computers,30
+attribute_option_cl100,ol_product_pim.attribute_solution_categories,Digital Signage Media Players,40
+attribute_option_cl100_tm700,ol_product_pim.attribute_solution_categories,Edge Computers,50
+attribute_option_cl200g10,ol_product_pim.attribute_solution_categories,EdgeIQ Edge Devices,52
+attribute_option_cl200g10_other,ol_product_pim.attribute_solution_categories,Embedded Computers,80
+attribute_option_cl200g11,ol_product_pim.attribute_solution_categories,Firewall Appliance,90
+attribute_option_cl210g10,ol_product_pim.attribute_solution_categories,Gateways for IoT,100
+attribute_option_cl210g10_other,ol_product_pim.attribute_solution_categories,HMI Panels,110
+attribute_option_cl210g10_igl200,ol_product_pim.attribute_solution_categories,IGEL Thin Clients,120
+attribute_option_cl210g10_ign600,ol_product_pim.attribute_solution_categories,Ignition Edge Gateways,130
+attribute_option_cl210g10 tm110,ol_product_pim.attribute_solution_categories,In Vehicle Computer Systems,140
+attribute_option_cl210g11,ol_product_pim.attribute_solution_categories,Industrial Controllers,150
+attribute_option_cl210g11_igl200,ol_product_pim.attribute_solution_categories,Industrial Thin Clients,160
+attribute_option_cl210g11_other,ol_product_pim.attribute_solution_categories,Industrial Workstation PCs,170
+attribute_option_cl250,ol_product_pim.attribute_solution_categories,IoT Gateways,180
+attribute_option_cl250_ign610,ol_product_pim.attribute_solution_categories,Kiosk Computers,190
+attribute_option_cl250_tm710,ol_product_pim.attribute_solution_categories,Machine Vision Computers,200
+attribute_option_components,ol_product_pim.attribute_solution_categories,Medical PCs,210
+attribute_option_compute,ol_product_pim.attribute_solution_categories,Mini Servers,220
+attribute_option_cpu_cooler,ol_product_pim.attribute_solution_categories,NVR PCs,230
+attribute_option_csp1001,ol_product_pim.attribute_solution_categories,RHEL Certified Hardware,240
+attribute_option_csp1101,ol_product_pim.attribute_solution_categories,Robotics Computers,250
+attribute_option_csp2002,ol_product_pim.attribute_solution_categories,ThinManager Thin Clients,270
+attribute_option_csp2102,ol_product_pim.attribute_solution_categories,Warehouse Computers,280
+attribute_option_cvp1001,ol_product_pim.attribute_storage_disk_features,AES Encryption,10
+attribute_option_cvp1101,ol_product_pim.attribute_storage_disk_features,ECC,20
+attribute_option_cvp1101_tm410,ol_product_pim.attribute_storage_disk_features,Host Power Loss Protection,30
+attribute_option_cvp2002,ol_product_pim.attribute_storage_disk_features,NCQ,40
+attribute_option_cvp2102,ol_product_pim.attribute_storage_disk_features,Power Shield,50
+attribute_option_d21011ks,ol_product_pim.attribute_storage_disk_features,SMART,60
+attribute_option_da1000,ol_product_pim.attribute_storage_disk_features,TRIM,70
+attribute_option_da1100,ol_product_pim.attribute_storage_flash_memory_type,3D NAND Flash,10
+attribute_option_dc1100,ol_product_pim.attribute_storage_flash_memory_type,eMLC NAND Flash,20
+attribute_option_dc1100_tm300,ol_product_pim.attribute_storage_flash_memory_type,MLC NAND Flash,30
+attribute_option_dc1200,ol_product_pim.attribute_storage_flash_memory_type,SLC NAND Flash,40
+attribute_option_de1000,ol_product_pim.attribute_storage_options,"1 M.2 2260 (PCIe x4, SATA)",90
+attribute_option_de1001,ol_product_pim.attribute_storage_options,"1 M.2 2280 (PCIe Gen 4.0 x4, SATA)",120
+attribute_option_di1000,ol_product_pim.attribute_storage_options,"1 M.2 2280 (PCIe x2, SATA)",130
+attribute_option_di1100,ol_product_pim.attribute_storage_options,"1 M.2 2280 (PCIe x4, SATA)",140
+attribute_option_dio,ol_product_pim.attribute_storage_options,"1 M.2 2280 M-key (PCIe Gen 4.0 x4, SATA)",190
+attribute_option_ds1000,ol_product_pim.attribute_storage_options,"1 M.2 2280 M-Key (PCIe x4, SATA)",210
+attribute_option_ds1001,ol_product_pim.attribute_storage_options,"1 M.2 2280/60/3042 B-key (PCIe x2, USB 3.0, SATA)",220
+attribute_option_ds1002,ol_product_pim.attribute_storage_options,"1 M.2 3042/2260/2280 B-key (PCIe x2, USB 2.0, SATA)",230
+attribute_option_ds1100,ol_product_pim.attribute_storage_options,"2 M.2 2280 (PCIe x1, SATA)",310
+attribute_option_ds1101,ol_product_pim.attribute_storage_options,"Coming Soon - 1 M.2 2280 (PCIe Gen 4.0 x4, SATA)",660
+attribute_option_ds1102,ol_product_pim.attribute_storage_options,"1 2.5"" HDD/SSD",10
+attribute_option_ds1200,ol_product_pim.attribute_storage_options,"1 2.5"" HDD/SSD (Nuvo-6002)",20
+attribute_option_ds1201,ol_product_pim.attribute_storage_options,1 M.2 2242 (PCIe x4),30
+attribute_option_ds1202,ol_product_pim.attribute_storage_options,1 M.2 2242/60 M-key (PCIe x4) for NVMe SSD,40
+attribute_option_ds1300,ol_product_pim.attribute_storage_options,1 M.2 2242/60/80 B-key,50
+attribute_option_ds1301,ol_product_pim.attribute_storage_options,1 M.2 2242/60/80 M-key,60
+attribute_option_ds1302,ol_product_pim.attribute_storage_options,1 M.2 2242/60/80 M-key (SATA),70
+attribute_option_dx1000,ol_product_pim.attribute_storage_options,1 M.2 2242/80,80
+attribute_option_dx1100,ol_product_pim.attribute_storage_options,1 M.2 2260 M-key (PCIe x4) for NVMe SSD,100
+attribute_option_dx1100_grl200,ol_product_pim.attribute_storage_options,1 M.2 2280,110
+attribute_option_external_components,ol_product_pim.attribute_storage_options,1 M.2 2280 B-key (SATA),112
+attribute_option_fan,ol_product_pim.attribute_storage_options,1 M.2 2280 (PCIe Gen 4.0 x4),118
+attribute_option_foam,ol_product_pim.attribute_storage_options,1 M.2 2280 (PCIe x4),150
+attribute_option_fr201,ol_product_pim.attribute_storage_options,1 M.2 2280 (SATA),160
+attribute_option_fr201_ign800,ol_product_pim.attribute_storage_options,1 M.2 2280 M-key,170
+attribute_option_fr202,ol_product_pim.attribute_storage_options,1 M.2 2280 M-key (PCIe Gen 3.0 x4) for NVMe SSD,180
+attribute_option_fr202_ign802,ol_product_pim.attribute_storage_options,1 M.2 2280 M-key (PCIe x2) for NVMe SSD,200
+attribute_option_gasket,ol_product_pim.attribute_storage_options,1 M.2 M-key 2280 for SATA/NVMe PCIe Gen 4,205
+attribute_option_gm1000,ol_product_pim.attribute_storage_options,1 mSATA (mux with mPCIe),240
+attribute_option_gp3001,ol_product_pim.attribute_storage_options,1 mSATA (shared with full-size mPCIe slot),250
+attribute_option_gp3002,ol_product_pim.attribute_storage_options,1 mSATA (shared with mPCIe),260
+attribute_option_gpu,ol_product_pim.attribute_storage_options,1 mSATA (shared with SATA2),270
+attribute_option_halfheight_msata,ol_product_pim.attribute_storage_options,"1 SATA 2.5"" Drive",275
+attribute_option_hardware,ol_product_pim.attribute_storage_options,"1.8"" SSD",280
+attribute_option_hot_swap,ol_product_pim.attribute_storage_options,10 SATA 6 Gb/s,290
+attribute_option_hx310,ol_product_pim.attribute_storage_options,"2 3.5"" HDD",300
+attribute_option_hx330,ol_product_pim.attribute_storage_options,2 M.2 2280 (PCIe x4),320
+attribute_option_hx330_tm260,ol_product_pim.attribute_storage_options,2 MicroSDHC cards up to 32 GB (1 external 1 internal),330
+attribute_option_hx500,ol_product_pim.attribute_storage_options,2 mSATA (1 shared with mPCIe),340
+attribute_option_hx500_ign700,ol_product_pim.attribute_storage_options,2 mSATA (shared with mPCIe),350
+attribute_option_hx511,ol_product_pim.attribute_storage_options,"2 mSATA Socket ( SATA 3.0, shared by Mini-PCIe socket)",
+attribute_option_hx600,ol_product_pim.attribute_storage_options,2 SATA 6 Gb/s,360
+attribute_option_hx610,ol_product_pim.attribute_storage_options,2 SATA 6 Gb/s (SATA2 shared w/ mSATA),370
+attribute_option_igt20,ol_product_pim.attribute_storage_options,"2 SATA III 2.5"" Drives",380
+attribute_option_ignition,ol_product_pim.attribute_storage_options,"2 SATA III connectors for 2.5"" HDD/SSD (externally accessible hot swap optional)",390
+attribute_option_industrial_other,ol_product_pim.attribute_storage_options,"2 2.5"" SATA HDD/SSD Bay (SATA 3.0)",
+attribute_option_insert,ol_product_pim.attribute_storage_options,2 SO-DIMM (2 32GB max Dual-Channel) 64 GB total,400
+attribute_option_internal_brackets,ol_product_pim.attribute_storage_options,"2.5"" HDD",410
+attribute_option_internal_power_supplies,ol_product_pim.attribute_storage_options,"2.5"" HDD/SDD (Externally Accessible)",420
+attribute_option_k300,ol_product_pim.attribute_storage_options,"2.5"" HDD/SSD",430
+attribute_option_k300_ckt110,ol_product_pim.attribute_storage_options,"2.5"" Hot-swap HDD/SSD",440
+attribute_option_k300_igl300,ol_product_pim.attribute_storage_options,"2.5"" PC HDD",450
+attribute_option_k300_ign200,ol_product_pim.attribute_storage_options,"2.5"" SSD",460
+attribute_option_k410,ol_product_pim.attribute_storage_options,"3 2.5"" HDD/SSD",470
+attribute_option_k410_ign210,ol_product_pim.attribute_storage_options,"3 2.5"" HDD/SSD (Nuvo-6032)",480
+attribute_option_k430,ol_product_pim.attribute_storage_options,3 mSATA slots (Shared by mPCIe),490
+attribute_option_k700se,ol_product_pim.attribute_storage_options,"3.5"" HDD",500
+attribute_option_k700se2,ol_product_pim.attribute_storage_options,"3.5"" Hot-swap HDD",510
+attribute_option_k700se_grl400,ol_product_pim.attribute_storage_options,"4 2.5"" HDD/SSD",520
+attribute_option_k700se_ign400,ol_product_pim.attribute_storage_options,"4 2.5"" Hot Swappable SATA III HDD/SSD Bays (Max Height 15 mm)",530
+attribute_option_k700x2,ol_product_pim.attribute_storage_options,4 mSATA (shared with mPCIe),540
+attribute_option_k700x22,ol_product_pim.attribute_storage_options,4 SATA 6 Gb/s,550
+attribute_option_k801,ol_product_pim.attribute_storage_options,40-pin IDE Module,560
+attribute_option_k802,ol_product_pim.attribute_storage_options,44-pin IDE Module,570
+attribute_option_k803,ol_product_pim.attribute_storage_options,4GB eMMC flash,580
+attribute_option_k804,ol_product_pim.attribute_storage_options,6 SATA 6 Gb/s,590
+attribute_option_keyboard,ol_product_pim.attribute_storage_options,"8 Hot-Swap 2.5"" SATA3 SSD",600
+attribute_option_kit,ol_product_pim.attribute_storage_options,8 SATA 6 Gb/s,610
+attribute_option_label,ol_product_pim.attribute_storage_options,8MB NOR Flash,620
+attribute_option_lcd,ol_product_pim.attribute_storage_options,CFast,630
+attribute_option_m2_2242,ol_product_pim.attribute_storage_options,CFast (Externally Accessible),640
+attribute_option_m2_2260,ol_product_pim.attribute_storage_options,CFast/SIM (Externally Accessible),650
+attribute_option_m2_2280,ol_product_pim.attribute_storage_options,CompactFlash,670
+attribute_option_mc50010,ol_product_pim.attribute_storage_options,CompactFlash (Externally Accessible),680
+attribute_option_mc50011,ol_product_pim.attribute_storage_options,"Dual 2.5"" Hot-swap HDD/SDD",690
+attribute_option_mc50030,ol_product_pim.attribute_storage_options,eSATA,700
+attribute_option_mc50050,ol_product_pim.attribute_storage_options,M.2 2242/60/80,710
+attribute_option_mc50051,ol_product_pim.attribute_storage_options,M.2 2260 SSD,720
+attribute_option_mc50052,ol_product_pim.attribute_storage_options,M.2 2260/80,730
+attribute_option_mc500_other,ol_product_pim.attribute_storage_options,MicroSD,740
+attribute_option_mc51010,ol_product_pim.attribute_storage_options,MicroSD Card,750
+attribute_option_mc51040,ol_product_pim.attribute_storage_options,mSATA,760
+attribute_option_mc51040_tm800,ol_product_pim.attribute_storage_options,mSATA (full-size),770
+attribute_option_mc51050,ol_product_pim.attribute_storage_options,mSATA (half-size),780
+attribute_option_mc51050_grl100,ol_product_pim.attribute_storage_options,mSATA (shared with mPCIe slot),790
+attribute_option_mc60010,ol_product_pim.attribute_storage_options,Onboard eMMC up to 32GB,795
+attribute_option_mc60011,ol_product_pim.attribute_storage_options,SATA 3 Gb/s,800
+attribute_option_mc60050,ol_product_pim.attribute_storage_options,SATA 6 Gb/s,810
+attribute_option_mc60051,ol_product_pim.attribute_storage_options,SATA Flash Module,820
+attribute_option_mc60052,ol_product_pim.attribute_storage_options,SD Card,830
+attribute_option_mc600_other,ol_product_pim.attribute_storage_options,SIM Card,840
+attribute_option_mc61010,ol_product_pim.attribute_storage_options,SIM Card (Externally Accessible),850
+attribute_option_mc61050,ol_product_pim.attribute_storage_options,SlimSATA,860
+attribute_option_mc61050_tm610,ol_product_pim.attribute_storage_options,Up to 4 2.5” NVMe,870
+attribute_option_mc800_other,ol_product_pim.attribute_storage_options,Up to 4 2.5” SATA,880
+attribute_option_mc85040,ol_product_pim.attribute_storage_sata_interface,1.5,10
+attribute_option_mc85050,ol_product_pim.attribute_storage_sata_interface,3.0,20
+attribute_option_mc85051,ol_product_pim.attribute_storage_sata_interface,6.0,30
+attribute_option_mc85052,ol_product_pim.attribute_storage_sata_interface,Pin7 Power,40
+attribute_option_mc85053,ol_product_pim.attribute_storage_type,"2.5"" HDD",10
+attribute_option_mc85054,ol_product_pim.attribute_storage_type,"2.5"" SSD",20
+attribute_option_mc85070,ol_product_pim.attribute_storage_type,eMMC,30
+attribute_option_mk100b10,ol_product_pim.attribute_storage_type,Hot Swap,40
+attribute_option_mk100b40,ol_product_pim.attribute_storage_type,NVMe,50
+attribute_option_mk100b50,ol_product_pim.attribute_storage_type,mSATA,60
+attribute_option_mk100b51,ol_product_pim.attribute_storage_type,M.2 SATA,70
+attribute_option_mk100b52,ol_product_pim.attribute_suitable_environments,Vibration & Shock,80
+attribute_option_mk100b53,ol_product_pim.attribute_suitable_environments,Automotive,10
+attribute_option_mk100b54,ol_product_pim.attribute_suitable_environments,Cold,20
+attribute_option_mk100b70,ol_product_pim.attribute_suitable_environments,Dust,30
+attribute_option_mk100_other,ol_product_pim.attribute_suitable_environments,Extreme Environment,40
+attribute_option_mk101b30,ol_product_pim.attribute_suitable_environments,General Office,50
+attribute_option_mk150b10,ol_product_pim.attribute_suitable_environments,Heat,60
+attribute_option_mk150b30,ol_product_pim.attribute_suitable_environments,Industrial,70
+attribute_option_mk150b40,ol_product_pim.attribute_suitable_environments,Splashproof,90
+attribute_option_mk150b50,ol_product_pim.attribute_suitable_environments,Waterproof,100
+attribute_option_mk150b51,ol_product_pim.attribute_suitable_environments,Wide Power,110
+attribute_option_mk150b52,ol_product_pim.attribute_system_categories,Computers with 4G from AT&T,170
+attribute_option_mk150b53,ol_product_pim.attribute_system_categories,"Embedded Computers with Intel Core i3, i5 and i7 Processors",280
+attribute_option_mk150b54,ol_product_pim.attribute_system_categories,Fanless Skylake Computers & Motherboards,340
+attribute_option_mk150b70,ol_product_pim.attribute_system_categories,Helix 500 & 600 Series,370
+attribute_option_mk150_other,ol_product_pim.attribute_system_categories,1U Rackmount PC,10
+attribute_option_mk20060,ol_product_pim.attribute_system_categories,2U Rackmount PC,20
+attribute_option_mk20070,ol_product_pim.attribute_system_categories,Aetina AI Computers,25
+attribute_option_mk200_other,ol_product_pim.attribute_system_categories,AMD Computers,30
+attribute_option_mk40060,ol_product_pim.attribute_system_categories,AMD Ryzen Computers,40
+attribute_option_mk40070,ol_product_pim.attribute_system_categories,AMD Servers,50
+attribute_option_mk400_other,ol_product_pim.attribute_system_categories,ARM Computers,60
+attribute_option_ml100g10,ol_product_pim.attribute_system_categories,ASRock,70
+attribute_option_ml100g10_tm100,ol_product_pim.attribute_system_categories,AWS Greengrass Compatible IoT Edge Gateways,80
+attribute_option_ml100g30,ol_product_pim.attribute_system_categories,Backplates,85
+attribute_option_ml100g31,ol_product_pim.attribute_system_categories,CAN bus,90
+attribute_option_ml100g40,ol_product_pim.attribute_system_categories,CEC,110
+attribute_option_ml100g40_igl160,ol_product_pim.attribute_system_categories,Cincoze Rugged Computers,120
+attribute_option_ml100g40_ign510,ol_product_pim.attribute_system_categories,CL100 Series,130
+attribute_option_ml100g41,ol_product_pim.attribute_system_categories,CL200 Series,140
+attribute_option_ml100g50,ol_product_pim.attribute_system_categories,Computer Finder Page,150
+attribute_option_ml100g51,ol_product_pim.attribute_system_categories,Computers with 4G,160
+attribute_option_ml100g51_ign500,ol_product_pim.attribute_system_categories,Computers with 4G from Verizon,180
+attribute_option_ml100g52,ol_product_pim.attribute_system_categories,Computers with Intel Atom,200
+attribute_option_ml100g53,ol_product_pim.attribute_system_categories,Computers With Intel PTT,210
+attribute_option_ml100g53_tm120,ol_product_pim.attribute_system_categories,Computers with PCIe,220
+attribute_option_ml200_other,ol_product_pim.attribute_system_categories,CPU Coolers & Fans,222
+attribute_option_ml210g10,ol_product_pim.attribute_system_categories,Data Storage & I/O Cables,226
+attribute_option_ml210g10_tm200,ol_product_pim.attribute_system_categories,DIN Rail Computer,230
+attribute_option_ml210g11,ol_product_pim.attribute_system_categories,DIN Rail Power Supplies,234
+attribute_option_ml210g12,ol_product_pim.attribute_system_categories,Dual LAN Mini PCs,240
+attribute_option_ml210g50,ol_product_pim.attribute_system_categories,Edge Server Systems,250
+attribute_option_ml210g51,ol_product_pim.attribute_system_categories,Edge Servers,260
+attribute_option_ml250_other,ol_product_pim.attribute_system_categories,Embedded Computers with GPU,270
+attribute_option_ml300_other,ol_product_pim.attribute_system_categories,Embedded Mini-ITX Computers,290
+attribute_option_ml340g10,ol_product_pim.attribute_system_categories,Embedded Servers with Intel Xeon,300
+attribute_option_ml340g50,ol_product_pim.attribute_system_categories,Ethernet Switches,302
+attribute_option_ml340g51,ol_product_pim.attribute_system_categories,Extended Life,308
+attribute_option_ml350g10,ol_product_pim.attribute_system_categories,Fanless,310
+attribute_option_ml350g10_grl600,ol_product_pim.attribute_system_categories,Fanless Industrial Computers,320
+attribute_option_ml350g10_igl100,ol_product_pim.attribute_system_categories,Fanless Rackmount Computers,330
+attribute_option_ml350g10_ign100,ol_product_pim.attribute_system_categories,Fanned Industrial Computers,350
+attribute_option_ml350g10_tm250,ol_product_pim.attribute_system_categories,Fanned Rackmount Computers,360
+attribute_option_ml400b50,ol_product_pim.attribute_system_categories,HotSwap,380
+attribute_option_ml400g10,ol_product_pim.attribute_system_categories,Industrial Computers,390
+attribute_option_ml400g12,ol_product_pim.attribute_system_categories,Industrial Displays,392
+attribute_option_ml400g14,ol_product_pim.attribute_system_categories,Industrial Mini PCs,400
+attribute_option_ml400g30,ol_product_pim.attribute_system_categories,Industrial PCs with GPU,410
+attribute_option_ml400g50,ol_product_pim.attribute_system_categories,Industrial Touchscreens,412
+attribute_option_ml400g51,ol_product_pim.attribute_system_categories,Intel Celeron Computers,420
+attribute_option_ml400g52,ol_product_pim.attribute_system_categories,Intel Core i5 Computers,430
+attribute_option_ml400_other,ol_product_pim.attribute_system_categories,Intel Core i7 Computers,440
+attribute_option_ml450g10,ol_product_pim.attribute_system_categories,Intel Embedded Systems,450
+attribute_option_ml450g11,ol_product_pim.attribute_system_categories,Intel i9 Processor Computers,460
+attribute_option_ml450g12,ol_product_pim.attribute_system_categories,Intel Processor,470
+attribute_option_ml450g50,ol_product_pim.attribute_system_categories,MC500 Series,480
+attribute_option_ml450g51,ol_product_pim.attribute_system_categories,MC600 Series,490
+attribute_option_ml450g52,ol_product_pim.attribute_system_categories,MC850 Series,500
+attribute_option_ml450g53,ol_product_pim.attribute_system_categories,Microsoft Azure Certified Embedded Computers,510
+attribute_option_ml500g30,ol_product_pim.attribute_system_categories,Mini ITX,512
+attribute_option_ml500g50,ol_product_pim.attribute_system_categories,Mini-ITX Cases,514
+attribute_option_ml500g51,ol_product_pim.attribute_system_categories,ML100 Series,520
+attribute_option_ml500_other,ol_product_pim.attribute_system_categories,ML200 Series,530
+attribute_option_ml510g50,ol_product_pim.attribute_system_categories,ML300 Series,540
+attribute_option_ml510g50_grl500,ol_product_pim.attribute_system_categories,ML400 Series,550
+attribute_option_ml600g10,ol_product_pim.attribute_system_categories,ML500 Series,560
+attribute_option_ml600g30,ol_product_pim.attribute_system_categories,ML600 Series,570
+attribute_option_ml600g50,ol_product_pim.attribute_system_categories,Mounting Hardware,574
+attribute_option_ml600g51,ol_product_pim.attribute_system_categories,Movidius,580
+attribute_option_ml600g52,ol_product_pim.attribute_system_categories,mSATA SSDs,582
+attribute_option_ml600g53,ol_product_pim.attribute_system_categories,NC100 Series,590
+attribute_option_mounting_brackets,ol_product_pim.attribute_system_categories,Neousys Rugged Computers,600
+attribute_option_msata,ol_product_pim.attribute_system_categories,Networking,602
+attribute_option_nc10050,ol_product_pim.attribute_system_categories,NUC,610
+attribute_option_nc200_other,ol_product_pim.attribute_system_categories,OEM Hardware Services,612
+attribute_option_ng100w10,ol_product_pim.attribute_system_categories,Panel PCs,620
+attribute_option_nru120s,ol_product_pim.attribute_system_categories,Pheonix Connector,622
+attribute_option_nuvis3304af,ol_product_pim.attribute_system_categories,Processors,624
+attribute_option_nuvis3616vr,ol_product_pim.attribute_system_categories,Power Cables,626
+attribute_option_nuvis5306rt,ol_product_pim.attribute_system_categories,Power over Ethernet Computers,630
+attribute_option_nuvo1000,ol_product_pim.attribute_system_categories,Rackmount Computer Cases,632
+attribute_option_nuvo1300af,ol_product_pim.attribute_system_categories,Rackmount Computers,640
+attribute_option_nuvo2510vtc,ol_product_pim.attribute_system_categories,Rackmount Servers,645
+attribute_option_nuvo3000,ol_product_pim.attribute_system_categories,Ready-to-Ship Computers,650
+attribute_option_nuvo3000lp,ol_product_pim.attribute_system_categories,Riser Cards,652
+attribute_option_nuvo3000tb,ol_product_pim.attribute_system_categories,Rugged Computers,660
+attribute_option_nuvo3100vtc,ol_product_pim.attribute_system_categories,Rugged Display Computers,670
+attribute_option_nuvo4000,ol_product_pim.attribute_system_categories,Rugged PCs with GPU,680
+attribute_option_nuvo5000,ol_product_pim.attribute_system_categories,Silent Computers,690
+attribute_option_nuvo5000lp,ol_product_pim.attribute_system_categories,Small Form Factor Motherboard,692
+attribute_option_nuvo5026e,ol_product_pim.attribute_system_categories,Small PC Cases,694
+attribute_option_nuvo5095gc,ol_product_pim.attribute_system_categories,Solid State Computers,700
+attribute_option_nuvo5100vtc,ol_product_pim.attribute_system_categories,Solid State Drives,704
+attribute_option_nuvo5501,ol_product_pim.attribute_system_categories,Special Offers,710
+attribute_option_nuvo6000,ol_product_pim.attribute_system_categories,Ubuntu Linux Computers,720
+attribute_option_nuvo6108gc,ol_product_pim.attribute_system_categories,Wide Temperature Computers,730
+attribute_option_nuvo7000e,ol_product_pim.attribute_system_categories,Wired Networking,732
+attribute_option_nuvo7000de,ol_product_pim.attribute_system_categories,Wireless Network Cards,736
+attribute_option_nuvo7000lp,ol_product_pim.attribute_system_monitoring,AMT Support,10
+attribute_option_nuvo7100vtc,ol_product_pim.attribute_system_monitoring,AMT 11.0 Support,20
+attribute_option_nuvo7160gc,ol_product_pim.attribute_system_monitoring,AMT 12.0 Support,30
+attribute_option_nuvo7200vtc,ol_product_pim.attribute_system_monitoring,AMT Support (with i5 Processor),40
+attribute_option_nuvo7501,ol_product_pim.attribute_system_monitoring,CPU Voltage Monitoring,50
+attribute_option_nuvo8108gc,ol_product_pim.attribute_system_monitoring,Infinion SLB9670VQ2.0,60
+attribute_option_nuvo8208gc,ol_product_pim.attribute_system_monitoring,IPMI v2.0,70
+attribute_option_motherboard_kits,ol_product_pim.attribute_system_monitoring,NMI,80
+attribute_option_other,ol_product_pim.attribute_system_monitoring,On-Board TPM 2.0 (embedded),85
+attribute_option_overlay,ol_product_pim.attribute_system_monitoring,PTT in BIOS,90
+attribute_option_p1001,ol_product_pim.attribute_system_monitoring,RedFish,95
+attribute_option_p10010as,ol_product_pim.attribute_system_monitoring,Smart Fan Control,100
+attribute_option_p1001_tm400,ol_product_pim.attribute_system_monitoring,System Power Management,110
+attribute_option_p1101,ol_product_pim.attribute_system_monitoring,TPM,120
+attribute_option_p1101_igl500,ol_product_pim.attribute_system_monitoring,TPM (Optional),130
+attribute_option_p1101_ign310,ol_product_pim.attribute_system_monitoring,TPM 2.0 Support,140
+attribute_option_p2002,ol_product_pim.attribute_system_monitoring,Wake on LAN,150
+attribute_option_p2002_ign300,ol_product_pim.attribute_system_monitoring,Wake on PCI,160
+attribute_option_p2102,ol_product_pim.attribute_system_monitoring,Wake on USB,170
+attribute_option_p2102_ign320,ol_product_pim.attribute_system_monitoring,Watchdog Timer,180
+attribute_option_pad,ol_product_pim.attribute_system_processor_core_options,1,10
+attribute_option_pigtail,ol_product_pim.attribute_system_processor_core_options,2,20
+attribute_option_poe,ol_product_pim.attribute_system_processor_core_options,4,30
+attribute_option_poc100,ol_product_pim.attribute_system_processor_core_options,6,40
+attribute_option_poc120,ol_product_pim.attribute_system_processor_core_options,8,50
+attribute_option_poc200,ol_product_pim.attribute_system_processor_core_options,10,60
+attribute_option_poc300,ol_product_pim.attribute_system_processor_core_options,12,70
+attribute_option_poc351vtc,ol_product_pim.attribute_system_processor_core_options,16,80
+attribute_option_poc500,ol_product_pim.attribute_system_processor_core_options,18,90
+attribute_option_power,ol_product_pim.attribute_system_processor_core_options,20,100
+attribute_option_printed_matter,ol_product_pim.attribute_system_processor_core_options,22,110
+attribute_option_riser,ol_product_pim.attribute_system_processor_core_options,24,115
+attribute_option_rugged_other,ol_product_pim.attribute_system_processor_core_options,32,120
+attribute_option_screw,ol_product_pim.attribute_system_processor_core_options,64,130
+attribute_option_serial,ol_product_pim.attribute_testing_status,Canceled,10
+attribute_option_svpremservpack,ol_product_pim.attribute_testing_status,Pending,20
+attribute_option_svpremservpackannual,ol_product_pim.attribute_testing_status,Rejected,30
+attribute_option_sleeve,ol_product_pim.attribute_testing_status,Approved,40
+attribute_option_terminal_block,ol_product_pim.attribute_tier,Portfolio,10
+attribute_option_thermal,ol_product_pim.attribute_tier,Tier 1,20
+attribute_option_tpm,ol_product_pim.attribute_tier,Tier 2,30
+attribute_option_mz1as,ol_product_pim.attribute_us_product_tax_code,[SE050000] Engineering Services,
+attribute_option_jetagx64f,ol_product_pim.attribute_us_product_tax_code,"[PC070000] Hardware, Labor, and Services used in producing a system",
+attribute_option_jetagx32f,ol_product_pim.attribute_us_product_tax_code,[ON020000] Non-Taxable (CAUTION),
+attribute_option_jetnx16f,ol_product_pim.attribute_us_product_tax_code,[FR020200] Shipping & Freight,
+attribute_option_jetnx8f,ol_product_pim.attribute_us_product_tax_code,[DC011000] Software,
+attribute_option_jetnan8f,ol_product_pim.attribute_us_product_tax_code,[S0000000] Standalone Services not used in producing a system,
+attribute_option_jetnan4f,ol_product_pim.attribute_us_product_tax_code,"[SR060000] Support Service, Labor, and Parts",
+attribute_option_jetagx64,ol_product_pim.attribute_us_product_tax_code,[NOTAVATAX2] Taxable Goods,
+attribute_option_jetagx32,ol_product_pim.attribute_us_product_tax_code,[NOTAVATAX7] Taxable Goods EU,
+attribute_option_jetnx16,ol_product_pim.attribute_us_product_tax_code,[SW019478] Warranty,
+attribute_option_jetnx8,ol_product_pim.attribute_video_encoding_standards,PAL,20
+attribute_option_jetnan8,ol_product_pim.attribute_video_encoding_standards,NTSC,10
+attribute_option_jetnan4,ol_product_pim.attribute_video_encoding_standards,SECAM,30
+attribute_option_mc51055,ol_product_pim.attribute_video_input,DisplayPort,10
+attribute_option_mc61055,ol_product_pim.attribute_video_input,DVI-D,20
+attribute_option_back_plates,ol_product_pim.attribute_video_input,DVI-I,30
+attribute_option_onlogic_power_supplies,ol_product_pim.attribute_video_input,HDMI,40
+attribute_option_mid_plates,ol_product_pim.attribute_video_input,RCA,50
+attribute_option_front_plates,ol_product_pim.attribute_video_input,VGA,60
+attribute_option_5_year,ol_product_pim.attribute_video_interface,DisplayPort,10
+attribute_option_3_year_to_5_year_upgrade,ol_product_pim.attribute_video_interface,DVI-D,20
+attribute_option_3_year,ol_product_pim.attribute_video_interface,DVI-I,30
+attribute_option_2_year,ol_product_pim.attribute_video_interface,HDMI,40
+attribute_option_not_public,ol_product_pim.attribute_video_interface,Mini-DisplayPort,50
+attribute_option_b2b,ol_product_pim.attribute_video_interface,VGA,60
+attribute_option_b2c,ol_product_pim.attribute_output_voltage_type,AC,
+attribute_option_b2b_b2c,ol_product_pim.attribute_output_voltage_type,DC,
