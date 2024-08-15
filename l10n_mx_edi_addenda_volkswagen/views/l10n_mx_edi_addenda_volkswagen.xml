@@ -21,7 +21,7 @@
                 t-att-nombre="record.vw_applicant_name"
                 t-att-correo="record.vw_applicant_email"
             />
-            <PSV:Archivo t-att-datos="record.vw_file" tipo="PDF" />
+            <PSV:Archivo datos="[ARCHIVO]" tipo="PDF" />
             <PSV:Partes>
                 <t t-set="i" t-value="1" />
                 <t t-foreach="record.invoice_line_ids" t-as="move_line">

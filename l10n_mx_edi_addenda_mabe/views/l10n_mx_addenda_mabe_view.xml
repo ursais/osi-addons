@@ -14,7 +14,7 @@
         >
             <mabe:Moneda
                 t-att-tipoMoneda="record.currency_id.name"
-                t-att-tipoCambio="record.currency_id.rate"
+                t-att-tipoCambio="0.00"
                 t-att-importeConLetra="record.mabe_amount_with_letter or 'NA'"
             />
             <mabe:Proveedor t-att-codigo="record.partner_id.ref or 'NA'" />
