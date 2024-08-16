@@ -12,7 +12,8 @@ class ProductAttributeValue(models.Model):
         # logic is preserved.
         super()._compute_display_name()
 
-        # Check if the context includes the "show_price_extra" key and its value is True.
+        # Check if the context includes the "show_price_extra" key and its value
+        # is True.
         if self._context.get("show_price_extra"):
             for rec in self:
                 # Determine the quantity available for the associated product.
@@ -34,8 +35,10 @@ class ProductAttributeValue(models.Model):
                 )
 
                 # Create a new display name with the format:
-                # "Original Display Name (A:<qty_available>/OH:<outgoing_qty>) (<product_state_string>)"
+                # "Original Display Name (A:<qty_available>/OH:<outgoing_qty>)
+                # (<product_state_string>)"
                 new_name = f"{rec.display_name} (A:{qty_available}/OH:{outgoing_qty}) ({product_state_string})"
 
-                # Update the record's display name only if a product is associated with it.
+                # Update the record's display name only if a product is associated
+                # with it.
                 rec.display_name = rec.product_id and new_name or rec.display_name
