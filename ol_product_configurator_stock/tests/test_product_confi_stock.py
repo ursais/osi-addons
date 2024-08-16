@@ -17,7 +17,8 @@ class TestProductConfiStock(common.TransactionCase):
             }
         )
 
-        # Create a product attribute named "SSD" with two values: "SSD-512GB" and "SSD-1TB".
+        # Create a product attribute named "SSD" with two values: "SSD-512GB" and
+        # "SSD-1TB".
         cls.attr_ssd = cls.env["product.attribute"].create(
             {
                 "name": "SSD",
@@ -36,7 +37,8 @@ class TestProductConfiStock(common.TransactionCase):
             .create({"name": "SSD-256GB", "attribute_id": cls.attr_ssd.id})
         )
 
-        # Create a product attribute named "Processor" with three values: "i3", "i5", and "i7".
+        # Create a product attribute named "Processor" with three
+        # values: "i3", "i5", and "i7".
         cls.attr_processor = cls.env["product.attribute"].create(
             {
                 "name": "Processor",
@@ -47,7 +49,8 @@ class TestProductConfiStock(common.TransactionCase):
             }
         )
 
-        # Create an attribute value "i7" under the "Processor" attribute and link it to the "i7 Processor" product variant.
+        # Create an attribute value "i7" under the "Processor" attribute and link
+        # it to the "i7 Processor" product variant.
         # The context is set to show the price extra in the display name.
         cls.attr_i7_value = (
             cls.env["product.attribute.value"]
