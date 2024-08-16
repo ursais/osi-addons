@@ -108,7 +108,6 @@ class SaleOrder(models.Model):
             self.message_post(
                 message_type="notification",
                 body=f"Backorder Notification failed: {str(e)}",
-                # subtype="ls_sale_workflow.workflow_message_subtype",
             )
 
         return super(SaleOrder, self).action_confirm()
