@@ -11,6 +11,7 @@
     # any module necessary for this one to work correctly
     "depends": [
         "ol_base",
+        "ol_sale",
         "sale_blanket_order",
     ],
     # always loaded
