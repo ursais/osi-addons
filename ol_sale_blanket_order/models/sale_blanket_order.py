@@ -57,6 +57,7 @@ class SaleBlanketOrder(models.Model):
             "payment_term_id": payment_term_id,
             "order_line": order_lines_by_customer[customer],
             "analytic_account_id": self.analytic_account_id.id,
+            "original_request_date": fields.Date.today(),
         }
 
     @api.model
