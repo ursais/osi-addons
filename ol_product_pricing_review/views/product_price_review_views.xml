@@ -16,7 +16,7 @@
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="pa" placeholder="Name.." />
+                            <field name="name" placeholder="Name.." />
                         </h1>
                     </div>
                     <group>
@@ -131,7 +131,7 @@
                 <field name="origin_vendor_id" optional="show" />
                 <field name="origin_purchase_id" optional="show" />
                 <field name="currency_id" optional="hide" />
-                <field name="pa" optional="show" />
+                <field name="name" optional="show" />
             </tree>
         </field>
     </record>
