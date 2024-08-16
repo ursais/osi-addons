@@ -24,6 +24,8 @@ class SaleBlanketOrder(models.Model):
     # METHODS #########
 
     def _prepare_so_line_vals(self, line):
+        """Prepares the values for a sale order line based on the
+        provided blanket order line."""
         return {
             "product_id": line.product_id.id,
             "name": line.product_id.name,
@@ -45,6 +47,7 @@ class SaleBlanketOrder(models.Model):
         payment_term_id,
         order_lines_by_customer,
     ):
+        # Prepares the values for creating a sale order based on the provided details.
         return {
             "partner_id": customer,
             "origin": self.name,
@@ -58,23 +61,36 @@ class SaleBlanketOrder(models.Model):
 
     @api.model
     def create_sale_order_cron(self):
+        # Scheduled method to create sale orders automatically based on blanket orders.
+        # Get the current date
         today = fields.Date.today()
+        # Search for open blanket orders with auto_release enabled
         blanket_orders = self.search(
             [("state", "=", "open"), ("auto_release", "=", True)]
         )
+
         for order in blanket_orders:
+            # Dictionary to store order lines by customer
             order_lines_by_customer = defaultdict(list)
+            # Initialize variables to track order attributes
             currency_id = pricelist_id = user_id = payment_term_id = 0
+
             for line in order.line_ids:
+                # Check if the scheduled date plus customer lead time is due and
+                # there is a remaining quantity to order
                 if (
                     line.date_schedule
                     and (line.date_schedule + timedelta(days=line.customer_lead or 0.0))
                     <= today
                     and line.remaining_uom_qty > 0
                 ):
+                    # Prepare values for the sale order line
                     vals = self._prepare_so_line_vals(line)
+                    # Group lines by customer
                     order_lines_by_customer[line.partner_id.id].append((0, 0, vals))
 
+                    # Track and validate the consistency of currency, pricelist, user,
+                    # and payment terms across lines
                     if currency_id == 0:
                         currency_id = line.order_id.currency_id.id
                     elif currency_id != line.order_id.currency_id.id:
@@ -95,11 +111,13 @@ class SaleBlanketOrder(models.Model):
                     elif payment_term_id != line.payment_term_id.id:
                         payment_term_id = False
 
+                    # If no order lines or inconsistent currency, skip to the next order
                     if not order_lines_by_customer or not currency_id:
                         continue
 
-                    res = []
+                    # Create sale orders for each customer with valid order lines
                     for customer in order_lines_by_customer:
+                        # Prepare values for the sale order
                         order_vals = order._prepare_so_vals(
                             customer,
                             user_id,
@@ -108,22 +126,16 @@ class SaleBlanketOrder(models.Model):
                             payment_term_id,
                             order_lines_by_customer,
                         )
+                        # Create the sale order
                         sale_order = self.env["sale.order"].create(order_vals)
+                        # Log the creation of the sale order
                         _logger.info(
                             _(
                                 f"Created sale order: {sale_order.id}, based on blanket order: {order.id}"
                             )
                         )
-                        res.append(sale_order.id)
+
+                        # Confirm the sale order
                         sale_order.action_confirm()
-                    return {
-                        "domain": [("id", "in", res)],
-                        "name": _("Sales Orders"),
-                        "view_type": "form",
-                        "view_mode": "tree,form",
-                        "res_model": "sale.order",
-                        "context": {"from_sale_order": True},
-                        "type": "ir.actions.act_window",
-                    }
 
     # END #########
