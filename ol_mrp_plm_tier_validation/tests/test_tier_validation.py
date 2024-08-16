@@ -90,6 +90,17 @@ class TestProductTierValidation(common.TransactionCase):
         self.assertFalse(eco.prev_stage_id)
         self.assertEqual(self.draft_stage.id, eco.stage_id.id)
         self.assertEqual(self.normal_stage.id, eco.next_stage_id.id)
+
+        # Move to the previous stage
         eco.action_move_to_prev_stage()
         self.assertEqual(self.draft_stage.id, eco.next_stage_id.id)
+
+        # Move to the previous stage
         eco.action_move_to_next_stage()
+
+        # Check that stage has moved to the normal stage
+        self.assertEqual(self.normal_stage.id, eco.stage_id.id)
+        # Check that the previous stage is now the draft stage
+        self.assertEqual(self.draft_stage.id, eco.prev_stage_id.id)
+        # Check that the next stage is the final stage
+        self.assertEqual(self.final_stage.id, eco.next_stage_id.id)
