@@ -1,19 +1,19 @@
 id,name,model_id
-attribute_set_product_management,Product Management,Product
-attribute_set_accessories,Accessories,Product
-attribute_set_assembly_validation,Assembly & Validation,Product
-attribute_set_cables,Cables,Product
-attribute_set_cases,Cases,Product
-attribute_set_computers,Computers,Product
-attribute_set_displays,Displays,Product
-attribute_set_expansion,Expansion,Product
-attribute_set_heatsinks,Heatsinks,Product
-attribute_set_memory,Memory,Product
-attribute_set_motherboards,Motherboards,Product
-attribute_set_panel_pcs,Panel PCs,Product
-attribute_set_power_supplies,Power Supplies,Product
-attribute_set_processors,Processors,Product
-attribute_set_services,Services,Product
-attribute_set_software,Software,Product
-attribute_set_storage,Storage,Product
-attribute_set_warranties,Warranties,Product
+attribute_set_product_management,Product Management,product.product
+attribute_set_accessories,Accessories,product.product
+attribute_set_assembly_validation,Assembly & Validation,product.product
+attribute_set_cables,Cables,product.product
+attribute_set_cases,Cases,product.product
+attribute_set_computers,Computers,product.product
+attribute_set_displays,Displays,product.product
+attribute_set_expansion,Expansion,product.product
+attribute_set_heatsinks,Heatsinks,product.product
+attribute_set_memory,Memory,product.product
+attribute_set_motherboards,Motherboards,product.product
+attribute_set_panel_pcs,Panel PCs,product.product
+attribute_set_power_supplies,Power Supplies,product.product
+attribute_set_processors,Processors,product.product
+attribute_set_services,Services,product.product
+attribute_set_software,Software,product.product
+attribute_set_storage,Storage,product.product
+attribute_set_warranties,Warranties,product.product

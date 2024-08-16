@@ -17,7 +17,6 @@ class TierReview(models.Model):
         for rec in self:
             if (
                 "status" in vals
-                and vals.get("status")
                 and rec.status in ("rejected", "approved")
                 and rec.model == "mrp.eco"
                 and rec.res_id
