@@ -13,9 +13,9 @@
                 t-attf-codigoImpuesto="1A"
             />
             <PSV:Proveedor
-                codigo="6001017954"
-                nombre="AMS FACTORY AUTOMATION DE MEXICO SA"
-                correoContacto="infomx@ams-fa.com"
+                t-att-codigo="record.partner_id.ref"
+                t-att-nombre="record.company_id.name"
+                t-att-correoContacto="record.company_id.email"
             />
             <PSV:Solicitante
                 t-att-nombre="record.vw_applicant_name"
