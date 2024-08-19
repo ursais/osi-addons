@@ -10,34 +10,29 @@
         <field name="sequence">2</field>
     </record>
 
-    <record id="new_component" model="mrp.eco.type">
-        <field name="name">New Component</field>
-        <field name="sequence">3</field>
-    </record>
-
     <record id="operations_new_consumable" model="mrp.eco.type">
         <field name="name">Operations - New SKU</field>
-        <field name="sequence">4</field>
+        <field name="sequence">3</field>
     </record>
 
     <record id="engineering_change_order" model="mrp.eco.type">
         <field name="name">Engineering Change Orders (ECOs)</field>
-        <field name="sequence">5</field>
+        <field name="sequence">4</field>
     </record>
 
     <record id="product_change_notifications" model="mrp.eco.type">
         <field name="name">Product Change Notifications (PCNs)</field>
-        <field name="sequence">6</field>
+        <field name="sequence">5</field>
     </record>
 
     <record id="end_of_sale" model="mrp.eco.type">
         <field name="name">End of Sale (Systems)</field>
-        <field name="sequence">7</field>
+        <field name="sequence">6</field>
     </record>
 
     <record id="end_of_life" model="mrp.eco.type">
         <field name="name">End of Life (Components)</field>
-        <field name="sequence">8</field>
+        <field name="sequence">7</field>
     </record>
 
 </odoo>

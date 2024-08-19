@@ -20,14 +20,14 @@
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="ol_base.role_project_management_res_groups" />
         <field name="definition_type">domain</field>
-        <field name="definition_domain" eval="[('stage_id', '=', ref('ol_mrp_plm.onl_new_stage')), ('type_id', 'in', [ref('ol_mrp_plm.new_system'), ref('ol_mrp_plm.new_component'), ref('ol_mrp_plm.product_change_notifications')])]" />
+        <field name="definition_domain" eval="[('stage_id', '=', ref('ol_mrp_plm.onl_new_stage')), ('type_id', 'in', [ref('ol_mrp_plm.new_system'), ref('ol_mrp_plm.product_change_notifications')])]" />
         <field name="company_id" eval="False" />
     </record>
 
     <!-- New Stage: Operations Group -->
     <record id="tier_def_plm_new_stg3" model="tier.definition">
         <field name="name">PLM: New Stage (Operations)</field>
-        <field name="sequence">1</field>
+        <field name="sequence">3</field>
         <field name="model_id" ref="mrp_plm.model_mrp_eco"/>
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="ol_base.role_operations_res_groups" />
@@ -39,7 +39,7 @@
     <!-- New Stage: Sales Group -->
     <record id="tier_def_plm_new_stg4" model="tier.definition">
         <field name="name">PLM: New Stage (Sales)</field>
-        <field name="sequence">1</field>
+        <field name="sequence">4</field>
         <field name="model_id" ref="mrp_plm.model_mrp_eco"/>
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="ol_base.role_sales_res_groups" />
@@ -51,7 +51,7 @@
     <!-- New Stage: Product Management Group -->
     <record id="tier_def_plm_new_stg5" model="tier.definition">
         <field name="name">PLM: New Stage (Product Management)</field>
-        <field name="sequence">2</field>
+        <field name="sequence">5</field>
         <field name="model_id" ref="mrp_plm.model_mrp_eco"/>
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="ol_base.role_product_management_res_groups" />
@@ -63,7 +63,7 @@
     <!-- Flow 1 -->
     <record id="tier_def_plm_eng_asses_stg" model="tier.definition">
         <field name="name">PLM: Engineering Assessment (Engineering)</field>
-        <field name="sequence">1</field>
+        <field name="sequence">6</field>
         <field name="model_id" ref="mrp_plm.model_mrp_eco"/>
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="ol_base.role_engineering_res_groups" />
@@ -74,7 +74,7 @@
 
     <record id="tier_def_plm_tech_assess_stg" model="tier.definition">
         <field name="name">PLM: Technical Assessment (Engineering)</field>
-        <field name="sequence">2</field>
+        <field name="sequence">7</field>
         <field name="model_id" ref="mrp_plm.model_mrp_eco"/>
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="ol_base.role_engineering_res_groups" />
@@ -85,7 +85,7 @@
 
     <record id="tier_def_plm_support_work_stg" model="tier.definition">
         <field name="name">PLM: Support &amp; Work Instructions (Operations)</field>
-        <field name="sequence">3</field>
+        <field name="sequence">8</field>
         <field name="model_id" ref="mrp_plm.model_mrp_eco"/>
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="ol_base.role_operations_res_groups" />
@@ -97,12 +97,12 @@
     <!-- Flow 2 -->
     <record id="tier_def_plm_evt_dvt_stg" model="tier.definition">
         <field name="name">PLM: EVT, DVT Stages (Project Management)</field>
-        <field name="sequence">1</field>
+        <field name="sequence">9</field>
         <field name="model_id" ref="mrp_plm.model_mrp_eco"/>
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="ol_base.role_project_management_res_groups" />
         <field name="definition_type">domain</field>
-        <field name="definition_domain" eval="[('stage_id', 'in', [ref('ol_mrp_plm.onl_new_stage'), ref('ol_mrp_plm.product_state_evt'), ref('ol_mrp_plm.product_state_dvt')]), ('type_id', 'in', [ref('ol_mrp_plm.new_system'), ref('ol_mrp_plm.new_component')])]" />
+        <field name="definition_domain" eval="[('stage_id', 'in', [ref('ol_mrp_plm.onl_new_stage'), ref('ol_mrp_plm.product_state_evt'), ref('ol_mrp_plm.product_state_dvt')]), ('type_id', 'in', [ref('ol_mrp_plm.new_system')])]" />
         <field name="company_id" eval="False" />
     </record>
 
@@ -111,7 +111,7 @@
     <!-- Flow 4 -->
     <record id="tier_def_plm_pre_eco" model="tier.definition">
         <field name="name">PLM: Pre-ECO (Engineering)</field>
-        <field name="sequence">9</field>
+        <field name="sequence">10</field>
         <field name="model_id" ref="mrp_plm.model_mrp_eco"/>
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="ol_base.role_engineering_res_groups" />
@@ -124,7 +124,7 @@
 
     <record id="tier_def_plm_eco_approval" model="tier.definition">
         <field name="name">PLM: ECO Approval (MRB)</field>
-        <field name="sequence">11</field>
+        <field name="sequence">12</field>
         <field name="model_id" ref="mrp_plm.model_mrp_eco"/>
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="ol_base.role_mrb_res_groups" />
@@ -137,7 +137,7 @@
 
     <record id="tier_def_plm_eco_approval2" model="tier.definition">
         <field name="name">PLM: ECO Approval (PM Rep)</field>
-        <field name="sequence">10</field>
+        <field name="sequence">11</field>
         <field name="model_id" ref="mrp_plm.model_mrp_eco"/>
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="ol_base.role_pm_rep_res_groups" />
@@ -175,10 +175,10 @@
         <field name="approve_sequence_bypass">True</field>
     </record>
 
-    <!-- Flow 6 -->
+    <!-- Flow 6/7 -->
     <record id="tier_def_plm_disc_approval" model="tier.definition">
-        <field name="name">PLM: EOS Discontinuation Approval (Product Management)</field>
-        <field name="sequence">21</field>
+        <field name="name">PLM: Discontinuation Approval (Product Management)</field>
+        <field name="sequence">23</field>
         <field name="model_id" ref="mrp_plm.model_mrp_eco"/>
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="ol_base.role_product_management_res_groups" />
@@ -191,7 +191,7 @@
 
     <record id="tier_def_plm_disc_approval2" model="tier.definition">
         <field name="name">PLM: Discontinuation Approval (Sales)</field>
-        <field name="sequence">20</field>
+        <field name="sequence">21</field>
         <field name="model_id" ref="mrp_plm.model_mrp_eco"/>
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="ol_base.role_sales_res_groups" />
@@ -202,26 +202,12 @@
         <field name="approve_sequence_bypass">True</field>
     </record>
 
-    <!-- Flow 7 -->
     <record id="tier_def_plm_disc_approval3" model="tier.definition">
         <field name="name">PLM: Discontinuation Approval (Engineering)</field>
-        <field name="sequence">20</field>
-        <field name="model_id" ref="mrp_plm.model_mrp_eco"/>
-        <field name="review_type">group</field>
-        <field name="reviewer_group_id" ref="ol_base.role_engineering_res_groups" />
-        <field name="definition_type">domain</field>
-        <field name="definition_domain" eval="[('stage_id', '=', ref('ol_mrp_plm.product_state_discontinuation_approval')), ('type_id', '=', ref('ol_mrp_plm.end_of_life'))]" />
-        <field name="company_id" eval="False" />
-        <field name="approve_sequence">True</field>
-        <field name="approve_sequence_bypass">True</field>
-    </record>
-
-    <record id="tier_def_plm_disc_approval4" model="tier.definition">
-        <field name="name">PLM: Discontinuation Approval (Product Management)</field>
         <field name="sequence">22</field>
         <field name="model_id" ref="mrp_plm.model_mrp_eco"/>
         <field name="review_type">group</field>
-        <field name="reviewer_group_id" ref="ol_base.role_product_management_res_groups" />
+        <field name="reviewer_group_id" ref="ol_base.role_engineering_res_groups" />
         <field name="definition_type">domain</field>
         <field name="definition_domain" eval="[('stage_id', '=', ref('ol_mrp_plm.product_state_discontinuation_approval')), ('type_id', '=', ref('ol_mrp_plm.end_of_life'))]" />
         <field name="company_id" eval="False" />
