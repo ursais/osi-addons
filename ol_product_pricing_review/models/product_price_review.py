@@ -517,7 +517,7 @@ class ProductPriceReview(models.Model):
         """Override create method to generate sequence 'pa' for each record."""
         for vals in vals_list:
             seq = self.env["ir.sequence"].next_by_code("product.price.review") or "New"
-            vals["pa"] = seq
+            vals["name"] = seq
         return super().create(vals_list)
 
     def assign_to_me(self):
