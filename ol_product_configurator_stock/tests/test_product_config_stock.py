@@ -2,7 +2,7 @@ from odoo.tests import common, tagged
 
 
 @tagged("-at_install", "post_install")
-class TestProductConfiStock(common.TransactionCase):
+class TestProductConfigStock(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         # Set up the testing environment by initializing required records.
