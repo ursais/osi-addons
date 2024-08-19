@@ -62,11 +62,8 @@ class SaleOrder(models.Model):
 
     def send_backorder_notification(self):
         """
-        Handle backorder notifications
-        1. Get backorder products if any
-        2. Get order expected date
-        3. ???
-        4. Send email
+        Send backorder email if 'to_send_backorder_email' true
+        Otherwise don't.
         """
 
         self.ensure_one()
