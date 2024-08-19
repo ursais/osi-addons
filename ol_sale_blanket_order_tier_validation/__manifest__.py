@@ -1,7 +1,8 @@
 {
     "name": "Onlogic Sale Blanket Orders Tier Validation",
     "summary": """
-        Extends the functionality of your Sale Blanket Orders to support a tier validation process.
+        Extends the functionality of your Sale Blanket Orders
+        to support a tier validation process.
         """,
     "author": "OnLogic, Open Source Integrators",
     "website": "https://www.onlogic.com",

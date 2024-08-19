@@ -4,12 +4,18 @@ from odoo.tools import float_is_zero
 
 
 class SaleBlanketOrder(models.Model):
+    """
+    Adding tier validation functionality to Blanket Orders.
+    """
+
     _name = "sale.blanket.order"
     _inherit = ["sale.blanket.order", "tier.validation"]
     _state_from = ["draft"]
     _state_to = ["open", "done", "expired"]
 
     _tier_validation_manual_config = False
+
+    # METHODS ##########
 
     @api.depends(
         "line_ids.remaining_uom_qty",
@@ -49,3 +55,5 @@ class SaleBlanketOrder(models.Model):
         for rec in self:
             rec.write({"state": "open"})
         return super().action_confirm()
+
+    # END ##########

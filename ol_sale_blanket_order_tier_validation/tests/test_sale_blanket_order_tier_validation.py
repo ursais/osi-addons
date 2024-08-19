@@ -3,6 +3,7 @@ from datetime import date, timedelta
 
 from odoo import fields
 from odoo.tests import common
+from odoo.exceptions import ValidationError
 
 
 class TestSaleBlanketOrdersTierValidation(common.TransactionCase):
@@ -109,12 +110,12 @@ class TestSaleBlanketOrdersTierValidation(common.TransactionCase):
         blanket_order.request_validation()
 
         # Changing to new stage would cause a validation error
-        # with self.assertRaises(ValidationError):
-        #     blanket_order.action_confirm()
+        with self.assertRaises(ValidationError):
+            blanket_order.action_confirm()
 
         # Validate the tier validation request
         blanket_order.with_user(self.test_user_1).validate_tier()
-        # self.assertTrue(blanket_order.validated)
+        self.assertTrue(blanket_order.validated)
 
         # Change the sale blanket stage to normal
         blanket_order.action_confirm()
