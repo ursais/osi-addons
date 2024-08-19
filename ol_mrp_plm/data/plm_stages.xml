@@ -2,7 +2,7 @@
 
     <record id="onl_new_stage" model="mrp.eco.stage">
         <field name="name">New</field>
-        <field name="type_ids" eval="[(6,0,[ref('new_sku'), ref('new_system'), ref('new_component'), ref('operations_new_consumable'), ref('engineering_change_order'), ref('product_change_notifications'), ref('end_of_sale'), ref('end_of_life'), ])]" />
+        <field name="type_ids" eval="[(6,0,[ref('new_sku'), ref('new_system'), ref('operations_new_consumable'), ref('engineering_change_order'), ref('product_change_notifications'), ref('end_of_sale'), ref('end_of_life'), ])]" />
     </record>
 
     <record id="product_state_eng_assessment" model="mrp.eco.stage">
@@ -49,7 +49,7 @@
         <field name="is_approval_stage">True</field>
         <field name="product_state_id" ref="product_state.product_state_draft"/>
         <field name="allow_bom_edits">True</field>
-        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.new_system'), ref('new_component')])]" />
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.new_system')])]" />
     </record>
 
     <record id="product_state_dvt" model="mrp.eco.stage">
@@ -57,7 +57,7 @@
         <field name="is_approval_stage">True</field>
         <field name="product_state_id" ref="product_state.product_state_draft"/>
         <field name="allow_bom_edits">True</field>
-        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.new_system'), ref('new_component')])]" />
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.new_system')])]" />
     </record>
 
     <record id="product_state_pvt" model="mrp.eco.stage">
@@ -65,7 +65,7 @@
         <field name="is_approval_stage">True</field>
         <field name="product_state_id" ref="ol_product_state.product_state_pre_order"/>
         <field name="allow_apply_change">True</field>
-        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.new_system'), ref('new_component')])]" />
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.new_system')])]" />
     </record>
 
     <record id="product_state_pre_eco" model="mrp.eco.stage">
