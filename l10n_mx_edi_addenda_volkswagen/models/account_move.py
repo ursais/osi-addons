@@ -7,7 +7,6 @@ class AccountMove(models.Model):
     vw_division = fields.Char(string="VW Division")
     vw_applicant_name = fields.Char(string="VW Applicant Name")
     vw_applicant_email = fields.Char(string="VW Applicant email")
-    vw_file = fields.Char(string="File")
     vw_flag = fields.Boolean(compute="_compute_vw_flag", store=True)
 
     @api.depends("partner_id.l10n_mx_edi_addenda")

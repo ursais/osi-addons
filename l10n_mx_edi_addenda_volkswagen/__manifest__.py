@@ -2,7 +2,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 {
     "name": "Mexican Addendum For Invoices For Volkswagen",
-    "version": "17.0.1.2.0",
+    "version": "17.0.1.3.1",
     "license": "LGPL-3",
     "summary": "Mexican Localization Addendum For Volkswagen",
     "author": "Open Source Integrators",
