@@ -112,31 +112,31 @@ class SaleBlanketOrder(models.Model):
                     elif payment_term_id != line.payment_term_id.id:
                         payment_term_id = False
 
-                    # If no order lines or inconsistent currency, skip to the next order
-                    if not order_lines_by_customer or not currency_id:
-                        continue
+            # If no order lines or inconsistent currency, skip to the next order
+            if not order_lines_by_customer or not currency_id:
+                continue
 
-                    # Create sale orders for each customer with valid order lines
-                    for customer in order_lines_by_customer:
-                        # Prepare values for the sale order
-                        order_vals = order._prepare_so_vals(
-                            customer,
-                            user_id,
-                            currency_id,
-                            pricelist_id,
-                            payment_term_id,
-                            order_lines_by_customer,
-                        )
-                        # Create the sale order
-                        sale_order = self.env["sale.order"].create(order_vals)
-                        # Log the creation of the sale order
-                        _logger.info(
-                            _(
-                                f"Created sale order: {sale_order.id}, based on blanket order: {order.id}"
-                            )
-                        )
+            # Create sale orders for each customer with valid order lines
+            for customer in order_lines_by_customer:
+                # Prepare values for the sale order
+                order_vals = order._prepare_so_vals(
+                    customer,
+                    user_id,
+                    currency_id,
+                    pricelist_id,
+                    payment_term_id,
+                    order_lines_by_customer,
+                )
+                # Create the sale order
+                sale_order = self.env["sale.order"].create(order_vals)
+                # Log the creation of the sale order
+                _logger.info(
+                    _(
+                        f"Created sale order: {sale_order.id}, based on blanket order: {order.id}"
+                    )
+                )
 
-                        # Confirm the sale order
-                        sale_order.action_confirm()
+                # Confirm the sale order
+                sale_order.action_confirm()
 
     # END #########
