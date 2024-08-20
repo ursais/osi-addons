@@ -1,11 +1,11 @@
 <odoo>
     <template id="l10n_mx_edi_addenda_volkswagen" name="Addenda Volkswagen">
         <PSV:Factura
+            xmlns:PSV="http://www.vwnovedades.com/volkswagen/kanseilab/shcp/2009/Addenda/PSV"
             version="1.0"
             tipoDocumentoFiscal="FA"
             tipoDocumentoVWM="PSV"
             t-att-division="record.vw_division"
-            xmlns:PSV="http://www.vwnovedades.com/volkswagen/kanseilab/shcp/2009/Addenda/PSV"
         >
             <PSV:Moneda
                 t-att-tipoMoneda="record.currency_id.name"
