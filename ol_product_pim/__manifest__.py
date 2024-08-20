@@ -1,5 +1,5 @@
 {
-    "name": "DO NOT USE (MODULE RENAMED) Onlogic Product PIM",
+    "name": "DO NOT USE: REPLACED WITH ol_pim",
     "summary": "Onlogic Product PIM",
     "description": """
     Onlogic Product PIM
