@@ -1,5 +1,5 @@
 {
-    "name": "DO NOT USE: Replaced with OCA Module: Will be removed",
+    "name": "DO NOT USE: REPLACED WITH OCA sale_blanket_order_tier_validation",
     "summary": """
         Extends the functionality of your Sale Blanket Orders
         to support a tier validation process.
@@ -11,7 +11,6 @@
     "version": "17.0.1.0.0",
     # any module necessary for this one to work correctly
     "depends": [
-        "ol_base",
         "sale_blanket_order",
         "base_tier_validation",
     ],
