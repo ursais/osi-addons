@@ -197,6 +197,6 @@
         <!-- <menuitem id="menu_sale_estimate_job" name="Job Estimates" action="action_estimate_job" parent="sale.sale_order_menu"
                 sequence="9"/> --> <!--odoo11-->
 
-        <menuitem id="menu_sale_estimate_job" name="Job Estimates" action="action_estimate_job" parent="sale.sale_order_menu" sequence="0"/>
+        <menuitem id="menu_sale_estimate_job" name="Job Estimates" action="action_estimate_job" parent="sale.sale_order_menu" sequence="25"/>
 
 </odoo>
