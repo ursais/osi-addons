@@ -2,11 +2,11 @@
 <odoo noupdate="1">
 
     <record forcecreate="True" id="create_sale_order_cron_us" model="ir.cron">
-        <field name="name">(US) Create Sale Order</field>
+        <field name="name">(US) Blanket Orders: Create Sale Order</field>
         <field name="model_id" ref="sale_blanket_order.model_sale_blanket_order" />
         <field name="state">code</field>
         <field name="code">model.create_sale_order_cron()</field>
-        <field name="user_id" ref="base.user_admin" />
+        <field name="user_id" ref="ol_base.us_company_user" />
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
         <field name="numbercall">-1</field>
@@ -16,11 +16,11 @@
     </record>
 
     <record forcecreate="True" id="create_sale_order_cron_eu" model="ir.cron">
-        <field name="name">(EU) Create Sale Order</field>
+        <field name="name">(EU) Blanket Orders: Create Sale Order</field>
         <field name="model_id" ref="sale_blanket_order.model_sale_blanket_order" />
         <field name="state">code</field>
         <field name="code">model.create_sale_order_cron()</field>
-        <field name="user_id" ref="base.user_admin" />
+        <field name="user_id" ref="ol_base.eu_company_user" />
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
         <field name="numbercall">-1</field>
