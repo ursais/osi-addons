@@ -17,7 +17,7 @@ class SaleBlanketOrder(models.Model):
 
     # COLUMNS #####
 
-    auto_release = fields.Boolean()
+    auto_release = fields.Boolean(default=True)
 
     # END #########
 
@@ -81,7 +81,7 @@ class SaleBlanketOrder(models.Model):
                 # there is a remaining quantity to order
                 if (
                     line.date_schedule
-                    and (line.date_schedule + timedelta(days=line.customer_lead or 0.0))
+                    and (line.date_schedule - timedelta(days=line.customer_lead or 0.0))
                     <= today
                     and line.remaining_uom_qty > 0
                 ):
