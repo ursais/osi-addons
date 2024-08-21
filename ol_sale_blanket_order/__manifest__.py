@@ -13,10 +13,12 @@
         "ol_base",
         "ol_sale",
         "sale_blanket_order",
+        "sale_product_approval",
     ],
     # always loaded
     "data": [
         "data/ir_cron.xml",
         "views/sale_blanket_order_line_views.xml",
+        "views/sale_blanket_order_views.xml",
     ],
 }
