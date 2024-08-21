@@ -50,4 +50,9 @@
         <field name="implied_ids" eval="[(6, 0, [ref('stock.group_stock_manager'), ref('sales_team.group_sale_manager')])]" />
     </record>
 
+    <record id="role_regulatory" model="res.users.role">
+        <field name="name">Regulatory</field>
+        <field name="implied_ids" eval="[(6, 0, [ref('stock.group_stock_manager'), ref('sales_team.group_sale_manager')])]" />
+    </record>
+
 </odoo>
