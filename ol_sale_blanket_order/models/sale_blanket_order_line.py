@@ -11,7 +11,16 @@ class SaleBlanketOrderLine(models.Model):
 
     # COLUMNS #####
 
-    customer_lead = fields.Float(compute="_compute_customer_lead")
+    customer_lead = fields.Float(
+        compute="_compute_customer_lead",
+        store=True,
+        readonly=False,
+        precompute=True,
+    )
+    product_state_id = fields.Many2one(
+        "product.state",
+        related="product_id.product_state_id",
+    )
 
     # END #########
 

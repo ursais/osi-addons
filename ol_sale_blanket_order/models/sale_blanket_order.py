@@ -4,6 +4,7 @@ from collections import defaultdict
 from datetime import timedelta
 
 from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -46,7 +47,7 @@ class SaleBlanketOrder(models.Model):
         pricelist_id,
         payment_term_id,
         order_lines_by_customer,
-        original_request_date
+        original_request_date,
     ):
         # Prepares the values for creating a sale order based on the provided details.
         return {
@@ -68,7 +69,10 @@ class SaleBlanketOrder(models.Model):
         today = fields.Date.today()
         # Search for open blanket orders with auto_release enabled
         blanket_orders = self.search(
-            [("state", "=", "open"), ("auto_release", "=", True)]
+            [
+                ("state", "=", "open"),
+                ("auto_release", "=", True),
+            ]
         )
 
         for order in blanket_orders:
@@ -87,13 +91,29 @@ class SaleBlanketOrder(models.Model):
                     <= today
                     and line.remaining_uom_qty > 0
                 ):
+                    # Check if product can be added to a quote, if not create activity
+                    if not line.product_id.sale_ok:
+                        order.activity_schedule(
+                            "mail.mail_activity_data_warning",
+                            note=_(
+                                "Failed to create sale order. "
+                                "Product %s is not allowed to be added to a sale order."
+                                % line.product_id.display_name
+                            ),
+                            user_id=order.user_id.id or self.env.uid,
+                        )
+                        continue
+
                     # Prepare values for the sale order line
                     vals = self._prepare_so_line_vals(line)
                     # Group lines by customer
                     order_lines_by_customer[line.partner_id.id].append((0, 0, vals))
 
                     # Find smallest scheduled date
-                    if original_request_date is None or line.date_schedule < original_request_date:
+                    if (
+                        original_request_date is None
+                        or line.date_schedule < original_request_date
+                    ):
                         original_request_date = line.date_schedule
 
                     # Track and validate the consistency of currency, pricelist, user,
@@ -146,20 +166,31 @@ class SaleBlanketOrder(models.Model):
                     )
                 except Exception as e:
                     order.activity_schedule(
-                        'mail.mail_activity_data_warning',
+                        "mail.mail_activity_data_warning",
                         note=_(f"Failed to create sale order. Reason is '{e}'"),
-                        user_id=order.user_id.id or self.env.uid
+                        user_id=order.user_id.id or self.env.uid,
                     )
 
                 if sale_order:
                     try:
+                        # Check to make sure all products are able to be sold
+                        # raise confirmation error if not which will create an activity.
+                        if any(
+                            not line.product_id.sale_ok_confirm
+                            for line in sale_order.order_line
+                        ):
+                            raise ValidationError(
+                                "A Product's state is preventing order confirmation."
+                            )
                         # Confirm the sale order
                         sale_order.action_confirm()
                     except Exception as e:
                         sale_order.activity_schedule(
-                            'mail.mail_activity_data_warning',
-                            note=_(f"The sale order {sale_order.name} stating couldn't confirm. Reason is '{e}'"),
-                            user_id=sale_order.user_id.id or self.env.uid
+                            "mail.mail_activity_data_warning",
+                            note=_(
+                                f"The sale order {sale_order.name} created from Blanket Order {order.name} couldn't be confirmed. \nReason: '{e}'"
+                            ),
+                            user_id=sale_order.user_id.id or self.env.uid,
                         )
 
     # END #########
