@@ -28,11 +28,7 @@ class ProductProduct(models.Model):
 
         # Use normal compute if standard product
         if standard_products:
-            result = super(
-                ProductProduct, standard_products
-            )._compute_product_price_extra()
-        else:
-            result = None
+            return super()._compute_product_price_extra()
 
         # If configured product then compute extra price but add bom_lst_price.
         for product in config_products:
@@ -43,8 +39,8 @@ class ProductProduct(models.Model):
             extra_prices = attribute_value_obj.get_attribute_value_extra_prices(
                 product_tmpl_id=product.product_tmpl_id.id, pt_attr_value_ids=value_ids
             )
-            product.price_extra = product.bom_lst_price + sum(extra_prices.values())
-        return result
+            # product.price_extra = product.bom_lst_price + sum(extra_prices.values())
+            product.price_extra = product.bom_lst_price
 
     def button_bom_sale_price(self):
         """Button method on the product form."""
