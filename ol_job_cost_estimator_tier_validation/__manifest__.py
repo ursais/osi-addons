@@ -1,7 +1,8 @@
 {
-    "name": "Onlogic Estimation for Jobs - Material / Labour / Overheads Tier Validation",
+    "name": "Onlogic Sale Estimates Tier Validation",
     "summary": """
-        Extends the functionality of your Customers for materials, labour, overheads details in job estimation to support a tier validation process.
+        Extends the functionality of your Customers for materials, labour,
+        overheads details in job estimation to support a tier validation process.
         """,
     "author": "OnLogic, Open Source Integrators",
     "website": "https://www.onlogic.com",
@@ -11,6 +12,7 @@
     "license": "AGPL-3",
     # any module necessary for this one to work correctly
     "depends": [
+        "ol_base",
         "job_cost_estimate_customer",
         "base_tier_validation",
     ],
