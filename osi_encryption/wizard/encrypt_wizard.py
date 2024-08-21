@@ -30,14 +30,16 @@ class EncryptWizard(models.TransientModel):
         help="Enter the file location where the CSV files will be kept. Write permissions are needed and make sure the location is persistant.",
     )
     show_key = fields.Boolean("Show Key", compute="_show_fields_compute")
-    show_file_location = fields.Boolean("Show File Location", compute="_show_fields_compute")
+    show_file_location = fields.Boolean(
+        "Show File Location", compute="_show_fields_compute"
+    )
     create_csv = fields.Boolean(
         "Create CSV",
         default=True,
         help="Creates CSV file and drop the temporary tables. Otherwise the temporary tables will be kept.",
     )
 
-    @api.depends('char_line_ids')
+    @api.depends("char_line_ids")
     def _show_fields_compute(self):
         """ """
         for rec in self:
@@ -46,7 +48,10 @@ class EncryptWizard(models.TransientModel):
             if any(line.line_action == "encrypt_decrypt" for line in rec.char_line_ids):
                 rec.show_key = True
             if (
-                any(line.line_action == "sanitize_unsanitize" for line in rec.char_line_ids)
+                any(
+                    line.line_action == "sanitize_unsanitize"
+                    for line in rec.char_line_ids
+                )
                 and self.create_csv
             ):
                 rec.show_file_location = True
@@ -90,14 +95,19 @@ class EncryptWizard(models.TransientModel):
 
             table_columns_dict = {}
             for table, column in table_columns_list_set:
-                if table in table_columns_dict and column not in table_columns_dict[table]:
+                if (
+                    table in table_columns_dict
+                    and column not in table_columns_dict[table]
+                ):
                     table_columns_dict[table].append(column)
                 else:
                     table_columns_dict[table] = [column]
             raise UserError(table_columns_dict.items())
 
     def sanitize_char_data(self):
-        sanitize_lines = self.char_line_ids.filtered(lambda x: x.line_action == "sanitize_unsanitize")
+        sanitize_lines = self.char_line_ids.filtered(
+            lambda x: x.line_action == "sanitize_unsanitize"
+        )
         for line in sanitize_lines:
             if line.line_action == "sanitize_unsanitize" and line.state not in (
                 "encrypted",
@@ -107,19 +117,17 @@ class EncryptWizard(models.TransientModel):
             ):
                 # Pre check for exclusions
                 if line.state == "excluded":
-                    runningLog = (
-                        "This table has been marked to be excluded. No encryption tasks have been performed."
-                    )
+                    runningLog = "This table has been marked to be excluded. No encryption tasks have been performed."
                     line.write({"log_notes": runningLog})
                     continue
                 # Pre check for already sanitized (or encrypted incase it was somehow added)
-                if line.state in ('encrypted', 'sanitized'):
+                if line.state in ("encrypted", "sanitized"):
                     continue
                 # Pre check if not columns added to be processed
                 if not line.included_char_column_ids:
                     line.write(
                         {
-                            'log_notes': "No columns to encrypt. Moving to 'Excluded' state.",
+                            "log_notes": "No columns to encrypt. Moving to 'Excluded' state.",
                             "exclude_reason": "No Columns to Encrypt",
                             "state": "excluded",
                         }
@@ -140,7 +148,13 @@ class EncryptWizard(models.TransientModel):
 
                     # Create temporary table
                     try:
-                        temp_table_query = "CREATE TABLE " + temp_table + " AS SELECT * FROM " + table + ";"
+                        temp_table_query = (
+                            "CREATE TABLE "
+                            + temp_table
+                            + " AS SELECT * FROM "
+                            + table
+                            + ";"
+                        )
                         self.env.cr.execute(temp_table_query)
                         self.env.cr.commit()
                     except Exception as e:
@@ -161,7 +175,9 @@ class EncryptWizard(models.TransientModel):
                             self.env.cr.execute(export_table_query)
                             self.env.cr.commit()
                         except Exception as e:
-                            raise UserError("Error during crating temp table: \n %s" % e)
+                            raise UserError(
+                                "Error during crating temp table: \n %s" % e
+                            )
 
                     # Sanitize the data with random characters taking char max size into consideration
                     i = len(line.included_char_column_ids)
@@ -170,15 +186,23 @@ class EncryptWizard(models.TransientModel):
                         char_limit = column.size or 33
                         if i > 1:
                             column_names += (
-                                column.name + "=substr(md5(random()::text), 0, " + str(char_limit) + "), "
+                                column.name
+                                + "=substr(md5(random()::text), 0, "
+                                + str(char_limit)
+                                + "), "
                             )
                         else:
                             column_names += (
-                                column.name + "=substr(md5(random()::text), 0, " + str(char_limit) + ")"
+                                column.name
+                                + "=substr(md5(random()::text), 0, "
+                                + str(char_limit)
+                                + ")"
                             )
                         i -= 1
                     try:
-                        sanitize_data_query = "UPDATE " + table + " SET " + column_names + ";"
+                        sanitize_data_query = (
+                            "UPDATE " + table + " SET " + column_names + ";"
+                        )
                         self.env.cr.execute(sanitize_data_query)
                         self.env.cr.commit()
                     except Exception as e:
@@ -199,11 +223,25 @@ class EncryptWizard(models.TransientModel):
                             self.env.cr.execute(drop_query)
                             self.env.cr.commit()
                         except Exception as e:
-                            raise UserError("Error during dropping temp table: \n %s" % e)
+                            raise UserError(
+                                "Error during dropping temp table: \n %s" % e
+                            )
 
     def encrypt_char_data(self):
-        encrypt_lines = self.char_line_ids.filtered(lambda x: x.line_action == "encrypt_decrypt")
+        encrypt_lines = self.char_line_ids.filtered(
+            lambda x: x.line_action == "encrypt_decrypt"
+        )
         for line in encrypt_lines:
+            # If no columns to encrypt then set line as excluded since there is nothing to do.
+            if not line.included_char_column_ids:
+                line.write(
+                    {
+                        "state": "excluded",
+                        "exclude_reason": "Excluded due to no lines to encrypt.",
+                    }
+                )
+                continue
+
             if line.line_action == "encrypt_decrypt" and line.state not in (
                 "encrypted",
                 "unsanitized",
@@ -251,7 +289,10 @@ class EncryptWizard(models.TransientModel):
 
                 table_columns_dict = {}
                 for table, column in table_columns_list_set:
-                    if table in table_columns_dict and column not in table_columns_dict[table]:
+                    if (
+                        table in table_columns_dict
+                        and column not in table_columns_dict[table]
+                    ):
                         table_columns_dict[table].append(column)
                     else:
                         table_columns_dict[table] = [column]
@@ -269,16 +310,21 @@ class EncryptWizard(models.TransientModel):
                             + "';"
                         )
                         self.env.cr.execute(varchar_query)
-                        runningLog += "\n Resized character_maximum_length for %s.%s from %s to 10000 \n" % (
-                            table,
-                            column.name,
-                            column.size,
+                        runningLog += (
+                            "\n Resized character_maximum_length for %s.%s from %s to 10000 \n"
+                            % (
+                                table,
+                                column.name,
+                                column.size,
+                            )
                         )
                         self.env.cr.commit()
 
                 # ============================ ENCRYPT DATA ============================
                 line.write({"state": "in_progress"})
-                runningLog += "MASTER TABLE GROUPED DICT: %s" % (str(table_columns_dict))
+                runningLog += "MASTER TABLE GROUPED DICT: %s" % (
+                    str(table_columns_dict)
+                )
                 log_excluded_ids = ""
                 for table, columns in table_columns_dict.items():
                     query = "SELECT id, {}  FROM {} ORDER BY id".format(
@@ -287,10 +333,13 @@ class EncryptWizard(models.TransientModel):
                     self.env.cr.execute(query)
                     table_data = self.env.cr.fetchall()
 
-                    runningLog += "\n Going Through Table: %s  for Columns: %s with %s records" % (
-                        table,
-                        str(columns),
-                        len(table_data),
+                    runningLog += (
+                        "\n Going Through Table: %s  for Columns: %s with %s records"
+                        % (
+                            table,
+                            str(columns),
+                            len(table_data),
+                        )
                     )
 
                     rec_updated_ids = []
@@ -302,7 +351,9 @@ class EncryptWizard(models.TransientModel):
                         for col, col_data in zip(columns, col_data[1:]):
                             if col_data:
                                 # Don't update if id in excluded id's
-                                if line.exclude_ids and str(id) in line.exclude_ids.split(","):
+                                if line.exclude_ids and str(
+                                    id
+                                ) in line.exclude_ids.split(","):
                                     continue
 
                                 set_data.append(
@@ -342,9 +393,12 @@ class EncryptWizard(models.TransientModel):
                             )
 
                     if skipped_ids:
-                        runningLog += "\n Skipped %s Record(s) as no field has data to be updated: %s " % (
-                            len(skipped_ids),
-                            col_data,
+                        runningLog += (
+                            "\n Skipped %s Record(s) as no field has data to be updated: %s "
+                            % (
+                                len(skipped_ids),
+                                col_data,
+                            )
                         )
                     runningLog += "\n Encrypted data for %s records from table %s" % (
                         len(rec_updated_ids),
@@ -367,9 +421,11 @@ class EncryptWizard(models.TransientModel):
     def encrypt_sanitize_char_data(self):
         if any(x.line_action == "encrypt_decrypt" for x in self.char_line_ids):
             if not self.key:
-                raise UserError("Missing Key! Please enter an encryption key to continue.")
+                raise UserError(
+                    "Missing Key! Please enter an encryption key to continue."
+                )
             self.encrypt_char_data()
         if any(x.line_action == "sanitize_unsanitize" for x in self.char_line_ids):
             if self.create_csv and not os.path.isdir(self.file_location):
-                raise UserError('Folder not found.')
+                raise UserError("Folder not found.")
             self.sanitize_char_data()
