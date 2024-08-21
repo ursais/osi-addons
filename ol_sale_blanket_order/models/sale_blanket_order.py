@@ -177,6 +177,7 @@ class SaleBlanketOrder(models.Model):
                         # raise confirmation error if not which will create an activity.
                         if any(
                             not line.product_id.sale_ok_confirm
+                            or not line.product_id.ship_ok
                             for line in sale_order.order_line
                         ):
                             raise ValidationError(
