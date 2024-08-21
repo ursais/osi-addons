@@ -46,6 +46,7 @@ class SaleBlanketOrder(models.Model):
         pricelist_id,
         payment_term_id,
         order_lines_by_customer,
+        original_request_date
     ):
         # Prepares the values for creating a sale order based on the provided details.
         return {
@@ -57,7 +58,7 @@ class SaleBlanketOrder(models.Model):
             "payment_term_id": payment_term_id,
             "order_line": order_lines_by_customer[customer],
             "analytic_account_id": self.analytic_account_id.id,
-            "original_request_date": fields.Date.today(),
+            "original_request_date": original_request_date or fields.Date.today(),
         }
 
     @api.model
@@ -75,6 +76,7 @@ class SaleBlanketOrder(models.Model):
             order_lines_by_customer = defaultdict(list)
             # Initialize variables to track order attributes
             currency_id = pricelist_id = user_id = payment_term_id = 0
+            original_request_date = None
 
             for line in order.line_ids:
                 # Check if the scheduled date plus customer lead time is due and
@@ -89,6 +91,10 @@ class SaleBlanketOrder(models.Model):
                     vals = self._prepare_so_line_vals(line)
                     # Group lines by customer
                     order_lines_by_customer[line.partner_id.id].append((0, 0, vals))
+
+                    # Find smallest scheduled date
+                    if original_request_date is None or line.date_schedule < original_request_date:
+                        original_request_date = line.date_schedule
 
                     # Track and validate the consistency of currency, pricelist, user,
                     # and payment terms across lines
@@ -126,17 +132,34 @@ class SaleBlanketOrder(models.Model):
                     pricelist_id,
                     payment_term_id,
                     order_lines_by_customer,
+                    original_request_date,
                 )
-                # Create the sale order
-                sale_order = self.env["sale.order"].create(order_vals)
-                # Log the creation of the sale order
-                _logger.info(
-                    _(
-                        f"Created sale order: {sale_order.id}, based on blanket order: {order.id}"
+                sale_order = False
+                try:
+                    # Create the sale order
+                    sale_order = self.env["sale.order"].create(order_vals)
+                    # Log the creation of the sale order
+                    _logger.info(
+                        _(
+                            f"Created sale order: {sale_order.id}, based on blanket order: {order.id}"
+                        )
                     )
-                )
+                except Exception as e:
+                    order.activity_schedule(
+                        'mail.mail_activity_data_warning',
+                        note=_(f"Failed to create sale order. Reason is '{e}'"),
+                        user_id=order.user_id.id or self.env.uid
+                    )
 
-                # Confirm the sale order
-                sale_order.action_confirm()
+                if sale_order:
+                    try:
+                        # Confirm the sale order
+                        sale_order.action_confirm()
+                    except Exception as e:
+                        sale_order.activity_schedule(
+                            'mail.mail_activity_data_warning',
+                            note=_(f"The sale order {sale_order.name} stating couldn't confirm. Reason is '{e}'"),
+                            user_id=sale_order.user_id.id or self.env.uid
+                        )
 
     # END #########
