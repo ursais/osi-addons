@@ -13,10 +13,9 @@
     <t t-name="ol_mrp_sale_price_rollup.BomOverviewLine" t-inherit="mrp.BomOverviewLine" t-inherit-mode="extension">
         <xpath expr="//td[@t-if='showCosts']" position="after">
             <td t-if="showCosts" class="text-end">
-                <span t-esc="formatMonetary(data.prod_price)"/>
+                <span t-if="data.hasOwnProperty('prod_price')" t-esc="formatMonetary(data.prod_price)"/>
             </td>
         </xpath>
-
     </t>
 
 </templates>

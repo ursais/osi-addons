@@ -12,5 +12,6 @@ class ProductConfigSession(models.Model):
             value_ids=value_ids,
             custom_vals=custom_vals,
         )
-        variant._set_sale_price_from_bom()
+        additional_total = variant._get_bom_sale_price()
+        variant.lst_price = additional_total
         return variant
