@@ -36,7 +36,7 @@
                     name="button_bom_sale_price"
                     string="Compute Sales Price from BoM"
                     type="object"
-                    invisible="bom_count == 0 or not product_tmpl_id.config_ok"
+                    invisible="not config_ok"
                     help="Compute the sales price of the product using products and operations of related bill of materials, for manufactured products only."
                     class="oe_link pt-0"
                     colspan="2"
@@ -56,11 +56,12 @@
                 <field name="bom_count" invisible="1" />
                 <field name="has_configurable_attributes" invisible="1" />
                 <field name="product_tmpl_id" invisible="1" />
+                <field name="config_ok" invisible="1" />
                 <button
                     name="button_bom_sale_price"
                     string="Compute Sales Price from BoM"
                     type="object"
-                    invisible="bom_count == 0 or not product_tmpl_id.config_ok"
+                    invisible="not config_ok"
                     help="Compute the sales price of the product using products and operations of related bill of materials, for manufactured products only."
                     class="oe_link pt-0"
                     colspan="2"

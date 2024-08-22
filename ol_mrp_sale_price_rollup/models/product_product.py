@@ -17,35 +17,62 @@ class ProductProduct(models.Model):
     # METHODS ##########
     """ The methods below are very similar to the compute cost from bom methods """
 
-    @api.depends(
-        "product_template_attribute_value_ids.price_extra",
-        "bom_lst_price",
-    )
-    def _compute_product_price_extra(self):
-        """Override the price extra method to add the bom_lst_price to extra price."""
-        standard_products = self.filtered(lambda product: not product.config_ok)
-        config_products = self - standard_products
+    def _get_non_config_set_bom_lines(self):
+        self.ensure_one()
+        attribute_value =  self.env["product.attribute.value"]
+        current_bom = self.env["mrp.bom"]._bom_find(self)[self]
+        additional_total = 0
+        for bom_line in current_bom.bom_line_ids:
+            if bom_line.child_bom_id:
+                for child_bom_line in bom_line.child_bom_id.bom_line_ids:
+                    additional_total +=  (
+                        child_bom_line.product_id.uom_id._compute_price(
+                            child_bom_line.product_id.lst_price, child_bom_line.product_uom_id
+                        )
+                        * child_bom_line.product_qty)
+            elif not bom_line.child_bom_id:
+                additional_total +=  (
+                    bom_line.product_id.uom_id._compute_price(
+                        bom_line.product_id.lst_price, bom_line.product_uom_id
+                    )
+                    * bom_line.product_qty)
+        return additional_total
 
-        # Use normal compute if standard product
-        if standard_products:
-            return super()._compute_product_price_extra()
-
-        # If configured product then compute extra price but add bom_lst_price.
-        for product in config_products:
+    def _get_bom_sale_price(self):
+        for product in self:
             attribute_value_obj = self.env["product.attribute.value"]
-            value_ids = (
-                product.product_template_attribute_value_ids.product_attribute_value_id
-            )
+            value_ids = product.product_template_attribute_value_ids.mapped("product_attribute_value_id").filtered(lambda l:not l.product_id)
             extra_prices = attribute_value_obj.get_attribute_value_extra_prices(
                 product_tmpl_id=product.product_tmpl_id.id, pt_attr_value_ids=value_ids
             )
-            # product.price_extra = product.bom_lst_price + sum(extra_prices.values())
-            product.price_extra = product.bom_lst_price
+            additional_total = product._get_non_config_set_bom_lines()
+            return additional_total + sum(extra_prices.values())
+
+    @api.onchange('lst_price')
+    def _set_product_lst_price(self):
+        """Override Method to bypass update Product lst Price"""
+        for product in self.filtered(lambda l: not l.config_ok):
+            if self._context.get('uom'):
+                value = self.env['uom.uom'].browse(self._context['uom'])._compute_price(product.lst_price, product.uom_id)
+            else:
+                value = product.lst_price
+            value -= product.price_extra
+            product.write({'list_price': value})
+
+    @api.depends('list_price', 'price_extra')
+    @api.depends_context('uom')
+    def _compute_product_lst_price(self):
+        rec = super()._compute_product_lst_price()
+        for product in self.filtered(lambda l:l.config_ok):
+            additional_total = product._get_bom_sale_price()
+            product.lst_price = additional_total
+            if self.env.context.get("from_product_template",False):
+                product.product_tmpl_id.list_price = additional_total
+        return rec
 
     def button_bom_sale_price(self):
         """Button method on the product form."""
-        self.ensure_one()
-        self._set_sale_price_from_bom()
+        self._compute_product_lst_price()
 
     def action_bom_sale_price(self):
         """Get the bom's to compute."""
