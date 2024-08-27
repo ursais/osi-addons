@@ -259,23 +259,52 @@ class ProductConfigurator(models.TransientModel):
                     product_attribute_value = attribute_value_obj.browse(
                         values_dict[value_line]
                     )
-                    update_price += product_attribute_value.product_id.lst_price
+                    if product_attribute_value.product_id:
+                        update_price += product_attribute_value.product_id.lst_price
+                    else:
+                        extra_prices = (
+                            attribute_value_obj.get_attribute_value_extra_prices(
+                                product_tmpl_id=self.product_tmpl_id.id,
+                                pt_attr_value_ids=product_attribute_value,
+                            )
+                        )
+                        update_price += sum(extra_prices.values())
                 elif isinstance(values_dict.get(value_line), list):
                     # Many2Many Values
                     data_list = values_dict[value_line][0][2]
                     product_attribute_values = attribute_value_obj.browse(data_list)
                     for product_attribute_value in product_attribute_values:
-                        update_price += product_attribute_value.product_id.lst_price
+                        if product_attribute_value.product_id:
+                            update_price += product_attribute_value.product_id.lst_price
+                        else:
+                            extra_prices = (
+                                attribute_value_obj.get_attribute_value_extra_prices(
+                                    product_tmpl_id=self.product_tmpl_id.id,
+                                    pt_attr_value_ids=product_attribute_value,
+                                )
+                            )
+                            update_price += sum(extra_prices.values())
+
             if value_line.startswith(qty_prefix):
                 qty_rec = attribute_value_qty_obj.browse(values_dict[value_line])
-                update_price = (
-                    update_price
-                    - qty_rec.product_attribute_value_id.product_id.lst_price
-                )
-                update_price = update_price + (
-                    qty_rec.product_attribute_value_id.product_id.lst_price
-                    * qty_rec.qty
-                )
+                if qty_rec.product_attribute_value_id.product_id:
+                    update_price = (
+                        update_price
+                        - qty_rec.product_attribute_value_id.product_id.lst_price
+                    )
+                    update_price = update_price + (
+                        qty_rec.product_attribute_value_id.product_id.lst_price
+                        * qty_rec.qty
+                    )
+                else:
+                    extra_prices = attribute_value_obj.get_attribute_value_extra_prices(
+                        product_tmpl_id=self.product_tmpl_id.id,
+                        pt_attr_value_ids=qty_rec.product_attribute_value_id,
+                    )
+                    update_price = update_price - sum(extra_prices.values())
+                    update_price = update_price + (
+                        sum(extra_prices.values()) * qty_rec.qty
+                    )
 
         if onchange_values.get("value", False):
             onchange_values.get("value")["price"] = update_price

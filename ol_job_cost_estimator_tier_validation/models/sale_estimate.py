@@ -6,6 +6,7 @@ class SaleEstimateJob(models.Model):
     """
     Adding tier validation inheritance as well as state from/to definitions.
     We can now add a state into both from/to to trigger validations def checks.
+    These definiation are used via the tier.validation abstract model.
     """
 
     _name = "sale.estimate.job"
