@@ -29,9 +29,47 @@
                 expr="//field[@name='product_template_variant_value_ids']"
                 position="after"
             >
-                <field name="product_attribute_value_qty_ids" widget="many2many_tags" />
-                    <!-- readonly="True" groups="product.group_product_variant" -->
+                <field
+                    name="product_attribute_value_qty_ids"
+                    widget="many2many_tags"
+                    readonly="True"
+                    groups="product.group_product_variant"
+                />
             </xpath>
+        </field>
+    </record>
+
+    <!-- product.product_product_tree_view -->
+    <record id="product_product_tree_view_inherited_mrp_qty" model="ir.ui.view">
+        <field name="name">product.product.tree</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_product_tree_view" />
+        <field name="arch" type="xml">
+            <field name="product_template_variant_value_ids" position="after">
+                <field
+                    name="product_attribute_value_qty_ids"
+                    widget="many2many_tags"
+                    string="Attribute Value Quantity"
+                    readonly="True"
+                    groups="product.group_product_variant"
+                />
+            </field>
+        </field>
+    </record>
+
+    <record id="product_variant_easy_edit_view_inherit_mrp_qty" model="ir.ui.view">
+        <field name="name">product.product.view.form.easy</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view" />
+        <field name="arch" type="xml">
+            <field name="product_template_attribute_value_ids" position="after">
+                <field
+                    name="product_attribute_value_qty_ids"
+                    widget="many2many_tags"
+                    readonly="True"
+                    groups="product.group_product_variant"
+                />
+            </field>
         </field>
     </record>
 </odoo>

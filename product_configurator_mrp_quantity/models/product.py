@@ -35,7 +35,7 @@ class ProductProduct(models.Model):
                 "qty"
             )
             product.qty_combination_indices = ",".join(
-                [str(i) for i in sorted(qty_combination_indices)]
+                [str(i) for i in qty_combination_indices]
             )
 
     product_attribute_value_qty_ids = fields.One2many(
@@ -54,17 +54,52 @@ class ProductProduct(models.Model):
             % self._table
         )
 
+    def _get_non_config_set_bom_lines(self):
+        self.ensure_one()
+        attribute_value = self.env["product.attribute.value"]
+        current_bom = self.env["mrp.bom"]._bom_find(self)[self]
+        additional_total = 0
+        for bom_line in current_bom.bom_line_ids:
+            if bom_line.child_bom_id:
+                for child_bom_line in bom_line.child_bom_id.bom_line_ids:
+                    additional_total += (
+                        child_bom_line.product_id.uom_id._compute_price(
+                            child_bom_line.product_id.lst_price,
+                            child_bom_line.product_uom_id,
+                        )
+                        * child_bom_line.product_qty
+                    )
+            elif not bom_line.child_bom_id:
+                additional_total += (
+                    bom_line.product_id.uom_id._compute_price(
+                        bom_line.product_id.lst_price, bom_line.product_uom_id
+                    )
+                    * bom_line.product_qty
+                )
+
+        return additional_total
+
+    def _get_bom_sale_price(self):
+        attribute_value_obj = self.env["product.attribute.value"]
+        value_ids = self.product_template_attribute_value_ids.mapped(
+            "product_attribute_value_id"
+        ).filtered(lambda l: not l.product_id)
+        extra_prices = attribute_value_obj.get_attribute_value_extra_prices(
+            product_tmpl_id=self.product_tmpl_id.id, pt_attr_value_ids=value_ids
+        )
+        additional_total = self._get_non_config_set_bom_lines()
+        for extra_price in extra_prices:
+            additional_qty = self.product_attribute_value_qty_ids.filtered(
+                lambda l: l.attr_value_id.id == extra_price
+            ).qty
+            extra_prices[extra_price] = extra_prices[extra_price] * additional_qty
+        return additional_total + sum(extra_prices.values())
+
     @api.depends("list_price", "price_extra")
     @api.depends_context("uom")
     def _compute_product_lst_price(self):
-        super()._compute_product_lst_price()
-        for product in self:
-            if product.config_ok:
-                updated_price = product.price_extra
-                for attr_val_qty in product.product_attribute_value_qty_ids:
-                    updated_price -= attr_val_qty.attr_value_id.product_id.lst_price
-                    updated_price += (
-                        attr_val_qty.attr_value_id.product_id.lst_price
-                        * attr_val_qty.qty
-                    )
-                product.lst_price = updated_price + product.product_tmpl_id.list_price
+        rec = super()._compute_product_lst_price()
+        for product in self.filtered(lambda l: l.config_ok):
+            additional_total = product._get_bom_sale_price()
+            product.lst_price = additional_total
+        return rec

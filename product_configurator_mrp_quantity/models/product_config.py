@@ -14,23 +14,14 @@ class ProductConfigSession(models.Model):
         products = super().search_variant(
             value_ids=value_ids, product_tmpl_id=product_tmpl_id
         )
-        session_filter_values = []
-        product_attrs_qtys = products.product_attribute_value_qty_ids
         session_attrs_qtys = self.session_value_quantity_ids
-        for attr_qty in session_attrs_qtys:
-            filter_values = product_attrs_qtys.filtered(
-                lambda prod_attr: prod_attr.attr_value_id.id
-                == attr_qty.attr_value_id.id
-                and prod_attr.qty == int(attr_qty.qty)
-            )
-            session_filter_values.extend(filter_values.mapped("product_id").ids)
-        session_filter_products = self.env["product.product"].browse(
-            session_filter_values
-        )
-        if session_filter_products:
-            return session_filter_products
-        else:
-            return self.env["product.product"]
+        duplicate_product = self.env["product.product"]
+        for product in products:
+            if product.product_attribute_value_qty_ids.mapped(
+                "qty"
+            ) == session_attrs_qtys.mapped("qty"):
+                duplicate_product = product
+        return duplicate_product
 
     def create_get_variant(self, value_ids=None, custom_vals=None):
         result = super().create_get_variant(
@@ -74,14 +65,70 @@ class ProductConfigSession(models.Model):
         price = super().get_cfg_price(value_ids=value_ids, custom_vals=custom_vals)
         updated_price = price
         if self.session_value_quantity_ids:
+            attribute_value_obj = self.env["product.attribute.value"]
             for session_value in self.session_value_quantity_ids:
                 updated_price = (
                     updated_price - session_value.attr_value_id.product_id.lst_price
                 )
-                updated_price = updated_price + (
-                    session_value.attr_value_id.product_id.lst_price * session_value.qty
-                )
+                if session_value.attr_value_id.product_id:
+                    updated_price = updated_price + (
+                        session_value.attr_value_id.product_id.lst_price
+                        * session_value.qty
+                    )
+                else:
+                    extra_prices = attribute_value_obj.get_attribute_value_extra_prices(
+                        product_tmpl_id=self.product_tmpl_id.id,
+                        pt_attr_value_ids=session_value.attr_value_id,
+                    )
+                    updated_price = updated_price - sum(extra_prices.values())
+                    updated_price = updated_price + (
+                        sum(extra_prices.values()) * session_value.qty
+                    )
         return updated_price
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        attribute_value_qty_obj = self.env["attribute.value.qty"]
+        attribute_value_qty_obj2 = self.env["product.template.attribute.value"]
+        for val in vals_list:
+            product_tmpl = (
+                self.env["product.template"].browse(val.get("product_tmpl_id")).exists()
+            )
+            session_qty_list = []
+            if product_tmpl:
+                default_val_ids = product_tmpl.attribute_line_ids.filtered(
+                    lambda line: line.default_val and line.is_qty_required
+                )
+                for line in default_val_ids:
+                    template_attribute_value2 = attribute_value_qty_obj2.search(
+                        [
+                            ("product_tmpl_id", "=", product_tmpl.id),
+                            ("attribute_id", "=", line.attribute_id.id),
+                            ("product_attribute_value_id", "=", line.default_val.id),
+                        ]
+                    )
+                    template_attribute_value = attribute_value_qty_obj.search(
+                        [
+                            ("product_tmpl_id", "=", product_tmpl.id),
+                            ("product_attribute_id", "=", line.attribute_id.id),
+                            ("product_attribute_value_id", "=", line.default_val.id),
+                            ("qty", "=", int(template_attribute_value2.default_qty)),
+                        ]
+                    )
+                    session_qty_list.append(
+                        (
+                            0,
+                            0,
+                            {
+                                "product_attribute_id": template_attribute_value.product_attribute_id.id,
+                                "attr_value_id": template_attribute_value.product_attribute_value_id.id,
+                                "attribute_value_qty_id": template_attribute_value.id,
+                                "qty": template_attribute_value.qty,
+                            },
+                        )
+                    )
+            val.update({"session_value_quantity_ids": session_qty_list})
+        return super().create(vals_list)
 
     # ============================
     # OVERRIDE Methods
@@ -275,6 +322,7 @@ class ProductConfigSession(models.Model):
                 )
                 existing_session_ids.unlink()
                 session_qty_list.append((0, 0, qty_val))
+
             update_vals.update({"session_value_quantity_ids": session_qty_list})
         # Remove all custom values included in the custom_vals dict
         self.custom_value_ids.filtered(
@@ -364,6 +412,7 @@ class ProductConfigSession(models.Model):
         )
         bom_type = parent_bom and parent_bom.type or "normal"
         bom_lines = []
+        attribute_value_obj = self.env["product.attribute.value"]
         if not parent_bom:
             # If not Bom, then Cycle through attributes to add their
             # related products to the bom lines.
@@ -402,17 +451,35 @@ class ProductConfigSession(models.Model):
                                 and local_session.attr_value_id.attribute_id.id
                                 in config.value_ids.mapped("attribute_id").ids
                             )
+                            non_local_session_attr_qty_values = session_attr_qty_values.filtered(
+                                lambda local_session: not local_session.attr_value_id.product_id
+                                and local_session.attr_value_id.attribute_id.id
+                                in config.value_ids.mapped("attribute_id").ids
+                            )
                             session_attr_qty_values = (
                                 session_attr_qty_values - local_session_attr_qty_values
                             )
                             if parent_bom_line.bom_id.id == parent_bom.id:
                                 parent_bom_line_vals = {
                                     "product_id": parent_bom_line.product_id.id,
-                                    "product_qty": local_session_attr_qty_values.qty > 0
-                                    and parent_bom_line.product_qty
-                                    * local_session_attr_qty_values.qty
-                                    or parent_bom_line.product_qty,
+                                    "product_qty": parent_bom_line.product_qty,
                                 }
+                                if local_session_attr_qty_values:
+                                    parent_bom_line_vals = {
+                                        "product_id": parent_bom_line.product_id.id,
+                                        "product_qty": (
+                                            parent_bom_line.product_qty
+                                            * local_session_attr_qty_values.qty
+                                        ),
+                                    }
+                                elif non_local_session_attr_qty_values:
+                                    parent_bom_line_vals = {
+                                        "product_id": parent_bom_line.product_id.id,
+                                        "product_qty": (
+                                            parent_bom_line.product_qty
+                                            * non_local_session_attr_qty_values.qty
+                                        ),
+                                    }
                                 specs = self.get_onchange_specifications(
                                     model="mrp.bom.line"
                                 )

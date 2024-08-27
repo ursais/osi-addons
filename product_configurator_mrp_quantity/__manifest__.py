@@ -17,6 +17,7 @@
     ],
     "images": ["static/description/cover.png"],
     "development_status": "Beta",
+    "uninstall_hook": "uninstall_hook",
     "maintainer": "Open Source Integrators",
     "installable": True,
     "auto_install": False,
