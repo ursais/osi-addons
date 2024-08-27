@@ -25,6 +25,10 @@ class ProductTemplate(models.Model):
             lambda t: t.product_variant_count == 1 and t.bom_count > 0
         )
         if templates:
-            return templates.mapped("product_variant_id").with_context(from_product_template=True).button_bom_sale_price()
+            return (
+                templates.mapped("product_variant_id")
+                .with_context(from_product_template=True)
+                .button_bom_sale_price()
+            )
 
     # END #########
