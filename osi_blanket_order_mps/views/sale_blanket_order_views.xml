@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_blanket_order_form" model="ir.ui.view">
+        <field name="name">sale.blanket.order.form</field>
+        <field name="model">sale.blanket.order</field>
+        <field name="inherit_id" ref="sale_blanket_order.view_blanket_order_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//button[@name='%(sale_blanket_order.action_create_sale_order)d']"
+                position="attributes"
+            >
+                <attribute name="string">Create SO or Update BO</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='line_ids']/tree/field[@name='ordered_uom_qty']"
+                position="after"
+            >
+                <field name="empty_ordered_uom_qty" sum="Total Empty Qty" />
+            </xpath>
+            <xpath
+                expr="//field[@name='line_ids']/tree/field[@name='invoiced_uom_qty']"
+                position="attributes"
+            >
+                <attribute name="optional">hide</attribute>
+                <attribute name="sum">Total Invoiced Qty</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='line_ids']/tree/field[@name='delivered_uom_qty']"
+                position="attributes"
+            >
+                <attribute name="optional">hide</attribute>
+                <attribute name="sum">Total Delivered Qty</attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='line_ids']/tree/field[@name='taxes_id']"
+                position="attributes"
+            >
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <field name="partner_id" position="after">
+                <field name="partner_ref" />
+            </field>
+            <field name="original_uom_qty" position="attributes">
+                <attribute name="sum">Total Original Qty</attribute>
+            </field>
+            <field name="ordered_uom_qty" position="attributes">
+                <attribute name="sum">Total Ordered Qty</attribute>
+            </field>
+            <field name="remaining_uom_qty" position="attributes">
+                <attribute name="sum">Total Remaining Qty</attribute>
+            </field>
+            <field name="price_subtotal" position="attributes">
+                <attribute name="sum">Total Amount</attribute>
+            </field>
+            <field name="validity_date" position="before">
+                <field name="remaining_qty_state" />
+            </field>
+        </field>
+    </record>
+
+    <record id="view_blanket_order_list" model="ir.ui.view">
+        <field name="name">sale.blanket.order.list</field>
+        <field name="model">sale.blanket.order</field>
+        <field name="inherit_id" ref="sale_blanket_order.view_blanket_order_tree" />
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="partner_ref" />
+            </field>
+            <field name="state" position="before">
+                <field name="client_order_ref" />
+                <field name="remaining_qty_state" />
+            </field>
+        </field>
+    </record>
+
+    <record id="blanket_order_product_template_search_view" model="ir.ui.view">
+        <field name="name">blanket.order.product.template.search</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view" />
+        <field name="arch" type="xml">
+            <field name="categ_id" position="after">
+                <field name="id" />
+            </field>
+        </field>
+    </record>
+
+</odoo>
