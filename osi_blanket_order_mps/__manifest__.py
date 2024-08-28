@@ -9,16 +9,17 @@
     "maintainers": "Open Source Integrators",
     "website": "https://github.com/ursais/osi-addons",
     "category": "Manufacturing",
-    "depends": ["sale_blanket_order", "mrp_mps"],
+    "depends": [
+        "sale_blanket_order",
+        "mrp_mps",
+    ],
     "data": [
-        "wizard/create_sale_orders.xml",
-        "views/mrp_mps_views.xml",
         "views/sale_blanket_order_views.xml",
         "views/sale_blanket_order_line_views.xml",
     ],
-    'assets': {
-        'web.assets_backend': [
-            'osi_blanket_order_mps/static/src/**/*',
+    "assets": {
+        "web.assets_backend": [
+            "osi_blanket_order_mps/static/src/**/*",
         ],
     },
     "auto_install": False,

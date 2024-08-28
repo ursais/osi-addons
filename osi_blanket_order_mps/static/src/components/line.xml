@@ -7,7 +7,6 @@
         </xpath>
         <xpath expr="//input[@t-att-value='formatFloat(forecast.forecast_qty)']" position="after">
             <span t-else="0"><t t-esc="formatFloat(forecast.forecast_qty)"/></span>
-            <!-- <span>Nikul:<t t-esc="forecast.is_edit_forcast_qty"/></span> -->
         </xpath>
     </t>
 </templates>

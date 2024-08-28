@@ -7,16 +7,10 @@
         <field name="inherit_id" ref="sale_blanket_order.view_blanket_order_form" />
         <field name="arch" type="xml">
             <xpath
-                expr="//button[@name='%(sale_blanket_order.action_create_sale_order)d']"
+                expr="//field[@name='line_ids']/tree/field[@name='ordered_uom_qty']"
                 position="attributes"
             >
-                <attribute name="string">Create SO or Update BO</attribute>
-            </xpath>
-            <xpath
-                expr="//field[@name='line_ids']/tree/field[@name='ordered_uom_qty']"
-                position="after"
-            >
-                <field name="empty_ordered_uom_qty" sum="Total Empty Qty" />
+                <attribute name="optional">show</attribute>
             </xpath>
             <xpath
                 expr="//field[@name='line_ids']/tree/field[@name='invoiced_uom_qty']"
@@ -38,6 +32,12 @@
             >
                 <attribute name="optional">hide</attribute>
             </xpath>
+            <xpath
+                expr="//field[@name='line_ids']/tree/field[@name='analytic_distribution']"
+                position="before"
+            >
+                <field name="bom_id" optional="hide" />
+            </xpath>
             <field name="line_ids" position="attributes">
                 <attribute name="readonly">state in ['done', 'expired']</attribute>
             </field>
@@ -56,11 +56,8 @@
             <field name="price_subtotal" position="attributes">
                 <attribute name="sum">Total Amount</attribute>
             </field>
-            <field name="validity_date" position="before">
-                <field name="remaining_qty_state" />
-            </field>
             <field name="validity_date" position="after">
-                <field name="is_mps_included" readonly="state != 'draft'"/>
+                <field name="is_mps_included" />
             </field>
         </field>
     </record>
@@ -75,18 +72,6 @@
             </field>
             <field name="state" position="before">
                 <field name="client_order_ref" />
-                <field name="remaining_qty_state" />
-            </field>
-        </field>
-    </record>
-
-    <record id="blanket_order_product_template_search_view" model="ir.ui.view">
-        <field name="name">blanket.order.product.template.search</field>
-        <field name="model">product.template</field>
-        <field name="inherit_id" ref="product.product_template_search_view" />
-        <field name="arch" type="xml">
-            <field name="categ_id" position="after">
-                <field name="id" />
             </field>
         </field>
     </record>
