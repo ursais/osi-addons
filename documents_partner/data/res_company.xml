@@ -1,7 +1,7 @@
 <odoo noupdate="1">
 
     <record id="base.main_company" model="res.company">
-        <field name="vendor_folder" ref="documents_vendor_folder" />
+        <field name="partner_folder" ref="documents_partner_folder" />
     </record>
 
 </odoo>

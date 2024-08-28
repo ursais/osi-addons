@@ -8,18 +8,13 @@ class ResPartner(models.Model):
     _inherit = ["res.partner", "documents.mixin"]
 
     def _get_document_tags(self):
-        if self.supplier_rank > 0:
-            company = self.company_id or self.env.company
-            return company.vendor_tags
+        company = self.company_id or self.env.company
+        return company.partner_tags
 
     def _get_document_folder(self):
-        if self.supplier_rank > 0:
-            company = self.company_id or self.env.company
-            return company.vendor_folder
+        company = self.company_id or self.env.company
+        return company.partner_folder
 
     def _check_create_documents(self):
-        if self.supplier_rank > 0:
-            company = self.company_id or self.env.company
-            return (
-                company.documents_vendor_settings and super()._check_create_documents()
-            )
+        company = self.company_id or self.env.company
+        return company.documents_partner_settings and super()._check_create_documents()

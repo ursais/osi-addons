@@ -14,7 +14,7 @@ Documents for Vendors
 
 |badge1| |badge2| |badge3|
 
-This module provides a documents folder where all the files attached to vendors will
+This module provides a documents folder where all the files attached to partners      will
 be available.
 
 **Table of contents**

@@ -1,15 +1,15 @@
 # Copyright (C) 2021 Open Source Integrators
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 {
-    "name": "Documents - Vendor",
-    "summary": "Documents for Vendors",
+    "name": "Documents for Partners",
+    "summary": "Manage documents attached to lot/tracking numbers",
     "category": "Productivity/Documents",
     "website": "https://github.com/ursais/osi-addons",
     "author": "Open Source Integrators",
     "maintainer": "Open Source Integrators",
-    "version": "14.0.1.0.0",
+    "version": "17.0.1.0.0",
     "license": "LGPL-3",
-    "depends": ["documents", "account"],
+    "depends": ["documents", "contacts"],
     "data": [
         "data/documents_folder.xml",
         "data/res_company.xml",

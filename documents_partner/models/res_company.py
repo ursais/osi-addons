@@ -10,13 +10,13 @@ class ResCompany(models.Model):
         company = self.env.company
         return ["|", ("company_id", "=", False), ("company_id", "=", company)]
 
-    documents_vendor_settings = fields.Boolean()
-    vendor_folder = fields.Many2one(
+    documents_partner_settings = fields.Boolean()
+    partner_folder = fields.Many2one(
         "documents.folder",
-        string="Vendors Workspace",
+        string="Partner Workspace",
         domain=_domain_company,
         default=lambda self: self.env.ref(
-            "documents_vendor_folder", raise_if_not_found=False
+            "documents_partner_folder", raise_if_not_found=False
         ),
     )
-    vendor_tags = fields.Many2many("documents.tag", "vendor_tags_table")
+    partner_tags = fields.Many2many("documents.tag", "partner_tags_table")
