@@ -17,7 +17,7 @@
         "data/documents_workflow_rule.xml",
         "data/res_company.xml",
         "views/res_config_settings.xml",
-        "wizards/select_production_lot_view.xml",
+        "wizards/select_lot_view.xml",
     ],
     "maintainers": ["bodedra"],
 }

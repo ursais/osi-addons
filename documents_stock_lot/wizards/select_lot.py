@@ -3,12 +3,12 @@
 from odoo import fields, models
 
 
-class SelectProdctionLot(models.TransientModel):
-    _name = "select.production.lot"
+class SelectLot(models.TransientModel):
+    _name = "select.lot"
     _description = "Select existing Lot/Tracking Number"
 
     lot_id = fields.Many2one(
-        "stock.production.lot",
+        "stock.lot",
         string="Lot/Tracking Number",
     )
 
@@ -35,7 +35,7 @@ class SelectProdctionLot(models.TransientModel):
             view_id = self.env.ref("stock.view_production_lot_form").id
             return {
                 "type": "ir.actions.act_window",
-                "res_model": "stock.production.lot",
+                "res_model": "stock.lot",
                 "name": "Lot/Tracking Number",
                 "context": ctx,
                 "view_mode": "form",

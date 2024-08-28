@@ -11,20 +11,18 @@ class DocumentsWorkflowRule(models.Model):
 
     has_business_option = fields.Boolean(default=True, compute="_compute_business")
     create_model = fields.Selection(
-        selection_add=[("stock.production.lot", "Lot/Tracking Number")]
+        selection_add=[("stock.lot", "Lot/Tracking Number")]
     )
 
     def create_record(self, documents=None):
         res = super().create_record(documents=documents)
-        if self.create_model == "stock.production.lot":
+        if self.create_model == "stock.lot":
             ctx = self._context.copy()
             ctx.update({"documents": documents.ids})
-            view_id = self.env.ref(
-                "documents_stock_production_lot.select_production_lot_view_form"
-            ).id
+            view_id = self.env.ref("documents_stock_lot.select_lot_view_form").id
             return {
                 "type": "ir.actions.act_window",
-                "res_model": "select.production.lot",
+                "res_model": "select.lot",
                 "name": "Lot/Tracking Number",
                 "context": ctx,
                 "view_mode": "form",

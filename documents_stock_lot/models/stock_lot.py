@@ -3,9 +3,9 @@
 from odoo import models
 
 
-class StockProductionLot(models.Model):
-    _name = "stock.production.lot"
-    _inherit = ["stock.production.lot", "documents.mixin"]
+class StockLot(models.Model):
+    _name = "stock.lot"
+    _inherit = ["stock.lot", "documents.mixin"]
 
     def _get_document_folder(self):
         return self.company_id.lot_folder

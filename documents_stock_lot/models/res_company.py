@@ -16,7 +16,7 @@ class ResCompany(models.Model):
         string="Lot/Tracking Number Workspace",
         domain=_domain_company,
         default=lambda self: self.env.ref(
-            "documents_stock_production_lot.documents_folder_lot",
+            "documents_stock_lot.documents_folder_lot",
             raise_if_not_found=False,
         ),
     )

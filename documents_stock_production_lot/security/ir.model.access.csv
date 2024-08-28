@@ -1,2 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_select_production_lot,access_select_production_lot,model_select_production_lot,base.group_user,1,1,1,1
