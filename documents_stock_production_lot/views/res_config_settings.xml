@@ -6,60 +6,46 @@
         <field name="priority" eval="70" />
         <field name="inherit_id" ref="base.res_config_settings_view_form" />
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('o_documents_block')]" position="attributes">
-                <attribute name="invisible">0</attribute>
+            <xpath expr="//app[@name='documents']" position="attributes">
+                <attribute name="notApp">0</attribute>
             </xpath>
-            <xpath expr="//div[hasclass('o_documents_block')]" position="inside">
-                <div class="row mt16 o_settings_container">
-                    <div class="col-xs-12 col-md-6 o_setting_box">
-                        <div class="o_setting_left_pane">
-                            <field name="documents_lot_settings" />
-                        </div>
-                        <div class="o_setting_right_pane o_documents_right_pane">
-                            <label for="documents_lot_settings" />
-                            <span
-                                class="fa fa-lg fa-building-o"
-                                title="Values set here are company-specific."
-                                aria-label="Values set here are company-specific."
-                                groups="base.group_multi_company"
-                                role="img"
-                            />
+            <xpath expr="//app[@name='documents']" position="inside">
+                <block>
+                    <setting
+                        company_dependent="1"
+                        help="Centralize files attached to lot/tracking numbers"
+                    >
+                        <field name="documents_lot_settings" />
+                        <div
+                            class="content-group"
+                            invisible="not documents_lot_settings"
+                        >
+                            <div class="row mt16">
+                                <label
+                                    class="o_form_label col-lg-3"
+                                    for="lot_folder"
+                                    string="Workspace"
+                                />
+                                <field
+                                    name="lot_folder"
+                                    required="documents_lot_settings"
+                                />
+                            </div>
                             <div class="row">
-                                <div class="text-muted col-md-12">
-                                    Centralize files attached to lot/tracking numbers.
-                                </div>
-                            </div>
-                            <div
-                                class="content-group"
-                                attrs="{'invisible' : [('documents_lot_settings', '=', False)]}"
-                            >
-                                <div class="row mt16">
-                                    <label
-                                        class="o_form_label col-lg-3"
-                                        for="lot_folder"
-                                        string="Workspace"
-                                    />
-                                    <field
-                                        name="lot_folder"
-                                        attrs="{'required' : [('documents_lot_settings', '=', True)]}"
-                                    />
-                                </div>
-                                <div class="row">
-                                    <label
-                                        class="o_form_label col-lg-3"
-                                        for="lot_tags"
-                                        string="Default Tags"
-                                    />
-                                    <field
-                                        name="lot_tags"
-                                        widget="many2many_tags"
-                                        domain="[('folder_id','=', lot_folder)]"
-                                    />
-                                </div>
+                                <label
+                                    class="o_form_label col-lg-3"
+                                    for="lot_tags"
+                                    string="Default Tags"
+                                />
+                                <field
+                                    name="lot_tags"
+                                    widget="many2many_tags"
+                                    domain="[('folder_id','=', lot_folder)]"
+                                />
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </setting>
+                </block>
             </xpath>
         </field>
     </record>

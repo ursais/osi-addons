@@ -2,7 +2,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 {
     "name": "Documents for lot/tracking number",
-    "version": "14.0.1.0.0",
+    "version": "17.0.1.0.0",
     "category": "Documents",
     "summary": """Manage documents attached to lot/tracking numbers""",
     "website": "https://github.com/ursais/osi-addons",
