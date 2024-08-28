@@ -29,7 +29,7 @@ class MrpProductionSchedule(models.Model):
                                 "forced_replenish": True,
                                 "replenish_qty_updated": True,
                                 "to_replenish": True,
-                                "is_edit_forcast_qty": False
+                                "is_edit_forcast_qty": True
                             }
                         )
 
@@ -37,7 +37,7 @@ class MrpProductionSchedule(models.Model):
             for forcast in line.get("forecast_ids"):
                 forcast.update(
                     {
-                        "is_edit_forcast_qty": False,
+                        "is_edit_forcast_qty": True,
                     }
                 )
 

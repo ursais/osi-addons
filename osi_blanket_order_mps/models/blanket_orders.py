@@ -206,6 +206,9 @@ class BlanketOrderLine(models.Model):
 
     def write(self, values):
         tracking_field_list = ['original_uom_qty', 'date_schedule', 'price_unit']
-        if any(field in values for field in tracking_field_list):
+        if any(field in values for field in tracking_field_list) and self.order_id.state != 'draft':
             self._update_line_quantity(values)
+
+        if "product_id" in values and self.ordered_uom_qty > 0:
+            raise UserError(_("You cannot change product which 'Ordered QTY' should greater than 0!"))
         return super().write(values)
