@@ -1,6 +1,7 @@
 # Copyright (C) 2022 - TODAY, Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 from datetime import datetime
+from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -21,6 +22,10 @@ class BlanketOrder(models.Model):
         string="Remaining Qty State",
         compute="_compute_remaining_state",
         store=True,
+    )
+    is_mps_included = fields.Boolean(
+        string="Include in Master Production Schedule",
+        default=True
     )
 
     @api.depends("line_ids", "state")
@@ -107,6 +112,7 @@ class BlanketOrder(models.Model):
                             "replenish_qty": qty,
                             "replenish_qty_updated": True,
                             "production_schedule_id": mps_id.id,
+                            "is_edit_forcast_qty": True
                         }
                     )
                     mps_id.with_context(
@@ -161,3 +167,45 @@ class BlanketOrderLine(models.Model):
                 - line.empty_ordered_uom_qty
             )
         return res
+
+    @api.onchange("original_uom_qty", "ordered_uom_qty")
+    def _onchange_uom_qty(self):
+        for line in self:
+            if line.original_uom_qty < line.ordered_uom_qty:
+                raise UserError(_("Updated 'Original QTY' should not be less than 'Ordered QTY'!"))
+
+    def _update_line_quantity(self, values):
+        orders = self.mapped('order_id')
+        for order in orders:
+            order_lines = self.filtered(lambda x: x.order_id == order)
+            msg = Markup("<b>%s</b><ul>") % _("The Original quantity has been updated.")
+            for line in order_lines:
+                if 'product_id' in values and values['product_id'] != line.product_id.id:
+                    # tracking is meaningless if the product is changed as well.
+                    continue
+                msg += Markup("<li> %s: <br/>") % line.product_id.display_name
+                changes = []
+                if 'original_uom_qty' in values:
+                    changes.append(_("Original Quantity: %(old_qty)s -> %(new_qty)s") % {
+                        'old_qty': line.original_uom_qty,
+                        'new_qty': values["original_uom_qty"]
+                    })
+                if "date_schedule" in values:
+                    changes.append(_("Scheduled Date: %(old_schedule)s -> %(new_schedule)s") % {
+                        'old_schedule': line.date_schedule,
+                        'new_schedule': values["date_schedule"]
+                    })
+                if "price_unit" in values:
+                    changes.append(_("Price: %(old_price)s -> %(new_price)s") % {
+                        'old_price': line.price_unit,
+                        'new_price': values["price_unit"]
+                    })
+                msg += Markup("<br/>".join(changes)) + Markup("<br/>")
+            msg += Markup("</ul>")
+            order.message_post(body=msg)
+
+    def write(self, values):
+        tracking_field_list = ['original_uom_qty', 'date_schedule', 'price_unit']
+        if any(field in values for field in tracking_field_list):
+            self._update_line_quantity(values)
+        return super().write(values)

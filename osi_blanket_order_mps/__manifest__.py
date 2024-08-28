@@ -16,6 +16,11 @@
         "views/sale_blanket_order_views.xml",
         "views/sale_blanket_order_line_views.xml",
     ],
+    'assets': {
+        'web.assets_backend': [
+            'osi_blanket_order_mps/static/src/**/*',
+        ],
+    },
     "auto_install": False,
     "application": False,
     "installable": True,

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="osi_blanket_order_mps.MpsLineComponent" t-inherit="mrp_mps.MpsLineComponent" t-inherit-mode="extension">
+        <xpath expr="//input[@t-att-value='formatFloat(forecast.forecast_qty)']" position="attributes">
+            <attribute name="t-if">forecast.is_edit_forcast_qty</attribute>
+        </xpath>
+        <xpath expr="//input[@t-att-value='formatFloat(forecast.forecast_qty)']" position="after">
+            <span t-else="0"><t t-esc="formatFloat(forecast.forecast_qty)"/></span>
+            <!-- <span>Nikul:<t t-esc="forecast.is_edit_forcast_qty"/></span> -->
+        </xpath>
+    </t>
+</templates>
+

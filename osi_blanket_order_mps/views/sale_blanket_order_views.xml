@@ -38,6 +38,9 @@
             >
                 <attribute name="optional">hide</attribute>
             </xpath>
+            <field name="line_ids" position="attributes">
+                <attribute name="readonly">state in ['done', 'expired']</attribute>
+            </field>
             <field name="partner_id" position="after">
                 <field name="partner_ref" />
             </field>
@@ -55,6 +58,9 @@
             </field>
             <field name="validity_date" position="before">
                 <field name="remaining_qty_state" />
+            </field>
+            <field name="validity_date" position="after">
+                <field name="is_mps_included" readonly="state != 'draft'"/>
             </field>
         </field>
     </record>

@@ -17,8 +17,8 @@ class MrpProductionSchedule(models.Model):
         product_id = context.get("product_id")
         # mps_qty = context.get("mps_qty")
 
-        if not (mps_id and mps_date and product_id):
-            return res
+        # if not (mps_id and mps_date and product_id):
+        #     return res
 
         for line in res:
             if line.get("id") == mps_id and line.get("product_id")[0] == product_id:
@@ -29,6 +29,23 @@ class MrpProductionSchedule(models.Model):
                                 "forced_replenish": True,
                                 "replenish_qty_updated": True,
                                 "to_replenish": True,
+                                "is_edit_forcast_qty": False
                             }
                         )
+
+            # TODO: NC Need to check
+            for forcast in line.get("forecast_ids"):
+                forcast.update(
+                    {
+                        "is_edit_forcast_qty": False,
+                    }
+                )
+
         return res
+
+
+class MrpProductForecast(models.Model):
+    _inherit = 'mrp.product.forecast'
+
+    is_edit_forcast_qty = fields.Boolean(defaul=False)
+
