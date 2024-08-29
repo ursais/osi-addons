@@ -1,7 +1,4 @@
 <odoo>
-    <!-- NOTE: product.attribute.value.company_id is be added in ls_product_configurator,
-              but we set up all the p.a.v records here to begin with -->
-
     <!-- =========== -->
     <!-- K300 System -->
     <!-- =========== -->

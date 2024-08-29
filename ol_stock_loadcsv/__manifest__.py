@@ -1,4 +1,3 @@
-# pylint: disable=pointless-statement
 {
     "name": "Create Delivery Orders from CSV import",
     "onlogic": True,
@@ -9,13 +8,10 @@
     "category": "Warehouse",
     "summary": "Create delivery orders for consigned stock from a csv",
     "depends": [
-        "base",
+        "ol_base",
+        "ol_blind_dropship",
         "delivery",
         "stock",
-        # "ls_base",
-        # "ls_blind_dropship",
-        # "ls_delivery",
-        # "ls_delivery_account",
     ],
     "data": [
         "security/ir.model.access.csv",

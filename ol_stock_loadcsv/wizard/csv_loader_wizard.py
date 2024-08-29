@@ -7,7 +7,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 
-# from odoo.addons.ls_base.models.tools import odoo_binary_to_csv_data
+from odoo.addons.ol_base.models.tools import odoo_binary_to_csv_data
 
 DATE_FORMAT = "%m/%d/%Y"
 
@@ -23,10 +23,13 @@ REQUIRED_ADDRESS_FIELDS = {
 
 
 class CsvLoaderWizard(models.TransientModel):
+    """Custom CSV Load Wizard"""
+
     _name = "wizard.csv.loader"
     _description = "Delivery Order CSV Import"
 
     # COLUMNS #####
+
     name = fields.Char(default="CSV Delivery Order Import")
     csv_file = fields.Binary(string="Import File")
     csv_filename = fields.Char(string="Filename")
@@ -36,6 +39,7 @@ class CsvLoaderWizard(models.TransientModel):
         readonly=True,
     )
     error_html = fields.Html(string="Lines with Errors", readonly=True)
+
     # END #########
 
     @api.model
@@ -218,8 +222,6 @@ class CsvLoaderWizard(models.TransientModel):
             {
                 "parent_id": int(data["origin_company"]),
                 "csv_company_name": data["destination_company"] if name_parts else None,
-                "firstname": data["first_name"],
-                "lastname": data["last_name"],
                 "name": " ".join(name_parts) or data["destination_company"],
                 "street": data["address_line1"],
                 "street2": data["address_line2"] or None,
@@ -382,6 +384,7 @@ class CsvLoaderWizard(models.TransientModel):
                     "partner_id": cur_partner.id,
                     "partner_shipping_id": partner_shipping_id.id,
                     "additional_notes": row["notes"],
+                    "note": row["notes"],
                     "move_lines": [
                         (0, 0, cur_move_vals)
                     ],  # create current move and append
@@ -423,7 +426,7 @@ class CsvLoaderWizard(models.TransientModel):
             "name": "Orders to Create on Import",
             "view_mode": "form",
             "view_type": "form",
-            "view_id": self.env.ref("ls_stock_loadcsv.view_orders_to_import").id,
+            "view_id": self.env.ref("ol_stock_loadcsv.view_orders_to_import").id,
             "res_model": "wizard.csv.loader",
             "res_id": self.id,
             "type": "ir.actions.act_window",
@@ -543,8 +546,7 @@ class CsvStockPicking(models.TransientModel):
                 "carrier_id": record.carrier_id.id,
                 "origin": record.origin,
                 "note": record.note,
-                "additional_notes": record.additional_notes,
-                "move_lines": move_lines,
+                "move_line_ids": move_lines,
                 "blind_ship_from": record.blind_ship_from.id,
                 "location_id": record.location_id.id,
                 "location_dest_id": record.location_dest_id.id,
@@ -555,7 +557,7 @@ class CsvStockPicking(models.TransientModel):
             }
 
             delivery_order = self.env["stock.picking"].create(delivery_order_values)
-            delivery_order.delivery_account_number = record.custom_shipping_account
+
             # Add attachment
             delivery_order.message_post(
                 body=_("Created from imported csv file"), attachment_ids=[attachment.id]
@@ -594,10 +596,9 @@ class CsvStockMove(models.TransientModel):
 
         for record in self:
             vals = {
-                "name": record.name,
                 "product_id": record.product_id.id,
-                "product_uom_qty": record.product_uom_qty,
-                "product_uom": record.product_uom.id,
+                "quantity": record.product_uom_qty,
+                "product_uom_id": record.product_uom.id,
                 "location_id": record.location_id.id,
                 "location_dest_id": record.location_dest_id.id,
             }

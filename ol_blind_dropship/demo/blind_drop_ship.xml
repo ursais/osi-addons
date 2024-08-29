@@ -9,7 +9,7 @@
         <field name="categ_id" ref="product.product_category_3" />
     </record>
 
-    <record id="ls_blind_dropship_demo_settings" model="res.config.settings">
+    <record id="ol_blind_dropship_demo_settings" model="res.config.settings">
         <field
             name="blind_drop_ship_product_id"
             model="product.product"
@@ -20,7 +20,7 @@
     <!-- Apply the config -->
     <function model="res.config.settings" name="execute">
         <function
-            eval="[[('id', '=', ref('ls_blind_dropship_demo_settings'))]]"
+            eval="[[('id', '=', ref('ol_blind_dropship_demo_settings'))]]"
             model="res.config.settings"
             name="search"
         />

@@ -19,7 +19,7 @@ class ResPartner(models.Model):
         if not self.env.context.get(
             "picking_partner_shipping_id", False
         ) or not self.env.context.get("picking_id", False):
-            return super(ResPartner, self).name_get()
+            return super().name_get()
 
         picking = self.env["stock.picking"].browse(
             int(self.env.context.get("picking_id"))
@@ -27,7 +27,7 @@ class ResPartner(models.Model):
 
         # Only change name_get() functionality if the picking was created via CSV import
         if not picking.csv_import:
-            return super(ResPartner, self).name_get()
+            return super().name_get()
 
         res = []
         for partner in self:
@@ -44,10 +44,10 @@ class ResPartner(models.Model):
                     name = dict(self.fields_get(["type"])["type"]["selection"])[
                         partner.type
                     ]
-                # @ls_upgrade(+2): Use the company name originally defined in uploaded CSV
+                # Use the company name originally defined in uploaded CSV
                 if partner.csv_company_name:
                     name = f"{partner.csv_company_name}, {name}"
-                # @ls_upgrade(-1/+1): elif, continue with the core code
+                # elif, continue with the core code
                 elif not partner.is_company:
                     name = self._get_contact_name(partner, name)
             if self._context.get("show_address_only"):

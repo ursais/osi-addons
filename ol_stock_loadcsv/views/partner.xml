@@ -1,7 +1,7 @@
 <odoo>
 
     <record model="ir.ui.view" id="loadcsv_partner_fields_form">
-        <field name="name">ls_stock_loadcsv.res.partner.form</field>
+        <field name="name">ol_stock_loadcsv.res.partner.form</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form" />
         <field name="arch" type="xml">

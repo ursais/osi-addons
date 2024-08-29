@@ -42,25 +42,23 @@ class StockPicking(models.Model):
             if record.blind_ship_from and record.picking_type_id.code != "outgoing":
                 raise ValidationError(_('"Ship From" restricted to outgoing'))
 
-    @api.model
-    def create(self, vals):
-        """
-        Strip the dictionary of blind_ship_from value
-        if type of transaction is anything other than outgoing.
-        """
-        picking_type_id = vals.get("picking_type_id")
-        if picking_type_id:
-            picking_type = self.env["stock.picking.type"].browse(picking_type_id)
-            key = "blind_ship_from"
-            if key in vals and picking_type.code != "outgoing":
-                del vals[key]
-        return super().create(vals)
+    # @api.model
+    # def create(self, vals):
+    #     """
+    #     Strip the dictionary of blind_ship_from value
+    #     if type of transaction is anything other than outgoing.
+    #     """
+    #     picking_type_id = vals.get("picking_type_id")
+    #     if picking_type_id:
+    #         picking_type = self.env["stock.picking.type"].browse(picking_type_id)
+    #         key = "blind_ship_from"
+    #         if key in vals and picking_type.code != "outgoing":
+    #             del vals[key]
+    #     return super().create(vals)
 
     def _compute_client_order_ref(self):
         """
         Set client_order_ref from csv version if it exists.
-        Overrides compute function defined in
-        ls_delivery/models/stock_picking.py.
         """
         csv_pickings = self.filtered(lambda p: p.csv_customer_po)
         normal_pickings = self - csv_pickings
@@ -73,8 +71,7 @@ class StockPicking(models.Model):
     @api.depends("partner_id")
     def _compute_shipping_id(self):
         """
-        Set partner_shipping_id for csv orders. Overrides compute function defined in
-        ls_delivery/models/stock_picking.py.
+        Set partner_shipping_id for csv orders.
         """
         # pickings which have no sale order and are outgoing
         csv_pickings = self.filtered(

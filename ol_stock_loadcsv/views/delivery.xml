@@ -1,7 +1,7 @@
 <odoo>
 
     <record model="ir.ui.view" id="delivery_csv_mapping_view">
-        <field name="name">ls_stock_loadcsv.mapping_view</field>
+        <field name="name">ol_stock_loadcsv.mapping_view</field>
         <field name="model">delivery.carrier</field>
         <field name="inherit_id" ref="delivery.view_delivery_carrier_form" />
         <field name="arch" type="xml">
