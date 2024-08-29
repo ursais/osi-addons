@@ -143,7 +143,7 @@ class ProductConfigSession(models.Model):
             values = updates.get("value", {})
             values = self.get_vals_to_write(values=values, model="mrp.bom")
             values.update(bom_values)
-            mrp_bom_id = mrpBom.create(values)
+            mrp_bom_id = mrpBom.sudo().create(values)
             if mrp_bom_id and parent_bom:
                 if mrp_bom_id.company_id and not parent_bom.company_id:
                     mrp_bom_id.company_id = False

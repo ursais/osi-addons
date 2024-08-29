@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_product_configurator_sale,product_configurator_sale,model_product_configurator_sale,base.group_user,1,0,0,0
 access_product_configurator_sale_manager,product_configurator_sale,model_product_configurator_sale,product_configurator.group_product_configurator_manager,1,1,1,1
+access_product_configurator_sale_salesman,product_configurator_sale,model_product_configurator_sale,sales_team.group_sale_salesman,1,1,1,0
