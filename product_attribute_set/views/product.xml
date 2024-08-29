@@ -71,6 +71,7 @@
             <xpath expr="//group[@name='packaging']/.." position="after">
                 <group>
                     <group name="product_attributes" string="Attributes" invisible="1">
+                        <field name="attribute_set_id" />
                         <separator name="attributes_placeholder" />
                     </group>
                 </group>
