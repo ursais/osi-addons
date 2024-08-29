@@ -1,0 +1,15 @@
+<odoo>
+
+    <record model="ir.ui.view" id="loadcsv_partner_fields_form">
+        <field name="name">ol_stock_loadcsv.res.partner.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <field name="type" position="before">
+                <!-- Only set via CSV import, so only show it if it's set -->
+                <field name="csv_company_name" invisible="not csv_company_name" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

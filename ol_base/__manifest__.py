@@ -57,6 +57,7 @@
         "data/product_data.xml",
         "data/res_users_role.xml",
         "views/res_company.xml",
+        "views/stock_picking.xml",
     ],
     # only loaded in demonstration mode
     "demo": [

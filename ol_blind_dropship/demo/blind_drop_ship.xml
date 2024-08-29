@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <!-- Create a blind drop ship product -->
+    <record id="blind_drop_ship_product" model="product.product">
+        <field name="default_code">BLIND DROP SHIP PRODUCT</field>
+        <field name="name">Product to indicate blind drop shipping</field>
+        <field name="type">service</field>
+        <field name="categ_id" ref="product.product_category_3" />
+    </record>
+
+    <record id="ol_blind_dropship_demo_settings" model="res.config.settings">
+        <field
+            name="blind_drop_ship_product_id"
+            model="product.product"
+            search="[('id', '=', ref('blind_drop_ship_product'))]"
+        />
+    </record>
+
+    <!-- Apply the config -->
+    <function model="res.config.settings" name="execute">
+        <function
+            eval="[[('id', '=', ref('ol_blind_dropship_demo_settings'))]]"
+            model="res.config.settings"
+            name="search"
+        />
+    </function>
+
+</odoo>

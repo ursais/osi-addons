@@ -1,0 +1,134 @@
+<odoo>
+
+    <!-- Add view to hold wizard form with import button -->
+    <record model="ir.ui.view" id="csv_loader_form_view">
+        <field name="name">csv.loader.form</field>
+        <field name="model">wizard.csv.loader</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Load Delivery Order CSV">
+                <group>
+                    <label for="csv_file" string="" colspan="2" />
+                    <field
+                        name="csv_file"
+                        filename="csv_filename"
+                        nolabel="1"
+                        colspan="2"
+                    />
+                    <field name="csv_filename" invisible="1" />
+                </group>
+                <footer>
+                    <button
+                        name="import_csv"
+                        string="Import"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    <button
+                        string="Cancel"
+                        type="object"
+                        name="cancel"
+                        class="oe_link"
+                        special="cancel"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Create action to open wizard -->
+    <record model="ir.actions.act_window" id="action_csv_loader_form">
+        <field name="name">Delivery Order CSV Import</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">wizard.csv.loader</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="csv_loader_form_view" />
+    </record>
+
+    <!-- Add menuitem -->
+    <menuitem
+        id="csv_loader_menu"
+        name="Import CSV"
+        action="action_csv_loader_form"
+        parent="stock.menu_stock_root"
+        sequence="12"
+    />
+
+    <!-- Verification of import -->
+    <record model="ir.ui.view" id="view_orders_to_import">
+        <field name="name">csv.loader.form.verification</field>
+        <field name="model">wizard.csv.loader</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form>
+                <div invisible="not error_html">
+                    <h2>
+                        <label for="error_html" string="Validation Errors" />
+                    </h2>
+                    <div style="margin-bottom: 2em;">
+                        <p style="margin: 0;">
+                            <b>Error:</b>
+                            CSV contains invalid data that cannot be imported.
+                        </p>
+                        <p style="margin: 0;">
+                            <b>Warning:</b>
+                            CSV contains valid data that can be imported but may be
+                            incorrect.
+                        </p>
+                    </div>
+                </div>
+                <field name="error_html" type="html" nolabel="1" />
+                <field name='delivery_orders' nolabel="1">
+                    <tree create="false">
+                        <field name="name" />
+                        <field name="partner_id" />
+                        <field name="carrier_id" />
+                        <field name="min_date" />
+                        <field name="origin" />
+                    </tree>
+                    <form>
+                        <h1>
+                            <field name="name" class="oe_inline" />
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="partner_id" />
+                                <field name="blind_drop_ship" />
+                                <field
+                                    name="blind_ship_from"
+                                    invisible="not blind_drop_ship"
+                                />
+                            </group>
+                            <group>
+                                <field name="min_date" />
+                                <field name="origin" />
+                                <field name="carrier_id" />
+                            </group>
+                        </group>
+                        <group>
+                            <field name="move_lines">
+                                <tree>
+                                    <field name="product_id" />
+                                    <field name="product_uom_qty" />
+                                    <field name="product_uom" />
+                                    <field name="location_dest_id" />
+                                </tree>
+                            </field>
+                        </group>
+                    </form>
+                </field>
+                <footer>
+                    <button
+                        name="import_confirm"
+                        class="oe_highlight"
+                        string="Confirm"
+                        type="object"
+                    />
+                    <button name="import_cancel" string="Cancel" type="object" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

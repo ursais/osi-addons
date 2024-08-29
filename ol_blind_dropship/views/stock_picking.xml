@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="view_picking_form" model="ir.ui.view">
+        <field name="name">ol_blind_dropship.picking_form_view</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="ol_base.view_picking_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='information_block_div']" position="inside">
+                <field name="blind_drop_ship" invisible="1" />
+                <!-- Add blind drop ship warning text -->
+                <div invisible="not blind_drop_ship" class="ls-information-block notification-alert">
+                    <div class="text-danger">BLIND DROP SHIP</div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
