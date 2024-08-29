@@ -4,12 +4,12 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2023-11-26 19:34+0000\n"
-"Last-Translator: Ivorra78 <informatica@totmaterial.es>\n"
+"PO-Revision-Date: 2024-03-07 08:36+0000\n"
+"Last-Translator: Ömer KÜLAK <omer.kulak@kitayazilim.com>\n"
 "Language-Team: none\n"
-"Language: es\n"
+"Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -26,58 +26,58 @@ msgstr ""
 #: model:ir.model.fields,field_description:product_attribute_set.field_product_template__attribute_set_id
 #: model_terms:ir.ui.view,arch_db:product_attribute_set.product_template_search_view
 msgid "Attribute Set"
-msgstr "Conjunto de atributos"
+msgstr "Nitelik Seti"
 
 #. module: product_attribute_set
 #: model_terms:ir.ui.view,arch_db:product_attribute_set.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product_attribute_set.product_variant_easy_edit_view
 msgid "Attributes"
-msgstr "Atributos"
+msgstr "Nitelikler"
 
 #. module: product_attribute_set
 #: model:attribute.set,name:product_attribute_set.computer_attribute_set
 msgid "Computer"
-msgstr "Ordenador"
+msgstr "Bilgisayar"
 
 #. module: product_attribute_set
 #: model:ir.model.fields,field_description:product_attribute_set.field_product_category__attribute_set_id
 msgid "Default Attribute Set"
-msgstr "Conjunto de Atributos por Defecto"
+msgstr "Varsayılan Nitelik Seti"
 
 #. module: product_attribute_set
 #: model:attribute.option,name:product_attribute_set.computer_processor_attribute_option_1
 msgid "Intel i5"
-msgstr "i5 de Intel"
+msgstr "İntel i5"
 
 #. module: product_attribute_set
 #: model:attribute.option,name:product_attribute_set.computer_processor_attribute_option_2
 msgid "Intel i6"
-msgstr "i6 de Intel"
+msgstr "İntel i6"
 
 #. module: product_attribute_set
 #: model:attribute.option,name:product_attribute_set.computer_processor_attribute_option_3
 msgid "Intel i7"
-msgstr "i7 de Intel"
+msgstr "İntel i7"
 
 #. module: product_attribute_set
 #: model:attribute.set,name:product_attribute_set.mouse_attribute_set
 msgid "Mouse"
-msgstr "Ratón"
+msgstr "Fare"
 
 #. module: product_attribute_set
 #: model:ir.model.fields,field_description:product_attribute_set.computer_processor_attribute_ir_model_fields
 msgid "Processor"
-msgstr "Procesador"
+msgstr "İşlemci"
 
 #. module: product_attribute_set
 #: model:ir.model,name:product_attribute_set.model_product_template
 msgid "Product"
-msgstr "Producto"
+msgstr "Ürün"
 
 #. module: product_attribute_set
 #: model:ir.model,name:product_attribute_set.model_product_category
 msgid "Product Category"
-msgstr "Categoría de Producto"
+msgstr "Ürün Kategorisi"
 
 #. module: product_attribute_set
 #: model:ir.model,name:product_attribute_set.model_product_product
@@ -87,19 +87,19 @@ msgstr ""
 #. module: product_attribute_set
 #: model:attribute.group,name:product_attribute_set.computer_technical_attribute_group
 msgid "Technical"
-msgstr "Técnico"
+msgstr "Teknik"
 
 #. module: product_attribute_set
 #: model:ir.model.fields,field_description:product_attribute_set.computer_tech_description_attribute_ir_model_fields
 msgid "Technical Description"
-msgstr "Descripción Técnica"
+msgstr "Teknik Açıklama"
 
 #. module: product_attribute_set
 #: model:attribute.group,name:product_attribute_set.computer_transport_attribute_group
 msgid "Transport"
-msgstr "Transporte"
+msgstr "Ulaşım"
 
 #. module: product_attribute_set
 #: model:ir.model.fields,field_description:product_attribute_set.computer_linux_compatible_attribute_ir_model_fields
 msgid "X Linux Compatible"
-msgstr "X Compatible con Linux"
+msgstr "X Linux Uyumlu"
