@@ -15,9 +15,10 @@ class MRPEco(models.Model):
         """When apply changes button is applied, then update variant BoM's
         from scaffolding BoM. This method only makes new BoM versions if
         differences are found."""
+        result = super(MRPEco, self).action_apply()
         for eco in self:
-            if eco.allow_apply_change and eco.type == "product":
+            if eco.type == "product":
                 eco.product_tmpl_id._reset_all_variants_bom_with_scaffold_bom()
-        return super(MRPEco, self).action_apply()
+        return result
 
     # END #########
