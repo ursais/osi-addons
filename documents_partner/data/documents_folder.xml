@@ -1,0 +1,8 @@
+<odoo noupdate="1">
+
+    <record id="documents_partner_folder" model="documents.folder">
+        <field name="name">Partners</field>
+        <field name="sequence">14</field>
+    </record>
+
+</odoo>

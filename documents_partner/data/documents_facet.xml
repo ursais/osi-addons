@@ -1,0 +1,9 @@
+<odoo noupdate="1">
+
+    <record id="documents_partner_facet" model="documents.facet">
+        <field name="name">Documents</field>
+        <field name="sequence">5</field>
+        <field name="folder_id" ref="documents_partner_folder" />
+    </record>
+
+</odoo>
