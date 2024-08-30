@@ -1,0 +1,53 @@
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.documents.mrp</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="70" />
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='documents']" position="attributes">
+                <attribute name="notApp">0</attribute>
+            </xpath>
+            <xpath expr="//app[@name='documents']" position="inside">
+                <block>
+                    <setting
+                        company_dependent="1"
+                        help="Centralize your manufacturing documents"
+                    >
+                        <field name="documents_mrp_settings" />
+                        <div
+                            class="content-group"
+                            invisible="not documents_mrp_settings"
+                        >
+                            <div class="row mt16">
+                                <label
+                                    class="o_form_label col-lg-3"
+                                    for="mrp_folder"
+                                    string="Workspace"
+                                />
+                                <field
+                                    name="mrp_folder"
+                                    required="documents_mrp_settings"
+                                />
+                            </div>
+                            <div class="row">
+                                <label
+                                    class="o_form_label col-lg-3"
+                                    for="mrp_tags"
+                                    string="Default Tags"
+                                />
+                                <field
+                                    name="mrp_tags"
+                                    widget="many2many_tags"
+                                    domain="[('folder_id','=', mrp_folder)]"
+                                />
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
