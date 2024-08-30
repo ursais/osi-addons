@@ -1,0 +1,53 @@
+<odoo>
+
+    <record id="res_config_settings_documents_lot_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.documents.lot</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="70" />
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='documents']" position="attributes">
+                <attribute name="notApp">0</attribute>
+            </xpath>
+            <xpath expr="//app[@name='documents']" position="inside">
+                <block>
+                    <setting
+                        company_dependent="1"
+                        help="Centralize files attached to lot/tracking numbers"
+                    >
+                        <field name="documents_lot_settings" />
+                        <div
+                            class="content-group"
+                            invisible="not documents_lot_settings"
+                        >
+                            <div class="row mt16">
+                                <label
+                                    class="o_form_label col-lg-3"
+                                    for="lot_folder"
+                                    string="Workspace"
+                                />
+                                <field
+                                    name="lot_folder"
+                                    required="documents_lot_settings"
+                                />
+                            </div>
+                            <div class="row">
+                                <label
+                                    class="o_form_label col-lg-3"
+                                    for="lot_tags"
+                                    string="Default Tags"
+                                />
+                                <field
+                                    name="lot_tags"
+                                    widget="many2many_tags"
+                                    domain="[('folder_id','=', lot_folder)]"
+                                />
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
