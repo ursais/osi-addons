@@ -22,7 +22,7 @@ class DocumentsWorkflowRule(models.Model):
             view_id = self.env.ref("documents_stock_lot.select_lot_view_form").id
             return {
                 "type": "ir.actions.act_window",
-                "res_model": "stock.lot",
+                "res_model": "select.lot",
                 "name": "Lot/Tracking Number",
                 "context": ctx,
                 "view_mode": "form",
