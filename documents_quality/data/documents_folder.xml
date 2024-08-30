@@ -1,0 +1,26 @@
+<odoo noupdate="1">
+
+    <record id="documents_quality_folder" model="documents.folder">
+        <field name="name">Quality</field>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="documents_quality_point_folder" model="documents.folder">
+        <field name="name">Control Points</field>
+        <field name="sequence">20</field>
+        <field name="parent_folder_id" ref="documents_quality_folder" />
+    </record>
+
+    <record id="documents_quality_check_folder" model="documents.folder">
+        <field name="name">Checks</field>
+        <field name="sequence">25</field>
+        <field name="parent_folder_id" ref="documents_quality_folder" />
+    </record>
+
+    <record id="documents_quality_alert_folder" model="documents.folder">
+        <field name="name">Alerts</field>
+        <field name="sequence">30</field>
+        <field name="parent_folder_id" ref="documents_quality_folder" />
+    </record>
+
+</odoo>
