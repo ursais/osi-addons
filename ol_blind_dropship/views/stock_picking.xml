@@ -6,10 +6,16 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="ol_base.view_picking_form" />
         <field name="arch" type="xml">
-            <xpath expr="//div[@name='information_block_div']" position="inside">
+            <xpath
+        expr="//div[@name='information_block_div']"
+        position="inside"
+      >
                 <field name="blind_drop_ship" invisible="1" />
                 <!-- Add blind drop ship warning text -->
-                <div invisible="not blind_drop_ship" class="ls-information-block notification-alert">
+                <div
+          invisible="not blind_drop_ship"
+          class="ls-information-block notification-alert"
+        >
                     <div class="text-danger">BLIND DROP SHIP</div>
                 </div>
             </xpath>
