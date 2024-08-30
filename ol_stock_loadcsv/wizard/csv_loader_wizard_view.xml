@@ -10,27 +10,27 @@
                 <group>
                     <label for="csv_file" string="" colspan="2" />
                     <field
-                        name="csv_file"
-                        filename="csv_filename"
-                        nolabel="1"
-                        colspan="2"
-                    />
+            name="csv_file"
+            filename="csv_filename"
+            nolabel="1"
+            colspan="2"
+          />
                     <field name="csv_filename" invisible="1" />
                 </group>
                 <footer>
                     <button
-                        name="import_csv"
-                        string="Import"
-                        type="object"
-                        class="oe_highlight"
-                    />
+            name="import_csv"
+            string="Import"
+            type="object"
+            class="oe_highlight"
+          />
                     <button
-                        string="Cancel"
-                        type="object"
-                        name="cancel"
-                        class="oe_link"
-                        special="cancel"
-                    />
+            string="Cancel"
+            type="object"
+            name="cancel"
+            class="oe_link"
+            special="cancel"
+          />
                 </footer>
             </form>
         </field>
@@ -48,12 +48,12 @@
 
     <!-- Add menuitem -->
     <menuitem
-        id="csv_loader_menu"
-        name="Import CSV"
-        action="action_csv_loader_form"
-        parent="stock.menu_stock_root"
-        sequence="12"
-    />
+    id="csv_loader_menu"
+    name="Import CSV"
+    action="action_csv_loader_form"
+    parent="stock.menu_stock_root"
+    sequence="12"
+  />
 
     <!-- Verification of import -->
     <record model="ir.ui.view" id="view_orders_to_import">
@@ -96,9 +96,9 @@
                                 <field name="partner_id" />
                                 <field name="blind_drop_ship" />
                                 <field
-                                    name="blind_ship_from"
-                                    invisible="not blind_drop_ship"
-                                />
+                  name="blind_ship_from"
+                  invisible="not blind_drop_ship"
+                />
                             </group>
                             <group>
                                 <field name="min_date" />
@@ -120,12 +120,16 @@
                 </field>
                 <footer>
                     <button
-                        name="import_confirm"
-                        class="oe_highlight"
-                        string="Confirm"
-                        type="object"
-                    />
-                    <button name="import_cancel" string="Cancel" type="object" />
+            name="import_confirm"
+            class="oe_highlight"
+            string="Confirm"
+            type="object"
+          />
+                    <button
+            name="import_cancel"
+            string="Cancel"
+            type="object"
+          />
                 </footer>
             </form>
         </field>

@@ -534,6 +534,9 @@ class CsvStockPicking(models.TransientModel):
         Creates and returns real stock pickings from this object's data
         """
         delivery_orders = self.env["stock.picking"]
+        # TODO: Need to Check Location
+        location_id = self.env.ref("stock.stock_location_stock")
+        location_dest_id = self.env.ref("stock.stock_location_customers")
 
         for record in self:
             # get the values for the stock moves in the form
@@ -548,8 +551,10 @@ class CsvStockPicking(models.TransientModel):
                 "note": record.note,
                 "move_line_ids": move_lines,
                 "blind_ship_from": record.blind_ship_from.id,
-                "location_id": record.location_id.id,
-                "location_dest_id": record.location_dest_id.id,
+                "location_id": record.location_id.id or location_id.id or False,
+                "location_dest_id": record.location_dest_id.id
+                or location_dest_id.id
+                or False,
                 "csv_import": True,
                 "csv_partner_shipping_id": record.partner_shipping_id.id,
                 "csv_customer_po": record.customer_po,
@@ -593,14 +598,19 @@ class CsvStockMove(models.TransientModel):
         Returns a list of stock move values to be used by a stock.picking.create call
         """
         stock_move_vals = []
+        # TODO: Need to Check Location
+        location_id = self.env.ref("stock.stock_location_stock")
+        location_dest_id = self.env.ref("stock.stock_location_customers")
 
         for record in self:
             vals = {
                 "product_id": record.product_id.id,
                 "quantity": record.product_uom_qty,
                 "product_uom_id": record.product_uom.id,
-                "location_id": record.location_id.id,
-                "location_dest_id": record.location_dest_id.id,
+                "location_id": record.location_id.id or location_id.id or False,
+                "location_dest_id": record.location_dest_id.id
+                or location_dest_id.id
+                or False,
             }
             stock_move_vals.append((0, 0, vals))
         # returning a recordset here

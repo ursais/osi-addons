@@ -7,11 +7,11 @@
         <field name="arch" type="xml">
             <field name="partner_id" position="after">
                 <field
-                    name="blind_ship_from"
-                    context="{'show_address': 1}"
-                    options="{'reload': 1}"
-                    invisible="not blind_ship_from"
-                />
+          name="blind_ship_from"
+          context="{'show_address': 1}"
+          options="{'reload': 1}"
+          invisible="not blind_ship_from"
+        />
             </field>
         </field>
     </record>
