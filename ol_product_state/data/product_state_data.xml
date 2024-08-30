@@ -58,6 +58,19 @@
         <field name="approved_ship" eval="True" />
     </record>
 
+    <record id="product_state_tech_exception" model="product.state">
+        <field name="code">tech_exception</field>
+        <field name="name">Tech Exception</field>
+        <field name="sequence">14</field>
+        <field name="approved_purchase" eval="False" />
+        <field name="approved_sale" eval="False" />
+        <field name="approved_sale_confirm" eval="False" />
+        <field name="approved_mrp" eval="False" />
+        <field name="approved_component_mrp" eval="False" />
+        <field name="approved_bom" eval="False" />
+        <field name="approved_ship" eval="False" />
+    </record>
+
     <record id="product_state.product_state_end" model="product.state">
         <field name="approved_purchase" eval="False" />
         <field name="approved_sale" eval="False" />

@@ -35,4 +35,29 @@
         <field name="sequence">7</field>
     </record>
 
+    <record id="bom_revision" model="mrp.eco.type">
+        <field name="name">BoM Revision</field>
+        <field name="sequence">8</field>
+    </record>
+
+    <record id="tierd_bom_revision" model="mrp.eco.type">
+        <field name="name">Tier'd BoM Revision</field>
+        <field name="sequence">9</field>
+    </record>
+
+    <record id="tierd_bom_revision_sensitive" model="mrp.eco.type">
+        <field name="name">Tier'd BoM Revision - REVISION SENSITIVE</field>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="tech_exception" model="mrp.eco.type">
+        <field name="name">Tech Exception</field>
+        <field name="sequence">11</field>
+    </record>
+
+    <record id="new_tierd_system" model="mrp.eco.type">
+        <field name="name">New Tier'd Systems</field>
+        <field name="sequence">12</field>
+    </record>
+
 </odoo>
