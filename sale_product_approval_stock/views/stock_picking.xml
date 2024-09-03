@@ -11,7 +11,7 @@
                 position="after"
             >
                 <button
-                    invisible="do_line_exceptions or (not product_id or pick_state in ('done','cancel'))"
+                    invisible="do_line_exceptions or (not product_id or pick_state in ('done','cancel') or picking_code != 'outgoing')"
                     class="fa fa-exclamation-triangle"
                     title="A product on this Delivery Order has been marked as not allowed."
                 />

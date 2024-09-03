@@ -18,9 +18,13 @@ class StockPicking(models.Model):
     @api.depends("move_ids_without_package")
     def _compute_stock_exception(self):
         for rec in self:
-            rec.do_exceptions = any(
-                not line.do_line_exceptions for line in rec.move_ids_without_package
-            )
+            # We only care about blocking outgoing shipments
+            if rec.picking_type_code == "outgoing":
+                rec.do_exceptions = any(
+                    not line.do_line_exceptions for line in rec.move_ids_without_package
+                )
+            else:
+                rec.do_exceptions = False
 
     def _log_exception_activity_stock(self, product_id):
         for order in self:
