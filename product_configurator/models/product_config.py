@@ -847,8 +847,7 @@ class ProductConfigSession(models.Model):
             custom_vals = {}
         value_ids = value_ids + self.value_ids.ids
         if self.env.context.get("tobe_remove_attr", []):
-            if self.env.context.get("is_m2m"):
-                value_ids = self.flatten_val_ids(value_ids)
+            value_ids = self.flatten_val_ids(value_ids)
             value_ids = set(value_ids) - set(
                 self.env.context.get("tobe_remove_attr", [])
             )

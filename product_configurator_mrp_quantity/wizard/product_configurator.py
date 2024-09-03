@@ -224,6 +224,8 @@ class ProductConfigurator(models.TransientModel):
         return vals
 
     def onchange(self, values, field_name, field_onchange):
+        # Remove False Values to Avoid an Error.
+        values = {k: v for k, v in values.items() if v is not False}
         onchange_values = super().onchange(values, field_name, field_onchange)
         vals = onchange_values.get("value", {})
         qty_prefix = self._prefixes.get("qty_field")
@@ -247,6 +249,8 @@ class ProductConfigurator(models.TransientModel):
                 if value.startswith(qty_prefix):
                     if value_qty_dict.get(value):
                         value_qty_dict[value] = values.get(value)
+                    if values_dict.get(value):
+                        values_dict[value] = values.get(value)
                     self.with_context(is_abc=True).value_qty_dict = json.dumps(
                         value_qty_dict
                     )
@@ -271,7 +275,20 @@ class ProductConfigurator(models.TransientModel):
                         update_price += sum(extra_prices.values())
                 elif isinstance(values_dict.get(value_line), list):
                     # Many2Many Values
-                    data_list = values_dict[value_line][0][2]
+                    data_list = list(set(values_dict[value_line][0][2]))
+                    if values.get(value_line) or value_line in values:
+                        if any(values.get(value_line)):
+                            for multi_value in values.get(value_line, []):
+                                if multi_value[0] == 3 and multi_value[1] in data_list:
+                                    data_list.remove(multi_value[1])
+                                if multi_value[0] == 4:
+                                    data_list.append(multi_value[1])
+                        if (
+                            not any(values.get(value_line))
+                            and values.get(value_line, []) == []
+                        ):
+                            data_list = []
+                    data_list = list(set(data_list))
                     product_attribute_values = attribute_value_obj.browse(data_list)
                     for product_attribute_value in product_attribute_values:
                         if product_attribute_value.product_id:
@@ -311,6 +328,83 @@ class ProductConfigurator(models.TransientModel):
         elif not onchange_values.get("value"):
             onchange_values.update({"value": {"price": update_price}})
         return onchange_values
+
+    @api.onchange("product_preset_id")
+    def _onchange_product_preset(self):
+        result = super()._onchange_product_preset()
+        if (
+            self.product_preset_id
+            and self.product_preset_id.product_attribute_value_qty_ids
+        ):
+            values_dict = self.values_dict and ast.literal_eval(self.values_dict) or {}
+            product_attribute_value_qty_ids = (
+                self.product_preset_id.product_attribute_value_qty_ids
+            )
+            attr_qty_list = []
+            attribute_qty_value_obj = self.env["attribute.value.qty"]
+            qty_prefix = self._prefixes.get("qty_field")
+            field_prefix = self._prefixes.get("field_prefix")
+            for qty_attr_value in product_attribute_value_qty_ids:
+                attribute_value_qty = attribute_qty_value_obj.search(
+                    [
+                        (
+                            "product_attribute_value_id",
+                            "=",
+                            qty_attr_value.attr_value_id.id,
+                        ),
+                        ("product_tmpl_id", "=", self.product_tmpl_id.id),
+                        (
+                            "product_attribute_id",
+                            "=",
+                            qty_attr_value.attr_value_id.attribute_id.id,
+                        ),
+                    ]
+                )
+                if attribute_value_qty:
+                    self._origin.domain_qty_ids = attribute_value_qty.ids
+                    self._origin.dyn_qty_field_value = qty_prefix + str(
+                        qty_attr_value.attr_value_id.attribute_id.id
+                    )
+                attr_qty_list.append(
+                    (
+                        0,
+                        0,
+                        {
+                            "session_id": self._origin.config_session_id.id,
+                            "product_attribute_id": qty_attr_value.attr_value_id.attribute_id.id,
+                            "attr_value_id": qty_attr_value.attr_value_id.id,
+                            "qty": int(qty_attr_value.qty),
+                            "attribute_value_qty_id": qty_attr_value.attribute_value_qty_id.id,
+                        },
+                    )
+                )
+                values_dict.update(
+                    {
+                        self._origin.dyn_qty_field_value: qty_attr_value.attribute_value_qty_id.id
+                    }
+                )
+            for value in self._origin.value_ids:
+                field_name = field_prefix + str(value.attribute_id.id)
+                if self.product_tmpl_id.attribute_line_ids.filtered(
+                    lambda attr_line: attr_line.attribute_id.id == value.attribute_id.id
+                    and not attr_line.multi
+                ):
+                    values_dict.update(
+                        {field_prefix + str(value.attribute_id.id): value.id}
+                    )
+                elif self.product_tmpl_id.attribute_line_ids.filtered(
+                    lambda attr_line: attr_line.attribute_id.id == value.attribute_id.id
+                    and attr_line.multi
+                ):
+                    multi_values = self._origin.value_ids.filtered(
+                        lambda attr_line: attr_line.attribute_id.id
+                        == value.attribute_id.id
+                    )
+                    values_dict.update({field_name: [[6, 0, multi_values.ids]]})
+            values_dict.update({"preset_product": self.product_preset_id.id})
+            self._origin.values_dict = json.dumps(values_dict)
+            self._origin.config_session_id.session_value_quantity_ids = attr_qty_list
+            return result
 
     # ============================
     # OVERRIDE Methods
