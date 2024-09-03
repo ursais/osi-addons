@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_product_configurator_order_template,access_product_configurator_order_template,ol_product_configurator_sale_template.model_product_configurator_sale_order_temp,base.group_user,1,1,1,1

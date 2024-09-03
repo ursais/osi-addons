@@ -1,0 +1,48 @@
+<odoo>
+
+    <record id="sale_order_template_view_form_configurator_inherit" model="ir.ui.view">
+        <field name="name">sale.order.template.form.configurator.inherit</field>
+        <field name="model">sale.order.template</field>
+        <field name="inherit_id" ref="sale_management.sale_order_template_view_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='sale_order_template_line_ids']"
+                position="before"
+            >
+                <button
+                    class="oe_highlight"
+                    groups="product_configurator.group_product_configurator"
+                    name="action_config_start"
+                    string="Configure Product"
+                    style="margin-top: 15px;"
+                    type="object"
+                />
+            </xpath>
+            <xpath
+                expr="//field[@name='sale_order_template_line_ids']/form//field[@name='product_id']"
+                position="after"
+            >
+                <field name="config_ok" invisible="1" optional="hide" />
+                <field name="config_session_id" />
+            </xpath>
+            <xpath
+                expr="//field[@name='sale_order_template_line_ids']/tree//field[@name='product_id']"
+                position="after"
+            >
+                <field name="config_ok" invisible="1" optional="hide" />
+                <button
+                    invisible="not config_ok"
+                    class="fa-lg"
+                    groups="product_configurator.group_product_configurator"
+                    help="Reconfigure"
+                    icon="fa-cogs"
+                    name="reconfigure_product"
+                    type="object"
+                    title="Reconfigure"
+                />
+                <field name="config_session_id" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
