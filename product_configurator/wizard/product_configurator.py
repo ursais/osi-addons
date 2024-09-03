@@ -208,7 +208,6 @@ class ProductConfigurator(models.TransientModel):
             tobe_remove_attr=tobe_remove_attr
         ).get_cfg_price(cfg_val_ids)
         weight = config_session_id.get_cfg_weight(value_ids=cfg_val_ids)
-
         return {
             "product_img": product_img,
             "value_ids": [(6, 0, cfg_val_ids)],
@@ -235,15 +234,31 @@ class ProductConfigurator(models.TransientModel):
         """
         vals = {}
         dynamic_fields = {k: v for k, v in dynamic_fields.items() if v}
+        tobe_remove_attr = []
+        available_val_ids_m2m = []
         for k, v in dynamic_fields.items():
             if not v:
                 continue
             available_val_ids = domains[k][0][2]
-            available_val_ids_m2m = []
+            value_ids = self.config_session_id.value_ids
+            attribute_line_ids = self.product_tmpl_id.attribute_line_ids.filtered(
+                lambda line: line.multi
+                and line.attribute_id.id in value_ids.mapped("attribute_id").ids
+            )
+            multi_value_ids = self.config_session_id.value_ids.filtered(
+                lambda value: value.attribute_id.id
+                in attribute_line_ids.mapped("attribute_id").ids
+            )
+            available_val_ids_m2m = multi_value_ids.ids
+            tobe_remove_attr_m2m = []
             if isinstance(v, list) or self.env.context.get("is_m2m"):
                 if isinstance(v, list):
                     for sub_value in v:
-                        available_val_ids_m2m.append(sub_value[1])
+                        if sub_value[0] == 3:
+                            tobe_remove_attr_m2m.append(sub_value[1])
+                            available_val_ids_m2m.remove(sub_value[1])
+                        if sub_value[0] == 4:
+                            available_val_ids_m2m.append(sub_value[1])
                     dynamic_fields.update({k: available_val_ids_m2m})
                     vals[k] = [[6, 0, available_val_ids_m2m]]
             elif v not in available_val_ids:
@@ -252,7 +267,6 @@ class ProductConfigurator(models.TransientModel):
 
             else:
                 vals[k] = v
-        tobe_remove_attr = []
         if (
             (
                 self.env.context.get("is_action_previous")
@@ -313,14 +327,10 @@ class ProductConfigurator(models.TransientModel):
                     elif (
                         self._context.get("is_m2m", False) and dyn_key in dynamic_fields
                     ):
-                        remove_value = dynamic_fields.get(dyn_key)
-                        if isinstance(remove_value, int):
-                            remove_value = [remove_value]
-                        m2m_attrb_values = session_attrb_values.filtered(
-                            lambda value: value.id in remove_value
+                        tobe_remove_attr_m2m = set(tobe_remove_attr_m2m) - set(
+                            available_val_ids_m2m
                         )
-                        if m2m_attrb_values:
-                            tobe_remove_attr.extend(m2m_attrb_values.ids)
+                        tobe_remove_attr.extend(list(tobe_remove_attr_m2m))
             origin_updated_fields = set(dynamic_fields)
             to_updated_fields = set(dynamic_fields2)
             updated_fields = to_updated_fields - origin_updated_fields
@@ -580,8 +590,8 @@ class ProductConfigurator(models.TransientModel):
             preset_id = self.env["product.product"].browse(preset_id)
         pta_value_ids = preset_id.product_template_attribute_value_ids
         attr_value_ids = pta_value_ids.mapped("product_attribute_value_id")
-        self.value_ids = attr_value_ids
-        self.price = (
+        self._origin.value_ids = attr_value_ids
+        self._origin.price = (
             preset_id and preset_id.lst_price or self.product_tmpl_id.list_price
         )
 
@@ -989,7 +999,6 @@ class ProductConfigurator(models.TransientModel):
                 product_tmpl_id=int(vals.get("product_tmpl_id"))
             )
             vals.update({"user_id": self.env.uid, "config_session_id": session.id})
-            wz_value_ids = vals.get("value_ids", [])
             if session.value_ids:
                 vals.update({"value_ids": [(6, 0, session.value_ids.ids)]})
         return super().create(vals_list)
@@ -1154,7 +1163,7 @@ class ProductConfigurator(models.TransientModel):
             session = self.env["product.config.step"]
         if session_product_tmpl_id:
             action = session_product_tmpl_id.with_context(
-                dict(self.env.context)
+                **dict(self.env.context)
             ).create_config_wizard(model_name=self._name, click_next=False)
             return action
         return False
