@@ -74,6 +74,8 @@ class ProductConfiguratorSaleBlanketOrder(models.TransientModel):
             for key, val in fields_spec.items()
             if key in list(line_vals.keys()) and key != "taxes_id"
         }
+        if "price_unit" in line_vals:
+            line_vals.pop("price_unit")
         updates = order_line_obj.onchange(line_vals, ["product_id"], fields_spec)
         values = updates.get("value", {})
         values = cfg_session.get_vals_to_write(values=values, model=model_name)
