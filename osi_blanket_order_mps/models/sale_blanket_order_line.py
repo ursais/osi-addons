@@ -10,6 +10,10 @@ class BlanketOrderLine(models.Model):
     _inherit = "sale.blanket.order.line"
 
     partner_id = fields.Many2one(store=True)
+    bom_id = fields.Many2one(
+        "mrp.bom",
+        string="BoM",
+    )
 
     @api.onchange(
         "original_uom_qty",
@@ -93,7 +97,11 @@ class BlanketOrderLine(models.Model):
                     " 'Ordered QTY' should greater than 0!"
                 )
             )
-        return super().write(values)
+        res = super().write(values)
+        # If the bom_id is changing on the line, then mps needs recompute
+        if "bom_id" in values:
+            self.order_id.action_mps_replenish(self.ids, bom_change=True)
+        return res
 
     def unlink(self):
         """
