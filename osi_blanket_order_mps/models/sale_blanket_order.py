@@ -18,7 +18,7 @@ class BlanketOrder(models.Model):
         default=True,
     )
 
-    def action_mps_replenish(self, line_ids):
+    def action_mps_replenish(self, line_ids, bom_change=False):
         mps_obj = self.env["mrp.production.schedule"]
         sale_blanket_line_obj = self.env["sale.blanket.order.line"]
         mo_obj = self.env["mrp.production"]
@@ -40,7 +40,14 @@ class BlanketOrder(models.Model):
                     ("company_id", "=", company_id.id),
                 ]
             )
-            if not mps_id and line.order_id.is_mps_included:
+            if (mps_id and bom_change) or (
+                not mps_id and line.order_id.is_mps_included
+            ):
+                if mps_id:
+                    mps_id.forecast_ids.sudo().write(
+                        {"forecast_qty": 0.0, "replenish_qty": 0.0}
+                    )
+                    mps_id.unlink()
                 mps_id = mps_obj.create(
                     {
                         "product_id": line.product_id.id,
