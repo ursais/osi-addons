@@ -1,0 +1,15 @@
+<odoo>
+
+    <record id="view_partner_property_form_inherit_ol_account_hot_ar" model="ir.ui.view">
+        <field name="name">res.partner.property.form.inherit.ol_account_hot_ar</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='credit_limits']/div[1]" position="after">
+                <field name="hot_ar" readonly="1" />
+                <field name="override_hot_ar" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
