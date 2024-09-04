@@ -11,11 +11,14 @@ class ResPartner(models.Model):
     hot_ar = fields.Boolean(
         string="Hot AR",
         compute="_compute_check_hot_ar",
-        help="""Customer has one or more invoices that are overdue and past the grace period."""
+        store=True,
+        help="""Customer has one or more invoices that are
+         overdue and past the grace period.""",
     )
     override_hot_ar = fields.Boolean(
         string="Override Hot AR",
-        help="Customer has one or more invoices that are overdue and past the grace period.",
+        help="""ustomer has one or more invoices that are overdue and
+         past the grace period.""",
         groups="account.group_account_invoice",
     )
 
@@ -23,18 +26,22 @@ class ResPartner(models.Model):
 
     # METHODS #####
 
-    @api.depends('invoice_ids.hot_ar')
+    @api.depends("invoice_ids.hot_ar")
     def _compute_check_hot_ar(self):
+        """Update hot_ar bool if any invoices have it enabled."""
         for partner in self:
             if partner.override_hot_ar:
                 partner.hot_ar = False
             else:
-                invoices = self.env["account.move"].search([
-                    ("partner_id", "=", partner.id),
-                    ("payment_state", "not in", ("in_payment", "paid", "reversed")),
-                    ('move_type', 'in', ('out_invoice', 'in_invoice')),
-                    ("hot_ar", "=", True), ("override_hot_ar", "=", False)
-                ])
+                invoices = self.env["account.move"].search(
+                    [
+                        ("partner_id", "=", partner.id),
+                        ("payment_state", "not in", ("in_payment", "paid", "reversed")),
+                        ("move_type", "in", ("out_invoice", "in_invoice")),
+                        ("hot_ar", "=", True),
+                        ("override_hot_ar", "=", False),
+                    ]
+                )
                 partner.hot_ar = bool(invoices)
 
     # END #########

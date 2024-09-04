@@ -1,0 +1,33 @@
+<odoo noupdate="1">
+
+    <record id="excep_sales_hot_ar" model="exception.rule">
+        <field name="name">Sales Hot AR Exception</field>
+        <field name="description">Throw Exception on Sales Order if Hot AR</field>
+        <field name="sequence">70</field>
+        <field name="model">sale.order</field>
+        <field name="exception_type">by_domain</field>
+        <field name="domain">["&amp;", ("partner_invoice_id.hot_ar", "=", True), ("partner_invoice_id.override_hot_ar", "=", False)]</field>
+        <field name="active" eval="True" />
+    </record>
+
+    <record id="excep_mo_hot_ar" model="exception.rule">
+        <field name="name">Manufacturing Order Hot AR Exception</field>
+        <field name="description">Throw Exception on Manufacturing Order if Hot AR</field>
+        <field name="sequence">71</field>
+        <field name="model">mrp.production</field>
+        <field name="exception_type">by_domain</field>
+        <field name="domain">["&amp;", ("sale_order_id.partner_invoice_id.hot_ar", "=", True), ("sale_order_id.partner_invoice_id.override_hot_ar", "=", False)]</field>
+        <field name="active" eval="True" />
+    </record>
+
+    <record id="excep_delivery_hot_ar" model="exception.rule">
+        <field name="name">Delivery Hot AR Exception</field>
+        <field name="description">Throw Exception on Delivery Order if Hot AR</field>
+        <field name="sequence">72</field>
+        <field name="model">stock.picking</field>
+        <field name="exception_type">by_domain</field>
+        <field name="domain">["&amp;", "&amp;", ("picking_type_code", "=", "outgoing"), ("move_ids.sale_line_id.order_id.partner_invoice_id.hot_ar", "=", True), ("move_ids.sale_line_id.order_id.partner_invoice_id.override_hot_ar", "=", False)]</field>
+        <field name="active" eval="True" />
+    </record>
+
+</odoo>

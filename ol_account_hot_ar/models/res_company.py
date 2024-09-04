@@ -12,17 +12,20 @@ class ResCompany(models.Model):
         string="Hot AR Grace Period",
         default=15,
         help="""Places holds on customer orders when invoices are not paid
-         within grace period of being due."""
+         within grace period of being due.""",
     )
 
     # END #########
 
     # METHODS #####
 
-    @api.constrains('hot_ar_grace_period')
+    @api.constrains("hot_ar_grace_period")
     def validate_hot_ar_grace_period(self):
+        """Validation to make sure grace period is a positive number."""
         for record in self:
             if record.hot_ar_grace_period <= 0:
-                raise ValidationError(_("Please set a strictly positive Hot AR Grace Period value."))
+                raise ValidationError(
+                    _("Please set a strictly positive Hot AR Grace Period value.")
+                )
 
     # END #########
