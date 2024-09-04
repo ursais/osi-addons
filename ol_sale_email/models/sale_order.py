@@ -82,9 +82,14 @@ class SaleOrder(models.Model):
         backorder_products = self.env["product.product"]
         for line in self.order_line:
             products = line.bom_id.bom_line_ids.product_id or False
-            for product in products:
-                if product and product.allow_backorder and product.qty_available <= 0:
-                    backorder_products |= product
+            if products:
+                for product in products:
+                    if (
+                        product
+                        and product.allow_backorder
+                        and product.qty_available <= 0
+                    ):
+                        backorder_products |= product
         return backorder_products
 
     def action_confirm(self):
