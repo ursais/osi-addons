@@ -15,11 +15,11 @@ class StockPicking(models.Model):
     )
     override_exception = fields.Boolean(default=False)
 
-    @api.depends("move_ids_without_package")
+    @api.depends("move_ids_without_package", "state")
     def _compute_stock_exception(self):
         for rec in self:
             # We only care about blocking outgoing shipments
-            if rec.picking_type_code == "outgoing":
+            if rec.picking_type_code == "outgoing" and rec.state in ["done", "cancel"]:
                 rec.do_exceptions = any(
                     not line.do_line_exceptions for line in rec.move_ids_without_package
                 )
