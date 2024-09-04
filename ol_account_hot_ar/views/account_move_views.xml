@@ -1,0 +1,32 @@
+<odoo>
+
+    <record id="view_move_form_inherit_ol_account_hot_ar" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.ol_account_hot_ar</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <field name="to_check" position="before">
+                <field name="hot_ar" invisible="1"/>
+                <field name="override_hot_ar" />
+            </field>
+            <xpath expr="//header" position="after">
+                <div groups="account.group_account_invoice,account.group_account_readonly"
+                     class="alert alert-warning" role="alert" invisible="not hot_ar">
+                    This invoice is overdue and past the grace period.
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_filter_inherit_ol_account_hot_ar" model="ir.ui.view">
+        <field name="name">account.move.search.inherit.ol_account_hot_ar</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter" />
+        <field name="arch" type="xml">
+            <filter name="late" position="after">
+                <filter string="Hot AR" name="hot_ar" domain="[('hot_ar', '=', True)]"/>
+            </filter>
+        </field>
+    </record>
+
+</odoo>
