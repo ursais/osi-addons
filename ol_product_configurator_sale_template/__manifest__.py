@@ -12,6 +12,7 @@
     "depends": [
         "ol_base",
         "sale_management",
+        "sale_mrp",
         "product_configurator",
     ],
     # always loaded
