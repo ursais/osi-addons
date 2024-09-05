@@ -12,6 +12,7 @@ class TestAccountHotAR(TransactionCase):
         self.company = self.browse_ref("base.main_company")
 
         # ==== Partners ====
+        # Create a test partner "partner_a" for testing invoice processing
         self.partner_a = self.env["res.partner"].create(
             {
                 "name": "partner_a",
@@ -19,6 +20,7 @@ class TestAccountHotAR(TransactionCase):
         )
 
         # ==== Products ====
+        # Create a test product "product_a" with specific prices and taxes
         self.product_a = self.env["product.product"].create(
             {
                 "name": "product_a",
@@ -34,14 +36,16 @@ class TestAccountHotAR(TransactionCase):
         )
 
         # ==== Invoice ====
+        # Create a test invoice with two lines for the test product
         self.invoice = self.env["account.move"].create(
             {
                 "move_type": "out_invoice",
                 "partner_id": self.partner_a.id,
                 "invoice_date": fields.Date.from_string("2024-01-01"),
                 "currency_id": self.company.currency_id.id,
-                "hot_ar": True,
+                "hot_ar": True,  # Enable the Hot AR flag
                 "invoice_line_ids": [
+                    # First invoice line: 3 units of product_a at 750/unit
                     Command.create(
                         {
                             "product_id": self.product_a.id,
@@ -49,6 +53,7 @@ class TestAccountHotAR(TransactionCase):
                             "price_unit": 750,
                         }
                     ),
+                    # Second invoice line: 1 unit of product_a at 3000/unit
                     Command.create(
                         {
                             "product_id": self.product_a.id,
@@ -61,24 +66,39 @@ class TestAccountHotAR(TransactionCase):
         )
 
     def test00_validate_hot_ar_grace_period(self):
+        # Test validation: hot_ar_grace_period should not be negative
         with self.assertRaises(ValidationError):
             self.company.write({"hot_ar_grace_period": -10})
 
     def test01_hot_ar_grace_period(self):
+        # Post the invoice and check its initial payment state
         self.invoice.action_post()
         self.assertTrue(self.invoice.payment_state in ("not_paid"))
+
+        # Check if Hot AR flag is set to True after posting
         self.assertTrue(self.invoice.hot_ar)
+
+        # Simulate payment and verify payment state changes to "paid" or "in_payment"
         self.env["account.payment.register"].with_context(
             active_model="account.move", active_ids=self.invoice.ids
         ).create({})._create_payments()
         self.assertTrue(self.invoice.payment_state in ("paid", "in_payment"))
+
+        # Verify Hot AR flag is updated to False after payment is registered
         self.invoice.onchange_payment_state()
         self.assertFalse(self.invoice.hot_ar)
 
     def test02_update_hot_ar_invoices(self):
+        # Set the invoice due date to be the same as the invoice date and
+        # disable Hot AR flag
         self.invoice.invoice_date_due = self.invoice.invoice_date
         self.invoice.hot_ar = False
+
+        # Post the invoice and ensure Hot AR is not set for the partner
         self.invoice.action_post()
         self.assertFalse(self.invoice.partner_id.hot_ar)
+
+        # Call the method to update Hot AR invoices and verify the partner's
+        # Hot AR is updated
         self.env["account.move"]._update_hot_ar_invoices()
         self.assertTrue(self.invoice.partner_id.hot_ar)
