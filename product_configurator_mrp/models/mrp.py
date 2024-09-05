@@ -103,18 +103,18 @@ class MrpBom(models.Model):
     @api.depends("scaffolding_bom", "active", "product_tmpl_id")
     def _compute_existing_scaffolding_bom(self):
         for rec in self:
-            if (
-                self.search_count(
-                    [
-                        ("scaffolding_bom", "=", True),
-                        ("active", "=", True),
-                        ("product_tmpl_id", "=", rec.product_tmpl_id.id),
-                        ("product_id", "=", False),
-                        ("id", "!=", rec.id),
-                    ]
-                )
-                >= 1
-            ):
+            domain = [
+                ("scaffolding_bom", "=", True),
+                ("active", "=", True),
+                ("product_tmpl_id", "=", rec.product_tmpl_id.id),
+                ("product_id", "=", False),
+            ]
+
+            # Only add the id condition if the record has an actual id (i.e., not a new record)
+            if rec.id:
+                domain.append(("id", "!=", rec.id))
+
+            if self.search_count(domain) >= 1:
                 rec.existing_scaffolding_bom = True
             else:
                 rec.existing_scaffolding_bom = False
