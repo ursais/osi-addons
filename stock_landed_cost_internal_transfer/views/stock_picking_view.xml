@@ -1,0 +1,25 @@
+<odoo>
+
+    <record id="view_picking_form_inherit_add_lc_fields" model="ir.ui.view">
+        <field name="name">view.picking.form.inherit.add.lc.fields</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="is_cost_based_transfer" invisible="picking_type_code != 'internal'" readonly="state in ['done', 'cancel']"/>
+                <field name="orig_dest_location_id" required="is_cost_based_transfer" invisible="not is_cost_based_transfer" readonly="state in ['done', 'cancel']"/>
+            </xpath>
+            <xpath expr="//field[@name='location_dest_id'][2]" position="attributes">
+                <attribute name="readonly">is_cost_based_transfer</attribute>
+                <attribute name="force_save">1</attribute>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="new_picking_id" invisible="1"/>
+                <button name="view_new_picking" type="object" class="oe_stat_button" icon="fa-truck"
+                        invisible="not new_picking_id">
+                    <span class="o_stat_text">IN Picking</span>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
