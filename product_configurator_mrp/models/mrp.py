@@ -110,6 +110,7 @@ class MrpBom(models.Model):
                         ("active", "=", True),
                         ("product_tmpl_id", "=", rec.product_tmpl_id.id),
                         ("product_id", "=", False),
+                        ("id", "!=", rec.id),
                     ]
                 )
                 >= 1
