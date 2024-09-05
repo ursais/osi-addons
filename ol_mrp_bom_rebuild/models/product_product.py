@@ -50,6 +50,29 @@ class ProductProduct(models.Model):
                     variant_bom = bom_obj.search(
                         [("product_id", "=", product.id)], limit=1
                     )
+                    # MRP Quantity Related Customization.
+                    product_attribute_value_qty_ids = product.product_attribute_value_qty_ids
+                    session_value_ids = scaffold_bom.bom_line_ids.config_set_id.configuration_ids.value_ids
+                    configuration_values = session_value_ids.filtered(lambda value: value.id in product.product_attribute_value_qty_ids.mapped("attr_value_id").ids)
+                    filtered_value_qty_ids = product_attribute_value_qty_ids.filtered(lambda value:value.attr_value_id.id in session_value_ids.ids)
+                    variant_bom = bom_obj.search(
+                        [("product_id", "=", product.id)], limit=1
+                    )
+                    session_qty_list = []
+                    for value_qty in filtered_value_qty_ids:
+                        session_qty_list.append(
+                        (
+                            0,
+                            0,
+                            {
+                                "product_attribute_id": value_qty.attr_value_id.attribute_id.id,
+                                "attr_value_id": value_qty.attr_value_id.id,
+                                "attribute_value_qty_id": value_qty.attribute_value_qty_id.id,
+                                "qty": value_qty.attribute_value_qty_id.qty,
+                            },
+                        )
+                    )
+
 
                     # Temporarily deactivate the variant's BoM
                     variant_bom.write({"active": False})
@@ -68,7 +91,8 @@ class ProductProduct(models.Model):
                                         "product_attribute_value_id"
                                     ).ids,
                                 )
-                            ]
+                            ],
+                            "session_value_quantity_ids":session_qty_list
                         }
                     )
                     session.action_confirm()

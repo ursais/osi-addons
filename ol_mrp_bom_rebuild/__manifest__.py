@@ -10,7 +10,7 @@
     # any module necessary for this one to work correctly
     "depends": [
         "ol_base",
-        "product_configurator_mrp",
+        "product_configurator_mrp_quantity",
         "ol_mrp_plm",
     ],
     # always loaded
