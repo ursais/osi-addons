@@ -126,8 +126,12 @@
                     class="alert alert-danger text-center"
                     role="alert"
                 >
-                <p><strong
-                        >There is an active scaffolding BoM for this product.</strong></p></div>
+                    <p>
+                        <strong>
+                            There is an active scaffolding BoM for this product.
+                        </strong>
+                    </p>
+                </div>
             </xpath>
         </field>
     </record>
