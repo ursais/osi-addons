@@ -1,0 +1,22 @@
+<odoo>
+
+    <record id="product_category_form_view_inherit" model="ir.ui.view" >
+        <field name="name">product.category.form.inherit</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_form_view" />
+        <field name="arch" type="xml">
+            <group name="first" position="after">
+                <group name="product_state_candidate" string="Product State Candidates">
+                    <field name="candidate_sale"/>
+                    <field name="candidate_sale_confirm"/>
+                    <field name="candidate_purchase"/>
+                    <field name="candidate_manufacture"/>
+                    <field name="candidate_component_manufacture"/>
+                    <field name="candidate_bom"/>
+                    <field name="candidate_ship"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+</odoo>

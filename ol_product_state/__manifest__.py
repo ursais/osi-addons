@@ -13,6 +13,7 @@
     "depends": [
         "ol_base",
         "product_state",
+        "sale_product_approval",
         "sale_product_approval_purchase",
         "sale_product_approval_mrp",
         "sale_product_approval_stock",
@@ -21,6 +22,7 @@
     "data": [
         "security/product_state_group.xml",
         "views/product_template_view.xml",
+        "views/product_category_views.xml",
         "data/product_state_data.xml",
     ],
     # only loaded in demo mode

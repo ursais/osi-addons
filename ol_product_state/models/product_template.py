@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class ProductTemplate(models.Model):
@@ -39,3 +39,21 @@ class ProductTemplate(models.Model):
         ):
             vals.pop("product_state_id")
         return super().write(vals)
+
+    @api.onchange("categ_id")
+    def onchange_categ_id(self):
+        """
+        Updates the candidate fields of each product in self based on 
+        the values of the corresponding fields in self.categ_id.
+        """
+        for product in self:
+            for field in [
+                'candidate_sale',
+                'candidate_sale_confirm',
+                'candidate_purchase',
+                'candidate_manufacture',
+                'candidate_component_manufacture',
+                'candidate_bom',
+                'candidate_ship',
+            ]:
+                setattr(product, field, getattr(self.categ_id, field))
