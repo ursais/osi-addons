@@ -53,3 +53,26 @@ class TestProductStateOlValidation(common.TransactionCase):
         mrp_eco.stage_id = self.env.ref("mrp_plm.ecostage_validated").id
         mrp_eco.action_apply()
         self.assertEqual(self.product_1.product_state_id, mrp_eco.stage_id.product_state_id)
+
+    def test_check_onchange_category(self):
+        product_category = self.env["product.category"].create(
+            {
+                "name": "Test category",
+                "candidate_sale": True,
+                "candidate_purchase": True,
+                "candidate_manufacture": True,
+            }
+        )
+        desk_temp = self.env["product.template"].create(
+            {
+                "name": "Desk Combination",
+            }
+        )
+        self.assertFalse(desk_temp.categ_id.candidate_sale)
+        self.assertFalse(desk_temp.candidate_sale)
+        desk_temp.write({"categ_id": product_category.id})
+        desk_temp.onchange_categ_id()
+        self.assertTrue(desk_temp.candidate_sale)
+        self.assertTrue(desk_temp.categ_id.candidate_sale)
+        self.assertEqual(desk_temp.candidate_sale, product_category.candidate_sale)
+        self.assertEqual(desk_temp.candidate_purchase, product_category.candidate_purchase)
