@@ -8,10 +8,17 @@
         <field name="model">sale.order</field>
         <field name="exception_type">by_domain</field>
         <field name="domain">[
-            ("order_line.bom_id.bom_line_ids.product_tmpl_id.detailed_type", "=","product"),
-            ("order_line.bom_id.bom_line_ids.product_tmpl_id.allow_backorder", "!=", True),
-            ("order_line.bom_id.bom_line_ids.product_id.qty_available", "&lt;=", 0)
-        ]</field>
+        "|",
+        "&amp;","&amp;","&amp;",
+            ("order_line.product_id.detailed_type", "=", "product"),
+            ("order_line.product_id.qty_available", "&lt;=", 0),
+            ("order_line.product_id.allow_backorder", "=", False),
+            ("order_line.bom_id", "=", False),
+        "&amp;","&amp;",
+            ("order_line.bom_id.bom_line_ids.product_id.detailed_type", "=", "product"),
+            ("order_line.bom_id.bom_line_ids.product_id.allow_backorder", "=", False),
+            ("order_line.bom_id.bom_line_ids.product_id.qty_available", "&lt;=", 0),
+    ]</field>
         <field name="active" eval="True" />
     </record>
 
