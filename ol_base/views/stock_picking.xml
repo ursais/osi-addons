@@ -7,20 +7,17 @@
         <field name="arch" type="xml">
             <!-- The Notification row container -->
             <div name="button_box" position="after">
-              <div
-          name="information_block_div"
-          class="ls-information-block-cont"
-        />
+                <div name="information_block_div" class="ls-information-block-cont" />
             </div>
 
             <!-- Add a debug page for relevant developer information -->
             <xpath expr="//notebook/page[last()]" position="after">
-              <page name="debug" string="Debug" groups="base.group_no_one">
-                <group name="basic_info">
-                  <field name="id" />
-                  <field name="sale_id" />
-                </group>
-              </page>
+                <page name="debug" string="Debug" groups="base.group_no_one">
+                    <group name="basic_info">
+                        <field name="id" />
+                        <field name="sale_id" />
+                    </group>
+                </page>
             </xpath>
 
         </field>
