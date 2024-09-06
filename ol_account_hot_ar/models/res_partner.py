@@ -37,7 +37,7 @@ class ResPartner(models.Model):
                     [
                         ("partner_id", "=", partner.id),
                         ("payment_state", "not in", ("in_payment", "paid", "reversed")),
-                        ("move_type", "in", ("out_invoice", "in_invoice")),
+                        ("move_type", "in", ("out_invoice", "in_invoice", "out_refund", "in_refund")),
                         ("hot_ar", "=", True),
                         ("override_hot_ar", "=", False),
                     ]

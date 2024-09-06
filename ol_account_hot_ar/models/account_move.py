@@ -35,9 +35,9 @@ class AccountMove(models.Model):
         # Use sudo to get ALL invoices for ALL companies
         invoices = self.sudo().search(
             [
-                ("move_type", "=", "out_invoice"),
+                ("move_type", "in", ("out_invoice", "in_invoice", "out_refund", "in_refund")),
                 ("state", "=", "posted"),
-                ("payment_state", "!=", "paid"),
+                ("payment_state", "not in", ("in_payment", "paid", "reversed")),
                 ("invoice_date_due", "!=", False),
                 ("hot_ar", "=", False),
                 ("override_hot_ar", "=", False),
