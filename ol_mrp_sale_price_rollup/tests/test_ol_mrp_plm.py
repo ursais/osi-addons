@@ -44,7 +44,6 @@ class TestSaleTierValidation(common.TransactionCase):
         cls.dozen = cls.env.ref("uom.product_uom_dozen")
 
         bom_form = Form(cls.Bom)
-        # bom_form.product_id = cls.dining_table
         bom_form.product_tmpl_id = cls.dining_table.product_tmpl_id
         bom_form.product_qty = 1.0
         bom_form.product_uom_id = cls.unit
@@ -62,8 +61,6 @@ class TestSaleTierValidation(common.TransactionCase):
             line.product_id = cls.glass
             line.product_qty = 1
         cls.bom_1 = bom_form.save()
-
-        # cls.dining_table.button_bom_sale_price()
 
 
 class TestBomPrice(TestSaleTierValidation):

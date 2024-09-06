@@ -143,10 +143,10 @@ class TestSaleBlanketOrder(common.TransactionCase):
         )
 
         # Trigger onchange for partner to update related fields
-        blanket_order.sudo().onchange_partner_id()
+        blanket_order.onchange_partner_id()
 
         # Confirm the blanket order
-        blanket_order.sudo().action_confirm()
+        blanket_order.action_confirm()
 
         # Run the cron job to create sale orders from the blanket order
         self.blanket_order_obj.create_sale_order_cron()
