@@ -18,7 +18,7 @@ class SaleBlanketOrder(models.Model):
 
     # COLUMNS #####
 
-    auto_release = fields.Boolean(default=True)
+    auto_release = fields.Boolean(default=True, tracking=True)
 
     # END #########
 

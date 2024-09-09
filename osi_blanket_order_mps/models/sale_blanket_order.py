@@ -3,10 +3,11 @@
 from datetime import datetime
 
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
 
 
 class BlanketOrder(models.Model):
+    """Inherit Blanket Orders adding MPS Integration and Field Tracking"""
+
     _inherit = "sale.blanket.order"
 
     partner_ref = fields.Char(
@@ -16,7 +17,18 @@ class BlanketOrder(models.Model):
     is_mps_included = fields.Boolean(
         string="Include in Master Production Schedule (MPS)",
         default=True,
+        tracking=True,
     )
+    state = fields.Selection(tracking=True)
+    partner_id = fields.Many2one(tracking=True)
+    payment_term_id = fields.Many2one(tracking=True)
+    currency_id = fields.Many2one(tracking=True)
+    validity_date = fields.Date(tracking=True)
+    pricelist_id = fields.Many2one(tracking=True)
+    user_id = fields.Many2one(tracking=True)
+    team_id = fields.Many2one(tracking=True)
+    client_order_ref = fields.Char(tracking=True)
+    company_id = fields.Many2one(tracking=True)
 
     def action_mps_replenish(self, line_ids, bom_change=False):
         mps_obj = self.env["mrp.production.schedule"]
@@ -32,7 +44,8 @@ class BlanketOrder(models.Model):
         company_id = line_ids.mapped("order_id").mapped("company_id")[0]
 
         for line in line_ids:
-            if not line.date_schedule:
+            date_schedule = line.date_schedule or line.order_id.validity_date
+            if not date_schedule:
                 continue
             mps_id = mps_obj.search(
                 [
@@ -58,7 +71,7 @@ class BlanketOrder(models.Model):
             if mps_id:
                 mps_id.forecast_ids.unlink()
                 forecast = mps_id.forecast_ids
-                qualiblanket_line_by_date = sale_blanket_line_obj.read_group(
+                grouped_blanket_line_by_date = sale_blanket_line_obj.read_group(
                     [
                         ("product_id", "=", line.product_id.id),
                         ("order_id.state", "in", ("open", "done")),
@@ -91,9 +104,23 @@ class BlanketOrder(models.Model):
                 po_ids.button_cancel()
                 po_ids.unlink()
 
-                for group in qualiblanket_line_by_date:
+                for group in grouped_blanket_line_by_date:
                     qty = group["remaining_uom_qty"]
-                    date_schedule = datetime.strptime(group["date_schedule"], "%B %Y")
+                    date_schedule_str = group[
+                        "date_schedule"
+                    ]  # This could be a string or False/None
+
+                    if (
+                        not date_schedule_str
+                    ):  # If it's False or None, use a fallback value
+                        date_schedule_str = line.order_id.validity_date.strftime(
+                            "%B %Y"
+                        )
+
+                    # Now safely parse the date string
+                    date_schedule = datetime.strptime(date_schedule_str, "%B %Y")
+
+                    # Create the forecast in MPS
                     forecast.create(
                         {
                             "forecast_qty": qty,
@@ -125,6 +152,12 @@ class BlanketOrder(models.Model):
         super().action_confirm()
         for rec in self:
             rec.sudo().action_mps_replenish(rec.line_ids)
+        return True
+
+    def action_cancel(self):
+        res = super().action_cancel()
+        for order in self:
+            order.action_mps_replenish(order.line_ids)
         return True
 
     @api.onchange("partner_id")
