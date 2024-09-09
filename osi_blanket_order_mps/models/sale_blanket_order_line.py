@@ -27,6 +27,8 @@ class BlanketOrderLine(models.Model):
                 )
 
     def _update_line_quantity(self, values):
+        """This method adds a chatter message to describe the change
+        similar to sale order changes."""
         orders = self.mapped("order_id")
         for order in orders:
             order_lines = self.filtered(lambda x: x.order_id == order)
@@ -79,17 +81,7 @@ class BlanketOrderLine(models.Model):
         return res
 
     def write(self, values):
-        tracking_field_list = [
-            "original_uom_qty",
-            "date_schedule",
-            "price_unit",
-        ]
-        if (
-            any(field in values for field in tracking_field_list)
-            and self.order_id.state != "draft"
-        ):
-            self._update_line_quantity(values)
-
+        res = super().write(values)
         if "product_id" in values and self.ordered_uom_qty > 0:
             raise UserError(
                 _(
@@ -97,10 +89,26 @@ class BlanketOrderLine(models.Model):
                     " 'Ordered QTY' should greater than 0!"
                 )
             )
-        res = super().write(values)
-        # If the bom_id is changing on the line, then mps needs recompute
-        if "bom_id" in values:
-            self.order_id.action_mps_replenish(self.ids, bom_change=True)
+
+        tracking_field_list = [
+            "original_uom_qty",
+            "date_schedule",
+            "price_unit",
+            "bom_id",
+        ]
+        if (
+            any(field in values for field in tracking_field_list)
+            and self.order_id.state != "draft"
+        ):
+            # If bom is changing, then recompute mps with bom_change true
+            # to recompute components.
+            if "bom_id" in values:
+                self.order_id.action_mps_replenish(self.ids, bom_change=True)
+            # If qty or scheduled date is changing, then recompute mps.
+            elif "original_uom_qty" in values or "date_schedule" in values:
+                self.order_id.action_mps_replenish(self.ids)
+            self._update_line_quantity(values)
+
         return res
 
     def unlink(self):
