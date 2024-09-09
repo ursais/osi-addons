@@ -3,6 +3,8 @@ from odoo import fields, models
 
 
 class ProductCategory(models.Model):
+    """Add fields to product categories."""
+
     _inherit = "product.category"
 
     # COLUMNS ###

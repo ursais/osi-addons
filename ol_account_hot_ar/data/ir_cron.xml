@@ -4,7 +4,7 @@
         <field name="name">Compute Hot AR</field>
         <field name="model_id" ref="account.model_account_move" />
         <field name="state">code</field>
-        <field name="code">model._update_hot_ar_invoices()</field>
+        <field name="code">model._update_hot_ar_invoices_cron()</field>
         <field name="interval_number">1</field>
         <field name="interval_type">days</field>
         <field name="numbercall">-1</field>

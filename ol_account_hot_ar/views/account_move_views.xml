@@ -11,7 +11,7 @@
             </field>
             <xpath expr="//header" position="after">
                 <div groups="account.group_account_invoice,account.group_account_readonly"
-                     class="alert alert-warning" role="alert" invisible="not hot_ar">
+                     class="alert alert-danger" role="alert" invisible="not hot_ar">
                     This invoice is overdue and past the grace period.
                 </div>
             </xpath>
