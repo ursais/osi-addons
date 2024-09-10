@@ -77,26 +77,26 @@ class SaleOrder(models.Model):
 
     def get_backorder_products(self):
         """
-        Get a list of products which are not currently orderable,
-        excluding service and consumable products
+        Get a list of storable products which are not currently available.
         """
         backorder_products = self.env["product.product"]
 
+        # Collect all products from order lines and their BoM components
+        product_ids = set()
         for line in self.order_line:
-            # Add line products as well as any BoM components
-            products = (
-                line.bom_id.bom_line_ids.product_id
-                if line.bom_id
-                else [line.product_id or False]
-            )
+            if line.bom_id:
+                product_ids.update(line.bom_id.bom_line_ids.mapped("product_id.id"))
+            if line.product_id:
+                product_ids.add(line.product_id.id)
 
-            for product in products:
-                # Skip if no product is found and exclude non-storable products
-                if not product or product.type != "product":
-                    continue
+        # Fetch the products in bulk to reduce database queries
+        products = self.env["product.product"].browse(list(product_ids))
 
-                if product and product.allow_backorder and product.qty_available <= 0:
-                    backorder_products |= product
+        # Filter products that are storable, allow backorders,
+        # and are currently not available
+        backorder_products = products.filtered(
+            lambda p: p.type == "product" and p.allow_backorder and p.qty_available <= 0
+        )
 
         return backorder_products
 
