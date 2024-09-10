@@ -32,7 +32,7 @@ class SaleOrderTemplateLine(models.Model):
 
     # Define a many-to-one relationship with the Bill of Materials (BoM)
     bom_id = fields.Many2one(
-        "mrp.bom",
+         comodel_name="mrp.bom",
         string="BoM",
         readonly=True,
     )

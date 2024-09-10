@@ -9,27 +9,30 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     # COLUMNS #####
+
     csv_company_name = fields.Char("CSV Company Name")
+
     # END #########
+    # METHODS #####
 
     def _compute_display_name(self):
         result = super()._compute_display_name()
 
-        # TODO: Need to check, this method is needed or not.
         context = dict(self.env.context)
-        # Only change display_name functionality
-        # if we show it on a Stock Picking's partner_shipping_id field
-        if not context.get("picking_partner_shipping_id", False) or context.get(
-            "picking_id", False
-        ):
+        # Only change display_name functionality if we show it on a Stock Picking
+        picking_id = context.get("picking_id")
+
+        if not picking_id:  # If picking_id is None or False, return the original result
             return result
-        picking = self.env["stock.picking"].browse(int(context.get("picking_id")))
+
+        picking = self.env["stock.picking"].browse(int(picking_id))
+
         # Only change display_name functionality if the picking was created via CSV import
         if not picking.csv_import:
             return result
 
         for partner in self:
-            if not partner.id == picking.csv_partner_shipping_id.id:
+            if partner.id != picking.csv_partner_shipping_id.id:
                 # We don't want to override other partner's display_name functionality
                 continue
 
@@ -53,4 +56,7 @@ class ResPartner(models.Model):
             # ----- END -----
 
             partner.display_name = name.strip()
+
         return result
+
+    # END #########

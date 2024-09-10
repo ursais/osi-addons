@@ -41,6 +41,7 @@ class CsvLoaderWizard(models.TransientModel):
     error_html = fields.Html(string="Lines with Errors", readonly=True)
 
     # END #########
+    # METHODS #####
 
     @api.model
     def validate_row(self, row, has_partner=None):
@@ -489,6 +490,8 @@ class CsvLoaderWizard(models.TransientModel):
 
         return {"type": "ir.actions.act_window_close"}
 
+    # END #########
+
 
 class CsvStockPicking(models.TransientModel):
     _name = "wizard.stock.picking"
@@ -527,14 +530,15 @@ class CsvStockPicking(models.TransientModel):
     location_dest_id = fields.Many2one(
         comodel_name="stock.location", string="Destination Location"
     )
+
     # END #########
+    # METHODS #########
 
     def create_stock_pickings(self, attachment=None):
         """
         Creates and returns real stock pickings from this object's data
         """
         delivery_orders = self.env["stock.picking"]
-        # TODO: Need to Check Location
         location_id = self.env.ref("stock.stock_location_stock")
         location_dest_id = self.env.ref("stock.stock_location_customers")
 
@@ -574,13 +578,18 @@ class CsvStockPicking(models.TransientModel):
 
         return delivery_orders
 
+    # END #########
+
 
 class CsvStockMove(models.TransientModel):
     _name = "wizard.stock.move"
     _description = "Temporary stock move for validation"
 
     # COLUMNS #####
-    csv_picking_id = fields.Many2one("wizard.stock.picking", string="Wizard Picking!")
+
+    csv_picking_id = fields.Many2one(
+        comodel_name="wizard.stock.picking", string="Wizard Picking!"
+    )
     name = fields.Char(string="Description")
     product_id = fields.Many2one(comodel_name="product.product", string="Product")
     product_uom_qty = fields.Float(string="Quantity")
@@ -591,14 +600,15 @@ class CsvStockMove(models.TransientModel):
     location_dest_id = fields.Many2one(
         comodel_name="stock.location", string="Destination Location"
     )
+
     # END #########
+    # METHODS #####
 
     def get_stock_move_vals(self):
         """
         Returns a list of stock move values to be used by a stock.picking.create call
         """
         stock_move_vals = []
-        # TODO: Need to Check Location
         location_id = self.env.ref("stock.stock_location_stock")
         location_dest_id = self.env.ref("stock.stock_location_customers")
 
@@ -615,3 +625,5 @@ class CsvStockMove(models.TransientModel):
             stock_move_vals.append((0, 0, vals))
         # returning a recordset here
         return stock_move_vals
+
+    # END #########
