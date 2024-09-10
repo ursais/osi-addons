@@ -15,6 +15,7 @@ class SimpleVoidCheck(models.TransientModel):
         """Void Check................."""
         payment_check_void_obj = self.env["payment.check.void"]
         check_hist_obj = self.env["payment.check.history"]
+        account_move_obj = self.env["account.move"]
         payment_check_void_obj.create(
             {
                 "bill_ref": self.payment_id.ref,
@@ -37,3 +38,6 @@ class SimpleVoidCheck(models.TransientModel):
         if check_ids:
             check_ids.write({"state": "posted"})
         self.payment_id.action_unmark_sent()
+        partial_reconciled_line_ids = self.env["account.partial.reconcile"].search(["|", ("id", "in", self.payment_id.reconciled_bill_ids.line_ids.matched_debit_ids.ids), ("id", "in", self.payment_id.reconciled_bill_ids.line_ids.matched_credit_ids.ids)])
+        for partial_id in partial_reconciled_line_ids:
+            account_move_obj.sudo().js_remove_outstanding_partial(partial_id.id)
