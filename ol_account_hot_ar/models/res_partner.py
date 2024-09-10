@@ -26,7 +26,12 @@ class ResPartner(models.Model):
 
     # METHODS #####
 
-    @api.depends("invoice_ids.hot_ar")
+    @api.depends(
+        "invoice_ids.hot_ar",
+        "invoice_ids.payment_state",
+        "invoice_ids.override_hot_ar",
+        "override_hot_ar",
+    )
     def _compute_check_hot_ar(self):
         """Update hot_ar bool if any invoices have it enabled."""
         for partner in self:
@@ -37,9 +42,15 @@ class ResPartner(models.Model):
                     [
                         ("partner_id", "=", partner.id),
                         ("payment_state", "not in", ("in_payment", "paid", "reversed")),
-                        ("move_type", "in", ("out_invoice", "in_invoice", "out_refund", "in_refund")),
+                        (
+                            "move_type",
+                            "in",
+                            ("out_invoice", "in_invoice", "out_refund", "in_refund"),
+                        ),
                         ("hot_ar", "=", True),
                         ("override_hot_ar", "=", False),
+                        ("state", "=", "posted"), #PW: Plz check this domain
+                        ("company_id.hot_ar_grace_period", ">", 0),  #PW: Plz check this domain
                     ]
                 )
                 partner.hot_ar = bool(invoices)
