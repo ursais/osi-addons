@@ -12,7 +12,7 @@ class SaleOrderTemplate(models.Model):
     # COLUMNS #####
 
     partner_id = fields.Many2one(
-        "res.partner",
+        comodel_name="res.partner",
         help="""Enter a Partner if this quote is specific to the Partner,
         leave blank if this template can be used for all sale orders.""",
     )

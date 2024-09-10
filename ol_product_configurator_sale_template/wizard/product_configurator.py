@@ -20,17 +20,17 @@ class ProductConfiguratorSaleOrderTemplate(models.TransientModel):
 
     # Domain attributes for the product configurator
     domain_attr_ids = fields.Many2many(
-        "product.attribute.value",
-        "domain_attrs_values_template_order_rel",
-        "wiz_id",
-        "attribute_id",
+        comodel_name="product.attribute.value",
+        relation="domain_attrs_values_template_order_rel",
+        column1="wiz_id",
+        column2="attribute_id",
         string="Domain",
     )
     domain_attr_2_ids = fields.Many2many(
-        "product.attribute.value",
-        "domain_attrs_2_values_template_order_rel",
-        "wiz_id",
-        "attribute_id",
+        comodel_name="product.attribute.value",
+        relation="domain_attrs_2_values_template_order_rel",
+        column1="wiz_id",
+        column2="attribute_id",
         string="Domain",
     )
 

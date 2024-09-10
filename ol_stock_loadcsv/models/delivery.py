@@ -10,7 +10,9 @@ class DeliveryCarrierMapping(models.Model):
     _inherit = "delivery.carrier"
 
     # COLUMNS #####
+
     v10_carrier_id = fields.Many2one(
         comodel_name="delivery.carrier", string="V10 Version"
     )
+
     # END #########
