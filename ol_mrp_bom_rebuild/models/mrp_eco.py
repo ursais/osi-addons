@@ -17,7 +17,7 @@ class MRPEco(models.Model):
         differences are found."""
         result = super(MRPEco, self).action_apply()
         for eco in self:
-            if eco.type == "product":
+            if eco.type == "bom":
                 eco.product_tmpl_id._reset_all_variants_bom_with_scaffold_bom()
         return result
 
