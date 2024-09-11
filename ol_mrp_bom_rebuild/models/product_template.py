@@ -15,8 +15,10 @@ class ProductTemplate(models.Model):
         """Method called by button or server action which cycles through all
         related variants on the template and runs the rebuild BoM method."""
         for template in self:
-            template.product_variant_ids.filtered(
+            variants = template.product_variant_ids.filtered(
                 lambda x: x.product_template_variant_value_ids != []
-            )._reset_variant_bom_with_scaffold_bom()
+            )
+            for variant in variants:
+                variant._reset_variant_bom_with_scaffold_bom()
 
     # END #########
