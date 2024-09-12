@@ -81,6 +81,9 @@ class ProductProduct(models.Model):
                     session = config_session_.create_get_session(
                         product.product_tmpl_id.id
                     )
+                    sessionqtylist = []
+                    if not session.session_value_quantity_ids:
+                        sessionqtylist = session_qty_list
                     session.write(
                         {
                             "value_ids": [
@@ -92,7 +95,7 @@ class ProductProduct(models.Model):
                                     ).ids,
                                 )
                             ],
-                            "session_value_quantity_ids":session_qty_list
+                            "session_value_quantity_ids":sessionqtylist
                         }
                     )
                     session.action_confirm()
