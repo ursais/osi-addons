@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<odoo>
+
+    <!-- Scheduler to update customer hold -->
+    <record model="ir.cron" id="credit_hold_out_picking_cron">
+        <field name="name">Customer Credit Hold on Delivery Orders</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall" eval="False"/>
+        <field name="model_id" ref="model_stock_picking"/>
+        <field name="code">model.compute_customer_hold()</field>
+        <field name="state">code</field>
+        <field eval="True" name="active" />
+    </record>
+
+</odoo>
