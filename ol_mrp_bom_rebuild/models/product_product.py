@@ -78,12 +78,9 @@ class ProductProduct(models.Model):
                     variant_bom.write({"active": False})
 
                     # Create a temporary session to generate a new BoM without committing
-                    session = config_session_.create_get_session(
+                    session = config_session_.with_context(quantity_val_create=True).create_get_session(
                         product.product_tmpl_id.id
                     )
-                    sessionqtylist = []
-                    if not session.session_value_quantity_ids:
-                        sessionqtylist = session_qty_list
                     session.write(
                         {
                             "value_ids": [
@@ -95,7 +92,7 @@ class ProductProduct(models.Model):
                                     ).ids,
                                 )
                             ],
-                            "session_value_quantity_ids":sessionqtylist
+                            "session_value_quantity_ids":session_qty_list
                         }
                     )
                     session.action_confirm()
