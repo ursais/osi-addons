@@ -127,7 +127,9 @@ class ProductConfigSession(models.Model):
                             },
                         )
                     )
-            val.update({"session_value_quantity_ids": session_qty_list})
+            # Added Context quantity_val_create which use to bypass Core Vals Creation over Custom vals.
+            if not self._context.get("quantity_val_create"):
+                val.update({"session_value_quantity_ids": session_qty_list})
         return super().create(vals_list)
 
     # ============================
@@ -406,10 +408,20 @@ class ProductConfigSession(models.Model):
             [
                 ("product_tmpl_id", "=", product_tmpl_id.id),
                 ("product_id", "=", False),
+                ("scaffolding_bom", "=", True),
             ],
             order="sequence asc",
             limit=1,
         )
+        if not parent_bom:
+            parent_bom = self.env["mrp.bom"].search(
+                [
+                    ("product_tmpl_id", "=", product_tmpl_id.id),
+                    ("product_id", "=", False),
+                ],
+                order="sequence asc",
+                limit=1,
+            )
         bom_type = parent_bom and parent_bom.type or "normal"
         bom_lines = []
         attribute_value_obj = self.env["product.attribute.value"]
