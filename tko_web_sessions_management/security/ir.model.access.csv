@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ir_sessions,access_ir_sessions,model_ir_sessions,,1,1,1,0
+access_resource_calendar,access_resource_calendar,resource.model_resource_calendar,,1,0,0,0
+access_resource_calendar_attendance,access_resource_calendar_attendance,resource.model_resource_calendar_attendance,,1,0,0,0
+access_ir_sessions_erp_manager,access_ir_sessions_erp_manager,model_ir_sessions,base.group_erp_manager,1,1,1,1
+access_resource_calendar_erp_manager,access_resource_calendar_erp_manager,resource.model_resource_calendar,base.group_erp_manager,1,1,1,1
+access_resource_calendar_attendance_erp_manager,access_resource_calendar_attendance_erp_manager,resource.model_resource_calendar_attendance,base.group_erp_manager,1,1,1,1
+accsess_ir_property_erp_manager,ir_property_erp_manager,base.model_ir_property,base.group_erp_manager,1,1,1,1

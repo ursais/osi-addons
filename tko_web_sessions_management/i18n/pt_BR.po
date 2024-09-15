@@ -1,0 +1,345 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* tko_web_sessions_management
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 8.0-20150322\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-09-13 01:59+0000\n"
+"PO-Revision-Date: 2015-09-13 01:59+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: tko_web_sessions_management
+#: model:ir.model,name:tko_web_sessions_management.model_res_groups
+msgid "Access Groups"
+msgstr "Grupos de Acesso"
+
+#. module: tko_web_sessions_management
+#: field:res.groups,login_calendar_id:0
+msgid "Allow Login Calendar"
+msgstr "Calendário Permitido"
+
+#. module: tko_web_sessions_management
+#: field:res.users,login_calendar_id:0
+msgid "Allowed Login Calendar"
+msgstr "Calendário Permitido"
+
+#. module: tko_web_sessions_management
+#: field:ir.sessions,multiple_sessions_block:0
+#: field:res.groups,multiple_sessions_block:0
+#: field:res.users,multiple_sessions_block:0
+msgid "Block Multiple Sessions"
+msgstr "Bloquear Múltiplas Sessões"
+
+#. module: tko_web_sessions_management
+#: view:ir.sessions:tko_web_sessions_management.view_sesssions_search
+msgid "Block Multisessions"
+msgstr "Bloquear Múltiplas Sessões"
+
+#. module: tko_web_sessions_management
+#: view:ir.sessions:tko_web_sessions_management.view_sesssions_search
+msgid "Can Open Multiple Session"
+msgstr "Pode Abrir Multiplas Sessões"
+
+#. module: tko_web_sessions_management
+#: view:ir.sessions:tko_web_sessions_management.view_sesssions_search
+msgid "Can't Open Multiple Sessions"
+msgstr "Não Pode Abrir Mais de Uma Sessão"
+
+#. module: tko_web_sessions_management
+#: view:ir.sessions:tko_web_sessions_management.view_sesssions_form
+#: view:ir.sessions:tko_web_sessions_management.view_sesssions_tree
+#: view:res.users:tko_web_sessions_management.view_users_form
+#: view:res.users:tko_web_sessions_management.view_users_form_simple_modif
+msgid "Close Session"
+msgstr "Terminar Sessão"
+
+#. module: tko_web_sessions_management
+#: field:ir.sessions,create_uid:0
+msgid "Created by"
+msgstr "Criado por"
+
+#. module: tko_web_sessions_management
+#: field:ir.sessions,create_date:0
+msgid "Created on"
+msgstr "Criado em"
+
+#. module: tko_web_sessions_management
+#: selection:res.groups,interval_type:0
+#: selection:res.users,interval_type:0
+msgid "Days"
+msgstr "Days"
+
+#. module: tko_web_sessions_management
+#: field:res.groups,interval_number:0
+#: field:res.users,interval_number:0
+msgid "Default Session Duration"
+msgstr "Duração da sessão"
+
+#. module: tko_web_sessions_management
+#: view:res.users:tko_web_sessions_management.view_users_form_simple_modif
+msgid "Email Preferences"
+msgstr "Preferências do Email"
+
+#. module: tko_web_sessions_management
+#: field:ir.sessions,expiration_date:0
+msgid "Expiration Date"
+msgstr "Data de expiração"
+
+#. module: tko_web_sessions_management
+#: view:ir.sessions:tko_web_sessions_management.view_sesssions_search
+msgid "Filter by Login State"
+msgstr "Filtrar por Data Login"
+
+#. module: tko_web_sessions_management
+#: view:ir.sessions:tko_web_sessions_management.view_sesssions_search
+msgid "Filter by Multiple Session"
+msgstr "Filtrar por Múltiplas Sessões"
+
+#. module: tko_web_sessions_management
+#: view:ir.sessions:tko_web_sessions_management.view_sesssions_search
+msgid "Group By"
+msgstr "Agrupar Por"
+
+#. module: tko_web_sessions_management
+#: selection:res.groups,interval_type:0
+#: selection:res.users,interval_type:0
+msgid "Hours"
+msgstr "Horas"
+
+#. module: tko_web_sessions_management
+#: field:ir.sessions,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: tko_web_sessions_management
+#: field:res.groups,interval_type:0
+#: field:res.users,interval_type:0
+msgid "Interval Unit"
+msgstr "Unidade de Intervalo"
+
+#. module: tko_web_sessions_management
+#: view:ir.sessions:tko_web_sessions_management.view_sesssions_search
+msgid "Kill User"
+msgstr "Terminada Por"
+
+#. module: tko_web_sessions_management
+#: field:ir.sessions,user_kill_id:0
+msgid "Killed by"
+msgstr "Terminada Por"
+
+#. module: tko_web_sessions_management
+#: field:ir.sessions,write_uid:0
+msgid "Last Updated by"
+msgstr "Última Actualização por"
+
+#. module: tko_web_sessions_management
+#: field:ir.sessions,write_date:0
+msgid "Last Updated on"
+msgstr "Última Actualização em"
+
+#. module: tko_web_sessions_management
+#: view:ir.sessions:tko_web_sessions_management.view_sesssions_search
+msgid "Logged"
+msgstr "Ligado"
+
+#. module: tko_web_sessions_management
+#: field:ir.sessions,logged_in:0
+msgid "Logged in"
+msgstr "Logado"
+
+#. module: tko_web_sessions_management
+#: field:ir.sessions,date_login:0
+msgid "Login"
+msgstr "Login"
+
+#. module: tko_web_sessions_management
+#: view:res.groups:tko_web_sessions_management.view_groups_form
+#: view:res.users:tko_web_sessions_management.view_users_form
+#: view:res.users:tko_web_sessions_management.view_users_form_simple_modif
+msgid "Login Calendar"
+msgstr "Calendário"
+
+#. module: tko_web_sessions_management
+#: view:ir.sessions:tko_web_sessions_management.view_sesssions_search
+msgid "Login Date"
+msgstr "Data do Login"
+
+#. module: tko_web_sessions_management
+#: view:ir.sessions:tko_web_sessions_management.view_sesssions_search
+msgid "Login State"
+msgstr "Estado do Login"
+
+#. module: tko_web_sessions_management
+#: field:ir.sessions,date_logout:0
+msgid "Logout"
+msgstr "Logout"
+
+#. module: tko_web_sessions_management
+#: view:ir.sessions:tko_web_sessions_management.view_sesssions_search
+msgid "Logout Date"
+msgstr "Data do Logout"
+
+#. module: tko_web_sessions_management
+#: view:ir.sessions:tko_web_sessions_management.view_sesssions_search
+#: field:ir.sessions,logout_type:0
+msgid "Logout Type"
+msgstr "Motivo do Logout"
+
+#. module: tko_web_sessions_management
+#: selection:res.groups,interval_type:0
+#: selection:res.users,interval_type:0
+msgid "Minutes"
+msgstr "Minutos"
+
+#. module: tko_web_sessions_management
+#: selection:res.groups,interval_type:0
+#: selection:res.users,interval_type:0
+msgid "Months"
+msgstr "Meses"
+
+#. module: tko_web_sessions_management
+#: view:ir.sessions:tko_web_sessions_management.view_sesssions_search
+msgid "Not Logged"
+msgstr "Não Logado"
+
+#. module: tko_web_sessions_management
+#: field:ir.sessions,ip:0
+msgid "Remote IP"
+msgstr "IP Remoto"
+
+#. module: tko_web_sessions_management
+#: field:ir.sessions,remote_tz:0
+msgid "Remote Time Zone"
+msgstr "TimeZone Remota"
+
+#. module: tko_web_sessions_management
+#: help:res.users,multiple_sessions_block:0
+msgid "Select this to prevent user to start more than one session."
+msgstr "Selecione para impedir o utilizador de abrir mais de uma sessão."
+
+#. module: tko_web_sessions_management
+#: help:res.groups,multiple_sessions_block:0
+msgid "Select this to prevent users of this group to start more than one session."
+msgstr "Selecione para impedir utilizadores deste grupo de abrir mais de uma sessão."
+
+#. module: tko_web_sessions_management
+#: field:ir.sessions,session_duration:0
+msgid "Session Duration"
+msgstr "Duração da Sessão"
+
+#. module: tko_web_sessions_management
+#: field:ir.sessions,session_id:0
+msgid "Session ID"
+msgstr "ID da Sessão"
+
+#. module: tko_web_sessions_management
+#: selection:ir.sessions,logout_type:0
+msgid "Session Killed"
+msgstr "Sessão Terminada"
+
+#. module: tko_web_sessions_management
+#: field:res.users,session_default_seconds:0
+msgid "Session Seconds"
+msgstr "Segundos"
+
+#. module: tko_web_sessions_management
+#: selection:ir.sessions,logout_type:0
+#: view:res.groups:tko_web_sessions_management.view_groups_form
+#: view:res.users:tko_web_sessions_management.view_users_form
+#: view:res.users:tko_web_sessions_management.view_users_form_simple_modif
+msgid "Session Timeout"
+msgstr "Timeout"
+
+#. module: tko_web_sessions_management
+#: field:ir.sessions,session_seconds:0
+msgid "Session duration in seconds"
+msgstr "Duração da sessão em segundos"
+
+#. module: tko_web_sessions_management
+#: model:ir.actions.act_window,name:tko_web_sessions_management.ir_session_action
+#: model:ir.model,name:tko_web_sessions_management.model_ir_sessions
+#: view:ir.sessions:tko_web_sessions_management.view_sesssions_graph
+#: model:ir.ui.menu,name:tko_web_sessions_management.ir_session_menu
+#: view:res.users:tko_web_sessions_management.view_users_form
+#: view:res.users:tko_web_sessions_management.view_users_form_simple_modif
+msgid "Sessions"
+msgstr "Sessões"
+
+#. module: tko_web_sessions_management
+#: help:res.groups,login_calendar_id:0
+msgid "The user will be only allowed to login in the calendar defined here.\n"
+"NOTE: The users will be allowed to login using a merge/union of all calendars to wich one belongs."
+msgstr "O utilizador só poderá entrar no horário definido no calandário selecionado aqui.\n"
+"NOTA: Os utilizadores poderão entrar na união dos calendários dos grupos a que pertencem."
+
+#. module: tko_web_sessions_management
+#: help:res.users,login_calendar_id:0
+msgid "The user will be only allowed to login in the calendar defined here.\n"
+"NOTE:The calendar defined here will overlap all defined in groups."
+msgstr "O utilizador só poderá entrar no horário selecionado aqui.\n"
+"NOTA: Definindo o calendário aqui irá sobrepôr os calendários dos grupos a que o utilizador pertence."
+
+#. module: tko_web_sessions_management
+#: help:res.groups,interval_number:0
+msgid "This define the timeout for the users of this group.\n"
+"NOTE: The system will get the lowest timeout of all user groups."
+msgstr "Indique aqui o timout dos utilizadores que pertencem a este grupo.\n"
+"NOTA: O sistema irá considerar o menor tempo de timout definido em todos os grupos."
+
+#. module: tko_web_sessions_management
+#: help:res.users,interval_number:0
+msgid "This is the timeout for this user.\n"
+"NOTE: The timeout defined here will overlap all the timeouts defined in groups."
+msgstr "Indique o timeout deste utilizador.\n"
+"NOTE: O timeout definido aqui irá prevalecer sobre os definidos nos grupos a que pertence este utilizador."
+
+#. module: tko_web_sessions_management
+#: view:ir.sessions:tko_web_sessions_management.view_sesssions_search
+#: field:ir.sessions,user_id:0
+msgid "User"
+msgstr "Utilizador"
+
+#. module: tko_web_sessions_management
+#: selection:ir.sessions,logout_type:0
+msgid "User Logout"
+msgstr "Terminado pelo Utilizador"
+
+#. module: tko_web_sessions_management
+#: field:res.users,session_ids:0
+msgid "User Sessions"
+msgstr "Sessões do Utilizador"
+
+#. module: tko_web_sessions_management
+#: model:ir.model,name:tko_web_sessions_management.model_res_users
+msgid "Users"
+msgstr "Utilizadores"
+
+#. module: tko_web_sessions_management
+#: view:ir.sessions:tko_web_sessions_management.view_sesssions_search
+msgid "Users that can login in multiple sessions"
+msgstr "Utilizadores que podem ter várias sessões"
+
+#. module: tko_web_sessions_management
+#: view:ir.sessions:tko_web_sessions_management.view_sesssions_search
+msgid "Users that can't open multiple sessions"
+msgstr "Utilizadores que não podem ter várias sessões"
+
+#. module: tko_web_sessions_management
+#: selection:res.groups,interval_type:0
+#: selection:res.users,interval_type:0
+msgid "Weeks"
+msgstr "Semanas"
+
+#. module: tko_web_sessions_management
+#: selection:res.groups,interval_type:0
+#: selection:res.users,interval_type:0
+msgid "Work Days"
+msgstr "Dias Úteis"
+
