@@ -26,8 +26,9 @@ class AttributeValueQty(models.Model):
             rec.display_name = f"{rec.qty}"
 
     @api.model
-    def name_search(self, name="", args=None, operator="ilike", limit=100):
-        args = args or []
+    def _name_search(self, name, domain=None, operator="ilike", limit=None, order=None):
+        query = super()._name_search(name, domain, operator, limit, order)
+        domain = domain or []
         if self.env.context.get("wizard_id"):
             wiz_id = self.env[
                 self.env.context.get("active_model", "product.configurator")
@@ -38,6 +39,7 @@ class AttributeValueQty(models.Model):
                 and self._context.get("field_name").split(qty_field_prefix)[1]
                 or False
             )
+            domain = [("product_tmpl_id", "=", wiz_id.product_tmpl_id.id)]
             if (
                 qty_attr_id
                 and wiz_id.dyn_qty_field_value == self._context.get("field_name")
@@ -45,7 +47,7 @@ class AttributeValueQty(models.Model):
                 and wiz_id.domain_qty_ids.mapped("product_attribute_id").id
                 == int(qty_attr_id)
             ):
-                args = [("id", "in", wiz_id.domain_qty_ids.ids)]
+                domain = [("id", "in", wiz_id.domain_qty_ids.ids)]
             elif qty_attr_id and wiz_id.dyn_qty_field_value != self._context.get(
                 "field_name"
             ):
@@ -91,8 +93,16 @@ class AttributeValueQty(models.Model):
                             ("product_attribute_id", "=", int(attribute_id[1])),
                         ]
                     ).ids
-                args = [("id", "in", domain_ids)]
-        return super().name_search(name=name, args=args, operator=operator, limit=limit)
+                domain = [("id", "in", domain_ids)]
+            if name:
+                domain_ids = self.search(
+                    [
+                        ("qty", "=", int(name)),
+                        ("product_tmpl_id", "=", wiz_id.product_tmpl_id.id),
+                    ]
+                )
+                domain = [("id", "in", domain_ids.ids)]
+        return self._search(domain, limit=limit, order=order)
 
     @api.model
     def web_search_read(
