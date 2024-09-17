@@ -5,6 +5,7 @@
         <field name="model">sale.blanket.order</field>
         <field name="inherit_id" ref="sale_blanket_order.view_blanket_order_form" />
         <field name="arch" type="xml">
+
             <xpath expr="//field[@name='product_id']" position="after">
                 <field name="product_state_id" optional="show" />
             </xpath>
@@ -14,6 +15,9 @@
             <xpath expr="//field[@name='validity_date']" position="after">
                 <field name="auto_release" />
             </xpath>
+            <field name="taxes_id" position="attributes">
+                <attribute name="required"></attribute>
+            </field>
         </field>
     </record>
 

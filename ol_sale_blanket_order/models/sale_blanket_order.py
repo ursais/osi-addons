@@ -18,7 +18,7 @@ class SaleBlanketOrder(models.Model):
 
     # COLUMNS #####
 
-    auto_release = fields.Boolean(default=True, tracking=True)
+    auto_release = fields.Boolean(default=True, tracking=True,help="Automates the release of blanket order lines on scheduled date minus customer lead time.")
 
     # END #########
 
