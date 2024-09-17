@@ -12,9 +12,11 @@ class MRPEco(models.Model):
     # METHODS #####
 
     def action_apply(self):
-        """When apply changes button is applied, then update variant BoM's
+        """
+        When apply changes button is applied, then update variant BoM's
         from scaffolding BoM. This method only makes new BoM versions if
-        differences are found."""
+        differences are found.
+        """
         result = super(MRPEco, self).action_apply()
         for eco in self:
             if eco.type == "bom":
