@@ -1,6 +1,6 @@
 {
     "name": "OnLogic MRP BOM Rebuild",
-    "summary": "OnLogic MRP BOM Rebuild.",
+    "summary": "Rebuild Variant BoM's from scaffolding.",
     "author": "OnLogic",
     "website": "https://www.onlogic.com",
     "onlogic": True,
@@ -10,8 +10,8 @@
     # any module necessary for this one to work correctly
     "depends": [
         "ol_base",
-        "product_configurator_mrp_quantity",
         "ol_mrp_plm",
+        "product_configurator_mrp_quantity",
     ],
     # always loaded
     "data": [
