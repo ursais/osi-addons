@@ -18,6 +18,7 @@ class BlanketOrder(models.Model):
         string="Include in Master Production Schedule (MPS)",
         default=True,
         tracking=True,
+        help="For confirmed orders that are still open, adds blanket order lines to demand via the master production schedule."
     )
     state = fields.Selection(tracking=True)
     partner_id = fields.Many2one(tracking=True)

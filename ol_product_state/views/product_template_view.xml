@@ -10,7 +10,9 @@
             </xpath>
             <field name="product_state_id" position="after">
                 <field name="has_product_state_change_group" invisible="1" />
-                <field name="product_state_id" widget="statusbar" invisible="has_product_state_change_group" />
+            </field>
+            <field name="product_state_id" position="attributes">
+                <attribute name="invisible">has_product_state_change_group</attribute>
             </field>
         </field>
     </record>

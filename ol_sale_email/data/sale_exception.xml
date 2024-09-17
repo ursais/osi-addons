@@ -2,8 +2,8 @@
 <odoo>
 
     <record id="excep_component_outof_stock" model="exception.rule">
-        <field name="name">Component Out of Stock</field>
-        <field name="description">Component Out of Stock Exception</field>
+        <field name="name">Component Not Available for Backorder</field>
+        <field name="description">Component Not Available for Backorder</field>
         <field name="sequence">50</field>
         <field name="model">sale.order</field>
         <field name="exception_type">by_domain</field>
