@@ -185,18 +185,18 @@
         </record>
        
         <record id="action_estimate_job" model="ir.actions.act_window">
-            <field name="name">Job Estimates</field>
+            <field name="name">Estimates</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.estimate.job</field>
             <!-- <field name="view_type">form</field> -->
             <field name="view_mode">tree,form</field>
         </record>
 
-<!--        <menuitem id="menu_sale_estimate_job" name="Job Estimates" action="action_estimate_job" parent="sales_team.menu_sales"-->
+<!--        <menuitem id="menu_sale_estimate_job" name="Estimates" action="action_estimate_job" parent="sales_team.menu_sales"-->
 <!--                sequence="9"/>-->
-        <!-- <menuitem id="menu_sale_estimate_job" name="Job Estimates" action="action_estimate_job" parent="sale.sale_order_menu"
+        <!-- <menuitem id="menu_sale_estimate_job" name="Estimates" action="action_estimate_job" parent="sale.sale_order_menu"
                 sequence="9"/> --> <!--odoo11-->
 
-        <menuitem id="menu_sale_estimate_job" name="Job Estimates" action="action_estimate_job" parent="sale.sale_order_menu" sequence="25"/>
+        <menuitem id="menu_sale_estimate_job" name="Estimates" action="action_estimate_job" parent="sale.sale_order_menu" sequence="25"/>
 
 </odoo>

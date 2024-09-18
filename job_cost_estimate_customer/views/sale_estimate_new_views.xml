@@ -29,7 +29,7 @@
                     <group>
                         <group>
                             <field name="partner_id" context="{'search_default_customer':1, 'show_address': 1}" options="{&quot;always_reload&quot;: True}" readonly="state in ('approve','quotesend','cancel','reject')"/>
-                            <field name="pricelist_id" readonly="state in ('approve','quotesend','cancel','reject')" groups="product.group_sale_pricelist"/>
+                            <field name="pricelist_id" readonly="state in ('approve','quotesend','cancel','reject')" groups="product.group_product_pricelist" />
                             <field name="payment_term_id" readonly="state in ('approve','quotesend','cancel','reject')" options="{'no_create': True}"/>
                             <field name="reference" readonly="state in ('approve','quotesend','cancel','reject')"/>
                         </group>
@@ -176,13 +176,13 @@
         </record>
        
         <record id="action_estimate_job" model="ir.actions.act_window">
-            <field name="name">Job Estimates</field>
+            <field name="name">Estimates</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.estimate.job</field>
             <!-- <field name="view_type">form</field> -->
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem id="menu_sale_estimate_job" name="Job Estimates" action="action_estimate_job" parent="sale.sale_order_menu" sequence="0"/>
+        <menuitem id="menu_sale_estimate_job" name="Estimates" action="action_estimate_job" parent="sale.sale_order_menu" sequence="25"/>
 
 </odoo>
