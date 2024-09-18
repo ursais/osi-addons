@@ -95,13 +95,32 @@ class AttributeValueQty(models.Model):
                     ).ids
                 domain = [("id", "in", domain_ids)]
             if name:
-                domain_ids = self.search(
-                    [
-                        ("qty", "=", int(name)),
-                        ("product_tmpl_id", "=", wiz_id.product_tmpl_id.id),
+                if wiz_id.domain_qty_ids:
+                    domain = [
+                        ("qty", "ilike", int(name)),
+                        ("id", "in", wiz_id.domain_qty_ids.ids),
                     ]
-                )
-                domain = [("id", "in", domain_ids.ids)]
+                else:
+                    attribute_id = self._context.get("field_name").split(
+                        qty_field_prefix
+                    )
+
+                    attribute_line_id = (
+                        wiz_id.product_tmpl_id.attribute_line_ids.filtered(
+                            lambda attr: attr.attribute_id.id == int(attribute_id[1])
+                        )
+                    )
+                    value_id = attribute_line_id.default_val
+                    domain_ids = self.search(
+                        [
+                            ("qty", "ilike", int(name)),
+                            ("product_tmpl_id", "=", wiz_id.product_tmpl_id.id),
+                            ("product_attribute_id", "=", int(attribute_id[1])),
+                            ("product_attribute_value_id", "=", value_id.id),
+                        ]
+                    )
+                    domain = [("id", "in", domain_ids.ids)]
+
         return self._search(domain, limit=limit, order=order)
 
     @api.model
