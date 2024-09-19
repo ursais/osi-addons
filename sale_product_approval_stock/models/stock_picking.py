@@ -13,7 +13,7 @@ class StockPicking(models.Model):
     do_exceptions = fields.Boolean(
         compute="_compute_stock_exception", string="Stock Exception"
     )
-    override_exception = fields.Boolean(default=False)
+    override_stock_exception = fields.Boolean("Override Stock Exception")
 
     @api.depends("move_ids_without_package", "state")
     def _compute_stock_exception(self):
@@ -59,7 +59,7 @@ class StockPicking(models.Model):
         for do in self:
             if (
                 do.do_exceptions
-                and not do.override_exception
+                and not do.override_stock_exception
                 and not self._context.get("override_ex")
             ):
                 raise UserError(
