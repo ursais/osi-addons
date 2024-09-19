@@ -1,36 +1,30 @@
 # Copyright 2021 Open Source Integrators
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
-
-
 from odoo.exceptions import UserError
+from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
 
-class TestSaleOrderLineDates(TransactionCase):
-    def setUp(self):
-        super().setUp()
-        self.customer = self.env.ref("base.res_partner_12")
-        self.product_id = self.test_create_product_template()
-        self.sale_id = self.test_sale_order()
-        self.product_state_sale = self.env.ref("product_state.product_state_sellable")
-        self.product_state_end = self.env.ref("product_state.product_state_end")
-
-    def test_create_product_template(self):
-        product = self.env["product.product"].create(
+@tagged("post_install", "-at_install")
+class TestSaleProductApproval(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.customer = cls.env.ref("base.res_partner_12")
+        cls.product_state_sale = cls.env.ref("product_state.product_state_sellable")
+        cls.product_state_end = cls.env.ref("product_state.product_state_end")
+        cls.product_id = cls.env["product.product"].create(
             {"name": "Test Product", "type": "product"}
         )
-        return product
-
-    def test_sale_order(self):
-        sale = self.env["sale.order"].create(
+        cls.sale_id = cls.env["sale.order"].create(
             {
-                "partner_id": self.customer.id,
+                "partner_id": cls.customer.id,
                 "order_line": [
                     (
                         0,
                         0,
                         {
-                            "product_id": self.product_id.id,
+                            "product_id": cls.product_id.id,
                             "product_uom_qty": 2.0,
                             "price_unit": 10.0,
                         },
@@ -38,7 +32,6 @@ class TestSaleOrderLineDates(TransactionCase):
                 ],
             }
         )
-        return sale
 
     def test_write_product_state(self):
         self.product_id.write({"product_state_id": self.product_state_sale.id})

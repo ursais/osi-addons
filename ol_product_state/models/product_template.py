@@ -12,7 +12,7 @@ class ProductTemplate(models.Model):
     # COLUMNS ###
 
     has_product_state_change_group = fields.Boolean(
-        compute="_compute_has_product_state_change_group"
+        compute="_compute_has_product_state_change_group",
     )
 
     # END #######
