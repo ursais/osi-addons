@@ -1,17 +1,17 @@
 <odoo>
 
-    <record id="sale_order_line_inherit_form" model="ir.ui.view">
-        <field name="name">sale_order_line_form_view_inherit</field>
+    <record id="sale_order_inherit_form" model="ir.ui.view">
+        <field name="name">sale_order_form_view_inherit</field>
         <field name="model">sale.order</field>
         <field name="priority">99</field>
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
             <xpath
-                expr="//field[@name='order_line']//tree/field[@name='name']"
+                expr="//field[@name='order_line']//tree/field[@name='product_template_id']"
                 position="after"
             >
                 <button
-                    invisible="approved_sale_confirm and state in ('sale','done','cancel')"
+                    invisible="approved_sale_confirm or state in ('sale','done','cancel')"
                     class="fa fa-exclamation-triangle"
                     title="Product has been marked as not saleable."
                 />
@@ -25,14 +25,13 @@
                     role="alert"
                 >Exception: A product on this sale order has been marked as not saleable.</div>
             </div>
-            <field name="tag_ids" position="after">
+            <field name="client_order_ref" position="after">
                 <field
-                    name="override_exception"
+                    name="override_saleable_exception"
                     groups="sales_team.group_sale_manager"
                 />
             </field>
-            <button id="action_confirm" position="replace">
-            </button>
+            <button id="action_confirm" position="replace" />
             <button name="action_confirm" position="attributes">
                 <attribute name="context">{'override_ex': True}</attribute>
             </button>

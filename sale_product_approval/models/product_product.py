@@ -19,29 +19,38 @@ class ProductTemplate(models.Model):
     )
     candidate_sale = fields.Boolean(
         string="Candidate to add to Quote",
+        compute="_compute_candidate_sale_confirm",
+        store=True,
+        readonly=False,
     )
     candidate_sale_confirm = fields.Boolean(
         string="Candidate to be Sold",
+        compute="_compute_candidate_sale_confirm",
+        store=True,
+        readonly=False,
     )
     can_edit_candidate = fields.Boolean(compute="_compute_can_edit_candidate")
 
     def _compute_can_edit_candidate(self):
-        for product in self:
-            product.can_edit_candidate = self.env.user.has_group(
-                "sale_product_approval.group_product_administrator"
-            )
+        self.update(
+            {
+                "can_edit_candidate": self.env.user.has_group(
+                    "sale_product_approval.group_product_administrator"
+                )
+            }
+        )
 
-    @api.onchange("candidate_sale_confirm")
-    def _onchange_candidate_sale_confirm(self):
+    @api.depends("candidate_sale_confirm")
+    def _compute_candidate_sale_confirm(self):
         for product in self:
-            if product.candidate_sale_confirm and not product.candidate_sale:
+            if product.candidate_sale_confirm:
                 product.candidate_sale = True
 
-    @api.model
-    def create(self, vals):
-        new = super().create(vals)
-        new._set_sale_ok_product()
-        return new
+    @api.model_create_multi
+    def create(self, vals_list):
+        templates = super().create(vals_list)
+        templates._set_sale_ok_product()
+        return templates
 
     def write(self, vals):
         res = super().write(vals)
