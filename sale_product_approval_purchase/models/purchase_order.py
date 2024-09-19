@@ -23,7 +23,7 @@ class PurchaseOrder(models.Model):
     exceptions_purchase_approval = fields.Boolean(
         compute="_compute_exceptions", string="Exception", default=False
     )
-    override_exception = fields.Boolean(default=False)
+    override_po_exception = fields.Boolean("Override PO Exception")
 
     @api.depends("order_line.approved_purchase")
     def _compute_exceptions(self):
@@ -55,7 +55,7 @@ class PurchaseOrder(models.Model):
         for purchase in self:
             if (
                 purchase.exceptions_purchase_approval
-                and not purchase.override_exception
+                and not purchase.override_po_exception
                 and not self._context.get("override_ex")
             ):
                 raise UserError(

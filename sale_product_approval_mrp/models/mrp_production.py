@@ -20,7 +20,7 @@ class MRPProduction(models.Model):
     mo_line_exceptions = fields.Boolean(
         compute="_compute_mo_exceptions", string="MO Line Exceptions"
     )
-    override_exception = fields.Boolean("Override Exception", default=False)
+    override_mo_exception = fields.Boolean("Override MO Exception")
 
     @api.depends("move_raw_ids.approved_mrp_component_ok")
     def _compute_mo_exceptions(self):
@@ -59,7 +59,7 @@ class MRPProduction(models.Model):
         for mo in self:
             if (
                 (mo.mo_line_exceptions or mo.bom_mo_exception)
-                and not mo.override_exception
+                and not mo.override_mo_exception
                 and not self._context.get("override_ex")
             ):
                 raise UserError(
@@ -75,7 +75,7 @@ class MRPProduction(models.Model):
         for mo in self:
             if (
                 mo.mo_line_exceptions or mo.bom_mo_exception
-            ) and not mo.override_exception:
+            ) and not mo.override_mo_exception:
                 raise UserError(
                     _(
                         "You can not mark done because some products are not "
