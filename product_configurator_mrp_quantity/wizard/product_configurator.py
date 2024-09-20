@@ -61,6 +61,7 @@ class ProductConfigurator(models.TransientModel):
                     domain=[("product_tmpl_id", "=", wiz.product_tmpl_id.id)],
                     string="Qty",
                     relation="attribute.value.qty",
+                    widget="selection",
                 )
         return res
 
