@@ -1,0 +1,15 @@
+<odoo>
+
+    <template id="ol_sale_optional_product_report_saleorder_document_inherit_sale_management" inherit_id="sale_management.report_saleorder_document_inherit_sale_management">
+        <!-- Insert Qty into options report -->
+        <xpath expr="//td[@name='th_option_price_unit']" position="before">
+            <td name="th_qty" class="text-end">Qty</td>
+        </xpath>
+        <xpath expr="//td[@name='td_option_price_unit']" position="before">
+            <td name="td_option_qty">
+                <span t-field="option.quantity">1.0</span>
+            </td>
+        </xpath>
+    </template>
+
+</odoo>

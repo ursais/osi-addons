@@ -33,6 +33,12 @@
             <xpath expr="//tree/button[@name='button_add_to_order']" position="attributes">
                 <attribute name="invisible" />
             </xpath>
+            <!-- Show Margin Fields on Optional Products -->
+            <xpath expr="//tree/field[@name='is_present']" position="before">
+                <field name="margin" optional="show" />
+                <field name="margin_percent" optional="show" widget="percentage" />
+                <field name="price_subtotal" optional="show" />
+            </xpath>
         </field>
     </record>
 
