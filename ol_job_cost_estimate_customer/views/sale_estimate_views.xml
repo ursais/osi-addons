@@ -11,17 +11,17 @@
             <xpath
                 expr="//field[@name='estimate_ids']/tree/field[@name='product_uom']"
                 position="after">
-                <field name="customer_lead" column_invisible="0" />
+                <field name="customer_lead" optional="show" />
             </xpath>
             <xpath
                 expr="//field[@name='labour_estimate_line_ids']/tree/field[@name='product_uom']"
                 position="after">
-                <field name="customer_lead" column_invisible="1" />
+                <field name="customer_lead" optional="hide" />
             </xpath>
             <xpath
                 expr="//field[@name='overhead_estimate_line_ids']/tree/field[@name='product_uom']"
                 position="after">
-                <field name="customer_lead" column_invisible="1" />
+                <field name="customer_lead" optional="hide" />
             </xpath>
         </field>
     </record>
