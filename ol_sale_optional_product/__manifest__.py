@@ -15,6 +15,7 @@
     ],
     # always loaded
     "data": [
+        "report/sale_report_templates.xml",
         "views/sale_order_view.xml",
     ],
 }
