@@ -120,7 +120,7 @@ attribute_power_cable_coupler,Power Cable Coupler,product.template,select,False,
 attribute_power_consumption,Power Consumption,product.template,float,False,x_power_consumption,"Accessories,Displays,Expansion,Heatsinks,Memory,Motherboards,Processors,Storage",Power
 attribute_power_cord_length,Power Cord Length,product.template,float,False,x_power_cord_length,Power Supplies,Other Specifications (Components)
 attribute_power_input_connectors,Power Input Connector,product.template,multiselect,False,x_power_input_connectors,"Cables,Computers,Displays,Expansion,Motherboards,Panel PCs,Power Supplies",Shared Specifications
-attribute_processor,Processor,product.template,multiselect,False,x_cpu,"Computers,Motherboards,Panel PCs,Processors",Processors (Components)
+attribute_processor,Processor,product.template,multiselect,False,x_processor,"Computers,Motherboards,Panel PCs,Processors",Processors (Components)
 attribute_processor_cache,Processor Cache,product.template,float,False,x_processor_cache,"Processors,Storage",Processors (Components)
 attribute_processor_clock_speed,Processor Clock Speed,product.template,float,False,x_processor_clock_speed,"Computers,Motherboards,Panel PCs,Processors",Processors (Components)
 attribute_processor_clock_speed_notes,Processor Clock Speed Notes,product.template,text,True,x_processor_clock_speed_notes,"Computers,Motherboards,Panel PCs,Processors",Processors (Components)
