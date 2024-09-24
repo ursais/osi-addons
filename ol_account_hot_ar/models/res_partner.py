@@ -49,8 +49,8 @@ class ResPartner(models.Model):
                         ),
                         ("hot_ar", "=", True),
                         ("override_hot_ar", "=", False),
-                        ("state", "=", "posted"), #PW: Plz check this domain
-                        ("company_id.hot_ar_grace_period", ">", 0),  #PW: Plz check this domain
+                        ("state", "=", "posted"),
+                        ("company_id.hot_ar_grace_period", ">", 0),
                     ]
                 )
                 partner.hot_ar = bool(invoices)

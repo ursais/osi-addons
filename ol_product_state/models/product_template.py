@@ -30,9 +30,11 @@ class ProductTemplate(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        results = super().create(vals_list)
-        results.onchange_categ_id()
-        return results
+        res = super().create(vals_list)
+        # Call category onchange to update the candidate fields based on category
+        # during creation.
+        res.onchange_categ_id()
+        return res
 
     def write(self, vals):
         """Prevents users without the group_product_state_change security group

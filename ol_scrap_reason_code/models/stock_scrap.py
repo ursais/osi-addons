@@ -15,7 +15,6 @@ class StockScrap(models.Model):
         compute="_compute_scrap_location_id",
         store=True,
         required=True,
-        precompute=True,
         domain="[('scrap_location', '=', True)]",
         check_company=True,
         readonly=False,

@@ -8,7 +8,7 @@ class StockPicking(models.Model):
 
     # COLUMNS #####
 
-    blind_ship_from = fields.Many2one(comodel_name="res.partner", string="Ship From")
+    blind_ship_from = fields.Many2one("res.partner", string="Ship From")
     blind_drop_ship_csv = fields.Boolean(
         string="Blind Drop Ship Imported",
         help="""The imported value of "Blind Drop Ship".
@@ -17,7 +17,7 @@ class StockPicking(models.Model):
     csv_import = fields.Boolean(string="Imported From CSV")
     csv_customer_po = fields.Char(string="CSV Customer PO")
     csv_partner_shipping_id = fields.Many2one(
-        comodel_name="res.partner", string="CSV Delivery Address", readonly=True
+        "res.partner", string="CSV Delivery Address", readonly=True
     )
 
     # END #########
