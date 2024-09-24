@@ -13,6 +13,7 @@
     # any module necessary for this one to work correctly
     "depends": [
         "ol_base",
+        "ol_tier_validation",
         "job_cost_estimate_customer",
         "base_tier_validation",
     ],

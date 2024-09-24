@@ -11,8 +11,6 @@ class DeliveryCarrierMapping(models.Model):
 
     # COLUMNS #####
 
-    v10_carrier_id = fields.Many2one(
-        comodel_name="delivery.carrier", string="V10 Version"
-    )
+    v10_carrier_id = fields.Many2one("delivery.carrier", string="V10 Version")
 
     # END #########

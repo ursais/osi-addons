@@ -34,7 +34,7 @@ class CsvLoaderWizard(models.TransientModel):
     csv_file = fields.Binary(string="Import File")
     csv_filename = fields.Char(string="Filename")
     delivery_orders = fields.One2many(
-        comodel_name="wizard.stock.picking",
+        "wizard.stock.picking",
         inverse_name="csv_id",
         readonly=True,
     )
@@ -498,25 +498,25 @@ class CsvStockPicking(models.TransientModel):
     _description = "Temporary stock picking for validation"
 
     # COLUMNS #####
-    csv_id = fields.Many2one(comodel_name="wizard.csv.loader", string="Wizard CSV!")
+    csv_id = fields.Many2one("wizard.csv.loader", string="Wizard CSV!")
     name = fields.Char(string="Reference", default="OUT/Temporary")
-    partner_id = fields.Many2one(comodel_name="res.partner", string="Partner")
+    partner_id = fields.Many2one("res.partner", string="Partner")
     partner_shipping_id = fields.Many2one(
-        comodel_name="res.partner", string="Delivery Address", readonly=True
+        "res.partner", string="Delivery Address", readonly=True
     )
-    picking_type_id = fields.Many2one(comodel_name="stock.picking.type")
+    picking_type_id = fields.Many2one("stock.picking.type")
     min_date = fields.Datetime(string="Scheduled Date")
-    carrier_id = fields.Many2one(comodel_name="delivery.carrier")
+    carrier_id = fields.Many2one("delivery.carrier")
     custom_shipping_account = fields.Char(string="Shipping Account")
     origin = fields.Char(string="Source Document")
     note = fields.Text(string="Internal note")
     additional_notes = fields.Text()
     move_lines = fields.One2many(
-        comodel_name="wizard.stock.move",
+        "wizard.stock.move",
         inverse_name="csv_picking_id",
         string="Product",
     )
-    blind_ship_from = fields.Many2one(comodel_name="res.partner", string="Ship From")
+    blind_ship_from = fields.Many2one("res.partner", string="Ship From")
     blind_drop_ship = fields.Boolean()
     blind_drop_ship_csv = fields.Boolean(
         string="Blind Drop Ship Imported",
@@ -524,12 +524,8 @@ class CsvStockPicking(models.TransientModel):
         This overrides the calculated blind_drop_ship field.""",
     )
     customer_po = fields.Char(string="Customer PO")
-    location_id = fields.Many2one(
-        comodel_name="stock.location", string="Source Location"
-    )
-    location_dest_id = fields.Many2one(
-        comodel_name="stock.location", string="Destination Location"
-    )
+    location_id = fields.Many2one("stock.location", string="Source Location")
+    location_dest_id = fields.Many2one("stock.location", string="Destination Location")
 
     # END #########
     # METHODS #########
@@ -587,19 +583,13 @@ class CsvStockMove(models.TransientModel):
 
     # COLUMNS #####
 
-    csv_picking_id = fields.Many2one(
-        comodel_name="wizard.stock.picking", string="Wizard Picking!"
-    )
+    csv_picking_id = fields.Many2one("wizard.stock.picking", string="Wizard Picking!")
     name = fields.Char(string="Description")
-    product_id = fields.Many2one(comodel_name="product.product", string="Product")
+    product_id = fields.Many2one("product.product", string="Product")
     product_uom_qty = fields.Float(string="Quantity")
-    product_uom = fields.Many2one(comodel_name="uom.uom", string="UOM")
-    location_id = fields.Many2one(
-        comodel_name="stock.location", string="Source Location"
-    )
-    location_dest_id = fields.Many2one(
-        comodel_name="stock.location", string="Destination Location"
-    )
+    product_uom = fields.Many2one("uom.uom", string="UOM")
+    location_id = fields.Many2one("stock.location", string="Source Location")
+    location_dest_id = fields.Many2one("stock.location", string="Destination Location")
 
     # END #########
     # METHODS #####

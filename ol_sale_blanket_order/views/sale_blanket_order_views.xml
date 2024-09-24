@@ -5,7 +5,6 @@
         <field name="model">sale.blanket.order</field>
         <field name="inherit_id" ref="sale_blanket_order.view_blanket_order_form" />
         <field name="arch" type="xml">
-
             <xpath expr="//field[@name='product_id']" position="after">
                 <field name="product_state_id" optional="show" />
             </xpath>

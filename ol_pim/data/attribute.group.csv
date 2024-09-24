@@ -1,21 +1,21 @@
 id,name,model_id,sequence
-attribute_group_product_manager,Product Manager,product.product,10
-attribute_group_lifecycle,Lifecycle,product.product,20
-attribute_group_sales,Sales,product.product,30
-attribute_group_operations,Operations,product.product,40
-attribute_group_physical_properties,Physical Properties,product.product,50
-attribute_group_power,Power,product.product,60
-attribute_group_regulatory,Regulatory,product.product,70
-attribute_group_shared_specifications,Shared Specifications,product.product,80
-attribute_group_manufacturer_info,Manufacturer Info,product.product,90
-attribute_group_displays_components,Displays (Components),product.product,100
-attribute_group_expansion_cards_components,Expansion Cards (Components),product.product,110
-attribute_group_memory_components,Memory (Components),product.product,120
-attribute_group_motherboards_components,Motherboards (Components),product.product,130
-attribute_group_other_specifications_components,Other Specifications (Components),product.product,140
-attribute_group_processors_components,Processors (Components),product.product,150
-attribute_group_storage_components,Storage (Components),product.product,160
-attribute_group_machine_use,Machine Use,product.product,170
-attribute_group_deprecated,Deprecated,product.product,180
-attribute_group_relation_attributes,Relation attributes,product.product,190
-attribute_group_relation_product_attributes,Relation product attributes,product.product,200
+attribute_group_product_manager,Product Manager,product.template,10
+attribute_group_lifecycle,Lifecycle,product.template,20
+attribute_group_sales,Sales,product.template,30
+attribute_group_operations,Operations,product.template,40
+attribute_group_physical_properties,Physical Properties,product.template,50
+attribute_group_power,Power,product.template,60
+attribute_group_regulatory,Regulatory,product.template,70
+attribute_group_shared_specifications,Shared Specifications,product.template,80
+attribute_group_manufacturer_info,Manufacturer Info,product.template,90
+attribute_group_displays_components,Displays (Components),product.template,100
+attribute_group_expansion_cards_components,Expansion Cards (Components),product.template,110
+attribute_group_memory_components,Memory (Components),product.template,120
+attribute_group_motherboards_components,Motherboards (Components),product.template,130
+attribute_group_other_specifications_components,Other Specifications (Components),product.template,140
+attribute_group_processors_components,Processors (Components),product.template,150
+attribute_group_storage_components,Storage (Components),product.template,160
+attribute_group_machine_use,Machine Use,product.template,170
+attribute_group_deprecated,Deprecated,product.template,180
+attribute_group_relation_attributes,Relation attributes,product.template,190
+attribute_group_relation_product_attributes,Relation product attributes,product.template,200
