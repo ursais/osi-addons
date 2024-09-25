@@ -81,6 +81,13 @@ class MrpBom(models.Model):
             )
         return result
 
+    @api.depends("code", "scaffolding_bom")
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        for bom in self:
+            if bom.scaffolding_bom:
+                bom.display_name = bom.display_name + "(" + "Scaffold" + ")"
+
     @api.constrains("product_tmpl_id", "scaffolding_bom")
     def _check_product_tmpl_scaffolding_bom(self):
         """Constraint ensures only one scaffolding BoM exists per product template"""
