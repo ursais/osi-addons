@@ -6,8 +6,8 @@
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
             <xpath expr="/form/sheet/notebook/page/field[@name='order_line']/tree/field[@name='name']" position="after">
-                <field name="sh_line_customer_code" />
-                <field name="sh_line_customer_product_name" />
+                <field name="sh_line_customer_code" optional="hide" />
+                <field name="sh_line_customer_product_name" optional="hide" />
             </xpath>
         </field>
     </record>
