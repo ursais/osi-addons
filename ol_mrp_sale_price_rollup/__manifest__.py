@@ -14,11 +14,13 @@
     # any module necessary for this one to work correctly
     "depends": [
         "ol_base",
+        "sale_blanket_order",
         "sale",
         "mrp",
         "mrp_account",
         "product_configurator_mrp",
         "product_configurator_sale",
+        "product_configurator_sale_blanket_order",
         "osi_mrp_bom_sequence",
     ],
     # always loaded

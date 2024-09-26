@@ -54,13 +54,5 @@ class ProductConfigSession(models.Model):
 
         value_ids = self.flatten_val_ids(value_ids)
 
-        # Fetch extra price based on attribute values
-        attr_val_obj = self.env["product.attribute.value"]
-        av_ids = attr_val_obj.browse(value_ids)
-        extra_prices = attr_val_obj.get_attribute_value_extra_prices(
-            product_tmpl_id=product_variant.product_tmpl_id.id, pt_attr_value_ids=av_ids
-        )
-        price_extra = sum(extra_prices.values())
-
         # Return price using variant's lst_price instead of template list_price
-        return product_variant.lst_price + price_extra
+        return product_variant.lst_price
