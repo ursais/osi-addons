@@ -18,6 +18,7 @@
         "mrp",
         "mrp_account",
         "product_configurator_mrp",
+        "product_configurator_sale",
         "osi_mrp_bom_sequence",
     ],
     # always loaded
