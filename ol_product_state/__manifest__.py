@@ -24,6 +24,7 @@
         "views/product_template_view.xml",
         "views/product_category_views.xml",
         "data/product_state_data.xml",
+        "data/product_category_data.xml",
     ],
     # only loaded in demo mode
     "demo": [],

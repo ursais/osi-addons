@@ -1,0 +1,178 @@
+<odoo>
+    <record id="ol_base.product_category_systems_computers" model="product.category">
+        <field name="candidate_sale" eval="True" />
+        <field name="candidate_sale_confirm" eval="True" />
+        <field name="candidate_manufacture" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
+        <field name="candidate_bom" eval="True" />
+        <field name="candidate_ship" eval="True" />
+    </record>
+
+    <record id="ol_base.product_category_systems_panelpcs" model="product.category">
+        <field name="candidate_sale" eval="True" />
+        <field name="candidate_sale_confirm" eval="True" />
+        <field name="candidate_manufacture" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
+        <field name="candidate_bom" eval="True" />
+        <field name="candidate_ship" eval="True" />
+    </record>
+
+    <record id="ol_base.product_category_components_motherboards" model="product.category">
+        <field name="candidate_sale" eval="True" />
+        <field name="candidate_sale_confirm" eval="True" />
+        <field name="candidate_purchase" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
+        <field name="candidate_bom" eval="True" />
+        <field name="candidate_ship" eval="True" />
+    </record>
+
+    <record id="ol_base.product_category_components_expansion" model="product.category">
+        <field name="candidate_sale" eval="True" />
+        <field name="candidate_sale_confirm" eval="True" />
+        <field name="candidate_purchase" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
+        <field name="candidate_bom" eval="True" />
+        <field name="candidate_ship" eval="True" />
+    </record>
+
+    <record id="ol_base.product_category_components_cables" model="product.category">
+        <field name="candidate_sale" eval="True" />
+        <field name="candidate_sale_confirm" eval="True" />
+        <field name="candidate_purchase" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
+        <field name="candidate_bom" eval="True" />
+        <field name="candidate_ship" eval="True" />
+    </record>
+
+    <record id="ol_base.product_category_components_accessories" model="product.category">
+        <field name="candidate_sale" eval="True" />
+        <field name="candidate_sale_confirm" eval="True" />
+        <field name="candidate_purchase" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
+        <field name="candidate_bom" eval="True" />
+        <field name="candidate_ship" eval="True" />
+    </record>
+
+    <record id="ol_base.product_category_components_processors" model="product.category">
+        <field name="candidate_sale" eval="True" />
+        <field name="candidate_sale_confirm" eval="True" />
+        <field name="candidate_purchase" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
+        <field name="candidate_bom" eval="True" />
+        <field name="candidate_ship" eval="True" />
+    </record>
+
+    <record id="ol_base.product_category_components_displays" model="product.category">
+        <field name="candidate_sale" eval="True" />
+        <field name="candidate_sale_confirm" eval="True" />
+        <field name="candidate_purchase" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
+        <field name="candidate_bom" eval="True" />
+        <field name="candidate_ship" eval="True" />
+    </record>
+
+    <record id="ol_base.product_category_components_power_supplies" model="product.category">
+        <field name="candidate_sale" eval="True" />
+        <field name="candidate_sale_confirm" eval="True" />
+        <field name="candidate_purchase" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
+        <field name="candidate_bom" eval="True" />
+        <field name="candidate_ship" eval="True" />
+    </record>
+
+    <record id="ol_base.product_category_components_cases" model="product.category">
+        <field name="candidate_sale" eval="True" />
+        <field name="candidate_sale_confirm" eval="True" />
+        <field name="candidate_purchase" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
+        <field name="candidate_bom" eval="True" />
+        <field name="candidate_ship" eval="True" />
+    </record>
+
+    <record id="ol_base.product_category_components_software" model="product.category">
+        <field name="candidate_sale" eval="True" />
+        <field name="candidate_sale_confirm" eval="True" />
+        <field name="candidate_purchase" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
+        <field name="candidate_bom" eval="True" />
+        <field name="candidate_ship" eval="True" />
+    </record>
+
+    <record id="ol_base.product_category_components_memory" model="product.category">
+        <field name="candidate_sale" eval="True" />
+        <field name="candidate_sale_confirm" eval="True" />
+        <field name="candidate_purchase" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
+        <field name="candidate_bom" eval="True" />
+        <field name="candidate_ship" eval="True" />
+    </record>
+
+    <record id="ol_base.product_category_components_storage" model="product.category">
+        <field name="candidate_sale" eval="True" />
+        <field name="candidate_sale_confirm" eval="True" />
+        <field name="candidate_purchase" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
+        <field name="candidate_bom" eval="True" />
+        <field name="candidate_ship" eval="True" />
+    </record>
+
+    <record id="ol_base.product_category_components_heatsinks" model="product.category">
+        <field name="candidate_sale" eval="True" />
+        <field name="candidate_sale_confirm" eval="True" />
+        <field name="candidate_purchase" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
+        <field name="candidate_bom" eval="True" />
+        <field name="candidate_ship" eval="True" />
+    </record>
+
+    <record id="ol_base.product_category_components_assembly_'&amp;_validation" model="product.category">
+        <field name="candidate_sale" eval="True" />
+        <field name="candidate_sale_confirm" eval="True" />
+        <field name="candidate_purchase" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
+        <field name="candidate_bom" eval="True" />
+        <field name="candidate_ship" eval="True" />
+    </record>
+
+    <record id="ol_base.product_category_service_warranties" model="product.category">
+        <field name="candidate_sale" eval="True" />
+        <field name="candidate_sale_confirm" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
+        <field name="candidate_bom" eval="True" />
+    </record>
+
+    <record id="ol_base.product_category_service_computer_software" model="product.category">
+        <field name="candidate_sale" eval="True" />
+        <field name="candidate_sale_confirm" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
+        <field name="candidate_bom" eval="True" />
+    </record>
+
+    <record id="ol_base.product_category_service_other" model="product.category">
+        <field name="candidate_sale" eval="True" />
+        <field name="candidate_sale_confirm" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
+        <field name="candidate_bom" eval="True" />
+    </record>
+
+    <record id="ol_base.product_category_service_engineering_services" model="product.category">
+        <field name="candidate_sale" eval="True" />
+        <field name="candidate_sale_confirm" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
+        <field name="candidate_bom" eval="True" />
+    </record>
+
+    <record id="ol_base.product_category_service_repair_services" model="product.category">
+        <field name="candidate_sale" eval="True" />
+        <field name="candidate_sale_confirm" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
+        <field name="candidate_bom" eval="True" />
+    </record>
+
+    <record id="ol_base.product_category_service_build_services" model="product.category">
+        <field name="candidate_sale" eval="True" />
+        <field name="candidate_sale_confirm" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
+        <field name="candidate_bom" eval="True" />
+    </record>
+</odoo>
