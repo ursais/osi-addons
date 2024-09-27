@@ -48,7 +48,6 @@
         "stock",
         "stock_barcode",
         "timesheet_grid",
-        "account_avatax",
         # OCA Modules
         "base_user_role_company",
     ],

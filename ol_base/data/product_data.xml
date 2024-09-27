@@ -1,146 +1,16 @@
 <odoo noupdate="1">
 
-    <!-- Parent Category -->
-    <record id="product_category_systems" model="product.category">
-        <field name="name">Systems</field>
-        <field name="avatax_category_id" ref="account_avatax.PC070000" />
-    </record>
-
-    <record id="product_category_components" model="product.category">
-        <field name="name">Components</field>
-        <field name="avatax_category_id" ref="account_avatax.PC070000" />
-    </record>
-
-    <record id="product_category_services" model="product.category">
-        <field name="name">Services</field>
-        <field name="avatax_category_id" ref="account_avatax.SW019478" />
-    </record>
-
-    <!-- Child  Category-->
-    <record id="product_category_systems_computers" model="product.category">
-        <field name="parent_id" ref="product_category_systems" />
-        <field name="name">Computers</field>
-        <field name="avatax_category_id" ref="account_avatax.PC070000" />
-    </record>
-
-    <record id="product_category_systems_panelpcs" model="product.category">
-        <field name="parent_id" ref="product_category_systems" />
-        <field name="name">Panel PCs</field>
-        <field name="avatax_category_id" ref="account_avatax.PC070000" />
-    </record>
-
-    <record id="product_category_components_motherboards" model="product.category">
-        <field name="parent_id" ref="product_category_components" />
-        <field name="name">Motherboards</field>
-        <field name="avatax_category_id" ref="account_avatax.PC070000" />
-    </record>
-
-    <record id="product_category_components_expansion" model="product.category">
-        <field name="parent_id" ref="product_category_components" />
-        <field name="name">Expansion</field>
-        <field name="avatax_category_id" ref="account_avatax.PC070000" />
-    </record>
-
-    <record id="product_category_components_cables" model="product.category">
-        <field name="parent_id" ref="product_category_components" />
-        <field name="name">Cables</field>
-        <field name="avatax_category_id" ref="account_avatax.PC070000" />
-    </record>
-
-    <record id="product_category_components_accessories" model="product.category">
-        <field name="parent_id" ref="product_category_components" />
-        <field name="name">Accessories</field>
-        <field name="avatax_category_id" ref="account_avatax.PC070000" />
-    </record>
-
-    <record id="product_category_components_processors" model="product.category">
-        <field name="parent_id" ref="product_category_components" />
-        <field name="name">Processors</field>
-        <field name="avatax_category_id" ref="account_avatax.PC070000" />
-    </record>
-
-    <record id="product_category_components_displays" model="product.category">
-        <field name="parent_id" ref="product_category_components" />
-        <field name="name">Displays</field>
-        <field name="avatax_category_id" ref="account_avatax.PC070000" />
-    </record>
-
-    <record id="product_category_components_power_supplies" model="product.category">
-        <field name="parent_id" ref="product_category_components" />
-        <field name="name">Power Supplies</field>
-        <field name="avatax_category_id" ref="account_avatax.PC070000" />
-    </record>
-
-    <record id="product_category_components_cases" model="product.category">
-        <field name="parent_id" ref="product_category_components" />
-        <field name="name">Cases</field>
-        <field name="avatax_category_id" ref="account_avatax.PC070000" />
-    </record>
-
-    <record id="product_category_components_software" model="product.category">
-        <field name="parent_id" ref="product_category_components" />
-        <field name="name">Software</field>
-        <field name="avatax_category_id" ref="account_avatax.DC011000" />
-    </record>
-
-    <record id="product_category_components_memory" model="product.category">
-        <field name="parent_id" ref="product_category_components" />
-        <field name="name">Memory</field>
-        <field name="avatax_category_id" ref="account_avatax.PC070000" />
-    </record>
-
-    <record id="product_category_components_storage" model="product.category">
-        <field name="parent_id" ref="product_category_components" />
-        <field name="name">Storage</field>
-        <field name="avatax_category_id" ref="account_avatax.PC070000" />        
-    </record>
-
-    <record id="product_category_components_heatsinks" model="product.category">
-        <field name="parent_id" ref="product_category_components" />
-        <field name="name">Heatsinks</field>
-        <field name="avatax_category_id" ref="account_avatax.PC070000" />
-    </record>
-
-    <record id="product_category_components_assembly_'&amp;_validation" model="product.category">
-        <field name="parent_id" ref="product_category_components" />
-        <field name="name">Assembly &amp;Validation</field>
-        <field name="avatax_category_id" ref="account_avatax.PC070000" />        
-    </record>
-
-    <record id="product_category_service_warranties" model="product.category">
-        <field name="parent_id" ref="product_category_services" />
-        <field name="name">Warranties</field>
-        <field name="avatax_category_id" ref="account_avatax.SW019478" />        
-    </record>
-
-    <record id="product_category_service_computer_software" model="product.category">
-        <field name="parent_id" ref="product_category_services" />
-        <field name="name">Computer Software</field>
-        <field name="avatax_category_id" ref="account_avatax.DC011000" />
-    </record>
-
-    <record id="product_category_service_other" model="product.category">
-        <field name="parent_id" ref="product_category_services" />
-        <field name="name">Other</field>
-        <field name="avatax_category_id" ref="account_avatax.S0000000" />
-    </record>
-
-    <record id="product_category_service_engineering_services" model="product.category">
-        <field name="parent_id" ref="product_category_services" />
-        <field name="name">Engineering Services</field>
-        <field name="avatax_category_id" ref="account_avatax.SE050000" />
-    </record>
-
-    <record id="product_category_service_repair_services" model="product.category">
-        <field name="parent_id" ref="product_category_services" />
-        <field name="name">Repair Services</field>
-        <field name="avatax_category_id" ref="account_avatax.SR060000" />        
-    </record>
-
-    <record id="product_category_service_build_services" model="product.category">
-        <field name="parent_id" ref="product_category_services" />
-        <field name="name">Build Services</field>
-        <field name="avatax_category_id" ref="account_avatax.PC070000" />        
-    </record>
+      <record id="product_category_systems" model="product.category">
+          <field name="parent_id" ref="product.product_category_all" />
+          <field name="name">Systems</field>
+      </record>
+      <record id="product_category_components" model="product.category">
+          <field name="parent_id" ref="product.product_category_all" />
+          <field name="name">Components</field>
+      </record>
+      <record id="product_category_services" model="product.category">
+          <field name="parent_id" ref="product.product_category_all" />
+          <field name="name">Services</field>
+      </record>
 
 </odoo>
