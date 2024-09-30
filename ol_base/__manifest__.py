@@ -50,10 +50,12 @@
         "timesheet_grid",
         # OCA Modules
         "base_user_role_company",
+        "account_avatax_oca"
     ],
     # always loaded
     "data": [
         "data/company_data.xml",
+        "data/avatax_code_data.xml",
         "data/product_data.xml",
         "data/res_users_role.xml",
         "views/res_company.xml",
