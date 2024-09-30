@@ -1,0 +1,52 @@
+<odoo>
+    <record id="avatax_code_DC011000" model="product.tax.code">
+        <field name="name">DC011000</field>
+        <field name="description">Software</field>
+        <field name="type">product</field>
+    </record>
+    <record id="avatax_code_FR020200" model="product.tax.code">
+        <field name="name">FR020200</field>
+        <field name="description">Shipping &amp; Freight</field>
+        <field name="type">product</field>
+    </record>
+    <record id="avatax_code_NOTAVATAX2" model="product.tax.code">
+        <field name="name">NOTAVATAX2</field>
+        <field name="description">Taxable Goods</field>
+        <field name="type">product</field>
+    </record>
+    <record id="avatax_code_NOTAVATAX7" model="product.tax.code">
+        <field name="name">NOTAVATAX7</field>
+        <field name="description">Taxable Goods EU</field>
+        <field name="type">product</field>
+    </record>
+    <record id="avatax_code_ON020000" model="product.tax.code">
+        <field name="name">ON020000</field>
+        <field name="description">Non-Taxable (CAUTION)</field>
+        <field name="type">product</field>
+    </record>
+    <record id="avatax_code_PC070000" model="product.tax.code">
+        <field name="name">PC070000</field>
+        <field name="description">Hardware, Labor, and Services used in producing a system</field>
+        <field name="type">product</field>
+    </record>
+    <record id="avatax_code_S0000000" model="product.tax.code">
+        <field name="name">S0000000</field>
+        <field name="description">Standalone Services not used in producing a system</field>
+        <field name="type">product</field>
+    </record>
+    <record id="avatax_code_SE050000" model="product.tax.code">
+        <field name="name">SE050000</field>
+        <field name="description">Engineering Services</field>
+        <field name="type">product</field>
+    </record>
+    <record id="avatax_code_SR060000" model="product.tax.code">
+        <field name="name">SR060000</field>
+        <field name="description">Support Service, Labor, and Parts</field>
+        <field name="type">product</field>
+    </record>
+    <record id="avatax_code_SW019478" model="product.tax.code">
+        <field name="name">SW019478</field>
+        <field name="description">Warranty</field>
+        <field name="type">product</field>
+    </record>
+</odoo>
