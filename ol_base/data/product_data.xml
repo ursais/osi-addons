@@ -64,7 +64,7 @@
     <record id="product_category_components_power_supplies" model="product.category">
         <field name="parent_id" ref="product_category_components" />
         <field name="name">Power Supplies</field>
-        <field name="tax_code_id" ref="ol_base.avatax_code_PC070000" /> 
+        <field name="tax_code_id" ref="ol_base.avatax_code_PC070000" />
     </record>
 
     <record id="product_category_components_cases" model="product.category">
@@ -99,7 +99,7 @@
 
     <record id="product_category_components_assembly_'&amp;_validation" model="product.category">
         <field name="parent_id" ref="product_category_components" />
-        <field name="name">Assembly &amp;Validation</field>
+        <field name="name">Assembly &amp; Validation</field>
         <field name="tax_code_id" ref="ol_base.avatax_code_PC070000" />
     </record>
 

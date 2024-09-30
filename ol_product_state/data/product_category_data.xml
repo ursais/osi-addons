@@ -1,4 +1,5 @@
-<odoo>
+<odoo noupdate="1">
+
     <record id="ol_base.product_category_systems_computers" model="product.category">
         <field name="candidate_sale" eval="True" />
         <field name="candidate_sale_confirm" eval="True" />
@@ -175,4 +176,5 @@
         <field name="candidate_component_manufacture" eval="True" />
         <field name="candidate_bom" eval="True" />
     </record>
+
 </odoo>
