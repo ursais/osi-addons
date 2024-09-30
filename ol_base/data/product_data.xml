@@ -139,4 +139,28 @@
         <field name="tax_code_id" ref="ol_base.avatax_code_PC070000" />
     </record>
 
+    <record id="product_category_shipping_and_freight" model="product.category">
+        <field name="parent_id" ref="product_category_services" />
+        <field name="name">Shipping &amp; Freight</field>
+        <field name="tax_code_id" ref="ol_base.avatax_code_FR020200" />
+    </record>
+
+    <record id="product_category_taxable" model="product.category">
+        <field name="parent_id" ref="product_category_components" />
+        <field name="name">Taxable Goods</field>
+        <field name="tax_code_id" ref="ol_base.avatax_code_NOTAVATAX2" />
+    </record>
+
+    <record id="product_category_taxable_eu" model="product.category">
+        <field name="parent_id" ref="product_category_components" />
+        <field name="name">Taxable Goods EU</field>
+        <field name="tax_code_id" ref="ol_base.avatax_code_NOTAVATAX7" />
+    </record>
+
+    <record id="product_category_non_taxable" model="product.category">
+        <field name="parent_id" ref="product_category_components" />
+        <field name="name">Non-Taxable (CAUTION)</field>
+        <field name="tax_code_id" ref="ol_base.avatax_code_ON020000" />
+    </record>
+
 </odoo>
