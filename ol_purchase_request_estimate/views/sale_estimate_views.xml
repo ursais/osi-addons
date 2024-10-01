@@ -1,0 +1,35 @@
+<odoo>
+
+    <record id="view_purchase_request_estimate_form_inherit" model="ir.ui.view">
+        <field name="name">sale.estimate.job.form.inherit</field>
+        <field name="model">sale.estimate.job</field>
+        <field name="inherit_id" ref="job_cost_estimate_customer.view_sale_estimate_form_job"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    class="oe_stat_button"
+                    type="object"
+                    groups="purchase_request.group_purchase_request_user"
+                    name="action_view_purchase_request"
+                    context="{'default_estimate_id': id}"
+                    icon="fa-list"
+                    invisible="purchase_request_count == 0">
+                    <div class="o_stat_info">
+                        <field name="purchase_request_count" class="o_stat_value"/>
+                        <span class="o_stat_text"> PR's</span>
+                    </div>
+                </button>
+            </div>
+            <xpath expr="//button[@name='estimate_cancel']" position="before">
+                <button
+                    context="{'default_estimate_id': id}"
+                    name="action_create_purchase_request"
+                    string="Create PR"
+                    type="object"
+                    groups="purchase_request.group_purchase_request_user"
+                />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
