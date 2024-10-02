@@ -55,7 +55,7 @@ for line in self.order_line:
     if line.bom_id:
         # Check each BoM component that is stockable (type='product') for stock and backorder status
         for bom_line in line.bom_id.bom_line_ids:
-            if bom_line.product_id.type == 'product' and bom_line.product_qty &gt;= bom_line.product_id.virtual_available and not bom_line.product_id.allow_backorder:
+            if bom_line.product_id.type == 'product' and line.product_uom_qty * bom_line.product_qty &gt; bom_line.product_id.virtual_available and not bom_line.product_id.allow_backorder:
                 # Add the product name to the list of failed components
                 products_out_of_stock.append(bom_line.product_id.display_name)
                 show_exception = True
