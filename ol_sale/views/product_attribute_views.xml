@@ -1,0 +1,25 @@
+<odoo>
+
+    <record id="ol_sale_product_attribute_view_form_inherit" model="ir.ui.view">
+        <field name="name">ol.sale.product.attribute.form.inherit</field>
+        <field name="model">product.attribute</field>
+        <field name="inherit_id" ref="product.product_attribute_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="used_in_sale_description" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ol_sale_attribute_tree_view_inherit" model="ir.ui.view">
+        <field name="name">ol.sale.attribute.tree.inherit</field>
+        <field name="model">product.attribute</field>
+        <field name="inherit_id" ref="product.attribute_tree_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="used_in_sale_description" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
