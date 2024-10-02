@@ -16,6 +16,7 @@
     ],
     # Data Loaded.
     "data": [
+        "views/purchase_request_views.xml",
         "views/sale_estimate_views.xml",
     ],
 }

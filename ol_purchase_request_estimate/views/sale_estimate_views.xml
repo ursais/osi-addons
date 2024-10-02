@@ -29,6 +29,9 @@
                     groups="purchase_request.group_purchase_request_user"
                 />
             </xpath>
+            <xpath expr="//field[@name='product_description']" position="after">
+                <field name="specifications" optional="show" />
+            </xpath>
         </field>
     </record>
 
