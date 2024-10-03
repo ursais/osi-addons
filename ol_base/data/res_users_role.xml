@@ -1,27 +1,27 @@
 <odoo noupdate="1">
 
     <record id="role_engineering" model="res.users.role">
-        <field name="name">Engineering</field>
+        <field name="name">Engineering - General</field>
         <field name="implied_ids" eval="[(6, 0, [ref('mrp_plm.group_plm_manager')])]" />
     </record>
 
     <record id="role_operations" model="res.users.role">
-        <field name="name">Operations</field>
+        <field name="name">Operations - Supply Chain</field>
         <field name="implied_ids" eval="[(6, 0, [ref('mrp_plm.group_plm_manager'), ref('mrp.group_mrp_manager')])]" />
     </record>
 
     <record id="role_sales" model="res.users.role">
-        <field name="name">Sales</field>
+        <field name="name">Sales - General</field>
         <field name="implied_ids" eval="[(6, 0, [ref('sales_team.group_sale_manager')])]" />
     </record>
 
     <record id="role_product_management" model="res.users.role">
-        <field name="name">Product Management</field>
+        <field name="name">Product Management - General</field>
         <field name="implied_ids" eval="[(6, 0, [ref('stock.group_stock_manager')])]" />
     </record>
 
     <record id="role_project_management" model="res.users.role">
-        <field name="name">Project Management</field>
+        <field name="name">Engineering - Project Manager</field>
         <field name="implied_ids" eval="[(6, 0, [ref('project.group_project_manager')])]" />
     </record>
 
@@ -31,23 +31,62 @@
     </record>
 
     <record id="role_pm_rep" model="res.users.role">
-        <field name="name">PM Rep</field>
+        <field name="name">Product Management - Representative</field>
         <field name="implied_ids" eval="[(6, 0, [ref('project.group_project_manager')])]" />
     </record>
 
-    <record id="role_engineering_rep" model="res.users.role">
-        <field name="name">Engineering Rep</field>
-        <field name="implied_ids" eval="[(6, 0, [ref('mrp.group_mrp_manager')])]" />
+    <record id="role_eng_manager" model="res.users.role">
+        <field name="name">Engineering - Manager</field>
     </record>
-
-    <record id="role_representative" model="res.users.role">
-        <field name="name">Representative</field>
-        <field name="implied_ids" eval="[(6, 0, [ref('stock.group_stock_manager'), ref('mrp_plm.group_plm_manager')])]" />
+    <record id="role_fin_cfo" model="res.users.role">
+        <field name="name">Finance - CFO</field>
     </record>
-
-    <record id="role_supply_chain" model="res.users.role">
-        <field name="name">Supply Chain</field>
-        <field name="implied_ids" eval="[(6, 0, [ref('stock.group_stock_manager'), ref('sales_team.group_sale_manager')])]" />
+    <record id="role_fin_manager" model="res.users.role">
+        <field name="name">Finance - Manager</field>
     </record>
-
+    <record id="role_it_admin" model="res.users.role">
+        <field name="name">IT - Admin</field>
+    </record>
+    <record id="role_it_app_dev" model="res.users.role">
+        <field name="name">IT - Application Development</field>
+    </record>
+    <record id="role_legal_gen_cou" model="res.users.role">
+        <field name="name">Legal - General Counsel</field>
+    </record>
+    <record id="role_ope_lead" model="res.users.role">
+        <field name="name">Operations - Lead</field>
+    </record>
+    <record id="role_ope_manager" model="res.users.role">
+        <field name="name">Operations - Manager</field>
+    </record>
+    <record id="role_ope_mrp_tech_supp" model="res.users.role">
+        <field name="name">Operations - Manufacturing &amp; Tech Support</field>
+    </record>
+    <record id="role_product_manager" model="res.users.role">
+        <field name="name">Product Management - Manager</field>
+    </record>
+    <record id="role_sale_manager" model="res.users.role">
+        <field name="name">Sales - Manager</field>
+    </record>
+    <record id="role_translations" model="res.users.role">
+        <field name="name">Translations</field>
+    </record>
+    <record id="role_ceo" model="res.users.role">
+        <field name="name">CEO</field>
+    </record>
+    <record id="role_sales_vp" model="res.users.role">
+        <field name="name">Sales - VP</field>
+    </record>
+    <record id="role_sales_svp" model="res.users.role">
+        <field name="name">Sales - SVP</field>
+    </record>
+    <record id="role_sales_director" model="res.users.role">
+        <field name="name">Sales - Director</field>
+    </record>
+    <record id="role_coo" model="res.users.role">
+        <field name="name">COO</field>
+    </record>
+    <record id="role_fin_controller" model="res.users.role">
+        <field name="name">Finance - Controller</field>
+    </record>
 </odoo>
