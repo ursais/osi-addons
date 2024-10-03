@@ -19,6 +19,7 @@
     ],
     # always loaded
     "data": [
+        "data/tier_job_estimator_def_data.xml",
         "views/sale_estimate_views.xml",
     ],
     "application": False,
