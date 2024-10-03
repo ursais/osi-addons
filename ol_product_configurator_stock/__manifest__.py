@@ -17,4 +17,7 @@
         "ol_product_state",
         "product_configurator",
     ],
+    "data": [
+        "views/product_template_views.xml",
+    ],
 }

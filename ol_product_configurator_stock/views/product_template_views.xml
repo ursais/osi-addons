@@ -1,0 +1,15 @@
+<odoo>
+
+    <record id="ol_product_configurator_stock_product_template_form_view_inherit" model="ir.ui.view">
+        <field name="name">product.template.form.view</field>
+        <field name="model">product.template</field>
+        <field name="priority">100</field>
+        <field name="inherit_id" ref="product_configurator.product_template_only_form_view_inherited" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='default_code']" position="attributes">
+                <attribute name="invisible"></attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
