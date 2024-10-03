@@ -16,6 +16,8 @@
     ],
     # always loaded
     "data": [
+        "views/product_attribute_views.xml",
+        "views/product_template_attribute_line_views.xml",
         "views/sale_order_view.xml",
     ],
 }
