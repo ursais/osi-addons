@@ -1,6 +1,7 @@
 # Import Odoo libs
 from odoo import api, fields, models
 from odoo.tools import float_round
+from odoo.exceptions import UserError
 
 
 class ProductProduct(models.Model):
@@ -15,7 +16,7 @@ class ProductProduct(models.Model):
     bom_lst_price = fields.Float(
         "BoM List Price",
         digits="Product Price",
-        help="This is the sum of the extra price of all attributes",
+        help="This is the sum of the sales prices from all components on BoM",
     )
 
     # METHODS ##########
@@ -69,14 +70,29 @@ class ProductProduct(models.Model):
         with the product's attributes.
         """
         for product in self:
+            # Get BoM components for the product
+            bom = self.env["mrp.bom"]._bom_find(self)[self]
+            bom_components = bom.bom_line_ids.mapped("product_id.id") if bom else []
+
+            # Get attribute values where product_id is either not set or not a BoM component
             attribute_value_obj = self.env["product.attribute.value"]
             value_ids = product.product_template_attribute_value_ids.mapped(
                 "product_attribute_value_id"
-            ).filtered(lambda l: not l.product_id)
+            ).filtered(
+                lambda l: not l.product_id or l.product_id.id not in bom_components
+            )
+
+            # Get extra prices for the filtered attribute values
             extra_prices = attribute_value_obj.get_attribute_value_extra_prices(
                 product_tmpl_id=product.product_tmpl_id.id, pt_attr_value_ids=value_ids
             )
+
+            # Calculate additional price from non-config BoM lines
             additional_total = product._get_non_config_set_bom_lines()
+            self.bom_lst_price = additional_total
+            self.price_extra = sum(extra_prices.values())
+
+            # Return total price
             return additional_total + sum(extra_prices.values())
 
     @api.onchange("lst_price")
@@ -142,7 +158,7 @@ class ProductProduct(models.Model):
                 ("product_tmpl_id", "in", self.mapped("product_tmpl_id").ids),
             ]
         )
-
+        raise UserError(boms_to_recompute)
         for product in self:
             product._set_sale_price_from_bom(boms_to_recompute)
 
@@ -155,6 +171,7 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
         bom = self.env["mrp.bom"]._bom_find(self)[self]
+        raise UserError(bom)
         if bom:
             self.bom_lst_price = self._compute_bom_sale_price(
                 bom, boms_to_recompute=boms_to_recompute
