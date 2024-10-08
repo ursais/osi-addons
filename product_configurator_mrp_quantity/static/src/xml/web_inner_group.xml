@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="web.Form.InnerGroup.ItemComponent" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_wrap_label')]" position="replace">
+            <t t-if="cell.props.fieldInfo.context.includes('is_qty_required')">
+                <div class="o_cell o_wrap_label flex-grow-1 flex-sm-grow-0 w-100 text-break text-900 tab-from-indent" >
+                    <t t-component="cell.Component" t-if="cell.isVisible" t-props="cell.props"/>
+                </div>
+            </t>
+            <t t-else="0">
+                <div class="o_cell o_wrap_label flex-grow-1 flex-sm-grow-0 w-100 text-break text-900 " >
+                    <t t-component="cell.Component" t-if="cell.isVisible" t-props="cell.props"/>
+                </div>
+            </t>
+            
+        </xpath>
+
+    </t>
+</templates>
