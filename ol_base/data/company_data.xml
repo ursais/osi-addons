@@ -31,6 +31,7 @@
         <field name="country_id" ref="base.us" />
         <field name="state_id" ref="base.state_us_46" />
     </record>
+
     <!-- Create the OnLogic EU Company -->
     <record id="onlogic_eu" model="res.company">
         <field name="name">OnLogic EU</field>
@@ -56,16 +57,20 @@
     <record id="base.group_system" model="res.groups">
         <field name="users" eval="[(4, ref('ol_base.us_company_user'), 0),(4, ref('ol_base.eu_company_user'), 0)]" />
     </record>
+
     <record id="stock.group_production_lot" model="res.groups">
         <field name="users" eval="[(4, ref('ol_base.us_company_user'), 0),(4, ref('ol_base.eu_company_user'), 0)]" />
     </record>
+
     <record id="stock.group_stock_multi_locations" model="res.groups">
         <field name="users" eval="[(4, ref('ol_base.us_company_user'), 0),(4, ref('ol_base.eu_company_user'), 0)]" />
     </record>
+
     <!-- Give admin multi-company -->
     <record id="base.group_multi_company" model="res.groups">
         <field name="users" eval="[(4, ref('base.user_admin'), 0)]" />
     </record>
+
     <!-- Give admin EU company -->
     <record id="base.user_admin" model="res.users">
         <field name="company_ids" eval="[(4, ref('ol_base.onlogic_eu'), 0)]" />

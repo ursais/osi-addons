@@ -38,55 +38,73 @@
     <record id="role_eng_manager" model="res.users.role">
         <field name="name">Engineering - Manager</field>
     </record>
+
     <record id="role_fin_cfo" model="res.users.role">
         <field name="name">Finance - CFO</field>
     </record>
+
     <record id="role_fin_manager" model="res.users.role">
         <field name="name">Finance - Manager</field>
     </record>
+
     <record id="role_it_admin" model="res.users.role">
         <field name="name">IT - Admin</field>
     </record>
+
     <record id="role_it_app_dev" model="res.users.role">
         <field name="name">IT - Application Development</field>
     </record>
+
     <record id="role_legal_gen_cou" model="res.users.role">
         <field name="name">Legal - General Counsel</field>
     </record>
+
     <record id="role_ope_lead" model="res.users.role">
         <field name="name">Operations - Lead</field>
     </record>
+
     <record id="role_ope_manager" model="res.users.role">
         <field name="name">Operations - Manager</field>
     </record>
+
     <record id="role_ope_mrp_tech_supp" model="res.users.role">
         <field name="name">Operations - Manufacturing &amp; Tech Support</field>
     </record>
+
     <record id="role_product_manager" model="res.users.role">
         <field name="name">Product Management - Manager</field>
     </record>
+
     <record id="role_sale_manager" model="res.users.role">
         <field name="name">Sales - Manager</field>
     </record>
+
     <record id="role_translations" model="res.users.role">
         <field name="name">Translations</field>
     </record>
+
     <record id="role_ceo" model="res.users.role">
         <field name="name">CEO</field>
     </record>
+
     <record id="role_sales_vp" model="res.users.role">
         <field name="name">Sales - VP</field>
     </record>
+
     <record id="role_sales_svp" model="res.users.role">
         <field name="name">Sales - SVP</field>
     </record>
+
     <record id="role_sales_director" model="res.users.role">
         <field name="name">Sales - Director</field>
     </record>
+
     <record id="role_coo" model="res.users.role">
         <field name="name">COO</field>
     </record>
+
     <record id="role_fin_controller" model="res.users.role">
         <field name="name">Finance - Controller</field>
     </record>
+
 </odoo>
