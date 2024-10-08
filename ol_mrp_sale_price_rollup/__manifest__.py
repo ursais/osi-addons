@@ -17,8 +17,9 @@
         "sale",
         "mrp",
         "mrp_account",
-        "product_configurator_mrp",
+        "product_configurator",
         "osi_mrp_bom_sequence",
+        "sale_blanket_order",
     ],
     # always loaded
     "data": [

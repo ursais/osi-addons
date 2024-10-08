@@ -43,6 +43,10 @@
                     groups="base.group_no_one"
                 />
             </xpath>
+            <xpath expr="//field[@name='taxes_id']" position="before">
+                <field name="price_extra" readonly="1" />
+                <field name="bom_lst_price" readonly="1" />
+            </xpath>
         </field>
     </record>
 
@@ -67,6 +71,16 @@
                     colspan="2"
                     groups="base.group_no_one"
                 />
+            </xpath>
+            <xpath expr="//group[@name='pricing']//div[field[@name='lst_price']]" position="after">
+                <label for="price_extra"/>
+                <div class="o_row">
+                    <field name="price_extra" readonly="1" />
+                </div>
+                <label for="bom_lst_price"/>
+                <div class="o_row">
+                    <field name="bom_lst_price" readonly="1" />
+                </div>
             </xpath>
         </field>
     </record>
