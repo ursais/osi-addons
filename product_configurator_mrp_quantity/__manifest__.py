@@ -15,6 +15,12 @@
         "views/product_config_view.xml",
         "views/attribute_value_qty_views.xml",
     ],
+    'assets': {
+        'web.assets_backend': [
+            '/product_configurator_mrp_quantity/static/src/xml/web_inner_group.xml',
+            '/product_configurator_mrp_quantity/static/src/scss/from_group_scss.scss'
+        ]
+    },
     "images": ["static/description/cover.png"],
     "development_status": "Beta",
     "uninstall_hook": "uninstall_hook",
