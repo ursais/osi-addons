@@ -5,3 +5,4 @@ from . import account_payment
 from . import payment_check_void
 from . import payment_check_history
 from . import print_prenumbered_checks
+from . import account_move
