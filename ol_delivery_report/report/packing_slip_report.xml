@@ -5,6 +5,7 @@
         <field name="model">stock.picking</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">ol_delivery_report.report_packing_slip_template</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
         <field name="print_report_name">'Packing_Slip_' + object.name</field>
     </record>
 
@@ -13,76 +14,81 @@
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="doc">
                     <t t-call="web.external_layout">
-
                         <t t-set="partner" t-value="doc.partner_id or (doc.move_ids and doc.move_ids[0].partner_id) or False"/>
-
-                        <t t-set="address">
-                            <div name="div_outgoing_address">
-                                <div name="outgoing_delivery_address" t-if="doc.should_print_delivery_address()">
-                                    <span><strong>Ship To:</strong></span>
-                                    <div t-field="doc.move_ids[0].partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
-                                </div>
-                                <div name="outgoing_warehouse_address" t-elif="doc.picking_type_id.code != 'internal' and doc.picking_type_id.warehouse_id.partner_id">
-                                    <span><strong>Sender:</strong></span>
-                                    <div t-field="doc.blind_ship_from or sale_order.partner_id.commercial_partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
-                                </div>
-                            </div>
-                        </t>
-                        <t t-set="information_block">
-                            <div class="row">
-                                <div class="col-7" name="div_incoming_address">
-                                    <t t-set="show_partner" t-value="False"/>
-                                    <div name="vendor_address" t-if="doc.picking_type_id.code=='incoming' and partner">
-                                        <span><strong>Vendor Address:</strong></span>
-                                        <t t-set="show_partner" t-value="True"/>
-                                    </div>
-                                    <div name="customer_address" t-if="doc.picking_type_id.code=='outgoing' and partner and partner != partner.commercial_partner_id">
-                                        <span><strong>Customer Address:</strong></span>
-                                        <t t-set="show_partner" t-value="True"/>
-                                    </div>
-                                    <div t-if="show_partner" name="partner_header">
-                                        <div t-field="partner.commercial_partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;, &quot;vat&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </t>
-                        <h2>
-                            <h2>Packing Slip</h2>
-                        </h2>
-
-                        <div class="row mt32 mb32">
-                            <div t-if="doc.sale_id" class="col-auto" name="sale_id">
-                                <div>
-                                    <strong>Sale Order: </strong><t t-esc="doc.sale_id.name"/>
-                                </div>
-                                <div>
-                                    <strong>Order Date: </strong><t t-esc="doc.sale_id.date_order"/>
-                                </div>
-                                <div>
-                                    <strong>Date: </strong>
-                                        <t t-if="doc.state == 'done'" t-esc="doc.date_done"/>
-                                        <t t-else="" t-esc="doc.scheduled_date"/>
-                                    <t t-if="doc.sale_id.client_order_ref">
-                                        <strong>Customer PO: </strong><t t-esc="doc.sale_id.client_order_ref"/>
-                                    </t>
-                                </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <h2>PACKING SLIP</h2>
                             </div>
                         </div>
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <strong>Sale Order</strong>
+                                    </div>
+                                    <div class="col-6">
+                                        <strong><t t-out="doc.sale_id.name"/></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span>Order Date</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <t t-out="doc.sale_id.date_order"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span>Ship Date</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <t t-if="doc.state == 'done'" t-out="doc.date_done"/>
+                                        <t t-else="" t-out="doc.scheduled_date"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span>Customer PO:</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <t t-out="doc.sale_id.client_order_ref"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <strong>Bill To</strong>
+                                    </div>
+                                    <div class="col-6">
+                                        <strong>Ship To</strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div t-field="partner.commercial_partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;, &quot;vat&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
+                                    </div>
+                                    <div class="col-6">
+                                        <div t-field="doc.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;, &quot;vat&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
+                                    </div>
+                                </div>
 
-                        <div class="page">
+                            </div>
+                        </div>
+                        <div class="page mb32 mt32">
                             <!-- Outer Table for Stock Moves -->
                             <table class="table table-sm">
                                 <thead>
                                     <tr>
-                                        <th>Quantity</th>
                                         <th>Products</th>
                                         <th>Model</th>
+                                        <th>Quantity</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <t t-foreach="doc.move_ids" t-as="move">
                                         <tr>
-                                            <td><t t-esc="move.quantity"/></td>
                                             <td name="td_name">
                                                 <t t-if="move.sale_line_id.name">
                                                     <span t-field="move.sale_line_id.name"/>
@@ -92,6 +98,7 @@
                                                 </t>
                                             </td>
                                             <td><t t-esc="move.product_id.default_code"/></td>
+                                            <td><t t-esc="move.quantity" t-options='{"widget": "float", "precision": 2}'/></td>
                                         </tr>
 
                                         <!-- Inner Table for Serial Numbers (Only if they exist) -->

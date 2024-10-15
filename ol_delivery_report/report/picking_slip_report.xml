@@ -1,0 +1,187 @@
+<odoo>
+    <record id="stock.action_report_picking" model="ir.actions.report">
+        <field name="name">Picking Operations</field>
+        <field name="model">stock.picking</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ol_delivery_report.report_picking_onl_document</field>
+        <field name="report_file">stock.report_picking_operations</field>
+        <field name="print_report_name">'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)</field>
+        <field name="binding_model_id" ref="stock.model_stock_picking"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_picking_onl_document">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="row">
+                            <div class="col-12">
+                                <h2>PICKING SLIP</h2>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <strong>Sale Order</strong>
+                                    </div>
+                                    <div class="col-6">
+                                        <strong><t t-out="doc.sale_id.name"/></strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span>Internal Reference</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <t t-out="doc.name"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span>Company</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <t t-out="doc.partner_id.parent_id.name"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span>Customer Name</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <t t-out="doc.partner_id.name"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="row">
+                                    <div class="col-6">
+                                        Method/Carrier
+                                    </div>
+                                    <div class="col-6">
+                                        <t t-out="doc.carrier_id.name"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        Order Value
+                                    </div>
+                                    <div class="col-6">
+                                        <t t-out="doc.sale_id.amount_total" t-options='{"widget": "monetary", "display_currency": doc.sale_id.currency_id}'/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        Shipping Value
+                                    </div>
+                                    <div class="col-6">
+                                        <t t-out="doc.get_shipping_cost()" t-options='{"widget": "monetary", "display_currency": doc.sale_id.currency_id}'/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <strong>Payment Method</strong>
+                                    </div>
+                                    <div class="col-6">
+                                        <t t-out="doc.partner_id.property_payment_term_id.name"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-4" name="right_box">
+                                <div t-field="doc.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:300px;height:50px;'}">
+                                    <div class="bg-light border-1 rounded d-flex flex-column align-items-center justify-content-center p-3 opacity-75 text-muted text-center">
+                                        (document barcode)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="mt-3 table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th name="th_source_location">
+                                        <strong>Location</strong>
+                                    </th>
+                                    <th name="th_model">
+                                        <strong>Model</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Quantity</strong>
+                                    </th>
+                                    <th name="th_product">
+                                        <strong>Product</strong>
+                                    </th>
+                                    <th name="th_dest_location">
+                                        <strong>Destination</strong>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="doc.move_ids" t-as="move">
+                                    <tr>
+                                        <td>
+                                            <span t-field="move.location_id.name"/>
+                                        </td>
+                                        <td>
+                                            <t t-out="move.product_id.default_code"/></td>
+                                        <td>
+                                            <t t-out="move.quantity" t-options='{"widget": "float", "precision": 2}'/>
+                                        </td>
+                                        <td name="td_name">
+                                            <t t-if="move.sale_line_id.name">
+                                                <span t-field="move.sale_line_id.name"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span t-field="move.product_id.name"/>
+                                            </t>
+                                        </td>
+                                        <td>
+                                            <span t-field="move.location_dest_id.name"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+
+                        <div class="row">
+                            <div class="col-12">
+                                <strong>Internal Reference</strong>
+                                <hr/>
+                            </div>
+                        </div>
+                        <div class="row mt32">
+                            <div class="col-3">
+                                CC Charged_______________
+                            </div>
+                            <div class="col-3">
+                                Picked By_______________
+                            </div>
+                            <div class="col-3">
+                                Packed By_______________
+                            </div>
+                            <div class="col-3">
+                                Box Count_______________
+                            </div>
+                        </div>
+                        <div class="row mt32">
+                            <div class="col-3">
+                                Box Weight_______________
+                            </div>
+                            <div class="col-3">
+                                Box Size_______________
+                            </div>
+                            <div class="col-3">
+                                Shipped_______________
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+    </template>
+
+
+</odoo>
