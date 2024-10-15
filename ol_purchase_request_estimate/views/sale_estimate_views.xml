@@ -32,6 +32,20 @@
             <xpath expr="//field[@name='product_description']" position="after">
                 <field name="specifications" optional="show" />
             </xpath>
+            <xpath expr="//field[@name='estimate_ids']/tree/field[@name='price_unit']" position="after">
+                <field
+                    name="purchase_state"
+                    widget="badge"
+                    decoration-success="purchase_state == ('done')"
+                    decoration-muted="purchase_state == ('draft')"
+                    decoration-info="purchase_state in ('sent', 'purchase')"
+                    decoration-warning="purchase_state == ('to_approve')"
+                    decoration-danger="purchase_state == 'cancelled'"
+                />
+            </xpath>
+            <xpath expr="//field[@name='estimate_ids']/tree/field[@name='price_unit']" position="before">
+                <field name="purchase_cost" optional="show" />
+            </xpath>
         </field>
     </record>
 

@@ -8,6 +8,20 @@
             <xpath expr="//field[@name='product_qty']" position="before">
                 <field name="specifications" optional="show" />
             </xpath>
+            <xpath expr="//field[@name='estimated_cost']" position="after">
+                <field name="purchase_cost" optional="show" />
+            </xpath>
+            <button name="action_view_stock_picking" position="after">
+                <button
+                    type="object"
+                    name="action_view_estimate"
+                    class="oe_stat_button"
+                    invisible="estimate_count == 0"
+                    icon="fa-list"
+                >
+                    <field name="estimate_count" widget="statinfo" string="Estimate(s)" />
+                </button>
+            </button>
         </field>
     </record>
 

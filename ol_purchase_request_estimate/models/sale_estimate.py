@@ -3,6 +3,8 @@ from odoo import api, fields, models
 
 
 class SaleEstimateJob(models.Model):
+    """Add the ability to create PR's from Estimates."""
+
     _inherit = "sale.estimate.job"
 
     # COLUMNS ######
@@ -47,6 +49,7 @@ class SaleEstimateJob(models.Model):
                     "product_uom_id": line.product_uom.id,
                     "specifications": line.specifications,
                     "estimated_cost": line.price_unit,
+                    "estimate_line_id": line.id,
                 }
                 purchase_request_line.create(purchase_request_line_vals)
 
