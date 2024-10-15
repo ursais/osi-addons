@@ -103,3 +103,28 @@ class ProductProduct(models.Model):
             additional_total = product._get_bom_sale_price()
             product.lst_price = additional_total
         return rec
+
+    def _compute_product_price_extra(self):
+        standard_products = self.filtered(lambda product: not product.config_ok)
+        config_products = self - standard_products
+        if standard_products:
+            result = super(
+                ProductProduct, standard_products
+            )._compute_product_price_extra()
+        else:
+            result = None
+        for product in config_products:
+            attribute_value_obj = self.env["product.attribute.value"]
+            value_ids = (
+                product.product_template_attribute_value_ids.product_attribute_value_id
+            )
+            extra_prices = attribute_value_obj.get_attribute_value_extra_prices(
+                product_tmpl_id=product.product_tmpl_id.id, pt_attr_value_ids=value_ids
+            )
+            for extra_price in extra_prices:
+                additional_qty = self.product_attribute_value_qty_ids.filtered(
+                    lambda l: l.attr_value_id.id == extra_price
+                ).qty
+                extra_prices[extra_price] = extra_prices[extra_price] * additional_qty
+            product.price_extra = sum(extra_prices.values())
+        return result
