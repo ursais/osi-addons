@@ -124,22 +124,23 @@ class ProductAttributePrice(models.Model):
 
     def write(self, values):
         result = super().write(values)
-        if self.is_qty_required and (
-            values.get("default_qty") or values.get("maximum_qty")
-        ):
-            qty_list = []
-            attribute_value_qty_obj = self.env["attribute.value.qty"]
-            for i in range(self.default_qty, self.maximum_qty + 1):
-                qty_list.append(
-                    {
-                        "product_tmpl_id": self.product_tmpl_id.id,
-                        "product_attribute_id": self.attribute_id.id,
-                        "product_attribute_value_id": self.product_attribute_value_id.id,
-                        "qty": i,
-                        "template_attri_value_id": self.id,
-                    }
-                )
-            self.attribute_value_qty_ids.unlink()
-            attribute_value_qty_obj.create(qty_list)
+        attribute_value_qty_obj = self.env["attribute.value.qty"]
+        for rec in self:
+            if rec.is_qty_required and (
+                values.get("default_qty") or values.get("maximum_qty")
+            ):
+                qty_list = []
+                for i in range(rec.default_qty, rec.maximum_qty + 1):
+                    qty_list.append(
+                        {
+                            "product_tmpl_id": rec.product_tmpl_id.id,
+                            "product_attribute_id": rec.attribute_id.id,
+                            "product_attribute_value_id": rec.product_attribute_value_id.id,
+                            "qty": i,
+                            "template_attri_value_id": rec.id,
+                        }
+                    )
+                rec.attribute_value_qty_ids.unlink()
+                attribute_value_qty_obj.create(qty_list)
 
         return result
