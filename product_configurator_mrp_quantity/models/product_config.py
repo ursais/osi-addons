@@ -17,7 +17,7 @@ class ProductConfigSession(models.Model):
         session_attrs_qtys = self.session_value_quantity_ids
         duplicate_product = self.env["product.product"]
         for product in products:
-            if product.product_attribute_value_qty_ids and product.product_attribute_value_qty_ids.mapped(
+            if product.product_attribute_value_qty_ids.mapped(
                 "qty"
             ) == session_attrs_qtys.mapped("qty"):
                 duplicate_product = product
