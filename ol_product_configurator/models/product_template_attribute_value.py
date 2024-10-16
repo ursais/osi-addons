@@ -11,6 +11,6 @@ class ProductTemplateAttributeValue(models.Model):
     product_id = fields.Many2one(
         "product.product", related="product_attribute_value_id.product_id"
     )
-    company_id = fields.Many2one(
-        "res.company", related="product_attribute_value_id.company_id"
+    company_ids = fields.Many2many(
+        "res.company", related="product_attribute_value_id.company_ids",
     )

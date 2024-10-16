@@ -9,23 +9,26 @@ class AttributeValue(models.Model):
     Inherit the Product Attribute Value Object Adding Fields and methods
     """
 
-    company_id = fields.Many2one("res.company", string="Company")
+    company_ids = fields.Many2many("res.company", string="Company")
 
     # METHODS ##########
 
-    @api.constrains("product_id", "company_id")
+    @api.constrains("product_id", "company_ids")
     def _check_company_ids(self):
         product_company = self.product_id.company_id
-        if (
-            self.product_id
-            and product_company
-            and product_company.id != self.company_id.id
-        ):
-            raise ValidationError(
-                _(
+        if self.product_id and product_company and self.company_ids:
+            for company in self.company_ids:
+                if product_company.id != company.id:
+                    raise ValidationError(_(
                     "The company '%s' cannot be added because the product '%s' is assigned to the company '%s'."
-                    % (self.company_id.name, self.product_id.name, product_company.name)
-                )
-            )
+                    % (company.name, self.product_id.name, product_company.name)))
 
+    @api.model
+    def _name_search(self, name, domain=None, operator="ilike", limit=None, order=None):
+        if not domain:
+            doamin = []
+        company = self.env.company.ids
+        if self._context.get("default_attribute_id"):
+            domain.extend(['|', ('company_ids', 'in', company), ('company_ids', '=', False)])
+        return super()._name_search(name, domain, operator, limit, order)
     # END ##########

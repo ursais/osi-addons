@@ -1,0 +1,15 @@
+<odoo>
+	<record id="product_normal_form_view_inherit_ol_product_configurator" model="ir.ui.view">
+        <field name="name">product.product.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view" />
+        <field name="arch" type="xml">
+        	<xpath expr="//div[@name='button_box']" position="after">
+        		<field name="values_company_diff"/>
+        		<div class="oe_edit_only alert alert-info" role="alert">
+                    This Product has attribute values that belong to a different company
+                </div>
+        	</xpath>
+        </field>
+    </record>
+</odoo>

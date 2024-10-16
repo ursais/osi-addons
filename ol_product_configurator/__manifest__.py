@@ -14,8 +14,9 @@
     "depends": ["ol_base", "product_configurator"],
     # always loaded
     "data": [
-        "security/ir_rule.xml",
+        # "security/ir_rule.xml",
         "views/attribute_value_views.xml",
         "views/product_template_attribute_value_views.xml",
+        "views/product_product_views.xml",
     ],
 }
