@@ -18,6 +18,7 @@
         "mrp",
         "mrp_account",
         "product_configurator",
+        "product_configurator_mrp_quantity",
         "osi_mrp_bom_sequence",
         "sale_blanket_order",
     ],

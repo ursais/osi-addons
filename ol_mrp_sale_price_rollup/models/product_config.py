@@ -1,6 +1,5 @@
 # Import Odoo libs
 from odoo import api, models
-from odoo.exceptions import UserError
 
 
 class ProductConfigSession(models.Model):
@@ -40,3 +39,41 @@ class ProductConfigSession(models.Model):
             else:
                 price = 0.00
             session.price = price
+
+
+class ProductAttributeValue(models.Model):
+    _inherit = "product.attribute.value"
+
+    @api.model
+    def get_attribute_value_extra_prices(
+        self, product_tmpl_id, pt_attr_value_ids, pricelist=None
+    ):
+        super().get_attribute_value_extra_prices(
+            product_tmpl_id, pt_attr_value_ids, pricelist=None
+        )
+        extra_prices = {}
+        if not pricelist:
+            pricelist = self.env.user.partner_id.property_product_pricelist
+
+        related_product_av_ids = self.env["product.attribute.value"].search(
+            [("id", "in", pt_attr_value_ids.ids), ("product_id", "!=", False)]
+        )
+        extra_prices = {
+            av.id: av.product_id.with_context(
+                pricelist=pricelist.id
+            )._get_contextual_price()
+            for av in related_product_av_ids
+        }
+        remaining_av_ids = pt_attr_value_ids - related_product_av_ids
+        pe_lines = self.env["product.template.attribute.value"].search(
+            [
+                ("product_attribute_value_id", "in", remaining_av_ids.ids),
+                ("product_tmpl_id", "=", product_tmpl_id),
+            ]
+        )
+        for line in pe_lines:
+            attr_val_id = line.product_attribute_value_id
+            if attr_val_id.id not in extra_prices:
+                extra_prices[attr_val_id.id] = 0
+            extra_prices[attr_val_id.id] += line.price_extra
+        return extra_prices
