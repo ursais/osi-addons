@@ -1,5 +1,5 @@
 <odoo>
-	<!-- product.template.attribute.value -->
+
 	<!-- Tree View -->
 	<record id="product_template_attribute_value_view_tree_inherit_ol_pro_config" model="ir.ui.view">
         <field name="name">product.template.attribute.value.view.tree</field>
@@ -8,8 +8,9 @@
         <field name="arch" type="xml">
             <field name="price_extra" position="after">
             	<field name="product_id" />
-                <field name="company_ids"  widget="many2many_tags"/>
+                <field name="company_ids" widget="many2many_tags" />
             </field>
         </field>
     </record>
+
 </odoo>
