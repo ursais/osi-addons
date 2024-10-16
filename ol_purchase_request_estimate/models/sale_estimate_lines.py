@@ -16,12 +16,13 @@ class SaleEstimatelineJob(models.Model):
         string="PR Lines",
     )
     purchase_cost = fields.Float(
-        string="PO Cost", compute="_compute_purchase_cost", store=True
-    )
-    purchase_state = fields.Selection(
-        selection=lambda self: self.env["purchase.order"]._fields["state"].selection,
-        compute="_compute_purchase_state",
+        string="PO Unit Cost",
+        compute="_compute_purchase_cost",
         store=True,
+    )
+    purchase_state = fields.Char(
+        string="Purchase Status",
+        compute="_compute_purchase_state",
     )
 
     # END ##########
@@ -41,28 +42,29 @@ class SaleEstimatelineJob(models.Model):
                 else 0.0
             )
 
-    @api.depends(
-        "purchase_request_line_ids.purchase_state",
-        "purchase_request_line_ids.purchase_lines.state",
-        "purchase_request_line_ids.purchase_lines.order_id.state",
-    )
+    # Dictionary to map state codes to their labels
+    STATE_LABELS = {
+        "draft": "RFQ",
+        "sent": "RFQ Sent",
+        "to approve": "To Approve",
+        "purchase": "Purchase Order",
+        "done": "Done",
+        "cancel": "Cancelled",
+    }
+
+    @api.depends("purchase_request_line_ids.purchase_state")
     def _compute_purchase_state(self):
         for line in self:
-            states = line.mapped("purchase_request_line_ids.purchase_lines.state")
-            if "done" in states:
-                line.purchase_state = "done"
-            elif states and all(state == "cancel" for state in states):
-                line.purchase_state = "cancel"
-            elif any(state in ("purchase", "to approve", "sent") for state in states):
-                line.purchase_state = next(
-                    (
-                        state
-                        for state in states
-                        if state in ("purchase", "to approve", "sent")
-                    ),
-                    "draft",
+            states = line.purchase_request_line_ids.mapped("purchase_state")
+            if states:
+                # Filter out any `False` or invalid states
+                state_labels = [
+                    self.STATE_LABELS.get(state, state) for state in states if state
+                ]
+                line.purchase_state = (
+                    ", ".join(state_labels) if state_labels else "No PO"
                 )
             else:
-                line.purchase_state = "draft"
+                line.purchase_state = "No PR"
 
     # END ##########

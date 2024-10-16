@@ -14,7 +14,6 @@ class TestPurchaseRequestEstimate(TransactionCase):
         self.product_uom = self.env.ref("uom.product_uom_unit")
         self.partner = self.env.ref("base.res_partner_1")
 
-
     def test01_sale_estimate(self):
         # Create an Sale Estimation in the 'draft' stage
         sale_estimate_job = self.sale_estimate_job_obj.create(
@@ -34,7 +33,9 @@ class TestPurchaseRequestEstimate(TransactionCase):
                 ],
             }
         )
-        sale_estimate_job.with_context(default_estimate_id=sale_estimate_job.id).action_create_purchase_request()
+        sale_estimate_job.with_context(
+            default_estimate_id=sale_estimate_job.id
+        ).action_create_purchase_request()
         purchase_request = sale_estimate_job.purchase_request_ids
         purchase_request_line = purchase_request.line_ids
 
@@ -60,15 +61,19 @@ class TestPurchaseRequestEstimate(TransactionCase):
             purchase_request_line.product_id.id,
             "Should have same product",
         )
+
+        # Check that purchase order state matches purchase request and estimate line
         self.assertEqual(
             purchase_request_line.purchase_lines.state,
             purchase_request_line.purchase_state,
-            "Should have same state",
+            "Should have same state in purchase line and purchase request line",
         )
+
+        # Check that the computed 'purchase_state' on estimate line shows RFQ
         self.assertEqual(
-            purchase_request_line.purchase_lines.state,
             sale_estimate_job.estimate_ids.purchase_state,
-            "Should have same state",
+            "RFQ",
+            "Purchase state on estimate line should match the label 'RFQ'",
         )
 
         # Approve the purchase order
@@ -76,5 +81,12 @@ class TestPurchaseRequestEstimate(TransactionCase):
         self.assertEqual(
             purchase_order.state,
             sale_estimate_job.estimate_ids.purchase_state,
-            "Should have same state",
+            "Should have same state on purchase order and estimate line after approval",
+        )
+
+        # Check that the computed 'purchase_state' on estimate line shows Purchase Order
+        self.assertEqual(
+            sale_estimate_job.estimate_ids.purchase_state,
+            "To Approve",
+            "Purchase state on estimate line should match the label 'To Approve'",
         )

@@ -48,7 +48,7 @@ class SaleEstimateJob(models.Model):
                     "product_qty": line.product_uom_qty,
                     "product_uom_id": line.product_uom.id,
                     "specifications": line.specifications,
-                    "estimated_cost": line.price_unit,
+                    "estimated_cost": line.price_subtotal,
                     "estimate_line_id": line.id,
                 }
                 purchase_request_line.create(purchase_request_line_vals)
