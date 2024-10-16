@@ -20,6 +20,8 @@ class SaleOrderLine(models.Model):
             "product_id": self.product_id.id,
             "quantity": self.product_uom_qty,
             "uom_id": self.product_uom.id,
+            "mrp_bom_id": self.bom_id.id,
+            "config_session_id": self.config_session_id.id,
         }
 
     def button_add_to_optional(self):

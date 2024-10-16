@@ -39,6 +39,10 @@
                 <field name="margin_percent" optional="show" widget="percentage" />
                 <field name="price_subtotal" optional="show" />
             </xpath>
+            <xpath expr="//page[@name='optional_products']//tree/field[@name='name']" position="after">
+                <field name="mrp_bom_id" optional="hide"/>
+                <field name="config_session_id" optional="hide"/>
+            </xpath>
         </field>
     </record>
 

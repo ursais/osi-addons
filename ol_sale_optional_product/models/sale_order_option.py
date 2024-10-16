@@ -42,6 +42,8 @@ class SaleOrderOption(models.Model):
         store=True,
         precompute=True,
     )
+    mrp_bom_id = fields.Many2one("mrp.bom",string="BOM")
+    config_session_id = fields.Many2one("product.config.session",string="Config session")
 
     # END #########
     # METHODS #####
