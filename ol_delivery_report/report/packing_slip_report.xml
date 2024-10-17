@@ -7,136 +7,139 @@
         <field name="report_name">ol_delivery_report.report_packing_slip_template</field>
         <field name="binding_model_id" ref="stock.model_stock_picking"/>
         <field name="print_report_name">'Packing_Slip_' + object.name</field>
+        <field name="paperformat_id" ref="ol_base.paperformat_onlogic"/>
     </record>
 
     <template id="report_packing_slip_template">
-        <t t-name="ol_delivery_report.report_packing_slip_template">
-            <t t-call="web.html_container">
-                <t t-foreach="docs" t-as="doc">
-                    <t t-call="web.external_layout">
-                        <t t-set="partner" t-value="doc.partner_id or (doc.move_ids and doc.move_ids[0].partner_id) or False"/>
-                        <div class="row">
-                            <div class="col-12">
-                                <h2>PACKING SLIP</h2>
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="web.basic_layout">
+                    <t t-set="partner" t-value="doc.partner_id or (doc.move_ids and doc.move_ids[0].partner_id) or False"/>
+                    <div class="row">
+                        <div class="col-10 mt-3 mb-5 text-muted">
+                            <h2><b>PACKING SLIP</b></h2>
+                        </div>
+                        <div class="col-2 text-end">
+                            <img t-if="doc.company_id.logo" t-att-src="image_data_uri(doc.company_id.logo)" style="max-height: 65px;" alt="Logo"/>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Sale Order</strong>
+                                </div>
+                                <div class="col-6">
+                                    <strong><t t-out="doc.sale_id.name"/></strong>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <span>Order Date</span>
+                                </div>
+                                <div class="col-6">
+                                    <t t-out="doc.sale_id.date_order"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <span>Ship Date</span>
+                                </div>
+                                <div class="col-6">
+                                    <t t-if="doc.state == 'done'" t-out="doc.date_done"/>
+                                    <t t-else="" t-out="doc.scheduled_date"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <span>Customer PO:</span>
+                                </div>
+                                <div class="col-6">
+                                    <t t-out="doc.sale_id.client_order_ref"/>
+                                </div>
                             </div>
                         </div>
-                        <div class="row mt-3">
-                            <div class="col-6">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <strong>Sale Order</strong>
-                                    </div>
-                                    <div class="col-6">
-                                        <strong><t t-out="doc.sale_id.name"/></strong>
-                                    </div>
+                        <div class="col-6">
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>Bill To</strong>
                                 </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <span>Order Date</span>
-                                    </div>
-                                    <div class="col-6">
-                                        <t t-out="doc.sale_id.date_order"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <span>Ship Date</span>
-                                    </div>
-                                    <div class="col-6">
-                                        <t t-if="doc.state == 'done'" t-out="doc.date_done"/>
-                                        <t t-else="" t-out="doc.scheduled_date"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <span>Customer PO:</span>
-                                    </div>
-                                    <div class="col-6">
-                                        <t t-out="doc.sale_id.client_order_ref"/>
-                                    </div>
+                                <div class="col-6">
+                                    <strong>Ship To</strong>
                                 </div>
                             </div>
-                            <div class="col-6">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <strong>Bill To</strong>
-                                    </div>
-                                    <div class="col-6">
-                                        <strong>Ship To</strong>
-                                    </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div t-field="partner.commercial_partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;, &quot;vat&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
                                 </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div t-field="partner.commercial_partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;, &quot;vat&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
-                                    </div>
-                                    <div class="col-6">
-                                        <div t-field="doc.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;, &quot;vat&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
-                                    </div>
+                                <div class="col-6">
+                                    <div t-field="doc.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;, &quot;vat&quot;], &quot;no_marker&quot;: True, &quot;phone_icons&quot;: True}"/>
                                 </div>
+                            </div>
 
-                            </div>
                         </div>
-                        <div class="page mb32 mt32">
-                            <!-- Outer Table for Stock Moves -->
-                            <table class="table table-sm">
-                                <thead>
+                    </div>
+                    <div class="page mb32 mt32">
+                        <!-- Outer Table for Stock Moves -->
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Products</th>
+                                    <th>Model</th>
+                                    <th>Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="doc.move_ids" t-as="move">
                                     <tr>
-                                        <th>Products</th>
-                                        <th>Model</th>
-                                        <th>Quantity</th>
+                                        <td name="td_name">
+                                            <t t-if="move.sale_line_id.name">
+                                                <span t-field="move.sale_line_id.name"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span t-field="move.product_id.name"/>
+                                            </t>
+                                        </td>
+                                        <td><t t-esc="move.product_id.default_code"/></td>
+                                        <td><t t-esc="move.quantity" t-options='{"widget": "float", "precision": 2}'/></td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    <t t-foreach="doc.move_ids" t-as="move">
+
+                                    <!-- Inner Table for Serial Numbers (Only if they exist) -->
+                                    <t t-if="move.move_line_ids and move.move_line_ids.filtered(lambda ml: ml.lot_id)">
                                         <tr>
-                                            <td name="td_name">
-                                                <t t-if="move.sale_line_id.name">
-                                                    <span t-field="move.sale_line_id.name"/>
-                                                </t>
-                                                <t t-else="">
-                                                    <span t-field="move.product_id.name"/>
-                                                </t>
+                                            <td colspan="5">
+                                                <table class="table border-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <!-- Count the number of serial numbers -->
+                                                            <t t-set="serial_count" t-value="len(move.move_line_ids.filtered(lambda ml: ml.lot_id))"/>
+                                                            <th>Serial Numbers (<t t-esc="serial_count"/>)</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <t t-set="serials" t-value="[]"/>
+                                                                <t t-foreach="move.move_line_ids.filtered(lambda ml: ml.lot_id)" t-as="move_line">
+                                                                    <t t-set="serials" t-value="serials + [move_line.lot_id.name]"/>
+                                                                </t>
+                                                                <!-- Join the serial numbers into a single string  -->
+                                                                <t t-esc="' , '.join(serials)"/>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+
+                                                </table>
                                             </td>
-                                            <td><t t-esc="move.product_id.default_code"/></td>
-                                            <td><t t-esc="move.quantity" t-options='{"widget": "float", "precision": 2}'/></td>
                                         </tr>
-
-                                        <!-- Inner Table for Serial Numbers (Only if they exist) -->
-                                        <t t-if="move.move_line_ids and move.move_line_ids.filtered(lambda ml: ml.lot_id)">
-                                            <tr>
-                                                <td colspan="5">
-                                                    <table class="table">
-                                                        <thead>
-                                                            <tr>
-                                                                <!-- Count the number of serial numbers -->
-                                                                <t t-set="serial_count" t-value="len(move.move_line_ids.filtered(lambda ml: ml.lot_id))"/>
-                                                                <th>Serial Numbers (<t t-esc="serial_count"/>)</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>
-                                                                    <t t-set="serials" t-value="[]"/>
-                                                                    <t t-foreach="move.move_line_ids.filtered(lambda ml: ml.lot_id)" t-as="move_line">
-                                                                        <t t-set="serials" t-value="serials + [move_line.lot_id.name]"/>
-                                                                    </t>
-                                                                    <!-- Join the serial numbers into a single string  -->
-                                                                    <t t-esc="' , '.join(serials)"/>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                        </t>
                                     </t>
-                                </tbody>
-                            </table>
-                        </div>
-                    </t>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
                 </t>
             </t>
         </t>
+        <!-- </t> -->
     </template>
 </odoo>

@@ -8,15 +8,19 @@
         <field name="print_report_name">'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)</field>
         <field name="binding_model_id" ref="stock.model_stock_picking"/>
         <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="ol_base.paperformat_onlogic"/>
     </record>
 
     <template id="report_picking_onl_document">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="doc">
-                    <t t-call="web.external_layout">
+                    <t t-call="web.basic_layout">
                         <div class="row">
-                            <div class="col-12">
-                                <h2>PICKING SLIP</h2>
+                            <div class="col-10 mt-3 mb-5 text-muted">
+                                <h2><b>PICKING SLIP</b></h2>
+                            </div>
+                            <div class="col-2 text-end">
+                                <img t-if="doc.company_id.logo" t-att-src="image_data_uri(doc.company_id.logo)" style="max-height: 65px;" alt="Logo"/>
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -150,7 +154,7 @@
                         <div class="row">
                             <div class="col-12">
                                 <strong>Internal Reference</strong>
-                                <hr/>
+                                <div style="border-top: 1px solid black;"/>
                             </div>
                         </div>
                         <div class="row mt32">
