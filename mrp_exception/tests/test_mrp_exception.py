@@ -38,7 +38,7 @@ class TestMrpException(TransactionCase):
             ],
         }
 
-    def test_mrp_order_exception(self):
+    def test01_mrp_order_exception(self):
         self.archived_finish_product.active = True
         self.product_component_archived.active = True
         self.mo = self.MrpOrder.create(self.mo_vals.copy())
@@ -85,3 +85,26 @@ class TestMrpException(TransactionCase):
             active_model=self.mo._name,
         ).create({"ignore": True})
         mo_except_confirm.action_confirm()
+
+    def test02_confirm_mrp_fail_by_domain(self):
+        self.exception_domain = self.env["exception.rule"].create(
+            {
+                "name": "Archived MO Finish Product",
+                "sequence": 11,
+                "model": "mrp.production",
+                "domain": "[('product_id.active', '=', False)]",
+                "exception_type": "by_domain",
+            }
+        )
+        self.mo = self.MrpOrder.create(self.mo_vals.copy())
+        self.product_id_1.active = False
+        exception_action = self.mo.action_confirm()
+        self.assertEqual(exception_action.get("res_model"), "mrp.exception.confirm")
+        self.assertTrue(self.mo.exceptions_summary)
+        self.assertTrue(self.mo.exception_ids)
+
+    def test03_call_mrp_method(self):
+        self.MrpOrder._reverse_field()
+        self.mo = self.MrpOrder.create(self.mo_vals.copy())
+        self.mo.move_raw_ids[0].write({"product_id": False})
+        self.mo.onchange_ignore_exception()

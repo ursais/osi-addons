@@ -53,12 +53,15 @@ Credits
 Authors
 -------
 
-* opensourceintegrators
+* Open Source Integrators
 
 Contributors
 ------------
 
--  Urvisha Desai <udesai@opensourceintegrators.com>
+-  Open Source Integrators http://www.opensourceintegrators.com
+
+   -  Urvisha Desai udesai@opensourceintegrators.com
+   -  Nikul Chaudhary nchaudhary@opensourceintegrators.com
 
 Maintainers
 -----------
