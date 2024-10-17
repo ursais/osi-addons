@@ -25,7 +25,7 @@
                     class="alert alert-danger"
                     role="alert"
                     style="margin-bottom:0px;"
-                    invisible="exceptions_summary == False"
+                    invisible="not exceptions_summary"
                 >
                     <p>
                         <strong

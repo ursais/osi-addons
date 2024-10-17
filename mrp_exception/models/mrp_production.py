@@ -4,9 +4,9 @@
 from odoo import api, models
 
 
-class MrpProduction(models.Model):
-    _inherit = ["mrp.production", "base.exception"]
+class MRPProduction(models.Model):
     _name = "mrp.production"
+    _inherit = ["mrp.production", "base.exception"]
 
     @api.model
     def test_all_archived_finish_product(self):
@@ -26,7 +26,7 @@ class MrpProduction(models.Model):
 
     @api.constrains("ignore_exception", "move_raw_ids", "product_id")
     def mrp_check_exception(self):
-        mrp_orders = self.filtered(lambda s: not s.product_id.active)
+        mrp_orders = self.filtered(lambda order: not order.product_id.active)
         if mrp_orders:
             mrp_orders._check_exception()
 
