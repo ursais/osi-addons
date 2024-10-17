@@ -26,12 +26,14 @@
                         <div class="row mt-3">
                             <div class="col-6">
                                 <div class="row">
-                                    <div class="col-6">
-                                        <strong>Sale Order</strong>
-                                    </div>
-                                    <div class="col-6">
-                                        <strong><t t-out="doc.sale_id.name"/></strong>
-                                    </div>
+                                    <t t-if="doc.sale_id">
+                                        <div class="col-6">
+                                            <strong>Sale Order</strong>
+                                        </div>
+                                        <div class="col-6">
+                                            <strong><t t-out="doc.sale_id.name"/></strong>
+                                        </div>
+                                    </t>
                                 </div>
                                 <div class="row">
                                     <div class="col-6">
@@ -68,19 +70,21 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-6">
-                                        Order Value
-                                    </div>
-                                    <div class="col-6">
-                                        <t t-out="doc.sale_id.amount_total" t-options='{"widget": "monetary", "display_currency": doc.sale_id.currency_id}'/>
-                                    </div>
+                                    <t t-if="doc.sale_id">
+                                        <div class="col-6">
+                                            Order Value
+                                        </div>
+                                        <div class="col-6">
+                                            <t t-out="doc.sale_id.amount_total" t-options='{"widget": "monetary", "display_currency": doc.sale_id.currency_id}'/>
+                                        </div>
+                                    </t>
                                 </div>
                                 <div class="row">
                                     <div class="col-6">
                                         Shipping Value
                                     </div>
                                     <div class="col-6">
-                                        <t t-out="doc.get_shipping_cost()" t-options='{"widget": "monetary", "display_currency": doc.sale_id.currency_id}'/>
+                                        <t t-out="doc.carrier_price" t-options='{"widget": "monetary", "display_currency": doc.company_id.currency_id}'/>
                                     </div>
                                 </div>
                                 <div class="row">
