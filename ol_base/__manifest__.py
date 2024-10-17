@@ -50,7 +50,7 @@
         "timesheet_grid",
         # OCA Modules
         "base_user_role_company",
-        "account_avatax_oca"
+        "account_avatax_oca",
     ],
     # always loaded
     "data": [
@@ -100,5 +100,7 @@
         # config parameters
         # actions which need to be called (ie changing base records once)
         "demo/action/cron.xml",
+        "report/paper_format.xml",
+        "report/report_template.xml",
     ],
 }

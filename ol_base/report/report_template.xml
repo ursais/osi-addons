@@ -1,0 +1,72 @@
+<odoo>
+
+    <template id="basic_layout_onl" inherit_id="web.basic_layout">
+        <xpath expr="//div[hasclass('article')]" position="after">
+            <t t-set="company" t-value="o.company_id"/>
+            <div t-if="company" class="footer o_standard_footer">
+                <div style="border-top: 1px solid black;">
+                    <div class="row">
+                        <div class="col-4" name="company_address">
+                        <ul class="list-unstyled" name="company_address_list">
+                            <li t-if="company.is_company_details_empty"><span t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'>
+                                <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
+                                    <strong>Company address block</strong>
+                                    <div>Contains the company address.</div>
+                                </div>
+                            </span></li>
+                            <li t-else="">
+                                <span t-field="company.company_details">
+                                    <div class="bg-light border-1 rounded h-100 d-flex flex-column align-items-center justify-content-center p-4 w-100 opacity-75 text-muted text-center">
+                                        <strong>Company details block</strong>
+                                        <div>Contains the company details.</div>
+                                    </div>
+                                </span>
+                            </li>
+                            <li t-if="not forced_vat"/>
+                            <li t-else="">
+                                <t t-esc="company.country_id.vat_label or 'Tax ID'">Tax ID</t>:
+                                <span t-esc="forced_vat">US12345671</span>
+                            </li>
+                        </ul>
+                        </div>
+                        <div class="col-4">
+                            <div class="row">
+                                <strong>Phone nik</strong>: <t t-out="company.phone"/>
+                            </div>
+                            <div class="row">
+                                <strong>Email</strong>: <t t-out="company.email"/>
+                            </div>
+                            <div class="row">
+                                <strong>Web</strong>: <t t-out="company.website"/>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <strong> Terms and Conditions</strong>
+                        </div>
+
+                        <div t-if="report_type == 'pdf'" class="col-2 text-muted text-right">
+                            Page: <span class="page"/> / <span class="topage"/>
+                        </div>
+                        <div t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted">
+                            <span t-out="o.name">(document name)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div t-else="0">
+                <div class="text-center">
+                    <div t-if="report_type == 'pdf'" class="text-muted">
+                        Page:
+                        <span class="page"/>
+                        of
+                        <span class="topage"/>
+                    </div>
+                    <div t-if="report_type == 'pdf' and display_name_in_footer" class="text-muted">
+                        <span t-out="o.name">(document name)</span>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>
