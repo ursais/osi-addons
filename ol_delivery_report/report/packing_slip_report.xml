@@ -13,14 +13,17 @@
     <template id="report_packing_slip_template">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="doc">
+                <t t-set="partner" t-value="doc.partner_id or (doc.move_ids and doc.move_ids[0].partner_id) or False"/>
+                <!-- Set hide_footer based on blind_drop_ship condition -->
+                <t t-set="hide_footer" t-value="doc.blind_drop_ship"/>
                 <t t-call="web.basic_layout">
-                    <t t-set="partner" t-value="doc.partner_id or (doc.move_ids and doc.move_ids[0].partner_id) or False"/>
                     <div class="row">
                         <div class="col-10 mt-3 mb-5 text-muted">
                             <h2><b>PACKING SLIP</b></h2>
                         </div>
                         <div class="col-2 text-end">
-                            <img t-if="doc.company_id.logo" t-att-src="image_data_uri(doc.company_id.logo)" style="max-height: 65px;" alt="Logo"/>
+                            <!-- invisible="doc.blind_drop_ship" -->
+                            <img t-if="doc.company_id.logo and not doc.blind_drop_ship" t-att-src="image_data_uri(doc.company_id.logo)" style="max-height: 65px;" alt="Logo"/>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -84,6 +87,29 @@
                             </div>
 
                         </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-9">
+                            <div class="row">
+                                <strong>Sender Address</strong>
+                            </div>
+                            <div class="row">
+                                <span t-if="not doc.blind_drop_ship" t-field="doc.company_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
+
+                                <span t-if="doc.blind_drop_ship and doc.partner_id.parent_id" t-field="doc.partner_id.parent_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
+
+                                <span t-if="doc.blind_drop_ship and not doc.partner_id.parent_id" t-field="doc.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="row">
+                                <strong>Shipping Method</strong>
+                            </div>
+                            <div class="row">
+                                <span t-field="doc.carrier_id.name"/>
+                            </div>
+                        </div>
+                        
                     </div>
                     <div class="page mb32 mt32">
                         <!-- Outer Table for Stock Moves -->
