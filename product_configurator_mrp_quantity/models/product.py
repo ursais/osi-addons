@@ -122,9 +122,14 @@ class ProductProduct(models.Model):
                 product_tmpl_id=product.product_tmpl_id.id, pt_attr_value_ids=value_ids
             )
             for extra_price in extra_prices:
-                additional_qty = self.product_attribute_value_qty_ids.filtered(
+                matching_records = self.product_attribute_value_qty_ids.filtered(
                     lambda l: l.attr_value_id.id == extra_price
-                ).qty
-                extra_prices[extra_price] = extra_prices[extra_price] * additional_qty
+                )
+                # Ensure there are records and handle multiple records if necessary
+                if matching_records:
+                    additional_qty = sum(matching_records.mapped("qty"))
+                    extra_prices[extra_price] = (
+                        extra_prices[extra_price] * additional_qty
+                    )
             product.price_extra = sum(extra_prices.values())
         return result
