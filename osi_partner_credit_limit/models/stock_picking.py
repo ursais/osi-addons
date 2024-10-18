@@ -40,7 +40,7 @@ class StockPicking(models.Model):
                     hold_value = False
 
                 record.dont_allow_transfer = hold_value
-                record.sale_id.write({"ship_hold": hold_value})
+                #record.sale_id.write({"ship_hold": hold_value})
 
     dont_allow_transfer = fields.Boolean(
         string="Credit Hold", compute="_compute_allow_transfer"
