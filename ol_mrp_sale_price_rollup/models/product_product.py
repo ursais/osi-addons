@@ -100,22 +100,22 @@ class ProductProduct(models.Model):
             value -= product.price_extra
             product.write({"list_price": value})
 
-    @api.depends("list_price", "price_extra")
+    @api.depends("list_price", "price_extra", "bom_lst_price")
     @api.depends_context("uom")
     def _compute_product_lst_price(self):
-        """
-        Compute the product list price, considering extra prices and the BoM.
+        res = super()._compute_product_lst_price()
+        to_uom = None
+        if "uom" in self._context:
+            to_uom = self.env["uom.uom"].browse(self._context["uom"])
 
-        This method calculates the list price of the product, taking into account
-        any additional costs from product attributes and the BoM structure.
-        """
-        rec = super()._compute_product_lst_price()
-        for product in self.filtered(lambda l: l.config_ok):
-            additional_total = product._get_bom_sale_price()
-            product.lst_price = additional_total
-            if self.env.context.get("from_product_template", False):
-                product.product_tmpl_id.list_price = additional_total
-        return rec
+        for product in self:
+            if to_uom:
+                list_price = product.uom_id._compute_price(product.list_price, to_uom)
+            else:
+                list_price = product.list_price
+            product._set_sale_price_from_bom()
+            product.lst_price = list_price + product.price_extra + product.bom_lst_price
+        return res
 
     def button_bom_sale_price(self):
         """
@@ -236,5 +236,66 @@ class ProductProduct(models.Model):
             return bom.product_uom_id._compute_price(
                 total / bom.product_qty, self.uom_id
             )
+
+    def _compute_product_price_extra(self):
+        standard_products = self.filtered(lambda product: not product.config_ok)
+        config_products = self - standard_products
+
+        if standard_products:
+            result = super(
+                ProductProduct, standard_products
+            )._compute_product_price_extra()
+        else:
+            result = None
+
+        for product in config_products:
+            attribute_value_obj = self.env["product.attribute.value"]
+            value_ids = (
+                product.product_template_attribute_value_ids.product_attribute_value_id
+            )
+
+            # Get extra prices from attribute values
+            extra_prices = attribute_value_obj.get_attribute_value_extra_prices(
+                product_tmpl_id=product.product_tmpl_id.id, pt_attr_value_ids=value_ids
+            )
+
+            # Get BoM components for this product variant
+            bom = self.env["mrp.bom"]._bom_find(product)[product]
+            bom_component_product_ids = (
+                bom.bom_line_ids.mapped("product_id.id") if bom else []
+            )
+
+            total_extra_price = 0.0  # Initialize total price
+
+            # Iterate over the extra prices dictionary
+            for attr_value_id, price in extra_prices.items():
+                matching_records = product.product_attribute_value_qty_ids.filtered(
+                    lambda l: l.attr_value_id.id == attr_value_id
+                )
+
+                # Retrieve the product_id of the attribute value if it exists
+                attr_value = self.env["product.attribute.value"].browse(attr_value_id)
+                if (
+                    attr_value.product_id
+                    and attr_value.product_id.id in bom_component_product_ids
+                ):
+                    continue  # Exclude the price if product_id is in BoM components
+
+                # Calculate the contribution to price_extra
+                if matching_records:
+                    additional_qty = sum(matching_records.mapped("qty"))
+                    if additional_qty > 0:
+                        total_extra_price += price * additional_qty
+                    else:
+                        # Even if qty is 0, still include the price (but don’t multiply)
+                        total_extra_price += price
+                else:
+                    # If no matching records, still include the price (no qty consideration)
+                    total_extra_price += price
+
+            # Set the final price_extra
+            product.price_extra = total_extra_price
+
+        return result
 
     # END #########
