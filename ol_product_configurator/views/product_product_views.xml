@@ -14,4 +14,18 @@
         </field>
     </record>
 
+	<record id="product_variant_easy_edit_view_inherit_ol_product_configurator" model="ir.ui.view">
+        <field name="name">product.product.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view" />
+        <field name="arch" type="xml">
+        	<xpath expr="//div[@name='button_box']" position="after">
+        		<field name="values_company_diff" invisible="1" />
+        		<div class="oe_edit_only alert alert-info" role="alert" invisible="not values_company_diff">
+                    This Product has attribute values that belong to a different company
+                </div>
+        	</xpath>
+        </field>
+    </record>
+
 </odoo>
