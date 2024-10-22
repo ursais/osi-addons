@@ -416,6 +416,10 @@ class CsvLoaderWizard(models.TransientModel):
         if not self.csv_file:
             raise UserError(_("You must specify the csv file to import!"))
 
+        # Check if the file is a CSV file
+        if not self.csv_filename.endswith(".csv"):
+            raise UserError(_("Only CSV files are allowed!"))
+
         if self.delivery_orders:
             self.delivery_orders.unlink()
             self.delivery_orders = None
