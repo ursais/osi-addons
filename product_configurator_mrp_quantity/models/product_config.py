@@ -62,28 +62,37 @@ class ProductConfigSession(models.Model):
 
     @api.model
     def get_cfg_price(self, value_ids=[], custom_vals=None):
+        # Call the original method to get the base price
         price = super().get_cfg_price(value_ids=value_ids, custom_vals=custom_vals)
         updated_price = price
+
         if self.session_value_quantity_ids:
             attribute_value_obj = self.env["product.attribute.value"]
+
             for session_value in self.session_value_quantity_ids:
-                updated_price = (
-                    updated_price - session_value.attr_value_id.product_id.lst_price
-                )
+                # Handle attribute values linked to a product
                 if session_value.attr_value_id.product_id:
-                    updated_price = updated_price + (
+                    # Subtract the list price of the product associated with the attribute value
+                    updated_price -= session_value.attr_value_id.product_id.lst_price
+
+                    # Add the price based on the quantity
+                    updated_price += (
                         session_value.attr_value_id.product_id.lst_price
                         * session_value.qty
                     )
                 else:
+                    # Handle attribute values without a product by fetching the extra prices
                     extra_prices = attribute_value_obj.get_attribute_value_extra_prices(
                         product_tmpl_id=self.product_tmpl_id.id,
                         pt_attr_value_ids=session_value.attr_value_id,
                     )
-                    updated_price = updated_price - sum(extra_prices.values())
-                    updated_price = updated_price + (
-                        sum(extra_prices.values()) * session_value.qty
-                    )
+
+                    # Subtract the extra price for the attribute value (non-quantity)
+                    updated_price -= sum(extra_prices.values())
+
+                    # Add the adjusted price based on the quantity
+                    updated_price += sum(extra_prices.values()) * session_value.qty
+
         return updated_price
 
     @api.model_create_multi
