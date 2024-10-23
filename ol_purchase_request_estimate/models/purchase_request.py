@@ -21,12 +21,15 @@ class PurchaseRequest(models.Model):
     # METHODS ##########
 
     def _compute_estimate_count(self):
+        """Standard count method that shows on the smart button."""
         for request in self:
             request.estimate_count = self.env["sale.estimate.job"].search_count(
                 [("id", "=", request.estimate_id.id)]
             )
 
     def action_view_estimate(self):
+        """Smart button action to open the estimate or list of estimate's
+        if more than one."""
         self.ensure_one()
         estimate_jobs = self.env["sale.estimate.job"].search(
             [("id", "=", self.estimate_id.id)]

@@ -1,7 +1,7 @@
 <odoo>
 
     <!-- Form View -->
-    <record id="product_attribute_value_form_view_inherit_ol_pro_config" model="ir.ui.view">
+    <record id="ol_product_configurator_product_attribute_value_form_view_inherit" model="ir.ui.view">
         <field name="name">product.config.product.attribute.value.form.view</field>
         <field name="model">product.attribute.value</field>
         <field name="inherit_id" ref="product_configurator.product_attribute_value_form_view" />
@@ -13,7 +13,7 @@
     </record>
 
     <!-- Tree View -->
-    <record id="product_attribute_value_list_inherit_ol_pro_config" model="ir.ui.view">
+    <record id="ol_product_configurator_product_attribute_value_list_inherit" model="ir.ui.view">
         <field name="name">product.attribute.value.list</field>
         <field name="model">product.attribute.value</field>
         <field name="inherit_id" ref="product.product_attribute_value_list" />

@@ -4,10 +4,11 @@ from odoo.exceptions import ValidationError
 
 
 class AttributeValue(models.Model):
-    _inherit = "product.attribute.value"
     """
     Inherit the Product Attribute Value Object Adding Fields and methods
     """
+
+    _inherit = "product.attribute.value"
 
     # COLUMNS ##########
 

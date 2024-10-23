@@ -34,6 +34,7 @@ class SaleEstimatelineJob(models.Model):
         "purchase_request_line_ids.purchase_lines.price_unit",
     )
     def _compute_purchase_cost(self):
+        """Method to compute add the purchasing cost to the estimate line."""
         for line in self:
             purchase_lines = line.mapped("purchase_request_line_ids.purchase_lines")
             line.purchase_cost = (
@@ -54,6 +55,9 @@ class SaleEstimatelineJob(models.Model):
 
     @api.depends("purchase_request_line_ids.purchase_state")
     def _compute_purchase_state(self):
+        """This method will cycle through the related PR lines and set the
+        purchase_state based on the PO state. This allows the user to see
+        PO progress for each line directly on the estimate."""
         for line in self:
             states = line.purchase_request_line_ids.mapped("purchase_state")
             if states:
