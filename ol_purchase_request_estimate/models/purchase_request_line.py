@@ -10,7 +10,9 @@ class PurchaseRequestLine(models.Model):
     # COLUMNS ######
 
     purchase_cost = fields.Float(
-        string="PO Cost", compute="_compute_purchase_cost", store=True
+        string="PO Cost",
+        compute="_compute_purchase_cost",
+        store=True,
     )
     estimate_line_id = fields.Many2one(
         "sale.estimate.line.job",
@@ -20,8 +22,12 @@ class PurchaseRequestLine(models.Model):
     # END ##########
     # METHODS ##########
 
-    @api.depends("purchase_lines.order_id.state", "purchase_lines.price_unit")
+    @api.depends(
+        "purchase_lines.order_id.state",
+        "purchase_lines.price_unit",
+    )
     def _compute_purchase_cost(self):
+        """Method to compute add the purchasing cost to the PR line."""
         for line in self:
             purchase_lines = line.purchase_lines
             line.purchase_cost = (

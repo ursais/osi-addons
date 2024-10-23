@@ -154,7 +154,6 @@
                             </tbody>
                         </table>
 
-
                         <div class="row">
                             <div class="col-12">
                                 <strong>Internal Reference</strong>
@@ -190,6 +189,5 @@
                 </t>
             </t>
     </template>
-
 
 </odoo>

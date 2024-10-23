@@ -1,6 +1,7 @@
 <odoo>
 
-	<record id="product_normal_form_view_inherit_ol_product_configurator" model="ir.ui.view">
+    <!-- Form View -->
+	<record id="ol_product_configurator_product_normal_form_view_inherit" model="ir.ui.view">
         <field name="name">product.product.form</field>
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_normal_form_view" />
@@ -14,7 +15,8 @@
         </field>
     </record>
 
-	<record id="product_variant_easy_edit_view_inherit_ol_product_configurator" model="ir.ui.view">
+    <!-- Form Simple View -->
+	<record id="ol_product_configurator_product_variant_easy_edit_view_inherit" model="ir.ui.view">
         <field name="name">product.product.form</field>
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_variant_easy_edit_view" />

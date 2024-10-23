@@ -1,4 +1,4 @@
-from odoo.tests import common, tagged, Form
+from odoo.tests import common, tagged
 from odoo.exceptions import ValidationError
 from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
 
@@ -8,43 +8,68 @@ class TestAttributeValue(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env = cls.env(context=dict(cls.env.context, **DISABLED_MAIL_CONTEXT))
-        cls.env.user.groups_id += cls.env.ref("uom.group_uom")
-        # Required for `product_id ` to be visible in the view
-        cls.env.user.groups_id += cls.env.ref("product.group_product_variant")
-        cls.Product = cls.env["product.product"]
+        # Set up test data: create companies and products
         cls.company1 = cls.env.ref("ol_base.onlogic_eu")
-        cls.USCompany = cls.env.ref("base.main_company")
+        cls.company2 = cls.env.ref("base.main_company")
+        cls.product = cls.env["product.template"].create({"name": "Test Product"})
 
-    def test_00_check_company_ids(self):
-        self.olive_color_product = self.Product.create(
+        cls.attribute_value1 = cls.env["product.attribute.value"].create(
             {
-                "name": "Olive Color",
-                "detailed_type": "product",
-                "company_id": self.company1.id,
+                "name": "Attribute Value 1",
+                "product_id": cls.product.id,
+                "company_ids": [(6, 0, [cls.company1.id])],
             }
         )
 
-        # ProductAttribute
-        self.attr_test = self.env["product.attribute"].create(
+        cls.attribute_value2 = cls.env["product.attribute.value"].create(
             {
-                "name": "Test-Color",
-                "value_ids": [
-                    (0, 0, {"name": "Black-Color"}),
-                    (0, 0, {"name": "Red Color"}),
-                ],
+                "name": "Attribute Value 2",
+                "product_id": cls.product.id,
+                "company_ids": [(6, 0, [cls.company2.id])],
             }
         )
 
-        # ProductAttributeValue
-        with self.assertRaises(ValidationError):
-            self.value_olive_color = self.env["product.attribute.value"].create(
-                [
-                    {
-                        "name": "Olive Color",
-                        "attribute_id": self.attr_test.id,
-                        "product_id": self.olive_color_product.id,
-                        "company_id": self.USCompany.id,
-                    }
-                ]
+    def test_name_search_with_company_ids(self):
+        # Test that name_search filters results based on company_ids
+        with self.env.context(wizard_id=True):
+            # Set logged-in company to company1
+            self.env.company = self.company1
+
+            result = self.attribute_value1.name_search(name="Attribute", limit=10)
+            self.assertEqual(
+                len(result), 1, "Only Attribute Value 1 should be returned."
+            )
+            self.assertEqual(result[0][1], "Attribute Value 1")
+
+            # Change logged-in company to company2
+            self.env.company = self.company2
+            result = self.attribute_value1.name_search(name="Attribute", limit=10)
+            self.assertEqual(
+                len(result), 0, "No attribute values should be returned for company2."
+            )
+
+    def test_web_search_read_with_company_ids(self):
+        # Test that web_search_read filters results based on company_ids
+        with self.env.context(wizard_id=True):
+            # Set logged-in company to company1
+            self.env.company = self.company1
+
+            domain = []
+            result = self.attribute_value1.web_search_read(
+                domain, specification={}, limit=10
+            )
+            self.assertEqual(
+                len(result["records"]), 1, "Only Attribute Value 1 should be returned."
+            )
+            self.assertEqual(result["records"][0]["id"], self.attribute_value1.id)
+
+            # Change logged-in company to company2
+            self.env.company = self.company2
+            result = self.attribute_value1.web_search_read(
+                domain, specification={}, limit=10
+            )
+            self.assertEqual(
+                len(result["records"]),
+                0,
+                "No attribute values should be returned for company2.",
             )

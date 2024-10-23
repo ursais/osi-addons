@@ -23,6 +23,7 @@ class SaleEstimateJob(models.Model):
     # METHODS ##########
 
     def action_create_purchase_request(self):
+        """Action called via button to create a new purchase request."""
         purchase_request = self.env["purchase.request"]
         purchase_request_line = self.env["purchase.request.line"]
 
@@ -64,10 +65,12 @@ class SaleEstimateJob(models.Model):
 
     @api.depends("purchase_request_ids")
     def _compute_purchase_request_count(self):
+        """Standard count method to count related PR's for smart button."""
         for request in self:
             request.purchase_request_count = len(request.purchase_request_ids)
 
     def action_view_purchase_request(self):
+        """Smart button action to open the PR or list of PR's if more than one."""
         purchase_requests = self.purchase_request_ids
         action = self.env.ref("purchase_request.purchase_request_form_action").read()[0]
         if len(purchase_requests) == 1:

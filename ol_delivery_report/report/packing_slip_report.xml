@@ -109,7 +109,6 @@
                                 <span t-field="doc.carrier_id.name"/>
                             </div>
                         </div>
-                        
                     </div>
                     <div class="page mb32 mt32">
                         <!-- Outer Table for Stock Moves -->
@@ -160,7 +159,6 @@
                                                             </td>
                                                         </tr>
                                                     </tbody>
-
                                                 </table>
                                             </td>
                                         </tr>
@@ -173,4 +171,5 @@
             </t>
         </t>
     </template>
+
 </odoo>
