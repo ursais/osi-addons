@@ -16,7 +16,7 @@
     </record>
 
     <record id="mrp_plm_tag_phantom" model="mrp.eco.tag">
-        <field name="name">Phantom</field>
+        <field name="name">Phantom Kit</field>
         <field name="color">4</field>
     </record>
 
@@ -48,6 +48,11 @@
     <record id="mrp_plm_tag_system" model="mrp.eco.tag">
         <field name="name">System</field>
         <field name="color">10</field>
+    </record>
+
+    <record id="mrp_plm_tag_portfolio" model="mrp.eco.tag">
+        <field name="name">Portfolio</field>
+        <field name="color">11</field>
     </record>
 
 </odoo>
