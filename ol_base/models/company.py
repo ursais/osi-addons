@@ -19,3 +19,9 @@ class ResCompany(models.Model):
     short_name = fields.Char(string="Abbreviated Company Identifier")
 
     # END #########
+
+    def get_all(self):
+        """
+        Get all companies that have a short name
+        """
+        return self.env["res.company"].sudo().search([("short_name", "!=", False)])

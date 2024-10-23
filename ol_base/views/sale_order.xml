@@ -1,0 +1,16 @@
+<odoo>
+    <data>
+        <record id="view_order_form" model="ir.ui.view">
+            <field name="name">ol_base.view_order_form</field>
+            <field name="model">sale.order</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <!-- Add a debug page for relevant developer information -->
+                <xpath expr="//notebook/page[last()]" position="after">
+                    <page name="onlogic_info" string="OnLogic Information" groups="ol_base.dev_team"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

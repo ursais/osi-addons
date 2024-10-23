@@ -58,8 +58,14 @@
         "data/avatax_code_data.xml",
         "data/product_data.xml",
         "data/res_users_role.xml",
+        "security/res_groups.xml",
         "views/res_company.xml",
         "views/stock_picking.xml",
+        "views/sale_order.xml",
+        "views/res_partner.xml",
+        "views/product_template.xml",
+        "report/paper_format.xml",
+        "report/report_template.xml",
     ],
     # only loaded in demonstration mode
     "demo": [
@@ -100,7 +106,5 @@
         # config parameters
         # actions which need to be called (ie changing base records once)
         "demo/action/cron.xml",
-        "report/paper_format.xml",
-        "report/report_template.xml",
     ],
 }
