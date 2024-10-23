@@ -1,4 +1,5 @@
 <odoo>
+
     <record id="view_picking_form" model="ir.ui.view">
         <field name="name">ol_base.picking_form_view</field>
         <field name="model">stock.picking</field>
@@ -19,4 +20,5 @@
             </xpath>
         </field>
     </record>
+
 </odoo>

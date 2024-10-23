@@ -1,4 +1,5 @@
 <odoo>
+
     <!-- Company specific admins -->
     <!-- US Admin -->
     <record id="us_company_user" model="res.users">
@@ -44,11 +45,13 @@
         <field name="company_user_id" ref="ol_base.eu_company_user" />
         <field name="country_id" ref="base.nl" />
     </record>
+
     <!-- Update company fields for EU admin-->
     <record id="ol_base.eu_company_user" model="res.users">
         <field name="company_id" ref="ol_base.onlogic_eu" />
         <field name="company_ids" eval="[(6, 0, [ref('ol_base.onlogic_eu')])]" />
     </record>
+
     <!-- Add the company users to Default Groups -->
     <!-- Base Settings -->
     <record id="base.group_system" model="res.groups">
@@ -72,4 +75,5 @@
     <record id="base.user_admin" model="res.users">
         <field name="company_ids" eval="[(4, ref('ol_base.onlogic_eu'), 0)]" />
     </record>
+
 </odoo>
