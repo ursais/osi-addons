@@ -26,8 +26,8 @@
                                     <tr>
                                         <th>Product SKU</th>
                                         <th>Qty</th>
-                                        <th>Price</th>
                                         <th>Price (Pricelist Price)</th>
+                                        <th>Price</th>
                                         <th>Cost</th>
                                         <th>Margin $</th>
                                         <th>Total Price</th>
