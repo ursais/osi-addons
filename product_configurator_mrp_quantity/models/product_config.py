@@ -17,10 +17,25 @@ class ProductConfigSession(models.Model):
         session_attrs_qtys = self.session_value_quantity_ids
         duplicate_product = self.env["product.product"]
         for product in products:
-            if product.product_attribute_value_qty_ids.mapped(
-                "qty"
-            ) == session_attrs_qtys.mapped("qty"):
+            attribute_value_qty_ids = session_attrs_qtys.mapped(
+                "attribute_value_qty_id"
+            )
+            if not attribute_value_qty_ids:
                 duplicate_product = product
+            else:
+                for value_qty in attribute_value_qty_ids:
+                    if product.product_attribute_value_qty_ids.filtered(
+                        lambda x: x.attribute_value_qty_id.id == value_qty.id
+                    ):
+                        duplicate_product = product
+                    elif (
+                        not duplicate_product
+                        and value_qty.id
+                        not in product.product_attribute_value_qty_ids.mapped(
+                            "attribute_value_qty_id"
+                        ).ids
+                    ):
+                        duplicate_product = self.env["product.product"]
         return duplicate_product
 
     def create_get_variant(self, value_ids=None, custom_vals=None):
@@ -62,37 +77,28 @@ class ProductConfigSession(models.Model):
 
     @api.model
     def get_cfg_price(self, value_ids=[], custom_vals=None):
-        # Call the original method to get the base price
         price = super().get_cfg_price(value_ids=value_ids, custom_vals=custom_vals)
         updated_price = price
-
         if self.session_value_quantity_ids:
             attribute_value_obj = self.env["product.attribute.value"]
-
             for session_value in self.session_value_quantity_ids:
-                # Handle attribute values linked to a product
+                updated_price = (
+                    updated_price - session_value.attr_value_id.product_id.lst_price
+                )
                 if session_value.attr_value_id.product_id:
-                    # Subtract the list price of the product associated with the attribute value
-                    updated_price -= session_value.attr_value_id.product_id.lst_price
-
-                    # Add the price based on the quantity
-                    updated_price += (
+                    updated_price = updated_price + (
                         session_value.attr_value_id.product_id.lst_price
                         * session_value.qty
                     )
                 else:
-                    # Handle attribute values without a product by fetching the extra prices
                     extra_prices = attribute_value_obj.get_attribute_value_extra_prices(
                         product_tmpl_id=self.product_tmpl_id.id,
                         pt_attr_value_ids=session_value.attr_value_id,
                     )
-
-                    # Subtract the extra price for the attribute value (non-quantity)
-                    updated_price -= sum(extra_prices.values())
-
-                    # Add the adjusted price based on the quantity
-                    updated_price += sum(extra_prices.values()) * session_value.qty
-
+                    updated_price = updated_price - sum(extra_prices.values())
+                    updated_price = updated_price + (
+                        sum(extra_prices.values()) * session_value.qty
+                    )
         return updated_price
 
     @api.model_create_multi

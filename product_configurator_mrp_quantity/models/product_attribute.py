@@ -82,6 +82,22 @@ class ProductAttributeLine(models.Model):
                     )
             attribute_value_qty_obj.create(qty_list)
         elif values.get("is_qty_required") == False:
+            if (
+                len(
+                    self.product_tmpl_id.product_variant_ids.filtered(
+                        lambda l: l.product_attribute_value_qty_ids.filtered(
+                            lambda l: l.attr_value_id.attribute_id.id
+                            == self.attribute_id.id
+                        )
+                    ).ids
+                )
+                > 1
+            ):
+                raise ValidationError(
+                    _(
+                        "Qty Required can not be disabled because there are variants that exist with quantities."
+                    )
+                )
             for attr_value in self.value_ids:
                 attribute_value_line_domain = self._get_attribute_value_line_domain()
                 attribute_value_line_domain += [
