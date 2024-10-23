@@ -19,6 +19,7 @@
         <field name="inherit_id" ref="product.product_attribute_value_list" />
         <field name="arch" type="xml">
             <field name="name" position="after">
+                <field name="product_id" />
                 <field name="company_ids" widget="many2many_tags" />
             </field>
         </field>
