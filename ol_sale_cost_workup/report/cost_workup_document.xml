@@ -18,123 +18,107 @@
                 <t t-call="web.external_layout">
                     <div class="page">
                         <h2>Cost Workup <span t-field="o.name"/> </h2>
-
                         <h5><span t-out="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/></h5>
 
-                        <table class="table table-sm o_main_table table-bordered mt-4">
-                            <thead style="display: table-row-group">
-                                <tr>
-                                    <th>Product SKU</th>
-                                    <th>Qty</th>
-                                    <th>Price</th>
-                                    <th>Price (Pricelist Price)</th>
-                                    <th>Cost</th>
-                                    <th>Margin $</th>
-                                    <th>Total Price</th>
-                                    <th>Total Cost</th>
-                                    <th>Total Margin</th>
-                                    <th>Discount</th>
-                                    <th>Margin %</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <t t-foreach="o.order_line" t-as="line">
+                        <t t-foreach="o.order_line" t-as="line">
+                            <table class="table table-sm o_main_table table-bordered mt-4">
+                                <thead style="display: table-row-group">
                                     <tr>
-                                        <td><span t-out="line.product_id.default_code"/></td>
-                                        <td><span t-out="line.product_uom_qty"/></td>
-                                        <td><span t-out="line.product_id.lst_price" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                        <td><span t-out="line.price_unit" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                        <td><span t-out="line.product_id.standard_price" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                        <td><span t-out="line.price_unit-line.product_id.standard_price" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                        <td><span t-out="line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                        <td><span t-out="line.product_id.standard_price * line.product_uom_qty" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                        <td><span t-out="line.margin" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                        <td><span t-out="line.discount"/></td>
-                                        <td><span t-out="line.margin_percent * 100"/></td>
+                                        <th>Product SKU</th>
+                                        <th>Qty</th>
+                                        <th>Price</th>
+                                        <th>Price (Pricelist Price)</th>
+                                        <th>Cost</th>
+                                        <th>Margin $</th>
+                                        <th>Total Price</th>
+                                        <th>Total Cost</th>
+                                        <th>Total Margin</th>
+                                        <th>Discount</th>
+                                        <th>Margin %</th>
                                     </tr>
-                                    <t t-set="bom_lines" t-value="o.getBOMLines(sol=line)"></t>
-                                    <t t-if="bom_lines">
+                                </thead>
+                                <tbody>
                                         <tr>
-                                            <th>BoM Qty</th>
-                                            <th>SKU</th>
-                                            <th>Ship Method</th>
-                                            <th>Ship Cost</th>
-                                            <th>Cost</th>
-                                            <th>Price</th>
-                                            <th>Line Price</th>
+                                            <td><span t-out="line.product_id.default_code"/></td>
+                                            <td><span t-out="line.product_uom_qty"/></td>
+                                            <td><span t-out="line.product_id.lst_price" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                            <td><span t-out="line.price_unit" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                            <td><span t-out="line.product_id.standard_price" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                            <td><span t-out="line.price_unit-line.product_id.standard_price" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                            <td><span t-out="line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                            <td><span t-out="line.product_id.standard_price * line.product_uom_qty" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                            <td><span t-out="line.margin" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                            <td><span t-out="line.discount"/></td>
+                                            <td><span t-out="line.margin_percent * 100" t-options='{"widget": "float", "precision": 2}'/></td>
                                         </tr>
-                                        <t t-foreach="bom_lines" t-as="bom_line">
+                                        <t t-set="bom_lines" t-value="o.getBOMLines(sol=line)"></t>
+                                        <t t-if="bom_lines">
                                             <tr>
-                                                <td><span t-out="bom_line.product_qty"></span></td>
-                                                <td><span t-out="bom_line.product_id.default_code"></span></td>
-                                                <td><span t-out="bom_line.product_id.carrier_multiplier_id.carrier"></span></td>
-                                                <td><span t-field="bom_line.product_id.default_shipping_cost"></span></td>
-                                                <td><span t-field="bom_line.product_id.total_cost" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span></td>
-                                                <td><span t-field="bom_line.product_id.lst_price" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span></td>
-                                                <td><span t-out="bom_line.product_id.lst_price * bom_line.product_qty" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span></td>
+                                                <th>BoM Qty</th>
+                                                <th>SKU</th>
+                                                <th>Ship Method</th>
+                                                <th>Ship Cost</th>
+                                                <th>Cost</th>
+                                                <th>Price</th>
+                                                <th>Line Price</th>
                                             </tr>
-                                        </t>
-                                    </t>
-                                    <t t-set="option_lines" t-value="o.getOptionLines(sol=line)"></t>
-                                    <t t-if="option_lines">
-                                        <tr>
-                                            <th colspan="11"><h4>Options</h4></th>
-                                        </tr>
-                                        <tr>
-                                            <th>Product SKU</th>
-                                            <th>Qty</th>
-                                            <th>Price</th>
-                                            <th>Price (Pricelist Price)</th>
-                                            <th>Cost</th>
-                                            <th>Margin $</th>
-                                            <th>Total Price</th>
-                                            <th>Total Cost</th>
-                                            <th>Total Margin</th>
-                                            <th>Discount</th>
-                                            <th>Margin %</th>
-                                        </tr>
-                                        <t t-foreach="option_lines" t-as="option_line">
-                                            <tr>
-                                                <td><span t-out="option_line.product_id.default_code"/></td>
-                                                <td><span t-out="option_line.quantity"/></td>
-                                                <td><span t-out="option_line.product_id.lst_price" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                                <td><span t-out="option_line.price_unit" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                                <td><span t-out="option_line.product_id.standard_price" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                                <td><span t-out="option_line.price_unit-option_line.product_id.standard_price" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                                <td><span t-out="option_line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                                <td><span t-out="option_line.product_id.standard_price * option_line.quantity" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                                <td><span t-out="option_line.margin" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
-                                                <td><span t-out="option_line.discount"/></td>
-                                                <td><span t-out="option_line.margin_percent * 100"/></td>
-                                            </tr>
-                                            <t t-set="bom_lines" t-value="o.getBOMLines(sol=option_line)"></t>
-                                            <t t-if="bom_lines">
+                                            <t t-foreach="bom_lines" t-as="bom_line">
                                                 <tr>
-                                                    <th>BoM Qty</th>
-                                                    <th>SKU</th>
-                                                    <th>Ship Method</th>
-                                                    <th>Ship Cost</th>
-                                                    <th>Cost</th>
-                                                    <th>Price</th>
-                                                    <th>Line Price</th>
+                                                    <td><span t-out="bom_line.product_qty"></span></td>
+                                                    <td><span t-out="bom_line.product_id.default_code"></span></td>
+                                                    <td><span t-out="bom_line.product_id.carrier_multiplier_id.carrier"></span></td>
+                                                    <td><span t-field="bom_line.product_id.default_shipping_cost"></span></td>
+                                                    <td><span t-field="bom_line.product_id.total_cost" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span></td>
+                                                    <td><span t-field="bom_line.product_id.lst_price" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span></td>
+                                                    <td><span t-out="bom_line.product_id.lst_price * bom_line.product_qty" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span></td>
                                                 </tr>
-                                                <t t-foreach="bom_lines" t-as="bom_line">
+                                            </t>
+                                        </t>
+                                        <t t-set="option_lines" t-value="o.getOptionLines(sol=line)"></t>
+                                        <t t-if="option_lines">
+                                            <t t-foreach="option_lines" t-as="option_line">
+                                                <tr>
+                                                    <td><span t-out="option_line.product_id.default_code"/></td>
+                                                    <td><span t-out="option_line.quantity"/></td>
+                                                    <td><span t-out="option_line.product_id.lst_price" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                                    <td><span t-out="option_line.price_unit" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                                    <td><span t-out="option_line.product_id.standard_price" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                                    <td><span t-out="option_line.price_unit-option_line.product_id.standard_price" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                                    <td><span t-out="option_line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                                    <td><span t-out="option_line.product_id.standard_price * option_line.quantity" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                                    <td><span t-out="option_line.margin" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/></td>
+                                                    <td><span t-out="option_line.discount"/></td>
+                                                    <td><span t-out="option_line.margin_percent * 100" t-options='{"widget": "float", "precision": 2}'/></td>
+                                                </tr>
+                                                <t t-set="bom_lines" t-value="o.getBOMLines(sol=option_line)"></t>
+                                                <t t-if="bom_lines">
                                                     <tr>
-                                                        <td><span t-out="bom_line.product_qty"></span></td>
-                                                        <td><span t-out="bom_line.product_id.default_code"></span></td>
-                                                        <td><span t-out="bom_line.product_id.carrier_multiplier_id.carrier"></span></td>
-                                                        <td><span t-field="bom_line.product_id.default_shipping_cost"></span></td>
-                                                        <td><span t-field="bom_line.product_id.total_cost" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span></td>
-                                                        <td><span t-field="bom_line.product_id.lst_price" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span></td>
-                                                        <td><span t-out="bom_line.product_id.lst_price * bom_line.product_qty" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span></td>
+                                                        <th>BoM Qty</th>
+                                                        <th>SKU</th>
+                                                        <th>Ship Method</th>
+                                                        <th>Ship Cost</th>
+                                                        <th>Cost</th>
+                                                        <th>Price</th>
+                                                        <th>Line Price</th>
                                                     </tr>
+                                                    <t t-foreach="bom_lines" t-as="bom_line">
+                                                        <tr>
+                                                            <td><span t-out="bom_line.product_qty"></span></td>
+                                                            <td><span t-out="bom_line.product_id.default_code"></span></td>
+                                                            <td><span t-out="bom_line.product_id.carrier_multiplier_id.carrier"></span></td>
+                                                            <td><span t-field="bom_line.product_id.default_shipping_cost"></span></td>
+                                                            <td><span t-field="bom_line.product_id.total_cost" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span></td>
+                                                            <td><span t-field="bom_line.product_id.lst_price" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span></td>
+                                                            <td><span t-out="bom_line.product_id.lst_price * bom_line.product_qty" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span></td>
+                                                        </tr>
+                                                    </t>
                                                 </t>
                                             </t>
                                         </t>
-                                    </t>
-                                </t>
-                            </tbody>
-                        </table>
+                                    
+                                </tbody>
+                            </table>
+                        </t>
                     </div>
                 </t>
             </t>
