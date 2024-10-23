@@ -1,5 +1,4 @@
 <odoo>
-
     <record id="view_picking_form" model="ir.ui.view">
         <field name="name">ol_base.picking_form_view</field>
         <field name="model">stock.picking</field>
@@ -7,9 +6,8 @@
         <field name="arch" type="xml">
             <!-- The Notification row container -->
             <div name="button_box" position="after">
-                <div name="information_block_div" class="ls-information-block-cont" />
+                <div name="information_block_div"/>
             </div>
-
             <!-- Add a debug page for relevant developer information -->
             <xpath expr="//notebook/page[last()]" position="after">
                 <page name="debug" string="Debug" groups="base.group_no_one">
@@ -19,8 +17,6 @@
                     </group>
                 </page>
             </xpath>
-
         </field>
     </record>
-
 </odoo>

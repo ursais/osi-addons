@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<!-- Combine OnLogic Groups under one category -->
+	<record id="ol_base.onlogic_groups" model="ir.module.category">
+		<field name="name">OnLogic Groups</field>
+		<field name="sequence" eval="1" />
+		<field name="parent_id" ref="base.module_category_hidden" />
+	</record>
+	<record id="ol_base.dev_team" model="res.groups">
+		<field name="name">OnLogic Dev Team</field>
+		<field name="category_id" ref="ol_base.onlogic_groups"/>
+		<field name="implied_ids" eval="[(4, ref('base.group_no_one'))]"/>
+	</record>
+</odoo>
