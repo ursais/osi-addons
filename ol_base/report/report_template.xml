@@ -32,7 +32,7 @@
                         </div>
                         <div class="col-4">
                             <div class="row">
-                                <strong>Phone nik</strong>: <t t-out="company.phone"/>
+                                <strong>Phone</strong>: <t t-out="company.phone"/>
                             </div>
                             <div class="row">
                                 <strong>Email</strong>: <t t-out="company.email"/>
@@ -42,7 +42,7 @@
                             </div>
                         </div>
                         <div class="col-3">
-                            <strong> Terms and Conditions</strong>
+                            <strong>Terms and Conditions</strong>
                         </div>
 
                         <div t-if="report_type == 'pdf'" class="col-2 text-muted text-right">
