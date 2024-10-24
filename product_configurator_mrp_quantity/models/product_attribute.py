@@ -81,7 +81,7 @@ class ProductAttributeLine(models.Model):
                         }
                     )
             attribute_value_qty_obj.create(qty_list)
-        elif "is_qty_required" in values and not values.get("is_qty_required"):
+        elif not values.get("is_qty_required", False):
             qty_variants = self.product_tmpl_id.product_variant_ids.filtered(
                 lambda variant: variant.product_attribute_value_qty_ids.filtered(
                     lambda qty: qty.attr_value_id.attribute_id.id
