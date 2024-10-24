@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Inherit ir.actions.act_window form view -->
+    <record model="ir.ui.view" id="view_ir_actions_window_form_inherit">
+        <field name="name">ir.actions.windows.form</field>
+        <field name="model">ir.actions.act_window</field>
+        <field name="inherit_id" ref="base.view_window_action_form" />
+        <field name="arch" type="xml">
+            <field name="filter" position="after">
+               <field name="reload_time" />
+            </field>
+        </field>
+    </record>
+
+    <!-- Inherit ir.actions.client form view -->
+    <record model="ir.ui.view" id="view_client_action_form_inherit">
+        <field name="name">ir.client.actions.form</field>
+        <field name="model">ir.actions.client</field>
+        <field name="inherit_id" ref="base.view_client_action_form" />
+        <field name="arch" type="xml">
+            <field name="context" position="after">
+               <field name="reload_time" />
+            </field>
+        </field>
+    </record>
+</odoo>
