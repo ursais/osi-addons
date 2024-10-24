@@ -1,0 +1,30 @@
+<odoo>
+    <data>
+        <record id="view_api_clients_form" model="ir.ui.view">
+            <field name="name">ol_webhooks.view_api_clients_form</field>
+            <field name="model">api.client</field>
+            <field name="inherit_id" ref="ol_api.view_api_clients_form"/>
+            <field name="arch" type="xml">
+                <field name="api_key" position="after">
+                    <field name="webhook_secret"/>
+                    <field name="webhook_url_hostname"/>
+                    <field name="webhook_url_path"/>
+                    <field name="webhook_url" readonly="1"/>
+                    <field name="run_webhooks_delayed"/>
+                    <field name="webhooks_enabled" invisible="1"/>
+                </field>
+                <group name="top_grp" position="before">
+                    <div class="alert alert-danger" role="alert" invisible="webhooks_enabled == True">
+                        <h3 class="text-danger">Odoo Webhooks are disabled!</h3>
+                        You can change this via the main Odoo Settings page.
+                    </div>
+                </group>
+                <group name="top_grp" position="after">
+                    <group name="webhook_grp">
+                        <field name="webhook_ids" string="Webhooks"/>
+                    </group>
+                </group>
+            </field>
+        </record>
+    </data>
+</odoo>

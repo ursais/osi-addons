@@ -1,0 +1,35 @@
+<odoo>
+    <data>
+        <!-- model_id and operation should be unique if you need to handle that logic in python. -->
+        <!-- The webhook.events -->
+        <record id="account_move_create" model="webhook.event">
+            <field name="name">Invoice: Create</field>
+            <field name="model_id" search="[('model', '=', 'account.move')]" />
+            <field name="model_name">account_move</field>
+            <field name="operation">create</field>
+        </record>
+        <record id="account_move_update" model="webhook.event">
+            <field name="name">Invoice: Update</field>
+            <field name="model_id" search="[('model', '=', 'account.move')]" />
+            <field name="model_name">account_move</field>
+            <field name="operation">update</field>
+        </record>
+        <record id="account_move_delete" model="webhook.event">
+            <field name="name">Invoice: Delete</field>
+            <field name="model_id" search="[('model', '=', 'account.move')]" />
+            <field name="model_name">account_move</field>
+            <field name="operation">delete</field>
+        </record>
+        <!-- The Webhook -->
+        <record id="account_move_webhook" model="webhook">
+            <field name="client_id" ref="ol_api.webhook_client_onlogic" />
+            <field name="url_path">invoice</field>
+            <field name="enabled">True</field>
+            <field name="event_ids" eval="[
+            (4, ref('ol_webhooks.account_move_create'), 0),
+            (4, ref('ol_webhooks.account_move_update'), 0),
+            (4, ref('ol_webhooks.account_move_delete'), 0)
+            ]"/>
+        </record>
+    </data>
+</odoo>

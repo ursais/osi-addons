@@ -1,0 +1,8 @@
+<odoo>
+	<data noupdate="1">
+		<!-- Dev team group should be allowed to see Jobs -->
+		<record id="ol_base.dev_team" model="res.groups">
+			<field name="implied_ids" eval="[(4, ref('queue_job.group_queue_job_manager'))]"/>
+		</record>
+	</data>
+</odoo>

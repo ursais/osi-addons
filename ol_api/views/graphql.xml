@@ -1,0 +1,13 @@
+<odoo>
+    <data>
+        <record id="action_menu_graphql_queue" model="ir.actions.act_window">
+            <field name="name">GraphQL Queue</field>
+            <field name="res_model">graphql.queue</field>
+            <field name="view_id" ref="ol_graphql.view_graphql_queue_tree"/>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+        </record>
+        <!-- Top level menu item -->
+        <menuitem id="graphql_queue_menu" parent="ol_api.api_menu_root" name="GraphQL Queue" action="action_menu_graphql_queue" sequence="4"/>
+    </data>
+</odoo>

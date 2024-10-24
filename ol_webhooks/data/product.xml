@@ -1,0 +1,52 @@
+<odoo>
+    <data>
+        <!-- The webhook.event -->
+        <record id="product_template_stock_quantity_changed" model="webhook.event">
+            <field name="name">Product Stock Changed</field>
+            <field name="model_id" search="[('model', '=', 'product.template')]" />
+            <field name="model_name">product.template</field>
+            <field name="operation">update</field>
+            <field name="is_custom">True</field>
+        </record>
+        <!-- The Webhook -->
+        <record id="product_template_stock_webhook" model="webhook">
+            <field name="client_id" ref="ol_api.webhook_client_onlogic" />
+            <field name="url_path">product-stock</field>
+            <field name="enabled">True</field>
+            <field name="event_ids" eval="[(4, ref('ol_webhooks.product_template_stock_quantity_changed'), 0)]"/>
+            <field name="delay_time">5</field>
+            <field name="chunk_size">50</field>
+        </record>
+        <record id="system_stock_quantity_changed" model="webhook.event">
+            <field name="name">System Stock Changed</field>
+            <field name="model_id" search="[('model', '=', 'product.template')]" />
+            <field name="model_name">product.template</field>
+            <field name="operation">update</field>
+            <field name="is_custom">True</field>
+        </record>
+        <!-- The Webhook -->
+        <record id="system_stock_quantity_webhook" model="webhook">
+            <field name="client_id" ref="ol_api.webhook_client_onlogic" />
+            <field name="url_path">system-stock</field>
+            <field name="enabled">True</field>
+            <field name="event_ids" eval="[(4, ref('ol_webhooks.system_stock_quantity_changed'), 0)]"/>
+            <field name="delay_time">5</field>
+            <field name="chunk_size">50</field>
+        </record>
+        <!-- The webhook.event -->
+        <record id="product_template_cost_changed" model="webhook.event">
+            <field name="name">Product Cost Changed</field>
+            <field name="model_id" search="[('model', '=', 'product.template')]" />
+            <field name="model_name">product.template</field>
+            <field name="operation">update</field>
+            <field name="is_custom">True</field>
+        </record>
+        <!-- The Webhook -->
+        <record id="product_template_cost_webhook" model="webhook">
+            <field name="client_id" ref="ol_api.webhook_client_onlogic" />
+            <field name="url_path">product-cost</field>
+            <field name="enabled">True</field>
+            <field name="event_ids" eval="[(4, ref('ol_webhooks.product_template_cost_changed'), 0)]"/>
+        </record>
+    </data>
+</odoo>

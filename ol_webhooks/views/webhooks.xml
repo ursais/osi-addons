@@ -1,0 +1,70 @@
+<odoo>
+	<data>
+		<!-- Tree View -->
+		<record id="view_webhook_tree" model="ir.ui.view">
+			<field name="name">ol_webhooks.view_webhook_tree</field>
+			<field name="model">webhook</field>
+			<field name="arch" type="xml">
+				<tree string="Webhooks" create="false" decoration-danger="url == False or secret == False">
+					<field name="display_name" string="Name"/>
+					<field name="event_ids" widget="many2many_tags"/>
+					<field name="enabled"/>
+					<field name="delay_time" optional="show"/>
+					<field name="chunk_size" optional="show"/>
+					<field name="timeout" optional="show"/>
+					<field name="url" optional="hide"/>
+					<field name="secret" optional="hide"/>
+					<field name="create_date" optional="hide"/>
+				</tree>
+			</field>
+		</record>
+		<record id="view_webhook_form" model="ir.ui.view">
+			<field name="name">ol_webhooks.view_webhook_form</field>
+			<field name="model">webhook</field>
+			<field name="arch" type="xml">
+				<form string="Webhook" create="false" class="o_sale_order">
+					<sheet>
+						<div class="oe_button_box" name="button_box">
+            			</div>
+						<div name="information_block_div">
+							<div invisible="url != False" class="notification-danger">
+								<div class="text-danger">INVALID URL</div>
+							</div>
+							<div invisible="secret != False" class="notification-danger">
+								<div class="text-danger">SECRET MISSING FROM CLIENT</div>
+							</div>
+						</div>
+						<!-- The Notification row container -->
+						<div class="oe_title">
+							<h1>
+								<field name="display_name" readonly="1"/>
+							</h1>
+						</div>
+						<group name="top_grp">
+							<field name="client_id"/>
+							<field name="secret" readonly="1"/>
+							<field name="url_hostname" readonly="1"/>
+							<field name="url_path"/>
+							<field name="url" readonly="1"/>
+							<field name="enabled"/>
+							<field name="delay_time" widget="integer"/>
+							<field name="chunk_size" widget="integer"/>
+							<field name="timeout" widget="integer"/>
+							<field name="event_ids" string="Trigger Events" widget="many2many_tags"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<record id="action_menu_webhooks" model="ir.actions.act_window">
+			<field name="name">Webhooks</field>
+			<field name="res_model">webhook</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('ol_webhooks.view_webhook_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('ol_webhooks.view_webhook_form')})]"/>
+		</record>
+		<!-- Top level menu item -->
+		<menuitem id="webhooks_menu" parent="ol_api.api_menu_root" name="Webhooks" action="action_menu_webhooks" sequence="2"/>
+	</data>
+</odoo>

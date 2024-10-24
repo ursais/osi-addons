@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_api,access_api,model_api,,1,1,1,1
+access_api_client,access_api_client,model_api_client,,1,1,1,1
+access_external_system,access_external_system,model_external_system,,1,1,1,1

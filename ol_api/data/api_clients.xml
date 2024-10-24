@@ -1,0 +1,9 @@
+<odoo>
+	<data noupdate="1">
+		<record id="webhook_client_onlogic" model="api.client">
+			<field name="name">OnLogic</field>
+			<field name="description">The OnLogic API Client</field>
+			<field name="api_key">change-me-based-on-passbolt</field>
+		</record>
+	</data>
+</odoo>

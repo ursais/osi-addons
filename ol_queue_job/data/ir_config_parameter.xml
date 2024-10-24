@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data noupdate="1">
+		<!-- Set the default values for the GraphQL settings -->
+		<record id="ol_queue_job_reverse_identity_key" model="ir.config_parameter">
+			<field name="key">ol_queue_job.reverse_identity_key</field>
+			<field name="value">True</field>
+		</record>
+	</data>
+</odoo>
