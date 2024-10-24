@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data noupdate="1">
+		<!-- Set the default values for the GraphQL settings -->
+		<record id="graphql_enabled" model="ir.config_parameter">
+			<field name="key">ol_graphql.graphql_enabled</field>
+			<field name="value">True</field>
+		</record>
+		<record id="graphql_create_from_update" model="ir.config_parameter">
+			<field name="key">ol_graphql.graphql_create_from_update</field>
+			<field name="value">True</field>
+		</record>
+		<record id="graphql_use_placeholders" model="ir.config_parameter">
+			<field name="key">ol_graphql.graphql_use_placeholders</field>
+			<field name="value">True</field>
+		</record>
+		<record id="graphql_log_incoming_mutations" model="ir.config_parameter">
+			<field name="key">ol_graphql.graphql_log_incoming_mutations</field>
+			<field name="value">True</field>
+		</record>
+	</data>
+</odoo>

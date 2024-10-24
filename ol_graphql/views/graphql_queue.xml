@@ -1,0 +1,79 @@
+<odoo>
+	<data>
+		<!-- Tree View -->
+		<record id="view_graphql_queue_tree" model="ir.ui.view">
+			<field name="name">graphql.queue.view.tree</field>
+			<field name="model">graphql.queue</field>
+			<field name="arch" type="xml">
+				<tree string="GraphQL Queues" create="false" delete="false" default_order="publish_time desc" decoration-danger="state == 'failed'" decoration-muted="state == 'done'">
+					<field name="name"/>
+					<field name="state"/>
+					<field name="exc_message" optional="show"/>
+					<field name="record_uuid"/>
+					<field name="odoo_class"/>
+					<field name="operation" optional="show" />
+					<field name="transaction_id" optional="show" />
+					<field name="publish_time" optional="show" />
+					<field name="create_date" optional="hide" />
+				</tree>
+			</field>
+		</record>
+		<!-- Form View -->
+		<record id="view_graphql_queue_form" model="ir.ui.view">
+			<field name="name">graphql.queue.view.form</field>
+			<field name="model">graphql.queue</field>
+			<field name="arch" type="xml">
+				<form string="GraphQL Queue" create="false" edit="false" delete="false">
+					<sheet style="max-width: 95%;">
+						<h1>
+							<field name="transaction_id" class="oe_inline" />
+						</h1>
+						<group>
+							<field name="name" />
+							<field name="record_uuid" />
+							<field name="operation" />
+							<field name="state" />
+							<field name="odoo_class" />
+							<field name="transaction_id" />
+							<field name="publish_time" />
+							<field name="create_date" />
+							<field name="values" widget="text"/>
+							<field name="queue_job_id" invisible="1"/>
+						</group>
+						<group>
+							<field name="exc_message"/>
+							<field name="exc_info"/>
+						</group>
+						<group name="queue_job_grp" invisible="queue_job_id == False">
+							<div class="alert alert-info" role="alert">
+                The related Queue Job could be in an other company (EU/US), don't be troubled this is normal!
+              </div>
+							<button name="open_queue_job" type="object" string="Open Queue Job"/>
+						</group>
+					</sheet>
+				</form>
+			</field>
+		</record>
+		<!-- SEARCH VIEW -->
+		<record id="view_graphql_queue_search" model="ir.ui.view">
+			<field name="name">graphql.queue.view.search</field>
+			<field name="model">graphql.queue</field>
+			<field name="arch" type="xml">
+				<search string="Search GraphQL Queue">
+					<field name="name"/>
+					<field name="record_uuid"/>
+					<field name="transaction_id"/>
+					<field name="odoo_class"/>
+					<field name="operation"/>
+					<field name="publish_time"/>
+					<group expand="0" string="Group By">
+						<filter string="Name" name="group_by_name" domain="[]" context="{'group_by':'name'}"/>
+						<filter string="Odoo Record UUID" name="group_by_record_uuid" domain="[]" context="{'group_by':'record_uuid'}"/>
+						<filter string="Odoo Class" name="group_by_odoo_class" domain="[]" context="{'group_by':'odoo_class'}"/>
+						<filter string="Operation" name="group_by_operation" domain="[]" context="{'group_by':'operation'}"/>
+					</group>
+				</search>
+			</field>
+		</record>
+	</data>
+</odoo>

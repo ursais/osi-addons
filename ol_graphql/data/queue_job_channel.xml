@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="queue.job.channel" id="channel_graphql_sale">
+            <field name="name">graphql_sale</field>
+            <field name="parent_id" ref="queue_job.channel_root"/>
+            <field name="removal_interval">30</field>
+        </record>
+        <record model="queue.job.channel" id="channel_graphql_customer">
+            <field name="name">graphql_customer</field>
+            <field name="parent_id" ref="queue_job.channel_root"/>
+            <field name="removal_interval">30</field>
+        </record>
+        <record model="queue.job.channel" id="channel_graphql_product">
+            <field name="name">graphql_product</field>
+            <field name="parent_id" ref="queue_job.channel_root"/>
+            <field name="removal_interval">30</field>
+        </record>
+    </data>
+</odoo>

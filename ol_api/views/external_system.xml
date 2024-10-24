@@ -1,0 +1,52 @@
+<odoo>
+    <data>
+        <record id="view_external_system_tree" model="ir.ui.view">
+            <field name="name">ol_api.view_external_system_tree</field>
+            <field name="model">external.system</field>
+            <field name="arch" type="xml">
+                <tree string="External Systems" default_order="name asc">
+                    <field name="name"/>
+                    <field name="message_source_string"/>
+                    <field name="enable_upsert"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_external_system_form" model="ir.ui.view">
+            <field name="name">ol_api.view_external_system_form</field>
+            <field name="model">external.system</field>
+            <field name="arch" type="xml">
+                <form string="External Systems">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="display_name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group name="top_grp">
+                            <field name="name"/>
+                            <field name="description"/>
+                            <field name="message_source_string"/>
+                            <div class="text-muted">
+                                Changing
+                                <code class="text-muted">message_source_string</code> could have unintended consequences! This field should match the incoming
+                                <code class="text-muted">message_source</code> from PubSub messages.
+                            </div>
+                            <br />
+                            <field name="enable_upsert"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="action_menu_external_system" model="ir.actions.act_window">
+            <field name="name">External Systems</field>
+            <field name="res_model">external.system</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                        (0, 0, {'view_mode': 'tree', 'view_id': ref('ol_api.view_external_system_tree')}),
+                        (0, 0, {'view_mode': 'form', 'view_id': ref('ol_api.view_external_system_form')})]"/>
+        </record>
+        <!-- Top level menu item -->
+        <menuitem id="external_system_menu" parent="ol_api.api_menu_root" name="External Systems" action="action_menu_external_system" sequence="99"/>
+    </data>
+</odoo>

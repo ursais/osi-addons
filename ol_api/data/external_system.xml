@@ -1,0 +1,16 @@
+<odoo>
+	<data noupdate="1">
+		<record id="external_system_hubspot" model="external.system">
+			<field name="name">HUBSPOT</field>
+			<field name="message_source_string">HUBSPOT</field>
+		</record>
+		<record id="external_system_commercetools" model="external.system">
+			<field name="name">COMMERCETOOLS</field>
+			<field name="message_source_string">COMMERCETOOLS</field>
+		</record>
+		<record id="external_system_contentful" model="external.system">
+			<field name="name">CONTENTFUL</field>
+			<field name="message_source_string">CONTENTFUL</field>
+		</record>
+	</data>
+</odoo>

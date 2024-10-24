@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_queue_job_user,queue job user,queue_job.model_queue_job,,1,0,0,0
+access_queue_job_function_user,queue job functions user,queue_job.model_queue_job_function,,1,0,0,0
+access_queue_job_channel_user,queue job channel user,queue_job.model_queue_job_channel,,1,0,0,0

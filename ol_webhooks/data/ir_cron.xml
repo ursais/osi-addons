@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+	<data>
+		<record id="ir_cron_autovacuum_webhook_broadcast_date" model="ir.cron">
+			<field name="name">AutoVacuum Webhook Broadcast Date</field>
+			<field ref="model_webhook_broadcast_date" name="model_id" />
+			<field eval="True" name="active" />
+			<field name="user_id" ref="base.user_root" />
+			<field name="interval_number">1</field>
+			<field name="interval_type">days</field>
+			<field name="numbercall">-1</field>
+			<field name="nextcall" eval="(DateTime.now()).strftime('%Y-%m-%d 20:00:00')"/>
+			<field eval="False" name="doall" />
+			<field name="state">code</field>
+			<field name="code">model.autovacuum()</field>
+		</record>
+	</data>
+</odoo>

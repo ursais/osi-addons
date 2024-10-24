@@ -1,0 +1,85 @@
+<odoo>
+	<data>
+		<!-- Main GraphQL configuration view -->
+		<record id="view_graphql_configuration" model="ir.ui.view">
+			<field name="name">GraphQL Settings</field>
+			<field name="model">res.config.settings</field>
+			<field name="inherit_id" ref="base.res_config_settings_view_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//form" position="inside">
+					<div class="app_settings_block" data-string="GraphQL" string="GraphQL" data-key="ol_graphql" groups="ol_base.dev_team">
+						<h2>GraphQL</h2>
+						<div class="row mt16 o_settings_container" name="ol_graphql">
+							<div class="col-12 col-lg-6 o_setting_box">
+								<div class="o_setting_left_pane">
+									<field name="graphql_enabled"/>
+								</div>
+								<div class="o_setting_right_pane">
+									<label for="graphql_enabled"/>
+									<div class="text-muted">
+                    Main switch to enable or disable Odoo GraphQL
+                  </div>
+								</div>
+							</div>
+							<div class="col-12 col-lg-6 o_setting_box">
+								<div class="o_setting_left_pane">
+									<field name="graphql_update_from_create"/>
+								</div>
+								<div class="o_setting_right_pane">
+									<label for="graphql_update_from_create"/>
+									<div class="text-muted">
+                    If create mutation received for an existing record, consider it as an update mutation.
+                  </div>
+								</div>
+							</div>
+							<div class="col-12 col-lg-6 o_setting_box">
+								<div class="o_setting_left_pane">
+									<field name="graphql_create_from_update"/>
+								</div>
+								<div class="o_setting_right_pane">
+									<label for="graphql_create_from_update"/>
+									<div class="text-muted">
+                    If update mutation received for a non existing record, consider it as a create mutation.
+                  </div>
+								</div>
+							</div>
+							<div class="col-12 col-lg-6 o_setting_box">
+								<div class="o_setting_left_pane">
+									<field name="graphql_use_placeholders"/>
+								</div>
+								<div class="o_setting_right_pane">
+									<label for="graphql_use_placeholders"/>
+									<div class="text-muted">
+                   If the received mutation is referring to related records that don't exist, instead of rejecting the request try to create placeholders.
+                  </div>
+								</div>
+							</div>
+							<div class="col-12 col-lg-6 o_setting_box">
+								<div class="o_setting_left_pane">
+									<field name="graphql_log_incoming_mutations"/>
+								</div>
+								<div class="o_setting_right_pane">
+									<label for="graphql_log_incoming_mutations"/>
+									<div class="text-muted">
+                   Log the incoming GraphQL mutation queries
+                  </div>
+								</div>
+							</div>
+							<div class="col-12 col-lg-6 o_setting_box">
+								<div class="o_setting_left_pane">
+									<field name="graphql_log_query_timing"/>
+								</div>
+								<div class="o_setting_right_pane">
+									<label for="graphql_log_query_timing"/>
+									<div class="text-muted">
+                   Logs the amount of time it takes to finish GraphQL queries
+                  </div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</odoo>

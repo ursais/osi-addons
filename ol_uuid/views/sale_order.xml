@@ -1,0 +1,25 @@
+<odoo>
+	<record id="view_order_form" model="ir.ui.view">
+		<field name="name">ol_uuid.view_order_form</field>
+		<field name="model">sale.order</field>
+		<field name="inherit_id" ref="ol_base.view_order_form"/>
+		<field name="arch" type="xml">
+			<page name="onlogic_info" position="inside">
+				<group>
+					<field name='uuid' readonly="1"/>
+				</group>
+			</page>
+		</field>
+	</record>
+	<!-- SEARCH VIEW -->
+	<record id="view_sales_order_filter" model="ir.ui.view">
+		<field name="name">ol_uuid.sale.order.list.select</field>
+		<field name="model">sale.order</field>
+		<field name="inherit_id" ref="sale.view_sales_order_filter"/>
+		<field name="arch" type="xml">
+			<field name="analytic_account_id" position="after">
+				<field name="uuid"/>
+      </field>
+		</field>
+	</record>
+</odoo>

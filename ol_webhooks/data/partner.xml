@@ -1,0 +1,70 @@
+<odoo>
+    <data>
+        <!-- model_id and operation should be unique if you need to handle that logic in python. -->
+        <!-- PARTNERS -->
+        <!-- The webhook.events -->
+        <record id="res_partner_create" model="webhook.event">
+            <field name="name">Partner: Create</field>
+            <field name="model_id" search="[('model', '=', 'res.partner')]" />
+            <field name="model_name">res.partner</field>
+            <field name="operation">create</field>
+        </record>
+        <record id="res_partner_update" model="webhook.event">
+            <field name="name">Partner: Update</field>
+            <field name="model_id" search="[('model', '=', 'res.partner')]" />
+            <field name="model_name">res.partner</field>
+            <field name="operation">update</field>
+        </record>
+        <record id="res_partner_delete" model="webhook.event">
+            <field name="name">Partner: Delete</field>
+            <field name="model_id" search="[('model', '=', 'res.partner')]" />
+            <field name="model_name">res.partner</field>
+            <field name="operation">delete</field>
+        </record>
+        <!-- The Webhook -->
+        <record id="res_partner_webhook" model="webhook">
+            <field name="client_id" ref="ol_api.webhook_client_onlogic" />
+            <field name="url_path">customer</field>
+            <field name="enabled">True</field>
+            <field name="event_ids" eval="[
+            (4, ref('ol_webhooks.res_partner_create'), 0),
+            (4, ref('ol_webhooks.res_partner_update'), 0),
+            (4, ref('ol_webhooks.res_partner_delete'), 0)
+            ]"/>
+        </record>
+        <!-- Companies -->
+        <!-- The webhook.events -->
+        <record id="company_create" model="webhook.event">
+            <field name="name">Company: Create</field>
+            <field name="model_id" search="[('model', '=', 'res.partner')]" />
+            <field name="model_name">res.partner</field>
+            <field name="operation">update</field>
+            <field name="is_custom">True</field>
+        </record>
+        <record id="company_update" model="webhook.event">
+            <field name="name">Company: Update</field>
+            <field name="model_id" search="[('model', '=', 'res.partner')]" />
+            <field name="model_name">res.partner</field>
+            <field name="operation">update</field>
+            <field name="is_custom">True</field>
+        </record>
+        <record id="company_delete" model="webhook.event">
+            <field name="name">Company: Delete</field>
+            <field name="model_id" search="[('model', '=', 'res.partner')]" />
+            <field name="model_name">res.partner</field>
+            <field name="operation">update</field>
+            <field name="is_custom">True</field>
+        </record>
+        <!-- The Webhook -->
+        <record id="company_webhook" model="webhook">
+            <field name="client_id" ref="ol_api.webhook_client_onlogic" />
+            <field name="url_path">company</field>
+            <field name="enabled">True</field>
+            <field name="event_ids" eval="[
+            (4, ref('ol_webhooks.company_create'), 0),
+            (4, ref('ol_webhooks.company_update'), 0),
+            (4, ref('ol_webhooks.company_delete'), 0)
+            ]"/>
+        </record>
+    </data>
+</odoo>

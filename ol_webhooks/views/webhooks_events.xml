@@ -1,0 +1,66 @@
+<odoo>
+    <data>
+        <record id="view_webhook_events_tree" model="ir.ui.view">
+            <field name="name">ol_webhooks.view_webhook_events_tree</field>
+            <field name="model">webhook.event</field>
+            <field name="arch" type="xml">
+                <tree string="Webhook Events" create="false" delete="false" default_order="model_id asc">
+                    <field name="name" readonly="1"/>
+                    <field name="model_id" readonly="1"/>
+                    <field name="operation" readonly="1"/>
+                    <field name="is_custom" readonly="1"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_webhook_events_form" model="ir.ui.view">
+            <field name="name">ol_webhooks.view_webhook_events_form</field>
+            <field name="model">webhook.event</field>
+            <field name="arch" type="xml">
+                <form string="Webhook Event" class="o_sale_order" edit="false" create="false">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="0"/>
+                            </h1>
+                        </div>
+                        <group name="top_grp">
+                            <field name="model_id" readonly="1"/>
+                            <field name="model_name" readonly="1"/>
+                            <field name="operation" readonly="1"/>
+                            <field name="is_custom" readonly="1"/>
+                            <field name="webhook_ids" string="Related Webhooks" readonly="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- SEARCH VIEW -->
+        <record id="view_webhook_event_search" model="ir.ui.view">
+            <field name="name">ol_webhooks.view.search</field>
+            <field name="model">webhook.event</field>
+            <field name="arch" type="xml">
+                <search string="Search Webhook Name">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="operation"/>
+                    <field name="is_custom"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Model" name="group_by_model_id" domain="[]" context="{'group_by':'model_id'}"/>
+                        <filter string="Custom" name="group_by_is_custom" domain="[]" context="{'group_by':'is_custom'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="action_menu_webhook_events" model="ir.actions.act_window">
+            <field name="name">Webhook Events</field>
+            <field name="res_model">webhook.event</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('ol_webhooks.view_webhook_events_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('ol_webhooks.view_webhook_events_form')})]"/>
+            <field name="search_view_id" ref="view_webhook_event_search"/>
+            <field name="context">{'search_default_group_by_model_id': True}</field>
+        </record>
+        <menuitem id="webhook_events_menu" parent="ol_api.api_menu_root" name="Webhook Events" action="action_menu_webhook_events" sequence="3"/>
+    </data>
+</odoo>

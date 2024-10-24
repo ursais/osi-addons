@@ -1,0 +1,22 @@
+<odoo>
+	<data>
+		<record id="graphql_query" model="res.groups">
+			<field name="name">OnLogic GraphQL Query</field>
+			<field name="category_id" ref="ol_base.onlogic_groups"/>
+		</record>
+		<record id="graphql_query_raw_fields" model="res.groups">
+			<field name="name">OnLogic GraphQL Query Raw Fields</field>
+			<field name="category_id" ref="ol_base.onlogic_groups"/>
+			<field name="implied_ids" eval="[(4, ref('ol_graphql.graphql_query'), 0)]"/>
+		</record>
+		<record id="graphql_mutation" model="res.groups">
+			<field name="name">OnLogic GraphQL Mutation</field>
+			<field name="category_id" ref="ol_base.onlogic_groups"/>
+			<field name="implied_ids" eval="[(4, ref('ol_graphql.graphql_query'), 0),
+                  (4, ref('ol_graphql.graphql_query_raw_fields'), 0)]"/>
+		</record>
+		<record id="ol_base.dev_team" model="res.groups">
+			<field name="implied_ids" eval="[(4, ref('ol_graphql.graphql_mutation'), 0)]"/>
+		</record>
+	</data>
+</odoo>

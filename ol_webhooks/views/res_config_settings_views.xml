@@ -1,0 +1,30 @@
+<odoo>
+	<data>
+		<!-- Main QueueJob configuration view -->
+		<record id="view_webhook_configuration" model="ir.ui.view">
+			<field name="name">Webhook Settings</field>
+			<field name="model">res.config.settings</field>
+			<field name="inherit_id" ref="base.res_config_settings_view_form"/>
+			<field name="arch" type="xml">
+				<xpath expr="//form" position="inside">
+					<div class="app_settings_block" data-string="Webhooks" string="Webhooks" data-key="ol_webhooks" groups="ol_base.dev_team">
+						<h2>Webhooks</h2>
+						<div class="row mt16 o_settings_container" name="ol_webhooks_setting_container">
+							<div class="col-12 col-lg-6 o_setting_box">
+								<div class="o_setting_left_pane">
+									<field name="webhooks_enabled"/>
+								</div>
+								<div class="o_setting_right_pane">
+									<label for="webhooks_enabled"/>
+									<div class="text-muted">
+										Main switch to enable or disable Odoo GraphQL
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</xpath>
+			</field>
+		</record>
+	</data>
+</odoo>

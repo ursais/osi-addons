@@ -1,0 +1,24 @@
+<odoo>
+    <data>
+        <!-- STOCK PICKINGS -->
+        <!-- The webhook.events -->
+        <record id="stock_picking_tracking_info_update" model="webhook.event">
+            <field name="name">Delivery Order: Update</field>
+            <field name="model_id" search="[('model', '=', 'stock.picking')]" />
+            <field name="model_name">stock.picking</field>
+            <field name="operation">update</field>
+            <field name="is_custom">True</field>
+        </record>
+        <!-- The Webhook -->
+        <record id="stock_picking_delivery_webhook" model="webhook">
+            <field name="client_id" ref="ol_api.webhook_client_onlogic" />
+            <field name="url_path">delivery-tracking</field>
+            <field name="enabled">True</field>
+            <field name="timeout">15</field>
+            <field name="delay_time">5</field>
+            <field name="event_ids" eval="[
+            (4, ref('ol_webhooks.stock_picking_tracking_info_update'), 0)
+            ]"/>
+        </record>
+    </data>
+</odoo>

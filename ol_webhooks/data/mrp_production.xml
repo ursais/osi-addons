@@ -1,0 +1,37 @@
+<odoo>
+    <data>
+        <!-- model_id and operation should be unique if you need to handle that logic in python. -->
+        <!-- The webhook.events -->
+        <record id="manufacturing_order_create" model="webhook.event">
+            <field name="name">Manufacturing Order: Create</field>
+            <field name="model_id" search="[('model', '=', 'mrp.production')]" />
+            <field name="model_name">mrp.production</field>
+            <field name="operation">create</field>
+            <field name="is_custom">True</field>
+        </record>
+        <record id="manufacturing_order_update" model="webhook.event">
+            <field name="name">Manufacturing Order: Update</field>
+            <field name="model_id" search="[('model', '=', 'mrp.production')]" />
+            <field name="model_name">mrp.production</field>
+            <field name="operation">update</field>
+            <field name="is_custom">True</field>
+        </record>
+        <record id="manufacturing_order_delete" model="webhook.event">
+            <field name="name">Manufacturing Order: Delete</field>
+            <field name="model_id" search="[('model', '=', 'mrp.production')]" />
+            <field name="model_name">mrp.production</field>
+            <field name="operation">delete</field>
+            <field name="is_custom">True</field>
+        </record>
+        <!-- The Webhook -->
+        <record id="manufacturing_order_webhook" model="webhook">
+            <field name="client_id" ref="ol_api.webhook_client_onlogic" />
+            <field name="url_path">manufacturing-order</field>
+            <field name="event_ids" eval="[
+            (4, ref('ol_webhooks.manufacturing_order_create'), 0),
+            (4, ref('ol_webhooks.manufacturing_order_update'), 0),
+            (4, ref('ol_webhooks.manufacturing_order_delete'), 0)
+            ]"/>
+        </record>
+    </data>
+</odoo>
