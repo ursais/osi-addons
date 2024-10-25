@@ -59,8 +59,7 @@ class AttributeSetOwnerMixin(models.AbstractModel):
         eview = etree.fromstring(arch)
         form_name = eview.get("string")
         placeholder = eview.xpath("//separator[@name='attributes_placeholder']")
-
-        if len(placeholder) != 1:
+        if placeholder and len(placeholder) != 1:
             raise ValidationError(
                 _(
                     """It is impossible to add Attributes on "%(name)s" xml
@@ -76,7 +75,7 @@ class AttributeSetOwnerMixin(models.AbstractModel):
         attribute_eview = self._build_attribute_eview()
 
         # Insert the Attributes view
-        placeholder[0].getparent().replace(placeholder[0], attribute_eview)
+        placeholder and placeholder[0].getparent().replace(placeholder[0], attribute_eview)
         return etree.tostring(eview, pretty_print=True)
 
     def get_view(self, view_id=None, view_type="form", **options):
