@@ -108,6 +108,7 @@ class ProductProduct(models.Model):
     @api.depends("list_price", "price_extra", "bom_lst_price")
     @api.depends_context("uom")
     def _compute_product_lst_price(self):
+        """Override method to insert set price from bom"""
         res = super()._compute_product_lst_price()
         to_uom = None
         if "uom" in self._context:
@@ -118,6 +119,8 @@ class ProductProduct(models.Model):
                 list_price = product.uom_id._compute_price(product.list_price, to_uom)
             else:
                 list_price = product.list_price
+
+            # Trigger to set the bom price
             product._set_sale_price_from_bom()
             product.lst_price = list_price + product.price_extra
 
@@ -244,6 +247,14 @@ class ProductProduct(models.Model):
             )
 
     def _compute_product_price_extra(self):
+        """
+        This overrides the price extra compute to properly handle different configuration scenarios such as
+        extra price only,
+        extra prices with qty,
+        bom's with compute from bom,
+        bom's with qty and compute from bom,
+        extra prices with boms and qty.
+        """
         standard_products = self.filtered(lambda product: not product.config_ok)
         config_products = self - standard_products
 
