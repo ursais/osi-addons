@@ -22,6 +22,7 @@ class ProductConfigSession(models.Model):
         "product_tmpl_id.list_price",
         "product_id",
         "product_id.lst_price",  # Change to variant lst_price
+        "product_id.bom_lst_price",
         "product_tmpl_id.attribute_line_ids",
         "product_tmpl_id.attribute_line_ids.value_ids",
         "product_tmpl_id.attribute_line_ids.product_template_value_ids",
@@ -40,6 +41,60 @@ class ProductConfigSession(models.Model):
             else:
                 price = 0.00
             session.price = price
+
+    def action_confirm(self, product_id=None):
+        for session in self:
+            if product_id is None:
+                product_id = session.create_get_variant()
+            # Recompute lst_price from price_extra to verify BoM pricing was computed
+            product_id._compute_product_price_extra()
+
+            session.write({"state": "done", "product_id": product_id.id})
+        return super().action_confirm(product_id)
+
+
+class SaleOrderLine(models.Model):
+    _inherit = "sale.order.line"
+
+    @api.depends("product_id", "product_uom", "product_uom_qty")
+    def _compute_price_unit(self):
+        # Super `product_configurator_sale` to handle the `config_session_id` condition cleanly
+        super(SaleOrderLine, self)._compute_price_unit()
+
+        for line in self:
+            # Conditions from the core method
+            if line.qty_invoiced > 0 or (
+                line.product_id.expense_policy == "cost" and line.is_expense
+            ):
+                continue
+
+            if not line.product_uom or not line.product_id:
+                line.price_unit = 0.0
+                continue
+
+            # Custom logic for your module if `config_session_id` is present
+            if line.config_session_id:
+                account_tax_obj = self.env["account.tax"]
+                line.price_unit = account_tax_obj._fix_tax_included_price_company(
+                    line.config_session_id.price,
+                    line.product_id.taxes_id,
+                    line.tax_id,
+                    line.company_id,
+                )
+                continue  # Skip further calculations if `config_session_id` logic is applied
+
+            # Retain core method logic to calculate `price_unit`
+            line = line.with_company(line.company_id)
+            price = line._get_display_price()
+            line.price_unit = line.product_id._get_tax_included_unit_price(
+                line.company_id or line.env.company,
+                line.order_id.currency_id,
+                line.order_id.date_order,
+                "sale",
+                fiscal_position=line.order_id.fiscal_position_id,
+                product_price_unit=price,
+                product_currency=line.currency_id,
+            )
 
 
 class ProductAttributeValue(models.Model):

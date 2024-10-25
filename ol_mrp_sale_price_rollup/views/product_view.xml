@@ -45,7 +45,8 @@
             </xpath>
             <xpath expr="//field[@name='taxes_id']" position="before">
                 <field name="price_extra" readonly="1" />
-                <field name="bom_lst_price" readonly="1" />
+                <field name="attr_val_lst_price" readonly="1"  groups="base.group_no_one" />
+                <field name="bom_lst_price" readonly="1"  groups="base.group_no_one" />
             </xpath>
         </field>
     </record>
@@ -77,9 +78,13 @@
                 <div class="o_row">
                     <field name="price_extra" readonly="1" />
                 </div>
-                <label for="bom_lst_price"/>
+                <label for="attr_val_lst_price" groups="base.group_no_one" />
                 <div class="o_row">
-                    <field name="bom_lst_price" readonly="1" />
+                    <field name="attr_val_lst_price" readonly="1" />
+                </div>
+                <label for="bom_lst_price" groups="base.group_no_one" />
+                <div class="o_row">
+                    <field name="bom_lst_price" readonly="1" groups="base.group_no_one" />
                 </div>
             </xpath>
         </field>
