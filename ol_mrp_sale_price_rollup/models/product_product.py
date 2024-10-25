@@ -15,7 +15,12 @@ class ProductProduct(models.Model):
     bom_lst_price = fields.Float(
         "BoM List Price",
         digits="Product Price",
-        help="This is the sum of the extra price of all attributes",
+        help="This is the sum of the sales price of all BoM Components",
+    )
+    attr_val_lst_price = fields.Float(
+        "Values Extra Price",
+        digits="Product Price",
+        help="This is the sum of the sales price of all attribute values",
     )
 
     # METHODS ##########
@@ -103,6 +108,7 @@ class ProductProduct(models.Model):
     @api.depends("list_price", "price_extra", "bom_lst_price")
     @api.depends_context("uom")
     def _compute_product_lst_price(self):
+        """Override method to insert set price from bom"""
         res = super()._compute_product_lst_price()
         to_uom = None
         if "uom" in self._context:
@@ -113,8 +119,11 @@ class ProductProduct(models.Model):
                 list_price = product.uom_id._compute_price(product.list_price, to_uom)
             else:
                 list_price = product.list_price
+
+            # Trigger to set the bom price
             product._set_sale_price_from_bom()
-            product.lst_price = list_price + product.price_extra + product.bom_lst_price
+            product.lst_price = list_price + product.price_extra
+
         return res
 
     def button_bom_sale_price(self):
@@ -238,15 +247,19 @@ class ProductProduct(models.Model):
             )
 
     def _compute_product_price_extra(self):
+        """
+        This overrides the price extra compute to properly handle different configuration scenarios such as
+        extra price only,
+        extra prices with qty,
+        bom's with compute from bom,
+        bom's with qty and compute from bom,
+        extra prices with boms and qty.
+        """
         standard_products = self.filtered(lambda product: not product.config_ok)
         config_products = self - standard_products
 
         if standard_products:
-            result = super(
-                ProductProduct, standard_products
-            )._compute_product_price_extra()
-        else:
-            result = None
+            super()._compute_product_price_extra()
 
         for product in config_products:
             attribute_value_obj = self.env["product.attribute.value"]
@@ -265,37 +278,40 @@ class ProductProduct(models.Model):
                 bom.bom_line_ids.mapped("product_id.id") if bom else []
             )
 
-            total_extra_price = 0.0  # Initialize total price
+            attr_val_lst_price = 0.0  # Initialize attribute value list price
 
-            # Iterate over the extra prices dictionary
+            # Calculate attr_val_lst_price based on attribute value prices and quantities
             for attr_value_id, price in extra_prices.items():
                 matching_records = product.product_attribute_value_qty_ids.filtered(
                     lambda l: l.attr_value_id.id == attr_value_id
                 )
 
-                # Retrieve the product_id of the attribute value if it exists
                 attr_value = self.env["product.attribute.value"].browse(attr_value_id)
                 if (
                     attr_value.product_id
                     and attr_value.product_id.id in bom_component_product_ids
                 ):
-                    continue  # Exclude the price if product_id is in BoM components
+                    # Skip as it’s accounted for in BoM
+                    continue
 
-                # Calculate the contribution to price_extra
                 if matching_records:
                     additional_qty = sum(matching_records.mapped("qty"))
-                    if additional_qty > 0:
-                        total_extra_price += price * additional_qty
-                    else:
-                        # Even if qty is 0, still include the price (but don’t multiply)
-                        total_extra_price += price
+                    attr_val_lst_price += (
+                        price * additional_qty if additional_qty else price
+                    )
                 else:
-                    # If no matching records, still include the price (no qty consideration)
-                    total_extra_price += price
+                    attr_val_lst_price += price
 
-            # Set the final price_extra
-            product.price_extra = total_extra_price
+            # Set attr_val_lst_price as an informative field
+            product.attr_val_lst_price = attr_val_lst_price
 
-        return result
+            # Final calculation for price_extra
+            total_price_extra = product.bom_lst_price + attr_val_lst_price
 
-    # END #########
+            # Directly assign to override any existing value
+            product.price_extra = total_price_extra
+
+        return None
+
+
+# END #########
