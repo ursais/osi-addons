@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_production_batch_search_view" model="ir.ui.view">
+        <field name="name">mrp.production.batch.search.view</field>
+        <field name="model">mrp.production.batch</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="tag_ids"/>
+                <field name="production_ids"/>
+                <field name="partner_ids"/>
+                <field name="responsible_id"/>
+                <separator/>
+                <filter name="partner_ids" string="Customer" context="{'group_by': 'partner_ids'}"/>
+                <filter name="responsible_id" string="Employee" context="{'group_by': 'responsible_id'}"/>
+            </search>
+        </field>
+    </record>
+    <record id="mrp_production_batch_tree_view" model="ir.ui.view">
+		<field name="name">mrp.production.batch.tree.view</field>
+        <field name="model">mrp.production.batch</field>
+        <field name="arch" type="xml">
+            <tree>
+                <header>
+                    <button name="button_plan" type="object" string='Plan' class="oe_highlight"/>
+                    <button name="action_assign" type="object" string='Check availability'/>
+                    <button name="action_unreserve" type="object" string='Unreserve'/>
+                    <button name="action_cancel" type="object" string="Cancel"/>
+                </header>
+                <field name="name"/>
+                <field name="partner_ids" widget="many2many_tags"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="responsible_id"/>
+                <field name="date_scheduled"/> 	
+            </tree>		
+        </field>
+    </record>   
+	<record id="mrp_production_batch_form_view" model="ir.ui.view">
+		<field name="name">mrp.production.batch.form.view</field>
+        <field name="model">mrp.production.batch</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="is_confirm_check" invisible="1"/>
+                    <field name="is_reserved" invisible="1"/>
+                    <field name="is_reserved_batch" invisible="1"/>
+                    <field name="is_unreserved" invisible="1"/>
+                    <field name="is_cancel" invisible="1"/>
+                    <field name="is_cancel_id" invisible="1"/>
+                    <field name="is_move_raw_ids" invisible="1"/>
+                    <field name="is_product_all" invisible="1"/>
+                    <field name="is_workorder_ids" invisible="1"/>
+                    <field name="is_planned" invisible="1"/>
+                    <field name="is_plan" invisible="1"/>
+                    <field name="is_date" invisible="1"/>
+                    <field name="show_lock" invisible="1"/>
+                    <field name="is_locked" invisible="1"/>
+                    <button name="action_confirm" type="object" string='Confirm' invisible="is_confirm_check" class="oe_highlight"/>
+                    <button name="button_plan" type="object" string='Plan' invisible="is_plan or not is_workorder_ids or is_planned" class="oe_highlight"/>
+                    <button name="action_done" type="object" string='Produce All' invisible="not is_move_raw_ids or not is_product_all" class="oe_highlight"/>
+                    <button name="action_assign" type="object" invisible="is_reserved_batch or not is_reserved" string='Check availability'/>
+                    <button name="action_unreserve" type="object" invisible="not is_unreserved" string='Unreserve'/>
+                    <button name="action_lock_and_unlock" type="object" invisible="not show_lock or is_locked" string='Lock'/>
+                    <button name="action_lock_and_unlock" type="object" invisible="not show_lock or not is_locked" string='Unlock'/>
+                    <button name="action_cancel" type="object" invisible="not is_cancel_id or is_cancel" string='Cancel'/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,progress,done"/>
+                </header>
+            	<sheet>
+                    <div class="oe_title">
+                        <widget name="web_ribbon" title="DELAYED" bg_color="text-bg-danger" invisible="not is_date"/>	
+                        <h1 class="d-flex">
+                              <field name="name" nolabel="1" readonly="1"/>
+                        </h1>
+                    </div>
+                     
+                    <group>
+                        <group>
+                            <field name="responsible_id" readonly="state not in ('draft', 'progress')" />
+                            <field name="partner_ids" widget="many2many_tags"/>
+                        </group> 
+                        <group>
+                            <field name="date_scheduled" readonly="state not in ('draft', 'progress')" />
+                            <field name="earliest_start"  />
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="state not in ('draft', 'progress')" />
+                        </group>
+                    </group> 
+                    <notebook>
+                        <page name="mrp_batch" string="Manufacturing Orders">
+                            <field name="production_ids" readonly="1">
+                                <tree editable="True" string="mrp batch">
+                                    <field name="product_id"/>
+                                    <field name="company_id" column_invisible="True"/>
+                                    <field name="name" string="Manufacturing Orders"/>
+                                    <field name="product_qty" string="Quantity"/>
+                                    <field name="state" decoration-success="state in ('done', 'to_close')" decoration-warning="state == 'progress'" decoration-info="state == 'confirmed'" decoration-danger="state == 'cancel'" decoration-muted="state == 'draft'" optional="show" widget="badge" class="text-dark"/>
+                                    <field name="date_start" string="Scheduled Date"/>
+                                    <field name="date_finished" string="End Date"/>
+                                    <button name="action_remove_batch" type="object" icon='fa-close' invisible="parent.state not in ('draft', 'progress')" />
+                                </tree>
+                            </field>                
+                        </page>
+                    </notebook>
+                    <div class="o_row" style="margin-top:10px;">
+                        <field name="desc" placeholder="commands"  class="w-25"/>
+                    </div>
+            	</sheet>
+                <div class='oe_chatter'>
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                </div>	
+            </form>		
+        </field>
+    </record>   
+     <record id="action_mrp_production_batch" model="ir.actions.act_window">
+        <field name="name">MRP Batch</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.production.batch</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="mrp_production_batch_search_view"/>
+        <field name="context">{}</field>
+        <field name="domain">[]</field>
+    </record>
+    <menuitem id="menu_mrp_production_batch_sale" name="Manufacturing Batch" parent="sale.menu_sales_config" action="mrp_batch.action_mrp_production_batch" sequence="25"/>
+    <menuitem id="menu_mrp_production_batch_manufacturing" name="Manufacturing Batch" parent="mrp.menu_mrp_manufacturing" action="mrp_batch.action_mrp_production_batch" sequence="40"/>                
+</odoo>      

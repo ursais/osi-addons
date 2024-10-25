@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_production_batch_wizard_form_view" model="ir.ui.view">
+        <field name="name">mrp.production.batch.wizard.form.view</field>
+        <field name="model">mrp.production.batch.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group> 
+                        <field name="responsible_id"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                        <field name="date_scheduled"/>
+                    </group>                
+                </sheet>
+                <footer class="oe_edit_only">
+                    <button name="action_confirm" type="object" string="confirm" class="oe_highlight"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

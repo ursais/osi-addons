@@ -1,0 +1,30 @@
+{
+    "name": "MRP Batch",
+    "version": "17.0.0.0.0",
+    "license": "AGPL-3",
+    "description": "Package management for mrp production batch",
+    "author": "Open Source Integrators",
+    "maintainer": "Open Source Integrators",
+    "website": "http://www.opensourceintegrators.com",
+    "category": "",
+    "images": [],
+    "depends": [
+        "mrp",
+        "sale_management", 'sale_mrp', 'queue_job'
+    ],
+    "data": [
+        'security/ir.model.access.csv',
+        'data/ir_sequence.xml',
+        'wizard/mrp_production_batch_wizard_view.xml',
+        'report/report_view.xml',
+        'report/mrp_batch_report_view.xml',
+        'views/mrp_production_batch_tag_view.xml',
+        'views/mrp_production_batch_view.xml',
+        'views/mrp_production_view.xml',
+        'views/sale_order_view.xml',
+        'views/product_template_view.xml',
+    ],
+    "auto_install": False,
+    "application": False,
+    "installable": True,
+}
