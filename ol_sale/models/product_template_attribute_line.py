@@ -17,6 +17,7 @@ class ProductTemplateAttributeLine(models.Model):
 
     # END #########
     # METHODS #####
+
     @api.onchange("attribute_id")
     def _onchange_attribute_id(self):
         if self.attribute_id:
