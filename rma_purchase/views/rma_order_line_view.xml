@@ -1,0 +1,80 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <record id="action_rma_line_purchase" model="ir.actions.act_window">
+        <field name="name">Purchase Order</field>
+        <field name="res_model">purchase.order</field>
+        <field name="target">current</field>
+        <field name="view_mode">form,tree</field>
+    </record>
+
+    <record id="view_rma_line_form" model="ir.ui.view">
+        <field name="name">rma.order.line.supplier.form</field>
+        <field name="model">rma.order.line</field>
+        <field name="inherit_id" ref="rma.view_rma_line_supplier_form" />
+        <field name="arch" type="xml">
+            <header position="inside">
+                <button
+                    name="%(action_rma_order_line_make_purchase_order)d"
+                    string="Create Purchase Order"
+                    class="oe_highlight"
+                    invisible="qty_to_purchase == 0 or state != 'approved'"
+                    context="{'rma_line_id': id, 'default_partner_id': partner_id}"
+                    type="action"
+                />
+                <button
+                    name="%(action_rma_order_line_make_purchase_order)d"
+                    string="Create Purchase Order"
+                    invisible="qty_to_purchase != 0 or state != 'approved'"
+                    context="{'rma_line_id': id, 'default_partner_id': partner_id}"
+                    type="action"
+                />
+            </header>
+            <div name='button_box' position="inside">
+                <button
+                    type="object"
+                    name="action_view_purchase_order"
+                    class="oe_stat_button"
+                    icon="fa-shopping-cart"
+                    groups="purchase.group_purchase_user"
+                    invisible="purchase_count == 0"
+                >
+                        <field
+                        name="purchase_count"
+                        widget="statinfo"
+                        string="Purchase Orders"
+                    />
+                </button>
+            </div>
+            <group name="main_info" position="inside">
+                <field
+                    name="purchase_order_line_id"
+                    options="{'no_create': True}"
+                    context="{'rma': True}"
+                    domain="['|',
+                                ('order_id.partner_id', '=', partner_id),
+                                ('order_id.partner_id', 'child_of', partner_id)]"
+                    readonly="state not in ['draft']"
+                />
+            </group>
+            <group name="quantities" position="inside">
+                <group invisible="purchase_policy == 'no'">
+                    <field name="qty_to_purchase" />
+                    <field name="qty_purchased" />
+                </group>
+            </group>
+            <field name="delivery_policy" position="after">
+                <field name="purchase_policy" />
+            </field>
+            <field name="origin" position="after">
+                <field name="purchase_id" invisible="purchase_order_line_id == False" />
+            </field>
+            <notebook position="inside">
+                <page name="purchase" string="Purchase Lines">
+                    <field name="purchase_order_line_ids" nolabel="1" />
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+</odoo>

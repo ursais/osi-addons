@@ -1,0 +1,85 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_rma_add_purchase" model="ir.ui.view">
+        <field name="name">rma.add.purchase</field>
+        <field name="model">rma_add_purchase</field>
+        <field name="arch" type="xml">
+            <form string="Select Purchase Order from customer">
+                <group>
+                    <field name="partner_id" string="Customer" />
+                </group>
+                <separator string="Select Purchase Order from customer" />
+                <group>
+                    <field
+                        name="purchase_id"
+                        domain="[
+                           ('partner_id','=',partner_id), (('state','not in',['draft','cancel']))]"
+                        context="{'partner_id': partner_id}"
+                    />
+                </group>
+                <separator string="Select Purchase Order Lines to Add" />
+                <field
+                    name="purchase_line_ids"
+                    domain="[('order_id', '=', purchase_id)]"
+                    string="Purchase Order Lines"
+                >
+                    <tree name="Purchase Order Lines">
+                        <field name="order_id" />
+                        <field name="name" />
+                        <field name="partner_id" string="Vendor" />
+                        <field name="product_id" />
+                        <field name="price_unit" />
+                        <field name="product_qty" />
+                        <field name="product_uom" groups="uom.group_uom" />
+                        <field name="price_subtotal" widget="monetary" />
+                        <field name="date_planned" widget="date" />
+                    </tree>
+                </field>
+                <footer>
+                    <button
+                        string="Confirm"
+                        name="add_lines"
+                        type="object"
+                        class="oe_highlight"
+                    />
+                    or
+                    <button
+                        name="action_cancel"
+                        string="Cancel"
+                        class="oe_link"
+                        special="cancel"
+                    />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rma_add_purchase" model="ir.actions.act_window">
+        <field name="name">Add Purchase Order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">rma_add_purchase</field>
+        <field name="binding_model_id" ref="rma.model_rma_order" />
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="view_rma_add_purchase" />
+        <field
+            name="groups_id"
+            eval="[(4, ref('rma.group_rma_customer_user')), (4, ref('rma.group_rma_customer_user'))]"
+        />
+    </record>
+
+    <record id="view_rma_add_purchase_button_form" model="ir.ui.view">
+        <field name="name">rma.order.line.supplier.form</field>
+        <field name="model">rma.order</field>
+        <field name="inherit_id" ref="rma.view_rma_supplier_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button
+                    name="%(action_rma_add_purchase)d"
+                    string="Add From Purchase Order"
+                    type="action"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

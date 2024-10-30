@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_purchase_order_supplier_user,access_purchase_order,purchase.model_purchase_order,rma.group_rma_supplier_user,1,0,0,0
+access_purchase_order_line_supplier_user,access_purchase_order_line,purchase.model_purchase_order_line,rma.group_rma_supplier_user,1,0,0,0
+access_rma_order_line_make_purchase_order_customer_user_item,rma.order.line.make.purchase.order.customer.user,model_rma_order_line_make_purchase_order,rma.group_rma_customer_user,1,1,1,1
+access_rma_order_line_make_purchase_order_supplier_user_item,rma.order.line.make.purchase.order.supplier.user,model_rma_order_line_make_purchase_order,rma.group_rma_supplier_user,1,1,1,1
+access_rma_order_line_make_purchase_order_item_customer_user_item,rma.order.line.make.purchase.order.item.customer.user,model_rma_order_line_make_purchase_order_item,rma.group_rma_customer_user,1,1,1,1
+access_rma_order_line_make_purchase_order_item_supplier_user_item,rma.order.line.make.purchase.order.item.supplier.user,model_rma_order_line_make_purchase_order_item,rma.group_rma_supplier_user,1,1,1,1
+access_rma_add_purchase_customer_user_item,rma.add.purchase.customer.user,model_rma_add_purchase,rma.group_rma_customer_user,1,1,1,1
+access_rma_add_purchase_supplier_user_item,rma.add.purchase.supplier.user,model_rma_add_purchase,rma.group_rma_supplier_user,1,1,1,1

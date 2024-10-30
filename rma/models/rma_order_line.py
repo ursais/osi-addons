@@ -652,12 +652,19 @@ class RmaOrderLine(models.Model):
     def action_rma_cancel(self):
         for order in self:
             order.check_cancel()
+            # cancel ongoing orig moves
+            # dest move cancelation can be managed with propagate_cancel option
+            # on stock rules.
+            moves = order.move_ids
+            to_cancel_orig_moves = self.env["stock.move"]
+            while moves:
+                moves = moves.move_orig_ids.filtered(
+                    lambda m: m.state not in ("done", "cancel") and m.picking_id
+                )
+                to_cancel_orig_moves |= moves
+            to_cancel_orig_moves._action_cancel()
             order.write({"state": "canceled"})
             order.move_ids._action_cancel()
-            shipments = order._get_in_pickings()
-            shipments |= order._get_out_pickings()
-            for ship in shipments:
-                ship.action_cancel()
         return True
 
     def _get_price_unit(self):
@@ -783,20 +790,20 @@ class RmaOrderLine(models.Model):
         if self.type == "customer":
             # from customer we link to supplier rma
             action = self.env.ref("rma.action_rma_supplier_lines")
-            rma_lines = self.supplier_rma_line_ids.ids
+            rma_lines = self.supplier_rma_line_ids
             res = self.env.ref("rma.view_rma_line_supplier_form", False)
         else:
             # from supplier we link to customer rma
             action = self.env.ref("rma.action_rma_customer_lines")
-            rma_lines = self.customer_rma_id.ids
+            rma_lines = self.customer_rma_id
             res = self.env.ref("rma.view_rma_line_form", False)
         result = action.sudo().read()[0]
         # choose the view_mode accordingly
         if rma_lines and len(rma_lines) != 1:
-            result["domain"] = rma_lines.ids
+            result["domain"] = [("id", "in", rma_lines.ids)]
         elif len(rma_lines) == 1:
             result["views"] = [(res and res.id or False, "form")]
-            result["res_id"] = rma_lines[0]
+            result["res_id"] = rma_lines.id
         return result
 
     @api.constrains("partner_id", "rma_id")

@@ -207,7 +207,9 @@ class RmaOrderLine(models.Model):
                 line.date,
                 round=False,
             ),
-            "delivery_address_id": line.move_id.partner_id.id,
+            "delivery_address_id": line.move_id.partner_shipping_id.id
+            if line.move_id.partner_shipping_id
+            else line.move_id.partner_id.id,
             "invoice_address_id": line.move_id.partner_id.id,
             "receipt_policy": operation.receipt_policy,
             "refund_policy": operation.refund_policy,

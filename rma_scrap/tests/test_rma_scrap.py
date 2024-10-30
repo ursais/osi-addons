@@ -1,3 +1,4 @@
+from odoo.exceptions import ValidationError
 from odoo.tests import common
 
 
@@ -32,11 +33,25 @@ class TestRmaScrap(common.SingleTransactionCase):
                 "tracking": "lot",
             }
         )
-
+        cls.product_3 = cls.product_obj.create(
+            {
+                "name": "Test Product 3",
+                "type": "product",
+                "list_price": 150.0,
+                "tracking": "serial",
+            }
+        )
         cls.lot = cls.env["stock.lot"].create(
             {
                 "name": "Lot for tests",
                 "product_id": cls.product_2.id,
+                "company_id": cls.env.ref("base.main_company").id,
+            }
+        )
+        cls.serial_p3 = cls.env["stock.lot"].create(
+            {
+                "name": "Serial for tests",
+                "product_id": cls.product_3.id,
                 "company_id": cls.env.ref("base.main_company").id,
             }
         )
@@ -77,6 +92,14 @@ class TestRmaScrap(common.SingleTransactionCase):
                 "out_route_id": cls.rma_route_cust.id,
             }
         )
+        # add somne qty or we cannot scrap
+        cls.env["stock.quant"].create(
+            {
+                "product_id": cls.product_1.id,
+                "location_id": cls.stock_rma_location.id,
+                "inventory_quantity": 1,
+            }
+        ).action_apply_inventory()
 
     def test_01_rma_scrap_received(self):
         rma = self.rma_line_obj.create(
@@ -184,12 +207,78 @@ class TestRmaScrap(common.SingleTransactionCase):
                 ],
             }
         ).create({})
+        wizard.item_ids[0].qty_to_scrap = 1
         action = wizard.action_create_scrap()
         scrap = self.env["stock.scrap"].browse([action["res_id"]])
         self.assertEqual(scrap.location_id.id, self.stock_rma_location.id)
         self.assertEqual(scrap.move_ids.id, False)
         self.assertEqual(rma.qty_in_scrap, 1.00)
         res = scrap.action_validate()
-        scrap.do_scrap()
         self.assertTrue(res)
         self.assertEqual(rma.qty_scrap, 1.00)
+
+    def test_03_rma_scrap_lot(self):
+        rma = self.rma_line_obj.create(
+            {
+                "partner_id": self.customer1.id,
+                "product_id": self.product_3.id,
+                "operation_id": self.operation_1.id,
+                "uom_id": self.product_1.uom_id.id,
+                "in_route_id": self.operation_1.in_route_id.id,
+                "out_route_id": self.operation_1.out_route_id.id,
+                "in_warehouse_id": self.operation_1.in_warehouse_id.id,
+                "out_warehouse_id": self.operation_1.out_warehouse_id.id,
+                "location_id": self.stock_rma_location.id,
+            }
+        )
+        rma._onchange_operation_id()
+        rma.action_rma_to_approve()
+        wizard = self.rma_make_picking.with_context(
+            **{
+                "active_ids": rma.id,
+                "active_model": "rma.order.line",
+                "picking_type": "incoming",
+                "active_id": 1,
+            }
+        ).create({})
+
+        self.assertEqual(rma.qty_to_receive, 1.00)
+        self.assertFalse(rma.qty_to_scrap)
+
+        action_picking = wizard.action_create_picking()
+        picking = self.env["stock.picking"].browse([action_picking["res_id"]])
+        picking.move_line_ids[0].quantity = rma.qty_to_receive
+        picking.move_line_ids[0].lot_id = self.serial_p3
+
+        picking.button_validate()
+        rma._compute_qty_to_scrap()
+
+        self.assertFalse(rma.qty_to_receive)
+        self.assertEqual(rma.qty_received, 1.00)
+        self.assertEqual(rma.qty_to_scrap, 1.00)
+        wizard = self.rma_make_scrap_wiz.with_context(
+            **{
+                "active_ids": rma.id,
+                "active_model": "rma.order.line",
+                "item_ids": [
+                    0,
+                    0,
+                    {
+                        "line_id": rma.id,
+                        "product_id": rma.product_id.id,
+                        "product_qty": rma.product_qty,
+                        "location_id": rma.location_id,
+                        "qty_to_scrap": rma.qty_to_scrap,
+                        "uom_id": rma.uom_id.id,
+                    },
+                ],
+            }
+        ).create({})
+        with self.assertRaises(ValidationError):
+            wizard.item_ids[0].qty_to_scrap = 0
+            action = wizard.action_create_scrap()
+        # now try to put more qty and check it is scrapped 1 anyway
+        wizard.item_ids[0].qty_to_scrap = 2
+        action = wizard.action_create_scrap()
+        scrap = self.env["stock.scrap"].browse([action["res_id"]])
+        self.assertEqual(scrap.scrap_qty, 1)
