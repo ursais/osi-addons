@@ -12,7 +12,7 @@ class ResConfigSettings(models.TransientModel):
         related="company_id.hot_ar_grace_period",
         readonly=False,
         help="""Places holds on customer orders when invoices are not paid
-         within grace period of being due.""",
+         within grace period of being due."""
     )
 
     # END #########

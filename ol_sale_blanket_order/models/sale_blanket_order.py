@@ -18,7 +18,11 @@ class SaleBlanketOrder(models.Model):
 
     # COLUMNS #####
 
-    auto_release = fields.Boolean(default=True, tracking=True,help="Automates the release of blanket order lines on scheduled date minus customer lead time.")
+    auto_release = fields.Boolean(
+        default=True,
+        tracking=True,
+        help="Automates the release of blanket order lines on scheduled date minus customer lead time.",
+    )
 
     # END #########
 
@@ -79,7 +83,7 @@ class SaleBlanketOrder(models.Model):
             # Dictionary to store order lines by customer
             order_lines_by_customer = defaultdict(list)
             # Initialize variables to track order attributes
-            currency_id = pricelist_id = user_id = payment_term_id = 0
+            currency_id = pricelist_id = user_id = payment_term_id = None
             original_request_date = None
 
             for line in order.line_ids:
@@ -118,22 +122,22 @@ class SaleBlanketOrder(models.Model):
 
                     # Track and validate the consistency of currency, pricelist, user,
                     # and payment terms across lines
-                    if currency_id == 0:
+                    if currency_id is None:
                         currency_id = line.order_id.currency_id.id
                     elif currency_id != line.order_id.currency_id.id:
                         currency_id = False
 
-                    if pricelist_id == 0:
+                    if pricelist_id is None:
                         pricelist_id = line.pricelist_id.id
                     elif pricelist_id != line.pricelist_id.id:
                         pricelist_id = False
 
-                    if user_id == 0:
+                    if user_id is None:
                         user_id = line.user_id.id
                     elif user_id != line.user_id.id:
                         user_id = False
 
-                    if payment_term_id == 0:
+                    if payment_term_id is None:
                         payment_term_id = line.payment_term_id.id
                     elif payment_term_id != line.payment_term_id.id:
                         payment_term_id = False

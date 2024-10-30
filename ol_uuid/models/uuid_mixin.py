@@ -17,10 +17,10 @@ class Uuid(models.AbstractModel):
     _uses_uuid_mixin = True
 
     # COLUMNS #####
+    # TODO: If we make UUID a required field, then we cannot complete the form, is there another way around this?
     uuid = ol_fields.Uuid(
         string="UUID",
         help="Unique identifier that is used to identify this record between different systems.",
-        required=True,
         copy=False,
         index=True,
     )

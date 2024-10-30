@@ -17,6 +17,10 @@
     "data": [
         "views/sale_order.xml",
         "views/res_partner.xml",
+        "views/product_attribute.xml",
+        "views/product_pricelist.xml",
+        "views/product_template.xml",
+        "views/product_category.xml",
     ],
     "post_init_hook": "_run_install_scripts",
 }

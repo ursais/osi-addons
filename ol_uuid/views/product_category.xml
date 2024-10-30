@@ -1,0 +1,20 @@
+<odoo>
+  <data>
+    <record id="product_category_form_view" model="ir.ui.view">
+      <field name="name">ol_uuid.product.category.form.view</field>
+      <field name="model">product.category</field>
+      <field name="inherit_id" ref="account.view_category_property_form"/>
+      <field name="arch" type="xml">
+        <group name="account_property" position="after">
+          <notebook name="main_tabs">
+            <page name="onlogic_info" string="OnLogic Information" groups="ol_base.dev_team">
+              <group name="onlogic_info_grp">
+                <field name='uuid' readonly="1"/>
+              </group>
+            </page>
+          </notebook>
+        </group>
+      </field>
+    </record>
+  </data>
+</odoo>

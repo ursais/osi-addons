@@ -28,7 +28,16 @@ def _generate_uuids(env):
     install_uuid_postgres_extension(env)
 
     # Add UUIDs to tables
-    tables = ["sale_order", "res_partner"]
+    tables = [
+        "sale_order",
+        "res_partner",
+        "product_attribute",
+        "product_category",
+        "product_pricelist",
+        "product_pricelist_item",
+        "product_tax_code",
+        "product_template",
+    ]
     for table in tables:
         query = f"""ALTER TABLE {table} ADD COLUMN IF NOT EXISTS uuid uuid;"""
         _logger.info(f"res.uuid: Add UUIDs to table: {table}")
