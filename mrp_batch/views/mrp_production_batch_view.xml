@@ -59,13 +59,19 @@
                     <button name="button_plan" type="object" string='Plan' invisible="is_plan or not is_workorder_ids or is_planned" class="oe_highlight"/>
                     <button name="action_done" type="object" string='Produce All' invisible="not is_move_raw_ids or not is_product_all" class="oe_highlight"/>
                     <button name="action_assign" type="object" invisible="is_reserved_batch or not is_reserved" string='Check availability'/>
+                    <button name="button_unplan" type="object" string='Unplan' invisible="not is_planned" /> 
                     <button name="action_unreserve" type="object" invisible="not is_unreserved" string='Unreserve'/>
                     <button name="action_lock_and_unlock" type="object" invisible="not show_lock or is_locked" string='Lock'/>
                     <button name="action_lock_and_unlock" type="object" invisible="not show_lock or not is_locked" string='Unlock'/>
                     <button name="action_cancel" type="object" invisible="not is_cancel_id or is_cancel" string='Cancel'/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,progress,done"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                 </header>
             	<sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_sale" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="sale_order_count == 0">
+                            <field name="sale_order_count" widget="statinfo" string="Sales"/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <widget name="web_ribbon" title="DELAYED" bg_color="text-bg-danger" invisible="not is_date"/>	
                         <h1 class="d-flex">
@@ -75,13 +81,14 @@
                      
                     <group>
                         <group>
-                            <field name="responsible_id" readonly="state not in ('draft', 'progress')" />
+                            <field name="responsible_id" readonly="state not in ('draft', 'confirm') or is_locked" />
                             <field name="partner_ids" widget="many2many_tags"/>
                         </group> 
                         <group>
-                            <field name="date_scheduled" readonly="state not in ('draft', 'progress')" />
+                            <field name="date_scheduled" readonly="state not in ('draft', 'confirm') or is_locked" />
                             <field name="earliest_start"  />
-                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="state not in ('draft', 'progress')" />
+                            <field name="total_duration" />
+                            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="state not in ('draft', 'confirm') or is_locked" />
                         </group>
                     </group> 
                     <notebook>
@@ -92,10 +99,11 @@
                                     <field name="company_id" column_invisible="True"/>
                                     <field name="name" string="Manufacturing Orders"/>
                                     <field name="product_qty" string="Quantity"/>
-                                    <field name="state" decoration-success="state in ('done', 'to_close')" decoration-warning="state == 'progress'" decoration-info="state == 'confirmed'" decoration-danger="state == 'cancel'" decoration-muted="state == 'draft'" optional="show" widget="badge" class="text-dark"/>
+                                    <field name="state" decoration-success="state in ('done', 'to_close')" decoration-warning="state == 'confirm'" decoration-info="state == 'confirmed'" decoration-danger="state == 'cancel'" decoration-muted="state == 'draft'" optional="show" widget="badge" class="text-dark"/>
                                     <field name="date_start" string="Scheduled Date"/>
                                     <field name="date_finished" string="End Date"/>
-                                    <button name="action_remove_batch" type="object" icon='fa-close' invisible="parent.state not in ('draft', 'progress')" />
+                                    
+                                    <button name="action_remove_batch" type="object" icon='fa-close' invisible="parent.state not in ('draft', 'confirm') or parent.is_locked" />
                                 </tree>
                             </field>                
                         </page>
