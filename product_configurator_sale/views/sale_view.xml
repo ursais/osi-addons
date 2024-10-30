@@ -26,7 +26,7 @@
                 expr="//field[@name='order_line']/tree//field[@name='product_template_id']"
                 position="after"
             >
-                <field invisible="1" name="config_ok" />
+                <field column_invisible="1" name="config_ok" />
                 <button
                     invisible="not config_ok or state not in ['draft','sent']"
                     class="fa-lg"
