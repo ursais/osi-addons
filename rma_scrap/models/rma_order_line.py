@@ -49,7 +49,7 @@ class RmaOrderLine(models.Model):
             for move in rec.move_ids.filtered(
                 lambda m: m.state in ["done"] and m.is_rma_scrap
             ):
-                qty += product_obj._compute_quantity(move.product_uom_qty, rec.uom_id)
+                qty += product_obj._compute_quantity(move.quantity, rec.uom_id)
             rec.qty_scrap = qty
 
     def _compute_scrap_count(self):

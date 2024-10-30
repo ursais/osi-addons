@@ -82,7 +82,9 @@ class RmaAddSale(models.TransientModel):
             "target": "new",
         }
 
-    def _prepare_rma_line_from_sale_order_line(self, line, lot=None):
+    def _prepare_rma_line_from_sale_order_line(
+        self, line, product, quantity, uom_id=False, lot=None
+    ):
         operation = self.rma_id.operation_default_id
         if not operation:
             operation = line.product_id.rma_customer_operation_id
@@ -121,33 +123,26 @@ class RmaAddSale(models.TransientModel):
                 or operation.in_warehouse_id.lot_rma_id
                 or warehouse.lot_rma_id
             )
-        product_qty = line.product_uom_qty
-        if line.product_id.tracking == "serial":
-            product_qty = 1
-        elif line.product_id.tracking == "lot":
-            product_qty = sum(
-                line.mapped("move_ids.move_line_ids")
-                .filtered(lambda x: x.lot_id.id == lot.id)
-                .mapped("qty_done")
-            )
         data = {
             "partner_id": self.partner_id.id,
             "description": self.rma_id.description,
             "sale_line_id": line.id,
-            "product_id": line.product_id.id,
+            "product_id": product.id,
             "lot_id": lot and lot.id or False,
             "origin": line.order_id.name,
-            "uom_id": line.product_uom.id,
+            "uom_id": uom_id or product.uom_id.id,
             "operation_id": operation.id,
-            "product_qty": product_qty,
+            "product_qty": quantity,
             "delivery_address_id": self.sale_id.partner_shipping_id.id,
             "invoice_address_id": self.sale_id.partner_invoice_id.id,
-            "price_unit": line.currency_id._convert(
+            "price_unit": line.product_id == product
+            and line.currency_id._convert(
                 line.price_unit,
                 line.currency_id,
                 line.company_id,
                 line.order_id.date_order,
-            ),
+            )
+            or product.lst_price,
             "rma_id": self.rma_id.id,
             "in_route_id": operation.in_route_id.id or route.id,
             "out_route_id": operation.out_route_id.id or route.id,
@@ -172,35 +167,84 @@ class RmaAddSale(models.TransientModel):
             existing_sale_lines.append(rma_line.sale_line_id)
         return existing_sale_lines
 
+    def _should_create_rma_line(self, line, existing_sale_line, lot=False):
+        if not lot and line in existing_sale_line:
+            return False
+        if lot and (
+            lot.id not in self.lot_ids.ids
+            or lot.id in self.rma_id.rma_line_ids.mapped("lot_id").ids
+        ):
+            return False
+        return True
+
+    def _create_from_move_line(self, line):
+        return True
+
+    def _get_lot_quantity_from_move_lines(self, sale_line):
+        outgoing_lines = self.env["stock.move.line"]
+        incoming_lines = self.env["stock.move.line"]
+        sent_moves = sale_line.move_ids.filtered(
+            lambda m: m.state == "done" and not m.scrapped
+        )
+        for move in sent_moves:
+            if move.location_dest_id.usage == "customer" and (
+                not move.origin_returned_move_id
+                or (move.origin_returned_move_id and move.to_refund)
+            ):
+                outgoing_lines |= move.move_line_ids
+            elif move.location_dest_id.usage != "customer" and move.to_refund:
+                incoming_lines |= move.move_line_ids
+        sent_product_data = {}
+        for line in outgoing_lines:
+            key = (line.product_id, line.product_uom_id, line.lot_id)
+            if key not in sent_product_data:
+                sent_product_data[key] = 0.0
+            sent_product_data[key] += line.quantity
+        for line in incoming_lines:
+            key = (line.product_id, line.product_uom_id, line.lot_id)
+            if key not in sent_product_data:
+                sent_product_data[key] = 0.0
+            sent_product_data[key] -= line.quantity
+        return sent_product_data
+
     def add_lines(self):
         rma_line_obj = self.env["rma.order.line"]
-        existing_sale_lines = self._get_existing_sale_lines()
+        existing_sale_line = self._get_existing_sale_lines()
         for line in self.sale_line_ids:
-            tracking_move = line.product_id.tracking in ("serial", "lot")
-            # Load a PO line only once
-            if line not in existing_sale_lines or tracking_move:
-                if not tracking_move:
-                    data = self._prepare_rma_line_from_sale_order_line(line)
+            if self._create_from_move_line(line):
+                sent_produt_data = self._get_lot_quantity_from_move_lines(line)
+                for (product, uom, lot), qty in sent_produt_data.items():
+                    if not self._should_create_rma_line(
+                        line, existing_sale_line, lot=lot
+                    ):
+                        continue
+                    data = self._prepare_rma_line_from_sale_order_line(
+                        line, product, qty, uom_id=uom.id, lot=lot
+                    )
                     rec = rma_line_obj.create(data)
                     # Ensure that configuration on the operation is applied
                     # TODO MIG: in v16 the usage of such onchange can be removed in
                     #  favor of (pre)computed stored editable fields for all policies
                     #  and configuration in the RMA operation.
                     rec._onchange_operation_id()
-                else:
-                    for lot in line.mapped("move_ids.move_line_ids.lot_id").filtered(
-                        lambda x: x.id in self.lot_ids.ids
-                    ):
-                        if lot.id in self.rma_id.rma_line_ids.mapped("lot_id").ids:
-                            continue
-                        data = self._prepare_rma_line_from_sale_order_line(line, lot)
-                        rec = rma_line_obj.create(data)
-                        # Ensure that configuration on the operation is applied
-                        # TODO MIG: in v16 the usage of such onchange can be removed in
-                        #  favor of (pre)computed stored editable fields for all
-                        # policies and configuration in the RMA operation.
-                        rec._onchange_operation_id()
-                        rec.price_unit = rec._get_price_unit()
+            else:
+                if not self._should_create_rma_line(line, existing_sale_line):
+                    continue
+                # we can't have lot management based on sale order line
+                data = self._prepare_rma_line_from_sale_order_line(
+                    line,
+                    line.product_id,
+                    line.product_uom_qty,
+                    uom_id=line.product_uom.id,
+                    lot=False,
+                )
+                rec = rma_line_obj.create(data)
+                # Ensure that configuration on the operation is applied
+                # TODO MIG: in v16 the usage of such onchange can be removed in
+                #  favor of (pre)computed stored editable fields for all policies
+                #  and configuration in the RMA operation.
+                rec._onchange_operation_id()
+                rec.price_unit = rec._get_price_unit()
         rma = self.rma_id
         data_rma = self._get_rma_data()
         rma.write(data_rma)

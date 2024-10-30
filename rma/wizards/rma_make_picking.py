@@ -232,7 +232,6 @@ class RmaMakePicking(models.TransientModel):
                 )
                 move.move_line_ids.write(
                     {
-                        "quantity": 1 if picking_type == "incoming" else 0,
                         "package_id": len(quants) == 1 and quants.package_id.id,
                     }
                 )
@@ -251,7 +250,7 @@ class RmaMakePicking(models.TransientModel):
                     {
                         "lot_id": move.rma_line_id.lot_id.id,
                         "product_uom_id": move.product_id.uom_id.id,
-                        "quantity": qty if picking_type == "incoming" else 0,
+                        "quantity": qty,
                     }
                 )
                 move_line_model.create(move_line_data)

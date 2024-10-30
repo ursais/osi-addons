@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <record id="view_rma_supplier_form" model="ir.ui.view">
+        <field name="name">rma.order.supplier.form</field>
+        <field name="model">rma.order</field>
+        <field name="inherit_id" ref="rma.view_rma_supplier_form" />
+        <field name="arch" type="xml">
+            <div name='button_box' position="inside">
+                <button
+                    type="object"
+                    name="action_view_purchase_order"
+                    class="oe_stat_button"
+                    icon="fa-shopping-cart"
+                    groups="purchase.group_purchase_user"
+                >
+                    <field name="po_count" widget="statinfo" string="Purchase Orders" />
+                </button>
+                <button
+                    type="object"
+                    name="action_view_origin_purchase_order"
+                    class="oe_stat_button"
+                    icon="fa-shopping-cart"
+                    groups="purchase.group_purchase_user"
+                >
+                    <field
+                        name="origin_po_count"
+                        widget="statinfo"
+                        string="Origin PO"
+                    />
+                </button>
+            </div>
+        </field>
+    </record>
+
+</odoo>

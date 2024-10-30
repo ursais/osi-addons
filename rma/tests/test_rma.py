@@ -1097,3 +1097,94 @@ class TestRma(common.TransactionCase):
         self.assertEqual(
             rma.rma_line_ids.mapped("state"), ["approved", "approved", "approved"]
         )
+
+    def test_10_rma_cancel_line(self):
+        # configure a new rule to make reception and  expedition in 2 steps
+        rma_route = self.env.ref("rma.route_rma_customer")
+        rma_loc = self.env.ref("rma.location_rma")
+        rma_loc2 = rma_loc.copy({"name": "rma loc shipping"})
+        rma_customer_rule = self.env.ref("rma.rule_rma_customer_out_pull")
+        rma_customer_rule.write({"procure_method": "make_to_order", "sequence": 0})
+        self.env["stock.rule"].create(
+            {
+                "name": "reception => rma loc shipping",
+                "action": "pull",
+                "picking_type_id": self.wh.int_type_id.id,
+                "location_src_id": self.wh.wh_input_stock_loc_id.id,
+                "location_dest_id": rma_loc2.id,
+                "procure_method": "make_to_stock",
+                "route_id": rma_route.id,
+                "warehouse_id": self.wh.id,
+                "company_id": self.wh.company_id.id,
+            }
+        )
+        self.env["stock.rule"].create(
+            {
+                "name": "rma => reception",
+                "action": "push",
+                "picking_type_id": self.wh.int_type_id.id,
+                "location_src_id": rma_loc.id,
+                "location_dest_id": self.wh.wh_input_stock_loc_id.id,
+                "procure_method": "make_to_stock",
+                "route_id": rma_route.id,
+                "warehouse_id": self.wh.id,
+                "company_id": self.wh.company_id.id,
+            }
+        )
+        # Generate expedition for the rma group
+        self.rma_customer_id.rma_line_ids.action_rma_to_approve()
+        wizard = self.rma_make_picking.with_context(
+            **{
+                "active_ids": self.rma_customer_id.rma_line_ids.ids,
+                "active_model": "rma.order.line",
+                "picking_type": "incoming",
+                "active_id": 1,
+            }
+        ).create({})
+        wizard._create_picking()
+        self.rma_customer_id.rma_line_ids.action_view_in_shipments()
+        # cancel first line and check it cancel the dest moves, but leave the picking
+        # ongoing for the 2 other lines
+        first_rma_line = self.rma_customer_id.rma_line_ids[0]
+        second_rma_line = self.rma_customer_id.rma_line_ids[1]
+        first_line_in_move = first_rma_line.move_ids.filtered(
+            lambda m: m.location_dest_id == rma_loc
+        )
+        first_line_in_dest_move = first_line_in_move.move_dest_ids
+        reception_picking = first_line_in_move.picking_id
+        self.assertEqual(first_line_in_dest_move.state, "waiting")
+        first_rma_line.action_rma_cancel()
+        self.assertEqual(first_line_in_dest_move.state, "cancel")
+        self.assertEqual(first_line_in_move.state, "cancel")
+        self.assertEqual(reception_picking.state, "assigned")
+        second_line_in_move = second_rma_line.move_ids.filtered(
+            lambda m: m.location_dest_id == rma_loc
+        )
+        self.assertEqual(second_line_in_move.state, "assigned")
+
+        # generate 2 step expedition for the 2 remaining lines
+        wizard = self.rma_make_picking.with_context(
+            **{
+                "active_ids": self.rma_customer_id.rma_line_ids.filtered(
+                    lambda rol: rol.state != "canceled"
+                ).ids,
+                "active_model": "rma.order.line",
+                "picking_type": "outgoing",
+                "active_id": 1,
+            }
+        ).create({})
+        for line in wizard.item_ids:
+            line.qty_to_deliver = line.product_qty
+        wizard._create_picking()
+        # cancel first line, check both chained move are canceled
+        second_rma_out_move = second_rma_line.move_ids.filtered(
+            lambda m: m.picking_id.picking_type_code == "outgoing"
+        )
+        second_rma_out_move_orig = second_rma_out_move.move_orig_ids
+        self.assertTrue(second_rma_out_move_orig)
+        self.assertEqual(second_rma_out_move.state, "waiting")
+        second_rma_line.action_rma_cancel()
+        self.assertEqual(second_rma_out_move.state, "cancel")
+        self.assertEqual(second_rma_out_move_orig.state, "cancel")
+        # check picking is not canceled because third line has not been yet.
+        self.assertEqual(second_rma_out_move.picking_id.state, "waiting")

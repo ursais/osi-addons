@@ -53,6 +53,8 @@ class RmaMakeScrap(models.TransientModel):
     def _create_scrap(self):
         scraps = []
         for item in self.item_ids:
+            if item.qty_to_scrap <= 0:
+                raise ValidationError(_("Quantity to scrap must be positive"))
             line = item.line_id
             if line.state != "approved":
                 raise ValidationError(_("RMA %s is not approved") % line.name)
@@ -68,12 +70,16 @@ class RmaMakeScrap(models.TransientModel):
     @api.model
     def _prepare_scrap(self, item):
         line = item.line_id
+        if item.line_id.product_id.tracking == "serial":
+            scrap_qty = 1
+        else:
+            scrap_qty = item.qty_to_scrap
         scrap = self.env["stock.scrap"].create(
             {
                 "name": line.rma_id.id and line.rma_id.name or line.name,
                 "origin": line.name,
                 "product_id": item.line_id.product_id.id,
-                "scrap_qty": item.qty_to_scrap,
+                "scrap_qty": scrap_qty,
                 "product_uom_id": item.line_id.product_id.product_tmpl_id.uom_id.id,
                 "location_id": item.location_id.id,
                 "scrap_location_id": item.scrap_location_id.id,
