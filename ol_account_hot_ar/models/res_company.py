@@ -25,9 +25,7 @@ class ResCompany(models.Model):
         for record in self:
             if record.hot_ar_grace_period <= 0:
                 raise ValidationError(
-                    _(
-                        "Please set a strictly positive Hot AR Grace Period (days) value."
-                    )
+                    _("Please set a strictly positive Hot AR Grace Period (days) value.")
                 )
 
     # END #########
