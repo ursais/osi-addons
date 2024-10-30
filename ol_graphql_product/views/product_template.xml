@@ -1,0 +1,50 @@
+<odoo>
+    <record id="pt_product_template_form_view" model="ir.ui.view">
+        <field name="name">ol_graphql_product.product.template.common.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <field name="categ_id" position="after">
+                <field name="lifecycle_launch_date" readonly="1"/>
+                <field name="lifecycle_status" readonly="1"/>
+            </field>
+            <field name="tax_code_id" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+        </field>
+    </record>
+    <record id="pp_product_template_form_view" model="ir.ui.view">
+        <field name="name">ol_graphql_product.product.product.form</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <field name="lst_price" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+        </field>
+    </record>
+    <record id="onlogic_information_product_template_form_view" model="ir.ui.view">
+        <field name="name">ol_graphql_product.product.template.common.form.onlogic</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="ol_base.view_product_template_form"/>
+        <field name="arch" type="xml">
+            <page name="onlogic_info" position="inside">
+                <group name="graphql_information">
+                    <field name='origin_system' readonly="1"/>
+                    <field name="public_destination" readonly="1"/>
+                    <field name='is_graphql_placeholder' readonly="1"/>
+                    <field name='last_graphql_queue_item_id' readonly="1"/>
+                    <field name='graphql_queue_ids'>
+                        <tree create="false" delete="false" editable="false" default_order="create_date desc">
+                            <field name="operation" readonly="1"/>
+                            <field name="state" readonly="1"/>
+                            <field name="transaction_id" readonly="1"/>
+                            <field name="publish_time" readonly="1"/>
+                            <field name="create_date" readonly="1"/>
+                        </tree>
+                    </field>
+                </group>
+            </page>
+        </field>
+    </record>
+</odoo>
