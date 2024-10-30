@@ -1,0 +1,18 @@
+<odoo>
+
+    <!-- Form View -->
+    <record id="ol_product_configurator_sale_order_form_view_inherit" model="ir.ui.view">
+        <field name="name">product.config.sale.order.form.view</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="product_configurator_sale.sale_order_form_config" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree//field[@name='config_session_id']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
+            <xpath expr="//field[@name='order_line']/tree//field[@name='config_session_id']" position="after">
+                <field name="bom_id" optional="hide" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -14,11 +14,14 @@
     "depends": [
         "ol_base",
         "product_configurator",
+        "product_configurator_mrp",
+        "product_configurator_sale",
     ],
     # always loaded
     "data": [
         "views/attribute_value_views.xml",
         "views/product_template_attribute_value_views.xml",
         "views/product_product_views.xml",
+        "views/sale_order_views.xml",
     ],
 }

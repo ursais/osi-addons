@@ -9,8 +9,14 @@
     "author": "Open Source Integrators, Odoo Community Association (OCA)",
     "license": "AGPL-3",
     "website": "https://github.com/OCA/product-configurator",
-    "depends": ["sale_blanket_order", "product_configurator_sale_mrp"],
-    "data": [],
+    "depends": [
+        "sale_blanket_order",
+        "product_configurator_sale_mrp",
+        "product_configurator_sale_blanket_order",
+    ],
+    "data": [
+        "views/sale_blanket_order_view.xml",
+    ],
     "installable": True,
     "auto_install": True,
     "development_status": "Alpha",
