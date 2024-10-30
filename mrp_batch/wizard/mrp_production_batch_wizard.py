@@ -9,7 +9,7 @@ class MRPProductionBatchwizard(models.TransientModel):
     def action_confirm(self):
         active_ids = self._context.get('active_ids')
         records = self.env['mrp.production'].browse(active_ids)
-        allows_records = records.filtered(lambda m: m.state in ['progress', 'draft'])
+        allows_records = records.filtered(lambda m: m.state in ['confirm', 'draft'])
         vals = {'responsible_id':self.responsible_id.id,
                 'tag_ids':self.tag_ids.ids,
                 'date_scheduled':self.date_scheduled,

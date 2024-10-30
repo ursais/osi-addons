@@ -14,7 +14,7 @@ class MrpProductionBatch(models.Model):
     desc = fields.Text(string="Description")
     partner_ids = fields.Many2many('res.partner',string="Customer",compute='_compute_partner_id',readonly=True,index=True)
     tag_ids = fields.Many2many('mrp.production.batch.tag', string="Tags")
-    state = fields.Selection([('draft', 'Draft'), ('progress', 'In Progress'), ('done', 'Done'), ('cancel', 'Cancel'), ('hold', 'Hold')], default='draft', string="Status")
+    state = fields.Selection([('draft', 'Draft'), ('progress', 'In Progress'), ('confirm', 'Confirm'), ('done', 'Done'), ('cancel', 'Cancel'), ('hold', 'Hold')], default='draft', string="Status")
     production_ids = fields.One2many('mrp.production', 'mrp_batch_id', string="Manufacturing productions")
     responsible_id = fields.Many2one('res.users', string="Owner", required=True)
     date_scheduled = fields.Datetime(string="Scheduled Date")
@@ -33,6 +33,8 @@ class MrpProductionBatch(models.Model):
     is_locked = fields.Boolean(string="is_locked",compute="compute_show_lock")
     earliest_start = fields.Datetime(string="Earliest start",compute="_compute_earliest_start")
     is_date = fields.Boolean(string="Is Date", compute="_compute_check_date")
+    total_duration = fields.Float('Total Duration', compute="_compute_total_duration")
+    sale_order_count = fields.Integer('Total Sale Order Count', compute="_compute_sale_order_count")
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -78,7 +80,12 @@ class MrpProductionBatch(models.Model):
         for record in self:
             for mrp_production in record.production_ids:
                 mrp_production.with_delay().button_plan()
-
+                
+    def button_unplan(self):
+        for record in self:
+            for mrp_production in record.production_ids:
+                mrp_production.with_delay().button_unplan()
+                
     def _compute_is_planned(self):
         for record in self:
             record.is_planned = False
@@ -92,7 +99,7 @@ class MrpProductionBatch(models.Model):
         for record in self:
             for mo in record.production_ids.filtered(lambda x: x.state == 'draft'):
                 mo.with_delay().action_confirm()
-            record.state = 'progress'
+            record.state = 'confirm'
 
     @api.depends('production_ids.state')
     def _compute_mrp_production_confirm(self):
@@ -140,10 +147,38 @@ class MrpProductionBatch(models.Model):
             for mo in record.production_ids.filtered(lambda x: x.state not in ('draft', 'done', 'cancel')):
                 mo.with_delay().button_mark_done()
             record.state = 'done'
-            
+   
     def compute_mrp_production_done(self):
         for record in self:
             record.is_product_all = False
             record.is_move_raw_ids = False
             record.is_move_raw_ids = all(production.move_raw_ids for production in record.production_ids)
             record.is_product_all = all(production.show_produce_all for production in record.production_ids)        
+    
+    def _compute_total_duration(self):
+        for rec in self:
+            rec.total_duration = sum(rec.production_ids.mapped('workorder_ids').mapped('duration_expected'))
+    
+    def _compute_sale_order_count(self):
+        for rec in self:
+            rec.sale_order_count = len(rec.production_ids.mapped('procurement_group_id').mapped('mrp_production_ids').mapped('move_dest_ids').mapped('group_id').mapped('sale_id'))
+    
+    def action_view_sale(self):
+        self.ensure_one()
+        sale_ids = self.production_ids.mapped('procurement_group_id').mapped('mrp_production_ids').mapped('move_dest_ids').mapped('group_id').mapped('sale_id').ids
+        action = {
+            'name': 'Sale Orders',
+            'res_model': 'sale.order',
+            'type': 'ir.actions.act_window',
+        }
+        if len(sale_ids) == 1:
+            action.update({
+                'view_mode': 'form',
+                'res_id': sale_ids[0],
+            })
+        else:
+            action.update({
+                'domain': [('id', 'in', sale_ids)],
+                'view_mode': 'tree,form',
+            })
+        return action

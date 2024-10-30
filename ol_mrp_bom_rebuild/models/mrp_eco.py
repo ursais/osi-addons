@@ -36,11 +36,12 @@ class MRPEco(models.Model):
               of onchange_product_tmpl_id using super()
         """
         bom_ids = self.product_tmpl_id.bom_ids
-        if bom_ids and bom_ids.filtered(lambda l: l.scaffolding_bom):
-            self.bom_id = bom_ids.filtered(lambda l: l.scaffolding_bom).id
-        elif bom_ids and bom_ids.filtered(lambda l: not l.product_id):
-            self.bom_id = bom_ids.filtered(lambda l: not l.product_id).ids[0]
-        else:
-            super().onchange_product_tmpl_id()
+        if bom_ids:
+            if boms := bom_ids.filtered(lambda l: l.scaffolding_bom):
+                self.bom_id = boms.id
+            elif boms := bom_ids.filtered(lambda l: not l.product_id):
+                self.bom_id = boms.ids[0]
+
+        return super().onchange_product_tmpl_id()
 
     # END #########
