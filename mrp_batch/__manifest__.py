@@ -23,6 +23,7 @@
         'views/mrp_production_view.xml',
         'views/sale_order_view.xml',
         'views/product_template_view.xml',
+        'views/mrp_workorder_view.xml',
     ],
     "auto_install": False,
     "application": False,

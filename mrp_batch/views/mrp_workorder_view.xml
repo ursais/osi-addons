@@ -1,0 +1,23 @@
+<odoo>
+    <record id="mrp_workorder_tree_view_inherit_mrp_batch" model="ir.ui.view">
+        <field name="name">mrp.workorder.tree.view.inherit.mrp.batch</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_editable_view"/> 
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="mrp_batch_id" />
+            </field>
+        </field>
+    </record>
+
+    <record id="mrp_workorder_form_view_inherit_mrp_batch" model="ir.ui.view">
+        <field name="name">mrp.workorder.form.view.inherit.mrp.batch</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_form_view_inherit"/> 
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="mrp_batch_id" />
+            </field>
+        </field>
+    </record>
+</odoo>

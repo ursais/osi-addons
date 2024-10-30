@@ -22,8 +22,8 @@
                 <button name="action_remove_batch" type="object" string='Remove Batch'/>
             </header>
             <field name="product_qty" position="after">
-                <field name="mrp_batch_state" invisible="1" />
                 <field name="mrp_batch_id" readonly="mrp_batch_state in ('done','cancel','hold')" />
+                <field name="mrp_batch_state" string="Batch State" />
             </field>
         </field>
     </record>
@@ -34,7 +34,7 @@
         <field name="arch" type="xml">
             <field name="user_id" position="after">
                 <field name="mrp_batch_id" readonly="mrp_batch_state in ('done','cancel','hold')" />
-                <field name="mrp_batch_state" decoration-danger="mrp_batch_state == 'hold'" decoration-success="mrp_batch_state == 'progress'" decoration-info="mrp_batch_state == 'done'"  decoration-muted="mrp_batch_state == 'cancel'" decoration-bf="1"/>
+                <field name="mrp_batch_state" decoration-danger="mrp_batch_state == 'hold'" decoration-success="mrp_batch_state == 'confirm'" decoration-info="mrp_batch_state == 'done'"  decoration-muted="mrp_batch_state == 'cancel'" decoration-bf="1"/>
             </field>
         </field>
     </record>    
