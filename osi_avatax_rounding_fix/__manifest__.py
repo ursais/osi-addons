@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 { # noqa
-    "name": "Proslat Accounting Enhancement",
-    "summary": "Proslat Accounting Enhancement",
+    "name": "OSI Avatax Rounding Fix",
+    "summary": "OSI Avatax Rounding Fix",
     "version": "17.0.1.0.0",
     "author": "Open Source Integrators",
     "category": "Accounting",
