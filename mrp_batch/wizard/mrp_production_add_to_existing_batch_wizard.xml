@@ -1,0 +1,30 @@
+<odoo>
+
+    <record id="view_add_mo_wizard_form" model="ir.ui.view">
+        <field name="name">add.manufacturing.order.wizard.form</field>
+        <field name="model">add.manufacturing.order.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Add Manufacturing Orders">
+                <field name="production_ids" nolabel="1" options="{'no_create': True, 'no_create_edit': True}" >
+                    <tree string="Manufacturing Orders" delete="0" create="0">
+                        <field name="product_id" optional="show" />
+                        <field name="company_id" optional="hide" />
+                        <field name="name" string="Manufacturing Orders" optional="show" />
+                        <field name="product_qty" string="Quantity" optional="show" />
+                        <field name="state" decoration-success="state == 'done'" decoration-warning="state == 'confirm'" decoration-info="state == 'confirmed'" decoration-danger="state == 'cancel'" decoration-muted="state == 'draft'" widget="badge" class="text-dark" optional="show" />
+                        <field name="date_start" string="Scheduled Date" optional="show" />
+                        <field name="date_finished" string="End Date" optional="show" />
+                        <field name="sale_order_id" string="Sale Order" optional="show" />
+                        <field name="duration_expected" widget="float_time" optional="show" />
+                        <field name="duration" widget="float_time" optional="show" />
+                    </tree>
+                </field>
+                <footer>
+                    <button name="action_add_to_batch" string="Add to Batch" type="object" class="btn-primary" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

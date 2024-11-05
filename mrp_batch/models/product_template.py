@@ -1,8 +1,11 @@
-from odoo import models, fields, api
+from odoo import fields, models
+
 
 class ProductTemplate(models.Model):
 
-    _inherit = 'product.template'
+    _inherit = "product.template"
 
-    is_allowe_split_mo = fields.Boolean(string='Allowe Split Mo',default=True)
-    
+    is_allowe_split_mo = fields.Boolean(
+        string="Allowe Split Mo",
+        default=True,
+    )
