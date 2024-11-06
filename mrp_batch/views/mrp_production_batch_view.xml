@@ -101,7 +101,7 @@
                     </group>
                     <notebook>
                         <page name="mrp_batch" string="Manufacturing Orders">
-                            <button name="action_open_add_to_batch_wizard" type="object" string="Add MO(s)" icon="fa-link" context="{'default_batch_id': id}" />
+                            <button name="action_open_add_to_batch_wizard" type="object" string="Add MO(s)" icon="fa-link" invisible="is_locked" context="{'default_batch_id': id}" />
                             <field name="production_ids" readonly="state not in ('draft', 'confirm') or is_locked" options="{'no_create': True, 'no_create_edit': True}">
                                 <tree string="Manufacturing Orders" delete="0" create="0">
                                     <field name="product_id" optional="show" />

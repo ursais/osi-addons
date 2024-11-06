@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="product.product_template_only_form_view" />
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='traceability']/field[@name='tracking']" position="after">
-                    <field name="is_allowe_split_mo" invisible="tracking != 'serial'" />
+                    <field name="is_allow_split_mo" invisible="tracking != 'serial'" />
                 </xpath>
             </field>
     </record>

@@ -132,12 +132,19 @@ class MrpProductionBatch(models.Model):
                 earliest_start = rec.earliest_start.date()
                 rec.is_date = Scheduled_date != earliest_start
 
+    @api.depends("production_ids")
     def _compute_partner_id(self):
         for record in self:
-            record.partner_ids = (
-                record.production_ids.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id.partner_id.ids
-            )
+            record.partner_ids = False
+            if record.production_ids:
+                record.partner_ids = (
+                    record.production_ids.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id.partner_id.ids
+                )
 
+    @api.depends(
+        "production_ids",
+        "production_ids.state",
+    )
     def _compute_earliest_start(self):
         for record in self:
             record.earliest_start = False
@@ -159,13 +166,14 @@ class MrpProductionBatch(models.Model):
         for record in self:
             record.is_cancel = False
             record.is_cancel_id = False
-            record.is_cancel_id = all(
-                production.id for production in record.production_ids
-            )
-            record.is_cancel = all(
-                production.state in ("done", "cancel")
-                for production in record.production_ids
-            )
+            if record.production_ids:
+                record.is_cancel_id = all(
+                    production.id for production in record.production_ids
+                )
+                record.is_cancel = all(
+                    production.state in ("done", "cancel")
+                    for production in record.production_ids
+                )
 
     def button_plan(self):
         for record in self:
@@ -181,21 +189,27 @@ class MrpProductionBatch(models.Model):
             for mrp_production in record.production_ids:
                 mrp_production.with_delay().button_unplan()
 
+    @api.depends(
+        "production_ids.state",
+        "production_ids.is_planned",
+        "production_ids.workorder_ids",
+    )
     def _compute_is_planned(self):
         for record in self:
             record.is_planned = False
             record.is_plan = False
             record.is_workorder_ids = False
-            record.is_workorder_ids = all(
-                production.workorder_ids for production in record.production_ids
-            )
-            record.is_plan = all(
-                production.state not in ("confirmed", "progress", "to_close")
-                for production in record.production_ids
-            )
-            record.is_planned = all(
-                production.is_planned for production in record.production_ids
-            )
+            if record.production_ids:
+                record.is_workorder_ids = all(
+                    production.workorder_ids for production in record.production_ids
+                )
+                record.is_plan = all(
+                    production.state not in ("confirmed", "progress", "to_close")
+                    for production in record.production_ids
+                )
+                record.is_planned = all(
+                    production.is_planned for production in record.production_ids
+                )
 
     def action_confirm(self):
         for record in self:
@@ -232,37 +246,50 @@ class MrpProductionBatch(models.Model):
     def _compute_mrp_production_reserve_batch(self):
         for record in self:
             record.is_reserved_batch = False
-            record.is_reserved_batch = all(
-                production.state in ("draft", "done", "cancel")
-                for production in record.production_ids
-            )
+            if record.production_ids:
+                record.is_reserved_batch = all(
+                    production.state in ("draft", "done", "cancel")
+                    for production in record.production_ids
+                )
 
+    @api.depends(
+        "production_ids.move_raw_ids",
+        "production_ids.state",
+        "production_ids.move_raw_ids.product_uom_qty",
+    )
     def _compute_reserve_and_unreserve_visible(self):
         for record in self:
             record.is_reserved = False
             record.is_unreserved = False
-            record.is_unreserved = all(
-                production.unreserve_visible for production in record.production_ids
-            )
-            record.is_reserved = all(
-                production.reserve_visible for production in record.production_ids
-            )
+            if record.production_ids:
+                record.is_unreserved = all(
+                    production.unreserve_visible for production in record.production_ids
+                )
+                record.is_reserved = all(
+                    production.reserve_visible for production in record.production_ids
+                )
 
     def action_lock_and_unlock(self):
         for record in self:
             for mo in record.production_ids:
                 mo.action_toggle_is_locked()
 
+    @api.depends(
+        "production_ids.state",
+        "production_ids.is_locked",
+        "production_ids.show_lock",
+    )
     def compute_show_lock(self):
         for record in self:
             record.show_lock = False
             record.is_locked = False
-            record.is_locked = all(
-                production.is_locked for production in record.production_ids
-            )
-            record.show_lock = all(
-                production.show_lock for production in record.production_ids
-            )
+            if record.production_ids:
+                record.is_locked = all(
+                    production.is_locked for production in record.production_ids
+                )
+                record.show_lock = all(
+                    production.show_lock for production in record.production_ids
+                )
 
     def action_done(self):
         for record in self:
@@ -273,23 +300,37 @@ class MrpProductionBatch(models.Model):
                 mo.with_delay().button_mark_done()
             record.state = "done"
 
+    @api.depends(
+        "production_ids.state",
+        "production_ids.product_qty",
+        "production_ids.qty_producing",
+    )
     def compute_mrp_production_done(self):
         for record in self:
             record.is_produce_all = False
             record.is_move_raw_ids = False
-            record.is_move_raw_ids = all(
-                production.move_raw_ids for production in record.production_ids
-            )
-            record.is_produce_all = all(
-                production.show_produce_all for production in record.production_ids
-            )
+            if record.production_ids:
+                record.is_move_raw_ids = all(
+                    production.move_raw_ids for production in record.production_ids
+                )
+                record.is_produce_all = all(
+                    production.show_produce_all for production in record.production_ids
+                )
 
+    @api.depends(
+        "production_ids",
+        "production_ids.workorder_ids.duration",
+    )
     def _compute_total_duration(self):
         for rec in self:
             rec.total_duration = sum(
                 rec.production_ids.mapped("workorder_ids").mapped("duration")
             )
 
+    @api.depends(
+        "production_ids",
+        "production_ids.workorder_ids.duration_expected",
+    )
     def _compute_total_duration_expected(self):
         for rec in self:
             rec.total_duration_expected = sum(

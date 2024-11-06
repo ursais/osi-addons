@@ -23,7 +23,7 @@ class SaleOrder(models.Model):
             for mo in rec.mrp_production_ids:
                 if (
                     mo.product_id.tracking == "serial"
-                    and mo.product_id.is_allowe_split_mo
+                    and mo.product_id.is_allow_split_mo
                 ):
                     qty = mo.product_qty
                     if qty > 1:
