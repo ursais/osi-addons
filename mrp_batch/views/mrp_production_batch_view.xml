@@ -95,8 +95,8 @@
                         <group>
                             <field name="date_scheduled" readonly="state not in ('draft', 'confirm') or is_locked" />
                             <field name="earliest_start"  />
-                            <field name="total_duration_expected" />
-                            <field name="total_duration" />
+                            <field name="total_duration_expected" widget="float_time" />
+                            <field name="total_duration" widget="float_time" />
                         </group>
                     </group>
                     <notebook>

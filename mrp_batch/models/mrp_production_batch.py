@@ -92,11 +92,11 @@ class MrpProductionBatch(models.Model):
     )
     show_lock = fields.Boolean(
         string="Show Lock Button",
-        compute="_compute_show_lock",
+        compute="_compute_lock",
     )
     is_locked = fields.Boolean(
         string="Is Locked",
-        compute="_compute_show_lock",
+        compute="_compute_lock",
     )
     is_queuing = fields.Boolean(
         string="Is Queuing",
@@ -334,12 +334,12 @@ class MrpProductionBatch(models.Model):
                 )
 
     @api.depends("production_ids.workorder_ids.state")
-    def _compute_show_lock(self):
+    def _compute_lock(self):
         # Determine if the lock button should be displayed based on work order states
         for record in self:
             record.show_lock = False
             record.is_locked = False
-            if record.production_ids:
+            if record.production_ids and record.state != "cancel":
                 record.show_lock = all(
                     wo.state in ("done", "cancel")
                     for production in record.production_ids
