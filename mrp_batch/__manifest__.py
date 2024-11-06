@@ -8,7 +8,12 @@
     "website": "http://www.opensourceintegrators.com",
     "category": "",
     "images": [],
-    "depends": ["mrp", "sale_management", "sale_mrp", "queue_job"],
+    "depends": [
+        "mrp",
+        "sale_management",
+        "sale_mrp",
+        "queue_job",
+    ],
     "data": [
         "security/ir.model.access.csv",
         "data/ir_sequence.xml",
