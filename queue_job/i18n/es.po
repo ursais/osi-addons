@@ -394,6 +394,7 @@ msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,help:queue_job.field_queue_job__message_has_error
+#: model:ir.model.fields,help:queue_job.field_queue_job__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
 
@@ -408,13 +409,6 @@ msgstr "Función del trabajo no válida: {}"
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__message_is_follower
 msgid "Is Follower"
 msgstr "Es un seguidor"
-
-#. module: queue_job
-#. odoo-javascript
-#: code:addons/queue_job/static/src/views/fields/job_direct_graph/job_direct_graph.esm.js:0
-#, python-format
-msgid "Job %(id)s"
-msgstr ""
 
 #. module: queue_job
 #: model:ir.model,name:queue_job.model_queue_job_channel
@@ -768,6 +762,11 @@ msgid "Retry Pattern (serialized)"
 msgstr "Patrón de reintentos (en serie)"
 
 #. module: queue_job
+#: model:ir.model.fields,field_description:queue_job.field_queue_job__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Error de entrega del SMS"
+
+#. module: queue_job
 #: model:ir.model,name:queue_job.model_queue_jobs_to_done
 msgid "Set all selected jobs to done"
 msgstr "Marcar como hechos todos los trabajos seleccionados"
@@ -911,13 +910,13 @@ msgstr "UUID"
 msgid ""
 "Unexpected format of Related Action for {}.\n"
 "Example of valid format:\n"
-"{{\"enable\": True, \"func_name\": \"related_action_foo\", "
-"\"kwargs\" {{\"limit\": 10}}}}"
+"{{\"enable\": True, \"func_name\": \"related_action_foo\", \"kwargs"
+"\" {{\"limit\": 10}}}}"
 msgstr ""
 "Formato inesperado en la acción relacionada con {}.\n"
 "Ejemplo de un formato válido:\n"
-"{{\"enable\": True, \"func_name\": \"related_action_foo\", "
-"\"kwargs\" {{\"limit\": 10}}}}"
+"{{\"enable\": True, \"func_name\": \"related_action_foo\", \"kwargs"
+"\" {{\"limit\": 10}}}}"
 
 #. module: queue_job
 #. odoo-python
@@ -952,9 +951,6 @@ msgstr "Asistente para volver a poner en cola una selección de trabajos"
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__worker_pid
 msgid "Worker Pid"
 msgstr "Pid del trabajador"
-
-#~ msgid "SMS Delivery error"
-#~ msgstr "Error de entrega del SMS"
 
 #~ msgid "Last Modified on"
 #~ msgstr "Última modificación el"

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2024-07-02 09:47+0000\n"
-"Last-Translator: xtanuiha <feihu.zhang@live.com>\n"
+"PO-Revision-Date: 2022-08-13 08:07+0000\n"
+"Last-Translator: Dong <dong@freshoo.cn>\n"
 "Language-Team: none\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.17\n"
+"X-Generator: Weblate 4.3.2\n"
 
 #. module: queue_job
 #: model_terms:ir.ui.view,arch_db:queue_job.view_queue_job_form
@@ -23,9 +23,6 @@ msgid ""
 "                            <span class=\"oe_grey oe_inline\"> If the max. "
 "retries is 0, the number of retries is infinite.</span>"
 msgstr ""
-"<br/>\n"
-"                            <span class=\"oe_grey oe_inline\"> 如果最大重试次"
-"数设置为0，则表示重试次数是无限的。</span>"
 
 #. module: queue_job
 #. odoo-python
@@ -57,7 +54,7 @@ msgstr "活动状态"
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活动类型图标"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__args
@@ -89,30 +86,30 @@ msgstr "取消"
 #. module: queue_job
 #: model:ir.model,name:queue_job.model_queue_jobs_to_cancelled
 msgid "Cancel all selected jobs"
-msgstr "取消所有选中作业"
+msgstr ""
 
 #. module: queue_job
 #: model_terms:ir.ui.view,arch_db:queue_job.view_queue_job_form
 msgid "Cancel job"
-msgstr "取消作业"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.actions.act_window,name:queue_job.action_set_jobs_cancelled
 #: model_terms:ir.ui.view,arch_db:queue_job.view_set_jobs_cancelled
 msgid "Cancel jobs"
-msgstr "取消作业"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields.selection,name:queue_job.selection__queue_job__state__cancelled
 msgid "Cancelled"
-msgstr "已取消"
+msgstr ""
 
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job.py:0
 #, python-format
 msgid "Cancelled by %s"
-msgstr "被%s取消"
+msgstr ""
 
 #. module: queue_job
 #. odoo-python
@@ -157,7 +154,7 @@ msgstr "公司"
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__channel_method_name
 msgid "Complete Method Name"
-msgstr "完整方法名"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job_channel__complete_name
@@ -199,7 +196,7 @@ msgstr "当前尝试/最大重试次数"
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__date_cancelled
 msgid "Date Cancelled"
-msgstr "取消日期"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__date_done
@@ -210,12 +207,12 @@ msgstr "完成日期"
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__dependencies
 #: model_terms:ir.ui.view,arch_db:queue_job.view_queue_job_form
 msgid "Dependencies"
-msgstr "依赖项"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__dependency_graph
 msgid "Dependency Graph"
-msgstr "依赖关系图"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__name
@@ -253,7 +250,7 @@ msgstr "排队"
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__exc_name
 #: model_terms:ir.ui.view,arch_db:queue_job.view_queue_job_search
 msgid "Exception"
-msgstr "异常"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__exc_info
@@ -268,17 +265,17 @@ msgstr "异常信息"
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__exc_message
 msgid "Exception Message"
-msgstr "异常信息"
+msgstr ""
 
 #. module: queue_job
 #: model_terms:ir.ui.view,arch_db:queue_job.view_queue_job_search
 msgid "Exception message"
-msgstr "异常信息"
+msgstr ""
 
 #. module: queue_job
 #: model_terms:ir.ui.view,arch_db:queue_job.view_queue_job_form
 msgid "Exception:"
-msgstr "异常："
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__eta
@@ -288,7 +285,7 @@ msgstr "仅在此之后执行"
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__exec_time
 msgid "Execution Time (avg)"
-msgstr "平均执行时间"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields.selection,name:queue_job.selection__queue_job__state__failed
@@ -299,12 +296,12 @@ msgstr "失败"
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_ir_model_fields__ttype
 msgid "Field Type"
-msgstr "字段类型"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model,name:queue_job.model_ir_model_fields
 msgid "Fields"
-msgstr "字段"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__message_follower_ids
@@ -319,27 +316,27 @@ msgstr "关注者(业务伙伴)"
 #. module: queue_job
 #: model:ir.model.fields,help:queue_job.field_queue_job__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font Awesome 图标，例如：fa-tasks"
+msgstr ""
 
 #. module: queue_job
 #: model_terms:ir.ui.view,arch_db:queue_job.view_queue_job_search
 msgid "Graph"
-msgstr "图表"
+msgstr ""
 
 #. module: queue_job
 #: model_terms:ir.ui.view,arch_db:queue_job.view_queue_job_form
 msgid "Graph Jobs"
-msgstr "图表作业"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__graph_jobs_count
 msgid "Graph Jobs Count"
-msgstr "图表作业数量"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__graph_uuid
 msgid "Graph UUID"
-msgstr "图表唯一标识符（UUID）"
+msgstr ""
 
 #. module: queue_job
 #: model_terms:ir.ui.view,arch_db:queue_job.view_queue_job_function_search
@@ -350,7 +347,7 @@ msgstr "分组"
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__has_message
 msgid "Has Message"
-msgstr "有消息"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__id
@@ -380,9 +377,9 @@ msgstr "身份密钥"
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job.py:0
-#, python-format
+#, fuzzy, python-format
 msgid "If both parameters are 0, ALL jobs will be requeued!"
-msgstr "如果两个参数都为0，所有任务都将被重新排队！"
+msgstr "所选作业将重新排队。"
 
 #. module: queue_job
 #: model:ir.model.fields,help:queue_job.field_queue_job__message_needaction
@@ -391,6 +388,7 @@ msgstr "确认后, 出现提示消息。"
 
 #. module: queue_job
 #: model:ir.model.fields,help:queue_job.field_queue_job__message_has_error
+#: model:ir.model.fields,help:queue_job.field_queue_job__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr "如果勾选此项， 某些消息将会产生传递错误。"
 
@@ -399,19 +397,12 @@ msgstr "如果勾选此项， 某些消息将会产生传递错误。"
 #: code:addons/queue_job/models/queue_job_function.py:0
 #, python-format
 msgid "Invalid job function: {}"
-msgstr "无效的作业函数：{}"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__message_is_follower
 msgid "Is Follower"
 msgstr "关注者"
-
-#. module: queue_job
-#. odoo-javascript
-#: code:addons/queue_job/static/src/views/fields/job_direct_graph/job_direct_graph.esm.js:0
-#, python-format
-msgid "Job %(id)s"
-msgstr ""
 
 #. module: queue_job
 #: model:ir.model,name:queue_job.model_queue_job_channel
@@ -447,8 +438,9 @@ msgstr "作业队列管理员"
 
 #. module: queue_job
 #: model:ir.model.fields.selection,name:queue_job.selection__ir_model_fields__ttype__job_serialized
+#, fuzzy
 msgid "Job Serialized"
-msgstr "任务序列化"
+msgstr "作业失败"
 
 #. module: queue_job
 #: model:mail.message.subtype,name:queue_job.mt_job_failed
@@ -478,14 +470,14 @@ msgstr "作业"
 #. module: queue_job
 #: model:ir.actions.server,name:queue_job.ir_cron_queue_job_garbage_collector_ir_actions_server
 msgid "Jobs Garbage Collector"
-msgstr "作业垃圾收集器"
+msgstr ""
 
 #. module: queue_job
 #. odoo-python
 #: code:addons/queue_job/models/queue_job.py:0
 #, python-format
 msgid "Jobs for graph %s"
-msgstr "图表 %s 的作业"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__kwargs
@@ -532,6 +524,7 @@ msgstr "消息"
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job_function__method
+#, fuzzy
 msgid "Method"
 msgstr "方法名称"
 
@@ -552,12 +545,12 @@ msgstr "模型"
 #: code:addons/queue_job/models/queue_job_function.py:0
 #, python-format
 msgid "Model {} not found"
-msgstr "模型 {} 未找到"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "我的活动截止日期"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job_channel__name
@@ -592,7 +585,7 @@ msgstr "此作业无法执行任何操作"
 #: code:addons/queue_job/models/queue_job.py:0
 #, python-format
 msgid "Not allowed to change field(s): {}"
-msgstr "不允许更改字段：{}"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__message_needaction_counter
@@ -607,7 +600,7 @@ msgstr "错误数量"
 #. module: queue_job
 #: model:ir.model.fields,help:queue_job.field_queue_job__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr "需要处理的消息数量"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,help:queue_job.field_queue_job__message_has_error_counter
@@ -637,11 +630,6 @@ msgid ""
 "Example: {1: (1, 10), 5: (11, 20), 10: (21, 30), 15: (100, 300)}.\n"
 "See the module description for details."
 msgstr ""
-"表达式用于根据重试可重试错误的次数，指定下一次执行推迟的秒数。将秒数设置为一"
-"个两个元素的元组或列表将会在两个值之间随机化重试间隔。 \n"
-"示例：{1: 10, 5: 20, 10: 30, 15: 300}。 \n"
-"示例：{1: (1, 10), 5: (11, 20), 10: (21, 30), 15: (100, 300)}。 \n"
-"详情请参阅模块描述。"
 
 #. module: queue_job
 #: model:ir.model.fields.selection,name:queue_job.selection__queue_job__state__pending
@@ -669,7 +657,7 @@ msgstr "队列作业"
 #: code:addons/queue_job/models/queue_job.py:0
 #, python-format
 msgid "Queue jobs must be created by calling 'with_delay()'."
-msgstr "队列任务必须通过调用'with_delay()'方法来创建。"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__record_ids
@@ -678,6 +666,7 @@ msgstr "记录"
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__records
+#, fuzzy
 msgid "Record(s)"
 msgstr "记录"
 
@@ -688,13 +677,14 @@ msgstr "相关的"
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job_function__edit_related_action
+#, fuzzy
 msgid "Related Action"
-msgstr "相关动作"
+msgstr "相关记录"
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job_function__related_action
 msgid "Related Action (serialized)"
-msgstr "相关操作（已序列化）"
+msgstr ""
 
 #. module: queue_job
 #. odoo-python
@@ -713,7 +703,7 @@ msgstr "相关记录"
 #. module: queue_job
 #: model_terms:ir.ui.view,arch_db:queue_job.view_queue_job_tree
 msgid "Remaining days to execute"
-msgstr "剩余执行天数"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job_channel__removal_interval
@@ -750,17 +740,22 @@ msgstr "结果"
 #. module: queue_job
 #: model_terms:ir.ui.view,arch_db:queue_job.view_queue_job_form
 msgid "Results"
-msgstr "结果"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job_function__edit_retry_pattern
 msgid "Retry Pattern"
-msgstr "重试模式"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job_function__retry_pattern
 msgid "Retry Pattern (serialized)"
-msgstr "重试模式（已序列化）"
+msgstr ""
+
+#. module: queue_job
+#: model:ir.model.fields,field_description:queue_job.field_queue_job__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "短信传递错误"
 
 #. module: queue_job
 #: model:ir.model,name:queue_job.model_queue_jobs_to_done
@@ -790,7 +785,7 @@ msgstr "设置为完成"
 #. module: queue_job
 #: model:ir.model.fields,help:queue_job.field_queue_job__graph_uuid
 msgid "Single shared identifier of a Graph. Empty for a single job."
-msgstr "图的唯一共享标识符。对于单个任务，则为空。"
+msgstr ""
 
 #. module: queue_job
 #. odoo-python
@@ -845,9 +840,6 @@ msgid ""
 "dictionary with optional keys: enable, func_name, kwargs.\n"
 "See the module description for details."
 msgstr ""
-"当在作业上使用“相关操作”按钮时所执行的动作。默认动作是打开与该作业相关的记录"
-"视图。此配置作为一个字典，包含可选键：enable, func_name, kwargs。 详细配置请"
-"参阅模块说明。"
 
 #. module: queue_job
 #: model:ir.model.fields,help:queue_job.field_queue_job__max_retries
@@ -861,7 +853,7 @@ msgstr ""
 #. module: queue_job
 #: model_terms:ir.ui.view,arch_db:queue_job.view_set_jobs_cancelled
 msgid "The selected jobs will be cancelled."
-msgstr "被选中的任务将被取消。"
+msgstr ""
 
 #. module: queue_job
 #: model_terms:ir.ui.view,arch_db:queue_job.view_requeue_job
@@ -876,12 +868,12 @@ msgstr "所选作业将设置为完成。"
 #. module: queue_job
 #: model_terms:ir.ui.view,arch_db:queue_job.view_queue_job_form
 msgid "Time (s)"
-msgstr "时间（秒）"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,help:queue_job.field_queue_job__exec_time
 msgid "Time required to execute this job in seconds. Average when grouped."
-msgstr "以秒为单位执行此任务所需的时间。分组时为平均值。"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model.fields,help:queue_job.field_queue_job__activity_exception_decoration
@@ -900,13 +892,9 @@ msgstr "UUID"
 msgid ""
 "Unexpected format of Related Action for {}.\n"
 "Example of valid format:\n"
-"{{\"enable\": True, \"func_name\": \"related_action_foo\", "
-"\"kwargs\" {{\"limit\": 10}}}}"
+"{{\"enable\": True, \"func_name\": \"related_action_foo\", \"kwargs"
+"\" {{\"limit\": 10}}}}"
 msgstr ""
-"对于 {}，关联操作的格式不符合预期。 \n"
-"有效格式的示例：\n"
-"{{\"enable\": True, \"func_name\": \"related_action_foo\", "
-"\"kwargs\" {{\"limit\": 10}}}}"
 
 #. module: queue_job
 #. odoo-python
@@ -917,8 +905,6 @@ msgid ""
 "Example of valid format:\n"
 "{{1: 300, 5: 600, 10: 1200, 15: 3000}}"
 msgstr ""
-"对于 {}，重试模式的格式不符合预期。 有效格式的示例：\n"
-"{{1: 300, 5: 600, 10: 1200, 15: 3000}}"
 
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__user_id
@@ -929,7 +915,7 @@ msgstr "用户"
 #: model:ir.model.fields.selection,name:queue_job.selection__queue_job__state__wait_dependencies
 #: model_terms:ir.ui.view,arch_db:queue_job.view_queue_job_search
 msgid "Wait Dependencies"
-msgstr "等待依赖项"
+msgstr ""
 
 #. module: queue_job
 #: model:ir.model,name:queue_job.model_queue_requeue_job
@@ -939,10 +925,7 @@ msgstr "重新排队向导所选的作业"
 #. module: queue_job
 #: model:ir.model.fields,field_description:queue_job.field_queue_job__worker_pid
 msgid "Worker Pid"
-msgstr "工作进程PID"
-
-#~ msgid "SMS Delivery error"
-#~ msgstr "短信传递错误"
+msgstr ""
 
 #~ msgid "Last Modified on"
 #~ msgstr "最后修改日"
