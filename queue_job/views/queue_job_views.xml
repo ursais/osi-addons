@@ -67,7 +67,6 @@
                     </group>
                     <group>
                         <group>
-                            <field name="id" invisible="True" />
                             <field name="priority" />
                             <field name="eta" />
                             <field
