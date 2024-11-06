@@ -1,9 +1,14 @@
+# Import Odoo libs
 from odoo import fields, models
 from odoo.exceptions import UserError
 
 
 class MrpProduction(models.Model):
+    """Inherit Manufacturing Orders to add Batch Functionality."""
+
     _inherit = "mrp.production"
+
+    # COLUMNS #########
 
     mrp_batch_id = fields.Many2one(
         "mrp.production.batch",
@@ -20,6 +25,9 @@ class MrpProduction(models.Model):
         "sale.order",
         string="Sale Order",
     )
+
+    # END #########
+    # METHODS #####
 
     def action_remove_batch(self):
         if self.filtered(lambda batch: not batch.mrp_batch_id):
@@ -53,3 +61,5 @@ class MrpProduction(models.Model):
             "view_mode": "form",
             "target": "new",
         }
+
+    # END #########

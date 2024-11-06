@@ -111,6 +111,9 @@
                                     <field name="state" decoration-success="state == 'done'" decoration-warning="state == 'confirm'" decoration-info="state == 'confirmed'" decoration-danger="state == 'cancel'" decoration-muted="state == 'draft'" widget="badge" class="text-dark" optional="show" />
                                     <field name="date_start" string="Scheduled Date" optional="show" />
                                     <field name="date_finished" string="End Date" optional="show" />
+                                    <field name="components_availability_state" column_invisible="True" options="{&quot;lazy&quot;: true}"/>
+                                    <field name="components_availability" options="{&quot;lazy&quot;: true}" invisible="state not in ['confirmed', 'progress']" optional="show" decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'" decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')" decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')"/>
+                                    <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
                                     <field name="sale_order_id" string="Sale Order" optional="show" />
                                     <field name="duration_expected" widget="float_time" optional="show" />
                                     <field name="duration" widget="float_time" optional="show" />

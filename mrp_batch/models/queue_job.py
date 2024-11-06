@@ -1,9 +1,14 @@
+# Import Odoo libs
 from odoo import fields, models, _
 from markupsafe import Markup
 
 
 class QueueJob(models.Model):
+    """Inherit Queue Jobs to add Batch Functionality and activity creation."""
+
     _inherit = "queue.job"
+
+    # METHODS #####
 
     def _message_post_on_failure(self):
         rec = super()._message_post_on_failure()
@@ -62,3 +67,5 @@ class QueueJob(models.Model):
                         production.mrp_batch_id._check_and_update_queuing()
 
         return res
+
+    # END #########

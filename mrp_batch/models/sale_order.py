@@ -1,48 +1,78 @@
+# Import Odoo libs
 from odoo import fields, models
 
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
+    # COLUMNS #########
+
     mrp_batch_count = fields.Integer(
         string="mrp batch count",
         compute="_compute_mrp_production_batch_id_count",
     )
 
+    # END #########
+    # METHODS #####
+
     def action_confirm(self):
+        # Calls the original `action_confirm` method from the super class to
+        # confirm the record.
         res = super().action_confirm()
+        # Asynchronously triggers the `split_mo` method to split
+        # manufacturing orders (MOs).
         self.with_delay().split_mo()
         return res
 
     def split_mo(self):
+        # Initializes the MRP Production Batch model.
         batch_obj = self.env["mrp.production.batch"]
         for rec in self:
+            # Sets up batch creation values with the current user as responsible.
             vals = {
                 "responsible_id": rec.env.user.id,
             }
+            # Iterates over each manufacturing order in `mrp_production_ids`.
             for mo in rec.mrp_production_ids:
+                # Checks if the product requires serial tracking and is
+                # allowed to split MOs.
                 if (
                     mo.product_id.tracking == "serial"
                     and mo.product_id.is_allow_split_mo
                 ):
                     qty = mo.product_qty
+                    # If the quantity is greater than 1, splits the MO into units
+                    # of 1 and removes the original MO entry by slicing off the
+                    # last item.
                     if qty > 1:
                         mo.sudo()._split_productions({mo: ([1] * int(qty))})[:-1]
+            # Creates a new batch record with the specified values.
             mrp_batch_id = batch_obj.create(vals)
+            # Assigns the new batch ID to each manufacturing order
+            # in `mrp_production_ids`.
             rec.mrp_production_ids.write({"mrp_batch_id": mrp_batch_id.id})
 
+    # Methods for Batch Smart Button
     def _compute_mrp_production_batch_id_count(self):
+        # Computes the count of unique batch IDs linked to the
+        # MOs in `mrp_production_ids`.
         for record in self:
+            # Collects batch IDs for each MO in `mrp_production_ids`.
             batch_id = [batch.id for batch in record.mrp_production_ids.mrp_batch_id]
+            # Sets `mrp_batch_count` to the number of unique batches found.
             record.mrp_batch_count = len(batch_id)
 
     def action_view_mrp_production_batch(self):
+        # Ensures the method is called on a single record.
         self.ensure_one()
+        # Defines the base action for viewing the manufacturing production batch.
         action = {
             "res_model": "mrp.production.batch",
             "type": "ir.actions.act_window",
         }
+        # Checks if there is only one batch ID in `mrp_production_ids`.
         if len([batch.id for batch in self.mrp_production_ids.mrp_batch_id]) == 1:
+            # If there is a single batch, open it in form view.
             action.update(
                 {
                     "view_mode": "form",
@@ -50,6 +80,8 @@ class SaleOrder(models.Model):
                 }
             )
         else:
+            # If there are multiple batches, open them in tree and form view with a
+            # domain filter.
             action.update(
                 {
                     "name": _(
@@ -60,3 +92,5 @@ class SaleOrder(models.Model):
                 }
             )
         return action
+
+    # END #########
