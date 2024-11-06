@@ -2,13 +2,13 @@
 
 {
     "name": "Job Queue",
-    "version": "17.0.1.0.2",
+    "version": "17.0.1.0.6",
     "author": "Camptocamp,ACSONE SA/NV,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/queue",
     "license": "LGPL-3",
     "category": "Generic Modules",
     "depends": ["mail", "base_sparse_field", "web"],
-    "external_dependencies": {"python": ["requests", "aiohttp"]},
+    "external_dependencies": {"python": ["requests"]},
     "data": [
         "security/security.xml",
         "security/ir.model.access.csv",
