@@ -5,7 +5,7 @@ class ProductTemplate(models.Model):
 
     _inherit = "product.template"
 
-    is_allowe_split_mo = fields.Boolean(
-        string="Allowe Split Mo",
+    is_allow_split_mo = fields.Boolean(
+        string="Allow Split Mo",
         default=True,
     )
