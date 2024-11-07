@@ -4,7 +4,7 @@ from odoo import _, api, fields, models
 
 class SaleOrderOption(models.Model):
     """
-    Adds margins to sale order options.
+    Adds margins and subtotals to sale order optional products.
     """
 
     _inherit = "sale.order.option"
@@ -42,22 +42,35 @@ class SaleOrderOption(models.Model):
         store=True,
         precompute=True,
     )
-    mrp_bom_id = fields.Many2one("mrp.bom",string="BOM")
-    config_session_id = fields.Many2one("product.config.session",string="Config session")
+    mrp_bom_id = fields.Many2one(
+        "mrp.bom",
+        string="BOM",
+    )
+    config_session_id = fields.Many2one(
+        "product.config.session",
+        string="Config session",
+    )
 
     # END #########
     # METHODS #####
 
     def _convert_to_sol_currency(self, amount, currency):
         """
-        Helper method for computing purchase price. Same as on SO Line.
-        Convert the given amount from the given currency to the SO(L) currency.
+        Convert a given amount from the specified currency to the sale order
+        line currency.
 
-        :param float amount: the amount to convert
-        :param currency: currency in which the given amount is expressed
-        :type currency: `res.currency` record
-        :returns: converted amount
-        :rtype: float
+        This helper method is used for computing purchase prices by converting the given
+        amount into the currency of the sale order line (SOL). If a currency conversion
+        is required, it uses the sale order's date or the current date for
+        the conversion.
+
+        Args:
+            amount (float): The amount to be converted.
+            currency (res.currency): The currency in which the amount is
+            currently expressed.
+
+        Returns:
+            float: The amount converted to the sale order line currency.
         """
         self.ensure_one()
         to_currency = self.order_id.currency_id
@@ -82,18 +95,30 @@ class SaleOrderOption(models.Model):
         "order_id.currency_id",
     )
     def _compute_purchase_price(self):
+        """
+        Compute the purchase price for each line based on the product's standard price.
+
+        This method checks if a product is assigned to the line. If so, it converts the
+        product's cost to the line's unit of measure (UoM) and then converts it to the
+        sale order line currency using `_convert_to_sol_currency`. The computed price
+        is then stored in `purchase_price`.
+
+        Sets:
+            purchase_price (float): The computed purchase price for the sale order line.
+        """
         for line in self:
             if not line.product_id:
                 line.purchase_price = 0.0
                 continue
             line = line.with_company(line.order_id.company_id)
 
-            # Convert the cost to the line UoM
+            # Convert the product's standard price to the line UoM
             product_cost = line.product_id.uom_id._compute_price(
                 line.product_id.standard_price,
                 line.uom_id,
             )
 
+            # Convert cost to the sale order line currency
             line.purchase_price = line._convert_to_sol_currency(
                 product_cost, line.product_id.cost_currency_id
             )
@@ -104,6 +129,7 @@ class SaleOrderOption(models.Model):
         "quantity",
     )
     def _compute_margin(self):
+        # Compute the margins on the sale order optional product line
         for line in self:
             line.margin = line.price_subtotal - (line.purchase_price * line.quantity)
             line.margin_percent = (
@@ -117,9 +143,7 @@ class SaleOrderOption(models.Model):
         "quantity",
     )
     def _compute_amount(self):
-        """
-        Compute the amounts of the SO Option line.
-        """
+        # Calculate the subtotal amount for each sale order option line.
         for line in self:
             if line.discount != 0.0:
                 line.price_subtotal = (line.price_unit * line.quantity) * (
