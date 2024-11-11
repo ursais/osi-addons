@@ -1,5 +1,6 @@
 # Import Odoo libs
 from odoo import api, fields, models
+from odoo.addons.ol_base.tools import get_product_description
 
 
 class SaleBlanketOrderLine(models.Model):
@@ -35,7 +36,7 @@ class SaleBlanketOrderLine(models.Model):
         res = super().create(vals)
 
         for rec in res:
-            rec.name = self._get_product_description(rec.product_id)
+            rec.name = get_product_description(rec.product_id)
 
         return res
 
@@ -50,30 +51,9 @@ class SaleBlanketOrderLine(models.Model):
             # If 'product_id' is being updated, adjust the record's description
             if vals.get("product_id"):
                 product = rec.env["product.product"].browse(vals["product_id"])
-                rec.name = self._get_product_description(product)
+                rec.name = get_product_description(product)
 
         return res
-
-    def _get_product_description(self, product):
-        """
-        Helper method to generate the description based on product's
-        attribute values and their corresponding attribute lines.
-        """
-        description = product.name
-
-        # Check if the product has template attribute values
-        if product.product_template_attribute_value_ids:
-            for attribute_value in product.product_template_attribute_value_ids:
-                # Retrieve the attribute line for the current attribute value
-                attribute_line = product.product_tmpl_id.attribute_line_ids.filtered(
-                    lambda line: line.attribute_id == attribute_value.attribute_id
-                )
-
-                # If 'used_in_sale_description' is True, add attribute to description
-                if attribute_line and attribute_line.used_in_sale_description:
-                    description += "\n  " + attribute_value.display_name
-
-        return description
 
     @api.depends("product_id")
     def _compute_customer_lead(self):

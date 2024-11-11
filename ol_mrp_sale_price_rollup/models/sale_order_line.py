@@ -32,10 +32,10 @@ class SaleOrderLine(models.Model):
             if line.config_session_id:
                 account_tax_obj = self.env["account.tax"]
                 line.price_unit = account_tax_obj._fix_tax_included_price_company(
-                    line.config_session_id.price,
-                    line.product_id.taxes_id,
-                    line.tax_id,
-                    line.company_id,
+                    price=line.config_session_id.price,
+                    prod_taxes=line.product_id.taxes_id,
+                    line_taxes=line.tax_id,
+                    company_id=line.company_id,
                 )
 
             # Retain core method logic to calculate `price_unit`
@@ -43,13 +43,16 @@ class SaleOrderLine(models.Model):
             line = line.with_company(line.company_id)
             price = line._get_display_price()
             line.price_unit = line.product_id._get_tax_included_unit_price(
-                line.company_id or line.env.company,
-                line.order_id.currency_id,
-                line.order_id.date_order,
-                "sale",
-                fiscal_position=line.order_id.fiscal_position_id,
-                product_price_unit=price,
+                company=line.company_id or line.env.company,
+                currency=line.order_id.currency_id,
+                document_date=line.order_id.date_order,
+                document_type="sale",
+                is_refund_document=False,
+                product_uom=None,
                 product_currency=line.currency_id,
+                product_price_unit=price,
+                product_taxes=None,
+                fiscal_position=line.order_id.fiscal_position_id,
             )
 
     # END #########
