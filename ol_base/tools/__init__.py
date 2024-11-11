@@ -1,0 +1,1 @@
+from .line_description import get_product_description

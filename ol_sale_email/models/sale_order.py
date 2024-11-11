@@ -119,4 +119,69 @@ class SaleOrder(models.Model):
 
         return super(SaleOrder, self).action_confirm()
 
+    # Methods used in the exception definitions.
+    def check_so_line_out_of_stock(self):
+        show_exception = False
+        # List to store product details for logging in the chatter
+        products_out_of_stock = []
+
+        # Iterate through each sale order line
+        for line in self.order_line:
+            # Check if:
+            # 1. The product does not have a Bill of Materials (BoM)
+            # 2. The requested quantity is greater than the available stock (virtual_available_at_date)
+            # 3. The product is not make-to-order (is_mto is False)
+            # 4. The product does not allow backorders (allow_backorder is False)
+            if (
+                not line.bom_id
+                and line.product_uom_qty > line.virtual_available_at_date
+                and not line.is_mto
+                and not line.product_id.allow_backorder
+            ):
+                # Add the product name to the list of affected products
+                products_out_of_stock.append(line.product_id.display_name)
+                show_exception = True
+
+        # If there are any products that failed the check, add a note in the chatter
+        if products_out_of_stock:
+            product_names = ", ".join(products_out_of_stock)
+            message = f"The following SO line products are out of stock and cannot be backordered: {product_names}"
+            self.message_post(body=message)
+
+        # Return show_exception, failure (True) if any product is not available for backorder
+        return show_exception
+
+    def check_component_out_of_stock(self):
+        show_exception = False
+        # List to store product details for logging in the chatter
+        products_out_of_stock = []
+
+        # Iterate through each sale order line that has a Bill of Materials (BoM) and check its components.
+        # For each BoM component (bom_line):
+        # 1. The component is storable
+        # 2. The required quantity of the component is greater than its available stock (virtual_available)
+        # 3. The component does not allow backordering (allow_backorder is False)
+        for line in self.order_line:
+            if line.bom_id:
+                # Check each BoM component that is stockable (type='product') for stock and backorder status
+                for bom_line in line.bom_id.bom_line_ids:
+                    if (
+                        bom_line.product_id.type == "product"
+                        and line.product_uom_qty * bom_line.product_qty
+                        > bom_line.product_id.virtual_available
+                        and not bom_line.product_id.allow_backorder
+                    ):
+                        # Add the product name to the list of failed components
+                        products_out_of_stock.append(bom_line.product_id.display_name)
+                        show_exception = True
+
+        # If there are any stockable products that failed the check, add a note in the chatter
+        if products_out_of_stock:
+            product_names = ", ".join(products_out_of_stock)
+            message = f"The following stockable BoM components are out of stock and cannot be backordered: {product_names}"
+            self.message_post(body=message)
+
+        # Return show_exception, failure (True) if any component is not available for backorder
+        return show_exception
+
     # END #########

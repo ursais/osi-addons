@@ -21,7 +21,7 @@ class ProductConfigSession(models.Model):
         "value_ids",
         "product_tmpl_id.list_price",
         "product_id",
-        "product_id.lst_price",  # Change to variant lst_price
+        "product_id.lst_price",
         "product_id.bom_lst_price",
         "product_tmpl_id.attribute_line_ids",
         "product_tmpl_id.attribute_line_ids.value_ids",
