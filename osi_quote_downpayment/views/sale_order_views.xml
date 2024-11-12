@@ -1,0 +1,15 @@
+<odoo>
+
+    <record id="sale_order_form_view_inherit" model="ir.ui.view">
+        <field name="name">sale.order.form.view.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//button[@id='create_invoice']" position="attributes">
+               <attribute name="invisible">invoice_status != 'to invoice' or state in ['draft', 'sent']</attibute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
