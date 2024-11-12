@@ -10,13 +10,13 @@ class AccountMove(models.Model):
     #Prevents price of downpayment from being reset on draft sale orders
     def action_post(self):
         downpayment_lines = {}
-        for rec in records:
+        for rec in self:
             downpayment_lines[rec.id] = {}
             for line in rec.invoice_line_ids:
                 if "Down payment" in line.name:
                     downpayment_lines[rec.id][line.id] = line.price_unit
         res = super().action_post()
-        for rec in records:
+        for rec in self:
             for line in rec.invoice_line_ids:
                 if "Down payment" in line.name:
                     downpayment_lines[rec.id][line.id] = line.price_unit

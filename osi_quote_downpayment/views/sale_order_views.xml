@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
             <xpath expr="//button[@id='create_invoice']" position="attributes">
-               <attribute name="invisible">invoice_status != 'to invoice' or state in ['draft', 'sent']</attibute>
+               <attribute name="invisible">invoice_status != 'to invoice' and state not in ['draft', 'sent']</attribute>
             </xpath>
         </field>
     </record>
