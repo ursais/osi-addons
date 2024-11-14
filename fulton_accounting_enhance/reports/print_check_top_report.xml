@@ -1,0 +1,56 @@
+<odoo>
+    <template id="ckus_check" inherit_id="l10n_us_check_printing.ckus_check">
+        <xpath expr="//div[@class='ckus_memo']" position="replace">
+            <div style="margin-top: 0.1in" class="ckus_memo" t-esc="page['memo']"/>
+        </xpath>
+    </template>
+
+    <template id="ckus_stub" inherit_id="l10n_us_check_printing.ckus_stub">
+        <xpath expr="//table" position="replace">
+            <table class="table table-bordered table-sm stub_lines" t-if="page['stub_lines']">
+                <thead>
+                    <tr>
+                        <th class="text-start">Due Date</th>
+                        <th class="text-start">Reference</th>
+                        <th class="text-end">Original</th>
+                        <th class="text-end">Discount</th>
+                        <th class="text-end">Payment</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="page['stub_lines']" t-as="stub_line">
+                        <t t-if="stub_line.get('header')">
+                            <tr>
+                                <th colspan="6">
+                                    <t t-esc="stub_line['name']"/>
+                                </th>
+                            </tr>
+                        </t>
+                        <t t-if="not stub_line.get('header')">
+                            <tr>
+                                <td class="text-start">
+                                    <t t-if="stub_line['due_date']" t-esc="stub_line['due_date']"/>
+                                </td>
+                                <td class="text-start text-truncate" style="max-width: 500px;">
+                                    <t t-esc="stub_line['reference']"/>
+                                </td>
+                                <td class="text-end">
+                                    <t t-esc="stub_line['amount_original']"/>
+                                </td>
+                                <td class="text-end">
+                                    <t t-esc="stub_line['amount_discount']"/>
+                                </td>
+                                <td class="text-end">
+                                    <t t-esc="stub_line['payment_total']"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
+                    <tr t-if="page['stub_cropped']">
+                        <td colspan="6" class="text-end">...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </xpath>
+    </template>
+</odoo>
