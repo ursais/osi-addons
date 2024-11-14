@@ -57,6 +57,7 @@
         "data/company_data.xml",
         "data/avatax_code_data.xml",
         "data/product_data.xml",
+        "data/utm_source_data.xml",
         "data/res_users_role.xml",
         "security/res_groups.xml",
         "views/res_company.xml",
