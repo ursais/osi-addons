@@ -12,6 +12,7 @@
     # any module necessary for this one to work correctly
     "depends": [
         "ol_base",
+        "sale_margin",
         "sale_blanket_order",
         "base_tier_validation",
         "base_tier_validation_formula",
