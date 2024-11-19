@@ -88,7 +88,7 @@
     </record>
 
     <record id="role_sales_vp" model="res.users.role">
-        <field name="name">Sales - VP</field>
+        <field name="name">Sales - VP/SVP</field>
     </record>
 
     <record id="role_sales_svp" model="res.users.role">
@@ -105,6 +105,18 @@
 
     <record id="role_fin_controller" model="res.users.role">
         <field name="name">Finance - Controller</field>
+    </record>
+
+    <record id="role_executive" model="res.users.role">
+        <field name="name">Executive</field>
+    </record>
+
+    <record id="role_sales_EVP" model="res.users.role">
+        <field name="name">Sales – EVP</field>
+    </record>
+
+    <record id="role_supply_chain_director" model="res.users.role">
+        <field name="name">Supply Chain - Director</field>
     </record>
 
 </odoo>

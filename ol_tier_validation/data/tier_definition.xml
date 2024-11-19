@@ -1,0 +1,146 @@
+<odoo noupdate="1">
+
+    <record id="partner_tier_definition_purchase_order_1" model="tier.definition">
+        <field name="name">PO up to $100k</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="review_type">group</field>
+        <field name="active" eval="True" />
+        <field name="definition_type">domain</field>
+        <field name="definition_domain">[["amount_total", "&lt;", 100000]]</field>
+        <field name="reviewer_group_id" ref="ol_base.role_operations_res_groups"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="partner_tier_definition_purchase_order_2" model="tier.definition">
+        <field name="name">PO Between $100% and $350k</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="review_type">group</field>
+        <field name="active" eval="True" />
+        <field name="definition_type">domain</field>
+        <field name="definition_domain">['&amp;', ("amount_total", '&gt;=', 100000), ("amount_total", '&lt;=', 350000)]</field>
+        <field name="reviewer_group_id" ref="ol_base.role_supply_chain_director_res_groups"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="partner_tier_definition_purchase_order_3" model="tier.definition">
+        <field name="name">PO Over $350k</field>
+        <field name="model_id" ref="purchase.model_purchase_order"/>
+        <field name="review_type">group</field>
+        <field name="active" eval="True" />
+        <field name="definition_type">domain</field>
+        <field name="definition_domain">[["amount_total", "&gt;", 350000]]</field>
+        <field name="reviewer_group_id" ref="ol_base.role_executive_res_groups"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="partner_tier_definition_res_partner_1" model="tier.definition">
+        <field name="name">Finance Terms Approval Under $50k</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="review_type">group</field>
+        <field name="active" eval="True" />
+        <field name="definition_type">domain</field>
+        <field name="definition_domain">[["credit_limit", "&lt;", 50000]]</field>
+        <field name="reviewer_group_id" ref="ol_base.role_fin_manager_res_groups"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="partner_tier_definition_res_partner_2" model="tier.definition">
+        <field name="name">Finance Terms Approval $250k</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="review_type">group</field>
+        <field name="active" eval="True"/>
+        <field name="definition_type">domain</field>
+        <field name="definition_domain">[["credit_limit", "&gt;", 250000]]</field>
+        <field name="reviewer_group_id" ref="ol_base.role_fin_cfo_res_groups"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="partner_tier_definition_res_partner_3" model="tier.definition">
+        <field name="name">Finance Terms Approval letwoon Silk and $250</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="review_type">group</field>
+        <field name="active" eval="True"/>
+        <field name="definition_type">domain</field>
+        <field name="definition_domain">["&amp;", ("credit_limit", "&gt;=", 50000), ("credit_limit", "&lt;=", 250000)]</field>
+        <field name="reviewer_group_id" ref="ol_base.role_fin_controller_res_groups"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="partner_tier_definition_sale_order_1" model="tier.definition">
+        <field name="name">SO Line Margin Linder 40%</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="review_type">group</field>
+        <field name="active" eval="True"/>
+        <field name="definition_type">domain</field>
+        <field name="definition_domain">["&amp;", "&amp;", ("order_line.margin_percent", "&lt;=", 0.4), ("source_id", "not in", [11]), ("blanket_order_id", "=", False)]</field>
+        <field name="reviewer_group_id" ref="ol_base.role_sales_EVP_res_groups"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="partner_tier_definition_sale_order_2" model="tier.definition">
+        <field name="name">Sales Order Between $250k and 500k</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="review_type">group</field>
+        <field name="active" eval="True" />
+        <field name="definition_type">domain</field>
+        <field name="definition_domain">["&amp;", "&amp;", "&amp;", ("amount_total", "&gt;=", 250000), ("amount_total", "&lt;=", 499999.99), ("source_id", "not in", [11]), ("blanket_order_id", "=", False)]</field>
+        <field name="reviewer_group_id" ref="ol_base.role_sales_director_res_groups"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="partner_tier_definition_sale_order_3" model="tier.definition">
+        <field name="name">Sales Order Between $500 and $1m</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="review_type">group</field>
+        <field name="active" eval="True" />
+        <field name="definition_type">domain</field>
+        <field name="definition_domain">["&amp;", "&amp;", "&amp;", ("amount_total", "&gt;=", 500000), ("amount_total", "&lt;=", 1000000), ("source_id", "not in", [11]), ("blanket_order_id", "=", False)]</field>
+        <field name="reviewer_group_id" ref="ol_base.role_sales_vp_res_groups"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="partner_tier_definition_sale_order_4" model="tier.definition">
+        <field name="name">Sales Order Over $1M</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="review_type">group</field>
+        <field name="active" eval="True" />
+        <field name="definition_type">domain</field>
+        <field name="definition_domain">["&amp;", "&amp;", ("amount_total", "&gt;", 1000000), ("source_id", "not in", [11]), ("blanket_order_id", "=", False)]</field>
+        <field name="reviewer_group_id" ref="ol_base.role_executive_res_groups"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="partner_tier_definition_sale_blanket_order_1" model="tier.definition">
+        <field name="name">Blanket Order Between $250k and $500k</field>
+        <field name="model_id" ref="sale_blanket_order.model_sale_blanket_order"/>
+        <field name="review_type">group</field>
+        <field name="reviewer_group_id" ref="ol_base.role_sales_director_res_groups"/>
+        <field name="active" eval="True" />
+        <field name="definition_type">domain</field>
+        <field name="definition_domain">["&amp;", ("amount_total", "&gt;=", 250000), ("amount_total", "&lt;=", 499999.99)]</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="partner_tier_definition_sale_blanket_order_2" model="tier.definition">
+        <field name="name">Wanket Order Between $500k and $1m</field>
+        <field name="model_id" ref="sale_blanket_order.model_sale_blanket_order"/>
+        <field name="review_type">group</field>
+        <field name="reviewer_group_id" ref="ol_base.role_sales_vp_res_groups"/>
+        <field name="active" eval="True"/>
+        <field name="definition_type">domain</field>
+        <field name="definition_domain">["&amp;", ("amount_total", "&gt;=", 500000), ("amount_total", "&lt;=", 1000000)]</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="partner_tier_definition_sale_blanket_order_3" model="tier.definition">
+        <field name="name">Blanket Onder Over 51M</field>
+        <field name="model_id" ref="sale_blanket_order.model_sale_blanket_order"/>
+        <field name="review_type">group</field>
+        <field name="reviewer_group_id" ref="ol_base.role_executive_res_groups"/>
+        <field name="active" eval="True"/>
+        <field name="definition_type">domain</field>
+        <field name="definition_domain">[["amount_total", "&gt;", 1000000]]</field>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+</odoo>
