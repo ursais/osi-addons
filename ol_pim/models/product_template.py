@@ -21,5 +21,11 @@ class ProductTemplate(models.Model):
         string="Public Destination",
         default="not_public",
     )
+    company_ids_display = fields.Many2many(
+        "res.company",
+        string="Enabled Companies",
+        help="To be used for eCommerce:"
+        " If set, the product is limited to only be sold in these regions.",
+    )
 
     # END ##########

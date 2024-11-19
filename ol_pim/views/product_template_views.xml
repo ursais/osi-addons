@@ -10,6 +10,7 @@
                 <group>
                     <group name="public_destination">
                         <field name="public_destination" />
+                        <field name="company_ids_display" widget="many2many_tags" />
                     </group>
                 </group>
             </xpath>
