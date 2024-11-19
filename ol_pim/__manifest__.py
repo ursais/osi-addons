@@ -13,14 +13,17 @@
     # any module necessary for this one to work correctly
     "depends": [
         "ol_base",
+        "documents_product",
         "product_attribute_set",
     ],
     # always loaded
     "data": [
+        "data/documents_folder.xml",
         "data/attribute.set.csv",
         "data/attribute.group.csv",
         "data/attribute.attribute.csv",
         "data/attribute.option.csv",
         "views/product_template_views.xml",
+        "data/attribute_attribute_domain.xml",
     ],
 }
