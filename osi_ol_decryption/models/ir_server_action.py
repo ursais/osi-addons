@@ -41,7 +41,7 @@ class IrActionsServer(models.Model):
                 AND (col.character_maximum_length > 64 OR col.character_maximum_length IS NULL)
                 AND tab.table_name NOT LIKE 'mail%'
                 AND col.table_name NOT LIKE 'report%'
-                -- AND col.table_name = 'ir_sequence'
+                -- AND col.table_name = ''
                 AND col.table_name NOT IN ('res_config_settings', 'res_country', 'res_country_group', 'res_groups', 'res_lang','account_invoice_extract_words')
                 ORDER BY col.table_name, col.ordinal_position;"""
         )
@@ -427,7 +427,7 @@ class IrActionsServer(models.Model):
                 AND (col.character_maximum_length > 64 OR col.character_maximum_length IS NULL)
                 AND tab.table_name NOT LIKE 'mail%'
                 AND col.table_name NOT LIKE 'report%'
-                AND col.table_name NOT IN ('res_config_settings', 'res_country', 'res_country_group', 'res_groups', 'res_lang')
+                AND col.table_name NOT IN ('res_config_settings', 'res_country_group', 'res_lang', 'knowledge_article')
                 AND col.column_name NOT LIKE 'analytic%'
                 ORDER BY col.table_name, col.ordinal_position;"""
         )
@@ -450,9 +450,9 @@ class IrActionsServer(models.Model):
             "res_partner": [
                 "contact_address_complete",
             ],
-            "account_move": [
-                "sequence_prefix",
-            ],
+            # "account_move": [
+            #     "sequence_prefix",
+            # ],
         }
         columns_missing = []
         tables_missing = []

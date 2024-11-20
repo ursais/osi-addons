@@ -10,11 +10,17 @@ import odoorpc
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
+    def update_compute_complete_address(self):
+        partner_ids = self.env['res.partner'].search([("contact_address_complete", "!=", ""), ('active', '=', 'f')], order="id")
+        for partner in partner_ids:
+            print ("\n partner", partner.id)
+            partner._compute_complete_address()
+
     def update_supplier_invoice_number(self):
         # Fetch supplier invoice numbers and references for in_invoice types
         self._cr.execute("""
             SELECT supplier_invoice_number, ref, id 
-            FROM account_move 
+            FROM temp_account_move 
             WHERE move_type = 'in_invoice' AND supplier_invoice_number != ''
         """)
         move_ids = self._cr.dictfetchall()
@@ -45,7 +51,7 @@ class IrActionsServer(models.Model):
 
     def update_product_tax_code(self):
         conn_13 = psycopg2.connect(
-            database="odoo13_local_main",
+            database="odoo13_20241106",
             user="odoo",
             password="odoo",
             host="localhost",
@@ -70,25 +76,34 @@ class IrActionsServer(models.Model):
 
     def odoo_rpc_call_product_weight(self):
         odoo_13 = odoorpc.ODOO("localhost", port=8069, timeout=12000)
-        odoo_13.login("odoo13_local_main", "admin", "pw")
+        odoo_13.login("odoo13_20241106", "admin", "pw")
         obj_product = odoo_13.env["product.product"]
-        product_ids = obj_product.search_read(
-            [("active", "=", False),('id', '>=', 10000),('id', '<=', 40000), ('id', 'not in', [112677, 147811,92960,96905])],
-            fields=["id", "weight", "product_tmpl_id"],
-            order="id",
-        )
-        print("\n product_ids", product_ids)
-        for product in product_ids:
-            self._cr.execute(
-                "update product_template set weight_dummy = %s where id = %s"
-                % (product.get("weight"), product.get("product_tmpl_id")[0])
+        final_count  = 172723
+        limit = 10000
+        offset = 0
+        while True:
+            product_ids = obj_product.search_read(
+                [('id', 'not in', [112677, 147811,92960,96905,135649, 143682]),'|',("active", "=", True),("active", "=", False)],
+                fields=["id", "weight", "product_tmpl_id"],
+                order="id",
+                offset=offset,
+                limit=limit
             )
+            print("\n product_ids", product_ids)
+            for product in product_ids:
+                self._cr.execute(
+                    "update product_template set weight_dummy = %s where id = %s"
+                    % (product.get("weight"), product.get("product_tmpl_id")[0])
+                )
+            if offset > final_count:
+                break
+            offset += 10000
 
     @api.model
     def odoo_rpc_call(self):
 
-        odoo_13 = odoorpc.ODOO("localhost", port=8069)
-        odoo_13.login("odoo13_local_main", "admin", "pw")
+        odoo_13 = odoorpc.ODOO("localhost", port=8069, timeout=12000)
+        odoo_13.login("odoo13_20241106", "admin", "pw")
         obj_product = odoo_13.env["product.template"]
         obj_att_value = odoo_13.env["product.attribute.value"]
         obj_v17_att_value = odoo_13.env["product.attribute.value"]
@@ -96,6 +111,7 @@ class IrActionsServer(models.Model):
         obj_product_17 = self.env["product.template"]
 
         """FIX work_location in Employee"""
+        print ("\n FIX work_location in Employee")
         employee_obj = self.env["hr.employee"]
         work_location_obj = self.env["hr.work.location"]
         obj_employee = odoo_13.env["hr.employee"]
@@ -114,6 +130,7 @@ class IrActionsServer(models.Model):
                 )
 
         """FIX Payment Team Data missing"""
+        print ("\n FIX Payment Team Data missing")
         obj_sale_order = odoo_13.env["sale.order"]
         sale_order_ids = obj_sale_order.search_read(
             [("id", "!=", False)], fields=["id", "payment_term_id"], order="id"
@@ -130,27 +147,29 @@ class IrActionsServer(models.Model):
                     )
                 )
 
-        atts_val = obj_att_value.search([], order="id")
-        """Remvoe record rule from v13 of compnay before run."""
+        atts_val = obj_att_value.search_read([], fields=['id', 'name'], order="id")
+        """Remove record rule from v13 of company before run."""
+        print("Update attribute")
         for atts in atts_val:
+            print ("\n atts",atts)
             self._cr.execute(
                 "update product_attribute_value set name = json_build_object('en_US', '%s') where id = %s"
-                % (vals.name, vals.id)
+                % (atts.get('name'), atts.get('id'))
             )
         self._cr.execute(
             "update product_template_attribute_value set is_qty_required ='t' where maximum_qty > 1"
         )
 
-        products = obj_product.search([("id", "!=", False)], order="id")
+        products = obj_product.search_read([("id", "!=", False)], fields=['id', 'backorder_config'], order="id")
+        print ("\n Update Backorder")
         for product in products:
-            prod_13 = obj_product.browse(product)
-            if prod_13.backorder_config != "no-backorder":
-                product_17 = obj_product_17.browse(product)
+            print ("\n product", product)
+            if product.get('backorder_config') != "no-backorder":
+                product_17 = obj_product_17.browse(product.get('id'))
                 product_17.write({"allow_backorder": True})
 
         return True
-        """ No use """
-        # update product_template_attribute_line ptal set is_qty_required ='t' where id in (select ptav.attribute_line_id from product_template_attribute_value ptav where ptav.attribute_line_id = ptal.id and ptav.maximum_qty > 0);
+        
 
     def update_attribute_value_qty_id(self):
         ppavq_ids = self.env["product.product.attribute.value.qty"].search(
@@ -199,7 +218,7 @@ class IrActionsServer(models.Model):
     @api.model
     def import_product_data(self):
         conn_13 = psycopg2.connect(
-            database="odoo13_local_main",
+            database="odoo13_20241106",
             user="odoo",
             password="odoo",
             host="localhost",
@@ -208,13 +227,13 @@ class IrActionsServer(models.Model):
 
         cur_13 = conn_13.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-        # cur_13.execute(
-        #     "select id, has_configurable_attributes from product_template where has_configurable_attributes = 't' ;"
-        # )
-        # product_ids = cur_13.fetchall()
-        # for product in product_ids:
-        #     _logger.info("\n \n data %s" %(product))
-        #     self._cr.execute("update product_template set config_ok = 't' where id = %s" % (product.get('id'),))
+        cur_13.execute(
+            "select id, has_configurable_attributes from product_template where has_configurable_attributes = 't' ;"
+        )
+        product_ids = cur_13.fetchall()
+        for product in product_ids:
+            _logger.info("\n \n data %s" %(product))
+            self._cr.execute("update product_template set config_ok = 't' where id = %s" % (product.get('id'),))
 
         # cur_13.execute("select code,id,root_id from account_account;")
         # account_ids = cur_13.fetchall()
@@ -251,5 +270,6 @@ class IrActionsServer(models.Model):
         #         _logger.info("\n \n rec.name %s and old atteibute name %s" %(rec.name, atts.get('name')))
         #     #rec.write({'name': atts.get('name')})
         update product_attribute_value set name = json_build_object('en_US', 'None') where name is null;
-
+        '''No use'''
+        # update product_template_attribute_line ptal set is_qty_required ='t' where id in (select ptav.attribute_line_id from product_template_attribute_value ptav where ptav.attribute_line_id = ptal.id and ptav.maximum_qty > 0);
         """
