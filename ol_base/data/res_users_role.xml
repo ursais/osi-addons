@@ -6,8 +6,12 @@
     </record>
 
     <record id="role_operations" model="res.users.role">
-        <field name="name">Operations - Supply Chain</field>
+        <field name="name">Supply Chain</field>
         <field name="implied_ids" eval="[(6, 0, [ref('mrp_plm.group_plm_manager'), ref('mrp.group_mrp_manager')])]" />
+    </record>
+
+    <record id="role_supply_chain_director" model="res.users.role">
+        <field name="name">Supply Chain - Director</field>
     </record>
 
     <record id="role_sales" model="res.users.role">
@@ -113,10 +117,6 @@
 
     <record id="role_sales_EVP" model="res.users.role">
         <field name="name">Sales – EVP</field>
-    </record>
-
-    <record id="role_supply_chain_director" model="res.users.role">
-        <field name="name">Supply Chain - Director</field>
     </record>
 
 </odoo>
