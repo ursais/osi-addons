@@ -84,7 +84,7 @@
         <field name="name">Sales Order Between $50k and $250k</field>
         <field name="model_id" ref="sale.model_sale_order"/>
         <field name="review_type">field</field>
-        <field name="reviewer_field_id" ref="user_id"/>
+        <field name="reviewer_field_id" ref="sale.field_sale_order__user_id"/>
         <field name="active" eval="True" />
         <field name="definition_type">domain</field>
         <field name="definition_domain">["&amp;", "&amp;", "&amp;", ("amount_total", "&gt;=", 50000), ("amount_total", "&lt;=", 249999.99), ("source_id", "not in", [11]), ("blanket_order_id", "=", False)]</field>
@@ -129,7 +129,7 @@
         <field name="name">Blanket Order Between $50k and $250k</field>
         <field name="model_id" ref="sale_blanket_order.model_sale_blanket_order"/>
         <field name="review_type">field</field>
-        <field name="reviewer_field_id" ref="user_id"/>
+        <field name="reviewer_field_id" ref="sale_blanket_order.field_sale_blanket_order__user_id"/>
         <field name="active" eval="True" />
         <field name="definition_type">domain</field>
         <field name="definition_domain">["&amp;", ("amount_total", "&gt;=", 50000), ("amount_total", "&lt;=", 249999.99)]</field>
