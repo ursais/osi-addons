@@ -1,0 +1,14 @@
+<odoo>
+
+    <record id="ol_purchase_view_partner_property_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.purchase.property.form</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="purchase.view_partner_property_form" />
+        <field name="arch" type="xml">
+            <field name="buyer_id" position="before">
+                <field name="approved_vendor" />
+            </field>
+        </field>
+    </record>
+
+</odoo>
