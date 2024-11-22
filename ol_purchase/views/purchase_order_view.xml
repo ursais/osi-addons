@@ -12,7 +12,7 @@
                 <field name="approved_vendor" invisible="1" />
             </field>
             <xpath expr="//header" position="after">
-                <div class="alert alert-danger" role="alert" style="text-align: center" invisible="approved_vendor">
+                <div class="alert alert-danger" role="alert" style="text-align: center" invisible="not partner_id or approved_vendor">
                     The vendor on this purchase order has not been approved!
                 </div>
             </xpath>
