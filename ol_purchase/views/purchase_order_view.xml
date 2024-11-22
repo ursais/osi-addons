@@ -8,6 +8,14 @@
             <field name="partner_id" position="attributes">
                 <attribute name="domain">[("approved_vendor", "=", True)]</attribute>
             </field>
+            <field name="partner_id" position="after">
+                <field name="approved_vendor" invisible="1" />
+            </field>
+            <xpath expr="//header" position="after">
+                <div class="alert alert-danger" role="alert" style="text-align: center" invisible="approved_vendor">
+                    The vendor on this purchase order has not been approved!
+                </div>
+            </xpath>
         </field>
     </record>
 
