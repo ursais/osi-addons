@@ -17,13 +17,18 @@
         "sale_exception",
         "purchase_exception",
         "stock_exception",
+        "mrp_exception",
+        "mrp_batch",
     ],
     # always loaded
     "data": [
         "security/base_exception_security.xml",
+        "security/ir.model.access.csv",
+        "views/exception_config.xml",
         "views/exception_rule_view.xml",
         "views/purchase_order_view.xml",
         "views/sale_order_view.xml",
         "views/stock_view.xml",
+        "data/exception_config_data.xml",
     ],
 }
