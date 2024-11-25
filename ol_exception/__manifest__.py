@@ -30,5 +30,6 @@
         "views/sale_order_view.xml",
         "views/stock_view.xml",
         "data/exception_config_data.xml",
+        "data/exception_data.xml",
     ],
 }
