@@ -1,0 +1,23 @@
+<odoo noupdate="1">
+
+    <record id="exception_mo_so_unlocked" model="exception.rule">
+        <field name="name">Sale Order Change In Progress Exception</field>
+        <field name="description">The Sale Order has been unlocked.</field>
+        <field name="sequence">71</field>
+        <field name="model">mrp.production</field>
+        <field name="exception_type">by_domain</field>
+        <field name="domain">[("sale_id.locked", "=", False)]</field>
+        <field name="active" eval="True" />
+    </record>
+
+    <record id="exception_do_so_unlocked" model="exception.rule">
+        <field name="name">Sale Order Change In Progress Exception</field>
+        <field name="description">The Sale Order has been unlocked.</field>
+        <field name="sequence">71</field>
+        <field name="model">stock.picking</field>
+        <field name="exception_type">by_domain</field>
+        <field name="domain">[("sale_id.locked", "=", False)]</field>
+        <field name="active" eval="True" />
+    </record>
+
+</odoo>
