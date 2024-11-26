@@ -20,13 +20,16 @@ class MRPProduction(models.Model):
 
     def _fields_trigger_check_exception(self):
         config_records = self.env["exception.config"].search(
-            [("model_id.model", "=", "mrp.production")]
+            [("model_id.model", "=", self._name)]
         )
-        return [
-            field.name
-            for record in config_records
-            for field in record.trigger_field_ids
-        ]
+        fields_to_check = set()
+        for config in config_records:
+            # Include directly configured fields
+            fields_to_check.update(field.name for field in config.trigger_field_ids)
+            # Include dynamically discovered related fields
+            related_fields = config.get_related_fields()
+            fields_to_check.update(field.name for field in related_fields)
+        return list(fields_to_check)
 
     def _check_mrp_check_exception(self, vals):
         check_exceptions = any(
