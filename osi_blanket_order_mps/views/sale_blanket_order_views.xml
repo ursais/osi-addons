@@ -41,7 +41,7 @@
             <field name="line_ids" position="attributes">
                 <attribute name="readonly">state in ['done', 'expired']</attribute>
             </field>
-            <field name="partner_id" position="after">
+            <field name="payment_term_id" position="before">
                 <field name="partner_ref" />
             </field>
             <field name="original_uom_qty" position="attributes">
