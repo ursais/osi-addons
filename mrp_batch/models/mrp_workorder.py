@@ -13,5 +13,6 @@ class MrpWorkorder(models.Model):
         string="Batch",
         related="production_id.mrp_batch_id",
     )
+    operation_type = fields.Selection(related="operation_id.type")
 
-    # COLUMNS #########
+    # END #########

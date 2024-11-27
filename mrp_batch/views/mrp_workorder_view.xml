@@ -8,6 +8,9 @@
             <field name="name" position="after">
                 <field name="mrp_batch_id" />
             </field>
+            <field name="duration" position="after">
+                <field name="operation_type" />
+            </field>
         </field>
     </record>
 

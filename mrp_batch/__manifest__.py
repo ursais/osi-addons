@@ -10,6 +10,7 @@
     "images": [],
     "depends": [
         "mrp",
+        "mrp_exception",
         "sale_management",
         "sale_mrp",
         "queue_job",
@@ -24,6 +25,8 @@
         "views/mrp_production_batch_tag_view.xml",
         "views/mrp_production_batch_view.xml",
         "views/mrp_production_view.xml",
+        "views/mrp_routing_workcenter.xml",
+        "views/mrp_workcenter.xml",
         "views/sale_order_view.xml",
         "views/product_template_view.xml",
         "views/mrp_workorder_view.xml",
