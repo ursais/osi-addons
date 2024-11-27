@@ -75,9 +75,11 @@ class SaleBlanketOrder(models.Model):
                 limit=1,
             ))
 
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
+    @api.onchange("partner_id")
+    def onchange_partner_id(self):
+        res = super().onchange_partner_id()
         self.carrier_id = self.partner_id.property_delivery_carrier_id
+        return res
 
     @api.onchange('company_id')
     def _onchange_company_id_warning(self):
@@ -111,7 +113,7 @@ class SaleBlanketOrder(models.Model):
     def _recompute_prices(self):
         lines_to_recompute = self._get_update_prices_lines()
         lines_to_recompute.invalidate_recordset(['pricelist_item_id'])
-        lines_to_recompute.onchange_product()
+        lines_to_recompute.with_context(update_pricelist=True).onchange_product()
         # lines_to_recompute._compute_price_unit()
         # Special case: we want to overwrite the existing discount on _recompute_prices call
         # i.e. to make sure the discount is correctly reset

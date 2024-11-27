@@ -16,6 +16,9 @@ class TestSaleBlanketOrder(common.TransactionCase):
         cls.sale_pricelist = cls.env["product.pricelist"].create(
             {"name": "Test Pricelist", "currency_id": cls.env.ref("base.USD").id}
         )
+        cls.test_pricelist = cls.env["product.pricelist"].create(
+            {"name": "Test Pricelist", "currency_id": cls.env.ref("base.USD").id}
+        )
 
         # Create a custom unit of measure (UoM) for testing
         cls.categ_unit = cls.env.ref("uom.product_uom_categ_unit")
@@ -36,6 +39,16 @@ class TestSaleBlanketOrder(common.TransactionCase):
                 "property_product_pricelist": cls.sale_pricelist.id,
             }
         )
+        cls.partner_invoice_id = cls.env['res.partner'].create({
+            'name': 'Partner Invoice Address',
+            'parent_id': cls.partner.id,
+            'type': 'invoice',
+        })
+        cls.partner_shipping_id = cls.env['res.partner'].create({
+            'name': 'Partner Delivery Address',
+            'parent_id': cls.partner.id,
+            'type': 'delivery',
+        })
 
         # Create a test product
         cls.product = cls.env["product.product"].create(
@@ -56,6 +69,7 @@ class TestSaleBlanketOrder(common.TransactionCase):
     def test_01_create_blanket_order_with_so(self):
         """Test creating a blanket order with associated sale orders."""
         # Create a blanket order with one line item
+        self.product.sale_ok = True
         blanket_order = self.blanket_order_obj.create(
             {
                 "partner_id": self.partner.id,
@@ -103,6 +117,8 @@ class TestSaleBlanketOrder(common.TransactionCase):
 
         # Browse the created sale order
         sale_order = self.so_obj.browse(domain_ids)
+        self.assertEqual(sale_order.partner_invoice_id, self.partner_invoice_id)
+        self.assertEqual(sale_order.partner_shipping_id, self.partner_shipping_id)
 
         # Check that the origin of the sale order matches the blanket order name
         self.assertEqual(sale_order.origin, blanket_order.name)
@@ -159,3 +175,44 @@ class TestSaleBlanketOrder(common.TransactionCase):
 
         # Check that no sale orders were created
         self.assertFalse(so)
+
+    def test_03_create_blanket_order_with_pricelist(self):
+        """Test creating a blanket order with associated sale orders."""
+        # Create a blanket order with one line item
+        blanket_order = self.blanket_order_obj.create(
+            {
+                "partner_id": self.partner.id,
+                "validity_date": fields.Date.to_string(self.tomorrow),
+                "payment_term_id": self.payment_term.id,
+                "pricelist_id": self.sale_pricelist.id,
+                "auto_release": True,
+                "line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": self.product.id,
+                            "product_uom": self.product.uom_id.id,
+                            "original_uom_qty": 20.0,
+                            "price_unit": 30.0,
+                            "date_schedule": fields.Date.today(),
+                        },
+                    ),
+                ],
+            }
+        )
+        self.assertTrue(blanket_order.partner_invoice_id)
+        self.assertTrue(blanket_order.partner_shipping_id)
+
+        blanket_order.sudo()._onchange_company_id_warning()
+        self.assertTrue(blanket_order.show_update_pricelist)
+
+        # Trigger onchange for partner to update related fields
+        blanket_order.sudo().onchange_partner_id()
+
+        blanket_order.sudo()._onchange_pricelist_id_show_update_prices()
+        blanket_order.sudo().action_update_prices()
+        self.assertFalse(blanket_order.show_update_pricelist)
+
+        # Confirm the blanket order
+        blanket_order.sudo().action_confirm()

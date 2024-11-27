@@ -60,4 +60,9 @@ class SaleBlanketOrderLine(models.Model):
         for line in self:
             line.customer_lead = line.product_id.sale_delay
 
+    def onchange_product(self):
+        super().onchange_product()
+        if self.env.context.get("update_pricelist"):
+            self.price_unit = self._get_display_price()
+
     # END ######
