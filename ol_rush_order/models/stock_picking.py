@@ -1,9 +1,15 @@
-from odoo import api,models,fields
+from odoo import fields, models
 
-class ProductTemplate(models.Model):
 
-    _inherit = 'stock.picking'
+class StockPicking(models.Model):
+    """
+    Adding fields to Stock Picking.
+    """
 
-    rush_order = fields.Boolean("Rush Order",related="sale_id.rush_order")
+    _inherit = "stock.picking"
 
-    
+    # COLUMNS ##########
+
+    rush_order = fields.Boolean("Rush Order", related="sale_id.rush_order")
+
+    # END ##########
