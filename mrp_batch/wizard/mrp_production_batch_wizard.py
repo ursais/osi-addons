@@ -13,7 +13,7 @@ class MRPProductionBatchwizard(models.TransientModel):
     batch_id = fields.Many2one("mrp.production.batch")
     responsible_id = fields.Many2one("res.users", string="Responsible")
     tag_ids = fields.Many2many("mrp.production.batch.tag", string="Tags")
-    date_scheduled = fields.Datetime(string="Scheduled Date")
+    date_start = fields.Datetime(string="Scheduled Date")
 
     # END #########
     # METHODS #####
@@ -33,7 +33,7 @@ class MRPProductionBatchwizard(models.TransientModel):
             vals = {
                 "responsible_id": self.responsible_id.id,
                 "tag_ids": self.tag_ids.ids,
-                "date_scheduled": self.date_scheduled,
+                "date_start": self.date_start,
                 "production_ids": allowed_records,
             }
             self.env["mrp.production.batch"].create(vals)

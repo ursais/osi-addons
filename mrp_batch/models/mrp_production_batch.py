@@ -77,7 +77,12 @@ class MrpProductionBatch(models.Model):
         string="Owner",
         required=True,
     )
-    date_scheduled = fields.Datetime(string="Scheduled Date")
+    date_start = fields.Datetime(string="Scheduled Date")
+    date_finished = fields.Datetime(
+        string="Date Finished",
+        compute="_compute_date_finished",
+        store=True,
+    )
     workcenter_tag_id = fields.Many2one(
         "mrp.workcenter.tag",
         string="Workcenter Tag",
@@ -347,8 +352,8 @@ class MrpProductionBatch(models.Model):
         # Check if the scheduled date falls after deadline
         self.is_delayed = False
         for rec in self:
-            if rec.date_scheduled and rec.date_deadline:
-                scheduled_date = rec.date_scheduled.date()
+            if rec.date_start and rec.date_deadline:
+                scheduled_date = rec.date_start.date()
                 deadline_date = rec.date_deadline.date()
                 rec.is_delayed = scheduled_date >= deadline_date
 
@@ -427,6 +432,21 @@ class MrpProductionBatch(models.Model):
                     production.date_start for production in record.production_ids
                 )
                 record.earliest_start = start_date
+
+    @api.depends(
+        "production_ids",
+        "production_ids.date_finished",
+        "production_ids.state",
+    )
+    def _compute_date_finished(self):
+        # Determine the finished date among all productions in the batch
+        for record in self:
+            record.date_finished = False
+            if record.production_ids:
+                start_date = min(
+                    production.date_finished for production in record.production_ids
+                )
+                record.date_finished = start_date
 
     @api.depends(
         "production_ids",
@@ -712,11 +732,11 @@ class MrpProductionBatch(models.Model):
         res = super().write(vals)
 
         for batch in self:
-            if "date_scheduled" in vals and batch.state in ("draft", "confirm"):
+            if "date_start" in vals and batch.state in ("draft", "confirm"):
                 for mo in batch.production_ids:
                     # If the job is related to a manufacturing order, check its batch
                     if mo.state in ("draft", "confirmed"):
-                        mo.date_start = batch.date_scheduled
+                        mo.date_start = batch.date_start
                 batch._compute_daily_sequence()
 
         return res
@@ -745,13 +765,13 @@ class MrpProductionBatch(models.Model):
             if all(job.state in ["done", "failed", "cancelled"] for job in jobs):
                 batch.is_queuing = False
 
-    @api.depends("date_scheduled")
+    @api.depends("date_start")
     def _compute_daily_sequence(self):
         for record in self:
-            if record.date_scheduled:
+            if record.date_start:
                 # Get the start and end of the day
                 start_of_day = fields.Datetime.context_timestamp(
-                    record, record.date_scheduled
+                    record, record.date_start
                 ).replace(hour=0, minute=0, second=0, microsecond=0)
                 end_of_day = start_of_day.replace(hour=23, minute=59, second=59)
 
@@ -759,14 +779,14 @@ class MrpProductionBatch(models.Model):
                 same_day_records = self.search(
                     [
                         (
-                            "date_scheduled",
+                            "date_start",
                             ">=",
                             fields.Datetime.to_string(start_of_day),
                         ),
-                        ("date_scheduled", "<=", fields.Datetime.to_string(end_of_day)),
+                        ("date_start", "<=", fields.Datetime.to_string(end_of_day)),
                     ],
-                    order="date_scheduled asc, id asc",
-                )  # Sort by date_scheduled (and id for stability)
+                    order="date_start asc, id asc",
+                )  # Sort by date_start (and id for stability)
 
                 # Assign daily_sequence
                 for idx, rec in enumerate(same_day_records, start=1):

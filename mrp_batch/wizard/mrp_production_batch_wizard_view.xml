@@ -10,7 +10,7 @@
                         <field name="batch_id" string="Add to Existing Batch (Optional)" domain="[('state', 'not in', ('done', 'cancel'))]" />
                         <field name="responsible_id" invisible="batch_id" required="not batch_id" />
                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" invisible="batch_id" />
-                        <field name="date_scheduled" invisible="batch_id" />
+                        <field name="date_start" invisible="batch_id" />
                     </group>
                 </sheet>
                 <footer class="oe_edit_only">

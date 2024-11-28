@@ -10,6 +10,7 @@
     "images": [],
     "depends": [
         "mrp",
+        "mrp_workorder",
         "mrp_exception",
         "sale_management",
         "sale_mrp",
