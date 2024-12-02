@@ -1,0 +1,15 @@
+<odoo>
+    <record id="view_picking_form_inheirt_credit_limit" model="ir.ui.view">
+        <field name="name">stock.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position = "inside">
+                <widget name="web_ribbon" title="CREDIT HOLD" bg_color="text-bg-danger" invisible="not credit_hold" groups="ol_credit_limit.group_credit_management_user"/>
+            </xpath>
+            <field name="backorder_id" position="after">
+                <field  name="credit_hold" groups="ol_credit_limit.group_credit_management_user"/>
+            </field>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,30 @@
+<odoo noupdate="1">
+
+    <record id="exception_credit_so_hold" model="exception.rule">
+        <field name="name">Sale OrderCredit Hold Exception</field>
+        <field name="description">Credit Hold Exception</field>
+        <field name="model">sale.order</field>
+        <field name="exception_type">by_domain</field>
+        <field name="domain">[("credit_hold", "=", True)]</field>
+        <field name="active" eval="True" />
+    </record>
+
+    <record id="exception_credit_picking_hold" model="exception.rule">
+        <field name="name">Picking Credit Hold Exception</field>
+        <field name="description">Credit Hold Exception</field>
+        <field name="model">stock.picking</field>
+        <field name="exception_type">by_domain</field>
+        <field name="domain">[("credit_hold", "=", True)]</field>
+        <field name="active" eval="True" />
+    </record>
+
+    <record id="exception_credit_picking_hold" model="exception.rule">
+        <field name="name">Picking Credit Hold Exception</field>
+        <field name="description">Credit Hold Exception</field>
+        <field name="model">mrp.production</field>
+        <field name="exception_type">by_domain</field>
+        <field name="domain">[("credit_hold", "=", True)]</field>
+        <field name="active" eval="True" />
+    </record>
+
+</odoo>

@@ -1,0 +1,19 @@
+<odoo>
+    <record id="view_order_form_inheirt_credit_limit" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position = "after">
+                <widget name="web_ribbon" title="CREDIT HOLD" bg_color="text-bg-danger" invisible="not credit_hold" groups="ol_credit_limit.group_credit_management_user"/>
+            </xpath>
+            <xpath expr="//page[@name='other_information']//group[@name='sale_reporting']" position="after">
+                <group name="credit_management" string="Credit Management" groups="ol_credit_limit.group_credit_management_user">
+                    <field  name="credit_hold"/>
+                    <field  name="uninvoiced_balance"/>
+                    <field  name="override_credit_limit_hold"/>
+                </group>
+            </xpath> 
+        </field>
+    </record>
+</odoo>
