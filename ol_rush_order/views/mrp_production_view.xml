@@ -1,0 +1,18 @@
+<odoo>
+
+    <record id="mrp_production_view_form" model="ir.ui.view">
+            <field name="name">mrp.production.form.inherit</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/div[hasclass('oe_button_box')]" position="before">
+                    <widget name="web_ribbon" title="RUSH ORDER" bg_color="text-bg-danger" invisible="not rush_order"/>
+                </xpath>
+                <field name='user_id' position="before">
+                    <field name="rush_order_sale_id" invisible="1"/>
+                    <field name='rush_order' invisible="not rush_order_sale_id"/>
+                </field>
+            </field>
+    </record>
+
+</odoo>
