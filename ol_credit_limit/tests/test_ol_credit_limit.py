@@ -18,25 +18,39 @@ class TestCreditLimit(common.TransactionCase):
     def test_check_partner_rollup_id(self):
         PartnerObj = self.env["res.partner"]
         rollup_partner_1 = PartnerObj.create(
-            {"name": "RollUp Partner A", "is_company": False,}
+            {
+                "name": "RollUp Partner A",
+                "is_company": False,
+            }
         )
 
         rollup_partner_2 = PartnerObj.create(
-            {"name": "RollUp Partner B", "is_company": False,}
+            {
+                "name": "RollUp Partner B",
+                "is_company": False,
+            }
         )
         rollup_partner_1.write(
-            {"partner_rollup_id": rollup_partner_2.id,}
+            {
+                "partner_rollup_id": rollup_partner_2.id,
+            }
         )
         with self.assertRaises(exceptions.UserError):
             rollup_partner_2.write(
-                {"partner_rollup_id": rollup_partner_1.id,}
+                {
+                    "partner_rollup_id": rollup_partner_1.id,
+                }
             )
 
     def test_partner_flow(self):
         PartnerObj = self.env["res.partner"]
         SaleOrderObj = self.env["sale.order"]
         compnay_a = PartnerObj.create(
-            {"name": "Company A", "is_company": True, "credit_limit": 30,}
+            {
+                "name": "Company A",
+                "is_company": True,
+                "credit_limit": 30,
+            }
         )
         child_compnay_a = PartnerObj.create(
             {

@@ -10,6 +10,39 @@ class ResPartner(models.Model):
 
     _inherit = "res.partner"
 
+    # COLUMNS #####
+
+    credit_limit = fields.Monetary(string="Credit Limit")
+    partner_rollup_id = fields.Many2one(
+        "res.partner",
+        "Credit Rollup Partner",
+        help="When set, any credit used on this partner will roll up to the parent partner’s credit usage.",
+    )
+    rollup_partner_ids = fields.One2many(
+        "res.partner",
+        "partner_rollup_id",
+        string="Partners with this Rollup Partner",
+        help="Partners that have this partner set as their Credit Rollup Partner.",
+    )
+    credit_hold = fields.Boolean(
+        "Credit Hold", compute="_compute_credit_hold", store=True
+    )
+    open_so_balance = fields.Monetary(
+        string="Open SO Balance",
+        compute="_compute_open_so_balance",
+        store=True,
+        help="Sum of all open sale orders including rollup partner orders.",
+    )
+    remaining_credit = fields.Monetary(
+        string="Remaining Credit",
+        compute="_compute_remaining_credit",
+        store=True,
+        help="Credit Remaining after sum of total_due plus all credit rollup partner’s total dues.",
+    )
+
+    # END #########
+    # METHODS #####
+
     @api.depends(
         "credit_limit",
         "open_so_balance",
@@ -54,36 +87,7 @@ class ResPartner(models.Model):
                 local_remaining_credit = local_remaining_credit - sum(
                     partner.partner_rollup_id.mapped("total_due")
                 )
-                # partner.credit_hold = partner.partner_rollup_id.remaining_credit < 0
             partner.remaining_credit = local_remaining_credit or 0
-
-    credit_limit = fields.Monetary(string="Credit Limit")
-    partner_rollup_id = fields.Many2one(
-        "res.partner",
-        "Credit Rollup Partner",
-        help="When set, any credit used on this partner will roll up to the parent partner’s credit usage.",
-    )
-    rollup_partner_ids = fields.One2many(
-        "res.partner",
-        "partner_rollup_id",
-        string="Partners with this Rollup Partner",
-        help="Partners that have this partner set as their Credit Rollup Partner.",
-    )
-    credit_hold = fields.Boolean(
-        "Credit Hold", compute="_compute_credit_hold", store=True
-    )
-    open_so_balance = fields.Monetary(
-        string="Open SO Balance",
-        compute="_compute_open_so_balance",
-        store=True,
-        help="Sum of all open sale orders including rollup partner orders.",
-    )
-    remaining_credit = fields.Monetary(
-        string="Remaining Credit",
-        compute="_compute_remaining_credit",
-        store=True,
-        help="Credit Remaining after sum of total_due plus all credit rollup partner’s total dues.",
-    )
 
     @api.onchange("credit_limit")
     def onchange_credit_limit(self):
@@ -106,3 +110,5 @@ class ResPartner(models.Model):
         if self.env.context.get("is_rollup_partner"):
             args += [("id", "!=", int(self.env.context.get("is_rollup_partner")))]
         return super().name_search(name=name, args=args, operator=operator, limit=limit)
+
+    # END #########

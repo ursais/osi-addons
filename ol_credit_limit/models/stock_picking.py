@@ -10,7 +10,12 @@ class StockPicking(models.Model):
 
     _inherit = "stock.picking"
 
+    # COLUMNS #####
+
     credit_hold = fields.Boolean("Credit Hold", related="sale_id.credit_hold")
+
+    # END #########
+    # METHODS #####
 
     def action_assign(self):
         for picking in self:
@@ -27,3 +32,5 @@ class StockPicking(models.Model):
                     _("Delivery cannot be confirmed due to customer's credit hold.")
                 )
         return super().button_validate()
+
+    # END #########

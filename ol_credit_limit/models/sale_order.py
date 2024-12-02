@@ -10,6 +10,19 @@ class SaleOrder(models.Model):
 
     _inherit = "sale.order"
 
+    # COLUMNS #####
+
+    credit_hold = fields.Boolean(
+        "Credit Hold", compute="_compute_credit_hold", store=True
+    )
+    uninvoiced_balance = fields.Monetary(
+        string="Uninvoiced Balance", compute="_compute_uninvoiced_balance", store=True
+    )
+    override_credit_limit_hold = fields.Boolean("Override Credit Limit Hold")
+
+    # END #########
+    # METHODS #####
+
     @api.depends("partner_id.remaining_credit", "override_credit_limit_hold")
     def _compute_credit_hold(self):
         for order in self:
@@ -24,14 +37,6 @@ class SaleOrder(models.Model):
                 order.amount_total if order.invoice_status != "invoiced" else 0
             )
 
-    credit_hold = fields.Boolean(
-        "Credit Hold", compute="_compute_credit_hold", store=True
-    )
-    uninvoiced_balance = fields.Monetary(
-        string="Uninvoiced Balance", compute="_compute_uninvoiced_balance", store=True
-    )
-    override_credit_limit_hold = fields.Boolean("Override Credit Limit Hold")
-
     def action_confirm(self):
         for order in self:
             if order.credit_hold and not order.override_credit_limit_hold:
@@ -41,3 +46,5 @@ class SaleOrder(models.Model):
                     )
                 )
         return super().action_confirm()
+
+    # END #########

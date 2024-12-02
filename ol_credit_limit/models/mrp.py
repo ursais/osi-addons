@@ -10,9 +10,14 @@ class MRPProduction(models.Model):
 
     _inherit = "mrp.production"
 
+    # COLUMNS #####
+
     credit_hold = fields.Boolean(
         "Credit Hold", related="sale_order_id.credit_hold", readonly=True
     )
+
+    # END #########
+    # METHODS #####
 
     def action_confirm(self):
         for mo in self:
@@ -37,3 +42,5 @@ class MRPProduction(models.Model):
                     _("Manufacturing cannot proceed due to customer's credit hold.")
                 )
         return super().button_mark_done()
+
+    # END #########
