@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -24,6 +24,10 @@ class MrpProduction(models.Model):
     sale_order_id = fields.Many2one(
         "sale.order",
         string="Sale Order",
+    )
+    sale_order_line_id = fields.Many2one(
+        "sale.order.line",
+        string="Sale Order Line",
     )
 
     # END #########
@@ -61,5 +65,25 @@ class MrpProduction(models.Model):
             "view_mode": "form",
             "target": "new",
         }
+
+    @api.depends(
+        "move_raw_ids.state",
+        "move_raw_ids.quantity",
+        "move_finished_ids.state",
+        "workorder_ids.state",
+        "product_qty",
+        "qty_producing",
+        "move_raw_ids.picked",
+    )
+    def _compute_state(self):
+        # Call the original compute logic
+        res = super()._compute_state()
+
+        # Trigger batch state computation for related batches
+        for production in self:
+            if production.mrp_batch_id:
+                production.mrp_batch_id._compute_batch_state()
+
+        return res
 
     # END #########

@@ -1,0 +1,14 @@
+<odoo>
+
+    <record id="mrp_batch_mmrp_workcenter_view" model="ir.ui.view">
+        <field name="name">mrp.workcenter.bom.inherit.mrp.batch</field>
+        <field name="model">mrp.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_workcenter_view" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="type" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

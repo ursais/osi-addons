@@ -1,0 +1,25 @@
+<odoo>
+
+    <record id="mrp_batch_mrp_routing_workcenter_tree_view" model="ir.ui.view">
+        <field name="name">mrp.routing.workcenter.bom.inherit.mrp.batch</field>
+        <field name="model">mrp.routing.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_routing_workcenter_tree_view" />
+        <field name="arch" type="xml">
+            <field name="time_cycle" position="after">
+                <field name="type" />
+            </field>
+        </field>
+    </record>
+
+    <record id="mrp_batch_mrp_routing_workcenter_form_view" model="ir.ui.view">
+        <field name="name">mrp.routing.workcenter.inherit.mrp.batch</field>
+        <field name="model">mrp.routing.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_routing_workcenter_form_view" />
+        <field name="arch" type="xml">
+            <field name="company_id" position="before">
+                <field name="type" />
+            </field>
+        </field>
+    </record>
+
+</odoo>
