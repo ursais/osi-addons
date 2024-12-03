@@ -453,7 +453,7 @@ class MrpProductionBatch(models.Model):
         "production_ids.date_deadline",
         "production_ids.state",
     )
-    def _compute_deadline_date(self):
+    def _compute_date_deadline(self):
         # Determine the deadline date among all productions in the batch
         for record in self:
             record.date_deadline = False
