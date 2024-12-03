@@ -14,7 +14,7 @@
                     class="fa fa-exclamation-triangle"
                     title="Product has been marked as not purchasable."
                 />
-                <field invisible="1" name="approved_purchase" />
+                <field column_invisible="1" name="approved_purchase" />
             </xpath>
             <div name="button_box" position="after">
                 <field invisible="1" name="exceptions_purchase_approval" />

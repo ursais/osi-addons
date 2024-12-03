@@ -8,6 +8,20 @@
         <field name="active">False</field>
     </record>
 
+    <record id="product_state_new" model="product.state">
+        <field name="code">new</field>
+        <field name="name">New</field>
+        <field name="default">False</field>
+        <field name="sequence">0</field>
+        <field name="approved_purchase" eval="False" />
+        <field name="approved_sale" eval="False" />
+        <field name="approved_sale_confirm" eval="False" />
+        <field name="approved_mrp" eval="False" />
+        <field name="approved_component_mrp" eval="False" />
+        <field name="approved_bom" eval="False" />
+        <field name="approved_ship" eval="False" />
+    </record>
+
     <record id="product_state.product_state_draft" model="product.state">
         <field name="default">True</field>
         <field name="approved_purchase" eval="True" />
@@ -79,6 +93,24 @@
         <field name="approved_component_mrp" eval="False" />
         <field name="approved_bom" eval="False" />
         <field name="approved_ship" eval="False" />
+    </record>
+
+    <!-- Stage Server Action: Allows for prototype products to change initial stages which don't require PLM. -->
+    <record id="action_move_initial_stage" model="ir.actions.server">
+        <field name="name">Change State to New/Development</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="state">code</field>
+        <field name="code">
+new_state = env.ref("ol_product_state.product_state_new")
+dev_state = env.ref("product_state.product_state_draft")
+for rec in records:
+    if new_state and dev_state:
+        if rec.product_state_id == new_state:
+            rec.sudo().write({"product_state_id": dev_state.id})
+        if rec.product_state_id == dev_state:
+            rec.sudo().write({"product_state_id": new_state.id})
+        </field>
     </record>
 
 </odoo>
