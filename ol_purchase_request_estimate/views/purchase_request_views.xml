@@ -11,6 +11,9 @@
             <xpath expr="//field[@name='estimated_cost']" position="after">
                 <field name="purchase_cost" optional="show" />
             </xpath>
+            <xpath expr="//field[@name='assigned_to']" position="attributes">
+                <attribute name="string">Assigned To</attribute>
+            </xpath>
             <button name="action_view_stock_picking" position="after">
                 <button
                     type="object"

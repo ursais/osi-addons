@@ -13,6 +13,7 @@
         "ol_base",
         "purchase_request",
         "job_cost_estimate_customer",
+        "purchase_request_tier_validation",
     ],
     # Data Loaded.
     "data": [
