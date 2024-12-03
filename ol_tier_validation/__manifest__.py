@@ -16,6 +16,10 @@
         "sale_blanket_order",
         "base_tier_validation",
         "base_tier_validation_formula",
+        "purchase_tier_validation",
+        "purchase_request_tier_validation",
+        "partner_tier_validation",
+        "sale_tier_validation",
     ],
     # always loaded
     "data": [
