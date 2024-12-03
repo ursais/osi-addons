@@ -16,6 +16,10 @@
                     The vendor on this purchase order has not been approved!
                 </div>
             </xpath>
+            <!-- Show Order Deadline but renamed after confirmed.-->
+            <field name="date_order" position="after">
+                <field name="date_order" string="Original Order Date" invisible="state not in ('purchase', 'done')" readonly="1"/>
+            </field>
         </field>
     </record>
 
