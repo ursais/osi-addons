@@ -6,7 +6,8 @@
         <field name="arch" type="xml">
             <form string="Create Product, BOM, and ECO">
                 <group>
-                    <field name="product_name"/>
+                    <field name="product_name" />
+                    <field name="type_id" />
                 </group>
                 <footer>
                     <button string="Create" type="object" name="action_create_product_bom_eco" class="btn-primary"/>

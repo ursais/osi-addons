@@ -39,7 +39,7 @@ class SaleEstimateJob(models.Model):
             "target": "new",
         }
 
-    def action_create_eco_and_product(self, product_name):
+    def action_create_eco_and_product(self, product_name, type):
         """Action called via button to create a new prototype product."""
         # Create the estimate
         profile = self.env["mrp.eco.type"].search([("name", "=", "Prototype")], limit=1)
@@ -68,15 +68,19 @@ class SaleEstimateJob(models.Model):
                 }
             )
 
-        eco_type = self.env["mrp.eco.type"].search([("name", "=", "New SKU")], limit=1)
+        # Create ECO
+        eco_stage = self.env["mrp.eco.stage"].search(
+            [("type_ids", "in", type.id)], limit=1
+        )
         new_eco = self.env["mrp.eco"].create(
             {
                 "name": product_name,
-                "type_id": eco_type.id,
+                "type_id": type.id,
                 "type": "bom",
                 "product_tmpl_id": new_product.id,
                 "bom_id": new_bom.id,
                 "estimate_id": self.id,
+                "stage_id": eco_stage.id,
             }
         )
         # Show the created eco
@@ -95,26 +99,25 @@ class SaleEstimateJob(models.Model):
             lead.product_count = len(lead.product_tmpl_ids)
 
     def action_view_product(self):
-        """Smart button action to open the Product or list of Product's if more than one."""
+        """Smart button action to open the Product or list of Products if
+        more than one."""
         products = self.product_tmpl_ids
         action = self.env.ref("product.product_template_action").read()[0]
         if len(products) == 1:
+            # Open the single product in form view
             action["views"] = [
-                (
-                    self.env.ref("product.product_template_only_form_view").id,
-                    "form",
-                )
+                (self.env.ref("product.product_template_only_form_view").id, "form"),
             ]
             action["res_id"] = products.id
         else:
+            # Open the list view with a fallback to form view for individual records
             action["views"] = [
-                (
-                    self.env.ref("product.product_template_tree_view").id,
-                    "tree",
-                )
+                (self.env.ref("product.product_template_tree_view").id, "tree"),
+                (self.env.ref("product.product_template_only_form_view").id, "form"),
             ]
-            action["context"] = "{}"
+            action["context"] = dict(self.env.context)  # Preserve context if needed
             action["domain"] = [("id", "in", products.ids)]
+
         return action
 
     @api.depends("mrp_eco_ids")
@@ -127,20 +130,20 @@ class SaleEstimateJob(models.Model):
         """Smart button action to open the ECO or list of ECO's if more than one."""
         ecos = self.mrp_eco_ids
         action = self.env.ref("mrp_plm.mrp_eco_action").read()[0]
+
         if len(ecos) == 1:
+            # Open the single ECO in form view
             action["views"] = [
-                (
-                    self.env.ref("mrp_plm.mrp_eco_view_form").id,
-                    "form",
-                )
+                (self.env.ref("mrp_plm.mrp_eco_view_form").id, "form"),
             ]
             action["res_id"] = ecos.id
         else:
+            # Open the list view with a fallback to form view for individual records
             action["views"] = [
-                (
-                    self.env.ref("mrp_plm.mrp_eco_view_tree").id,
-                    "tree",
-                )
+                (self.env.ref("mrp_plm.mrp_eco_view_tree").id, "tree"),
+                (self.env.ref("mrp_plm.mrp_eco_view_form").id, "form"),
             ]
             action["domain"] = [("id", "in", ecos.ids)]
+            action["context"] = dict(self.env.context)  # Preserve context if needed
+
         return action
