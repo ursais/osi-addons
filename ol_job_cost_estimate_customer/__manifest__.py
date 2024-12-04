@@ -14,10 +14,17 @@
     "depends": [
         "ol_base",
         "job_cost_estimate_customer",
+        "product_configurator_mrp",
+        "product_profile",
+        "mrp_plm",
     ],
     # always loaded
     "data": [
+        "data/product_profile_data.xml",
+        "security/ir.model.access.csv",
+        "views/mrp_bom.xml",
         "views/sale_estimate_views.xml",
+        "wizard/create_product_eco_wizard.xml",
     ],
     "application": False,
     "installable": True,

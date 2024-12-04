@@ -5,12 +5,13 @@
         model="ir.ui.view">
         <field name="name">sale.estimate.job.customer.inherit.form</field>
         <field name="model">sale.estimate.job</field>
-        <field name="inherit_id"
-            ref="job_cost_estimate_customer.view_sale_estimate_form_job" />
+        <field name="inherit_id" ref="job_cost_estimate_customer.view_sale_estimate_form_job" />
         <field name="arch" type="xml">
             <xpath
                 expr="//field[@name='estimate_ids']/tree/field[@name='product_uom']"
                 position="after">
+                <field name="forecast_expected_date" column_invisible="True"/>
+                <field name="forecast_availability" string="Forecast" optional="show" widget="forecast_widget"/>
                 <field name="customer_lead" optional="show" />
             </xpath>
             <xpath
@@ -22,6 +23,29 @@
                 expr="//field[@name='overhead_estimate_line_ids']/tree/field[@name='product_uom']"
                 position="after">
                 <field name="customer_lead" optional="hide" />
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]" position = "inside">
+                <button
+                    type="object"
+                    name="action_view_product"
+                    class="oe_stat_button"
+                    invisible="product_count == 0"
+                    icon="fa-list"
+                >
+                    <field name="product_count" widget="statinfo" string="Prototype Products" />
+                </button>
+                <button
+                    type="object"
+                    name="action_view_eco"
+                    class="oe_stat_button"
+                    invisible="mrp_eco_count == 0"
+                    icon="fa-list"
+                >
+                    <field name="mrp_eco_count" widget="statinfo" string="ECOs" />
+                </button>
+            </xpath>
+            <xpath expr="//button[@name='estimate_cancel']" position="before">
+                <button string="New Product/BoM/ECO" name="open_product_creation_wizard" type="object" class="oe_highlight" data-hotkey="q" title="Create a New Prototype Product/BoM/ECO" />
             </xpath>
         </field>
     </record>
