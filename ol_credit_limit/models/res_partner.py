@@ -52,9 +52,10 @@ class ResPartner(models.Model):
     )
     def _compute_credit_hold(self):
         for partner in self:
-            partner.credit_hold = partner.remaining_credit < 0
-            if partner.partner_rollup_id:
-                partner.credit_hold = partner.partner_rollup_id.remaining_credit < 0
+            if partner:
+                partner.credit_hold = partner.remaining_credit < 0
+                if partner.partner_rollup_id:
+                    partner.credit_hold = partner.partner_rollup_id.remaining_credit < 0
 
     @api.depends(
         "sale_order_ids",
@@ -63,6 +64,7 @@ class ResPartner(models.Model):
         "rollup_partner_ids.sale_order_ids.invoice_status",
     )
     def _compute_open_so_balance(self):
+        all_child = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
         for partner in self:
             open_so = [
                 order.amount_total
@@ -70,28 +72,22 @@ class ResPartner(models.Model):
                     lambda so: so.state == "sale" and so.invoice_status != "invoiced"
                 )
             ]
+            open_invoices = self.env["account.move"].search([('move_type', 'in', ('out_invoice', 'out_refund')),
+            ('partner_id', 'in', all_child.ids),("state","=","draft")])
             open_so_balance = partner.rollup_partner_ids.mapped("open_so_balance")
-            partner.open_so_balance = sum(open_so) + sum(open_so_balance)
+            partner.open_so_balance = sum(open_so) + sum(open_so_balance) + sum(open_invoices.mapped("amount_total"))
 
     @api.depends(
-        "credit_limit", "total_due", "rollup_partner_ids.total_due", "partner_rollup_id"
+        "credit_limit", "total_due", "rollup_partner_ids.total_due", "partner_rollup_id","open_so_balance"
     )
     def _compute_remaining_credit(self):
         for partner in self:
-            local_remaining_credit = partner.credit_limit - partner.total_due
-            if partner.rollup_partner_ids:
-                local_remaining_credit = local_remaining_credit - sum(
-                    partner.rollup_partner_ids.mapped("total_due")
-                )
-            if partner.partner_rollup_id:
-                local_remaining_credit = local_remaining_credit - sum(
-                    partner.partner_rollup_id.mapped("total_due")
-                )
-            partner.remaining_credit = local_remaining_credit or 0
+            used_credit =  sum(partner.rollup_partner_ids.mapped("credit")) + partner.open_so_balance
+            partner.remaining_credit = partner.credit_limit - used_credit or 0
 
     @api.onchange("credit_limit")
     def onchange_credit_limit(self):
-        if self.credit_limit > 0:
+        if self.credit_limit >= 0:
             self.partner_rollup_id = False
 
     @api.constrains("partner_rollup_id")
