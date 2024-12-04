@@ -10,6 +10,8 @@
             <xpath
                 expr="//field[@name='estimate_ids']/tree/field[@name='product_uom']"
                 position="after">
+                <field name="forecast_expected_date" column_invisible="True"/>
+                <field name="forecast_availability" string="Forecast" optional="show" widget="forecast_widget"/>
                 <field name="customer_lead" optional="show" />
             </xpath>
             <xpath
