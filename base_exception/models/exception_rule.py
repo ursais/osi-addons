@@ -20,7 +20,7 @@ class ExceptionRule(models.Model):
     _order = "active desc, sequence asc"
 
     name = fields.Char("Exception Name", required=True, translate=True)
-    description = fields.Text(translate=True)
+    description = fields.Text(translate=True, required=True)
     sequence = fields.Integer(help="Gives the sequence order when applying the test")
     model = fields.Selection(selection=[], string="Apply on", required=True)
 
@@ -113,9 +113,9 @@ class ExceptionRule(models.Model):
             "sequence": self.sequence,
             "model": self.model,
             "exception_type": self.exception_type,
-            "domain": self._get_domain()
-            if self.exception_type == "by_domain"
-            else None,
+            "domain": (
+                self._get_domain() if self.exception_type == "by_domain" else None
+            ),
             "method": self.method,
             "code": self.code,
             "is_blocking": self.is_blocking,

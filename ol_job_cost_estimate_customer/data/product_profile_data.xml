@@ -1,7 +1,7 @@
 <odoo noupdate="1">
 
     <record id="prototype_product" model="product.profile">
-        <field name="name">Prototype Product</field>
+        <field name="name">Prototype</field>
         <field name="explanation">Prototype Product's Default Settings</field>
         <field name="detailed_type">product</field>
     </record>
