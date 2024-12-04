@@ -1,0 +1,26 @@
+<odoo>
+
+    <record id="view_product_creation_wizard_form" model="ir.ui.view">
+        <field name="name">product.creation.wizard.form</field>
+        <field name="model">product.creation.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create Product, BOM, and ECO">
+                <group>
+                    <field name="product_name"/>
+                </group>
+                <footer>
+                    <button string="Create" type="object" name="action_create_product_bom_eco" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_product_creation_wizard" model="ir.actions.act_window">
+        <field name="name">Create Product, BoM, and ECO</field>
+        <field name="res_model">product.creation.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>
