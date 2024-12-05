@@ -339,14 +339,20 @@ class MrpProductionBatch(models.Model):
             elif all(state == "done" for state in non_cancel_states):
                 batch.state = "done"
 
-    @api.depends("production_ids.sale_order_id.tag_ids")
+    @api.depends(
+        "production_ids.sale_order_id.tag_ids",
+        "production_ids.state",
+    )
     def _compute_sale_tags(self):
-        for rec in self:
-            # Collect all sale_tag_ids from the lines
-            all_tags = rec.production_ids.sale_order_id.mapped("tag_ids")
+        for record in self:
+            # Exclude canceled MOs
+            valid_productions = record.production_ids.filtered(
+                lambda mo: mo.state != "cancel"
+            )
 
-            # Update the main object's sale_tag_ids
-            rec.sale_tag_ids = [(6, 0, all_tags.ids)]
+            # Collect sale tags
+            all_tags = valid_productions.mapped("sale_order_id.tag_ids")
+            record.sale_tag_ids = [(6, 0, all_tags.ids)]
 
     def _compute_is_delayed(self):
         # Check if the scheduled date falls after deadline
@@ -529,16 +535,20 @@ class MrpProductionBatch(models.Model):
     @api.depends(
         "production_ids.procurement_group_id.mrp_production_ids.move_dest_ids.sale_line_id.price_unit",
         "production_ids.product_qty",
+        "production_ids.state",
     )
     def _compute_revenue(self):
         for record in self:
-            total = 0.0
-            for mo in record.production_ids:
-                sale_line = (
-                    mo.procurement_group_id.mrp_production_ids.move_dest_ids.sale_line_id
-                )
-                if sale_line:
-                    total += sale_line.price_unit * mo.product_qty
+            # Exclude canceled MOs
+            valid_productions = record.production_ids.filtered(
+                lambda mo: mo.state != "cancel"
+            )
+            # Compute revenue
+            total = sum(
+                sale_line.price_unit * mo.product_qty
+                for mo in valid_productions
+                for sale_line in mo.procurement_group_id.mrp_production_ids.move_dest_ids.sale_line_id
+            )
             record.total_revenue = total
 
     @api.depends("production_ids.state")
@@ -657,12 +667,18 @@ class MrpProductionBatch(models.Model):
         "production_ids.qty_produced",
     )
     def _compute_qty(self):
-        # Compute the total count of sales orders associated with productions
         for record in self:
-            # Sum product_qty for all lines where state is not 'cancelled'
-            record.qty_producing = sum(mo.product_qty for mo in record.production_ids)
-            record.qty_produced = sum(mo.qty_produced for mo in record.production_ids)
+            # Exclude canceled MOs
+            valid_productions = record.production_ids.filtered(
+                lambda mo: mo.state != "cancel"
+            )
+
+            # Compute quantities
+            record.qty_producing = sum(mo.product_qty for mo in valid_productions)
+            record.qty_produced = sum(mo.qty_produced for mo in valid_productions)
             record.qty_remaining = record.qty_producing - record.qty_produced
+
+            # Compute percentage complete
             if record.qty_producing > 0.0:
                 record.percent_complete = record.qty_produced / record.qty_producing
             else:
