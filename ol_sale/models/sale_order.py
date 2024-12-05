@@ -11,9 +11,13 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     # COLUMNS #####
-    original_request_date = fields.Date(string="Original Customer Requested Date")
+    original_request_date = fields.Date(
+        string="Original Customer Requested Date",
+        copy=False,
+    )
     original_commitment_date = fields.Datetime(
-        string="Original Shipment Commitment Date"
+        string="Original Shipment Commitment Date",
+        copy=False,
     )
     # END #########
 
@@ -25,12 +29,12 @@ class SaleOrder(models.Model):
         """
         res = super().action_confirm()
         for rec in self:
-            rec.original_commitment_date = (
-                self.commitment_date or self.expected_date
-            )
+            rec.original_commitment_date = self.commitment_date or self.expected_date
             if not rec.original_request_date:
                 raise ValidationError(
-                    _("Original Customer Requested Date is required to confirm the order.")
+                    _(
+                        "Original Customer Requested Date is required to confirm the order."
+                    )
                 )
         return res
 

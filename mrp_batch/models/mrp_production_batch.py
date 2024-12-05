@@ -467,47 +467,64 @@ class MrpProductionBatch(models.Model):
                 # Compute the maximum deadline if there are any valid dates
                 record.date_deadline = max(deadlines) if deadlines else False
 
+    # Computes for Expected & Real durations
+    @api.depends(
+        "production_ids.duration_expected",
+        "production_ids.state",
+    )
+    def _compute_total_duration_expected(self):
+        for record in self:
+            # Exclude MOs in the "cancel" state
+            productions = record.production_ids.filtered(lambda p: p.state != "cancel")
+            record.total_duration_expected = sum(
+                productions.mapped("duration_expected")
+            )
+
+    @api.depends(
+        "production_ids.duration",
+    )
+    def _compute_total_duration(self):
+        for record in self:
+            # Exclude MOs in the "cancel" state
+            productions = record.production_ids.filtered(lambda p: p.state != "cancel")
+            record.total_duration = sum(productions.mapped("duration"))
+
     @api.depends(
         "production_ids.workorder_ids.operation_id.type",
         "production_ids.duration_expected",
+        "production_ids.state",
     )
     def _compute_build_test_durations_expected(self):
-        # Determine the build/test expected durations all productions in the batch
         for record in self:
-            total_build = 0.0
-            total_test = 0.0
+            # Exclude MOs in the "cancel" state
+            productions = record.production_ids.filtered(lambda p: p.state != "cancel")
+            workorders = productions.mapped("workorder_ids")
 
-            # Iterate through all related work orders
-            for production in record.production_ids:
-                for workorder in production.workorder_ids:
-                    if workorder.operation_type == "build":
-                        total_build += workorder.duration_expected
-                    elif workorder.operation_type == "test":
-                        total_test += workorder.duration_expected
-
-            record.total_build_duration_expected = total_build
-            record.total_test_duration_expected = total_test
+            record.total_build_duration_expected = sum(
+                wo.duration_expected
+                for wo in workorders
+                if wo.operation_type == "build"
+            )
+            record.total_test_duration_expected = sum(
+                wo.duration_expected for wo in workorders if wo.operation_type == "test"
+            )
 
     @api.depends(
         "production_ids.workorder_ids.operation_id.type",
         "production_ids.duration",
     )
     def _compute_build_test_durations(self):
-        # Determine the build/test real durations all productions in the batch
         for record in self:
-            total_build = 0.0
-            total_test = 0.0
+            # Exclude MOs in the "cancel" state
+            productions = record.production_ids.filtered(lambda p: p.state != "cancel")
+            workorders = productions.mapped("workorder_ids")
 
-            # Iterate through all related work orders
-            for production in record.production_ids:
-                for workorder in production.workorder_ids:
-                    if workorder.operation_type == "build":
-                        total_build += workorder.duration
-                    elif workorder.operation_type == "test":
-                        total_test += workorder.duration
-
-            record.total_build_duration = total_build
-            record.total_test_duration = total_test
+            record.total_build_duration = sum(
+                wo.duration for wo in workorders if wo.operation_type == "build"
+            )
+            record.total_test_duration = sum(
+                wo.duration for wo in workorders if wo.operation_type == "test"
+            )
 
     @api.depends(
         "production_ids.procurement_group_id.mrp_production_ids.move_dest_ids.sale_line_id.price_unit",
@@ -633,22 +650,6 @@ class MrpProductionBatch(models.Model):
                     for production in record.production_ids
                     for wo in production.workorder_ids
                 )
-
-    @api.depends("production_ids.duration")
-    def _compute_total_duration(self):
-        # Sum the total duration of all productions in the batch
-        for record in self:
-            record.total_duration = sum(
-                production.duration for production in record.production_ids
-            )
-
-    @api.depends("production_ids.duration_expected")
-    def _compute_total_duration_expected(self):
-        # Sum the expected durations of all productions in the batch
-        for record in self:
-            record.total_duration_expected = sum(
-                production.duration_expected for production in record.production_ids
-            )
 
     @api.depends(
         "production_ids.state",
