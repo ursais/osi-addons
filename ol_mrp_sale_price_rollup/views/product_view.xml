@@ -11,7 +11,7 @@
                 <field name="has_configurable_attributes" invisible="1" />
                 <button
                     name="button_bom_sale_price"
-                    string="Compute Sales Price from BoM"
+                    string="Compute Sales Price/Total Cost from BoM"
                     type="object"
                     invisible="bom_count == 0 or is_product_variant"
                     help="Compute the sales price of the product using products and operations of related bill of materials, for manufactured products only."
@@ -34,7 +34,7 @@
                 <field name="has_configurable_attributes" invisible="1" />
                 <button
                     name="button_bom_sale_price"
-                    string="Compute Sales Price from BoM"
+                    string="Compute Sales Price/Total Cost from BoM"
                     type="object"
                     invisible="bom_count == 0 or not is_product_variant"
                     help="Compute the sales price of the product using products and operations of related bill of materials, for manufactured products only."

@@ -55,4 +55,24 @@ class SaleOrderLine(models.Model):
                 fiscal_position=line.order_id.fiscal_position_id,
             )
 
+    @api.depends("product_id", "company_id", "currency_id", "product_uom")
+    def _compute_purchase_price(self):
+        res = super()._compute_purchase_price()
+        for line in self:
+            if not line.product_id:
+                line.purchase_price = 0.0
+                continue
+            line = line.with_company(line.company_id)
+
+            # Convert the cost to the line UoM
+            product_cost = line.product_id.uom_id._compute_price(
+                line.product_id.total_cost,
+                line.product_uom,
+            )
+
+            line.purchase_price = line._convert_to_sol_currency(
+                product_cost, line.product_id.cost_currency_id
+            )
+        return res
+
     # END #########
