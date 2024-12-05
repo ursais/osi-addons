@@ -15,10 +15,12 @@
         "product_configurator",
         "sale_management",
         "mrp",
+        "mrp_batch",
     ],
     # always loaded
     "data": [
         "views/product_template_view.xml",
+        "views/mrp_production_batch_view.xml",
         "views/mrp_production_view.xml",
         "views/sale_order_view.xml",
         "views/stock_picking.xml",
