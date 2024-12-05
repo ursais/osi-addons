@@ -1,7 +1,7 @@
 # Import Odoo libs
 import html
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 
 class MrpProductionBatch(models.Model):
@@ -168,12 +168,17 @@ class MrpProductionBatch(models.Model):
     )
     total_build_duration_expected = fields.Float(
         string="Expected Build Duration",
-        compute="_compute_build_test_durations_expected",
+        compute="_compute_build_test_other_durations_expected",
         store=True,
     )
     total_test_duration_expected = fields.Float(
         string="Expected Test Duration",
-        compute="_compute_build_test_durations_expected",
+        compute="_compute_build_test_other_durations_expected",
+        store=True,
+    )
+    total_other_duration_expected = fields.Float(
+        string="Expected Other Duration",
+        compute="_compute_build_test_other_durations_expected",
         store=True,
     )
     total_duration = fields.Float(
@@ -183,12 +188,17 @@ class MrpProductionBatch(models.Model):
     )
     total_build_duration = fields.Float(
         string="Real Build Duration",
-        compute="_compute_build_test_durations",
+        compute="_compute_build_test_other_durations",
         store=True,
     )
     total_test_duration = fields.Float(
         string="Real Test Duration",
-        compute="_compute_build_test_durations",
+        compute="_compute_build_test_other_durations",
+        store=True,
+    )
+    total_other_duration = fields.Float(
+        string="Real Other Duration",
+        compute="_compute_build_test_other_durations",
         store=True,
     )
 
@@ -390,28 +400,26 @@ class MrpProductionBatch(models.Model):
                 record.product_tmpl_ids = record.production_ids.product_tmpl_id.ids
 
     @api.depends(
-        "production_ids",
+        "production_ids.state",
         "production_ids.exception_ids",
+        "production_ids.main_exception_id",
         "production_ids.ignore_exception",
     )
     def _compute_exception_ids(self):
         for record in self:
-            # Filter out production records where ignore_exception is True
+            # Exclude canceled MOs
             valid_productions = record.production_ids.filtered(
-                lambda p: not p.ignore_exception
+                lambda mo: mo.state != "cancel"
             )
 
-            # Collect exception_ids from the remaining productions
-            record.exception_ids = (
-                valid_productions.mapped("exception_ids").ids
-                if valid_productions
-                else False
-            )
+            # Collect exceptions
+            all_exceptions = valid_productions.mapped("exception_ids")
+            record.exception_ids = [(6, 0, all_exceptions.ids)]
 
     @api.depends("exception_ids")
     def _compute_exceptions_summary(self):
         for rec in self:
-            if rec.exception_ids and not rec.ignore_exception:
+            if rec.exception_ids:
                 rec.exceptions_summary = "<ul>%s</ul>" % "".join(
                     [
                         f"<li>{html.escape(e.name)}: <i>{html.escape(e.description or '')}</i> <b>"
@@ -500,7 +508,7 @@ class MrpProductionBatch(models.Model):
         "production_ids.duration_expected",
         "production_ids.state",
     )
-    def _compute_build_test_durations_expected(self):
+    def _compute_build_test_other_durations_expected(self):
         for record in self:
             # Exclude MOs in the "cancel" state
             productions = record.production_ids.filtered(lambda p: p.state != "cancel")
@@ -514,12 +522,17 @@ class MrpProductionBatch(models.Model):
             record.total_test_duration_expected = sum(
                 wo.duration_expected for wo in workorders if wo.operation_type == "test"
             )
+            record.total_other_duration_expected = sum(
+                wo.duration_expected
+                for wo in workorders
+                if wo.operation_type == "other"
+            )
 
     @api.depends(
         "production_ids.workorder_ids.operation_id.type",
         "production_ids.duration",
     )
-    def _compute_build_test_durations(self):
+    def _compute_build_test_other_durations(self):
         for record in self:
             # Exclude MOs in the "cancel" state
             productions = record.production_ids.filtered(lambda p: p.state != "cancel")
@@ -530,6 +543,9 @@ class MrpProductionBatch(models.Model):
             )
             record.total_test_duration = sum(
                 wo.duration for wo in workorders if wo.operation_type == "test"
+            )
+            record.total_other_duration = sum(
+                wo.duration for wo in workorders if wo.operation_type == "other"
             )
 
     @api.depends(
