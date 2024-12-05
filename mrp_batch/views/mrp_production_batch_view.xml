@@ -28,14 +28,18 @@
                 <field name="total_duration_expected" widget="float_time" optional="show" sum="Total" />
                 <field name="total_build_duration_expected" widget="float_time" optional="show" sum="Total" />
                 <field name="total_test_duration_expected" widget="float_time" optional="show" sum="Total" />
+                <field name="total_other_duration_expected" widget="float_time" optional="show" sum="Total" />
                 <field name="total_duration" widget="float_time" optional="hide" sum="Total" />
                 <field name="total_build_duration" widget="float_time" optional="hide" sum="Total" />
                 <field name="total_test_duration" widget="float_time" optional="hide" sum="Total" />
+                <field name="total_other_duration" widget="float_time" optional="hide" sum="Total" />
                 <field name="qty_producing" optional="hide" sum="Total" />
                 <field name="qty_produced" optional="hide" sum="Total" />
                 <field name="qty_remaining" optional="hide" sum="Total" />
                 <field name="percent_complete" widget="percentage" optional="hide" />
                 <field name="responsible_id" optional="show" />
+                <field name="exception_ids" widget="many2many_tags" optional="hide" />
+                <field name="exceptions_summary" optional="show" />
                 <field name="notes" optional="hide" />
                 <field name="state" decoration-success="state == 'done'" decoration-warning="state == 'progress'" decoration-info="state == 'confirm'" decoration-danger="state == 'hold'" decoration-muted="state in ('cancel', 'draft')" optional="show" widget="badge" class="text-dark"/>
                 <field name="is_planned" widget="boolean_toggle" readonly="1" />
@@ -82,6 +86,10 @@
                             <field name="sale_order_count" widget="statinfo" string="Sales" />
                         </button>
                     </div>
+                    <div class="alert alert-danger mb8" role="alert" invisible="not exception_ids">
+                        IMPORTANT: There are manufacturing orders with exceptions.
+                        <field name="exceptions_summary"/>
+                    </div>
                     <div class="oe_title">
                         <widget name="web_ribbon" title="DELAYED" bg_color="text-bg-danger" invisible="not is_delayed" />
                         <widget name="web_ribbon" title="QUEUING" bg_color="text-bg-info" invisible="not is_queuing" />
@@ -107,6 +115,8 @@
                             <field name="earliest_start" readonly="state not in ('draft', 'confirm', 'cancel') or is_locked" />
                             <field name="date_deadline" readonly="state not in ('draft', 'confirm', 'cancel') or is_locked" />
                             <field name="responsible_id" readonly="state not in ('draft', 'confirm', 'cancel') or is_locked" />
+                            <field name="exception_ids" widget="many2many_tags" invisible="1" />
+                            <field name="exceptions_summary" invisible="1" />
                         </group>
                         <group>
                             <label for="qty_producing" string="Quantity"/>
@@ -121,11 +131,13 @@
                             <field name="total_duration" widget="float_time" />
                             <field name="total_build_duration" widget="float_time" />
                             <field name="total_test_duration" widget="float_time" />
+                            <field name="total_other_duration" widget="float_time" />
                         </group>
                         <group>
                             <field name="total_duration_expected" widget="float_time" />
                             <field name="total_build_duration_expected" widget="float_time" />
                             <field name="total_test_duration_expected" widget="float_time" />
+                            <field name="total_other_duration_expected" widget="float_time" />
                         </group>
                     </group>
                     <notebook>
@@ -146,6 +158,8 @@
                                     <field name="sale_order_id" string="Sale Order" optional="show" />
                                     <field name="duration_expected" widget="float_time" optional="show" />
                                     <field name="duration" widget="float_time" optional="show" />
+                                    <field name="main_exception_id" optional="hide" />
+                                    <field name="exceptions_summary" optional="show" />
                                     <button name="action_remove_batch" type="object" icon='fa-close' column_invisible="parent.state not in ('draft', 'progress', 'cancel') or parent.is_locked" />
                                 </tree>
                             </field>
@@ -193,9 +207,11 @@
                 <field name="total_duration_expected"/>
                 <field name="total_build_duration_expected"/>
                 <field name="total_test_duration_expected"/>
+                <field name="total_other_duration_expected"/>
                 <field name="total_duration"/>
                 <field name="total_build_duration"/>
                 <field name="total_test_duration"/>
+                <field name="total_other_duration"/>
                 <field name="percent_complete"/>
             </gantt>
         </field>
