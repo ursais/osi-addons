@@ -27,7 +27,7 @@
         name="Work Center Tags"
         parent="mrp.menu_mrp_configuration"
         action="action_mrp_workcenter_tag"
-        sequence="100"
+        sequence="91"
     />
 
 </odoo>
