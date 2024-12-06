@@ -18,6 +18,7 @@ class PurchaseRequestLine(models.Model):
         "sale.estimate.line.job",
         string="Sale Estimate Line",
     )
+    url = fields.Char(string="URL")
 
     # END ##########
     # METHODS ##########

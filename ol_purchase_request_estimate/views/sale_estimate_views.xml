@@ -31,6 +31,7 @@
             </xpath>
             <xpath expr="//field[@name='product_description']" position="after">
                 <field name="specifications" optional="show" />
+                <field name="url" widget="url" optional="show" />
             </xpath>
             <xpath expr="//field[@name='estimate_ids']/tree/field[@name='price_unit']" position="before">
                 <field
