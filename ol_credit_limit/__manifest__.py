@@ -27,6 +27,11 @@
         "views/stock_picking_view.xml",
         "views/mrp_production_view.xml",
     ],
+    'assets': {
+        'web.assets_backend': [
+            'ol_credit_limit/static/src/**/*',
+        ],
+    },
     # only loaded in demo mode
     "demo": [],
     "application": False,

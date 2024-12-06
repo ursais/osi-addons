@@ -1,6 +1,5 @@
 # Import Odoo libs
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
 
 
 class StockPicking(models.Model):
@@ -12,25 +11,17 @@ class StockPicking(models.Model):
 
     # COLUMNS #####
 
-    credit_hold = fields.Boolean("Credit Hold", related="sale_id.credit_hold")
+    credit_hold = fields.Boolean("Credit Hold",store=True,compute="_compute_credit_hold" )
 
     # END #########
     # METHODS #####
 
-    def action_assign(self):
-        for picking in self:
-            if picking.sale_id and picking.sale_id.credit_hold:
-                raise UserError(
-                    _("Delivery cannot be confirmed due to customer's credit hold.")
-                )
-        return super().action_assign()
+    @api.depends("sale_id","sale_id.credit_hold", "sale_id.override_credit_limit_hold")
+    def _compute_credit_hold(self):
+        for pick in self:
+            credit_hold = False
+            if pick.sale_id.credit_hold:
+                credit_hold = True
+            pick.credit_hold = credit_hold
 
-    def button_validate(self):
-        for picking in self:
-            if picking.sale_id and picking.sale_id.credit_hold:
-                raise UserError(
-                    _("Delivery cannot be confirmed due to customer's credit hold.")
-                )
-        return super().button_validate()
-
-    # END #########
+    # # END #########

@@ -1,6 +1,5 @@
 # Import Odoo libs
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
 
 
 class MRPProduction(models.Model):
@@ -13,34 +12,18 @@ class MRPProduction(models.Model):
     # COLUMNS #####
 
     credit_hold = fields.Boolean(
-        "Credit Hold", related="sale_order_id.credit_hold", readonly=True
+        "Credit Hold", store=True,compute="_compute_credit_hold" 
     )
 
     # END #########
     # METHODS #####
 
-    def action_confirm(self):
+    @api.depends("sale_order_id","sale_order_id.credit_hold" ,"sale_order_id.override_credit_limit_hold")
+    def _compute_credit_hold(self):
         for mo in self:
-            if mo.sale_order_id and mo.sale_order_id.credit_hold:
-                raise UserError(
-                    _("Manufacturing cannot proceed due to customer's credit hold.")
-                )
-        return super().action_confirm()
-
-    def button_plan(self):
-        for mo in self:
-            if mo.sale_order_id and mo.sale_order_id.credit_hold:
-                raise UserError(
-                    _("Manufacturing cannot proceed due to customer's credit hold.")
-                )
-        return super().button_plan()
-
-    def button_mark_done(self):
-        for mo in self:
-            if mo.sale_order_id and mo.sale_order_id.credit_hold:
-                raise UserError(
-                    _("Manufacturing cannot proceed due to customer's credit hold.")
-                )
-        return super().button_mark_done()
+            credit_hold = False
+            if mo.sale_order_id.credit_hold:
+                credit_hold = True
+            mo.credit_hold = credit_hold
 
     # END #########

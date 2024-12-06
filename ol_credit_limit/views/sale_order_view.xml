@@ -4,8 +4,13 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form" />
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('oe_button_box')]" position = "after">
-                <widget name="web_ribbon" title="CREDIT HOLD" bg_color="text-bg-danger" invisible="not credit_hold" groups="ol_credit_limit.group_credit_management_user"/>
+            <xpath expr="//sheet/div[@invisible='not locked']" position="attributes">
+                <attribute name="class" add="so_lock_bubble" separator=" "></attribute>
+            </xpath>
+            <xpath expr="//header" position = "after">
+                <div class="alert alert-danger mb-0" role="alert" invisible="not credit_hold" groups="ol_credit_limit.group_credit_management_user">
+                    <strong> CREDIT HOLD </strong>
+                </div>
             </xpath>
             <xpath expr="//page[@name='other_information']//group[@name='sale_reporting']" position="after">
                 <group name="credit_management" string="Credit Management" groups="ol_credit_limit.group_credit_management_user">
