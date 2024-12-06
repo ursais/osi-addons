@@ -49,9 +49,6 @@ class PurchaseRequestLine(models.Model):
                 virtual_available = line.product_id.with_context(
                     warehouse=warehouse.id, to_date=line.date_required
                 ).virtual_available
-                # raise UserError(virtual_available)
-                # if line.request_id.state == "draft":
-                #     virtual_available += line.product_qty
                 if virtual_available <= 0:
                     line.forecasted_issue = True
 
