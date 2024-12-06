@@ -1,5 +1,6 @@
 # Import Odoo libs
 from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 
 class PurchaseRequestLine(models.Model):
@@ -19,6 +20,8 @@ class PurchaseRequestLine(models.Model):
         string="Sale Estimate Line",
     )
     url = fields.Char(string="URL")
+    product_type = fields.Selection(related="product_id.detailed_type")
+    forecasted_issue = fields.Boolean(compute="_compute_forecasted_issue")
 
     # END ##########
     # METHODS ##########
@@ -36,5 +39,36 @@ class PurchaseRequestLine(models.Model):
                 if purchase_lines
                 else 0.0
             )
+
+    @api.depends("product_qty", "date_required")
+    def _compute_forecasted_issue(self):
+        for line in self:
+            warehouse = line.request_id.picking_type_id.warehouse_id
+            line.forecasted_issue = False
+            if line.product_id:
+                virtual_available = line.product_id.with_context(
+                    warehouse=warehouse.id, to_date=line.date_required
+                ).virtual_available
+                # raise UserError(virtual_available)
+                # if line.request_id.state == "draft":
+                #     virtual_available += line.product_qty
+                if virtual_available <= 0:
+                    line.forecasted_issue = True
+
+    def action_product_forecast_report(self):
+        self.ensure_one()
+        action = self.product_id.action_product_forecast_report()
+        action["context"] = {
+            "active_id": self.product_id.id,
+            "active_model": "product.product",
+            "move_to_match_ids": self.purchase_lines.move_ids.filtered(
+                lambda m: m.product_id == self.product_id
+            ).ids,
+            "purchase_line_to_match_id": self.purchase_lines.id,
+        }
+        warehouse = self.request_id.picking_type_id.warehouse_id
+        if warehouse:
+            action["context"]["warehouse"] = warehouse.id
+        return action
 
     # END ##########
