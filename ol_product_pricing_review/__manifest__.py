@@ -27,5 +27,6 @@
         "views/product_price_review_views.xml",
         "views/product_product_views.xml",
         "views/product_template_views.xml",
+        "views/purchase_order_view.xml",
     ],
 }
