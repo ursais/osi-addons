@@ -14,6 +14,9 @@
             <xpath expr="//field[@name='assigned_to']" position="attributes">
                 <attribute name="string">Assigned To</attribute>
             </xpath>
+            <xpath expr="//field[@name='specifications']" position="after">
+                <field name="url" widget="url" optional="show" />
+            </xpath>
             <button name="action_view_stock_picking" position="after">
                 <button
                     type="object"

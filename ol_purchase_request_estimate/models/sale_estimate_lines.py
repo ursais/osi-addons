@@ -10,6 +10,7 @@ class SaleEstimatelineJob(models.Model):
     # COLUMNS ######
 
     specifications = fields.Text()
+    url = fields.Char(string="URL")
     purchase_request_line_ids = fields.One2many(
         "purchase.request.line",
         "estimate_line_id",
