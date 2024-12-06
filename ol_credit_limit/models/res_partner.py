@@ -44,7 +44,7 @@ class ResPartner(models.Model):
     # METHODS #####
 
     def _get_open_sale_order(self):
-        open_so = self.sale_order_ids.filtered(lambda so: so.state == "sale" and so.invoice_status != "invoiced")
+        open_so = self.sale_order_ids.filtered(lambda so: so.invoice_status != "invoiced")
         sorted_orders_asc = self.env['sale.order'].browse(open_so.ids).sorted('id')
         return sorted_orders_asc
 
