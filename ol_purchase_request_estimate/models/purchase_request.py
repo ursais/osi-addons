@@ -1,11 +1,17 @@
 # Import Odoo libs
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class PurchaseRequest(models.Model):
     """Add relation to estimates on PR's"""
 
     _inherit = "purchase.request"
+
+    @api.model
+    def _default_picking_type(self):
+        return self._get_picking_type(
+            self.env.context.get("company_id") or self.env.company.id
+        )
 
     # COLUMNS ######
 
@@ -16,9 +22,40 @@ class PurchaseRequest(models.Model):
     estimate_count = fields.Integer(
         compute="_compute_estimate_count",
     )
+    picking_type_id = fields.Many2one(
+        "stock.picking.type",
+        "Deliver To",
+        required=True,
+        default=_default_picking_type,
+        help="This will determine operation type of incoming shipment",
+    )
 
     # END ##########
     # METHODS ##########
+
+    @api.model
+    def _get_picking_type(self, company_id):
+        picking_type = self.env["stock.picking.type"].search(
+            [("code", "=", "incoming"), ("warehouse_id.company_id", "=", company_id)]
+        )
+        if not picking_type:
+            picking_type = self.env["stock.picking.type"].search(
+                [("code", "=", "incoming"), ("warehouse_id", "=", False)]
+            )
+        return picking_type[:1]
+
+    @api.onchange("company_id")
+    def _onchange_company_id(self):
+        p_type = self.picking_type_id
+        if not (
+            p_type
+            and p_type.code == "incoming"
+            and (
+                p_type.warehouse_id.company_id == self.company_id
+                or not p_type.warehouse_id
+            )
+        ):
+            self.picking_type_id = self._get_picking_type(self.company_id.id)
 
     def _compute_estimate_count(self):
         """Standard count method that shows on the smart button."""

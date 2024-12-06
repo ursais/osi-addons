@@ -5,18 +5,30 @@
         <field name="model">purchase.request</field>
         <field name="inherit_id" ref="purchase_request.view_purchase_request_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='assigned_to']" position="attributes">
+                <attribute name="string">Assigned To</attribute>
+            </xpath>
+            <xpath expr="//field[@name='group_id']" position="after">
+                <!-- <field name="picking_type_id" domain="['|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id.id)]" /> -->
+                <field name="picking_type_id" />
+            </xpath>
+
+            <!-- Line Updates -->
             <xpath expr="//field[@name='product_qty']" position="before">
                 <field name="specifications" optional="show" />
+                <field name="url" widget="url" optional="show" />
+            </xpath>
+            <xpath expr="//field[@name='date_required']" position="before">
+                <field name="product_type" column_invisible="True"/>
+                <field name="forecasted_issue" column_invisible="True"/>
+                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="not id or not forecasted_issue or product_type != 'product'" class="text-danger"/>
+                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="not id or forecasted_issue or product_type != 'product'"/>
             </xpath>
             <xpath expr="//field[@name='estimated_cost']" position="after">
                 <field name="purchase_cost" optional="show" />
             </xpath>
-            <xpath expr="//field[@name='assigned_to']" position="attributes">
-                <attribute name="string">Assigned To</attribute>
-            </xpath>
-            <xpath expr="//field[@name='specifications']" position="after">
-                <field name="url" widget="url" optional="show" />
-            </xpath>
+
+            <!-- Add Buttons -->
             <button name="action_view_stock_picking" position="after">
                 <button
                     type="object"
