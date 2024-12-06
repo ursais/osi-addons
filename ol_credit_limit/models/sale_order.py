@@ -1,6 +1,5 @@
 # Import Odoo libs
 from odoo import _, api, fields, models
-from odoo.exceptions import UserError
 
 
 class SaleOrder(models.Model):
@@ -23,12 +22,19 @@ class SaleOrder(models.Model):
     # END #########
     # METHODS #####
 
-    @api.depends("partner_id.remaining_credit", "override_credit_limit_hold")
+    @api.depends("partner_id.remaining_credit","partner_id.open_so_balance", "override_credit_limit_hold")
     def _compute_credit_hold(self):
-        for order in self:
-            order.credit_hold = (
-                order.partner_id.credit_hold and not order.override_credit_limit_hold
-            )
+        open_saleorders = self.partner_id._get_open_sale_order()
+        counter_total = 0
+        credit_hold = False
+        for order in open_saleorders:
+            counter_total += order.amount_total
+            if counter_total > order.partner_id.credit_limit:
+                credit_hold = True
+            if order.override_credit_limit_hold:
+                credit_hold = False
+            order.credit_hold = credit_hold
+            
 
     @api.depends("amount_total", "invoice_status")
     def _compute_uninvoiced_balance(self):
@@ -36,15 +42,5 @@ class SaleOrder(models.Model):
             order.uninvoiced_balance = (
                 order.amount_total if order.invoice_status != "invoiced" else 0
             )
-
-    def action_confirm(self):
-        for order in self:
-            if order.credit_hold and not order.override_credit_limit_hold:
-                raise UserError(
-                    _(
-                        "Order cannot be confirmed because the customer is on credit hold."
-                    )
-                )
-        return super().action_confirm()
 
     # END #########

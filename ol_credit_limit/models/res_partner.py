@@ -43,6 +43,11 @@ class ResPartner(models.Model):
     # END #########
     # METHODS #####
 
+    def _get_open_sale_order(self):
+        open_so = self.sale_order_ids.filtered(lambda so: so.invoice_status != "invoiced")
+        sorted_orders_asc = self.env['sale.order'].browse(open_so.ids).sorted('id')
+        return sorted_orders_asc
+
     @api.depends(
         "credit_limit",
         "open_so_balance",
@@ -52,6 +57,7 @@ class ResPartner(models.Model):
     )
     def _compute_credit_hold(self):
         for partner in self:
+            open_so= partner._get_open_sale_order()
             if partner:
                 partner.credit_hold = partner.remaining_credit < 0
                 if partner.partner_rollup_id:
@@ -66,16 +72,11 @@ class ResPartner(models.Model):
     def _compute_open_so_balance(self):
         all_child = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
         for partner in self:
-            open_so = [
-                order.amount_total
-                for order in partner.sale_order_ids.filtered(
-                    lambda so: so.state == "sale" and so.invoice_status != "invoiced"
-                )
-            ]
+            open_so= partner._get_open_sale_order()
             open_invoices = self.env["account.move"].search([('move_type', 'in', ('out_invoice', 'out_refund')),
             ('partner_id', 'in', all_child.ids),("state","=","draft")])
             open_so_balance = partner.rollup_partner_ids.mapped("open_so_balance")
-            partner.open_so_balance = sum(open_so) + sum(open_so_balance) + sum(open_invoices.mapped("amount_total"))
+            partner.open_so_balance = sum(open_so.mapped('amount_total'))+ sum(open_so_balance) + sum(open_invoices.mapped("amount_total"))
 
     @api.depends(
         "credit_limit", "total_due", "rollup_partner_ids.total_due", "partner_rollup_id","open_so_balance"
