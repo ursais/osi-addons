@@ -11,5 +11,4 @@ class SaleOrderLine(models.Model):
         related="product_id.sale_ok_confirm",
         string="Approved for Sale",
         store=True,
-        default=True,
     )

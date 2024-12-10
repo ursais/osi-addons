@@ -39,7 +39,7 @@ class TierDefinition(models.Model):
                 "ol_tier_validation.group_tier_validation_python"
             )
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals):
         self.check_user_permissions(vals)
         return super().create(vals)

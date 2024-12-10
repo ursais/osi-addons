@@ -67,7 +67,7 @@ class StockRequest(models.Model):
                     wiz = self.env["stock.immediate.transfer"].browse([wiz_id])
                     wiz.process()
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals):
         request = super().create(vals)
         if vals.get("stage_id"):

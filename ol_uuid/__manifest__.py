@@ -3,6 +3,7 @@
     "name": "OnLogic UUID",
     "summary": "Adds UUID to existing Odoo models.",
     "version": "1.0",
+    "license": "AGPL-3",
     "depends": [
         "base",
         "account",

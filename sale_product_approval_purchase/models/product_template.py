@@ -14,7 +14,7 @@ class ProductTemplate(models.Model):
     )
     candidate_purchase = fields.Boolean(string="Candidate to Purchase")
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals):
         new = super().create(vals)
         new._set_purchase_ok()

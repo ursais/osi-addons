@@ -28,7 +28,7 @@ class ProductTemplate(models.Model):
     )
     candidate_bom = fields.Boolean(string="Candidate to be on BoM")
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals):
         new = super().create(vals)
         new._set_mrp_ok()

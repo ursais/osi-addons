@@ -18,7 +18,7 @@ class WebhookSettings(models.TransientModel):
 
     # END #########
 
-    @api.model
+    @api.model_create_multi
     def create(self, values):
         # Saving a res_config even without changing any values will trigger the write of all
         # related values on res_company. This in return could affect a lot of other records like
