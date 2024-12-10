@@ -1,0 +1,17 @@
+<odoo>
+    <record id="view_res_partner_form_inherit_addenda_mabe" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.addenda.mabe</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="l10n_mx_edi_addenda_name" invisible="1" />
+                <field
+                    name="mabe_plant_code"
+                    string="Mabe Plant Code"
+                    attrs="{'invisible': [('l10n_mx_edi_addenda_name', '!=', 'Addenda Mabe')]}"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>

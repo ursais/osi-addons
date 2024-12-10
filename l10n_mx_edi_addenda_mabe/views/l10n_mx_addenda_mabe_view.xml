@@ -1,0 +1,60 @@
+<odoo>
+    <template id="l10n_mx_edi_addenda_mabe" name="Addenda Mabe">
+        <mabe:Factura
+            xmlns:mabe="http://recepcionfe.mabempresa.com/cfd/addenda/v1"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://recepcionfe.mabempresa.com/cfd/addenda/v1 http://recepcionfe.mabempresa.com/cfd/addenda/v1/mabev1.xsd"
+            version="1.0"
+            tipoDocumento="FACTURA"
+            t-att-folio="record.name"
+            t-att-fecha="record.invoice_date"
+            t-att-ordenCompra="record.ref"
+            t-att-referencia1="record.mabe_ref1"
+            t-att-referencia2="record.mabe_ref2"
+        >
+            <mabe:Moneda
+                t-att-tipoMoneda="record.currency_id.name"
+                t-att-tipoCambio="0.00"
+                t-att-importeConLetra="record.mabe_amount_with_letter or 'NA'"
+            />
+            <mabe:Proveedor t-att-codigo="record.partner_id.ref or 'NA'" />
+            <mabe:Entrega
+                t-att-plantaEntrega="record.partner_shipping_id.mabe_plant_code"
+                t-att-calle="record.partner_shipping_id.street_name"
+                t-att-noExterior="record.partner_shipping_id.street_number"
+                t-att-noInterior="record.partner_shipping_id.street_number2 or 'NA'"
+                t-att-codigoPostal="record.partner_shipping_id.zip"
+            />
+            <mabe:Detalles>
+                <t t-set="i" t-value="1" />
+                <t t-foreach="record.invoice_line_ids" t-as="move_line">
+                    <mabe:Detalle
+                        t-att-noLineaArticulo="i"
+                        t-att-codigoArticulo="move_line.product_id.default_code"
+                        t-att-descripcion="move_line.product_id.name"
+                        t-att-unidad="move_line.product_uom_id.name"
+                        t-att-cantidad="move_line.quantity"
+                        t-att-precioSinIva="move_line.price_unit"
+                        t-att-precioConIva="round(move_line.price_unit * 1.16)"
+                        t-att-importeSinIva="move_line.price_subtotal"
+                        t-att-importeConIva="round(move_line.price_subtotal * 1.16)"
+                    />
+                    <t t-set="i" t-value="i+1" />
+                </t>
+            </mabe:Detalles>
+            <mabe:Descuentos tipo="CARGO" descripcion="NA" importe="0.00" />
+            <mabe:Subtotal t-att-importe="record.amount_untaxed" />
+            <mabe:Traslados>
+                <mabe:Traslado tipo="IVA" tasa="16" t-att-importe="record.amount_tax" />
+            </mabe:Traslados>
+            <mabe:Retenciones>
+                <mabe:Retencion tipo="NA" tasa="0.00" importe="0.00" />
+            </mabe:Retenciones>
+            <mabe:Total t-att-importe="record.amount_total" />
+        </mabe:Factura>
+    </template>
+
+    <record id="l10n_mx_edi_addenda_mabe" model="ir.ui.view">
+        <field name="l10n_mx_edi_addenda_flag" eval="True" />
+    </record>
+</odoo>
