@@ -6,22 +6,25 @@
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
                 <field name="mabe_flag" invisible="1" />
-                <page string="Mabe Addenda" invisible="not mabe_flag">
+                <page
+                    string="Mabe Addenda"
+                    attrs="{'invisible': [('mabe_flag', '=', False)]}"
+                >
                     <group>
                         <field
                             name="mabe_ref1"
                             string="Reference 1"
-                            invisible="not mabe_flag"
+                            attrs="{'invisible': [('mabe_flag', '=', False)]}"
                         />
                         <field
                             name="mabe_ref2"
                             string="Reference 2"
-                            invisible="not mabe_flag"
+                            attrs="{'invisible': [('mabe_flag', '=', False)]}"
                         />
                         <field
                             name="mabe_amount_with_letter"
                             string="Amount with letter"
-                            invisible="not mabe_flag"
+                            attrs="{'invisible': [('mabe_flag', '=', False)]}"
                         />
                     </group>
                 </page>
