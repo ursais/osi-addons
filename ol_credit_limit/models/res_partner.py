@@ -68,22 +68,27 @@ class ResPartner(models.Model):
         "sale_order_ids.amount_total",
         "sale_order_ids.invoice_status",
         "rollup_partner_ids.sale_order_ids.invoice_status",
+        "invoice_ids",
+        "invoice_ids.amount_residual_signed",
+        "invoice_ids.payment_state",
+        "invoice_ids.state",
     )
     def _compute_open_so_balance(self):
         all_child = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
         for partner in self:
             open_so= partner._get_open_sale_order()
-            open_invoices = self.env["account.move"].search([('move_type', 'in', ('out_invoice', 'out_refund')),
-            ('partner_id', 'in', all_child.ids),("state","=","draft")])
+            not_paid_invoices = self.env["account.move"].search([('move_type', '=', 'out_invoice'),('partner_id', 'in', all_child.ids),("state","!=","cancel"),("payment_state","in",["not_paid","partial"])])
             open_so_balance = partner.rollup_partner_ids.mapped("open_so_balance")
-            partner.open_so_balance = sum(open_so.mapped('amount_total'))+ sum(open_so_balance) + sum(open_invoices.mapped("amount_total"))
+            partner.open_so_balance = sum(open_so.mapped('amount_total'))+ sum(open_so_balance) + sum(not_paid_invoices.mapped("amount_residual_signed"))
 
     @api.depends(
         "credit_limit", "total_due", "rollup_partner_ids.total_due", "partner_rollup_id","open_so_balance"
     )
     def _compute_remaining_credit(self):
         for partner in self:
-            used_credit =  sum(partner.rollup_partner_ids.mapped("credit")) + partner.open_so_balance
+            used_credit = partner.open_so_balance 
+            if partner.rollup_partner_ids:
+                used_credit = sum(partner.mapped('rollup_partner_ids.open_so_balance')) + sum(partner.mapped('rollup_partner_ids.credit')) + partner.credit
             partner.remaining_credit = partner.credit_limit - used_credit or 0
 
     @api.onchange("credit_limit")
