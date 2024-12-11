@@ -44,7 +44,7 @@ class ResPartner(models.Model):
     # METHODS #####
 
     def _get_open_sale_order(self):
-        open_so = self.sale_order_ids.filtered(lambda so: so.invoice_status != "invoiced")
+        open_so = self.sale_order_ids.filtered(lambda so: so.invoice_status != "invoiced" and so.state != "cancel")
         sorted_orders_asc = self.env['sale.order'].browse(open_so.ids).sorted('id')
         return sorted_orders_asc
 
@@ -77,7 +77,7 @@ class ResPartner(models.Model):
         all_child = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
         for partner in self:
             open_so= partner._get_open_sale_order()
-            not_paid_invoices = self.env["account.move"].search([('move_type', '=', 'out_invoice'),('partner_id', 'in', all_child.ids),("state","!=","cancel"),("payment_state","in",["not_paid","partial"])])
+            not_paid_invoices = self.env["account.move"].search([('move_type', '=', 'out_invoice'),('partner_id', 'in', all_child.ids),("state","=","draft")])
             open_so_balance = partner.rollup_partner_ids.mapped("open_so_balance")
             partner.open_so_balance = sum(open_so.mapped('amount_total'))+ sum(open_so_balance) + sum(not_paid_invoices.mapped("amount_residual_signed"))
 
@@ -86,9 +86,10 @@ class ResPartner(models.Model):
     )
     def _compute_remaining_credit(self):
         for partner in self:
-            used_credit = partner.open_so_balance 
+            credit = (partner.credit > 0 and partner.credit or 0)
+            used_credit = partner.open_so_balance + credit
             if partner.rollup_partner_ids:
-                used_credit = sum(partner.mapped('rollup_partner_ids.open_so_balance')) + sum(partner.mapped('rollup_partner_ids.credit')) + partner.credit
+                used_credit = sum(partner.mapped('rollup_partner_ids.open_so_balance')) + sum(partner.mapped('rollup_partner_ids.credit')) + credit
             partner.remaining_credit = partner.credit_limit - used_credit or 0
 
     @api.onchange("credit_limit")
