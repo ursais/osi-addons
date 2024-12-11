@@ -258,6 +258,7 @@
                 <filter name="partner_ids" string="Customer" context="{'group_by': 'partner_ids'}" />
                 <filter name="product_ids" string="Product" context="{'group_by': 'product_ids'}" />
                 <filter name="product_tmpl_ids" string="Product Templates" context="{'group_by': 'product_tmpl_ids'}" />
+                <filter name="exception_ids" string="Exceptions" context="{'group_by': 'exception_ids'}" />
                 <filter name="responsible_id" string="Employee" context="{'group_by': 'responsible_id'}" />
             </search>
         </field>

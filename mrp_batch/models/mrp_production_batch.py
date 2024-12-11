@@ -27,6 +27,7 @@ class MrpProductionBatch(models.Model):
         compute="_compute_partner_ids",
         readonly=True,
         index=True,
+        store=True,
     )
     product_ids = fields.Many2many(
         "product.product",
@@ -34,6 +35,7 @@ class MrpProductionBatch(models.Model):
         compute="_compute_product_ids",
         readonly=True,
         index=True,
+        store=True,
     )
     product_tmpl_ids = fields.Many2many(
         "product.template",
@@ -41,6 +43,7 @@ class MrpProductionBatch(models.Model):
         compute="_compute_product_tmpl_ids",
         readonly=True,
         index=True,
+        store=True,
     )
     exception_ids = fields.Many2many(
         "exception.rule",
@@ -272,10 +275,16 @@ class MrpProductionBatch(models.Model):
                 mrp_production.with_delay().button_plan()
 
     def button_unplan(self):
-        # Unplan all manufacturing orders in the batch
+        # Unplan all eligible manufacturing orders in the batch
         for record in self:
             record.is_queuing = True
-            for mrp_production in record.production_ids:
+            # Filter production orders to exclude ones that would cause a UserError
+            eligible_productions = record.production_ids.filtered(
+                lambda mo: not any(
+                    wo.state in ("done", "progress") for wo in mo.workorder_ids
+                )
+            )
+            for mrp_production in eligible_productions:
                 mrp_production.with_delay().button_unplan()
 
     def action_unreserve(self):
@@ -298,11 +307,15 @@ class MrpProductionBatch(models.Model):
                 mo.with_delay().button_mark_done()
 
     def action_cancel(self):
-        # Cancel the batch and related manufacturing orders
+        # Cancel the batch and related eligible manufacturing orders
         for record in self:
             record.is_queuing = True
             record.state = "cancel"
-            for mrp_production in record.production_ids:
+            # Filter MOs to exclude those that cannot be canceled
+            eligible_productions = record.production_ids.filtered(
+                lambda mo: not any(wo.state == "done" for wo in mo.workorder_ids)
+            )
+            for mrp_production in eligible_productions:
                 mrp_production.with_delay().action_cancel()
 
     def action_lock_and_unlock(self):
@@ -588,22 +601,21 @@ class MrpProductionBatch(models.Model):
         "production_ids.workorder_ids",
     )
     def _compute_is_planned(self):
-        # Compute planned status and check for associated work orders
         for record in self:
-            record.is_planned = False
-            record.is_plan = False
-            record.is_workorder_ids = False
-            if record.production_ids:
-                record.is_workorder_ids = all(
-                    production.workorder_ids for production in record.production_ids
-                )
-                record.is_plan = all(
-                    production.state not in ("confirmed", "progress", "to_close")
-                    for production in record.production_ids
-                )
-                record.is_planned = all(
-                    production.is_planned for production in record.production_ids
-                )
+            # Filter out production orders with states 'to_close', 'done', or 'cancel'
+            filtered_productions = record.production_ids.filtered(
+                lambda p: p.state not in ("progress", "to_close", "done", "cancel")
+            )
+            record.is_workorder_ids = all(
+                production.workorder_ids for production in filtered_productions
+            )
+            record.is_plan = all(
+                production.state not in ("confirmed", "progress")
+                for production in filtered_productions
+            )
+            record.is_planned = all(
+                production.is_planned for production in filtered_productions
+            )
 
     @api.depends("production_ids.state")
     def _compute_mrp_production_confirm(self):
