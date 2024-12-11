@@ -27,6 +27,21 @@ class SaleEstimateJob(models.Model):
         string="ECO Count",
         compute="_compute_mrp_eco_count",
     )
+    total_cost = fields.Float(
+        string="Total Cost",
+        compute="_compute_total_cost_margin",
+        store=True,
+    )
+    margin = fields.Float(
+        string="Margin",
+        compute="_compute_total_cost_margin",
+        store=True,
+    )
+    margin_percent = fields.Float(
+        "Margin (%)",
+        compute="_compute_total_cost_margin",
+        store=True,
+    )
 
     # END ##########
     # METHODS ##########
@@ -97,6 +112,34 @@ class SaleEstimateJob(models.Model):
         """Standard count method to count related Products's for smart button."""
         for lead in self:
             lead.product_count = len(lead.product_tmpl_ids)
+
+    @api.depends(
+        "estimate_ids",
+        "estimate_ids.purchase_price",
+        "labour_estimate_line_ids",
+        "labour_estimate_line_ids.purchase_price",
+        "overhead_estimate_line_ids",
+        "overhead_estimate_line_ids.purchase_price",
+    )
+    def _compute_total_cost_margin(self):
+        for estimate in self:
+            estimate_total_cost = 0.0
+            estimate_total_cost += sum(
+                line.purchase_price for line in estimate.estimate_ids
+            )
+            estimate_total_cost += sum(
+                line.purchase_price for line in estimate.labour_estimate_line_ids
+            )
+            estimate_total_cost += sum(
+                line.purchase_price for line in estimate.overhead_estimate_line_ids
+            )
+
+            estimate.total_cost = estimate_total_cost
+            estimate.margin = estimate.estimate_total - estimate_total_cost
+            if estimate.estimate_total != 0.0:
+                estimate.margin_percent = estimate.margin / estimate.estimate_total
+            else:
+                estimate.margin_percent = 0.0
 
     def action_view_product(self):
         """Smart button action to open the Product or list of Products if

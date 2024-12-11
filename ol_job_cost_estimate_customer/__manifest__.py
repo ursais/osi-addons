@@ -13,6 +13,7 @@
     # any module necessary for this one to work correctly
     "depends": [
         "ol_base",
+        "ol_product_pricing_review",
         "job_cost_estimate_customer",
         "product_configurator_mrp",
         "product_profile",

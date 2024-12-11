@@ -6,4 +6,10 @@
         <field name="detailed_type">product</field>
     </record>
 
+    <record id="prototype_component" model="product.profile">
+        <field name="name">Prototype Component</field>
+        <field name="explanation">Prototype Component's Default Settings</field>
+        <field name="detailed_type">product</field>
+    </record>
+
 </odoo>
