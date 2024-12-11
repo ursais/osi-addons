@@ -1121,9 +1121,9 @@ class ProductConfigSession(models.Model):
             if cfg_step == active_cfg_step_line:
                 adjacent_steps.update(
                     {
-                        "next_step": None
-                        if i + 1 == nr_steps
-                        else open_step_lines[i + 1],
+                        "next_step": (
+                            None if i + 1 == nr_steps else open_step_lines[i + 1]
+                        ),
                         "previous_step": None if i == 0 else open_step_lines[i - 1],
                     }
                 )
@@ -1473,7 +1473,7 @@ class ProductConfigSession(models.Model):
         session = self.search(domain, order="create_date desc", limit=1)
         return session
 
-    @api.model
+    @api.model_create_multi
     def create_get_session(
         self, product_tmpl_id, parent_id=None, force_create=False, user_id=None
     ):
