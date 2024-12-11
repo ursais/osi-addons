@@ -11,6 +11,13 @@
             </xpath>
             <xpath expr="//field[@name='order_line']/tree//field[@name='config_session_id']" position="after">
                 <field name="bom_id" optional="hide" />
+                <field name="order_id" column_invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='action_config_start']" position="attributes">
+                <attribute name="invisible">locked or state in ['cancel']</attribute>
+            </xpath>
+            <xpath expr="//button[@name='reconfigure_product']" position="attributes">
+                <attribute name="invisible">order_id.locked or state not in ['draft','sent']</attribute>
             </xpath>
         </field>
     </record>
