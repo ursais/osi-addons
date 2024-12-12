@@ -22,6 +22,7 @@ class RmaSupplier(models.Model):
         readonly=True,
         default="New",
     )
+    rma_number = fields.Char(string="Supplier RMA#")
     partner_id = fields.Many2one(
         "res.partner",
         string="Vendor",

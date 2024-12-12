@@ -17,6 +17,7 @@
         "data/stock_data.xml",
         "security/security_groups.xml",
         "security/ir.model.access.csv",
+        "views/res_partner.xml",
         "views/rma_supplier_tag_views.xml",
         "views/rma_supplier_line_views.xml",
         "views/rma_supplier_views.xml",

@@ -7,6 +7,7 @@
             <tree string="RMA to Supplier">
                 <field name="name" optional="show" />
                 <field name="partner_id" optional="show" />
+                <field name="rma_number" />
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show" />
                 <field name="out_warehouse_id" optional="hide" />
                 <field name="out_operation_id" optional="hide" />
@@ -52,9 +53,8 @@
                     <group name="rma_header">
                         <group name="partner_info">
                             <field name="partner_id" />
-                            <field name="partner_shipping_id"
-                              context="{'default_type':'delivery', 'show_address': 1, 'show_vat': False}"
-                              readonly="state in ('cancel', 'complete')" />
+                            <field name="partner_shipping_id" context="{'default_type':'delivery', 'show_address': 1, 'show_vat': False}" readonly="state in ('cancel', 'complete')" />
+                            <field name="rma_number" />
                         </group>
                         <group name="misc">
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" />
@@ -131,8 +131,9 @@
         <field name="model">rma.supplier.order</field>
         <field name="arch" type="xml">
             <search string="Search Supplier RMA">
-                <field name="name" string="RMA Order" filter_domain="['|', '|', ('name', 'ilike', self), ('partner_ref', 'ilike', self), ('partner_id', 'child_of', self)]" />
+                <field name="name" string="RMA Order" filter_domain="['|', '|', ('name', 'ilike', self), ('rma_number', 'ilike', self), ('partner_id', 'ilike', self)]" />
                 <field name="partner_id" operator="child_of" />
+                <field name="rma_number" />
                 <field name="product_id" />
                 <field name="tag_ids" />
                 <separator/>

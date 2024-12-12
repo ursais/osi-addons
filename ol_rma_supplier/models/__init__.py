@@ -1,3 +1,4 @@
+from . import res_partner
 from . import rma_supplier_line
 from . import rma_supplier
 from . import rma_tags
