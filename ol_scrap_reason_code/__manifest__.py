@@ -13,5 +13,7 @@
         "scrap_reason_code",
     ],
     # always loaded
-    "data": [],
+    "data": [
+        "views/stock_scrap_views.xml",
+    ],
 }
