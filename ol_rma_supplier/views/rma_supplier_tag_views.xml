@@ -46,11 +46,4 @@
         </field>
     </record>
 
-    <menuitem
-        id="menu_action_tags"
-        action="rma_supplier_tag_action"
-        parent="menu_rma_configuration"
-        sequence="10"
-    />
-
 </odoo>

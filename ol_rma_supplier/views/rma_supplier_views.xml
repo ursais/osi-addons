@@ -198,9 +198,18 @@
         sequence="20"
     />
 
+    <!-- Warehouse Menu -->
     <menuitem
         id="menu_action_warehouse_form"
         action="stock.action_warehouse_form"
+        parent="menu_rma_configuration"
+        sequence="10"
+    />
+
+    <!-- Tags Menu -->
+    <menuitem
+        id="menu_action_tags"
+        action="rma_supplier_tag_action"
         parent="menu_rma_configuration"
         sequence="10"
     />
