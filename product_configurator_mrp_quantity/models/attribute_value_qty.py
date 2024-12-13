@@ -5,6 +5,7 @@ from odoo import api, fields, models
 
 class AttributeValueQty(models.Model):
     _name = "attribute.value.qty"
+    _description = "A link between product attributes, value and the quantity"
 
     name = fields.Char()
     product_tmpl_id = fields.Many2one("product.template", string="Product Template")

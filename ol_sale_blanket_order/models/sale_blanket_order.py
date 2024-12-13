@@ -250,7 +250,7 @@ class SaleBlanketOrder(models.Model):
             "partner_shipping_id": partner_shipping_id,
         }
 
-    @api.model
+    @api.model_create_multi
     def create_sale_order_cron(self):
         # Scheduled method to create sale orders automatically based on blanket orders.
         # Get the current date

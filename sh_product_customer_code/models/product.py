@@ -25,7 +25,7 @@ class ShProductTemplate(models.Model):
         readonly=False,
     )
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals):
         res = super(ShProductTemplate, self).create(vals)
 

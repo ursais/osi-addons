@@ -3,6 +3,7 @@
     "name": "OnLogic GraphQL - Product",
     "summary": "Product specific GraphQL functionality",
     "version": "1.0",
+    "license": "AGPL-3",
     "depends": [
         "ol_base",
         "ol_graphql",

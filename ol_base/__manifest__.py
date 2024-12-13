@@ -23,7 +23,7 @@
         "contacts",
         "crm",
         "delivery_fedex",
-        "delivery_ups",
+        "delivery_ups_rest",
         "delivery_usps",
         "documents",
         "helpdesk",

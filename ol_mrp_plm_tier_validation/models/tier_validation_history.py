@@ -8,6 +8,7 @@ class TierValidationHistory(models.Model):
     """
 
     _name = "tier.validation.history"
+    _description = "Tier Validation Review History"
 
     # COLUMNS ###
 

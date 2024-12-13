@@ -19,6 +19,7 @@ class StockScrap(models.Model):
         check_company=True,
         readonly=False,
     )
+    note = fields.Text()
 
     # END #########
     # METHODS #####

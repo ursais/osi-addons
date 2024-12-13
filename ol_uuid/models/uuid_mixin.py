@@ -49,7 +49,7 @@ class Uuid(models.AbstractModel):
 
         return result
 
-    @api.model
+    @api.model_create_multi
     def create(self, values):
         """
         Always generate a UUID for newly created records

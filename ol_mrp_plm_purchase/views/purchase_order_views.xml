@@ -1,0 +1,14 @@
+<odoo>
+
+    <record id="ol_mrp_plm_purchase_view_form" model="ir.ui.view">
+        <field name="name">purchase.order.form</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form" />
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="eco_id" invisible="not eco_id" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

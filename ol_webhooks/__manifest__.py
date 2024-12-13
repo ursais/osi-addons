@@ -3,6 +3,7 @@
     "name": "OnLogic Webhooks",
     "summary": "Adds the possibility to create webhooks that can be called on predefined events.",
     "version": "1.0",
+    "license": "AGPL-3",
     "depends": [
         "ol_base",
         "ol_api",

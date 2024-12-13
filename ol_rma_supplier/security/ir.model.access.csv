@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rma_supplier_tag_user,rma.supplier.tag user,model_rma_supplier_tag,group_rma_user,1,0,0,0
+access_rma_supplier__tagmanager,rma.supplier.tag manager,model_rma_supplier_tag,group_rma_manager,1,1,1,1
+access_rma_supplier_user,rma.supplier.order user,model_rma_supplier_order,group_rma_user,1,0,0,0
+access_rma_supplier_manager,rma.supplier.order manager,model_rma_supplier_order,group_rma_manager,1,1,1,1
+access_rma_supplier_line_user,rma.supplier.order.line user,model_rma_supplier_order_line,group_rma_user,1,0,0,0
+access_rma_supplier_line_manager,rma.supplier.order.line manager,model_rma_supplier_order_line,group_rma_manager,1,1,1,1
+

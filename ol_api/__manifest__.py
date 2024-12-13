@@ -3,6 +3,7 @@
     "name": "OnLogic API",
     "summary": "API related functionality",
     "version": "1.0",
+    "license": "AGPL-3",
     "depends": ["ol_base", "ol_graphql"],
     "author": "OnLogic",
     "website": "https://www.onlogic.com",

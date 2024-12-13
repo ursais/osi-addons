@@ -1,0 +1,16 @@
+<odoo>
+
+    <!-- Security Groups -->
+    <record id="group_rma_user" model="res.groups">
+        <field name="name">RMA User</field>
+        <field name="category_id" ref="base.module_category_inventory"/>
+    </record>
+
+    <record id="group_rma_manager" model="res.groups">
+        <field name="name">RMA Manager</field>
+        <field name="category_id" ref="base.module_category_inventory"/>
+        <field name="implied_ids" eval="[(4, ref('group_rma_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_admin'))]" />
+    </record>
+
+</odoo>

@@ -14,6 +14,7 @@
     "website": "https://www.onlogic.com",
     "category": "API",
     "version": "1.0",
+    "license": "AGPL-3",
     "depends": [
         "graphql_base",
         "ol_base",

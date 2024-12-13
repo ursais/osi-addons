@@ -21,7 +21,7 @@ class MrpProduction(models.Model):
         help="Sequence number for the day.",
     )
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals):
         if "date_start" not in vals or not vals["date_start"]:
             user_tz = self.env.user.tz or "UTC"

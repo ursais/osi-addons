@@ -237,7 +237,7 @@ class CsvLoaderWizard(models.TransientModel):
             }
         )
 
-    @api.model
+    @api.model_create_multi
     def create_error_html(self, row_num, raw_line, errors, etype="error"):
         """
         Formats the given error array into a nice html string

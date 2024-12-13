@@ -6,4 +6,4 @@ from odoo import fields, models
 class MrpProductForecast(models.Model):
     _inherit = "mrp.product.forecast"
 
-    is_edit_forcast_qty = fields.Boolean(defaul=False)
+    is_edit_forcast_qty = fields.Boolean(default=False)

@@ -36,14 +36,12 @@ class SaleBlanketOrderLine(models.Model):
         digits="Product Price",
         store=True,
         groups="base.group_user",
-        precompute=True,
     )
     margin_percent = fields.Float(
         "Margin (%)",
         compute="_compute_margin",
         store=True,
         groups="base.group_user",
-        precompute=True,
     )
     purchase_price = fields.Float(
         string="Cost",

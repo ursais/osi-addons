@@ -13,6 +13,11 @@
                 <field name="customer_lead" optional="show" />
             </xpath>
             <xpath
+                expr="//field[@name='estimate_ids']/tree/field[@name='price_unit']"
+                position="after">
+                <field name="purchase_price" optional="show" />
+            </xpath>
+            <xpath
                 expr="//field[@name='labour_estimate_line_ids']/tree/field[@name='product_uom']"
                 position="after">
                 <field name="customer_lead" optional="hide" />
@@ -44,6 +49,11 @@
             </xpath>
             <xpath expr="//button[@name='estimate_cancel']" position="before">
                 <button string="New Product/BoM/ECO" name="open_product_creation_wizard" type="object" class="oe_highlight" data-hotkey="q" title="Create a New Prototype Product/BoM/ECO" />
+            </xpath>
+            <xpath expr="//field[@name='estimate_total']" position="after">
+                <field name="total_cost" widget="monetary"/>
+                <field name="margin" widget="monetary"/>
+                <field name="margin_percent" widget="percentage"/>
             </xpath>
         </field>
     </record>

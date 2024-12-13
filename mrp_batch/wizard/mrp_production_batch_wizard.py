@@ -7,6 +7,7 @@ class MRPProductionBatchwizard(models.TransientModel):
     """Wizard Object for allow Add to/Create Batch from list view."""
 
     _name = "mrp.production.batch.wizard"
+    _description = "Wizard to Add MO to Batch or Create a New Batch"
 
     # COLUMNS #########
 
