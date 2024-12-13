@@ -47,14 +47,15 @@ class MrpProductionBatch(models.Model):
     )
     exception_ids = fields.Many2many(
         "exception.rule",
-        compute="_compute_exception_ids",
+        compute="_compute_exceptions",
         string="Exceptions",
         store=True,
         copy=False,
     )
     exceptions_summary = fields.Html(
-        compute="_compute_exceptions_summary",
+        compute="_compute_exceptions",
         store=True,
+        copy=False,
     )
     tag_ids = fields.Many2many("mrp.production.batch.tag", string="Tags")
     sale_tag_ids = fields.Many2many("crm.tag", compute="_compute_sale_tags")
@@ -418,7 +419,7 @@ class MrpProductionBatch(models.Model):
         "production_ids.main_exception_id",
         "production_ids.ignore_exception",
     )
-    def _compute_exception_ids(self):
+    def _compute_exceptions(self):
         for record in self:
             # Exclude canceled MOs
             valid_productions = record.production_ids.filtered(
@@ -429,21 +430,19 @@ class MrpProductionBatch(models.Model):
             all_exceptions = valid_productions.mapped("exception_ids")
             record.exception_ids = [(6, 0, all_exceptions.ids)]
 
-    @api.depends("exception_ids")
-    def _compute_exceptions_summary(self):
-        for rec in self:
-            if rec.exception_ids:
-                rec.exceptions_summary = "<ul>%s</ul>" % "".join(
+            # Compute exceptions summary
+            if all_exceptions:
+                record.exceptions_summary = "<ul>%s</ul>" % "".join(
                     [
                         f"<li>{html.escape(e.name)}: <i>{html.escape(e.description or '')}</i> <b>"
                         + _(
                             f"{'(Blocking exception)' if e.is_blocking else ''}</b></li>"
                         )
-                        for e in rec.exception_ids
+                        for e in all_exceptions
                     ]
                 )
             else:
-                rec.exceptions_summary = False
+                record.exceptions_summary = False
 
     @api.depends(
         "production_ids",
