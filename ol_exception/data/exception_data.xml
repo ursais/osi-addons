@@ -16,7 +16,7 @@
         <field name="sequence">71</field>
         <field name="model">stock.picking</field>
         <field name="exception_type">by_domain</field>
-        <field name="domain">[("sale_id.locked", "=", False)]</field>
+        <field name="domain">[("sale_id.locked", "=", False), ("picking_type_code", "=", "outgoing")]</field>
         <field name="active" eval="True" />
     </record>
 
