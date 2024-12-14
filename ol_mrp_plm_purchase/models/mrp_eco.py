@@ -20,6 +20,11 @@ class MRPEco(models.Model):
         string="Purchase Count",
         compute="_compute_purchase_count",
     )
+    purchase_expected_date = fields.Datetime(
+        string="PO Expected Date",
+        compute="_compute_purchase_expected_date",
+        store=True,
+    )
 
     # END #########
     # METHODS ##########
@@ -29,6 +34,21 @@ class MRPEco(models.Model):
         """Standard count method to count related PO's for smart button."""
         for eco in self:
             eco.purchase_count = len(eco.purchase_ids)
+
+    @api.depends(
+        "purchase_ids.date_planned",
+        "purchase_ids.state",
+    )
+    def _compute_purchase_expected_date(self):
+        for eco in self:
+            # Filter purchase orders with status 'purchase'
+            valid_purchase_orders = eco.purchase_ids.filtered(
+                lambda po: po.state == "purchase"
+            )
+            # Extract the planned dates from valid purchase orders
+            planned_dates = valid_purchase_orders.mapped("date_planned")
+            # Check if there are any dates, and assign the earliest one if available
+            eco.purchase_expected_date = min(planned_dates) if planned_dates else False
 
     def action_view_purchase(self):
         """Smart button action to open the PO or list of PO's if more than one."""

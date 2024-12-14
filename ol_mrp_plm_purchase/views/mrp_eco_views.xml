@@ -19,6 +19,9 @@
             <xpath expr="//button[@name='reject']" position="before">
                 <button string="Create RFQ" name="open_purchase_creation_wizard" type="object" class="oe_highlight" data-hotkey="q" title="Create a New RFQ" invisible="not product_tmpl_id.purchase_ok" />
             </xpath>
+            <field name="tag_ids" position="before">
+                <field name="purchase_expected_date" invisible="not purchase_expected_date" />
+            </field>
         </field>
     </record>
 
