@@ -82,7 +82,10 @@ class ResPartner(models.Model):
             partner.open_so_balance = sum(open_so.mapped('amount_total'))+ sum(open_so_balance) + sum(not_paid_invoices.mapped("amount_residual_signed"))
 
     @api.depends(
-        "credit_limit", "total_due", "rollup_partner_ids.total_due", "partner_rollup_id","open_so_balance"
+        "credit_limit", "total_due", "rollup_partner_ids.total_due", "partner_rollup_id", "invoice_ids","open_so_balance",
+        "invoice_ids.amount_residual_signed",
+        "invoice_ids.payment_state",
+        "invoice_ids.state",
     )
     def _compute_remaining_credit(self):
         for partner in self:
