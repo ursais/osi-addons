@@ -95,12 +95,12 @@ class SaleEstimateLineJob(models.Model):
         :rtype: float
         """
         self.ensure_one()
-        to_currency = self.currency_id or self.order_id.currency_id
+        to_currency = self.currency_id or self.estimate_id.currency_id
         if currency and to_currency and currency != to_currency:
-            conversion_date = self.order_id.date_order or fields.Date.context_today(
+            conversion_date = self.estimate_id.date_order or fields.Date.context_today(
                 self
             )
-            company = self.company_id or self.order_id.company_id or self.env.company
+            company = self.company_id or self.estimate_id.company_id or self.env.company
             return currency._convert(
                 from_amount=amount,
                 to_currency=to_currency,
