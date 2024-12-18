@@ -97,8 +97,8 @@ class SaleEstimateLineJob(models.Model):
         self.ensure_one()
         to_currency = self.currency_id or self.estimate_id.currency_id
         if currency and to_currency and currency != to_currency:
-            conversion_date = self.estimate_id.date_order or fields.Date.context_today(
-                self
+            conversion_date = (
+                self.estimate_id.estimate_date or fields.Date.context_today(self)
             )
             company = self.company_id or self.estimate_id.company_id or self.env.company
             return currency._convert(

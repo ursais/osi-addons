@@ -213,7 +213,7 @@ class SaleEstimateJob(models.Model):
         for rec in self:
             rec.state = "draft"
 
-    @api.model_create_multi
+    @api.model
     def create(self, vals):
         number = self.env["ir.sequence"].next_by_code("product.estimate.seq.job")
         vals.update({"number": number})
