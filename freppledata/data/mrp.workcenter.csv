@@ -1,0 +1,5 @@
+id,sequence,code,name,owner,company_id,active
+__export__.mrp_workcenter_4_55b84d26,1,,saw,,My Company (San Francisco),TRUE
+__export__.mrp_workcenter_5_4394f2c2,1,,assembly line,,My Company (San Francisco),TRUE
+__export__.mrp_workcenter_6_5e3667b1,1,,painting workstation,,My Company (San Francisco),TRUE
+__export__.mrp_workcenter_7_6072a422,1,,polishing workstation,,My Company (San Francisco),TRUE

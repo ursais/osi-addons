@@ -1,0 +1,8 @@
+id,sequence,product_tmpl_id,code,type,company_id,bom_line_ids/id,bom_line_ids/product_qty,bom_line_ids/sequence,bom_line_ids/operation_id/id,bom_line_ids/product_id/id,operation_ids/id,operation_ids/name,operation_ids/sequence,operation_ids/search_mode,operation_ids/priority,operation_ids/workcenter_id,operation_ids/time_cycle_manual
+__export__.mrp_bom_10_e182e22b,0,chair leg,,Manufacture this product,My Company (San Francisco),__export__.mrp_bom_line_21_d74495e0,1,1,,__export__.product_product_58_8eba4d11,__export__.mrp_routing_workcenter_11_ac949bac,cut wooden beam,100,priority,1,saw,2
+__export__.mrp_bom_11_ed249962,0,varnished chair,,Manufacture this product,My Company (San Francisco),__export__.mrp_bom_line_22_d4d5d970,1,1,,__export__.product_product_54_eb19f380,__export__.mrp_routing_workcenter_12_5e242078,varnishing chair,100,priority,1,painting workstation,15
+,,,,,,__export__.mrp_bom_line_23_981377bb,1,1,,__export__.product_product_57_9ea5498d,,,,,,,
+,,,,,,,,,,,__export__.mrp_routing_workcenter_13_bf2ceeff,polishing chair,101,priority,1,polishing workstation,10
+__export__.mrp_bom_9_132490bc,0,chair,,Manufacture this product,My Company (San Francisco),__export__.mrp_bom_line_18_d03483a9,4,1,,__export__.product_product_55_ac47c67d,__export__.mrp_routing_workcenter_10_b5cc8e56,assemble chair,100,priority,1,assembly line,15
+,,,,,,__export__.mrp_bom_line_19_ec858f0a,20,1,,mrp.product_product_computer_desk_screw,,,,,,,
+,,,,,,__export__.mrp_bom_line_20_70809562,1,1,,__export__.product_product_56_ea472d4f,,,,,,,

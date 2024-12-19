@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_secondary_workcenter_tree_view" model="ir.ui.view">
+        <field name="name">mrp.secondary.workcenter.tree</field>
+        <field name="model">mrp.secondary.workcenter</field>
+        <field name="arch" type="xml">
+            <tree string="Secondary Work Centers">
+                <field name="routing_workcenter_id" invisible="1"/>
+                <field name="workcenter_id"/>
+                <field name="skill"/>
+                <field name="search_mode" optional="show"/>
+                <field name="priority" optional="show"/>
+                <field name="duration"/>
+            </tree>
+        </field>
+    </record>
+    <record id="mrp_secondary_workcenter_form_view" model="ir.ui.view">
+        <field name="name">mrp.secondary.workcenter.tree</field>
+        <field name="model">mrp.secondary.workcenter</field>
+        <field name="arch" type="xml">
+            <form string="Secondary Work Centers">
+                <sheet>
+                    <group name="Secondary workcenter">
+                        <field name="routing_workcenter_id" invisible="1"/>
+                        <field name="workcenter_id" string="Work Center"/>
+                        <field name="skill"/>
+                        <field name="search_mode" string="Search Mode" optional="show"/>
+                        <field name="priority" string="priority" optional="show"/>
+                        <field name="duration" string = "Duration"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

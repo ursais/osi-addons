@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_production_workorder_tree_view_frepple" model="ir.ui.view">
+        <field name="name">mrp.workcenter.inherit.tree</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_view" />
+        <field name="arch" type="xml">
+            <field name="production_id" position="after">
+                <field name="secondary_workcenters" string="secondary workcenters" widget="many2many_tags" optional="hide" readonly="1"/>
+            </field>
+        </field>
+    </record>
+    <record id="mrp_production_workorder_form_view_inherit_frepple" model="ir.ui.view">
+        <field name="name">mrp.production.work.order.form</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_form_view_inherit" />
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Secondary Workcenters" name="Secondary Workcenters">
+                    <field name="secondary_workcenters" />
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>
