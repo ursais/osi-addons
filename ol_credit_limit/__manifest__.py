@@ -17,11 +17,14 @@
         "stock_exception",
         "ol_sale_mrp_tags",
         "account",
+        "ol_exception",
     ],
     # always loaded
     "data": [
         "security/credit_limit_group.xml",
         "data/credit_limit_data.xml",
+        "data/function.xml",
+        "data/exception_config_data.xml",
         "views/res_partner.xml",
         "views/sale_order_view.xml",
         "views/stock_picking_view.xml",

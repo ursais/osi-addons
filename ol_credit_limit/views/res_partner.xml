@@ -12,7 +12,7 @@
                     <field  name="credit_limit" invisible="partner_rollup_id" />
                     <field  name="partner_rollup_id" invisible="is_company" context="{'is_rollup_partner': id}"/>
                     <!-- invisible="parent_id.credit_limit &gt; 0" -->
-                    <field  name="rollup_partner_ids" invisible="partner_rollup_id or not is_company"/>
+                    <field  name="rollup_partner_ids" invisible="partner_rollup_id or not is_company" readonly="1"/>
                     <field  name="credit_hold" />
                     <field  name="open_so_balance"/>
                     <field  name="remaining_credit"/>
