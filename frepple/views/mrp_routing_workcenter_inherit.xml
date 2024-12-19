@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mrp_routing_workcenter_inherit_tree" model="ir.ui.view">
+        <field name="name">mrp.routing.workcenter.inherit</field>
+        <field name="model">mrp.routing.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_routing_workcenter_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="workcenter_id" position="after">
+                <field name="skill"/>
+                <field name="search_mode"/>
+                <field name="priority"/>
+                <field name="secondary_workcenter" string="secondary work centers" widget="many2many_tags" optional="hide"/>
+            </field>
+        </field>
+    </record>
+    <record id="mrp_routing_workcenter_inherit_form" model="ir.ui.view">
+        <field name="name">mrp.routing.workcenter.inherit</field>
+        <field name="model">mrp.routing.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_routing_workcenter_form_view"/>
+        <field name="arch" type="xml">
+            <field name="workcenter_id" position="after">
+                <field name="skill"/>
+                <field name="search_mode"/>
+                <field name="priority"/>
+            </field>
+        </field>
+    </record>
+    <record id="mrp_routing_workcenter_inherit_form_notebook" model="ir.ui.view">
+        <field name="name">mrp.routing.workcenter.inherit.notebook</field>
+        <field name="model">mrp.routing.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_routing_workcenter_form_view"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Secondary Workcenters" name="Secondary Workcenters">
+                    <field name="secondary_workcenter" context="{'routing_workcenter_id_invisible': True, 'default_routing_workcenter_id': id, 'tree_view_ref': 'mrp.mrp_secondary_workcenter_tree_view'}"/>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+   <data>
+      <record id="res_config_settings_view_form" model="ir.ui.view">
+         <field name="name">res.config.settings.view.form.inherit.frepple</field>
+         <field name="model">res.config.settings</field>
+         <field name="priority" eval="135"/>
+         <field name="inherit_id" ref="base.res_config_settings_view_form" />
+         <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+               <app data-string="frePPLe" string="frePPLe" name="frepple">
+                  <h2>FrePPLe</h2>
+                  <div class="row mt16 o_settings_container">
+                     <div class="col-12 col-lg-6 o_setting_box" id="frepple_manufacturing_warehouse">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                           <label for="manufacturing_warehouse"/>
+                           <div class="text-muted">
+                     Manufacturing warehouse
+                           </div>
+                           <field name="manufacturing_warehouse"/>
+                        </div>
+                     </div>
+                     <div class="col-12 col-lg-6 o_setting_box" id="frepple_calendar">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                           <label for="calendar"/>
+                           <div class="text-muted">
+                     Working hour calendar at the manufacturing location
+                           </div>
+                           <field name="calendar"/>
+                        </div>
+                     </div>
+                     <div class="col-12 col-lg-6 o_setting_box" id="frepple_webtoken_key">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                           <label for="webtoken_key"/>
+                           <div class="text-muted">
+                     Key to generate web tokens to authenticate on the frePPLe server
+                           </div>
+                           <field name="webtoken_key"/>
+                        </div>
+                     </div>
+                     <div class="col-12 col-lg-6 o_setting_box" id="frepple_server">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                           <label for="frepple_server"/>
+                           <div class="text-muted">
+                     URL of the frePPLe server
+                           </div>
+                           <field name="frepple_server"/>
+                        </div>
+                     </div>
+                     <div class="col-12 col-lg-6 o_setting_box" id="frepple_respect_reservations">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                           <label for="respect_reservations"/>
+                           <div class="text-muted">
+                     When checked frepple respects the odoo reservations.<br/>
+					 When unchecked frepple ignores reservations and reallocates material.
+                           </div>
+                           <field name="respect_reservations"/>
+                        </div>
+                     </div>
+                     <div class="col-12 col-lg-6 o_setting_box" id="frepple_disclose_stack_trace">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                           <label for="disclose_stack_trace"/>
+                           <div class="text-muted">
+                     Send stack trace to your frepple server upon connector exceptions.
+                           </div>
+                           <field name="disclose_stack_trace"/>
+                        </div>
+                     </div>
+                  </div>
+               </app>
+            </xpath>
+         </field>
+      </record>
+   </data>
+</odoo>

@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mrp_skill,access_mrp_skill,model_mrp_skill,base.group_user,1,1,1,1
+access_mrp_workcenter_skill,access_mrp_workcenter_skill,model_mrp_workcenter_skill,base.group_user,1,1,1,1
+access_mrp_secondary_workcenter,access_mrp_secondary_workcenter,model_mrp_secondary_workcenter,base.group_user,1,1,1,1
+access_mrp_workorder_secondary_workcenter,access_mrp_workorder_secondary_workcenter,frepple.model_mrp_workorder_secondary_workcenter,base.group_user,1,1,1,1
+access_frepple_quote,access_frepple_quote,model_frepple_quote,frepple.frepple_quoting_user,1,1,1,1
