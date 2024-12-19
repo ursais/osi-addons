@@ -55,4 +55,8 @@ class SaleOrder(models.Model):
                 order.amount_total if order.invoice_status != "invoiced" else 0
             )
 
-    # END #########
+    @api.depends('company_id', 'partner_id', 'amount_total')
+    def _compute_partner_credit_warning(self):
+        for order in self:
+            order.partner_credit_warning = ''
+
