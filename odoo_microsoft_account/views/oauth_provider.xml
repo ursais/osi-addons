@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record model="ir.ui.view" id="auth_oauth_provider_inherit">
+        <field name="name">auth.oauth.provider.inherit</field>
+        <field name="model">auth.oauth.provider</field>
+        <field name="inherit_id" ref="auth_oauth.view_oauth_provider_form" />
+        <field name="arch" type="xml">
+            <field name='client_id' position='after'>
+                <field name='secret_key' />
+            </field>
+        </field>
+    </record>
+</odoo>
