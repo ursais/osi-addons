@@ -65,8 +65,10 @@ class ResPartner(models.Model):
 
     @api.depends(
         "sale_order_ids",
+        "sale_order_ids.partner_id",
         "sale_order_ids.amount_total",
         "sale_order_ids.invoice_status",
+        "sale_order_ids.state",
         "rollup_partner_ids.sale_order_ids.invoice_status",
         "invoice_ids",
         "invoice_ids.amount_residual_signed",
@@ -86,6 +88,10 @@ class ResPartner(models.Model):
         "invoice_ids.amount_residual_signed",
         "invoice_ids.payment_state",
         "invoice_ids.state",
+        "sale_order_ids.amount_total",
+        "sale_order_ids.invoice_status",
+        "sale_order_ids.partner_id",
+        "sale_order_ids.state"
     )
     def _compute_remaining_credit(self):
         for partner in self:
