@@ -1,0 +1,25 @@
+<odoo>
+
+    <record id="ol_crm_crm_lead_view_form_inherit" model="ir.ui.view">
+        <field name="name">crm.lead.form.inherit</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <button name="action_schedule_meeting" position="after">
+                <button
+                    type="object"
+                    name="action_view_blanket_order"
+                    class="oe_stat_button"
+                    invisible="blanket_order_count == 0"
+                    icon="fa-list"
+                >
+                    <field name="blanket_order_count" widget="statinfo"/>
+                </button>
+            </button>
+            <xpath expr="//button[@name='action_set_won_rainbowman']" position="before">
+                <button string="New Blanket Order" name="action_create_blanket_order" type="object" class="oe_highlight" data-hotkey="q" title="Create new blanket order" invisible="type == 'lead' or not partner_id or probability == 0 and not active"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
