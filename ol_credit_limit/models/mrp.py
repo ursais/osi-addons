@@ -18,6 +18,9 @@ class MRPProduction(models.Model):
     # END #########
     # METHODS #####
 
+    def update_ignore_exceptions(self):
+        self.write({"ignore_exception": True})
+
     @api.depends("sale_order_id","sale_order_id.credit_hold" ,"sale_order_id.override_credit_limit_hold")
     def _compute_credit_hold(self):
         for mo in self:
@@ -25,5 +28,8 @@ class MRPProduction(models.Model):
             if mo.sale_order_id.credit_hold:
                 credit_hold = True
             mo.credit_hold = credit_hold
+            if not credit_hold:
+                mo.update_ignore_exceptions()
+            
 
     # END #########

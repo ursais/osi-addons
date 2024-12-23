@@ -11,4 +11,11 @@
             <value model="exception.rule" eval="obj().search([('name', '=', 'Sale OrderCredit Hold Exception')]).id"/>
     </function>
 
+    <function name="unlink" model="exception.rule">
+        <value model="exception.rule" eval="obj().search([('name', '=', 'Manufacturing Credit Hold Exception')]).id"/>
+    </function>
+
+    <function name="unlink" model="exception.rule">
+        <value model="exception.rule" eval="obj().search([('name', '=', 'Picking Credit Holde Exception')]).id"/>
+    </function>
 </odoo>
