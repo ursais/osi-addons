@@ -1,0 +1,21 @@
+<odoo>
+
+    <record id="ol_crm_purchase_request_lead_view_form_inherit" model="ir.ui.view">
+        <field name="name">crm.lead.form.inherit</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <button name="action_schedule_meeting" position="after">
+                <button
+                    type="object"
+                    name="action_view_purchase_request"
+                    class="oe_stat_button"
+                    icon="fa-list"
+                >
+                    <field name="purchase_request_count" widget="statinfo" />
+                </button>
+            </button>
+        </field>
+    </record>
+
+</odoo>
