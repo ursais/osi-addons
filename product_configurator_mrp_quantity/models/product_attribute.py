@@ -44,7 +44,7 @@ class ProductAttributeLine(models.Model):
     def _get_attribute_value_line_domain(self):
         return [
             ("product_tmpl_id", "=", self.product_tmpl_id.id),
-            ("attribute_line_id", "=", self.id),
+            ("attribute_line_id", "in", self.ids),
             ("attribute_id", "=", self.attribute_id.id),
         ]
 
@@ -54,7 +54,7 @@ class ProductAttributeLine(models.Model):
         attribute_value_qty_obj = self.env["attribute.value.qty"]
         attribute_value_line_domain = [
             ("product_tmpl_id", "=", self.product_tmpl_id.id),
-            ("attribute_line_id", "=", self.id),
+            ("attribute_line_id", "in", self.ids),
             ("attribute_id", "=", self.attribute_id.id),
         ]
         if values.get("is_qty_required") and self.value_ids:
@@ -81,17 +81,20 @@ class ProductAttributeLine(models.Model):
                         }
                     )
             attribute_value_qty_obj.create(qty_list)
-        elif not values.get("is_qty_required", False):
+        elif "is_qty_required" in values and not values.get("is_qty_required"):
+            #is_check: Helping Variable for Server Action DB Migration
+            is_check = bool(self.product_template_value_ids.filtered(lambda line: line.maximum_qty != 1 and line.is_qty_required)) 
             qty_variants = self.product_tmpl_id.product_variant_ids.filtered(
                 lambda variant: variant.product_attribute_value_qty_ids.filtered(
                     lambda qty: qty.attr_value_id.attribute_id.id
                     == self.attribute_id.id
                 )
-            )
+            ) and is_check
             if qty_variants:
                 raise ValidationError(
                     _(
-                        "Qty Required cannot be disabled because there are variants that exist with quantities."
+                        "Qty Required cannot be disabled because there are variants that exist with quantities %s %s %s."
+                        % (self.product_tmpl_id.display_name,self.attribute_id.name,self.id)
                     )
                 )
             for attr_value in self.value_ids:
@@ -153,5 +156,27 @@ class ProductAttributePrice(models.Model):
                 )
             self.attribute_value_qty_ids.unlink()
             attribute_value_qty_obj.create(qty_list)
+
+        return result
+    def write(self, values):
+        result = super().write(values)
+        for res in self:
+            if res.is_qty_required and (
+                values.get("default_qty") or values.get("maximum_qty")
+            ):
+                qty_list = []
+                attribute_value_qty_obj = self.env["attribute.value.qty"]
+                for i in range(self.default_qty, self.maximum_qty + 1):
+                    qty_list.append(
+                        {
+                            "product_tmpl_id": res.product_tmpl_id.id,
+                            "product_attribute_id": res.attribute_id.id,
+                            "product_attribute_value_id": res.product_attribute_value_id.id,
+                            "qty": i,
+                            "template_attri_value_id": res.id,
+                        }
+                    )
+                res.attribute_value_qty_ids.unlink()
+                attribute_value_qty_obj.create(qty_list)
 
         return result
