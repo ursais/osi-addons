@@ -42,9 +42,27 @@ class SaleEstimateJob(models.Model):
         compute="_compute_total_cost_margin",
         store=True,
     )
+    warehouse_id = fields.Many2one(
+        'stock.warehouse', string='Warehouse', required=True,
+        compute='_compute_warehouse_id', store=True, readonly=False, precompute=True,
+        check_company=True)
+
 
     # END ##########
     # METHODS ##########
+
+    @api.depends('user_id', 'company_id')
+    def _compute_warehouse_id(self):
+        for rec in self:
+            default_warehouse_id = self.env['ir.default'].with_company(
+                rec.company_id.id)._get_model_defaults('sale.order').get('warehouse_id')
+            if rec.state in ['draft', 'sent'] or not rec.ids:
+                # Should expect empty
+                if default_warehouse_id is not None:
+                    rec.warehouse_id = default_warehouse_id
+                else:
+                    rec.warehouse_id = rec.user_id.with_company(rec.company_id.id)._get_default_warehouse_id()
+
 
     def open_product_creation_wizard(self):
         return {
@@ -190,3 +208,21 @@ class SaleEstimateJob(models.Model):
             action["context"] = dict(self.env.context)  # Preserve context if needed
 
         return action
+
+
+    def create_quotation_wizard(self):
+        """
+        Opens a wizard for creating a quotation from selected estimate products.
+        """
+        if self.product_tmpl_ids:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Create Quotation',
+                'res_model': 'quotation.wizard',
+                'view_mode': 'form',
+                'target': 'new',
+                'context': {'default_estimate_id': self.id},
+            }
+        else:
+            return self.estimate_to_quotation()
+

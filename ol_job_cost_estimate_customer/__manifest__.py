@@ -26,6 +26,7 @@
         "views/mrp_bom.xml",
         "views/sale_estimate_views.xml",
         "wizard/create_product_eco_wizard.xml",
+        "wizard/quatation_wizard_view.xml"
     ],
     "application": False,
     "installable": True,

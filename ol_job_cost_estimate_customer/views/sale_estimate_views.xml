@@ -55,6 +55,18 @@
                 <field name="margin" widget="monetary"/>
                 <field name="margin_percent" widget="percentage"/>
             </xpath>
+            <xpath expr="//button[@name='estimate_to_quotation']" position="attributes">
+                <attribute name="name">create_quotation_wizard</attribute>
+            </xpath>
+            <field name="reference" position="after">
+                <field name="warehouse_id" options="{'no_open': True, 'no_create': True}" groups="base.group_multi_company"/>
+            </field>
+            <xpath expr="//field[@name='estimate_ids']/tree/field[@name='product_uom']" position="after">
+                <field name="product_type" column_invisible="True"/>
+                <field name="forecasted_issue" column_invisible="True"/>
+                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="not id or not forecasted_issue or product_type != 'product' or job_type != 'material'" class="text-danger"/>
+                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="not id or forecasted_issue or product_type != 'product' or job_type != 'material'"/>
+            </xpath>
         </field>
     </record>
 
