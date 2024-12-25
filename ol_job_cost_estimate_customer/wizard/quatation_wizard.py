@@ -33,30 +33,35 @@ class QuotationWizard(models.TransientModel):
         Create a quotation with the selected product and quantity.
         """
         SaleOrder = self.env["sale.order"]
-        vals = {
-            "partner_id": self.estimate_id.partner_id.id,
-            "origin": self.estimate_id.number,
-            "analytic_account_id": self.estimate_id.id,
-            "payment_term_id": self.estimate_id.payment_term_id.id,
-            "pricelist_id": self.estimate_id.pricelist_id.id,
-            "order_line": [
-                (
-                    0,
-                    0,
-                    {
-                        "product_id": self.product_id.id,
-                        "product_uom_qty": self.qty,
-                    },
-                )
-            ],
-        }
-        quotation = SaleOrder.create(vals)
-        self.estimate_id.write({"state": "quotesend", 'quotation_id': quotation.id})
+        if self.product_id:
+            vals = {
+                "partner_id": self.estimate_id.partner_id.id,
+                "origin": self.estimate_id.number,
+                "analytic_account_id": self.estimate_id.id,
+                "payment_term_id": self.estimate_id.payment_term_id.id,
+                "pricelist_id": self.estimate_id.pricelist_id.id,
+                "order_line": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": self.product_id.id,
+                            "product_uom_qty": self.qty,
+                        },
+                    )
+                ],
+            }
+            quotation = SaleOrder.create(vals)
+            self.estimate_id.write({"state": "quotesend", 'quotation_id': quotation.id})
+            return {
+                    "type": "ir.actions.act_window",
+                    "name": "Quotation",
+                    "res_model": "sale.order",
+                    "view_mode": "form",
+                    "res_id": quotation.id
+                }
+        else:
+            self.estimate_id.estimate_to_quotation()
 
-        return {
-            "type": "ir.actions.act_window",
-            "name": "Quotation",
-            "res_model": "sale.order",
-            "view_mode": "form",
-            "res_id": quotation.id,
-        }
+
+        
