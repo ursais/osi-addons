@@ -16,7 +16,6 @@ class QuotationWizard(models.TransientModel):
         "product.product",
         string="Product",
         domain="[('id', 'in', product_ids)]",
-        required=True,
     )
     qty = fields.Integer(string="Quantity", default=1)
 

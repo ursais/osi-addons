@@ -7,8 +7,8 @@
                 <group>
                 	<field name="estimate_id" invisible="1"/>
                     <field name="product_ids" invisible="1"/>
-                    <field name="product_id"  required="1" options="{'no_create': True}"/>
-                    <field name="qty" required="1"/>
+                    <field name="product_id"  options="{'no_create': True}"/>
+                    <field name="qty" />
                 </group>
                 <footer>
                     <button string="Create" type="object" name="create_quotation" class="btn-primary"/>
