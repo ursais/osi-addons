@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 
 class SaleEstimateJob(models.Model):
@@ -47,9 +47,55 @@ class SaleEstimateJob(models.Model):
         compute='_compute_warehouse_id', store=True, readonly=False, precompute=True,
         check_company=True)
 
+    has_active_pricelist = fields.Boolean(compute="_compute_has_active_pricelist")
+    show_update_pricelist = fields.Boolean(string="Has Pricelist Changed", store=False)
 
     # END ##########
-    # METHODS ##########
+    # METHODS ########## 
+
+    def action_update_prices(self):
+        self.ensure_one()
+
+        self._recompute_prices()
+
+        if self.pricelist_id:
+            message = _(
+                "Product prices have been recomputed according to pricelist %s.",
+                self.pricelist_id._get_html_link(),
+            )
+        else:
+            message = _("Product prices have been recomputed.")
+        self.message_post(body=message)
+
+    
+    def _get_update_prices_lines(self):
+        """Hook to exclude specific lines which should not be updated based on price list recomputation"""
+        return self.estimate_ids.filtered(lambda line: line.job_type == 'material')
+
+
+    @api.onchange("pricelist_id")
+    def _onchange_pricelist_id_show_update_prices(self):
+        self.show_update_pricelist = bool(self.estimate_ids)
+
+    def _recompute_prices(self):
+            lines_to_recompute = self._get_update_prices_lines()
+            # lines_to_recompute.invalidate_recordset(["pricelist_item_id"])
+            for line in lines_to_recompute:
+                line.product_id_change()
+            self.show_update_pricelist = False
+
+    @api.depends("company_id")
+    def _compute_has_active_pricelist(self):
+        for order in self:
+            order.has_active_pricelist = bool(
+                self.env["product.pricelist"].search(
+                    [
+                        ("company_id", "in", (False, order.company_id.id)),
+                        ("active", "=", True),
+                    ],
+                    limit=1,
+                )
+            )
 
     @api.depends('user_id', 'company_id')
     def _compute_warehouse_id(self):
