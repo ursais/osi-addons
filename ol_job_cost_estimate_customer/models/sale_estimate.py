@@ -50,8 +50,22 @@ class SaleEstimateJob(models.Model):
     has_active_pricelist = fields.Boolean(compute="_compute_has_active_pricelist")
     show_update_pricelist = fields.Boolean(string="Has Pricelist Changed", store=False)
 
+    show_update_purchase_price = fields.Boolean(string='Ha Purchase Price Changed',compute="_compute_show_update_purchase_price")
+
     # END ##########
     # METHODS ########## 
+
+    def _compute_show_update_purchase_price(self):
+        for rec in self:
+            rec.show_update_purchase_price = False
+            if rec.estimate_ids:
+                rec.show_update_purchase_price = bool(rec.estimate_ids.filtered(lambda l: l.product_id.total_cost != l.purchase_price))
+
+    def action_update_purchase_price(self):
+        for rec in self:
+            for line in rec.estimate_ids.filtered(lambda l: l.product_id.total_cost != l.purchase_price):
+                line.purchase_price = line.product_id.total_cost
+
 
     def action_update_prices(self):
         self.ensure_one()
