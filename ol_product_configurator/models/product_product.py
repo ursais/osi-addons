@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class ProductProduct(models.Model):
@@ -34,5 +34,15 @@ class ProductProduct(models.Model):
                     # No need to continue checking once it's set to True
                     break
             product.values_company_diff = values_company_diff
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        products = super().create(vals_list)
+        for product in products:
+            # Check if the product has a template and a default code
+            if product.product_tmpl_id and product.product_tmpl_id.default_code:
+                # Generate the new product default code
+                product.default_code = f"{product.product_tmpl_id.default_code}-{product.id}"
+        return products
 
     # END ##########
