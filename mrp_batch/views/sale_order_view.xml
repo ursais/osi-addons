@@ -13,6 +13,11 @@
                     </div>
                 </button>
             </xpath>
+            <button name="action_unlock" position="replace">
+                <field name="is_mrp_warning" invisible="0"/>
+                <button name="action_unlock" type="object" string="Unlock" invisible="not locked or is_mrp_warning" groups="sales_team.group_sale_manager"/>
+                <button name="action_unlock" type="object" string="Unlock" invisible="not locked or not is_mrp_warning" groups="sales_team.group_sale_manager" confirm="Wording: There are planned or in progress manufacturing orders. Please confirm that any changes won't affect those orders. Continue?"/>
+            </button>
         </field>
     </record>
 

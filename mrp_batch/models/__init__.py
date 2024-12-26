@@ -7,3 +7,5 @@ from . import mrp_workorder
 from . import product_template
 from . import queue_job
 from . import sale_order
+from . import res_config_settings
+from . import mrp_bom

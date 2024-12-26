@@ -42,6 +42,7 @@
                 <field name="exceptions_summary" optional="show" />
                 <field name="notes" optional="hide" />
                 <field name="state" decoration-success="state == 'done'" decoration-warning="state == 'progress'" decoration-info="state == 'confirm'" decoration-danger="state == 'hold'" decoration-muted="state in ('cancel', 'draft')" optional="show" widget="badge" class="text-dark"/>
+                <field name="is_delayed" optional="show"/>
                 <field name="is_planned" widget="boolean_toggle" readonly="1" />
             </tree>
         </field>

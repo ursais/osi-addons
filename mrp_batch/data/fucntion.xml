@@ -1,0 +1,10 @@
+<odoo>
+	<function name="write" model="stock.warehouse">
+        <function name="search" model="stock.warehouse">
+            <value
+                eval="[('name', '=', 'OnLogic US Warehouse')]" />
+        </function>
+        <value eval="{'manufacture_steps': 'pbm'}" />
+    </function>
+</odoo>
+	

@@ -13,7 +13,7 @@
 
     <!-- Default Trigger Fields for Manufacturing Orders -->
     <record id="ol_exception.mo_exception_config_ignore_exception" model="exception.config">
-        <field name="trigger_field_ids" eval="[(4, ref('ol_credit_limit.field_mrp_production__credit_hold'))]"/>
+        <field name="trigger_field_ids" eval="[(4, ref('ol_credit_limit.field_mrp_production__credit_hold')), (4, ref('mrp_batch.field_mrp_production__sale_state'))]"/>
     </record>
 
 </odoo>
