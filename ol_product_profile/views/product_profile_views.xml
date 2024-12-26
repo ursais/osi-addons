@@ -1,0 +1,26 @@
+<odoo>
+
+    <record id="product_profile_form_view" model="ir.ui.view">
+        <field name="name">product.profile.form.view</field>
+        <field name="model">product.profile</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form string="Product Profile">
+                <group>
+                    <field name="sequence"/>
+                    <field name="name" />
+                    <field name="detailed_type" />
+                    <field name="explanation" />
+                </group>
+                <group>
+                    <field name="categ_id"/>
+                    <field name="uom_id" />
+                    <field name="uom_po_id" />
+                    <field name="route_ids" class="mb-0" widget="many2many_checkboxes" />
+                    <field name="invoice_policy" />
+                </group>
+            </form>
+        </field>
+    </record>
+
+</odoo>
