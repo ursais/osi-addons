@@ -17,6 +17,19 @@ class SaleOrderLine(models.Model):
     # END #########
     # METHODS #####
 
+    def update_crm_tag_sale_order(self):
+        tag_engineering_prototype = self.env.ref("ol_sale.crm_tag_engineering_prototype")
+        tag_ids = self.order_id.tag_ids.ids
+        if self.order_id and self.product_template_id.product_state_id.id == self.env.ref("ol_sale.product_state_prototype").id:
+            if self._context.get("from_unlink"):
+                tag_ids.remove(tag_engineering_prototype.id)
+                self.order_id.tag_ids = [(6,0,tag_ids)]
+            else:
+                self.order_id.tag_ids = [(6,0,tag_engineering_prototype.ids)]
+        elif self.product_template_id.product_state_id.id != tag_engineering_prototype.id and tag_engineering_prototype.id in self.order_id.tag_ids.ids:
+            tag_ids.remove(tag_engineering_prototype.id)
+            self.order_id.tag_ids = [(6,0,tag_ids)]
+
     @api.model_create_multi
     def create(self, vals):
         """
@@ -27,7 +40,7 @@ class SaleOrderLine(models.Model):
 
         for rec in res:
             rec.name = get_product_description(rec.product_id)
-
+            rec.update_crm_tag_sale_order()
         return res
 
     def write(self, vals):
@@ -42,7 +55,11 @@ class SaleOrderLine(models.Model):
             if vals.get("product_id"):
                 product = rec.env["product.product"].browse(vals["product_id"])
                 rec.name = get_product_description(product)
-
+            rec.update_crm_tag_sale_order()
         return res
+
+    def unlink(self):
+        self.with_context(from_unlink=True).update_crm_tag_sale_order()
+        return super().unlink()
 
     # END #########

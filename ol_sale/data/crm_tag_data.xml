@@ -1,0 +1,9 @@
+<odoo noupdate="1">
+	<record id="crm_tag_engineering_prototype" model="crm.tag">
+        <field name="name">Engineering Prototype</field>
+    </record>
+
+    <record id="crm_tag_sales_prototype" model="crm.tag">
+        <field name="name">Sales Prototype'</field>
+    </record>
+</odoo>
