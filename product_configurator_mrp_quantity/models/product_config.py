@@ -128,7 +128,7 @@ class ProductConfigSession(models.Model):
                             ("product_attribute_id", "=", line.attribute_id.id),
                             ("product_attribute_value_id", "=", line.default_val.id),
                             ("qty", "=", int(template_attribute_value2.default_qty)),
-                        ]
+                        ],order="qty",limit=1
                     )
                     session_qty_list.append(
                         (

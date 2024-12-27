@@ -25,4 +25,22 @@
         </field>
     </record>
 
+
+    <record id="product_attribute_value_search_view" model="ir.ui.view">
+        <field name="name">product.attribute.value.search</field>
+        <field name="model">product.attribute.value</field>
+        <field name="arch" type="xml">
+            <search string="Product">
+                <field name="name"/>
+                <field name="product_id"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="product_configurator.variants_action" model="ir.actions.act_window">
+        <field name="search_view_id" ref="product_attribute_value_search_view"/>
+    </record>
+
+
+
 </odoo>
