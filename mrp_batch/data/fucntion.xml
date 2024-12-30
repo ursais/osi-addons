@@ -6,5 +6,13 @@
         </function>
         <value eval="{'manufacture_steps': 'pbm'}" />
     </function>
+
+    <function name="write" model="stock.picking.type">
+        <function name="search" model="stock.picking.type">
+            <value
+                eval="[('name', '=', 'Pick Components')]" />
+        </function>
+        <value eval="{'name':'Assembly Queue', 'sequence_code': 'AQ', 'reservation_method': 'by_date', 'reservation_days_before': 21}" />
+    </function>
 </odoo>
 	
