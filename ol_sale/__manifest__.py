@@ -16,6 +16,7 @@
         "sale_subscription",
         "stock",
         "ol_sale_mrp_tags",
+        "product_configurator_sale_mrp",
     ],
     # always loaded
     "data": [

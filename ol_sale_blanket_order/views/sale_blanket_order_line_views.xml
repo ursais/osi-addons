@@ -14,4 +14,17 @@
         </field>
     </record>
 
+    <record id="view_blanket_order_form_configurator_inherit_ol_s_b_order" model="ir.ui.view">
+        <field name="name">sale.blanket.order.form.inherit.so_b_order</field>
+        <field name="model">sale.blanket.order</field>
+        <field name="inherit_id" ref="product_configurator_sale_blanket_order.view_blanket_order_form_configurator_inherit" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='line_ids']/tree//button[@name='reconfigure_product']"
+                position="attributes">
+                <attribute name="invisible">not config_ok or state not in ['draft','open'] or ordered_uom_qty > 0</attribute>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>

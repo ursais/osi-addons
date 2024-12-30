@@ -41,6 +41,9 @@ class SaleOrderLine(models.Model):
         for rec in res:
             rec.name = get_product_description(rec.product_id)
             rec.update_crm_tag_sale_order()
+            product_bom = self.env['mrp.bom'].search(['|', ('product_id', '=', rec.product_id.id), ('product_tmpl_id', '=', rec.product_id.product_tmpl_id.id)], limit=1)
+            if product_bom and not rec.bom_id and not rec.bom_id.scaffolding_bom:
+                rec.bom_id = product_bom.id
         return res
 
     def write(self, vals):
@@ -56,6 +59,11 @@ class SaleOrderLine(models.Model):
                 product = rec.env["product.product"].browse(vals["product_id"])
                 rec.name = get_product_description(product)
             rec.update_crm_tag_sale_order()
+            product_bom = self.env['mrp.bom'].search(['|', ('product_id', '=', rec.product_id.id), ('product_tmpl_id', '=', rec.product_id.product_tmpl_id.id)], limit=1)
+            if product_bom and not rec.bom_id and not rec.bom_id.scaffolding_bom:
+                rec.bom_id = product_bom.id
+            if not product_bom and rec.bom_id:
+                rec.bom_id = False
         return res
 
     def unlink(self):
