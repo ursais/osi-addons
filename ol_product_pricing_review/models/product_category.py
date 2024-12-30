@@ -12,6 +12,7 @@ class ProductCategory(models.Model):
     suggested_margin = fields.Float(
         string="Suggested Margin",
         help="Default margin if no other pricing methods are set.",
+        default="0.4"
     )
 
     # END ##########

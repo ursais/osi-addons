@@ -1,4 +1,4 @@
-# Import Odoo libs
+    # Import Odoo libs
 from odoo import api, models
 
 
@@ -73,6 +73,17 @@ class SaleOrderLine(models.Model):
             line.purchase_price = line._convert_to_sol_currency(
                 product_cost, line.product_id.cost_currency_id
             )
+        return res
+
+    @api.model_create_multi
+    def create(self,vals_list):
+        res = super().create(vals_list)
+        product_template = self.env["product.template"]
+        for vals in vals_list:
+            product_template_id = product_template.browse(vals.get("product_template_id"))
+            is_bom_product_template = sum(product_template_id.mapped("bom_count")) > 0
+            if not vals.get("config_session_id") and is_bom_product_template:
+                product_template_id.button_bom_sale_price()
         return res
 
     # END #########
