@@ -1,13 +1,21 @@
-from odoo import api, fields, models
+# Import Odoo libs
+from odoo import fields, models
 
 
 class CRMLead(models.Model):
+    """Add the ability to create Purchase Request's from Leads."""
+
     _inherit = "crm.lead"
+
+    # COLUMNS ######
 
     purchase_request_ids = fields.One2many("purchase.request", "opportunity_id")
     purchase_request_count = fields.Integer(
         string="Purchase Request", compute="_compute_purchase_request_count"
     )
+
+    # END ##########
+    # METHODS ##########
 
     def _compute_purchase_request_count(self):
         for lead in self:
@@ -28,3 +36,5 @@ class CRMLead(models.Model):
         else:
             action["domain"] = [("id", "in", purchase_request_ids.ids)]
         return action
+
+    # END ##########

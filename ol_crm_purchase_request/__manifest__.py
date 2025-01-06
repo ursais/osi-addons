@@ -1,7 +1,8 @@
 {
     "name": "Onlogic CRM Purchase",
-    "summary": "CRM Enhancements.",
-    "description": """CRM Enhancements.""",
+    "summary": """
+        Adds the ability to create Purchase Requests from Opportunities.
+        """,
     "author": "Onlogic",
     "website": "https://www.onlogic.com",
     "onlogic": True,
