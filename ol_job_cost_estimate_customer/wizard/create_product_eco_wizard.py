@@ -1,3 +1,4 @@
+# Import Odoo libs
 from odoo import api, fields, models
 
 
@@ -5,8 +6,14 @@ class ProductCreationWizard(models.TransientModel):
     _name = "product.creation.wizard"
     _description = "Wizard to create product, BoM, and ECO"
 
+    # COLUMNS #####
+
     product_name = fields.Char(string="Product Name", required=True)
     type_id = fields.Many2one("mrp.eco.type", "ECO Type")
+
+    # END #########
+
+    # METHODS #####
 
     @api.model
     def default_get(self, fields):
@@ -26,3 +33,5 @@ class ProductCreationWizard(models.TransientModel):
             self.product_name, self.type_id
         )
         return action
+
+    # END #########

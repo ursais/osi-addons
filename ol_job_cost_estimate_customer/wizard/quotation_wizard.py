@@ -1,9 +1,12 @@
+# Import Odoo libs
 from odoo import api, fields, models
 
 
 class QuotationWizard(models.TransientModel):
     _name = "quotation.wizard"
     _description = "Quotation Wizard"
+
+    # COLUMNS #####
 
     estimate_id = fields.Many2one("sale.estimate.job", string="Estimate", required=True)
     product_ids = fields.Many2many(
@@ -18,6 +21,10 @@ class QuotationWizard(models.TransientModel):
         domain="[('id', 'in', product_ids)]",
     )
     qty = fields.Integer(string="Quantity", default=1)
+
+    # END #########
+
+    # METHODS #####
 
     @api.depends("estimate_id")
     def _compute_product_ids(self):
@@ -51,16 +58,15 @@ class QuotationWizard(models.TransientModel):
                 ],
             }
             quotation = SaleOrder.create(vals)
-            self.estimate_id.write({"state": "quotesend", 'quotation_id': quotation.id})
+            self.estimate_id.write({"state": "quotesend", "quotation_id": quotation.id})
             return {
-                    "type": "ir.actions.act_window",
-                    "name": "Quotation",
-                    "res_model": "sale.order",
-                    "view_mode": "form",
-                    "res_id": quotation.id
-                }
+                "type": "ir.actions.act_window",
+                "name": "Quotation",
+                "res_model": "sale.order",
+                "view_mode": "form",
+                "res_id": quotation.id,
+            }
         else:
             self.estimate_id.estimate_to_quotation()
 
-
-        
+    # END #########
