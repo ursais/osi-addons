@@ -44,6 +44,7 @@ class SaleEstimateLineJob(models.Model):
     )
     product_type = fields.Selection(related="product_id.detailed_type")
     forecasted_issue = fields.Boolean(compute="_compute_forecasted_issue")
+
     # END #########
 
     # METHODS #####
@@ -66,10 +67,6 @@ class SaleEstimateLineJob(models.Model):
         action["context"] = {
             "active_id": self.product_id.id,
             "active_model": "product.product",
-            # "move_to_match_ids": self.purchase_lines.move_ids.filtered(
-            #     lambda m: m.product_id == self.product_id
-            # ).ids,
-            # "purchase_line_to_match_id": self.purchase_lines.id,
         }
         warehouse = self.estimate_id.warehouse_id
         if warehouse:
