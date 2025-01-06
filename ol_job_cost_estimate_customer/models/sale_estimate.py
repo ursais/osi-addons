@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 
 
 class SaleEstimateJob(models.Model):
@@ -190,3 +190,13 @@ class SaleEstimateJob(models.Model):
             action["context"] = dict(self.env.context)  # Preserve context if needed
 
         return action
+
+    def open_add_components(self):
+        # Prepare the action to open the "Add Components" wizard
+        return {
+            "name": _("Add Components"),
+            "type": "ir.actions.act_window",
+            "res_model": "add.components.wizard",
+            "view_mode": "form",
+            "target": "new",
+        }
