@@ -108,7 +108,7 @@ for rec in records:
     if new_state and dev_state:
         if rec.product_state_id == new_state:
             rec.sudo().write({"product_state_id": dev_state.id})
-        if rec.product_state_id == dev_state:
+        elif rec.product_state_id == dev_state:
             rec.sudo().write({"product_state_id": new_state.id})
         </field>
     </record>
