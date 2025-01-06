@@ -13,7 +13,7 @@
     "depends": [
         "ol_base",
         "ol_purchase_request_estimate",
-        "ol_crm",
+        "crm",
     ],
     # Data Loaded.
     "data": [
