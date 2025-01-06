@@ -75,4 +75,23 @@ class SaleOrderLine(models.Model):
             )
         return res
 
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        product_template = self.env["product.template"]
+        for vals in vals_list:
+            # Browse the product template using the provided ID
+            product_template_id = product_template.browse(
+                vals.get("product_template_id")
+            )
+
+            # Check if the product template has any BOMs associated with it
+            is_bom_product_template = sum(product_template_id.mapped("bom_count")) > 0
+
+            # If there is no config session ID and the product template has BOMs,
+            # update the BOM sale price
+            if not vals.get("config_session_id") and is_bom_product_template:
+                product_template_id.button_bom_sale_price()
+        return res
+
     # END #########
