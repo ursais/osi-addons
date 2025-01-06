@@ -1,4 +1,5 @@
 <odoo>
+
     <record id="view_move_form_inherit_purchase_3way_match" model="ir.ui.view">
         <field name="name">account.move.inherit.purchase</field>
         <field name="model">account.move</field>

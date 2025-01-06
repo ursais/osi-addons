@@ -1,7 +1,8 @@
 {
     "name": "OnLogic Purchase 3 way match",
-    "summary": "Purchase 3 way match.",
-    "description": """Purchase 3 way match""",
+    "summary": """
+        Purchase 3 way match adding visiblity if bill line price doesn't match PO line.
+        """,
     "author": "OnLogic",
     "website": "https://www.onlogic.com",
     "onlogic": True,
@@ -11,7 +12,7 @@
     # any module necessary for this one to work correctly
     "depends": [
         "ol_base",
-        "purchase"
+        "purchase",
     ],
     # always loaded
     "data": [
