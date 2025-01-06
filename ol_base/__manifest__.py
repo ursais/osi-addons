@@ -28,6 +28,7 @@
         "documents",
         "helpdesk",
         "hr",
+        "hr_attendance",
         "hr_contract",
         "hr_expense",
         "hr_skills",
