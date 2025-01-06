@@ -269,7 +269,6 @@ class SaleEstimateJob(models.Model):
 
         return action
 
-
     def create_quotation_wizard(self):
         """
         Opens a wizard for creating a quotation from selected estimate products.
@@ -286,3 +285,12 @@ class SaleEstimateJob(models.Model):
         else:
             return self.estimate_to_quotation()
 
+    def open_add_components(self):
+        # Prepare the action to open the "Add Components" wizard
+        return {
+            "name": _("Add Components"),
+            "type": "ir.actions.act_window",
+            "res_model": "add.components.wizard",
+            "view_mode": "form",
+            "target": "new",
+        }

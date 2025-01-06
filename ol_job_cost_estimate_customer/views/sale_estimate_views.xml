@@ -97,6 +97,9 @@
 
                 </div>
             </notebook>
+            <field name="estimate_ids" position="before">
+                <button name="open_add_components" string="Add from Product" type="object" class="btn btn-secondary" invisible="state == 'cancel'" />
+            </field>
         </field>
     </record>
 
