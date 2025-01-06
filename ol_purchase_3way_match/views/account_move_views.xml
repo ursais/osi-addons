@@ -1,0 +1,28 @@
+<odoo>
+
+    <record id="view_move_form_inherit_purchase_3way_match" model="ir.ui.view">
+        <field name="name">account.move.inherit.purchase</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="purchase.view_move_form_inherit_purchase" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position = "after">
+                <field name="po_price_difference" invisible="1"></field>
+                <div class="alert alert-danger mb-0" role="alert" style="text-align: center" invisible="not po_price_difference">
+                    <strong> The Bill is not approved for payment because there are lines linked to purchase orders which do not have matching received qty.</strong>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_invoice_tree_inherit_purchase_3way_match" model="ir.ui.view">
+        <field name="name">account.invoice.tree</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree" />
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="po_price_difference" optional="hide" column_invisible="context.get('default_move_type') not in ('in_invoice', 'in_refund', 'in_receipt')" groups="base.group_user"></field>
+            </field>
+        </field>
+    </record>
+
+</odoo>
