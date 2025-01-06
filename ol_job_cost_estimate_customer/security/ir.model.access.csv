@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_product_creation_wizard_user,product.creation.wizard user,model_product_creation_wizard,base.group_user,1,1,1,1
+access_quotation_wizard,quotation.wizard,model_quotation_wizard,base.group_user,1,1,1,1
 access_add_components_wizard_user,add.components.wizard user,model_add_components_wizard,base.group_user,1,1,1,1

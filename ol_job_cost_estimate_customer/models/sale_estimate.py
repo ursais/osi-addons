@@ -42,9 +42,87 @@ class SaleEstimateJob(models.Model):
         compute="_compute_total_cost_margin",
         store=True,
     )
+    warehouse_id = fields.Many2one(
+        'stock.warehouse', string='Warehouse', required=True,
+        compute='_compute_warehouse_id', store=True, readonly=False, precompute=True,
+        check_company=True)
+
+    has_active_pricelist = fields.Boolean(compute="_compute_has_active_pricelist")
+    show_update_pricelist = fields.Boolean(string="Has Pricelist Changed", store=False)
+
+    show_update_purchase_price = fields.Boolean(string='Ha Purchase Price Changed',compute="_compute_show_update_purchase_price")
 
     # END ##########
-    # METHODS ##########
+    # METHODS ########## 
+
+    def _compute_show_update_purchase_price(self):
+        for rec in self:
+            rec.show_update_purchase_price = False
+            if rec.estimate_ids:
+                rec.show_update_purchase_price = bool(rec.estimate_ids.filtered(lambda l: l.product_id.total_cost != l.purchase_price))
+
+    def action_update_purchase_price(self):
+        for rec in self:
+            for line in rec.estimate_ids.filtered(lambda l: l.product_id.total_cost != l.purchase_price):
+                line.purchase_price = line.product_id.total_cost
+
+
+    def action_update_prices(self):
+        self.ensure_one()
+
+        self._recompute_prices()
+
+        if self.pricelist_id:
+            message = _(
+                "Product prices have been recomputed according to pricelist %s.",
+                self.pricelist_id._get_html_link(),
+            )
+        else:
+            message = _("Product prices have been recomputed.")
+        self.message_post(body=message)
+
+    
+    def _get_update_prices_lines(self):
+        """Hook to exclude specific lines which should not be updated based on price list recomputation"""
+        return self.estimate_ids.filtered(lambda line: line.job_type == 'material')
+
+
+    @api.onchange("pricelist_id")
+    def _onchange_pricelist_id_show_update_prices(self):
+        self.show_update_pricelist = bool(self.estimate_ids)
+
+    def _recompute_prices(self):
+            lines_to_recompute = self._get_update_prices_lines()
+            # lines_to_recompute.invalidate_recordset(["pricelist_item_id"])
+            for line in lines_to_recompute:
+                line.product_id_change()
+            self.show_update_pricelist = False
+
+    @api.depends("company_id")
+    def _compute_has_active_pricelist(self):
+        for order in self:
+            order.has_active_pricelist = bool(
+                self.env["product.pricelist"].search(
+                    [
+                        ("company_id", "in", (False, order.company_id.id)),
+                        ("active", "=", True),
+                    ],
+                    limit=1,
+                )
+            )
+
+    @api.depends('user_id', 'company_id')
+    def _compute_warehouse_id(self):
+        for rec in self:
+            default_warehouse_id = self.env['ir.default'].with_company(
+                rec.company_id.id)._get_model_defaults('sale.order').get('warehouse_id')
+            if rec.state in ['draft', 'sent'] or not rec.ids:
+                # Should expect empty
+                if default_warehouse_id is not None:
+                    rec.warehouse_id = default_warehouse_id
+                else:
+                    rec.warehouse_id = rec.user_id.with_company(rec.company_id.id)._get_default_warehouse_id()
+
 
     def open_product_creation_wizard(self):
         return {
@@ -190,6 +268,22 @@ class SaleEstimateJob(models.Model):
             action["context"] = dict(self.env.context)  # Preserve context if needed
 
         return action
+
+    def create_quotation_wizard(self):
+        """
+        Opens a wizard for creating a quotation from selected estimate products.
+        """
+        if self.product_tmpl_ids:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': 'Create Quotation',
+                'res_model': 'quotation.wizard',
+                'view_mode': 'form',
+                'target': 'new',
+                'context': {'default_estimate_id': self.id},
+            }
+        else:
+            return self.estimate_to_quotation()
 
     def open_add_components(self):
         # Prepare the action to open the "Add Components" wizard

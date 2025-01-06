@@ -42,10 +42,39 @@ class SaleEstimateLineJob(models.Model):
         store=True,
         precompute=True,
     )
-
+    product_type = fields.Selection(related="product_id.detailed_type")
+    forecasted_issue = fields.Boolean(compute="_compute_forecasted_issue")
     # END #########
 
     # METHODS #####
+
+    @api.depends("product_uom_qty", "product_id")
+    def _compute_forecasted_issue(self):
+        for line in self:
+            warehouse = line.estimate_id.warehouse_id
+            line.forecasted_issue = False
+            if line.product_id:
+                virtual_available = line.product_id.with_context(
+                    warehouse=warehouse.id,
+                ).virtual_available
+                if virtual_available <= 0:
+                    line.forecasted_issue = True
+
+    def action_product_forecast_report(self):
+        self.ensure_one()
+        action = self.product_id.action_product_forecast_report()
+        action["context"] = {
+            "active_id": self.product_id.id,
+            "active_model": "product.product",
+            # "move_to_match_ids": self.purchase_lines.move_ids.filtered(
+            #     lambda m: m.product_id == self.product_id
+            # ).ids,
+            # "purchase_line_to_match_id": self.purchase_lines.id,
+        }
+        warehouse = self.estimate_id.warehouse_id
+        if warehouse:
+            action["context"]["warehouse"] = warehouse.id
+        return action
 
     @api.depends("product_id")
     def _compute_customer_lead(self):

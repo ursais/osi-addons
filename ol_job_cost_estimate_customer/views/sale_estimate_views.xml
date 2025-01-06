@@ -55,6 +55,48 @@
                 <field name="margin" widget="monetary"/>
                 <field name="margin_percent" widget="percentage"/>
             </xpath>
+            <xpath expr="//button[@name='estimate_to_quotation']" position="attributes">
+                <attribute name="name">create_quotation_wizard</attribute>
+            </xpath>
+            <field name="reference" position="after">
+                <field name="warehouse_id" options="{'no_open': True, 'no_create': True}" groups="base.group_multi_company" readonly="state in ('approve','quotesend','cancel','reject')"/>
+            </field>
+            <xpath expr="//field[@name='estimate_ids']/tree/field[@name='product_uom']" position="after">
+                <field name="product_type" column_invisible="True"/>
+                <field name="forecasted_issue" column_invisible="True"/>
+                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="not id or not forecasted_issue or product_type != 'product' or job_type != 'material'" class="text-danger"/>
+                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" invisible="not id or forecasted_issue or product_type != 'product' or job_type != 'material'"/>
+            </xpath>
+            <field name="pricelist_id" position="replace">
+                <field name="has_active_pricelist" invisible="1"/>
+                <field name="show_update_pricelist" invisible="1"/>
+                <label for="pricelist_id"
+                    groups="product.group_product_pricelist"
+                        invisible="not has_active_pricelist"/>
+                <div groups="product.group_product_pricelist"
+                     class="o_row"
+                     invisible="not has_active_pricelist">
+                    <field name="pricelist_id" options="{'no_open':True,'no_create': True}" readonly="state in ('approve','quotesend','cancel','reject')"/>
+                    <button name="action_update_prices" type="object"
+                        string=" Update Prices"
+                        help="Recompute all prices based on this pricelist"
+                        class="btn-link mb-1 px-0" icon="fa-refresh"
+                        confirm="This will update the unit price of all products based on the new pricelist."
+                        invisible="not show_update_pricelist or state in ('approve','quotesend','cancel','reject')"/>
+                        </div>
+            </field>
+            <notebook position="before">
+                <div class="o_row" invisible="not show_update_purchase_price">
+                    <field name="show_update_purchase_price" invisible="1"/>
+                    <button name="action_update_purchase_price" type="object"
+                            string=" Update Cost"
+                            help="Recompute all Purchase prices based on this Total Cost"
+                            class="btn-link mb-1 px-0" icon="fa-refresh"
+                            confirm="This will update the Purchase price of all products based on the Total Cost."
+                            invisible="not show_update_purchase_price or state in ('approve','quotesend','cancel','reject')"/>
+
+                </div>
+            </notebook>
             <field name="estimate_ids" position="before">
                 <button name="open_add_components" string="Add from Product" type="object" class="btn btn-secondary" invisible="state == 'cancel'" />
             </field>
