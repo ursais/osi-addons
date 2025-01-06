@@ -1,7 +1,8 @@
 {
     "name": "Onlogic CRM MRP PLM",
-    "summary": "CRM Enhancements.",
-    "description": """CRM Enhancements.""",
+    "summary": """
+        Adds the ability to create ECO from the Opportunity.
+        """,
     "author": "Onlogic",
     "website": "https://www.onlogic.com",
     "onlogic": True,

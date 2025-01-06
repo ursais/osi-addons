@@ -1,11 +1,19 @@
-from odoo import api, fields, models
+# Import Odoo libs
+from odoo import fields, models
 
 
 class CRMLead(models.Model):
+    """Add the ability to create Engineering Change Order's from Leads."""
+
     _inherit = "crm.lead"
+
+    # COLUMNS ######
 
     eco_ids = fields.One2many("mrp.eco", "opportunity_id", string="ECO")
     eco_count = fields.Integer(string="ECO Count", compute="_compute_eco_count")
+
+    # END ##########
+    # METHODS ##########
 
     def _compute_eco_count(self):
         for lead in self:
@@ -26,3 +34,5 @@ class CRMLead(models.Model):
         else:
             action["domain"] = [("id", "in", eco_ids.ids)]
         return action
+
+    # END ##########
