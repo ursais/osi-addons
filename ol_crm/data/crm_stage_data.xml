@@ -66,4 +66,5 @@
         <field name="name">Canceled</field>
         <field name="sequence">99</field>
     </record>
+
 </odoo>
