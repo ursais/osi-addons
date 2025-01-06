@@ -1,0 +1,70 @@
+<odoo>
+
+    <!-- Portfolio Stages -->
+    <record id="portfolio_stage_new" model="crm.stage">
+        <field name="name">New</field>
+        <field name="sequence">1</field>
+        <field name="team_id" ref="ol_crm.sales_team_portfolio"/>
+    </record>
+    <record id="portfolio_stage_sales_prototype" model="crm.stage">
+        <field name="name">Sales Prototype to Customer</field>
+        <field name="sequence">2</field>
+        <field name="team_id" ref="ol_crm.sales_team_portfolio"/>
+    </record>
+    <record id="portfolio_stage_approved_prototype" model="crm.stage">
+        <field name="name">Approved Sales Prototype</field>
+        <field name="sequence">3</field>
+        <field name="team_id" ref="ol_crm.sales_team_portfolio"/>
+    </record>
+
+    <!-- Customer SKU Stages -->
+    <record id="customer_sku_stage_new" model="crm.stage">
+        <field name="name">New</field>
+        <field name="sequence">1</field>
+        <field name="team_id" ref="ol_crm.sales_team_customer_sku"/>
+    </record>
+    <record id="customer_sku_stage_sales_prototype" model="crm.stage">
+        <field name="name">Sales Prototype to Customer</field>
+        <field name="sequence">2</field>
+        <field name="team_id" ref="ol_crm.sales_team_customer_sku"/>
+    </record>
+    <record id="customer_sku_stage_approved_prototype" model="crm.stage">
+        <field name="name">Approved Sales Prototype</field>
+        <field name="sequence">3</field>
+        <field name="team_id" ref="ol_crm.sales_team_customer_sku"/>
+    </record>
+
+    <!-- Engineer to Order Stages -->
+    <record id="engineer_to_order_stage_prototype_request" model="crm.stage">
+        <field name="name">Prototype Request</field>
+        <field name="sequence">1</field>
+        <field name="team_id" ref="ol_crm.sales_team_engineer_to_order"/>
+    </record>
+    <record id="engineer_to_order_stage_viability_review" model="crm.stage">
+        <field name="name">Viability Review</field>
+        <field name="sequence">2</field>
+        <field name="team_id" ref="ol_crm.sales_team_engineer_to_order"/>
+    </record>
+    <record id="engineer_to_order_stage_engineering_project" model="crm.stage">
+        <field name="name">Engineering Project</field>
+        <field name="sequence">3</field>
+        <field name="team_id" ref="ol_crm.sales_team_engineer_to_order"/>
+    </record>
+    <record id="engineer_to_order_stage_engineering_prototype" model="crm.stage">
+        <field name="name">Engineering Prototype to Customer</field>
+        <field name="sequence">4</field>
+        <field name="team_id" ref="ol_crm.sales_team_engineer_to_order"/>
+    </record>
+    <record id="engineer_to_order_stage_approved_prototype" model="crm.stage">
+        <field name="name">Approved Prototype</field>
+        <field name="sequence">5</field>
+        <field name="team_id" ref="ol_crm.sales_team_engineer_to_order"/>
+    </record>
+
+    <!-- Canceled Stages -->
+     <record id="crm_stage_canceled" model="crm.stage">
+        <field name="name">Canceled</field>
+        <field name="sequence">99</field>
+    </record>
+
+</odoo>

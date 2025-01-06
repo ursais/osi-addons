@@ -18,6 +18,7 @@ class CRMLead(models.Model):
         string="Estimate Count",
         compute="_compute_estimate_count",
     )
+    quantity = fields.Integer()
 
     # END ##########
     # METHODS ##########

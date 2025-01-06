@@ -19,6 +19,12 @@
             <xpath expr="//button[@name='action_set_won_rainbowman']" position="before">
                 <button string="New Estimate" name="action_create_estimate" type="object" class="oe_highlight" data-hotkey="q" title="Create new quotation" invisible="type == 'lead' or not partner_id or probability == 0 and not active"/>
             </xpath>
+            <xpath expr="//label[@for='expected_revenue']" position="after">
+                <label for="quantity" class="oe_edit_only"/>
+            </xpath>
+            <field name="expected_revenue" position="after">
+                <field name="quantity" class="o_input_13ch"/>
+            </field>
         </field>
     </record>
 
