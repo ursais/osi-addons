@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<odoo noupdate="1   ">
+<odoo noupdate="1">
 
     <record id="default_produce_delay" model="ir.config_parameter">
         <field name="key">mrp_batch.default_produce_delay</field>

@@ -2,15 +2,21 @@ from odoo import fields, models
 
 
 class ResConfigSettings(models.TransientModel):
+    """Inherit Settings to add default delay/prepare values."""
+
     _inherit = "res.config.settings"
+
+    # COLUMNS #########
 
     produce_delay = fields.Integer(
         string="Default Manufacturing Lead Time",
         config_parameter="mrp_batch.default_produce_delay",
-        default=4
+        default=4,
     )
     days_to_prepare_mo = fields.Integer(
         string="Default Days to Prepare",
         config_parameter="mrp_batch.default_days_to_prepare_mo",
-        default=1
+        default=1,
     )
+
+    # END #########
