@@ -13,11 +13,21 @@
         "ol_base",
         "sale_management",
         "product_state",
+        "sale_subscription",
+        "stock",
+        "ol_sale_mrp_tags",
+        "product_configurator_sale_mrp",
     ],
     # always loaded
     "data": [
+        "data/crm_tag_data.xml",
+        "data/product_state_data.xml",
         "views/product_attribute_views.xml",
         "views/product_template_attribute_line_views.xml",
         "views/sale_order_view.xml",
+        "views/res_partner_view.xml",
+        "views/sale_subscription_views.xml",
+        "views/stock_picking_view.xml",
+        "views/mrp_production_view.xml",
     ],
 }

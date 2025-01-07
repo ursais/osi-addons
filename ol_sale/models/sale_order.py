@@ -19,6 +19,15 @@ class SaleOrder(models.Model):
         string="Original Shipment Commitment Date",
         copy=False,
     )
+    account_manager_id = fields.Many2one(
+        "res.users",
+        related="partner_id.account_manager_id",
+        string="Account Manager",
+        store=True
+    )
+    delivery_note = fields.Text(string="Delivery Note")
+    mrp_note = fields.Text(string="MRP Note")
+
     # END #########
 
     # METHODS #########

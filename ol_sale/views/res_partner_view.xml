@@ -1,0 +1,14 @@
+<odoo>
+
+	<record id="view_partner_form_inherit_ol_sale" model="ir.ui.view">
+        <field name="name">view.partner.form.inherit.ol.sale</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sale']/field[@name='user_id']" position="after">
+                <field name="account_manager_id" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

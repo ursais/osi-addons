@@ -14,6 +14,7 @@
         "ol_sale",
         "sale_blanket_order",
         "sale_product_approval",
+        "product_configurator_sale_blanket_order",
     ],
     # always loaded
     "data": [

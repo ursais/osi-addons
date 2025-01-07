@@ -40,6 +40,7 @@
             </xpath>
             <field name="line_ids" position="attributes">
                 <attribute name="readonly">state in ['done', 'expired']</attribute>
+                <attribute name="force_save">1</attribute>
             </field>
             <field name="payment_term_id" position="before">
                 <field name="partner_ref" />
