@@ -9,15 +9,21 @@
                 <group>
                     <field name="sequence"/>
                     <field name="name" />
-                    <field name="detailed_type" />
                     <field name="explanation" />
                 </group>
-                <group>
-                    <field name="categ_id"/>
-                    <field name="uom_id" />
-                    <field name="uom_po_id" />
-                    <field name="route_ids" class="mb-0" widget="many2many_checkboxes" />
-                    <field name="invoice_policy" />
+                <group name="product_settings" string="Product Settings">
+                    <group name="product_settings_general" string="General">
+                        <field name="detailed_type" />
+                        <field name="invoice_policy" />
+                        <field name="uom_id" />
+                        <field name="categ_id" />
+                    </group>
+                    <group name="product_settings_purchase" string="Purchase">
+                        <field name="uom_po_id" />
+                    </group>
+                    <group name="product_settings_inventory" string="Inventory">
+                        <field name="route_ids" class="mb-0" widget="many2many_checkboxes" />
+                    </group>
                 </group>
             </form>
         </field>

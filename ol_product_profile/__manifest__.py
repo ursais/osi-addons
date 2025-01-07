@@ -14,7 +14,6 @@
         "ol_base",
         "product_profile",
         "stock",
-        "ol_product_state",
     ],
     # always loaded
     "data": [
