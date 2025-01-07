@@ -24,7 +24,6 @@
                 <div class="o_td_label">
                    <label for="commitment_date" string="Delivery Date"/>
                 </div>
-                <!-- <div name="commitment_date_div" position="move"/>-->
                 <div class="o_row">
                     <field name="commitment_date"/>
                     <span class="text-muted" invisible="effective_date and commitment_date">Expected: <field name="expected_date" class="oe_inline" widget="date"/></span>
@@ -36,6 +35,8 @@
             <xpath expr="//page[@name='order_lines']//field[@name='order_line']//tree//field[@name='product_template_id']" position="after">
                 <field name="product_state_id" optional="show"/>
             </xpath>
+
+            <!-- Add Account Manager after Sales Person -->
             <xpath expr="//group[@name='sales_person']/field[@name='user_id']" position="after">
                 <field name="account_manager_id" />
             </xpath>

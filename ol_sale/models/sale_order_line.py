@@ -18,17 +18,26 @@ class SaleOrderLine(models.Model):
     # METHODS #####
 
     def update_crm_tag_sale_order(self):
-        tag_engineering_prototype = self.env.ref("ol_sale.crm_tag_engineering_prototype")
+        tag_engineering_prototype = self.env.ref(
+            "ol_sale.crm_tag_engineering_prototype"
+        )
         tag_ids = self.order_id.tag_ids.ids
-        if self.order_id and self.product_template_id.product_state_id.id == self.env.ref("ol_sale.product_state_prototype").id:
+        if (
+            self.order_id
+            and self.product_template_id.product_state_id.id
+            == self.env.ref("ol_sale.product_state_prototype").id
+        ):
             if self._context.get("from_unlink"):
                 tag_ids.remove(tag_engineering_prototype.id)
-                self.order_id.tag_ids = [(6,0,tag_ids)]
+                self.order_id.tag_ids = [(6, 0, tag_ids)]
             else:
-                self.order_id.tag_ids = [(6,0,tag_engineering_prototype.ids)]
-        elif self.product_template_id.product_state_id.id != tag_engineering_prototype.id and tag_engineering_prototype.id in self.order_id.tag_ids.ids:
+                self.order_id.tag_ids = [(6, 0, tag_engineering_prototype.ids)]
+        elif (
+            self.product_template_id.product_state_id.id != tag_engineering_prototype.id
+            and tag_engineering_prototype.id in self.order_id.tag_ids.ids
+        ):
             tag_ids.remove(tag_engineering_prototype.id)
-            self.order_id.tag_ids = [(6,0,tag_ids)]
+            self.order_id.tag_ids = [(6, 0, tag_ids)]
 
     @api.model_create_multi
     def create(self, vals):
@@ -41,7 +50,14 @@ class SaleOrderLine(models.Model):
         for rec in res:
             rec.name = get_product_description(rec.product_id)
             rec.update_crm_tag_sale_order()
-            product_bom = self.env['mrp.bom'].search(['|', ('product_id', '=', rec.product_id.id), ('product_tmpl_id', '=', rec.product_id.product_tmpl_id.id)], limit=1)
+            product_bom = self.env["mrp.bom"].search(
+                [
+                    "|",
+                    ("product_id", "=", rec.product_id.id),
+                    ("product_tmpl_id", "=", rec.product_id.product_tmpl_id.id),
+                ],
+                limit=1,
+            )
             if product_bom and not rec.bom_id and not rec.bom_id.scaffolding_bom:
                 rec.bom_id = product_bom.id
         return res
@@ -59,14 +75,29 @@ class SaleOrderLine(models.Model):
                 product = rec.env["product.product"].browse(vals["product_id"])
                 rec.name = get_product_description(product)
             rec.update_crm_tag_sale_order()
-            product_bom = self.env['mrp.bom'].search(['|', ('product_id', '=', rec.product_id.id), ('product_tmpl_id', '=', rec.product_id.product_tmpl_id.id)], limit=1)
+
+            # Search for a Bill of Materials (BoM) related to the product
+            product_bom = self.env["mrp.bom"].search(
+                [
+                    "|",
+                    ("product_id", "=", rec.product_id.id),
+                    ("product_tmpl_id", "=", rec.product_id.product_tmpl_id.id),
+                ],
+                limit=1,
+            )
+
+            # If a BoM is found and the current record does not have a
+            # BoM or a scaffolding BoM, assign the found BoM
             if product_bom and not rec.bom_id and not rec.bom_id.scaffolding_bom:
                 rec.bom_id = product_bom.id
+
+            # If no BoM is found and the current record has a BoM, remove the BoM
             if not product_bom and rec.bom_id:
                 rec.bom_id = False
         return res
 
     def unlink(self):
+        # Update CRM tag sale order with context indicating the unlink operation
         self.with_context(from_unlink=True).update_crm_tag_sale_order()
         return super().unlink()
 

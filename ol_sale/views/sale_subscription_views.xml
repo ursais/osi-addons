@@ -1,5 +1,5 @@
 <odoo>
-        
+
     <record id="sale_subscription_order_view_form_inherit_ol_sale" model="ir.ui.view">
         <field name="name">sale.subscription.order.form.inherit.ol.sale</field>
         <field name="model">sale.order</field>
