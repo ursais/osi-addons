@@ -1,0 +1,27 @@
+<odoo>
+
+    <record id="res_config_settings_view_form_inherit_mrp_batch" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="mrp.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[@id='mrp_reception_report']" position="after">
+                <setting id="default_produce_delay" string="Default Manufacturing Lead Time">
+                    <div class="content-group">
+                        <div class="mt16" >
+                            <field name="produce_delay" class="oe_inline"/> days
+                        </div>
+                    </div>
+                </setting>
+                <setting id="default_days_to_prepare_mo" string="Default Days to Prepare">
+                    <div class="content-group">
+                        <div class="mt16" >
+                            <field name="days_to_prepare_mo" class="oe_inline"/> days
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

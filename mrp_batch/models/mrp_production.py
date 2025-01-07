@@ -29,6 +29,7 @@ class MrpProduction(models.Model):
         "sale.order.line",
         string="Sale Order Line",
     )
+    sale_state = fields.Selection(related="sale_order_id.state", store=True)
 
     # END #########
     # METHODS #####

@@ -1,0 +1,14 @@
+<odoo>
+
+    <!-- Exception Rules Sale Order Canceled Exception-->
+    <record id="exception_sale_order_canceled_exception" model="exception.rule">
+        <field name="name">Sale Order Canceled Exception</field>
+        <field name="description">Sale Order Canceled Exception</field>
+        <field name="sequence">50</field>
+        <field name="model">mrp.production</field>
+        <field name="exception_type">by_domain</field>
+        <field name="domain">[("state", "not in", ["done", "cancel"]), ("sale_order_id.state", "=", "cancel")]</field>
+        <field name="active" eval="True" />
+    </record>
+
+</odoo>

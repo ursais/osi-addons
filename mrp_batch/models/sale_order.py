@@ -11,9 +11,23 @@ class SaleOrder(models.Model):
         string="mrp batch count",
         compute="_compute_mrp_production_batch_id_count",
     )
+    is_mrp_warning = fields.Boolean(compute="_compute_is_mrp_warning")
 
     # END #########
     # METHODS #####
+
+    def _compute_is_mrp_warning(self):
+        for so in self:
+            is_mrp_warning = False
+
+            # Check if there are any related manufacturing orders (mrp_production_ids)
+            # and if any of those orders are planned or in specific states
+            if so.mrp_production_ids and so.mrp_production_ids.filtered(
+                lambda l: l.is_planned or l.state in ("progress", "to_close", "done")
+            ):
+                is_mrp_warning = True
+
+            so.is_mrp_warning = is_mrp_warning
 
     def action_confirm(self):
         # Calls the original `action_confirm` method from the super class to
