@@ -8,7 +8,7 @@
             <xpath expr="//header" position = "after">
                 <field name="po_price_difference" invisible="1"></field>
                 <div class="alert alert-danger mb-0" role="alert" style="text-align: center" invisible="not po_price_difference">
-                    <strong> The Bill is not approved for payment because there are lines linked to purchase orders which do not have matching received qty.</strong>
+                    <strong> The Bill has a PO line where its Unit Price does not match what is on the Purchase Order line. </strong>
                 </div>
             </xpath>
         </field>
