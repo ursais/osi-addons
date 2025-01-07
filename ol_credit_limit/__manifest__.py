@@ -18,6 +18,7 @@
         "ol_sale_mrp_tags",
         "account",
         "ol_exception",
+        "mrp_batch",
     ],
     # always loaded
     "data": [
@@ -30,9 +31,9 @@
         "views/stock_picking_view.xml",
         "views/mrp_production_view.xml",
     ],
-    'assets': {
-        'web.assets_backend': [
-            'ol_credit_limit/static/src/**/*',
+    "assets": {
+        "web.assets_backend": [
+            "ol_credit_limit/static/src/**/*",
         ],
     },
     # only loaded in demo mode
