@@ -91,9 +91,9 @@ class ProductProfile(models.Model):
             )
             if discard_value:
                 values_to_keep.pop(key)
+        res = super().write(vals)
         if values_to_keep:
             self._refresh_products_vals()
-        res = super().write(vals)
         return res
 
     def _refresh_products_vals(self):
