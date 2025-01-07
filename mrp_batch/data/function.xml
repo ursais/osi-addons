@@ -1,23 +1,17 @@
 <odoo>
 
-    <!-- Update the 'stock.warehouse' to set manufacturing step -->
-    <function name="write" model="stock.warehouse">
-        <!-- Search for the warehouse named 'OnLogic US Warehouse' -->
-        <function name="search" model="stock.warehouse">
-            <value eval="[('name', '=', 'OnLogic US Warehouse')]" />
-        </function>
-        <!-- Update the 'manufacture_steps' field to 'pbm' for the found warehouse -->
-        <value eval="{'manufacture_steps': 'pbm'}" />
-    </function>
+    <record id="stock.warehouse0" model="stock.warehouse">
+        <field name="name">OnLogic US Warehouse</field>
+        <!-- When manufacturing here: pick, then build -->
+        <field name="manufacture_steps">pbm</field>
+    </record>
 
-    <!-- Update the 'stock.picking.type' setting the reservation method -->
+    <!-- Update the 'stock.picking.type' setting the reservation method
     <function name="write" model="stock.picking.type">
-        <!-- Search for the picking type named 'Pick Components' -->
         <function name="search" model="stock.picking.type">
             <value eval="[('name', '=', 'Pick Components')]" />
         </function>
-        <!-- Update the fields for the found picking type -->
         <value eval="{'name':'Assembly Queue', 'sequence_code': 'AQ', 'reservation_method': 'by_date', 'reservation_days_before': 21}" />
-    </function>
+    </function> -->
 
 </odoo>
