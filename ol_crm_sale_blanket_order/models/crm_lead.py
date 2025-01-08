@@ -30,7 +30,7 @@ class CRMLead(models.Model):
                 "team_id": self.team_id.id,
                 "payment_term_id": self.partner_id.property_payment_term_id.id,
                 "opportunity_id": self.id,
-                "carrier_id": self.partner_id.property_delivery_carrier_id,
+                "carrier_id": self.partner_id.property_delivery_carrier_id.id,
             }
         )
 
@@ -58,7 +58,7 @@ class CRMLead(models.Model):
             "default_team_id": self.team_id.id,
             "default_payment_term_id": self.partner_id.property_payment_term_id.id,
             "default_opportunity_id": self.id,
-            "default_carrier_id": self.partner_id.property_delivery_carrier_id,
+            "default_carrier_id": self.partner_id.property_delivery_carrier_id.id,
         }
         action.update({"context": ctx})
         if len(blanket_order_ids) == 1:
