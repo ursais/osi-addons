@@ -11,6 +11,7 @@
                     name="action_view_purchase_request"
                     class="oe_stat_button"
                     icon="fa-list"
+                    invisible="purchase_request_count == 0"
                 >
                     <field name="purchase_request_count" widget="statinfo" />
                 </button>
