@@ -5,7 +5,7 @@
     </record>
 
     <record id="crm_tag_sales_prototype" model="crm.tag">
-        <field name="name">Sales Prototype'</field>
+        <field name="name">Sales Prototype</field>
     </record>
 
 </odoo>

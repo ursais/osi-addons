@@ -11,6 +11,7 @@
                     name="action_view_eco"
                     class="oe_stat_button"
                     icon="fa-list"
+                    invisible="eco_count == 0"
                 >
                     <field name="eco_count" widget="statinfo" />
                 </button>
