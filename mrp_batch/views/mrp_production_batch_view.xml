@@ -33,6 +33,21 @@
                 <field name="total_build_duration" widget="float_time" optional="hide" sum="Total" />
                 <field name="total_test_duration" widget="float_time" optional="hide" sum="Total" />
                 <field name="total_other_duration" widget="float_time" optional="hide" sum="Total" />
+
+                <field name="remaining_duration" widget="float_time" optional="hide" sum="Total" />
+                <field name="remaining_build_duration" widget="float_time" optional="hide" sum="Total" />
+                <field name="remaining_test_duration" widget="float_time" optional="hide" sum="Total" />
+                <field name="remaining_other_duration" widget="float_time" optional="hide" sum="Total" />
+
+                <field name="avg_duration_expected" widget="float_time" optional="show" sum="Total" />
+                <field name="avg_build_duration_expected" widget="float_time" optional="show" sum="Total" />
+                <field name="avg_test_duration_expected" widget="float_time" optional="show" sum="Total" />
+                <field name="avg_other_duration_expected" widget="float_time" optional="show" sum="Total" />
+                <field name="avg_duration" widget="float_time" optional="hide" sum="Total" />
+                <field name="avg_build_duration" widget="float_time" optional="hide" sum="Total" />
+                <field name="avg_test_duration" widget="float_time" optional="hide" sum="Total" />
+                <field name="avg_other_duration" widget="float_time" optional="hide" sum="Total" />
+
                 <field name="qty_producing" optional="hide" sum="Total" />
                 <field name="qty_produced" optional="hide" sum="Total" />
                 <field name="qty_remaining" optional="hide" sum="Total" />
@@ -129,16 +144,48 @@
                                 <field name="qty_producing" class="oe_inline text-start" />
                             </div>
                             <field name="total_revenue" widget="monetary" />
-                            <field name="total_duration" widget="float_time" />
-                            <field name="total_build_duration" widget="float_time" />
-                            <field name="total_test_duration" widget="float_time" />
-                            <field name="total_other_duration" widget="float_time" />
                         </group>
-                        <group>
-                            <field name="total_duration_expected" widget="float_time" />
-                            <field name="total_build_duration_expected" widget="float_time" />
-                            <field name="total_test_duration_expected" widget="float_time" />
-                            <field name="total_other_duration_expected" widget="float_time" />
+                    </group>
+                    <group>
+                        <group name="expected_durations" string="Total/Remaining Expected Durations">
+                            <label for="total_duration_expected" string="Total Duration" />
+                            <div class="o_row g-0 d-flex">
+                                <div class="o_row flex-grow-0">
+                                    <field name="total_duration_expected" class="text-start" widget="float_time" help="Total expected duration of all MO's / Remaining duration." />
+                                    <span>/ </span>
+                                </div>
+                                <field name="remaining_duration" class="oe_inline text-start" widget="float_time" />
+                            </div>
+                            <label for="total_build_duration_expected" string="Build Duration" />
+                            <div class="o_row g-0 d-flex">
+                                <div class="o_row flex-grow-0">
+                                    <field name="total_build_duration_expected" class="text-start" widget="float_time" help="Total expected build duration of all MO's / Remaining build duration." />
+                                    <span>/ </span>
+                                </div>
+                                <field name="remaining_build_duration" class="oe_inline text-start" widget="float_time" />
+                            </div>
+                            <label for="total_test_duration_expected" string="Test Duration" />
+                            <div class="o_row g-0 d-flex">
+                                <div class="o_row flex-grow-0">
+                                    <field name="total_test_duration_expected" class="text-start" widget="float_time" help="Total expected test duration of all MO's / Remaining test duration." />
+                                    <span>/ </span>
+                                </div>
+                                <field name="remaining_test_duration" class="oe_inline text-start" widget="float_time" />
+                            </div>
+                            <label for="total_other_duration_expected" string="Other Duration" />
+                            <div class="o_row g-0 d-flex">
+                                <div class="o_row flex-grow-0">
+                                    <field name="total_other_duration_expected" class="text-start" widget="float_time" help="Total expected other duration of all MO's / Remaining other duration." />
+                                    <span>/ </span>
+                                </div>
+                                <field name="remaining_other_duration" class="oe_inline text-start" widget="float_time" />
+                            </div>
+                        </group>
+                        <group name="unit_durations" string="Per Unit Durations">
+                            <field name="avg_duration_expected" widget="float_time" string="Duration" help="Average expected duration for each unit." />
+                            <field name="avg_build_duration_expected" widget="float_time" string="Build Duration" help="Average build expected duration for each unit." />
+                            <field name="avg_test_duration_expected" widget="float_time" string="Test Duration" help="Average test expected duration for each unit." />
+                            <field name="avg_other_duration_expected" widget="float_time" string="Other Duration" help="Average other expected duration for each unit." />
                         </group>
                     </group>
                     <notebook>
@@ -164,6 +211,14 @@
                                     <button name="action_remove_batch" type="object" icon='fa-close' column_invisible="parent.state not in ('draft', 'progress', 'cancel') or parent.is_locked" />
                                 </tree>
                             </field>
+                        </page>
+                        <page name="durations" string="Real Durations">
+                            <group>
+                                <field name="total_duration" widget="float_time" />
+                                <field name="total_build_duration" widget="float_time" />
+                                <field name="total_test_duration" widget="float_time" />
+                                <field name="total_other_duration" widget="float_time" />
+                            </group>
                         </page>
                     </notebook>
                     <div class="o_row" style="margin-top:10px;">

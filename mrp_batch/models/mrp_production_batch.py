@@ -206,6 +206,70 @@ class MrpProductionBatch(models.Model):
         store=True,
     )
 
+    # Fields tracking the avg per unit durations for the batch
+    avg_duration_expected = fields.Float(
+        string="Expected Unit Duration",
+        compute="_compute_avg_unit_duration_expected",
+        store=True,
+    )
+    avg_build_duration_expected = fields.Float(
+        string="Expected Unit Build Duration",
+        compute="_compute_build_test_unit_other_durations_expected",
+        store=True,
+    )
+    avg_test_duration_expected = fields.Float(
+        string="Expected Unit Test Duration",
+        compute="_compute_build_test_unit_other_durations_expected",
+        store=True,
+    )
+    avg_other_duration_expected = fields.Float(
+        string="Expected Unit Other Duration",
+        compute="_compute_build_test_unit_other_durations_expected",
+        store=True,
+    )
+    avg_duration = fields.Float(
+        string="Unit Duration",
+        compute="_compute_avg_unit_duration",
+        store=True,
+    )
+    avg_build_duration = fields.Float(
+        string="Unit Build Duration",
+        compute="_compute_build_test_unit_other_durations",
+        store=True,
+    )
+    avg_test_duration = fields.Float(
+        string="Unit Test Duration",
+        compute="_compute_build_test_unit_other_durations",
+        store=True,
+    )
+    avg_other_duration = fields.Float(
+        string="Unit Other Duration",
+        compute="_compute_build_test_unit_other_durations",
+        store=True,
+    )
+
+    # Fields tracking the remaining durations for the batch
+    remaining_duration = fields.Float(
+        string="Remaining Duration",
+        compute="_compute_remaining_duration",
+        store=True,
+    )
+    remaining_build_duration = fields.Float(
+        string="Remaining Duration",
+        compute="_compute_remaining_build_duration",
+        store=True,
+    )
+    remaining_test_duration = fields.Float(
+        string="Remaining Test Duration",
+        compute="_compute_remaining_test_duration",
+        store=True,
+    )
+    remaining_other_duration = fields.Float(
+        string="Remaining Other Duration",
+        compute="_compute_remaining_other_duration",
+        store=True,
+    )
+
     # Misc compute fields
     qty_produced = fields.Float(
         string="Qty Produced",
@@ -558,6 +622,129 @@ class MrpProductionBatch(models.Model):
             )
             record.total_other_duration = sum(
                 wo.duration for wo in workorders if wo.operation_type == "other"
+            )
+
+    # Computes for Average Unit Expected & Real durations
+    @api.depends(
+        "production_ids.duration_expected",
+        "production_ids.state",
+    )
+    def _compute_avg_unit_duration_expected(self):
+        for record in self:
+            productions = record.production_ids.filtered(lambda p: p.state != "cancel")
+            durations = productions.mapped("duration_expected")
+            record.avg_duration_expected = (
+                sum(durations) / len(durations) if durations else 0
+            )
+
+    @api.depends(
+        "production_ids.duration",
+    )
+    def _compute_avg_unit_duration(self):
+        for record in self:
+            productions = record.production_ids.filtered(lambda p: p.state != "cancel")
+            durations = productions.mapped("duration")
+            record.avg_duration = sum(durations) / len(durations) if durations else 0
+
+    @api.depends(
+        "production_ids.workorder_ids.operation_id.type",
+        "production_ids.duration_expected",
+        "production_ids.state",
+    )
+    def _compute_build_test_unit_other_durations_expected(self):
+        for record in self:
+            productions = record.production_ids.filtered(lambda p: p.state != "cancel")
+            workorders = productions.mapped("workorder_ids")
+
+            build_durations = [
+                wo.duration_expected
+                for wo in workorders
+                if wo.operation_type == "build"
+            ]
+            test_durations = [
+                wo.duration_expected for wo in workorders if wo.operation_type == "test"
+            ]
+            other_durations = [
+                wo.duration_expected
+                for wo in workorders
+                if wo.operation_type == "other"
+            ]
+
+            record.avg_build_duration_expected = (
+                sum(build_durations) / len(build_durations) if build_durations else 0
+            )
+            record.avg_test_duration_expected = (
+                sum(test_durations) / len(test_durations) if test_durations else 0
+            )
+            record.avg_other_duration_expected = (
+                sum(other_durations) / len(other_durations) if other_durations else 0
+            )
+
+    @api.depends(
+        "production_ids.workorder_ids.operation_id.type",
+        "production_ids.duration",
+    )
+    def _compute_build_test_unit_other_durations(self):
+        for record in self:
+            productions = record.production_ids.filtered(lambda p: p.state != "cancel")
+            workorders = productions.mapped("workorder_ids")
+
+            build_durations = [
+                wo.duration for wo in workorders if wo.operation_type == "build"
+            ]
+            test_durations = [
+                wo.duration for wo in workorders if wo.operation_type == "test"
+            ]
+            other_durations = [
+                wo.duration for wo in workorders if wo.operation_type == "other"
+            ]
+
+            record.avg_build_duration = (
+                sum(build_durations) / len(build_durations) if build_durations else 0
+            )
+            record.avg_test_duration = (
+                sum(test_durations) / len(test_durations) if test_durations else 0
+            )
+            record.avg_other_duration = (
+                sum(other_durations) / len(other_durations) if other_durations else 0
+            )
+
+    @api.depends(
+        "total_duration",
+        "total_duration_expected",
+    )
+    def _compute_remaining_duration(self):
+        for rec in self:
+            rec.remaining_duration = rec.total_duration_expected - rec.total_duration
+
+    @api.depends(
+        "total_build_duration_expected",
+        "total_build_duration",
+    )
+    def _compute_remaining_build_duration(self):
+        for rec in self:
+            rec.remaining_build_duration = (
+                rec.total_build_duration_expected - rec.total_build_duration
+            )
+
+    @api.depends(
+        "total_test_duration_expected",
+        "total_test_duration",
+    )
+    def _compute_remaining_duration(self):
+        for rec in self:
+            rec.remaining_test_duration = (
+                rec.total_test_duration_expected - rec.total_test_duration
+            )
+
+    @api.depends(
+        "total_other_duration_expected",
+        "total_other_duration",
+    )
+    def _compute_remaining_other_duration(self):
+        for rec in self:
+            rec.remaining_other_duration = (
+                rec.total_other_duration_expected - rec.total_other_duration
             )
 
     @api.depends(
