@@ -60,6 +60,7 @@
         "data/product_data.xml",
         "data/utm_source_data.xml",
         "data/res_users_role.xml",
+        "data/warehouse_data.xml",
         "security/res_groups.xml",
         "views/res_company.xml",
         "views/stock_picking.xml",
@@ -97,7 +98,6 @@
         # units of measure
         "demo/uom/uom.xml",
         # inventory
-        "demo/stock/warehouse.xml",
         "demo/stock/locations.xml",
         "demo/stock/orderpoint.xml",
         # delivery

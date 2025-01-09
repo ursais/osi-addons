@@ -731,7 +731,7 @@ class MrpProductionBatch(models.Model):
         "total_test_duration_expected",
         "total_test_duration",
     )
-    def _compute_remaining_duration(self):
+    def _compute_remaining_test_duration(self):
         for rec in self:
             rec.remaining_test_duration = (
                 rec.total_test_duration_expected - rec.total_test_duration

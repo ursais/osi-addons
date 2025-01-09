@@ -286,7 +286,6 @@ class SaleBlanketOrderLine(models.Model):
         res = super().onchange_product()
         if self.env.context.get("update_pricelist"):
             self.price_unit = self._get_display_price()
-            # self._compute_discount()
         return res
 
     @api.model_create_multi
