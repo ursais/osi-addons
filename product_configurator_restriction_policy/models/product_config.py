@@ -9,7 +9,7 @@ class ProductConfigSession(models.Model):
 
     @api.model
     def values_available(
-        self, check_val_ids=None, value_ids=None, custom_vals=None, product_tmpl_id=None
+        self, check_val_ids=None, value_ids=None, custom_vals=None, product_tmpl_id=None, product_template_attribute_line_id=None,
     ):
         """Overrides product configurator values_available to include
         the restriction policy option while generating available values"""
