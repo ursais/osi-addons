@@ -18,6 +18,7 @@
     # always loaded
     "data": [
         "views/product_profile_views.xml",
+        "views/product_template_views.xml",
     ],
     "installable": True,
 }
