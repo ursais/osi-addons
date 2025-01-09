@@ -40,6 +40,11 @@
             <xpath expr="//group[@name='sales_person']/field[@name='user_id']" position="after">
                 <field name="account_manager_id" />
             </xpath>
+
+            <!-- Don't show configurable products in the product_template_id field -->
+            <xpath expr="//tree/field[@name='product_template_id']" position="attributes">
+                <attribute name="domain">[('sale_ok', '=', True), ('config_ok', '=', False)]</attribute>
+            </xpath>
         </field>
     </record>
 

@@ -235,38 +235,51 @@ class SaleBlanketOrderLine(models.Model):
                 }
             )
 
-    @api.model_create_multi
-    def create(self, vals):
-        """
-        Override create method to include attribute values in the name
-        of the record based on product attribute line settings.
-        """
-        res = super().create(vals)
-
-        for rec in res:
-            rec.name = get_product_description(rec.product_id)
-
-        return res
-
-    def write(self, vals):
-        """
-        Override write method to update record's name with attribute values
-        based on changes in 'product_id' and attribute line settings.
-        """
-        res = super().write(vals)
-
-        for rec in self:
-            # If 'product_id' is being updated, adjust the record's description
-            if vals.get("product_id"):
-                product = rec.env["product.product"].browse(vals["product_id"])
-                rec.name = get_product_description(product)
-
-        return res
-
     @api.depends("product_id")
     def _compute_customer_lead(self):
         for line in self:
             line.customer_lead = line.product_id.sale_delay
+
+    def _update_bom(self, rec):
+        """
+        Update the Bill of Materials (BoM) for a order line based on the
+        selected product. This method searches for a BoM that matches the product
+        or its template and assigns it to the order line if applicable.
+
+        :param rec: The order line record being processed.
+        """
+        if not rec.product_id:
+            return  # No product selected, nothing to update
+
+        product = rec.product_id
+        product_tmpl_id = product.product_tmpl_id.id
+
+        # Search for a BoM that matches either the specific product or its template
+        product_bom = self.env["mrp.bom"].search(
+            [
+                "|",
+                ("product_id", "=", product.id),
+                ("product_tmpl_id", "=", product_tmpl_id),
+            ],
+            limit=1,  # Only retrieve the first matching BoM
+        )
+
+        # If a matching BoM is found, assign it to the order line unless a non-scaffolding BoM is already assigned
+        if product_bom and (not rec.bom_id or rec.bom_id.scaffolding_bom):
+            rec.bom_id = product_bom.id
+        # If no BoM is found but the order line has a BoM assigned, remove it
+        elif not product_bom and rec.bom_id:
+            rec.bom_id = False
+
+    @api.onchange("product_id")
+    def _onchange_product_id_set_bom(self):
+        """
+        Automatically update the BoM on the order line when the product is changed.
+        This ensures that the correct BoM is always associated with the selected product.
+        """
+        for rec in self:
+            if rec.product_id:
+                rec._update_bom(rec)
 
     @api.onchange("product_id", "original_uom_qty")
     def onchange_product(self):
@@ -274,6 +287,39 @@ class SaleBlanketOrderLine(models.Model):
         if self.env.context.get("update_pricelist"):
             self.price_unit = self._get_display_price()
             # self._compute_discount()
+        return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """
+        Override the create method to:
+        - Dynamically update the order line's description based on the selected product.
+        - Automatically assign a matching BoM to the order line after creation.
+        """
+        records = super().create(vals_list)
+
+        for rec in records:
+            # Update the name with the product's description
+            rec.name = get_product_description(rec.product_id)
+            # Update the BoM for the order line if not already being set
+            if "bom_id" not in vals_list:
+                rec._update_bom(rec)
+
+        return records
+
+    def write(self, vals):
+        """
+        Override the write method to Re-evaluate and update the BoM based on
+        the new product selection.
+        """
+        res = super().write(vals)
+
+        for rec in self:
+            # If 'product_id' is being updated, set bom_id on the line
+            if vals.get("product_id"):
+                # Update the BoM for the order line
+                rec._update_bom(rec)
+
         return res
 
     # END ######

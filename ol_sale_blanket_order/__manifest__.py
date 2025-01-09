@@ -15,6 +15,7 @@
         "sale_blanket_order",
         "sale_product_approval",
         "product_configurator_sale_blanket_order",
+        "product_configurator_sale_blanket_order_mrp",
     ],
     # always loaded
     "data": [
