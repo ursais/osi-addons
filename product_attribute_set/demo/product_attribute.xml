@@ -23,7 +23,7 @@
     <!-- Custom attributes -->
     <record id="computer_processor_attribute" model="attribute.attribute">
         <field name="nature">custom</field>
-        <field name="field_description">Processor</field>
+        <field name="field_description">CPU</field>
         <field name="name">x_cpu_processor</field>
         <field name="attribute_type">select</field>
         <field name="attribute_group_id" ref="computer_technical_attribute_group" />
