@@ -13,13 +13,13 @@
                 </group>
                 <group name="product_settings" string="Product Settings">
                     <group name="product_settings_general" string="General">
-                        <field name="detailed_type" />
+                        <field name="detailed_type" required="1"/>
                         <field name="invoice_policy" />
-                        <field name="uom_id" />
-                        <field name="categ_id" />
+                        <field name="uom_id" required="1"/>
+                        <field name="categ_id" required="1"/>
                     </group>
                     <group name="product_settings_purchase" string="Purchase">
-                        <field name="uom_po_id" />
+                        <field name="uom_po_id" required="1" />
                     </group>
                     <group name="product_settings_inventory" string="Inventory">
                         <field name="route_ids" class="mb-0" widget="many2many_checkboxes" />
