@@ -12,14 +12,12 @@ class AccountMove(models.Model):
         downpayment_lines = {}
         for rec in self:
             downpayment_lines[rec.id] = {}
-            if rec.invoice_line_ids:
-                for line in rec.invoice_line_ids:
-                    if "Down payment" in line.name:
-                        downpayment_lines[rec.id][line.id] = line.price_unit
+            for line in rec.invoice_line_ids:
+                if line and "Down payment" in line.name:
+                    downpayment_lines[rec.id][line.id] = line.price_unit
         res = super().action_post()
         for rec in self:
-            if rec.invoice_line_ids:
-                for line in rec.invoice_line_ids:
-                    if "Down payment" in line.name:
-                        downpayment_lines[rec.id][line.id] = line.price_unit
+            for line in rec.invoice_line_ids:
+                if line and "Down payment" in line.name:
+                    downpayment_lines[rec.id][line.id] = line.price_unit
         return res
