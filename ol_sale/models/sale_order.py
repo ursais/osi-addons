@@ -23,8 +23,10 @@ class SaleOrder(models.Model):
         "res.users",
         related="partner_id.account_manager_id",
         string="Account Manager",
-        store=True
+        store=True,
     )
+    end_user = fields.Many2one("res.partner")
+    integrator = fields.Many2one("res.partner")
     delivery_note = fields.Text(string="Delivery Note")
     mrp_note = fields.Text(string="MRP Note")
 
