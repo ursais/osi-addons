@@ -20,7 +20,7 @@
                         <field name="categ_id" required="1" readonly="has_products" />
                     </group>
                     <group name="product_settings_purchase" string="Purchase">
-                        <field name="uom_po_id" />
+                        <field name="uom_po_id" required="1" />
                     </group>
                     <group name="product_settings_inventory" string="Inventory">
                         <field name="route_ids" class="mb-0" widget="many2many_checkboxes" />
