@@ -96,7 +96,8 @@ class SaleEstimateJob(models.Model):
         self.message_post(body=message)
 
     def _get_update_prices_lines(self):
-        """Hook to exclude specific lines which should not be updated based on price list recomputation"""
+        """Hook to exclude specific lines which should not be updated
+        based on price list recomputation"""
         return self.estimate_ids.filtered(lambda line: line.job_type == "material")
 
     @api.onchange("pricelist_id")

@@ -9,7 +9,6 @@
                 <attribute name="string">Assigned To</attribute>
             </xpath>
             <xpath expr="//field[@name='group_id']" position="after">
-                <!-- <field name="picking_type_id" domain="['|', ('warehouse_id', '=', False), ('warehouse_id.company_id', '=', company_id.id)]" /> -->
                 <field name="picking_type_id" />
             </xpath>
 

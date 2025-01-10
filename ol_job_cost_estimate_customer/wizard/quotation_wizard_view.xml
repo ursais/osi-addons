@@ -1,4 +1,5 @@
 <odoo>
+
 	<record id="view_quotation_wizard_form" model="ir.ui.view">
         <field name="name">quotation.wizard.form</field>
         <field name="model">quotation.wizard</field>
@@ -17,4 +18,5 @@
             </form>
         </field>
     </record>
+
 </odoo>
