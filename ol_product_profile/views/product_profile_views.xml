@@ -7,19 +7,20 @@
         <field name="arch" type="xml">
             <form string="Product Profile">
                 <group>
-                    <field name="sequence"/>
+                    <field name="sequence" />
                     <field name="name" />
                     <field name="explanation" />
                 </group>
                 <group name="product_settings" string="Product Settings">
                     <group name="product_settings_general" string="General">
-                        <field name="detailed_type" required="1"/>
-                        <field name="invoice_policy" />
-                        <field name="uom_id" required="1"/>
-                        <field name="categ_id" required="1"/>
+                        <field name="has_products" invisible="1" />
+                        <field name="detailed_type" required="1" />
+                        <field name="invoice_policy" required="1" />
+                        <field name="uom_id" required="1" />
+                        <field name="categ_id" required="1" readonly="has_products" />
                     </group>
                     <group name="product_settings_purchase" string="Purchase">
-                        <field name="uom_po_id" required="1" />
+                        <field name="uom_po_id" />
                     </group>
                     <group name="product_settings_inventory" string="Inventory">
                         <field name="route_ids" class="mb-0" widget="many2many_checkboxes" />
