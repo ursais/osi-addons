@@ -263,7 +263,7 @@ class ProductConfigurator(models.TransientModel):
                     )
         values_dict.update(value_qty_dict)
         self.values_dict = json.dumps(values_dict)
-        update_price = self.product_tmpl_id.list_price
+        update_price = sum(self.product_tmpl_id.attribute_line_ids.mapped('default_val').mapped("product_id.lst_price"))
         for value_line in values_dict:
             if value_line.startswith(field_prefix):
                 if isinstance(values_dict.get(value_line), int):
