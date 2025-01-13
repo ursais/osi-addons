@@ -1,6 +1,6 @@
 <odoo>
 
-    <record id="ol_crm_view_sale_job_estimate_form_inherit" model="ir.ui.view">
+    <record id="ol_crm_estimate_view_sale_job_estimate_form_inherit" model="ir.ui.view">
         <field name="name">sale.estimate.job.form.inherit</field>
         <field name="model">sale.estimate.job</field>
         <field name="inherit_id" ref="job_cost_estimate_customer.view_sale_estimate_form_job"/>
