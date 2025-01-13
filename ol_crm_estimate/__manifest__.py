@@ -12,11 +12,11 @@
     "depends": [
         "ol_base",
         "crm",
+        "job_cost_estimate_customer",
     ],
     # Data Loaded.
     "data": [
-        "data/sale_team_data.xml",
-        "data/crm_stage_data.xml",
         "views/crm_lead_views.xml",
+        "views/sale_estimate_views.xml",
     ],
 }
