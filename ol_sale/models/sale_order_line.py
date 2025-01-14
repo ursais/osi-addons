@@ -108,8 +108,7 @@ class SaleOrderLine(models.Model):
         Also set the bom_id if it's not being set in vals.
         """
         res = super().create(vals)
-
-        for rec in res:
+        for rec in res.filtered(lambda l: l.display_type not in ('line_section', 'line_note')):
             rec.name = get_product_description(rec.product_id)
             rec.update_crm_tag_sale_order()
             # Update the BoM for the order line if not already being set
