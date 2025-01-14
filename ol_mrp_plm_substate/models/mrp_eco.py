@@ -1,10 +1,15 @@
+# Import Odoo libs
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
 
 
 class MrpEco(models.Model):
+    """Inherit ECO to add substate methods."""
+
     _inherit = ["mrp.eco", "base.substate.mixin"]
     _name = "mrp.eco"
+
+    # METHODS ##########
 
     @api.constrains("substate_id", "state")
     def check_substate_id_value(self):
@@ -40,3 +45,5 @@ class MrpEco(models.Model):
                 },
             )
         return res
+
+    # END #########

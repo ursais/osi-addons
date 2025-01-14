@@ -10,8 +10,8 @@ class CRMLead(models.Model):
     # COLUMNS ######
 
     blanket_order_ids = fields.One2many(
-        "sale.blanket.order",
-        "opportunity_id",
+        comodel_name="sale.blanket.order",
+        inverse_name="opportunity_id",
     )
     blanket_order_count = fields.Integer(
         string="Blanket Order Count",

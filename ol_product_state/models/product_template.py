@@ -16,6 +16,7 @@ class ProductTemplate(models.Model):
     )
 
     # END #######
+    # METHODS ###
 
     def _compute_has_product_state_change_group(self):
         """Similar to the computed has_configurable_attributes field for view
@@ -65,3 +66,21 @@ class ProductTemplate(models.Model):
                 "candidate_ship",
             ]:
                 setattr(product, field, getattr(self.categ_id, field))
+
+    def toggle_product_state(self):
+        """Toggle the product state between 'New/Development'."""
+        new_state = self.env.ref(
+            "ol_product_state.product_state_new", raise_if_not_found=False
+        )
+        dev_state = self.env.ref(
+            "product_state.product_state_draft", raise_if_not_found=False
+        )
+
+        for rec in self:
+            if new_state and dev_state:
+                if rec.product_state_id == new_state:
+                    rec.sudo().write({"product_state_id": dev_state.id})
+                elif rec.product_state_id == dev_state:
+                    rec.sudo().write({"product_state_id": new_state.id})
+
+    # END #######

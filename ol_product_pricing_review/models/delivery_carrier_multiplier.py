@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import api, models
+from odoo import models
 
 
 class DeliveryCarrierMultiplier(models.Model):

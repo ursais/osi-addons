@@ -1,12 +1,17 @@
+# Import Odoo libs
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
 class RmaSupplier(models.Model):
+    """RMA object specific for vendor RMA's."""
+
     _name = "rma.supplier.order"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _order = "id DESC"
     _description = "RMA to Supplier"
+
+    # FIELD DEFAULT METHOD ######
 
     @api.model
     def _default_warehouse_id(self):
@@ -14,6 +19,9 @@ class RmaSupplier(models.Model):
             [("company_id", "=", self.env.company.id)], limit=1
         )
         return warehouse
+
+    # END ##########
+    # COLUMNS ######
 
     name = fields.Char(
         string="RMA Reference",
@@ -144,6 +152,9 @@ class RmaSupplier(models.Model):
         required=True,
         default=lambda self: self.env.company,
     )
+
+    # END ##########
+    # METHODS ##########
 
     @api.depends("out_transfer_ids")
     def _compute_out_transfer_count(self):
@@ -326,3 +337,5 @@ class RmaSupplier(models.Model):
                 self.env["ir.sequence"].next_by_code("rma.supplier.order") or "New"
             )
         return super().create(vals)
+
+    # END ##########

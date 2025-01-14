@@ -1,14 +1,25 @@
+# Import Odoo libs
 from odoo import api, fields, models
 
 
 class StockPicking(models.Model):
+    """
+    Add sale_locked field to be used for order edit exceptions.
+    Also adds new triggered field functionality to check exception if a
+    triggered field is being updated.
+    """
+
     _inherit = "stock.picking"
 
+    # COLUMNS ######
     sale_locked = fields.Boolean(
         "Sale Order Locked",
         related="sale_id.locked",
         store=True,
     )
+
+    # END ##########
+    # METHODS ##########
 
     @api.constrains("ignore_exception", "move_ids", "state")
     def stock_check_exception(self):
@@ -42,3 +53,5 @@ class StockPicking(models.Model):
         res = super().write(vals)
         self._check_stock_check_exception(vals)
         return res
+
+    # END ##########

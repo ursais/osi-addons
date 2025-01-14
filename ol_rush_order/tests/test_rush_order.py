@@ -14,6 +14,7 @@ class TestModule(common.TransactionCase):
             }
         )
         self.assertEqual(free_product.triggers_rush, True)
+
         partner = self.env["res.partner"].create({"name": "Jone"})
         order = self.env["sale.order"].create(
             {
@@ -33,9 +34,16 @@ class TestModule(common.TransactionCase):
                 ],
             }
         )
+
+        # Verify rush_order is True after onchange
         order._onchange_rush_order()
         self.assertEqual(order.rush_order, True)
-        sale_order = order.action_confirm()
+
+        # Confirm the order
+        order.action_confirm()
+
+        # Assert that the state is updated to 'sale'
+        self.assertEqual(order.state, "sale")
 
     def test_sale_rush_order_false(self):
         free_product = self.env["product.product"].create(
@@ -45,6 +53,7 @@ class TestModule(common.TransactionCase):
             }
         )
         self.assertEqual(free_product.triggers_rush, False)
+
         partner = self.env["res.partner"].create({"name": "Jone"})
         order = self.env["sale.order"].create(
             {
@@ -64,6 +73,13 @@ class TestModule(common.TransactionCase):
                 ],
             }
         )
+
+        # Verify rush_order is False after onchange
         order._onchange_rush_order()
         self.assertEqual(order.rush_order, False)
-        sale_order = order.action_confirm()
+
+        # Confirm the order
+        order.action_confirm()
+
+        # Assert that the state is updated to 'sale'
+        self.assertEqual(order.state, "sale")

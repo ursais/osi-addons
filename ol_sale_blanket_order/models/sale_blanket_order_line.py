@@ -59,8 +59,9 @@ class SaleBlanketOrderLine(models.Model):
         store=True,
         precompute=True,
     )
-    # M2M holding the values of product.attribute with create_variant field set to 'no_variant'
-    # It allows keeping track of the extra_price associated to those attribute values and add them to the SO line description
+    # M2M holding the values of product.attribute with create_variant field
+    # set to 'no_variant'. It allows keeping track of the extra_price associated
+    # to those attribute values and add them to the SO line description
     product_no_variant_attribute_value_ids = fields.Many2many(
         comodel_name="product.template.attribute.value",
         string="Extra Values",
