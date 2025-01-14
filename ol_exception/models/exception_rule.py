@@ -4,12 +4,14 @@ from odoo.exceptions import UserError
 
 
 class ExceptionRule(models.Model):
+    """
+    Rewrite Exception Rule fields for adding the Tracking.
+    Also add security groups for limiting python code option in rules.
+    """
+
     _name = "exception.rule"
     _inherit = ["exception.rule", "mail.thread"]
 
-    """
-    Rewrite Exception Rule fields for adding the Tracking.
-    """
     # COLUMNS #####
 
     name = fields.Char(tracking=True)

@@ -1,8 +1,16 @@
+# Import Odoo libs
 from odoo import models
 
 
 class SaleOrder(models.Model):
+    """
+    Also adds new triggered field functionality to check exception if a
+    triggered field is being updated.
+    """
+
     _inherit = "sale.order"
+
+    # METHODS ##########
 
     def _fields_trigger_check_exception(self):
         config_records = self.env["exception.config"].search(
@@ -53,3 +61,5 @@ class SaleOrder(models.Model):
             mrp_productions._check_mrp_check_exception(related_changes)
 
         return res
+
+    # END ##########

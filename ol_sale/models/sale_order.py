@@ -28,7 +28,7 @@ class SaleOrder(models.Model):
     end_user = fields.Many2one("res.partner")
     integrator = fields.Many2one("res.partner")
     delivery_note = fields.Text(string="Delivery Note")
-    mrp_note = fields.Text(string="MRP Note")
+    mrp_note = fields.Text(string="Manufacturing Note")
 
     # END #########
 

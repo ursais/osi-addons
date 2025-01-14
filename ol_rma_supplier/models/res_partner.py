@@ -1,8 +1,13 @@
+# Import Odoo libs
 from odoo import fields, models
 
 
 class ResPartner(models.Model):
+    """Inherit partner for RMA smart buttons."""
+
     _inherit = "res.partner"
+
+    # COLUMNS ######
 
     rma_supplier_order_count = fields.Integer(
         compute="_compute_rma_supplier_order_count",
@@ -11,6 +16,9 @@ class ResPartner(models.Model):
     rma_supplier_order_ids = fields.One2many(
         "rma.supplier.order", "partner_id", string="Supplier RMA's"
     )
+
+    # END ##########
+    # METHODS ##########
 
     def _compute_rma_supplier_order_count(self):
         """Standard count method to count related RMA's for smart button."""
@@ -38,3 +46,5 @@ class ResPartner(models.Model):
             action["context"] = dict(self.env.context)  # Preserve context if needed
 
         return action
+
+    # END ##########

@@ -1,14 +1,26 @@
+# Import Odoo libs
 from odoo import api, fields, models
 
 
 class MRPProduction(models.Model):
+    """
+    Add sale_locked field to be used for order edit exceptions.
+    Also adds new triggered field functionality to check exception if a
+    triggered field is being updated.
+    """
+
     _inherit = "mrp.production"
+
+    # COLUMNS ######
 
     sale_locked = fields.Boolean(
         "Sale Order Locked",
         related="sale_order_id.locked",
         store=True,
     )
+
+    # END ##########
+    # METHODS ##########
 
     @api.constrains("ignore_exception", "move_raw_ids", "product_id")
     def mrp_check_exception(self):
@@ -42,3 +54,5 @@ class MRPProduction(models.Model):
         res = super().write(vals)
         self._check_mrp_check_exception(vals)
         return res
+
+    # END ##########

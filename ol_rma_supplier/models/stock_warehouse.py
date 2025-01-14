@@ -1,21 +1,27 @@
-# Copyright (C) 2017-20 ForgeFlow S.L.
-# License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html)
-
+# Import Odoo libs
 from odoo import _, fields, models
 
 
 class StockWarehouse(models.Model):
+    """Inherit warehouse to add RMA fields and generate rma operations when enabled."""
+
     _inherit = "stock.warehouse"
 
+    # COLUMNS ######
+
     lot_rma_id = fields.Many2one(
-        comodel_name="stock.location", string="RMA Location"
-    )  # not readonly to have the possibility to edit location and
-    # propagate to rma rules (add a auto-update when writing this field?)
+        comodel_name="stock.location",
+        string="RMA Location",
+    )
     rma_sup_out_type_id = fields.Many2one(
-        comodel_name="stock.picking.type", string="RMA Supplier out Type", readonly=True
+        comodel_name="stock.picking.type",
+        string="RMA Supplier out Type",
+        readonly=True,
     )
     rma_sup_in_type_id = fields.Many2one(
-        comodel_name="stock.picking.type", string="RMA Supplier in Type", readonly=True
+        comodel_name="stock.picking.type",
+        string="RMA Supplier in Type",
+        readonly=True,
     )
     rma_in_this_wh = fields.Boolean(
         string="RMA in this Warehouse",
@@ -23,11 +29,16 @@ class StockWarehouse(models.Model):
         "for this warehouse.",
     )
     rma_supplier_in_pull_id = fields.Many2one(
-        comodel_name="stock.rule", string="RMA Supplier In Rule"
+        comodel_name="stock.rule",
+        string="RMA Supplier In Rule",
     )
     rma_supplier_out_pull_id = fields.Many2one(
-        comodel_name="stock.rule", string="RMA Supplier Out Rule"
+        comodel_name="stock.rule",
+        string="RMA Supplier Out Rule",
     )
+
+    # END ##########
+    # METHODS ######
 
     def _get_rma_types(self):
         return [
@@ -175,8 +186,4 @@ class StockWarehouse(models.Model):
                 )
         return True
 
-
-class StockLocationRoute(models.Model):
-    _inherit = "stock.route"
-
-    rma_selectable = fields.Boolean(string="Selectable on RMA Lines")
+    # END ##########

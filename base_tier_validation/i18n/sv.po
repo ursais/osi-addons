@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2021-11-24 12:20+0000\n"
-"Last-Translator: Simon S <simon.stromberg@vertel.se>\n"
+"PO-Revision-Date: 2024-06-12 12:39+0000\n"
+"Last-Translator: jakobkrabbe <jakob@syscare.se>\n"
 "Language-Team: none\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.3.2\n"
+"X-Generator: Weblate 4.17\n"
 
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_validation_label
@@ -23,6 +23,9 @@ msgid ""
 "                This Record needs to be\n"
 "                validated."
 msgstr ""
+"<i class=\"fa fa-lg fa-info-cirkel\"/>\n"
+"                Denna post behöver\n"
+"                bekräftas."
 
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_validation_label
@@ -32,6 +35,10 @@ msgid ""
 "                <b>rejected</b>\n"
 "                ."
 msgstr ""
+"<i class=\"fa fa-lg fa-tummarna-ned\"/>\n"
+"                Operationen har blivit\n"
+"                <b>avslås</b>\n"
+"                ."
 
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_validation_label
@@ -41,6 +48,10 @@ msgid ""
 "                <b>validated</b>\n"
 "                !"
 msgstr ""
+"<i class=\"fa fa-lg fa-thumbs-up\"/>\n"
+"                Operationen har blivit\n"
+"                <b>bekräftad</b>\n"
+"                !"
 
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_definition_view_form
@@ -51,12 +62,20 @@ msgstr "<span class=\"oe_edit_only\">Namn</span>"
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_definition_view_form
 msgid "<span>Bypass, if previous tier was validated by same reviewer</span>"
 msgstr ""
+"<span>Hoppa över, om föregående nivå bekräftades av samma granskare</span>"
 
 #. module: base_tier_validation
 #. odoo-python
 #: code:addons/base_tier_validation/models/tier_validation.py:0
 #, python-format
 msgid "A record to be reviewed has been created by %s."
+msgstr "En post som ska granskas har skapats av %s."
+
+#. module: base_tier_validation
+#. odoo-python
+#: code:addons/base_tier_validation/models/tier_review.py:0
+#, python-format
+msgid "A review has been requested %s days ago."
 msgstr ""
 
 #. module: base_tier_validation
@@ -85,7 +104,7 @@ msgstr "En granskning accepterades. (%s)"
 #: code:addons/base_tier_validation/models/tier_validation.py:0
 #, python-format
 msgid "A review was rejected by %(user)s. (%(comment)s)"
-msgstr ""
+msgstr "En recension avvisades av %(user)s. (%(comment)s)"
 
 #. module: base_tier_validation
 #. odoo-python
@@ -111,12 +130,22 @@ msgstr "Aktiv"
 #: code:addons/base_tier_validation/static/src/components/tier_review_menu/tier_review_menu.xml:0
 #, python-format
 msgid "Activity"
-msgstr ""
+msgstr "Aktivitet"
 
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_definition_view_search
 msgid "All"
 msgstr "Alla"
+
+#. module: base_tier_validation
+#: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__allow_write_for_reviewer
+msgid "Allow Write For Reviewers"
+msgstr ""
+
+#. module: base_tier_validation
+#: model:ir.model.fields,help:base_tier_validation.field_tier_validation_exception__group_ids
+msgid "Allowed groups to use this Tier Validation Exception"
+msgstr ""
 
 #. module: base_tier_validation
 #: model:ir.model.fields.selection,name:base_tier_validation.selection__tier_definition__review_type__group
@@ -138,7 +167,7 @@ msgstr "Godkännandeordning enligt angivet sekvensnummer"
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__approve_sequence_bypass
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__approve_sequence_bypass
 msgid "Approve Sequence Bypass"
-msgstr ""
+msgstr "Godkänna förbikoppling av sekvens"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__approve_sequence
@@ -154,6 +183,15 @@ msgstr "Godkänd"
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_definition_view_form
 msgid "Archived"
+msgstr "Arkiverad"
+
+#. module: base_tier_validation
+#. odoo-python
+#: code:addons/base_tier_validation/models/tier_validation_exception.py:0
+#, python-format
+msgid ""
+"At least one of these fields must be checked! Write under Validation, Write "
+"after Validation"
 msgstr ""
 
 #. module: base_tier_validation
@@ -162,6 +200,8 @@ msgstr ""
 msgid ""
 "Bypassed (auto validated), if previous tier was validated by same reviewer"
 msgstr ""
+"Förbigås (bekräftas automatiskt), om föregående nivå bekräftades av samma "
+"granskare"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__can_review
@@ -209,6 +249,8 @@ msgstr "Kommentarer"
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__company_id
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__company_id
+#: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation_exception__company_id
+#: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_validation_exception_search
 msgid "Company"
 msgstr "Bolag"
 
@@ -218,9 +260,15 @@ msgid "Config Settings"
 msgstr "Konfigurationsinställningar"
 
 #. module: base_tier_validation
+#: model_terms:ir.actions.act_window,help:base_tier_validation.tier_validation_exception_action
+msgid "Create a new Validation Exception!"
+msgstr ""
+
+#. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_comment_wizard__create_uid
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__create_uid
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__create_uid
+#: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation_exception__create_uid
 msgid "Created by"
 msgstr "Skapad av"
 
@@ -228,6 +276,7 @@ msgstr "Skapad av"
 #: model:ir.model.fields,field_description:base_tier_validation.field_comment_wizard__create_date
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__create_date
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__create_date
+#: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation_exception__create_date
 msgid "Created on"
 msgstr "Skapad den"
 
@@ -255,13 +304,14 @@ msgstr "Beskrivning"
 #: model:ir.model.fields,field_description:base_tier_validation.field_comment_wizard__display_name
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__display_name
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__display_name
+#: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation_exception__display_name
 msgid "Display Name"
 msgstr "Visningsnamn"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__display_status
 msgid "Display Status"
-msgstr ""
+msgstr "Visa status"
 
 #. module: base_tier_validation
 #: model:ir.model.fields.selection,name:base_tier_validation.selection__tier_definition__definition_type__domain
@@ -286,6 +336,11 @@ msgid "Field in related record"
 msgstr "Fält i relaterad post"
 
 #. module: base_tier_validation
+#: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation_exception__field_ids
+msgid "Fields"
+msgstr ""
+
+#. module: base_tier_validation
 #. odoo-python
 #: code:addons/base_tier_validation/models/tier_review.py:0
 #, python-format
@@ -298,6 +353,11 @@ msgid "Group By"
 msgstr "Gruppera efter"
 
 #. module: base_tier_validation
+#: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation_exception__group_ids
+msgid "Groups"
+msgstr ""
+
+#. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation__has_comment
 msgid "Has Comment"
 msgstr "Har kommentar"
@@ -305,12 +365,13 @@ msgstr "Har kommentar"
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation__hide_reviews
 msgid "Hide Reviews"
-msgstr ""
+msgstr "Dölj recensioner"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_comment_wizard__id
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__id
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__id
+#: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation_exception__id
 msgid "ID"
 msgstr "ID"
 
@@ -318,6 +379,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:base_tier_validation.field_tier_validation__has_comment
 msgid "If set, Allow the reviewer to leave a comment on the review."
 msgstr ""
+"Om inställd, Tillåt granskaren att lämna en kommentar till granskningen."
 
 #. module: base_tier_validation
 #: model:ir.model.fields,help:base_tier_validation.field_tier_definition__notify_on_create
@@ -335,6 +397,10 @@ msgid ""
 "reached.Usefull in an Approve by sequence scenario. An notification request "
 "to review is sent out when it's their turn to review."
 msgstr ""
+"Om den är inställd kommer alla möjliga granskare att meddelas via e-post när "
+"den här statusen uppnås.Användbar i ett Approve by sequence-scenario. Ett "
+"meddelande med en begäran om granskning skickas ut när det är deras tur att "
+"granska."
 
 #. module: base_tier_validation
 #: model:ir.model.fields,help:base_tier_validation.field_tier_definition__notify_on_accepted
@@ -342,6 +408,8 @@ msgid ""
 "If set, reviewers will be notified by email when a review related to this "
 "definition is accepted."
 msgstr ""
+"Om den är inställd kommer granskare att meddelas via e-post när en "
+"granskning som är relaterad till denna definition accepteras."
 
 #. module: base_tier_validation
 #: model:ir.model.fields,help:base_tier_validation.field_tier_definition__notify_on_rejected
@@ -349,6 +417,8 @@ msgid ""
 "If set, reviewers will be notified by email when a review related to this "
 "definition is rejected."
 msgstr ""
+"Om den är inställd kommer granskare att meddelas via e-post när en "
+"granskning som är relaterad till denna definition avvisas."
 
 #. module: base_tier_validation
 #: model:ir.model.fields,help:base_tier_validation.field_tier_definition__notify_on_restarted
@@ -356,11 +426,29 @@ msgid ""
 "If set, reviewers will be notified by email when a reviews related to this "
 "definition are restarted."
 msgstr ""
+"Om den är inställd kommer granskare att meddelas via e-post när en "
+"granskning som är relaterad till denna definition startas om."
+
+#. module: base_tier_validation
+#: model_terms:ir.actions.act_window,help:base_tier_validation.tier_validation_exception_action
+msgid "It's fully validated"
+msgstr ""
+
+#. module: base_tier_validation
+#: model_terms:ir.actions.act_window,help:base_tier_validation.tier_validation_exception_action
+msgid "It's in the validation process"
+msgstr ""
+
+#. module: base_tier_validation
+#: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__last_reminder_date
+msgid "Last Reminder Date"
+msgstr ""
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_comment_wizard__write_uid
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__write_uid
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__write_uid
+#: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation_exception__write_uid
 msgid "Last Updated by"
 msgstr "Senast uppdaterad av"
 
@@ -368,19 +456,32 @@ msgstr "Senast uppdaterad av"
 #: model:ir.model.fields,field_description:base_tier_validation.field_comment_wizard__write_date
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__write_date
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__write_date
+#: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation_exception__write_date
 msgid "Last Updated on"
 msgstr "Senast uppdaterad den"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__model
+#: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation_exception__model_id
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_definition_view_search
+#: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_validation_exception_search
 msgid "Model"
 msgstr "Modell"
+
+#. module: base_tier_validation
+#: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation_exception__model_name
+msgid "Model Name"
+msgstr ""
 
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_definition_view_form
 msgid "More Options"
 msgstr "Fler alternativ"
+
+#. module: base_tier_validation
+#: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation_exception__name
+msgid "Name"
+msgstr ""
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation__need_validation
@@ -416,7 +517,7 @@ msgstr "Inga granskningar att göra."
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__notify_on_accepted
 msgid "Notify Reviewers on Accepted"
-msgstr ""
+msgstr "Meddela granskare om accepterad"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__notify_on_create
@@ -426,16 +527,30 @@ msgstr "Meddela granskare vid skapande"
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__notify_on_rejected
 msgid "Notify Reviewers on Rejected"
-msgstr ""
+msgstr "Meddela granskare om avvisade"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__notify_on_restarted
 msgid "Notify Reviewers on Restarted"
-msgstr ""
+msgstr "Meddela granskare vid omstart"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__notify_on_pending
 msgid "Notify Reviewers on reaching Pending"
+msgstr "Meddela granskare om att nå Pending"
+
+#. module: base_tier_validation
+#: model:ir.model.fields,help:base_tier_validation.field_tier_definition__notify_reminder_delay
+msgid ""
+"Number of days after which a message must be posted to remind about pending "
+"validation  (0 = no reminder)"
+msgstr ""
+
+#. module: base_tier_validation
+#: model_terms:ir.actions.act_window,help:base_tier_validation.tier_validation_exception_action
+msgid ""
+"Once created, you can decide which fields you want to be editable when the "
+"record:"
 msgstr ""
 
 #. module: base_tier_validation
@@ -443,14 +558,14 @@ msgstr ""
 #: code:addons/base_tier_validation/models/tier_validation.py:0
 #, python-format
 msgid "Operation has been <b>rejected</b>."
-msgstr ""
+msgstr "Operationen har <b>avslagits</b>."
 
 #. module: base_tier_validation
 #. odoo-python
 #: code:addons/base_tier_validation/models/tier_validation.py:0
 #, python-format
 msgid "Operation has been <b>validated</b>!"
-msgstr ""
+msgstr "Operationen har <b>validerats</b>!"
 
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.res_config_settings_view_form_budget
@@ -488,7 +603,7 @@ msgstr "Nekad"
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation__rejected_message
 msgid "Rejected Message"
-msgstr ""
+msgstr "Avvisat meddelande"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__res_id
@@ -520,12 +635,12 @@ msgstr "Begärd av"
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_comment_wizard__res_id
 msgid "Res"
-msgstr ""
+msgstr "Res"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_comment_wizard__res_model
 msgid "Res Model"
-msgstr ""
+msgstr "Res modell"
 
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_validation_buttons
@@ -571,6 +686,16 @@ msgid "Reviews"
 msgstr "Granskningar"
 
 #. module: base_tier_validation
+#: model:ir.actions.server,name:base_tier_validation.ir_cron_auto_tier_validation_ir_actions_server
+msgid "Send Tier Review Reminder"
+msgstr ""
+
+#. module: base_tier_validation
+#: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__notify_reminder_delay
+msgid "Send reminder message on pending reviews"
+msgstr ""
+
+#. module: base_tier_validation
 #. odoo-javascript
 #: code:addons/base_tier_validation/static/src/components/tier_review_widget/tier_review_widget.xml:0
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__sequence
@@ -595,13 +720,6 @@ msgstr "Status"
 #. odoo-python
 #: code:addons/base_tier_validation/models/tier_validation.py:0
 #, python-format
-msgid "The operation is under validation."
-msgstr "Åtgärden håller på att valideras."
-
-#. module: base_tier_validation
-#. odoo-python
-#: code:addons/base_tier_validation/models/tier_validation.py:0
-#, python-format
 msgid "The review has been reset by %s."
 msgstr "Granskningen har återställts av %s."
 
@@ -617,23 +735,22 @@ msgstr "Det finns inga res.users i det valda fältet"
 #: code:addons/base_tier_validation/models/tier_validation.py:0
 #, python-format
 msgid "This %s needs to be validated"
-msgstr ""
+msgstr "Denna %s måste bekräftas"
 
 #. module: base_tier_validation
 #. odoo-python
 #: code:addons/base_tier_validation/models/tier_validation.py:0
 #, python-format
 msgid ""
-"This action needs to be validated for at least one record. \n"
+"This action needs to be validated for at least one record. Reviews pending:\n"
+" - %s \n"
 "Please request a validation."
 msgstr ""
-"Denna åtgärd måste valideras för minst en post.\n"
-"Vänligen begär en validering."
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__sequence
 msgid "Tier"
-msgstr ""
+msgstr "Djur"
 
 #. module: base_tier_validation
 #: model:ir.actions.act_window,name:base_tier_validation.tier_definition_action
@@ -669,9 +786,27 @@ msgid "Tier Validation Accepted Notification"
 msgstr "Meddelande vid accepterad attestering"
 
 #. module: base_tier_validation
+#: model:ir.actions.act_window,name:base_tier_validation.tier_validation_exception_action
+#: model:ir.ui.menu,name:base_tier_validation.menu_tier_validation_exception
+#: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_validation_exception_form
+msgid "Tier Validation Exception"
+msgstr ""
+
+#. module: base_tier_validation
+#: model:ir.model,name:base_tier_validation.model_tier_validation_exception
+msgid "Tier Validation Exceptions"
+msgstr ""
+
+#. module: base_tier_validation
 #: model:mail.message.subtype,name:base_tier_validation.mt_tier_validation_rejected
 msgid "Tier Validation Rejected Notification"
 msgstr "Meddelande vid nekad attestering"
+
+#. module: base_tier_validation
+#: model:mail.activity.type,name:base_tier_validation.mail_act_tier_validation_reminder
+#: model:mail.message.subtype,name:base_tier_validation.mt_tier_validation_reminder
+msgid "Tier Validation Reminder"
+msgstr ""
 
 #. module: base_tier_validation
 #: model:mail.message.subtype,name:base_tier_validation.mt_tier_validation_requested
@@ -691,7 +826,7 @@ msgstr "Attesteringar"
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation__to_validate_message
 msgid "To Validate Message"
-msgstr ""
+msgstr "För att validera meddelandet"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__todo_by
@@ -708,12 +843,17 @@ msgstr "Att göra av"
 #. module: base_tier_validation
 #: model:ir.model,name:base_tier_validation.model_res_users
 msgid "User"
+msgstr "Användare"
+
+#. module: base_tier_validation
+#: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation_exception__valid_model_field_ids
+msgid "Valid Model Field"
 msgstr ""
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__valid_reviewer_field_ids
 msgid "Valid Reviewer Field"
-msgstr ""
+msgstr "Giltigt fält för granskare"
 
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_validation_label
@@ -734,7 +874,7 @@ msgstr "Validerad"
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation__validated_message
 msgid "Validated Message"
-msgstr ""
+msgstr "Validerat meddelande"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_definition__review_type
@@ -753,12 +893,12 @@ msgstr "Valideringsdatum"
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_review__reviewed_formated_date
 msgid "Validation Formated Date"
-msgstr ""
+msgstr "Validering Formated Date"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation__validation_status
 msgid "Validation Status"
-msgstr ""
+msgstr "Status för validering"
 
 #. module: base_tier_validation
 #: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation__review_ids
@@ -769,17 +909,73 @@ msgstr "Valideringar"
 #: model:ir.model.fields.selection,name:base_tier_validation.selection__tier_review__status__waiting
 #: model:ir.model.fields.selection,name:base_tier_validation.selection__tier_validation__validation_status__waiting
 msgid "Waiting"
-msgstr ""
+msgstr "Väntar på"
 
 #. module: base_tier_validation
 #: model:ir.model.fields.selection,name:base_tier_validation.selection__tier_validation__validation_status__no
 msgid "Without validation"
+msgstr "Utan validering"
+
+#. module: base_tier_validation
+#: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation_exception__allowed_to_write_after_validation
+msgid "Write after Validation"
+msgstr ""
+
+#. module: base_tier_validation
+#: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_validation_exception_search
+msgid "Write after validation"
+msgstr ""
+
+#. module: base_tier_validation
+#: model:ir.model.fields,field_description:base_tier_validation.field_tier_validation_exception__allowed_to_write_under_validation
+msgid "Write under Validation"
+msgstr ""
+
+#. module: base_tier_validation
+#: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_validation_exception_search
+msgid "Write under validation"
+msgstr ""
+
+#. module: base_tier_validation
+#. odoo-python
+#: code:addons/base_tier_validation/models/tier_validation.py:0
+#, python-format
+msgid ""
+"You are not allowed to write those fields after validation.\n"
+"- %(not_allowed_fields)s\n"
+"\n"
+"Only those fields can be modified:\n"
+"- %(allowed_fields)s"
+msgstr ""
+
+#. module: base_tier_validation
+#. odoo-python
+#: code:addons/base_tier_validation/models/tier_validation.py:0
+#, python-format
+msgid ""
+"You are not allowed to write those fields under validation.\n"
+"- %(not_allowed_fields)s\n"
+"\n"
+"Only those fields can be modified:\n"
+"- %(allowed_fields)s"
 msgstr ""
 
 #. module: base_tier_validation
 #: model_terms:ir.ui.view,arch_db:base_tier_validation.tier_definition_view_form
 msgid "e.g. Tier Validation for..."
 msgstr "t.ex. attestvalidering för..."
+
+#, python-format
+#~ msgid ""
+#~ "This action needs to be validated for at least one record. \n"
+#~ "Please request a validation."
+#~ msgstr ""
+#~ "Denna åtgärd måste bekräftas för minst en post.\n"
+#~ "Vänligen begär en validering."
+
+#, python-format
+#~ msgid "The operation is under validation."
+#~ msgstr "Åtgärden håller på att bekräftas."
 
 #~ msgid ""
 #~ "<i class=\"fa fa-info-circle\"/>\n"

@@ -1,9 +1,14 @@
+# Import Odoo libs
 from odoo import api, fields, models
 
 
 class RmaSupplierLine(models.Model):
+    """RMA Line Object to contain product information."""
+
     _name = "rma.supplier.order.line"
     _description = "RMA Supplier Line"
+
+    # COLUMNS ######
 
     name = fields.Text(
         string="Description",
@@ -65,6 +70,9 @@ class RmaSupplierLine(models.Model):
         copy=False,
     )
     note = fields.Text(string="Note")
+
+    # END ##########
+    # METHODS ##########
 
     @api.depends(
         "rma_order_id",
@@ -135,3 +143,5 @@ class RmaSupplierLine(models.Model):
                     )
             line.qty_delivered = delivered_qty
             line.qty_received = received_qty
+
+    # END ##########

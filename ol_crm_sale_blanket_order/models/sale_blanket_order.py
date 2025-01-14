@@ -9,6 +9,9 @@ class SaleEstimateJob(models.Model):
 
     # COLUMNS ######
 
-    opportunity_id = fields.Many2one("crm.lead")
+    opportunity_id = fields.Many2one(
+        comodel_name="crm.lead",
+        string="Opportunity",
+    )
 
     # END ##########

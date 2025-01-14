@@ -12,7 +12,7 @@
                     name="action_cancel"
                     type="object"
                     class="btn_secondary"
-                    invisible="not id or state and state in ('done','cancel')"
+                    invisible="not id or (state and state in ('done', 'cancel'))"
                     groups="mrp_plm.group_plm_user"
                     confirm="Are you sure you want to cancel this Engineering Change Request?"
                 />

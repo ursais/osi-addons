@@ -1,3 +1,4 @@
+# Import Odoo libs
 from collections import defaultdict
 
 from odoo import _, models
@@ -5,7 +6,14 @@ from odoo.exceptions import UserError
 
 
 class BlanketOrderWizard(models.TransientModel):
+    """
+    Override Blanket Order create order wizard to add
+    invoice/delivery addresses.
+    """
+
     _inherit = "sale.blanket.order.wizard"
+
+    # METHODS #########
 
     def _prepare_so_vals(
         self,
@@ -16,7 +24,7 @@ class BlanketOrderWizard(models.TransientModel):
         payment_term_id,
         order_lines_by_customer,
         partner_invoice_id,
-        partner_shipping_id
+        partner_shipping_id,
     ):
         return {
             "partner_id": customer,
@@ -52,12 +60,20 @@ class BlanketOrderWizard(models.TransientModel):
 
             if partner_invoice_id == 0:
                 partner_invoice_id = line.blanket_line_id.order_id.partner_invoice_id.id
-            elif partner_invoice_id != line.blanket_line_id.order_id.partner_invoice_id.id:
+            elif (
+                partner_invoice_id
+                != line.blanket_line_id.order_id.partner_invoice_id.id
+            ):
                 partner_invoice_id = False
 
             if partner_shipping_id == 0:
-                partner_shipping_id = line.blanket_line_id.order_id.partner_shipping_id.id
-            elif partner_shipping_id != line.blanket_line_id.order_id.partner_shipping_id.id:
+                partner_shipping_id = (
+                    line.blanket_line_id.order_id.partner_shipping_id.id
+                )
+            elif (
+                partner_shipping_id
+                != line.blanket_line_id.order_id.partner_shipping_id.id
+            ):
                 partner_shipping_id = False
 
             if pricelist_id == 0:
@@ -96,7 +112,7 @@ class BlanketOrderWizard(models.TransientModel):
                 payment_term_id,
                 order_lines_by_customer,
                 partner_invoice_id,
-                partner_shipping_id
+                partner_shipping_id,
             )
             sale_order = self.env["sale.order"].create(order_vals)
             res.append(sale_order.id)
@@ -109,3 +125,5 @@ class BlanketOrderWizard(models.TransientModel):
             "context": {"from_sale_order": True},
             "type": "ir.actions.act_window",
         }
+
+    # END #########

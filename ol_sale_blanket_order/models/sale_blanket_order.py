@@ -65,6 +65,9 @@ class SaleBlanketOrder(models.Model):
         group_operator="avg",
     )
 
+    # END #########
+    # METHODS #####
+
     @api.depends("line_ids.margin", "amount_untaxed")
     def _compute_margin(self):
         if not all(self._ids):

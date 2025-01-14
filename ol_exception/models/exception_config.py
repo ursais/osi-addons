@@ -1,9 +1,19 @@
+# Import Odoo libs
 from odoo import models, fields
 
 
 class ExceptionConfig(models.Model):
+    """
+    Currently the exception checks are triggered either via specific methods or
+    scheduled actions. This adds a new object for configurating 'Trigger Fields' which
+    can then be used to trigger the exception checks if that field is being updated.
+    This was a configurable solution to not triggering exception checks consistantly.
+    """
+
     _name = "exception.config"
     _description = "Exception Configuration"
+
+    # COLUMNS ######
 
     model_id = fields.Many2one(
         "ir.model",
@@ -24,6 +34,9 @@ class ExceptionConfig(models.Model):
             "Only one exception configuration per model is allowed.",
         )
     ]
+
+    # END ##########
+    # METHODS ##########
 
     def get_related_fields(self):
         """
@@ -83,3 +96,5 @@ class ExceptionConfig(models.Model):
                 field_mapping.setdefault(related_target, []).append(field.name)
 
         return field_mapping
+
+    # END ##########
