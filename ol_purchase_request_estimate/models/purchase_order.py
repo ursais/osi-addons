@@ -18,11 +18,9 @@ class PurchaseOrder(models.Model):
     # METHODS ######
 
     def action_open_purchase_request_line(self):
-        action = (
-            self.env.ref("purchase_request.purchase_request_line_form_action")
-            .sudo()
-            .read()[0]
-        )
+        action = self.env.ref(
+            "purchase_request.purchase_request_line_form_action"
+        ).read()[0]
         lines = self.order_line.purchase_request_lines
         if len(lines) > 1:
             action["domain"] = [("id", "in", lines.ids)]
