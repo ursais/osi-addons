@@ -54,11 +54,15 @@
                                 />
                                 <field name="condition" />
                                 <field
+                                    name="template_attribute_value_ids"
+                                    column_invisible="1"
+                                />
+                                <field
                                     name="value_ids"
                                     widget="many2many_tags"
                                     options="{'no_create': True, 'no_create_edit': True}"
                                     context="{'show_attribute': False}"
-                                    domain="[('attribute_id', '=', attribute_id)]"
+                                    domain="[('id', 'in', template_attribute_value_ids)]"
                                 />
                                 <field name="operator" />
                             </tree>
@@ -97,7 +101,7 @@
                                 <field name="condition" />
                                 <field
                                     name="template_attribute_value_ids"
-                                    invisible="1"
+                                    column_invisible="1"
                                 />
                                 <field
                                     name="value_ids"
@@ -137,7 +141,6 @@
                 <field name="config_step_name" />
                 <field name="product_id" />
                 <field name="state" />
-                <field name="company_id" />
             </tree>
         </field>
     </record>
@@ -166,12 +169,6 @@
                         />
                         <field name="config_step_name" />
                         <field name="product_id" />
-                        <field
-                            name="product_preset_id"
-                            invisible="not product_preset_id"
-                            readonly="1"
-                        />
-                        <field name="company_id" />
                     </group>
                     <notebook>
                         <page name="custom_vals" string="Custom Values">

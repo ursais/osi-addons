@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="configurator_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="10" />
+        <field
+            name="inherit_id"
+            ref="product_configurator.configurator_settings_view_form"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='product_configurator']/block" position="inside">
+                <h2>Website</h2>
+                <div class="row mt16 o_settings_container">
+                    <div
+                        class="col-12 col-lg-6 o_setting_box"
+                        id="configurator_website_template"
+                    >
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Website Template</span>
+                            <div class="text-muted">
+                                Set the default template for configurator tabs(Radio/Select).
+                            </div>
+                            <div class="mt16">
+                                <field name="website_tmpl_id" class="oe_inline" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <menuitem
+        id="product_configurator.menu_action_product_configurator_configuration"
+        action="product_configurator.action_product_configurator_configuration"
+        name="Settings"
+        active="True"
+        parent="product_configurator.menu_product_configurable_settings"
+        sequence="0"
+    />
+</odoo>

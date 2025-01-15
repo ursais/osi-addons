@@ -26,6 +26,7 @@ class ProductConfigurator(models.TransientModel):
             "field_prefix": "__attribute_",
             "custom_field_prefix": "__custom_",
             "qty_field": "__qty_",
+            "domain_field_prefix": "__domain_",
         }
 
     @api.model
@@ -100,14 +101,16 @@ class ProductConfigurator(models.TransientModel):
                     vals.update({"session_value_quantity_ids": attr_qty_list})
         return super().create(vals_list)
 
-    def apply_onchange_values(self, values, field_name, field_onchange):
-        result = super().apply_onchange_values(values, field_name, field_onchange)
+    def apply_onchange_values(self, values, field_names, field_onchange):
+        result = super().apply_onchange_values(values, field_names, field_onchange)
         if not self._context.get("is_qty_required"):
             qty_prefix = self._prefixes.get("qty_field")
             field_prefix = self._prefixes.get("field_prefix")
+            domain_field_prefix = self._prefixes.get("domain_field_prefix")
             template_attribute_line = self.env["product.template.attribute.line"]
             attribute_value_qty_obj = self.env["attribute.value.qty"]
-            values_dict = self.values_dict and ast.literal_eval(self.values_dict) or {}
+            values_dict = self.values_dict and json.loads(self.values_dict) or {}
+            # values_dict = self.values_dict and ast.literal_eval(self.values_dict) or {}
             for value in result.get("value"):
                 if value.startswith(field_prefix):
                     values_dict.update({value: result.get("value")[value]})
@@ -155,6 +158,7 @@ class ProductConfigurator(models.TransientModel):
         cfg_val_ids=None,
         product_tmpl_id=None,
         config_session_id=None,
+        values=None,
     ):
         vals = super().get_form_vals(
             dynamic_fields,
@@ -162,6 +166,7 @@ class ProductConfigurator(models.TransientModel):
             cfg_val_ids=cfg_val_ids,
             product_tmpl_id=product_tmpl_id,
             config_session_id=config_session_id,
+            values=values,
         )
         field_prefix = self._prefixes.get("field_prefix")
         qty_prefix = self._prefixes.get("qty_field")
@@ -224,10 +229,10 @@ class ProductConfigurator(models.TransientModel):
                     self.value_qty_dict = value_qty_dict
         return vals
 
-    def onchange(self, values, field_name, field_onchange):
+    def onchange(self, values, field_names, field_onchange):
         # Remove False Values to Avoid an Error.
         values = {k: v for k, v in values.items() if v is not False}
-        onchange_values = super().onchange(values, field_name, field_onchange)
+        onchange_values = super().onchange(values, field_names, field_onchange)
         vals = onchange_values.get("value", {})
         qty_prefix = self._prefixes.get("qty_field")
         field_prefix = self._prefixes.get("field_prefix")
@@ -244,7 +249,8 @@ class ProductConfigurator(models.TransientModel):
         value_qty_dict = (
             self.value_qty_dict and ast.literal_eval(self.value_qty_dict) or {}
         )
-        values_dict = self.values_dict and ast.literal_eval(self.values_dict) or {}
+        # values_dict = self.values_dict and ast.literal_eval(self.values_dict) or {}
+        values_dict = self.values_dict and json.loads(self.values_dict) or {}
         if not onchange_values and values:
             for value in values:
                 if value.startswith(qty_prefix):
@@ -257,7 +263,7 @@ class ProductConfigurator(models.TransientModel):
                     )
         values_dict.update(value_qty_dict)
         self.values_dict = json.dumps(values_dict)
-        update_price = self.product_tmpl_id.list_price
+        update_price = sum(self.product_tmpl_id.attribute_line_ids.mapped('default_val').mapped("product_id.lst_price"))
         for value_line in values_dict:
             if value_line.startswith(field_prefix):
                 if isinstance(values_dict.get(value_line), int):
@@ -274,7 +280,7 @@ class ProductConfigurator(models.TransientModel):
                             )
                         )
                         update_price += sum(extra_prices.values())
-                elif isinstance(values_dict.get(value_line), list):
+                elif values_dict.get(value_line) and isinstance(values_dict.get(value_line), list):
                     # Many2Many Values
                     data_list = list(set(values_dict[value_line][0][2]))
                     if values.get(value_line) or value_line in values:
@@ -407,9 +413,9 @@ class ProductConfigurator(models.TransientModel):
             self._origin.config_session_id.session_value_quantity_ids = attr_qty_list
             return result
 
-    # ============================
-    # OVERRIDE Methods
-    # ============================
+    # # ============================
+    # # OVERRIDE Methods
+    # # ============================
 
     def prepare_attrs_initial(
         self,
@@ -425,6 +431,8 @@ class ProductConfigurator(models.TransientModel):
             attribute_id = attr_line.attribute_id.id
             field_name = field_prefix + str(attribute_id)
             custom_field = custom_field_prefix + str(attribute_id)
+            domain_field_prefix = self._prefixes.get("domain_field_prefix")
+            domain_field_name = domain_field_prefix + str(attribute_id)
             qty_field = qty_field_prefix + str(attribute_id)
 
             # Check if the attribute line has been added to the db fields
@@ -508,7 +516,7 @@ class ProductConfigurator(models.TransientModel):
                     "invisible": invisible_str,
                 }
             )
-        return attrs, field_name, custom_field, qty_field, config_steps, cfg_step_ids
+        return attrs, field_name, custom_field, qty_field, config_steps, cfg_step_ids, domain_field_name
 
     @api.model
     def add_dynamic_fields(self, res, dynamic_fields, wiz):
@@ -545,6 +553,7 @@ class ProductConfigurator(models.TransientModel):
                 qty_field,
                 config_steps,
                 cfg_step_ids,
+                domain_field_name,
             ) = self.prepare_attrs_initial(
                 attr_line,
                 field_prefix,
@@ -581,6 +590,15 @@ class ProductConfigurator(models.TransientModel):
                     }
                 ),
             )
+            xml_dynamic_form.append(node)
+            domain_node = etree.Element(
+                "field",
+                name=domain_field_name,
+                on_change="1",
+                readonly="1",
+                invisible="1",
+            )
+            xml_dynamic_form.append(domain_node)
 
             field_type = dynamic_fields[field_name].get("type")
             if field_type == "many2many":
@@ -588,7 +606,7 @@ class ProductConfigurator(models.TransientModel):
             # Apply the modifiers (attrs) on the newly inserted field in the
             # arch and add it to the view
             # self.setup_modifiers(node) # TODO: NC: Need to improve this method
-            xml_dynamic_form.append(node)
+            
 
             if attr_line.custom and custom_field in dynamic_fields:
                 widget = ""
@@ -670,12 +688,14 @@ class ProductConfigurator(models.TransientModel):
         field_prefix = self._prefixes.get("field_prefix")
         custom_field_prefix = self._prefixes.get("custom_field_prefix")
         qty_field_prefix = self._prefixes.get("qty_field")
+        domain_field_prefix = self._prefixes.get("domain_field_prefix")
 
         attr_vals = [f for f in fields if f.startswith(field_prefix)]
         custom_attr_vals = [f for f in fields if f.startswith(custom_field_prefix)]
         qty_attr_vals = [f for f in fields if f.startswith(qty_field_prefix)]
+        domain_attr_vals = [f for f in fields if f.startswith(domain_field_prefix)]
 
-        dynamic_fields = attr_vals + custom_attr_vals + qty_attr_vals
+        dynamic_fields = attr_vals + custom_attr_vals + qty_attr_vals + domain_attr_vals
         fields = self._remove_dynamic_fields(fields)
 
         custom_val = self.env["product.config.session"].get_custom_value_id()
@@ -697,10 +717,20 @@ class ProductConfigurator(models.TransientModel):
 
             custom_field_name = custom_field_prefix + str(attr_id)
             qty_field_name = qty_field_prefix + str(attr_id)
+            domain_field_name = domain_field_prefix + str(attr_id)
+            available_value_ids = self.config_session_id.values_available(
+                check_val_ids=attr_line.value_ids.ids,
+                product_template_attribute_line_id=attr_line.id,
+            )
 
             # Handle default values for dynamic fields on Odoo frontend
             res[0].update(
-                {field_name: False, custom_field_name: False, qty_field_name: False}
+                {
+                    field_name: [] if attr_line.multi else False,
+                    custom_field_name: False,
+                    qty_field_name: False,
+                    domain_field_name: [("id", "in", available_value_ids)],
+                }
             )
 
             custom_vals = self.custom_value_ids.filtered(

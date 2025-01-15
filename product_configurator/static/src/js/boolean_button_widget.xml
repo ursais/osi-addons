@@ -2,13 +2,12 @@
 <templates xml:space="preserve">
 
     <t t-name="product_configurator.BooleanButtonField" owl="1">
-        <div t-ref="root" t-on-click="onChange">
+        <div t-ref="root">
             <CheckBox
                 id="props.id"
-                value="props.value or false"
+                value="props.state or false"
                 className="'d-inline-block me-2'"
                 disabled="isReadonly"
-                onChange.bind="onChange"
             />
         </div>
     </t>

@@ -1,0 +1,185 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_product_configurator
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2024-12-19 10:06+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
+"Language-Team: none\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.6.2\n"
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.cfg_product
+msgid ""
+"30-day money-back guarantee<br/>\n"
+"                              Free Shipping in U.S.<br/>\n"
+"                              Buy now, get in 2 days"
+msgstr ""
+"Garanzia soddisfatti o rimborsati entro 30 giorni<br/>\n"
+"                              Spedizione gratuita negli Stati Uniti<br/>\n"
+"                              Acquista ora, ricevi in 2 giorni"
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.error_page
+msgid ""
+"<b><u>There is somthing going wrong. Please try again after some "
+"time.</u></b>"
+msgstr "<b><u>Si è verificato un problema. Riprova più tardi.</u></b>"
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.product_buy_now_cfg
+msgid "<i class=\"fa fa-bolt\"/> Buy Now"
+msgstr "<i class=\"fa fa-bolt\"/> Acquista ora"
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.cfg_product
+msgid "<i class=\"fa fa-shopping-cart\"/> Add to Cart"
+msgstr "<i class=\"fa fa-shopping-cart\"/> Aggiungi al carrello"
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.configurator_settings_view_form
+msgid "<span class=\"o_form_label\">Website Template</span>"
+msgstr "<span class=\"o_form_label\">Modello sito web</span>"
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.product_configurator
+msgid "<span><b>Price: </b></span>"
+msgstr "<span><b>Prezzo: </b></span>"
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.product_configurator
+msgid "<span><b>Weight: </b></span>"
+msgstr "<span><b>Peso: </b></span>"
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.config_footer
+msgid "<span>Back</span>"
+msgstr "<span>Precedente</span>"
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.config_footer
+msgid "<span>Continue</span>"
+msgstr "<span>Continua</span>"
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.product_configurator
+msgid "<span>kg</span>"
+msgstr "<span>kg</span>"
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.cfg_product
+msgid "A short description that will also appear on documents."
+msgstr "Una breve descrizione che apparirà anche sui documenti."
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.config_custom_field
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.product_quantity_cfg
+msgid "Add one"
+msgstr "Aggiungi uno"
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.recommended_products_cfg
+msgid "Alternative Products:"
+msgstr "Prodotti alternativi:"
+
+#. module: website_product_configurator
+#: model:ir.model,name:website_product_configurator.model_res_config_settings
+msgid "Config Settings"
+msgstr "Impostazioni configurazione"
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.config_steps
+msgid "Configure"
+msgstr "Configura"
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.cfg_product
+msgid "Configure Again"
+msgstr "Configura nuovamente"
+
+#. module: website_product_configurator
+#: model:ir.actions.server,name:website_product_configurator.cron_delete_sessions_with_no_activity_ir_actions_server
+msgid "Delete inactive config-sessions"
+msgstr "Cancella configurazione sessioni inattive"
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.error_page
+msgid "ERROR!"
+msgstr "ERRORE!"
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.error_page
+msgid "Go Back"
+msgstr "Indietro"
+
+#. module: website_product_configurator
+#: model:ir.model,name:website_product_configurator.model_product_config_session
+msgid "Product Config Session"
+msgstr "Sessione configurazione prodotto"
+
+#. module: website_product_configurator
+#: model:ir.model,name:website_product_configurator.model_product_config_step_line
+msgid "Product Config Step Lines"
+msgstr "Righe passo configurazione prodotto"
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.cfg_product
+msgid "Product Name"
+msgstr "Nome prodotto"
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.cfg_product
+msgid "Products"
+msgstr "Prodotti"
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.cfg_product
+msgid "Reconfigure"
+msgstr "Riconfigurare"
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.config_custom_field
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.product_quantity_cfg
+msgid "Remove one"
+msgstr "Rimuovi uno"
+
+#. module: website_product_configurator
+#: model:ir.model,name:website_product_configurator.model_sale_order
+msgid "Sales Order"
+msgstr "Ordine di vendita"
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.configurator_settings_view_form
+msgid "Set the default template for configurator tabs(Radio/Select)."
+msgstr ""
+"Imposta il modello predefinito per le linguette del configuratore (Radio/"
+"selezione)."
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.cfg_product
+msgid "This product has no valid combination."
+msgstr "Questo prodotto non ha una combinazione valida."
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.cfg_product
+msgid "This product is no longer available."
+msgstr "Questo prodotto non è più disponibile."
+
+#. module: website_product_configurator
+#: model_terms:ir.ui.view,arch_db:website_product_configurator.configurator_settings_view_form
+msgid "Website"
+msgstr "Sito web"
+
+#. module: website_product_configurator
+#: model:ir.model.fields,field_description:website_product_configurator.field_product_config_step_line__website_tmpl_id
+#: model:ir.model.fields,field_description:website_product_configurator.field_res_config_settings__website_tmpl_id
+msgid "Website Template"
+msgstr "Modello sito web"

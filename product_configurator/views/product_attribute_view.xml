@@ -26,9 +26,11 @@
                     widget="image"
                     class="oe_avatar oe_left"
                     invisible="not context.get('flag_config_ok')"
-                />
+                >
+                    <field name="image" widget="image" class="oe_avatar oe_left" />
+                </field>
             </xpath>
-            <xpath expr="//group[@name='main_fields']" position="inside">
+            <xpath expr="//group[@name='sale_main_fields']" position="inside">
                 <field name="active" invisible="not context.get('flag_config_ok')" />
             </xpath>
             <xpath expr="//field[@name='create_variant']" position="attributes">
@@ -54,9 +56,10 @@
                 </page>
                 <page
                     string="Custom Values"
-                    invisible="not context.get('flag_config_ok')"
+                    invisible="not context.get('flag_config_ok') or not val_custom"
                     groups="product_configurator.group_product_configurator_manager"
                 >
+
                     <group>
                         <group>
                             <field name="custom_type" />
@@ -144,15 +147,14 @@
 
     <!-- Product Attribute Value -->
 
-    <record id="variants_tree_view" model="ir.ui.view">
-        <field name="name">product.attribute.value.tree</field>
+    <record id="product_attribute_value_list" model="ir.ui.view">
+        <field name="name">product.attribute.value.list.inherit</field>
         <field name="model">product.attribute.value</field>
+        <field name="inherit_id" ref="product.product_attribute_value_list" />
         <field name="arch" type="xml">
-            <tree>
-                <field name="sequence" widget="handle" />
+            <xpath expr="//field[@name='name']" position="before">
                 <field name="attribute_id" />
-                <field name="name" />
-            </tree>
+            </xpath>
         </field>
     </record>
 
