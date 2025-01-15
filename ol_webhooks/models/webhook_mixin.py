@@ -73,7 +73,7 @@ class WebhookMixin(models.AbstractModel):
 
     # CREATE #######
 
-    @api.model_create_multi
+    @api.model
     def create(self, values):
         """Add webhooks into the `create` method"""
         res = super().create(values)
