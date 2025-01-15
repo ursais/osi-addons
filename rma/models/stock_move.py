@@ -24,7 +24,7 @@ class StockMove(models.Model):
         res = super()._action_assign(force_qty=force_qty)
         for move in self:
             if move.rma_line_id:
-                move.partner_id = move.rma_line_id.partner_id.id or False
+                move.partner_id = move.rma_line_id.rma_order_id.partner_id.id or False
         return res
 
     @api.model
@@ -60,11 +60,11 @@ class StockMove(models.Model):
     ):
         if (
             not lot_id
-            and self.rma_line_id.lot_id
+            and self.rma_line_id.lot_ids
             and self.location_id.usage == "internal"
         ):
             # In supplier RMA deliveries we can only send the RMA lot/serial.
-            lot_id = self.rma_line_id.lot_id
+            lot_id = self.rma_line_id.lot_ids
         return super()._get_available_quantity(
             location_id,
             lot_id=lot_id,
@@ -86,11 +86,11 @@ class StockMove(models.Model):
     ):
         if (
             not lot_id
-            and self.rma_line_id.lot_id
+            and self.rma_line_id.lot_ids
             and self.location_id.usage == "internal"
         ):
             # In supplier RMA deliveries we can only send the RMA lot/serial.
-            lot_id = self.rma_line_id.lot_id
+            lot_id = self.rma_line_id.lot_ids
         return super()._update_reserved_quantity(
             need,
             location_id,

@@ -90,7 +90,7 @@ class StockWarehouse(models.Model):
 
     def _create_rma_picking_types(self):
         picking_type_obj = self.env["stock.picking.type"]
-        supplier_loc = self._get_partner_locations()
+        customer_loc, supplier_loc = self._get_partner_locations()
         for wh in self:
             other_pick_type = picking_type_obj.search(
                 [("warehouse_id", "=", wh.id)], order="sequence desc", limit=1
@@ -140,7 +140,7 @@ class StockWarehouse(models.Model):
     def get_rma_rules_dict(self):
         self.ensure_one()
         rma_rules = dict()
-        supplier_loc = self._get_partner_locations()
+        customer_loc, supplier_loc = self._get_partner_locations()
         rma_rules["rma_supplier_in"] = {
             "name": self._format_rulename(self, supplier_loc, self.lot_rma_id.name),
             "action": "pull",
