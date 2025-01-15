@@ -26,9 +26,13 @@ class SaleOrderLine(models.Model):
         the tag is removed.
         - Ensures the sale order tags are consistent with the product's state.
         """
+
+        # Retrieve the 'Engineering Prototype' tag reference
         tag_engineering_prototype = self.env.ref(
             "ol_sale.crm_tag_engineering_prototype"
         )
+
+        # Get the current tags on the related sale order
         prototype_state_id = self.env.ref("ol_sale.product_state_prototype").id
 
         for line in self:
