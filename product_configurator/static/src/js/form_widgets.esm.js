@@ -1,30 +1,16 @@
 /* @odoo-module */
-/*eslint-disable*/
-import {patch} from "@web/core/utils/patch";
 import {FormController} from "@web/views/form/form_controller";
-import {ListController} from "@web/views/list/list_controller";
-import {KanbanController} from "@web/views/kanban/kanban_controller";
-import {onMounted} from "@odoo/owl";
+import {patch} from "@web/core/utils/patch";
 
 patch(FormController.prototype, {
     setup() {
         super.setup(...arguments);
-        onMounted(() => {
-            var form_element = this.rootRef.el;
-            var self = this;
-            if (
-                self.model.config.resModel === "product.product" &&
-                self.model.config.context.custom_create_variant
-            ) {
-                var buttons = form_element.querySelector(
-                    ".o_control_panel_main_buttons"
-                );
-                var createButtons = buttons.querySelectorAll(".o_form_button_create");
-                createButtons.forEach((button) => {
-                    button.style.display = "none";
-                });
-            }
-        });
+        if (
+            this.props.resModel === "product.product" &&
+            this.props.context.custom_create_variant
+        ) {
+            this.canCreate = false;
+        }
     },
     async beforeExecuteActionButton(clickParams) {
         if (clickParams.special === "no_save") {
@@ -32,49 +18,5 @@ patch(FormController.prototype, {
             return true;
         }
         return super.beforeExecuteActionButton(...arguments);
-    },
-});
-
-patch(ListController.prototype, {
-    setup() {
-        super.setup(...arguments);
-        onMounted(() => {
-            var form_element = this.rootRef.el;
-            var self = this;
-            if (
-                self.model.config.resModel === "product.product" &&
-                self.model.config.context.custom_create_variant
-            ) {
-                var buttons = form_element.querySelector(
-                    ".o_control_panel_main_buttons"
-                );
-                var createButtons = buttons.querySelectorAll(".o_list_button_add");
-                createButtons.forEach((button) => {
-                    button.style.display = "none";
-                });
-            }
-        });
-    },
-});
-
-patch(KanbanController.prototype, {
-    setup() {
-        super.setup(...arguments);
-        onMounted(() => {
-            var form_element = this.rootRef.el;
-            var self = this;
-            if (
-                self.model.config.resModel === "product.product" &&
-                self.model.config.context.custom_create_variant
-            ) {
-                var buttons = form_element.querySelector(
-                    ".o_control_panel_main_buttons"
-                );
-                var createButtons = buttons.querySelectorAll(".o-kanban-button-new");
-                createButtons.forEach((button) => {
-                    button.style.display = "none";
-                });
-            }
-        });
     },
 });

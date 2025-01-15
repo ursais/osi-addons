@@ -54,7 +54,11 @@ class SaleOrderLine(models.Model):
             model_name=wizard_model, extra_vals=extra_vals
         )
 
-    @api.depends()
+    @api.depends(
+        "config_session_id",
+        "tax_id",
+        "company_id",
+    )
     def _compute_price_unit(self):
         result = None
         for line in self:

@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -152,6 +152,11 @@ msgid "Allow selection of multiple values for this attribute?"
 msgstr ""
 
 #. module: product_configurator
+#: model:ir.model.fields,field_description:product_configurator.field_product_config_line__attr_line_val_ids
+msgid "Allowed Attribute Values"
+msgstr ""
+
+#. module: product_configurator
 #. odoo-python
 #: code:addons/product_configurator/models/product_config.py:0
 #, python-format
@@ -205,11 +210,6 @@ msgid "Attribute Line Val"
 msgstr ""
 
 #. module: product_configurator
-#: model:ir.model.fields,field_description:product_configurator.field_product_config_line__attr_line_val_ids
-msgid "Attribute Line Values"
-msgstr ""
-
-#. module: product_configurator
 #: model:ir.model.fields,field_description:product_configurator.field_product_config_step_line__attribute_line_ids
 msgid "Attribute Lines"
 msgstr ""
@@ -235,24 +235,6 @@ msgstr ""
 #. module: product_configurator
 #: model:ir.model.fields,field_description:product_configurator.field_product_template_attribute_value__weight_extra
 msgid "Attribute Weight Extra"
-msgstr ""
-
-#. module: product_configurator
-#. odoo-python
-#: code:addons/product_configurator/models/product_config.py:0
-#, python-format
-msgid ""
-"Attribute custom type is binary, attachments are the only accepted values "
-"with this custom field type"
-msgstr ""
-
-#. module: product_configurator
-#. odoo-python
-#: code:addons/product_configurator/models/product_config.py:0
-#, python-format
-msgid ""
-"Attribute custom type must be 'binary' for saving attachments to custom "
-"value"
 msgstr ""
 
 #. module: product_configurator
@@ -316,15 +298,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:product_configurator.field_product_product__config_ok
 #: model:ir.model.fields,field_description:product_configurator.field_product_template__config_ok
 msgid "Can be Configured"
-msgstr ""
-
-#. module: product_configurator
-#. odoo-python
-#: code:addons/product_configurator/models/product_config.py:0
-#, python-format
-msgid ""
-"Cannot conduct search on an empty config session without product_tmpl_id "
-"kwarg"
 msgstr ""
 
 #. module: product_configurator
@@ -466,13 +439,6 @@ msgstr ""
 #: model:ir.ui.menu,name:product_configurator.menu_product_config_steps_action
 #: model_terms:ir.ui.view,arch_db:product_configurator.product_template_only_form_view_inherited
 msgid "Configuration Steps"
-msgstr ""
-
-#. module: product_configurator
-#. odoo-python
-#: code:addons/product_configurator/models/product_config.py:0
-#, python-format
-msgid "Configuration cannot have the same value inserted twice"
 msgstr ""
 
 #. module: product_configurator
@@ -628,7 +594,6 @@ msgstr ""
 #. module: product_configurator
 #. odoo-python
 #: code:addons/product_configurator/models/product.py:0
-#: code:addons/product_configurator/models/product_config.py:0
 #, python-format
 msgid "Default values provided generate an invalid configuration"
 msgstr ""
@@ -734,6 +699,13 @@ msgid ""
 msgstr ""
 
 #. module: product_configurator
+#: model:ir.model.fields,help:product_configurator.field_product_config_line__attr_line_val_ids
+msgid ""
+"For normal attributes the values configured for the product can be selected.\n"
+"For custom attributes the 'Custom' value can also be selected."
+msgstr ""
+
+#. module: product_configurator
 #: model:product.attribute,name:product_configurator.product_attribute_fuel
 msgid "Fuel"
 msgstr ""
@@ -808,14 +780,6 @@ msgid "Interior"
 msgstr ""
 
 #. module: product_configurator
-#. odoo-python
-#: code:addons/product_configurator/models/product_config.py:0
-#: code:addons/product_configurator/models/product_config.py:0
-#, python-format
-msgid "Invalid Configuration"
-msgstr ""
-
-#. module: product_configurator
 #: model:ir.model.fields,field_description:product_configurator.field_product_product__config_preset_ok
 msgid "Is Preset"
 msgstr ""
@@ -823,20 +787,6 @@ msgstr ""
 #. module: product_configurator
 #: model:ir.model.fields,help:product_configurator.field_product_template_attribute_line__required
 msgid "Is this attribute required?"
-msgstr ""
-
-#. module: product_configurator
-#: model:ir.model.fields,field_description:product_configurator.field_product_attribute_value_line____last_update
-#: model:ir.model.fields,field_description:product_configurator.field_product_config_domain____last_update
-#: model:ir.model.fields,field_description:product_configurator.field_product_config_domain_line____last_update
-#: model:ir.model.fields,field_description:product_configurator.field_product_config_image____last_update
-#: model:ir.model.fields,field_description:product_configurator.field_product_config_line____last_update
-#: model:ir.model.fields,field_description:product_configurator.field_product_config_session____last_update
-#: model:ir.model.fields,field_description:product_configurator.field_product_config_session_custom_value____last_update
-#: model:ir.model.fields,field_description:product_configurator.field_product_config_step____last_update
-#: model:ir.model.fields,field_description:product_configurator.field_product_config_step_line____last_update
-#: model:ir.model.fields,field_description:product_configurator.field_product_configurator____last_update
-msgid "Last Modified on"
 msgstr ""
 
 #. module: product_configurator
@@ -979,13 +929,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:product_configurator.field_product_config_step__name
 #: model:ir.model.fields,field_description:product_configurator.field_product_config_step_line__name
 msgid "Name"
-msgstr ""
-
-#. module: product_configurator
-#. odoo-python
-#: code:addons/product_configurator/models/product_config.py:0
-#, python-format
-msgid "New"
 msgstr ""
 
 #. module: product_configurator
@@ -1139,13 +1082,6 @@ msgid "Product configuration Wizard"
 msgstr ""
 
 #. module: product_configurator
-#. odoo-python
-#: code:addons/product_configurator/models/product_config.py:0
-#, python-format
-msgid "Product created via configuration wizard"
-msgstr ""
-
-#. module: product_configurator
 #: model_terms:ir.ui.view,arch_db:product_configurator.product_form_view_custom_vals_inherit
 msgid "Reconfigure Product"
 msgstr ""
@@ -1159,13 +1095,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:product_configurator.field_product_attribute__required
 #: model:ir.model.fields,field_description:product_configurator.field_product_template_attribute_line__required
 msgid "Required"
-msgstr ""
-
-#. module: product_configurator
-#. odoo-python
-#: code:addons/product_configurator/models/product_config.py:0
-#, python-format
-msgid "Required attribute '%s' is empty"
 msgstr ""
 
 #. module: product_configurator
@@ -1504,12 +1433,4 @@ msgstr ""
 #: code:addons/product_configurator/models/product.py:0
 #, python-format
 msgid "You cannot have a duplicate configuration for the same value"
-msgstr ""
-
-#. module: product_configurator
-#. odoo-python
-#: code:addons/product_configurator/models/product_config.py:0
-#: code:addons/product_configurator/models/product_config.py:0
-#, python-format
-msgid "You must select at least one attribute in order to configure a product"
 msgstr ""

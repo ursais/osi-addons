@@ -102,7 +102,9 @@ class ProductConfigSession(models.Model):
                             ("product_attribute_id", "=", line.attribute_id.id),
                             ("product_attribute_value_id", "=", line.default_val.id),
                             ("qty", "=", int(template_attribute_value2.default_qty)),
-                        ],order="qty",limit=1
+                        ],
+                        order="qty",
+                        limit=1,
                     )
                     session_qty_list.append(
                         (
@@ -359,6 +361,24 @@ class ProductConfigSession(models.Model):
 
             update_vals["custom_value_ids"].append((0, 0, custom_vals))
         self.write(update_vals)
+
+    @api.model
+    def get_onchange_specifications(self, model):
+        """return onchange specification
+        - same functionality by _onchange_spec
+        - needed this method because odoo don't add specification for fields
+        one2many or many2many there is view-reference(using : tree_view_ref)
+        intead of view in that field"""
+        model_obj = self.env[model]
+        specs = model_obj._onchange_spec()
+        for name, field in model_obj._fields.items():
+            if field.type not in ["one2many", "many2many"]:
+                continue
+            # ch_specs = self.get_child_specification(
+            #     model=field.comodel_name, parent=name
+            # )
+            # specs.update(ch_specs)
+        return specs
 
     def create_get_bom(self, variant, product_tmpl_id=None, values=None):
         # default_type is set as 'product' when the user navigates

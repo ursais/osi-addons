@@ -5,7 +5,6 @@ from odoo import api, fields, models
 
 
 class ProductConfiguratorSale(models.TransientModel):
-
     _name = "product.configurator.sale"
     _inherit = "product.configurator"
     _description = "Product Configurator Sale"
@@ -13,41 +12,17 @@ class ProductConfiguratorSale(models.TransientModel):
     order_id = fields.Many2one(comodel_name="sale.order", required=True, readonly=True)
     order_line_id = fields.Many2one(comodel_name="sale.order.line", readonly=True)
 
-    domain_attr_ids = fields.Many2many(
-        "product.attribute.value",
-        "domain_attrs_values_sale_rel",
-        "wiz_id",
-        "attribute_id",
-        string="Domain",
-    )
-    domain_attr_2_ids = fields.Many2many(
-        "product.attribute.value",
-        "domain_attrs_2_values_sale_rel",
-        "wiz_id",
-        "attribute_id",
-        string="Domain",
-    )
-
     def _get_order_line_vals(self, product_id):
         """Hook to allow custom line values to be put on the newly
         created or edited lines."""
         product = self.env["product.product"].browse(product_id)
-        line_vals = {"product_id": product_id, "order_id": self.order_id.id}
-
-        onchange_fields = ["price_unit", "product_uom", "tax_id"]
-        line = self.env["sale.order.line"].new(line_vals)
-        for field in onchange_fields:
-            line_vals.update(
-                {field: line._fields[field].convert_to_write(line[field], line)}
-            )
-
-        line_vals.update(
-            {
-                "config_session_id": self.config_session_id.id,
-                "name": product._get_mako_tmpl_name(),
-                "customer_lead": product.sale_delay,
-            }
-        )
+        line_vals = {
+            "product_id": product_id,
+            "order_id": self.order_id.id,
+            "config_session_id": self.config_session_id.id,
+            "name": product._get_mako_tmpl_name(),
+            "customer_lead": product.sale_delay,
+        }
         return line_vals
 
     def action_config_done(self):
@@ -63,11 +38,14 @@ class ProductConfiguratorSale(models.TransientModel):
         order_line_obj = self.env[model_name]
         cfg_session = self.config_session_id
         fields_spec = cfg_session.get_onchange_specifications(model=model_name)
+        # Filter the fields_spec dictionary to keep only the keys present in line_vals.
         fields_spec = {
             key: val
             for key, val in fields_spec.items()
-            if key in list(line_vals.keys()) and key != "tax_id"
+            if key in list(line_vals.keys())
         }
+        # Trigger the onchange event for the 'product_id' field, passing in line_vals
+        # and the filtered fields_spec to update the order line accordingly
         updates = order_line_obj.onchange(line_vals, ["product_id"], fields_spec)
         values = updates.get("value", {})
         values = cfg_session.get_vals_to_write(values=values, model=model_name)

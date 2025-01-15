@@ -7,14 +7,17 @@
         <field name="priority" eval="10" />
         <field name="inherit_id" ref="base.res_config_settings_view_form" />
         <field name="arch" type="xml">
-            <xpath expr="//form[hasclass('oe_form_configuration')]" position="inside">
-                <div
-                    class="app_settings_block"
+            <xpath expr="//form" position="inside">
+                <app
                     data-string="Product Configurator"
                     string="Product Configurator"
-                    data-key="product_configurator"
+                    name="product_configurator"
+                    groups="product_configurator.group_product_configurator_manager"
                 >
-                </div>
+                    <block title="">
+                        <settings />
+                    </block>
+                </app>
             </xpath>
         </field>
     </record>

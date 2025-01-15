@@ -1,0 +1,954 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <template id="config_header" name="Product Configuration Header">
+        <div id="cfg_header" class="form-group">
+            <span id="product_config_image">
+                <t t-set="model" t-value="config_image_vals['name']" />
+                <t t-foreach="config_image_vals['config_image_ids']" t-as="config">
+                    <img
+                        itemprop="image"
+                        class="cfg_image img img-responsive"
+                        t-attf-src="/web/image/{{model}}/{{config}}/image_1920"
+                    />
+                </t>
+            </span>
+        </div>
+    </template>
+
+    <!-- Base view for website configuration body -->
+    <template id="product_configurator" name="Product Configuration Interface">
+        <t t-call="website.layout">
+        <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap">
+
+           <section
+                    id="unique_product_configurator"
+                    class="container py-2 product_configurator"
+                >
+            <div class="row">
+                <div class="col-lg-12">
+                    <t t-call="website_product_configurator.config_header" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <form
+                                id="product_config_form"
+                                class="form-horizontal"
+                                method="post"
+                                enctype="multipart/form-data"
+                            >
+                      <input
+                                    type="hidden"
+                                    name="csrf_token"
+                                    t-att-value="request.csrf_token()"
+                                />
+                        <div class="row">
+                            <div class="col-lg-12">
+                              <div class="config_weight">
+                                <span><b>Weight: </b></span>
+                                <span
+                                                class="config_product_weight"
+                                                t-esc="('{0:,.%sf}' % (weight_prec)).format(cfg_session.weight)"
+                                            />
+                                <span>kg</span>
+                              </div>
+                               <div class="config_price">
+                                <span><b>Price: </b></span>
+                                <!-- old code -->
+                                <!-- <span class="config_product_price" t-esc="cfg_session.price" t-options="{'widget': 'monetary', 'display_currency': product_tmpl.currency_id}"/> -->
+                                <span
+                                                class="config_product_price"
+                                                t-esc="cfg_session.price"
+                                                t-options="{'widget': 'monetary', 'display_currency': website._get_current_pricelist().currency_id}"
+                                            />
+
+                              </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                              <!-- Render the tabs for configuration step lines -->
+                              <t t-call="website_product_configurator.config_steps" />
+                            </div>
+                        </div>
+                         <div class="row">
+                            <div class="col-lg-12">
+                                <!-- Render forms for each line -->
+                                <t t-call="website_product_configurator.config_form" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <t
+                                            t-call="website_product_configurator.config_footer"
+                                        />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+          </section>
+        </div>
+        </t>
+    </template>
+
+    <template id="config_footer" name="Product Configuration Footer">
+        <div id="cfg_footer" class="form-group row">
+            <t t-set="step_count" t-value="1" />
+            <t t-set="active_step_count" t-value="1" />
+            <t t-foreach="cfg_step_lines" t-as="cfg_step_line">
+                <t t-if="cfg_step_line.id == active_step.id">
+                    <t t-set="active_step_count" t-value="step_count" />
+                </t>
+                <t t-set="step_count" t-value="step_count + 1" />
+            </t>
+            <t t-if="extra_attribute_line_ids">
+                <t t-if="not active_step">
+                    <t t-set="active_step_count" t-value="step_count" />
+                </t>
+                <t t-set="step_count" t-value="step_count + 1" />
+            </t>
+
+            <div class="col-6 text-left">
+                <a
+                    id="form_action"
+                    t-att-class="'btn btn-primary btnPreviousStep' + ((active_step_count == 1) and ' d-none' or '')"
+                >
+                    <span>Back</span>
+                </a>
+            </div>
+            <div class="col-6 text-right">
+                <a
+                    id="form_action"
+                    t-att-class="'btn btn-primary btnNextStep' + ((active_step_count == step_count - 1) and ' d-none' or '')"
+                >
+                    <span>Continue</span>
+                </a>
+                <button
+                    id="form_action"
+                    type="submit"
+                    t-att-class="'btn btn-primary configureProduct' + ((active_step_count != step_count - 1) and ' d-none' or '')"
+                >
+                    <span>Continue</span>
+                </button>
+            </div>
+            <input
+                type="hidden"
+                name="total_attributes"
+                calss="total_attributes"
+                id="total_attributes"
+                t-att-value="step_count - 1"
+            />
+        </div>
+    </template>
+
+
+    <!-- Base view for the form view of each configuration step -->
+    <template id="config_form" name="Product Configuration Form">
+      <div>
+        <input
+                name="product_tmpl_id"
+                t-att-value="product_tmpl.id"
+                class="product_tmpl_id"
+                type="hidden"
+            />
+        <input
+                name="config_session_id"
+                t-att-value="cfg_session.id"
+                class="config_session_id"
+                type="hidden"
+            />
+      </div>
+      <div class="tab-content">
+          <t t-foreach="cfg_step_lines" t-as="cfg_step_line">
+              <div
+                    role="tabpanel"
+                    t-attf-id="cfg_step_{{cfg_step_line.id}}"
+                    t-att-data-step-id="cfg_step_line.id"
+                    t-att-class="'tab-pane fade container' + (cfg_step_line.id == active_step.id and ' show active' or '')"
+                >
+                <t
+                        t-set="configuration_template_id"
+                        t-value="cfg_step_line.sudo().get_website_template()"
+                    />
+                <t t-call="{{configuration_template_id}}">
+                    <t
+                            t-set="cfg_step_attribute_line_ids"
+                            t-value="cfg_step_line.attribute_line_ids"
+                        />
+                </t>
+              </div>
+          </t>
+          <t t-if="extra_attribute_line_ids">
+              <div
+                    role="tabpanel"
+                    t-attf-id="cfg_step_configure"
+                    t-att-data-step-id="configure"
+                    t-att-class="'tab-pane fade container' + (not active_step and ' show active' or '')"
+                >
+                <t t-call="{{default_website_template}}">
+                    <t
+                            t-set="configuration_template_id"
+                            t-value="default_website_template"
+                        />
+                    <t
+                            t-set="cfg_step_attribute_line_ids"
+                            t-value="extra_attribute_line_ids"
+                        />
+                </t>
+              </div>
+          </t>
+      </div>
+    </template>
+
+    <!-- Base view for configuration steps -->
+    <template id="config_steps" name="Product Configuration Steps">
+      <div class="row">
+        <div class="col-lg-12">
+          <ul class="nav nav-tabs" role="tablist">
+            <t t-set="step_count" t-value="1" />
+            <t t-foreach="cfg_step_lines" t-as="cfg_step_line">
+                <li
+                            t-att-data-step-id="cfg_step_line.id"
+                            t-att-class="'nav-item config_step' + (cfg_step_line not in open_cfg_step_lines and ' d-none' or '')"
+                            t-att-data-step-count="step_count"
+                        >
+                    <a
+                                t-att-class="'nav-link' + (cfg_step_line.id == active_step.id and ' active' or '')"
+                                data-bs-toggle="tab"
+                                role="tab"
+                                t-attf-href="#cfg_step_{{cfg_step_line.id}}"
+                                t-esc="cfg_step_line.config_step_id.name"
+                            />
+                </li>
+                <t t-set="step_count" t-value="step_count + 1" />
+            </t>
+            <t t-if="extra_attribute_line_ids">
+                <li
+                            data-step-id="configure"
+                            class="nav-item config_step"
+                            t-att-data-step-count="step_count"
+                        >
+                    <a
+                                t-att-class="'nav-link'  + (not active_step and ' active' or '')"
+                                data-bs-toggle="tab"
+                                role="tab"
+                                href="#cfg_step_configure"
+                            >Configure</a>
+                </li>
+                <t t-set="step_count" t-value="step_count + 1" />
+            </t>
+          </ul>
+        </div>
+      </div>
+    </template>
+
+
+<!-- Configuration forms -->
+
+    <template id="config_form_base" name="Base Config Form View" />
+
+    <template id="config_custom_field" name="Custom Configuration Field">
+        <t t-set='custom_type' t-value='line.attribute_id.custom_type' />
+        <t t-if="not custom_type or custom_type in ['color', 'char']">
+            <input
+                t-att-type="'color' if custom_type == 'color' else 'text'"
+                t-att-style="'width: 44px' if custom_type == 'color' else None"
+                t-att-id="'%s%s' % (custom_field_prefix, line.attribute_id.id)"
+                t-att-data-oe-id="line.attribute_id.id"
+                t-att-name="'%s%s' % (custom_field_prefix, line.attribute_id.id)"
+                t-att-class="'form-control custom_config_value' + (' required_config_attrib' if (custom_value or not line.value_ids) and line.required else '')"
+                t-att-value="custom_value.value"
+            />
+        </t>
+        <t t-if="custom_type in ['float','integer']">
+            <t t-set="custom_val" t-value="float(custom_value.value)" />
+
+            <div class="css_quantity input-group">
+                <div class="input-group-prepend">
+                    <a
+                        t-attf-href="#"
+                        aria-label="Remove one"
+                        title="Remove one"
+                        t-att-class="'btn btn-link d-md-inline-block js_remove_qty' + (' btn-disabled' if (custom_val and custom_val &lt;= line.attribute_id.min_val) or not custom_val else '')"
+                    >
+                        <i class="fa fa-minus" />
+                    </a>
+                </div>
+                <input
+                    type="text"
+                    t-att-id="'%s%s' % (custom_field_prefix, line.attribute_id.id)"
+                    t-att-min="line.attribute_id.min_val"
+                    t-att-max="line.attribute_id.max_val"
+                    t-att-data-oe-id="line.attribute_id.id"
+                    t-att-data-type="custom_type"
+                    t-att-name="'%s%s' % (custom_field_prefix, line.attribute_id.id)"
+                    t-att-class="'form-control custom_config_value spinner_qty' + (' required_config_attrib' if (custom_value or not line.value_ids) and line.required else '')"
+                    t-att-value="custom_value and custom_value.value or line.attribute_id.min_val or '0'"
+                />
+                <div class="input-group-append">
+                    <a
+                        t-attf-href="#"
+                        aria-label="Add one"
+                        title="Add one"
+                        t-att-class="'btn btn-link float_left d-md-inline-block js_add_qty'  + (' btn-disabled' if custom_val and line.attribute_id.max_val and custom_val &gt;= line.attribute_id.max_val else '')"
+                    >
+                        <i class="fa fa-plus" />
+                    </a>
+                </div>
+            </div>
+        </t>
+        <t t-if="custom_type == 'binary'">
+            <t t-foreach="custom_value.attachment_ids" t-as="attachment">
+                <div style="min-height: 40px;padding-top: 5px">
+                    <i style="font-size: 30px;" class="fa fa-paperclip fa-5" />
+                    <span t-field="attachment.name" />
+                </div>
+            </t>
+            <input
+                type="file"
+                t-att-id="'%s%s' % (custom_field_prefix, line.attribute_id.id)"
+                t-att-name="'%s%s' % (custom_field_prefix, line.attribute_id.id)"
+                t-att-data-oe-id="line.attribute_id.id"
+                t-att-class="'form-control custom_config_value config_attachment' + (' required_config_attrib' if ((custom_value and not custom_value.attachment_ids) or not line.value_ids) and line.required else '')"
+            />
+        </t>
+        <t t-if="custom_type == 'text'">
+            <textarea
+                t-att-id="'%s%s' % (custom_field_prefix, line.attribute_id.id)"
+                t-att-name="'%s%s' % (custom_field_prefix, line.attribute_id.id)"
+                t-att-data-oe-id="line.attribute_id.id"
+                t-att-class="'form-control custom_config_value' + (' required_config_attrib' if (custom_value or not line.value_ids) and line.required else '')"
+            ><t t-esc="custom_value.value" /></textarea>
+        </t>
+        <t t-if="custom_type == 'datetime'">
+            <div
+                class="input-group date"
+                t-att-id="'datetime-%s%s' % (custom_field_prefix, line.attribute_id.id)"
+                data-target-input="nearest"
+            >
+                <input
+                    type="text"
+                    t-att-id="'%s%s' % (custom_field_prefix, line.attribute_id.id)"
+                    t-att-data-oe-id="line.attribute_id.id"
+                    t-att-name="'%s%s' % (custom_field_prefix, line.attribute_id.id)"
+                    t-att-class="'datetimepicker-input product_config_datetimepicker form-control custom_config_value' + (' required_config_attrib' if (custom_value or not line.value_ids) and line.required else '')"
+                    t-att-value="custom_value.value"
+                    t-att-data-target="'#datetime-%s%s' % (custom_field_prefix, line.attribute_id.id)"
+                />
+                <div
+                    class="input-group-append"
+                    t-att-data-target="'#datetime-%s%s' % (custom_field_prefix, line.attribute_id.id)"
+                    data-toggle="datetimepicker"
+                >
+                  <div class="input-group-text">
+                    <i class="fa fa-calendar" />
+                  </div>
+                </div>
+            </div>
+        </t>
+        <t t-if="custom_type == 'date'">
+            <div
+                class="input-group date"
+                t-att-id="'date-%s%s' % (custom_field_prefix, line.attribute_id.id)"
+                data-target-input="nearest"
+            >
+                <input
+                    type="text"
+                    t-att-id="'%s%s' % (custom_field_prefix, line.attribute_id.id)"
+                    t-att-data-oe-id="line.attribute_id.id"
+                    t-att-name="'%s%s' % (custom_field_prefix, line.attribute_id.id)"
+                    t-att-class="'datetimepicker-input product_config_datepicker form-control custom_config_value' + (' required_config_attrib' if (custom_value or not line.value_ids) and line.required else '')"
+                    t-att-value="custom_value.value"
+                    t-att-data-target="'#date-%s%s' % (custom_field_prefix, line.attribute_id.id)"
+                />
+                <div
+                    class="input-group-append"
+                    t-att-data-target="'#date-%s%s' % (custom_field_prefix, line.attribute_id.id)"
+                    data-toggle="datetimepicker"
+                >
+                  <div class="input-group-text">
+                    <i class="fa fa-calendar" />
+                  </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Default configuration form (selectboxes ) -->
+    <template
+        id="config_form_select"
+        name="Selectbox configuration form"
+        inherit_id="website_product_configurator.config_form_base"
+    >
+        <xpath expr="." position="inside">
+            <t
+                t-if="configuration_template_id == 'website_product_configurator.config_form_select'"
+            >
+                <t t-set="field_prefix" t-value="prefixes.get('field_prefix')" />
+                <t
+                    t-set="custom_field_prefix"
+                    t-value="prefixes.get('custom_field_prefix')"
+                />
+                <t t-foreach="cfg_step_attribute_line_ids" t-as="line">
+                    <t
+                        t-set="custom_value"
+                        t-value="custom_value_ids.filtered(lambda x: x.attribute_id == line.attribute_id)"
+                    />
+                    <t
+                        t-set="available_val"
+                        t-value="any(val.id in available_value_ids for val in line.value_ids)"
+                    />
+                    <div t-att-class="'attribute_container'">
+                        <label
+                            class="control-label"
+                            t-esc="line.attribute_id.name"
+                            t-att-data-oe-id="line.attribute_id.id"
+                        />
+                        <select
+                            t-att-id="'%s%s' % (field_prefix, line.attribute_id.id)"
+                            t-att-data-oe-id="line.attribute_id.id"
+                            t-att-data-attr-required="line.required"
+                            t-att-multiple="'multiple' if line.multi else None"
+                            t-att-name="'%s%s' % (field_prefix, line.attribute_id.id)"
+                            t-att-class="'form-control config_attribute cfg-select' + (' required_config_attrib' if (not available_val and line.required and line.custom) or (available_val and line.required) else '') + (' d-none' if not line.value_ids else '')"
+                            t-att-data-old-val-id="(value_ids &amp; line.value_ids) and (value_ids &amp; line.value_ids).ids[0] or ''"
+                        >
+
+                                  <!-- t-att-disabled="'disabled' if not available_val_ids and not line.custom else None" -->
+                            <option name="" />
+                            <t t-foreach="line.value_ids" t-as="value">
+                                <option
+                                    t-att-selected="'selected' if value.id in value_ids.ids else None"
+                                    t-att-class="'config_attr_value' + (' disabled' if value.id not in available_value_ids else '')"
+                                    t-att-value="value.id"
+                                    t-att-data-oe-id="value.id"
+                                    t-att-name="value.id"
+                                    t-att-disabled="value.id not in available_value_ids and True or False"
+                                >
+                                    <t t-esc="value.name" />
+                                    <t
+                                        t-set="price_extra"
+                                        t-value="extra_prices.get(value.id, 0)"
+                                    />
+                                    <t t-if="price_extra">
+                                        (+<t
+                                            t-esc="price_extra"
+                                            t-options="{'widget': 'monetary', 'display_currency': pricelist.currency_id, 'from_currency': website.currency_id}"
+                                        />)
+                                    </t>
+                                </option>
+                            </t>
+                            <t t-if="line.custom">
+                                  <option
+                                    t-att-selected="'selected' if custom_value or not line.value_ids else None"
+                                    t-att-class="'config_attr_value custom_config_attr_value' + (' disabled' if custom_val_id.id not in available_value_ids else '')"
+                                    t-att-value="custom_val_id.id"
+                                    t-att-data-oe-id="custom_val_id.id"
+                                    t-att-name="custom_val_id.id"
+                                    t-att-disabled="custom_val_id.id not in available_value_ids and True or False"
+                                >
+                                      <t t-esc="custom_val_id.name" />
+                                </option>
+                            </t>
+                        </select>
+                        <t t-if="line.custom">
+                            <div
+                                t-att-class="'custom_field_container mt16' + (' d-none' if not custom_value and line.value_ids else '')"
+                                t-att-data-oe-id="line.attribute_id.id"
+                            >
+                                <t
+                                    t-call="website_product_configurator.config_custom_field"
+                                />
+                            </div>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Default configuration form (radio buttons ) -->
+    <template
+        id="config_form_radio"
+        name="RadioButton configuration form"
+        inherit_id="website_product_configurator.config_form_base"
+    >
+        <xpath expr="." position="inside">
+            <t
+                t-if="configuration_template_id == 'website_product_configurator.config_form_radio'"
+            >
+                <t t-set="field_prefix" t-value="prefixes.get('field_prefix')" />
+                <t
+                    t-set="custom_field_prefix"
+                    t-value="prefixes.get('custom_field_prefix')"
+                />
+                <t t-foreach="cfg_step_attribute_line_ids" t-as="line">
+                    <t
+                        t-set="custom_value"
+                        t-value="custom_value_ids.filtered(lambda x: x.attribute_id == line.attribute_id)"
+                    />
+                    <t
+                        t-set="available_val"
+                        t-value="any(val.id in available_value_ids for val in line.value_ids)"
+                    />
+                    <div t-att-class="'attribute_container'">
+                        <label
+                            class="control-label"
+                            t-esc="line.attribute_id.name"
+                            t-att-data-oe-id="line.attribute_id.id"
+                        />
+                        <div
+                            t-att-id="'%s%s' % (field_prefix, line.attribute_id.id)"
+                            t-att-data-oe-id="line.attribute_id.id"
+                            t-att-data-attr-required="line.required"
+                            t-att-name="'%s%s' % (field_prefix, line.attribute_id.id)"
+                            t-att-class="'form-control config_attribute cfg-radio' + (' required_config_attrib' if (not available_val and line.required and line.custom) or (available_val and line.required) else '') + (' d-none' if not line.value_ids else '')"
+                            t-att-data-old-val-id="(value_ids &amp; line.value_ids) and (value_ids &amp; line.value_ids).ids[0] or ''"
+                        >
+                            <t t-foreach="line.value_ids" t-as="value">
+                                <div class="radio-card-container">
+                                    <div class="info_config_attr_value_radio">
+                                        <span class="label_config_attr_value_radio">
+                                            <t t-esc="value.name" />
+                                        </span>
+                                        <t
+                                            t-set="price_extra"
+                                            t-value="extra_prices.get(value.id, 0)"
+                                        />
+                                        <t t-if="price_extra">
+                                            <span
+                                                class="label_config_price_extra_radio"
+                                            >
+                                                (+<t
+                                                    t-esc="price_extra"
+                                                    t-options="{'widget': 'monetary', 'display_currency': pricelist.currency_id, 'from_currency': website.currency_id}"
+                                                />)
+                                            </span>
+                                        </t>
+                                        <input
+                                            t-att-id="'%s%s' % (field_prefix, line.attribute_id.id)"
+                                            t-att-checked="'checked' if value.id in value_ids.ids else None"
+                                            t-att-type="line.multi and 'checkbox' or 'radio'"
+                                            t-att-class="'config_attr_value'"
+                                            t-att-value="value.id"
+                                            t-att-data-oe-id="value.id"
+                                            t-att-name="'%s%s' % (field_prefix, line.attribute_id.id)"
+                                            t-att-disabled="value.id not in available_value_ids and True or False"
+                                            t-att-title="value.name"
+                                        />
+                                    </div>
+                                    <label
+                                        class="image_config_attr_value_radio"
+                                        for="'%s%s' % (field_prefix, line.attribute_id.id)"
+                                        t-att-data-val-id="value.id"
+                                        t-attf-style="background-image:url(/web/image/product.attribute.value/{{value.id}}/image);"
+                                        t-att-enabled="value.id in available_value_ids and True or False"
+                                        t-att-title="value.name"
+                                    >
+                                    </label>
+                                </div>
+                            </t>
+                            <t t-if="line.custom">
+                                <div class="radio-card-container">
+                                    <span
+                                        t-esc="custom_val_id.name"
+                                        class="label_config_attr_value_radio"
+                                        t-att-title="custom_val_id.name"
+                                    />
+                                    <input
+                                        t-att-id="'%s%s' % (field_prefix, line.attribute_id.id)"
+                                        t-att-checked="'checked' if custom_value or not line.value_ids else None"
+                                        t-att-type="line.multi and 'checkbox' or 'radio'"
+                                        t-att-class="'config_attr_value custom_config_attr_value'"
+                                        t-att-value="custom_val_id.id"
+                                        t-att-data-oe-id="custom_val_id.id"
+                                        t-att-name="'%s%s' % (field_prefix, line.attribute_id.id)"
+                                        t-att-disabled="custom_val_id.id not in available_value_ids and True or False"
+                                        t-att-title="custom_val_id.name"
+                                    />
+                                    <label
+                                        class="image_config_attr_value_radio"
+                                        for="'%s%s' % (field_prefix, line.attribute_id.id)"
+                                        t-att-data-val-id="custom_val_id.id"
+                                        t-attf-style="background-image:url(/web/image/product.attribute.value/{{custom_val_id.id}}/image);"
+                                        t-att-enabled="custom_val_id.id in available_value_ids and True or False"
+                                        t-att-title="custom_val_id.name"
+                                    >
+                                    </label>
+                                </div>
+                            </t>
+                        </div>
+                        <t t-if="line.custom">
+
+                            <div
+                                t-att-class="'custom_field_container' + (' d-none' if not custom_value and line.value_ids else '')"
+                                t-att-data-oe-id="line.attribute_id.id"
+                            >
+                                <t
+                                    t-call="website_product_configurator.config_custom_field"
+                                />
+                            </div>
+                        </t>
+                    </div>
+                </t>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Product configurator checkout -->
+
+    <template id="product_price">
+        <div
+            itemprop="offers"
+            itemscope="itemscope"
+            itemtype="http://schema.org/Offer"
+            class="product_price mt16"
+        >
+            <h4
+                class="oe_price_h4 decimal_precision"
+                t-att-data-precision="str(website.currency_id.decimal_places)"
+            >
+                <t t-set="curr_pl" t-value="website._get_current_pricelist()" />
+                <t
+                    t-set="price"
+                    t-value="product_variant.with_context(pricelist=curr_pl.id)._get_contextual_price()"
+                />
+                <b
+                    class="oe_price"
+                    style="white-space: nowrap;"
+                    t-esc="price"
+                    t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"
+                />
+                <span itemprop="price" style="display:none;" t-esc="price" />
+                <span
+                    itemprop="priceCurrency"
+                    style="display:none;"
+                    t-esc="website.currency_id.name"
+                />
+            </h4>
+        </div>
+    </template>
+
+    <template id="cfg_product" name="Product" track="1">
+        <t
+            t-set="combination_info"
+            t-value="product._get_combination_info(product_id=product_variant.id, add_qty=add_qty or 1)"
+        />
+        <t t-call="website.layout">
+            <t t-set="additional_title" t-value="product.name" />
+            <div
+                itemscope="itemscope"
+                itemtype="http://schema.org/Product"
+                id="wrap"
+                class="js_sale"
+            >
+                <section
+                    t-attf-class="container py-2 oe_website_sale #{'discount' if combination_info['has_discounted_price'] else ''}"
+                    id="product_detail"
+                    t-att-data-view-track="view_track and '1' or '0'"
+                >
+                    <div class="row">
+                        <div class="col-md-4">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                     <a href="/shop">Products</a>
+                                </li>
+                                <li class="breadcrumb-item active">
+                                    <span t-field="product.name" />
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a
+                                        t-att-href="reconfigure_product_url"
+                                    >Reconfigure</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a
+                                        t-att-href="'/shop/product/%s#ProductConfiguration' % product.id"
+                                    >Configure Again</a>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-xl-8">
+                            <!-- Cart wizard image. -->
+                            <t t-call="website_sale.shop_product_images">
+                                <t
+                                    t-set="product_images"
+                                    t-value="product_variant._get_images() if product_variant else product._get_images()"
+                                />
+                            </t>
+                        </div>
+                        <div class="col-md-6 col-xl-4" id="product_details">
+                            <h1 itemprop="name" t-field="product.name">Product Name</h1>
+                            <span
+                                itemprop="url"
+                                style="display:none;"
+                                t-esc="product.website_url"
+                            />
+                            <form
+                                t-if="product_variant.active"
+                                action="/shop/cart/update"
+                                method="POST"
+                            >
+                                <input
+                                    type="hidden"
+                                    name="csrf_token"
+                                    t-att-value="request.csrf_token()"
+                                />
+                                <div class="js_product js_main_product">
+                                    <t t-placeholder="select">
+                                        <input
+                                            type="hidden"
+                                            class="product_id"
+                                            name="product_id"
+                                            t-att-value="product_variant.id"
+                                        />
+                                        <input
+                                            type="hidden"
+                                            class="product_template_id"
+                                            name="product_template_id"
+                                            t-att-value="product.id"
+                                        />
+                                        <input
+                                            type="hidden"
+                                            class="config_session_id"
+                                            name="config_session_id"
+                                            t-att-value="cfg_session_id.id"
+                                        />
+                                        <div class="col-xs-12">
+                                            <ul class="product_vals">
+                                                <t t-foreach="vals" t-as="val">
+                                                    <li>
+                                                        <strong
+                                                            t-field="val.attribute_id.name"
+                                                        />:
+                                                        <span t-field="val.name" />
+                                                    </li>
+                                                </t>
+                                                <t t-foreach="custom_vals" t-as="val">
+                                                    <li>
+                                                        <strong
+                                                            t-field="val.attribute_id.name"
+                                                        />:
+                                                        <span t-field="val.value" />
+                                                        <t
+                                                            t-foreach="val.attachment_ids"
+                                                            t-as="attachment"
+                                                        >
+                                                            <br
+                                                                t-if="not attachment_first"
+                                                            />
+                                                            <span
+                                                                t-field="attachment.name"
+                                                            />
+                                                        </t>
+                                                    </li>
+                                                </t>
+                                            </ul>
+                                        </div>
+                                    </t>
+                                    <t
+                                        t-call="website_product_configurator.product_price"
+                                    />
+                                    <!-- <p t-if="True" class="css_not_available_msg alert alert-warning">This combination does not exist.</p> -->
+                                    <a
+                                        role="button"
+                                        id="add_to_cart"
+                                        class="btn btn-primary btn-lg mt16 js_check_product a-submit d-block d-sm-inline-block"
+                                        href="#"
+                                    ><i class="fa fa-shopping-cart" /> Add to Cart</a>
+                                    <div id="product_option_block" />
+                                </div>
+                            </form>
+                            <p
+                                t-elif="not product_variant.active"
+                                class="alert alert-warning"
+                            >This product is no longer available.</p>
+                            <p
+                                t-else=""
+                                class="alert alert-warning"
+                            >This product has no valid combination.</p>
+                            <hr t-if="product.description_sale" />
+                            <div>
+                                <p
+                                    t-field="product.description_sale"
+                                    class="text-muted mt-3"
+                                    placeholder="A short description that will also appear on documents."
+                                />
+                            </div>
+                            <hr />
+                            <p class="text-muted">
+                              30-day money-back guarantee<br />
+                              Free Shipping in U.S.<br />
+                              Buy now, get in 2 days
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                <div
+                    itemprop="description"
+                    t-field="product.website_description"
+                    class="oe_structure mt16"
+                    id="product_full_description"
+                />
+            </div>
+        </t>
+    </template>
+
+    <template
+        inherit_id='website_product_configurator.cfg_product'
+        id="product_picture_magnify_cfg"
+        customize_show="True"
+        name="Image Zoom"
+    >
+        <xpath expr='//div[hasclass("js_sale")]' position='attributes'>
+            <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-next" />
+        </xpath>
+    </template>
+
+    <template
+        inherit_id='website_product_configurator.cfg_product'
+        id="product_picture_magnify_auto_cfg"
+        active="False"
+        customize_show="True"
+        name="Automatic Image Zoom"
+    >
+        <xpath expr='//div[hasclass("js_sale")]' position='attributes'>
+            <attribute name="data-ecom-zoom-auto">1</attribute>
+            <attribute name="class" separator=" " add="ecom-zoomable zoomodoo-next" />
+
+        </xpath>
+    </template>
+
+    <template
+        id="recommended_products_cfg"
+        inherit_id="website_product_configurator.cfg_product"
+        customize_show="True"
+        name="Alternative Products"
+    >
+        <xpath expr="//div[@id='product_full_description']" position="after">
+            <div class="container mt32" t-if="product.alternative_product_ids">
+                <h3>Alternative Products:</h3>
+                <div class="row mt16" style="">
+                    <t t-foreach="product.alternative_product_ids" t-as="alt_product">
+                        <div
+                            class="col-lg-2"
+                            style="width: 170px; height:130px; float:left; display:inline; margin-right: 10px; overflow:hidden;"
+                        >
+                            <div class="mt16 text-center" style="height: 100%;">
+                                <t
+                                    t-set="combination_info"
+                                    t-value="alt_product._get_combination_info()"
+                                />
+                                <div
+                                    t-if="product_variant"
+                                    t-field="product_variant.image_128"
+                                    t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded shadow o_alternative_product o_image_64_max' }"
+                                />
+                                <div
+                                    t-else=""
+                                    t-field="alt_product.image_128"
+                                    t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded shadow o_alternative_product o_image_64_max' }"
+                                />
+                                <h6>
+                                    <a
+                                        t-att-href="alt_product.website_url"
+                                        style="display: block"
+                                    >
+                                        <span
+                                            t-att-title="alt_product.name"
+                                            t-field="alt_product.name"
+                                            class="o_text_overflow"
+                                            style="display: block;"
+                                        />
+                                    </a>
+                                </h6>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template
+        id="product_comment_cfg"
+        inherit_id="website_product_configurator.cfg_product"
+        active="False"
+        customize_show="True"
+        name="Discussion and Rating"
+        priority="15"
+    >
+        <xpath expr="//div[@t-field='product.website_description']" position="after">
+            <div class="o_shop_discussion_rating">
+                <section class="container mt16 mb16">
+                    <hr />
+                    <div class="row">
+                        <div class="col-lg-8 offset-lg-2">
+                            <t t-call="portal.message_thread">
+                                <t t-set="object" t-value="product" />
+                                <t t-set="display_rating" t-value="True" />
+                            </t>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </xpath>
+    </template>
+
+    <template
+        id="product_quantity_cfg"
+        inherit_id="website_product_configurator.cfg_product"
+        customize_show="True"
+        name="Select Quantity"
+    >
+        <xpath expr="//a[@id='add_to_cart']" position="before">
+            <div t-attf-class="css_quantity input-group" contenteditable="false">
+                <a
+                    t-attf-href="#"
+                    class="btn btn-link js_add_cart_json"
+                    aria-label="Remove one"
+                    title="Remove one"
+                >
+                    <i class="fa fa-minus" />
+                </a>
+                <input
+                    type="text"
+                    class="form-control quantity text-center"
+                    data-min="1"
+                    name="add_qty"
+                    t-att-value="add_qty or 1"
+                />
+                <a
+                    t-attf-href="#"
+                    class="btn btn-link float_left js_add_cart_json"
+                    aria-label="Add one"
+                    title="Add one"
+                >
+                    <i class="fa fa-plus" />
+                </a>
+            </div>
+        </xpath>
+    </template>
+
+    <template
+        id="product_buy_now_cfg"
+        inherit_id="website_product_configurator.cfg_product"
+        active="False"
+        customize_show="True"
+        name="Buy Now Button"
+    >
+        <xpath expr="//a[@id='add_to_cart']" position="after">
+            <a
+                role="button"
+                id="buy_now"
+                class="btn btn-outline-primary btn-lg mt16 d-block d-sm-inline-block"
+                href="#"
+            ><i class="fa fa-bolt" /> Buy Now</a>
+        </xpath>
+    </template>
+
+</odoo>

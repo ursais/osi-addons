@@ -22,12 +22,11 @@
             <xpath expr='//header' position="inside">
                 <button
                     name="configure_product"
-                    class="oe_highlight configurator_button"
+                    class="oe_highlight"
                     type="object"
                     string="Configure Product"
                     groups="product_configurator.group_product_configurator"
                     invisible="not config_ok"
-                    js_class="product_template_form_view"
                 />
             </xpath>
             <div name="button_box" position="inside">
@@ -58,17 +57,11 @@
 
             <!-- Product attributes -->
             <xpath expr="//field[@name='attribute_line_ids']" position="attributes">
-                <attribute name="context">{
-                    'show_attribute': False,
-                    'attribute_line_ids': attribute_line_ids,
-                }</attribute>
-            </xpath>
-
-            <xpath expr="//field[@name='attribute_line_ids']" position="attributes">
                 <attribute
                     name="context"
                 >{'default_config_ok': context.get('default_config_ok', False)}</attribute>
             </xpath>
+
             <!-- TODO: Implement a method to hide this field for non-configurable product templates -->
             <xpath
                 expr="//field[@name='attribute_line_ids']/tree/field[@name='value_ids']"
@@ -103,7 +96,6 @@
                 expr="//field[@name='attribute_line_ids']/tree/field[@name='value_ids']"
                 position="attributes"
             >
-                <!-- <attribute name="attrs">{'required': [('custom','!=',True)]}</attribute> -->
                 <attribute name="required">not custom</attribute>
             </xpath>
 
@@ -152,7 +144,7 @@
                         <field
                                 name="attr_line_val_ids"
                                 widget="many2many_tags"
-                                column_invisible="True"
+                                column_invisible="1"
                             />
                         <field
                                 name="value_ids"
@@ -164,10 +156,10 @@
                             />
                         <field
                                 name="domain_id"
-                                context="{'product_tmpl_id': product_tmpl_id or active_id or parent.id, 'product_attribute_ids': template_attribute_ids, 'form_view_ref': 'product_configurator.product_config_domain_form_view_template'}"
+                                context="{'product_tmpl_id': product_tmpl_id or id or parent.id, 'product_attribute_ids': template_attribute_ids, 'form_view_ref': 'product_configurator.product_config_domain_form_view_template'}"
                             />
-                        <field name="product_tmpl_id" column_invisible="True" />
-                        <field name="template_attribute_ids" column_invisible="True" />
+                        <field name="product_tmpl_id" column_invisible="1" />
+                        <field name="template_attribute_ids" column_invisible="1" />
 
                     </tree>
                 </field>
@@ -216,8 +208,8 @@
                             editable="bottom"
                             context="{'default_product_tmpl_id': self.id}"
                         >
-                        <field name="product_tmpl_id" column_invisible="True" />
-                        <field name="attribute_id" column_invisible="True" />
+                        <field name="product_tmpl_id" invisible="1" />
+                        <field name="attribute_id" invisible="1" />
                         <field name="sequence" widget="handle" />
                         <field
                                 name="value_id"

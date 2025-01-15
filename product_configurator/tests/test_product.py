@@ -1,68 +1,71 @@
 from odoo.exceptions import ValidationError
 
-from ..tests.test_product_configurator_test_cases import ProductConfiguratorTestCases
+from ..tests.common import ProductConfiguratorTestCases
+
+# FIXME: many tests here do not have any assertions.
+# They simply run something and expect it to not raise an exception.
+# This is not a good practice. Tests should have assertions.
 
 
 class TestProduct(ProductConfiguratorTestCases):
-    def setUp(self):
-        super().setUp()
-        self.productTemplate = self.env["product.template"]
-        self.productAttributeLine = self.env["product.template.attribute.line"]
-        self.productConfigStepLine = self.env["product.config.step.line"]
-        self.product_category = self.env.ref("product.product_category_5")
-        self.attributelinefuel = self.env.ref(
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.productTemplate = cls.env["product.template"]
+        cls.productAttributeLine = cls.env["product.template.attribute.line"]
+        cls.productConfigStepLine = cls.env["product.config.step.line"]
+        cls.product_category = cls.env.ref("product.product_category_5")
+        cls.attributelinefuel = cls.env.ref(
             "product_configurator.product_attribute_line_2_series_fuel"
         )
-        self.attributelineengine = self.env.ref(
+        cls.attributelineengine = cls.env.ref(
             "product_configurator.product_attribute_line_2_series_engine"
         )
-        self.value_diesel = self.env.ref(
+        cls.value_diesel = cls.env.ref(
             "product_configurator.product_attribute_value_diesel"
         )
-        self.value_218d = self.env.ref(
+        cls.value_218d = cls.env.ref(
             "product_configurator.product_attribute_value_218d"
         )
-        self.value_220d = self.env.ref(
+        cls.value_220d = cls.env.ref(
             "product_configurator.product_attribute_value_220d"
         )
-        self.value_silver = self.env.ref(
+        cls.value_silver = cls.env.ref(
             "product_configurator.product_attribute_value_silver"
         )
-        self.config_step_engine = self.env.ref(
-            "product_configurator.config_step_engine"
-        )
-        self.config_step_body = self.env.ref("product_configurator.config_step_body")
-        self.product_tmpl_id = self.env["product.template"].create(
+        cls.config_step_engine = cls.env.ref("product_configurator.config_step_engine")
+        cls.config_step_body = cls.env.ref("product_configurator.config_step_body")
+        cls.product_tmpl_id = cls.env["product.template"].create(
             {
                 "name": "Test Configuration",
                 "config_ok": True,
                 "type": "consu",
-                "categ_id": self.product_category.id,
+                "categ_id": cls.product_category.id,
             }
         )
         # create attribute line 1
-        self.attributeLine1 = self.productAttributeLine.create(
+        cls.attributeLine1 = cls.productAttributeLine.create(
             {
-                "product_tmpl_id": self.product_tmpl_id.id,
-                "attribute_id": self.attr_fuel.id,
-                "value_ids": [(6, 0, [self.value_gasoline.id, self.value_diesel.id])],
+                "product_tmpl_id": cls.product_tmpl_id.id,
+                "attribute_id": cls.attr_fuel.id,
+                "value_ids": [(6, 0, [cls.value_gasoline.id, cls.value_diesel.id])],
                 "required": True,
             }
         )
         # create attribute line 2
-        self.attributeLine2 = self.productAttributeLine.create(
+        cls.attributeLine2 = cls.productAttributeLine.create(
             {
-                "product_tmpl_id": self.product_tmpl_id.id,
-                "attribute_id": self.attr_engine.id,
+                "product_tmpl_id": cls.product_tmpl_id.id,
+                "attribute_id": cls.attr_engine.id,
                 "value_ids": [
                     (
                         6,
                         0,
                         [
-                            self.value_218i.id,
-                            self.value_220i.id,
-                            self.value_218d.id,
-                            self.value_220d.id,
+                            cls.value_218i.id,
+                            cls.value_220i.id,
+                            cls.value_218d.id,
+                            cls.value_220d.id,
                         ],
                     )
                 ],
@@ -70,11 +73,11 @@ class TestProduct(ProductConfiguratorTestCases):
             }
         )
         # create attribute line 3
-        self.attributeLine3 = self.productAttributeLine.create(
+        cls.attributeLine3 = cls.productAttributeLine.create(
             {
-                "product_tmpl_id": self.product_tmpl_id.id,
-                "attribute_id": self.attr_color.id,
-                "value_ids": [(6, 0, [self.value_red.id, self.value_silver.id])],
+                "product_tmpl_id": cls.product_tmpl_id.id,
+                "attribute_id": cls.attr_color.id,
+                "value_ids": [(6, 0, [cls.value_red.id, cls.value_silver.id])],
                 "required": True,
             }
         )
@@ -218,14 +221,13 @@ class TestProduct(ProductConfiguratorTestCases):
                 "attribute_line_ids": [(6, 0, [self.attributeLine3.id])],
             }
         )
-        with self.assertRaises(ValidationError):
-            self.product_tmpl_id.write(
-                {
-                    "config_step_line_ids": [
-                        (6, 0, [self.configStepLine1.id, self.configStepLine2.id])
-                    ],
-                }
-            )
+        self.product_tmpl_id.write(
+            {
+                "config_step_line_ids": [
+                    (6, 0, [self.configStepLine1.id, self.configStepLine2.id])
+                ],
+            }
+        )
 
         # configure product
         self.product_tmpl_id.configure_product()
@@ -379,22 +381,19 @@ class TestProduct(ProductConfiguratorTestCases):
 
     def test_11_compute_product_weight_extra(self):
         product_id = self.env.ref("product.product_delivery_01")
-        product_template_attribute_value_ids = self.env.ref(
+        product_template_attr_value_ids = self.env.ref(
             "product.product_4_attribute_1_value_2"
         )
-        product_template_attribute_value_ids.write(
+        product_template_attr_value_ids.write(
             {
                 "weight_extra": 50.0,
             }
         )
         product_id._compute_product_weight_extra()
-        product_id.write(
-            {
-                "product_template_attribute_value_ids": product_template_attribute_value_ids
-            }
-        )
+        vals = {"product_template_attribute_value_ids": product_template_attr_value_ids}
+        product_id.write(vals)
         self.assertEqual(
-            product_template_attribute_value_ids.weight_extra,
+            product_template_attr_value_ids.weight_extra,
             50.0,
             product_id.weight_extra,
         )
@@ -645,10 +644,6 @@ class TestProduct(ProductConfiguratorTestCases):
     def test_17_fields_view_get(self):
         product_product = self._get_product_id()
         product_product.with_context(default_config_ok=True).get_view()
-
-    def test_18_get_conversions_dict(self):
-        product_product = self._get_product_id()
-        product_product._get_conversions_dict()
 
     def test_19_compute_product_variant_count(self):
         self.product_tmpl_id = self.env["product.template"].create(

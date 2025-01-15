@@ -10,6 +10,7 @@
                     class="oe_highlight"
                     groups="product_configurator.group_product_configurator"
                     name="action_config_start"
+                    invisible="state not in ['draft','sent']"
                     string="Configure Product"
                     style="margin-top: 15px;"
                     type="object"
@@ -19,7 +20,7 @@
                 expr="//field[@name='order_line']/form//field[@name='product_id']"
                 position="after"
             >
-                <field invisible="1" name="config_ok" />
+                <field column_invisible="1" name="config_ok" />
                 <field name="config_session_id" />
             </xpath>
             <xpath

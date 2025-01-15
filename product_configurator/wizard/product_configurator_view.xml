@@ -13,36 +13,34 @@
                         type="object"
                         name="action_reset"
                         confirm="Are you sure? This will remove your current configuration for this template!"
-                        class="oe_highlight"
                         special="no_save"
+                        class="oe_highlight"
                         invisible="not product_tmpl_id or state == 'select'"
                     />
                 </header>
                 <sheet>
                     <field
+                        invisible="not product_img"
                         name="product_img"
                         readonly="1"
                         nolabel="1"
                         widget="image"
-                        invisible="not product_img"
                     />
                     <group col="3">
-                        <group
-                            name='static_form'
-                            readonly="state != 'select'"
-                            colspan="2"
-                        >
+                        <group name='static_form' colspan="2">
                             <field
                                 name="config_session_id"
                                 required="context.get('wizard_id')"
                                 invisible="1"
                             />
+
                             <field name="product_id" invisible="1" />
                             <field name="currency_id" invisible="1" />
                             <field
                                 name="product_tmpl_id"
                                 readonly="context.get('product_tmpl_id_readonly', False)"
                                 required="True"
+                                invisible="state != 'select'"
                                 options="{'no_create': True}"
                                 force_save="1"
                             />
@@ -53,11 +51,11 @@
                             />
                             <separator
                                 string="To reset/change the Preset Please close and start the configuration again"
-                                invisible="context.get('allow_preset_selection')"
+                                invisible="context.get('allow_preset_selection') or state != 'select'"
                                 colspan="2"
                             />
                             <field
-                                invisible="state != 'select'"
+                                invisible="state != 'select' or not attribute_line_ids"
                                 name="attribute_line_ids"
                             >
                                 <tree>
@@ -82,8 +80,8 @@
                     <button
                         type="object"
                         name="action_previous_step"
-                        string="Back"
                         invisible="state == 'select'"
+                        string="Back"
                     />
                     <button
                         type="object"
