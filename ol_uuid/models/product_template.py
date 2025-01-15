@@ -29,7 +29,7 @@ class ProductProduct(models.Model):
     )
     # END #########
 
-    @api.model_create_multi
+    @api.model
     def create(self, values):
         """
         Make sure system variant's have their own unique UUID.
