@@ -26,35 +26,33 @@ class SaleOrderLine(models.Model):
         the tag is removed.
         - Ensures the sale order tags are consistent with the product's state.
         """
-
-        # Retrieve the 'Engineering Prototype' tag reference
         tag_engineering_prototype = self.env.ref(
             "ol_sale.crm_tag_engineering_prototype"
         )
+        prototype_state_id = self.env.ref("ol_sale.product_state_prototype").id
 
-        # Get the current tags on the related sale order
-        tag_ids = self.order_id.tag_ids.ids
+        for line in self:
+            order = line.order_id
+            if not order:
+                continue
 
-        # Check if the related sale order exists and the product's state is 'Prototype'
-        if (
-            self.order_id
-            and self.product_template_id.product_state_id.id
-            == self.env.ref("ol_sale.product_state_prototype").id
-        ):
-            if self._context.get("from_unlink"):
-                # If the method is called from a product unlink operation, remove the tag
+            tag_ids = order.tag_ids.ids
+
+            # Add the tag if the product's state is 'Prototype'
+            if line.product_template_id.product_state_id.id == prototype_state_id:
+                if line._context.get("from_unlink"):
+                    if tag_engineering_prototype.id in tag_ids:
+                        tag_ids.remove(tag_engineering_prototype.id)
+                        order.tag_ids = [(6, 0, tag_ids)]
+                else:
+                    if tag_engineering_prototype.id not in tag_ids:
+                        tag_ids.append(tag_engineering_prototype.id)
+                        order.tag_ids = [(6, 0, tag_ids)]
+
+            # Remove the tag if the product's state is no longer 'Prototype'
+            elif tag_engineering_prototype.id in tag_ids:
                 tag_ids.remove(tag_engineering_prototype.id)
-                self.order_id.tag_ids = [(6, 0, tag_ids)]
-            else:
-                # Otherwise, add the 'Engineering Prototype' tag to the sale order
-                self.order_id.tag_ids = [(6, 0, tag_engineering_prototype.ids)]
-        # If the product's state is no longer 'Prototype' and the tag is present, remove it
-        elif (
-            self.product_template_id.product_state_id.id != tag_engineering_prototype.id
-            and tag_engineering_prototype.id in self.order_id.tag_ids.ids
-        ):
-            tag_ids.remove(tag_engineering_prototype.id)
-            self.order_id.tag_ids = [(6, 0, tag_ids)]
+                order.tag_ids = [(6, 0, tag_ids)]
 
     def _update_bom(self, rec):
         """
@@ -108,7 +106,9 @@ class SaleOrderLine(models.Model):
         Also set the bom_id if it's not being set in vals.
         """
         res = super().create(vals)
-        for rec in res.filtered(lambda l: l.display_type not in ('line_section', 'line_note')):
+        for rec in res.filtered(
+            lambda l: l.display_type not in ("line_section", "line_note")
+        ):
             rec.name = get_product_description(rec.product_id)
             rec.update_crm_tag_sale_order()
             # Update the BoM for the order line if not already being set
