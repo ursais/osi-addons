@@ -3,6 +3,7 @@
     "name": "OnLogic Queue Job",
     "summary": "Adds OnLogic based enhancements to the OCA module `queue_job`",
     "version": "1.0",
+    "license": "AGPL-3",
     "depends": [
         "queue_job",
         "ol_base",
