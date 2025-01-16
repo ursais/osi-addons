@@ -25,17 +25,23 @@ class AddComponentsWizard(models.TransientModel):
         )
         # Filter the Bill of Materials (BOM) associated with the product
         # Exclude scaffolding BOMs and BOMs without a product
-        bom_ids = self.product_id.bom_ids.filtered(lambda l: not l.scaffolding_bom and not l.product_id)
+        bom_ids = self.product_id.bom_ids.filtered(
+            lambda l: not l.scaffolding_bom and l.product_id
+        )
         # If no valid BOMs are found, create an empty recordset
         bom_ids = bom_ids and bom_ids[0] or self.env["mrp.bom"]
         for bom_line in bom_ids.bom_line_ids:
             # Create a new estimate line to the sale estimate job
-            sale_estimate_job.estimate_ids = [Command.create({
-                "job_type": "material",
-                "product_id": bom_line.product_id.id,
-                "product_uom_qty": bom_line.product_qty,
-                "product_uom": bom_line.product_uom_id.id,
-            })]
+            sale_estimate_job.estimate_ids = [
+                Command.create(
+                    {
+                        "job_type": "material",
+                        "product_id": bom_line.product_id.id,
+                        "product_uom_qty": bom_line.product_qty,
+                        "product_uom": bom_line.product_uom_id.id,
+                    }
+                )
+            ]
         return True
 
     # END #########
