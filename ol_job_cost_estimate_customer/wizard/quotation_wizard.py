@@ -60,7 +60,7 @@ class QuotationWizard(models.TransientModel):
             quotation = SaleOrder.create(vals)
 
             # Set Unit Price on lines according to pricelist.
-            SaleOrder.action_update_prices()
+            quotation.action_update_prices()
 
             self.estimate_id.write({"state": "quotesend", "quotation_id": quotation.id})
             return {
