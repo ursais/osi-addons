@@ -42,6 +42,8 @@ class AddComponentsWizard(models.TransientModel):
                     }
                 )
             ]
+        # Compute sales prices on lines
+        sale_estimate_job.action_update_prices()
         return True
 
     # END #########
