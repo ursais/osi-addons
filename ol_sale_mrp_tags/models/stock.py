@@ -9,13 +9,17 @@ class StockMove(models.Model):
 
     _inherit = "stock.move"
 
+    # Methods #####
+
     def _prepare_procurement_values(self):
         # Ensure sale_line_id is propagated through stock moves
-        res = super(StockMove, self)._prepare_procurement_values()
+        res = super()._prepare_procurement_values()
         if self.sale_line_id:
             # Pass sale_line_id into procurement values
             res["sale_line_id"] = self.sale_line_id.id
         return res
+
+    # END #########
 
 
 class StockRule(models.Model):
@@ -24,6 +28,8 @@ class StockRule(models.Model):
     """
 
     _inherit = "stock.rule"
+
+    # Methods #####
 
     def _prepare_mo_vals(
         self,
@@ -74,3 +80,5 @@ class StockRule(models.Model):
             if sale_line:
                 procurement.values["mrp_so_line_id"] = sale_line
         return super(StockRule, self)._create_manufacturing_orders(procurements)
+
+    # END #########
