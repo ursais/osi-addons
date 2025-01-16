@@ -42,8 +42,10 @@ class AddComponentsWizard(models.TransientModel):
                     }
                 )
             ]
-        # Compute sales prices on lines
+
+        # Set Unit Price on lines based on pricelist
         sale_estimate_job.action_update_prices()
+
         return True
 
     # END #########
