@@ -12,23 +12,27 @@ class AttributeValue(models.Model):
 
     # COLUMNS ##########
 
-    company_ids = fields.Many2many("res.company", string="Companies")
+    company_ids = fields.Many2many(
+        comodel_name="res.company",
+        string="Companies",
+        compute="_compute_company_ids",
+        store=True,
+        readonly=False,
+    )
 
     # END ##########
     # METHODS ##########
 
-    @api.constrains("product_id", "company_ids")
-    def _check_company_ids(self):
-        product_company = self.product_id.company_id
-        if self.product_id and product_company and self.company_ids:
-            for company in self.company_ids:
-                if product_company.id != company.id:
-                    raise ValidationError(
-                        _(
-                            "The company '%s' cannot be added because the product '%s' is assigned to the company '%s'."
-                            % (company.name, self.product_id.name, product_company.name)
-                        )
-                    )
+    @api.depends("product_id", "product_id.company_ids_display")
+    def _compute_company_ids(self):
+        for rec in self:
+            if rec.product_id:
+                rec.company_ids = rec.product_id.company_ids_display.ids or False
+
+    # @api.onchange("product_id")
+    # def _onchange_product_id(self):
+    #     for rec in self:
+    #         rec.company_ids = rec.product_id.company_ids_display.ids or False
 
     @api.model
     def name_search(self, name="", args=None, operator="ilike", limit=100):
