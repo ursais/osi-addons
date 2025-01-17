@@ -149,6 +149,7 @@ class ProductTemplate(models.Model):
 
     @api.depends(
         "last_purchase_line_id",
+        "last_purchase_line_id.price_unit",
     )
     def _compute_last_purchase_margin(self, from_review=False, from_threshold=False):
         """This will compute the last purchase margin."""
@@ -185,6 +186,21 @@ class ProductTemplate(models.Model):
             if last_purchase_margin != rec.last_purchase_margin:
                 rec.last_purchase_margin = last_purchase_margin
                 margin_changed = True
+
+            # Check for an open price review record
+            open_review = self.env["product.price.review"].search(
+                [
+                    ("company_id", "=", self.env.company.id),
+                    ("product_id", "=", rec.product_variant_id.id),
+                    ("state", "not in", ("reject", "validated")),
+                ],
+                limit=1,
+            )
+            if open_review:
+                # Update the origin_last_purchase_price if open review exists
+                open_review.write(
+                    {"origin_last_purchase_price": rec.last_purchase_price}
+                )
 
             # If margin compute didn't come from a validated review,
             # then check if a review is needed.
