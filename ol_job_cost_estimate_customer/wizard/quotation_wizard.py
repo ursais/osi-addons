@@ -46,6 +46,7 @@ class QuotationWizard(models.TransientModel):
                 "analytic_account_id": self.estimate_id.id,
                 "payment_term_id": self.estimate_id.payment_term_id.id,
                 "pricelist_id": self.estimate_id.pricelist_id.id,
+                "opportunity_id": self.estimate_id.opportunity_id.id,
                 "order_line": [
                     (
                         0,
@@ -60,7 +61,7 @@ class QuotationWizard(models.TransientModel):
             quotation = SaleOrder.create(vals)
 
             # Set Unit Price on lines according to pricelist.
-            quotation.action_update_prices()
+            quotation.order_line._compute_price_unit()
 
             self.estimate_id.write({"state": "quotesend", "quotation_id": quotation.id})
             return {
