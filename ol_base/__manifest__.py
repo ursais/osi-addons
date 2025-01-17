@@ -52,6 +52,7 @@
         # OCA Modules
         "base_user_role_company",
         "account_avatax_oca",
+        "web_m2x_options_manager",
     ],
     # always loaded
     "data": [
@@ -61,6 +62,7 @@
         "data/utm_source_data.xml",
         "data/res_users_role.xml",
         "data/warehouse_data.xml",
+        "data/m2x_create_edit_option_data.xml",
         "security/res_groups.xml",
         "views/res_company.xml",
         "views/stock_picking.xml",
