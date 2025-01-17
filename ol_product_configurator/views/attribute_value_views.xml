@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="product_configurator.product_attribute_value_form_view" />
         <field name="arch" type="xml">
             <xpath expr="//group//group//field[@name='product_id']" position="before">
-                <field name="company_ids" widget="many2many_tags" />
+                <field name="company_ids" widget="many2many_tags" readonly="product_id" />
             </xpath>
         </field>
     </record>
@@ -20,7 +20,7 @@
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="product_id" />
-                <field name="company_ids" widget="many2many_tags" />
+                <field name="company_ids" widget="many2many_tags" readonly="product_id" />
             </field>
         </field>
     </record>
@@ -31,15 +31,16 @@
         <field name="model">product.attribute.value</field>
         <field name="arch" type="xml">
             <search string="Product">
-                <field name="name"/>
-                <field name="product_id"/>
+                <field name="name" />
+                <field name="product_id" />
+                <field name="company_ids" />
             </search>
         </field>
     </record>
 
     <!-- Actions -->
     <record id="product_configurator.variants_action" model="ir.actions.act_window">
-        <field name="search_view_id" ref="product_attribute_value_search_view"/>
+        <field name="search_view_id" ref="product_attribute_value_search_view" />
     </record>
 
 </odoo>

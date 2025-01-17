@@ -12,10 +12,22 @@ class AttributeValue(models.Model):
 
     # COLUMNS ##########
 
-    company_ids = fields.Many2many("res.company", string="Companies")
+    company_ids = fields.Many2many(
+        comodel_name="res.company",
+        string="Companies",
+        compute="_compute_company_ids",
+        store=True,
+        readonly=False,
+    )
 
     # END ##########
     # METHODS ##########
+
+    @api.depends("product_id", "product_id.company_ids_display")
+    def _compute_company_ids(self):
+        for rec in self:
+            if rec.product_id:
+                rec.company_ids = rec.product_id.company_ids_display.ids or False
 
     @api.constrains("product_id", "company_ids")
     def _check_company_ids(self):

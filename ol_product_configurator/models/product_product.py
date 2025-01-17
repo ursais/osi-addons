@@ -42,7 +42,11 @@ class ProductProduct(models.Model):
             # Check if the product has a template and a default code
             if product.product_tmpl_id and product.product_tmpl_id.default_code:
                 # Generate the new product default code
-                product.write({"default_code": f"{product.product_tmpl_id.default_code}-{product.id}"})
+                product.write(
+                    {
+                        "default_code": f"{product.product_tmpl_id.default_code}-{product.id}"
+                    }
+                )
         return products
 
     # END ##########

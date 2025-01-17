@@ -1,6 +1,6 @@
 <odoo>
 
-    <record id="ol_pim_product_template_form_view" model="ir.ui.view">
+    <record id="ol_product_configurator_product_template_form_view" model="ir.ui.view">
         <field name="name">product.template.form.view</field>
         <field name="model">product.template</field>
         <field name="priority">100</field>
@@ -8,8 +8,8 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='sale']" position="before">
                 <group>
-                    <group name="public_destination">
-                        <field name="public_destination" />
+                    <group name="visibility">
+                        <field name="company_ids_display" widget="many2many_tags" />
                     </group>
                 </group>
             </xpath>
