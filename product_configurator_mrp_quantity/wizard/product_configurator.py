@@ -101,56 +101,6 @@ class ProductConfigurator(models.TransientModel):
                     vals.update({"session_value_quantity_ids": attr_qty_list})
         return super().create(vals_list)
 
-    def apply_onchange_values(self, values, field_names, field_onchange):
-        result = super().apply_onchange_values(values, field_names, field_onchange)
-        if not self._context.get("is_qty_required"):
-            qty_prefix = self._prefixes.get("qty_field")
-            field_prefix = self._prefixes.get("field_prefix")
-            domain_field_prefix = self._prefixes.get("domain_field_prefix")
-            template_attribute_line = self.env["product.template.attribute.line"]
-            attribute_value_qty_obj = self.env["attribute.value.qty"]
-            values_dict = self.values_dict and json.loads(self.values_dict) or {}
-            # values_dict = self.values_dict and ast.literal_eval(self.values_dict) or {}
-            for value in result.get("value"):
-                if value.startswith(field_prefix):
-                    values_dict.update({value: result.get("value")[value]})
-                    attr_id = value.split(field_prefix)[1]
-                    attr_id = int(attr_id)
-                    template_attr_line_id = template_attribute_line.search(
-                        [
-                            ("product_tmpl_id", "=", self.product_tmpl_id.id),
-                            ("attribute_id", "=", attr_id),
-                            ("is_qty_required", "=", True),
-                        ],
-                        limit=1,
-                    )
-                    if template_attr_line_id:
-                        attr_value_id = result.get("value")[value]
-                        attribute_value_qty = attribute_value_qty_obj.search(
-                            [
-                                ("product_attribute_value_id", "=", int(attr_value_id)),
-                                ("product_tmpl_id", "=", self.product_tmpl_id.id),
-                                ("product_attribute_id", "=", attr_id),
-                            ]
-                        )
-                        qty_field_name = qty_prefix + str(attr_id)
-                        self.dyn_qty_field_value = qty_field_name
-                        self.domain_qty_ids = attribute_value_qty.ids
-                        domains_dict = (
-                            self.domains_dict
-                            and ast.literal_eval(self.domains_dict)
-                            or {}
-                        )
-                        if qty_field_name in domains_dict:
-                            domains_dict[qty_field_name] = attribute_value_qty.ids
-                        else:
-                            domains_dict.update(
-                                {qty_field_name: attribute_value_qty.ids}
-                            )
-                        self.domains_dict = domains_dict
-                self.values_dict = json.dumps(values_dict)
-        return result
-
     def get_form_vals(
         self,
         dynamic_fields,
@@ -168,172 +118,90 @@ class ProductConfigurator(models.TransientModel):
             config_session_id=config_session_id,
             values=values,
         )
+        vals.update({"val_qty_ids":[]})
         field_prefix = self._prefixes.get("field_prefix")
         qty_prefix = self._prefixes.get("qty_field")
-        new_val = {}
+        qty_dynamic_fields = {k: v for k, v in values.items() if k.startswith(qty_prefix)}
         attribute_value_qty_obj = self.env["attribute.value.qty"]
         product_template_attribute_value = self.env["product.template.attribute.value"]
         product_template_attribute_line = self.env["product.template.attribute.line"]
         qty_field_value = False
-        for k, v in dynamic_fields.items():
-            attrb_id = k.split(field_prefix)[1]
-            attribute_line = product_template_attribute_line.search(
-                [
-                    ("attribute_id", "=", int(attrb_id)),
-                    ("product_tmpl_id", "=", self.product_tmpl_id.id),
-                    ("is_qty_required", "=", True),
-                ]
-            )
-            if k.startswith(field_prefix) and config_session_id and attribute_line:
-                template_attribute_value_qty = product_template_attribute_value.search(
+        local_dict = {}
+        new_price = vals["price"]
+        values_dict = (
+            self.values_dict
+            and ast.literal_eval(self.values_dict)
+            or {}
+        )
+        for k,v in vals.items():
+            if k.startswith(field_prefix):
+                attrb_id = k.split(field_prefix)[1]
+                pt_attribute_line = product_template_attribute_line.search(
                     [
+                        ("attribute_id", "=", int(attrb_id)),
                         ("product_tmpl_id", "=", self.product_tmpl_id.id),
-                        ("product_attribute_value_id", "=", int(v)),
                         ("is_qty_required", "=", True),
                     ]
                 )
-                product_attrs = attribute_value_qty_obj.search(
-                    [
-                        ("product_tmpl_id", "=", self.product_tmpl_id.id),
-                        ("product_attribute_value_id", "=", int(v)),
-                        ("qty", "=", int(template_attribute_value_qty.default_qty)),
-                    ]
-                )
-                qty_field_name = qty_prefix + str(attrb_id)
-                is_qty_attrb = (
-                    config_session_id.product_tmpl_id.attribute_line_ids.filtered(
-                        lambda line: line.attribute_id.id == int(attrb_id)
-                        and line.is_qty_required
+                if pt_attribute_line and config_session_id:
+                    template_attribute_value_qty = product_template_attribute_value.search(
+                        [
+                            ("product_tmpl_id", "=", self.product_tmpl_id.id),
+                            ("product_attribute_value_id", "=", int(v)),
+                            ("is_qty_required", "=", True),
+                        ]
                     )
-                )
-                if is_qty_attrb and product_attrs:
-                    value_qty_dict = (
-                        self.value_qty_dict
-                        and ast.literal_eval(self.value_qty_dict)
-                        or {}
+                    default_attribute_value_qty = attribute_value_qty_obj.search(
+                        [
+                            ("product_tmpl_id", "=", self.product_tmpl_id.id),
+                            ("product_attribute_value_id", "=", int(v)),
+                            ("qty", "=", int(template_attribute_value_qty.default_qty)),
+                            ("template_attri_value_id","=",template_attribute_value_qty.id)
+                        ]
                     )
-                    qty_field_value = product_attrs.id
-                    attribute_value_qty_rec = attribute_value_qty_obj.browse(
-                        value_qty_dict.get(qty_field_name)
+                    product_attrs2 = attribute_value_qty_obj.search(
+                        [
+                            ("product_tmpl_id", "=", self.product_tmpl_id.id),
+                            ("product_attribute_value_id", "=", int(v)),
+                            ("template_attri_value_id","=",template_attribute_value_qty.id)
+                        ]
                     )
-                    if not value_qty_dict.get(qty_field_name):
-                        vals[qty_field_name] = qty_field_value
-                        value_qty_dict.update({qty_field_name: qty_field_value})
-                    elif (
-                        value_qty_dict.get(qty_field_name)
-                        and int(v)
-                        != attribute_value_qty_rec.product_attribute_value_id.id
-                    ):
-                        vals[qty_field_name] = qty_field_value
-                        value_qty_dict[qty_field_name] = qty_field_value
-                    self.value_qty_dict = value_qty_dict
+                    qty_field_name = qty_prefix + str(attrb_id)
+                    qty_field_value = default_attribute_value_qty.id
+                    if qty_dynamic_fields and qty_dynamic_fields.get(qty_field_name) and int(qty_dynamic_fields.get(qty_field_name)) in product_attrs2.ids:
+                        qty_field_value = int(qty_dynamic_fields.get(qty_field_name))
+                        default_attribute_value_qty = attribute_value_qty_obj.browse(qty_field_value)
+                    local_dict[qty_field_name] = qty_field_value
+                    if default_attribute_value_qty.product_attribute_value_id.product_id:
+                        updatedprice = new_price - default_attribute_value_qty.product_attribute_value_id.product_id.lst_price
+                        price = updatedprice + (default_attribute_value_qty.product_attribute_value_id.product_id.lst_price * default_attribute_value_qty.qty)
+                        local_dict["price"] = price
+                        new_price = price
+                    if not default_attribute_value_qty.product_attribute_value_id.product_id and default_attribute_value_qty.template_attri_value_id.price_extra:
+                        updatedprice = new_price - default_attribute_value_qty.template_attri_value_id.price_extra
+                        price = updatedprice + (default_attribute_value_qty.template_attri_value_id.price_extra * default_attribute_value_qty.qty)
+                        local_dict["price"] = price
+
+
+                    if values_dict.get(qty_field_name):
+                        values_dict[qty_field_name] = product_attrs2.ids
+                    else:
+                        values_dict.update({qty_field_name:product_attrs2.ids})
+
+        self.values_dict = values_dict
+        vals |= local_dict
         return vals
 
     def onchange(self, values, field_names, field_onchange):
-        # Remove False Values to Avoid an Error.
-        values = {k: v for k, v in values.items() if v is not False}
         onchange_values = super().onchange(values, field_names, field_onchange)
         vals = onchange_values.get("value", {})
-        qty_prefix = self._prefixes.get("qty_field")
-        field_prefix = self._prefixes.get("field_prefix")
         attribute_value_qty_obj = self.env["attribute.value.qty"]
-        attribute_value_obj = self.env["product.attribute.value"]
-        qty = 1
-        product_price = 1
+        qty_prefix = self._prefixes.get("qty_field")
         for key, val in vals.items():
             if isinstance(val, int) and key.startswith(qty_prefix):
                 att_qty_val = attribute_value_qty_obj.browse(val)
                 attribute_value = att_qty_val.product_attribute_value_id
                 vals[key] = (att_qty_val.id, str(att_qty_val.qty))
-
-        value_qty_dict = (
-            self.value_qty_dict and ast.literal_eval(self.value_qty_dict) or {}
-        )
-        # values_dict = self.values_dict and ast.literal_eval(self.values_dict) or {}
-        values_dict = self.values_dict and json.loads(self.values_dict) or {}
-        if not onchange_values and values:
-            for value in values:
-                if value.startswith(qty_prefix):
-                    if value_qty_dict.get(value):
-                        value_qty_dict[value] = values.get(value)
-                    if values_dict.get(value):
-                        values_dict[value] = values.get(value)
-                    self.with_context(is_abc=True).value_qty_dict = json.dumps(
-                        value_qty_dict
-                    )
-        values_dict.update(value_qty_dict)
-        self.values_dict = json.dumps(values_dict)
-        update_price = sum(self.product_tmpl_id.attribute_line_ids.mapped('default_val').mapped("product_id.lst_price"))
-        for value_line in values_dict:
-            if value_line.startswith(field_prefix):
-                if isinstance(values_dict.get(value_line), int):
-                    product_attribute_value = attribute_value_obj.browse(
-                        values_dict[value_line]
-                    )
-                    if product_attribute_value.product_id:
-                        update_price += product_attribute_value.product_id.lst_price
-                    else:
-                        extra_prices = (
-                            attribute_value_obj.get_attribute_value_extra_prices(
-                                product_tmpl_id=self.product_tmpl_id.id,
-                                pt_attr_value_ids=product_attribute_value,
-                            )
-                        )
-                        update_price += sum(extra_prices.values())
-                elif values_dict.get(value_line) and isinstance(values_dict.get(value_line), list):
-                    # Many2Many Values
-                    data_list = list(set(values_dict[value_line][0][2]))
-                    if values.get(value_line) or value_line in values:
-                        if any(values.get(value_line)):
-                            for multi_value in values.get(value_line, []):
-                                if multi_value[0] == 3 and multi_value[1] in data_list:
-                                    data_list.remove(multi_value[1])
-                                if multi_value[0] == 4:
-                                    data_list.append(multi_value[1])
-                        if (
-                            not any(values.get(value_line))
-                            and values.get(value_line, []) == []
-                        ):
-                            data_list = []
-                    data_list = list(set(data_list))
-                    product_attribute_values = attribute_value_obj.browse(data_list)
-                    for product_attribute_value in product_attribute_values:
-                        if product_attribute_value.product_id:
-                            update_price += product_attribute_value.product_id.lst_price
-                        else:
-                            extra_prices = (
-                                attribute_value_obj.get_attribute_value_extra_prices(
-                                    product_tmpl_id=self.product_tmpl_id.id,
-                                    pt_attr_value_ids=product_attribute_value,
-                                )
-                            )
-                            update_price += sum(extra_prices.values())
-
-            if value_line.startswith(qty_prefix):
-                qty_rec = attribute_value_qty_obj.browse(values_dict[value_line])
-                if qty_rec.product_attribute_value_id.product_id:
-                    update_price = (
-                        update_price
-                        - qty_rec.product_attribute_value_id.product_id.lst_price
-                    )
-                    update_price = update_price + (
-                        qty_rec.product_attribute_value_id.product_id.lst_price
-                        * qty_rec.qty
-                    )
-                else:
-                    extra_prices = attribute_value_obj.get_attribute_value_extra_prices(
-                        product_tmpl_id=self.product_tmpl_id.id,
-                        pt_attr_value_ids=qty_rec.product_attribute_value_id,
-                    )
-                    update_price = update_price - sum(extra_prices.values())
-                    update_price = update_price + (
-                        sum(extra_prices.values()) * qty_rec.qty
-                    )
-
-        if onchange_values.get("value", False):
-            onchange_values.get("value")["price"] = update_price
-        elif not onchange_values.get("value"):
-            onchange_values.update({"value": {"price": update_price}})
         return onchange_values
 
     @api.onchange("product_preset_id")
@@ -785,3 +653,107 @@ class ProductConfigurator(models.TransientModel):
                     )
             res[0].update(dynamic_vals)
         return res
+
+
+    def apply_onchange_values(self, values, field_names, field_onchange):
+        """Called from web-controller
+        - original onchage return M2o values in formate
+        (attr-value.id, attr-value.name) but on website
+        we need only attr-value.id"""
+        product_tmpl_id = self.env["product.template"].browse(
+            values.get("product_tmpl_id", [])
+        )
+        if not product_tmpl_id:
+            product_tmpl_id = self.product_tmpl_id
+
+        config_session_id = self.env["product.config.session"].browse(
+            values.get("config_session_id", [])
+        )
+        if not config_session_id:
+            config_session_id = self.config_session_id
+
+        state = values.get("state", False)
+        if not state:
+            state = self.state
+        cfg_vals = self.env["product.attribute.value"]
+        if values.get("value_ids", []):
+            cfg_vals = self.env["product.attribute.value"].browse(
+                values.get("value_ids", [])[0][2]
+            )
+        if not cfg_vals:
+            cfg_vals = self.value_ids
+
+        field_prefix = self._prefixes.get("field_prefix")
+        custom_field_prefix = self._prefixes.get("custom_field_prefix")
+        domain_field_prefix = self._prefixes.get("domain_field_prefix")
+        qty_prefix = self._prefixes.get("qty_field")
+        local_field_name = field_names and field_names[0].startswith(field_prefix)
+        local_custom_field = field_names and field_names[0].startswith(
+            custom_field_prefix
+        )
+        local_domain_prefix = field_names and field_names[0].startswith(
+            domain_field_prefix
+        )
+        local_qty_prefix = field_names and field_names[0].startswith(
+            qty_prefix
+        )
+        if not local_field_name and not local_custom_field and not local_domain_prefix and not local_qty_prefix:
+            values = self._remove_dynamic_fields(values)
+            field_onchange = self._remove_dynamic_fields(field_onchange)
+            res = super().onchange(values, field_names, field_onchange)
+            return res
+
+        view_val_ids = set()
+        view_attribute_ids = set()
+
+        try:
+            cfg_step_id = int(state)
+            cfg_step = product_tmpl_id.config_step_line_ids.filtered(
+                lambda x: x.id == cfg_step_id
+            )
+        except Exception:
+            cfg_step = self.env["product.config.step.line"]
+
+        dynamic_fields = {k: v for k, v in values.items() if k.startswith(field_prefix)}
+
+        # Get the unstored values from the client view
+        for k, v in dynamic_fields.items():
+            attr_id = int(k.split(field_prefix)[1])
+            # if isinstance(v, list):
+            #    dynamic_fields[k] = v[0][2]
+
+            line_attributes = cfg_step.attribute_line_ids.mapped("attribute_id")
+            if not cfg_step or attr_id in line_attributes.ids:
+                view_attribute_ids.add(attr_id)
+            else:
+                continue
+            if not v:
+                continue
+            if isinstance(v, list):
+                if v[0][0] == Command.SET:
+                    view_val_ids |= set(v[0][2])
+                else:
+                    view_val_ids |= {a[1] for a in v}
+            elif isinstance(v, int):
+                view_val_ids.add(v)
+
+        # Clear all DB values belonging to attributes changed in the wizard
+        cfg_vals = cfg_vals.filtered(
+            lambda v: v.attribute_id.id not in view_attribute_ids
+        )
+        # Combine database values with wizard values_available
+        cfg_val_ids = cfg_vals.ids + list(view_val_ids)
+
+        domains = self.get_onchange_domains(
+            cfg_val_ids, product_tmpl_id, config_session_id
+        )
+
+        vals = self.get_form_vals(
+            dynamic_fields=dynamic_fields,
+            domains=domains,
+            product_tmpl_id=product_tmpl_id,
+            config_session_id=config_session_id,
+            values=values,
+        )
+        vals.update(self._transform_onchange_domain_field_vals(domains))
+        return {"value": vals, "domain": domains}
