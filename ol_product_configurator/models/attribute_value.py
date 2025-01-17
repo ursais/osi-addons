@@ -29,10 +29,18 @@ class AttributeValue(models.Model):
             if rec.product_id:
                 rec.company_ids = rec.product_id.company_ids_display.ids or False
 
-    # @api.onchange("product_id")
-    # def _onchange_product_id(self):
-    #     for rec in self:
-    #         rec.company_ids = rec.product_id.company_ids_display.ids or False
+    @api.constrains("product_id", "company_ids")
+    def _check_company_ids(self):
+        product_company = self.product_id.company_id
+        if self.product_id and product_company and self.company_ids:
+            for company in self.company_ids:
+                if product_company.id != company.id:
+                    raise ValidationError(
+                        _(
+                            "The company '%s' cannot be added because the product '%s' is assigned to the company '%s'."
+                            % (company.name, self.product_id.name, product_company.name)
+                        )
+                    )
 
     @api.model
     def name_search(self, name="", args=None, operator="ilike", limit=100):
