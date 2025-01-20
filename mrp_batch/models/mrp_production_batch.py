@@ -91,6 +91,11 @@ class MrpProductionBatch(models.Model):
         "mrp.workcenter.tag",
         string="Workcenter Tag",
     )
+    is_outdated_bom = fields.Boolean(
+        "Outdated BoM",
+        compute="_compute_outaged_bom",
+        help="The BoM has been updated since creation of the MO",
+    )
 
     # Booleans representing various states for UI controls
     is_confirm_check = fields.Boolean(
@@ -399,6 +404,17 @@ class MrpProductionBatch(models.Model):
             "target": "new",  # Opens as a modal window
         }
 
+    def action_update_bom(self):
+        # Button that shows if any MO had changes to the BoM and update them.
+        for batch in self:
+            for production in batch.production_ids:
+                # If MO has outdated BoM and in state where it can change, then update
+                if production.is_outdated_bom and production.state in [
+                    "draft",
+                    "confirmed",
+                ]:
+                    production.action_update_bom()
+
     # Compute Methods
     @api.depends(
         "production_ids",
@@ -556,6 +572,18 @@ class MrpProductionBatch(models.Model):
                 ]
                 # Compute the maximum deadline if there are any valid dates
                 record.date_deadline = max(deadlines) if deadlines else False
+
+    @api.depends(
+        "production_ids",
+        "production_ids.is_outdated_bom",
+    )
+    def _compute_outaged_bom(self):
+        for record in self:
+            # Exclude MOs in the "cancel" state
+            productions = record.production_ids.filtered(lambda p: p.state != "cancel")
+            record.is_outdated_bom = any(
+                productions.filtered(lambda p: p.is_outdated_bom)
+            )
 
     # Computes for Expected & Real durations
     @api.depends(

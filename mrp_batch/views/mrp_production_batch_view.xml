@@ -53,6 +53,7 @@
                 <field name="qty_remaining" optional="hide" sum="Total" />
                 <field name="percent_complete" widget="percentage" optional="hide" />
                 <field name="responsible_id" optional="show" />
+                <field name='is_outdated_bom' optional="hide" />
                 <field name="exception_ids" widget="many2many_tags" optional="hide" />
                 <field name="exceptions_summary" optional="show" />
                 <field name="notes" optional="hide" />
@@ -85,6 +86,7 @@
                     <field name="is_locked" invisible="1" />
                     <field name="is_queuing" invisible="1" />
                     <field name="currency_id" invisible="1" />
+                    <field name='is_outdated_bom' invisible='1'/>
                     <button name="action_confirm" type="object" string='Confirm' invisible="is_confirm_check" class="oe_highlight" />
                     <button name="button_plan" type="object" string='Plan' invisible="is_plan or not is_workorder_ids or is_planned" class="oe_highlight" />
                     <button name="action_done" type="object" string='Produce All' invisible="not is_move_raw_ids or not is_produce_all" class="oe_highlight" />
@@ -121,7 +123,18 @@
                         <group>
                             <field name="workcenter_tag_id" />
                             <field name="partner_ids" widget="many2many_tags" />
-                            <field name="product_ids" widget="many2many_tags" />
+                            <label for="product_ids" name="product_ids_label"/>
+                            <div class="o_row" name="upgrade bom_div">
+                                <field name="product_ids" widget="many2many_tags"/>
+                                <button
+                                    name="action_update_bom"
+                                    string="Update BoM"
+                                    type="object"
+                                    title="Note that another version of a BOM is available on one or more Manufacturing Orders. Clicking this will update all Draft/Confirmed MO's with a changed BoM."
+                                    class="text-danger"
+                                    invisible="not is_outdated_bom"
+                                />
+                            </div>
                             <field name="product_tmpl_ids" widget="many2many_tags" invisible="1" />
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="state not in ('draft', 'confirm', 'cancel') or is_locked" />
                             <field name="sale_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" />
@@ -206,6 +219,7 @@
                                     <field name="sale_order_id" string="Sale Order" optional="show" />
                                     <field name="duration_expected" widget="float_time" optional="show" />
                                     <field name="duration" widget="float_time" optional="show" />
+                                    <field name='is_outdated_bom' optional="hide" />
                                     <field name="main_exception_id" optional="hide" />
                                     <field name="exceptions_summary" optional="show" />
                                     <button name="action_remove_batch" type="object" icon='fa-close' column_invisible="parent.state not in ('draft', 'progress', 'cancel') or parent.is_locked" />
