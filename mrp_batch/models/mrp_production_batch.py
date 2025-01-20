@@ -405,13 +405,14 @@ class MrpProductionBatch(models.Model):
         }
 
     def action_update_bom(self):
+        # Button that shows if any MO had changes to the BoM and update them.
         for batch in self:
             for production in batch.production_ids:
+                # If MO has outdated BoM and in state where it can change, then update
                 if production.is_outdated_bom and production.state in [
                     "draft",
                     "confirmed",
                 ]:
-                    # production._link_bom(production.latest_bom_id)
                     production.action_update_bom()
 
     # Compute Methods
