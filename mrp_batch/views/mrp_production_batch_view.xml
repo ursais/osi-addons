@@ -130,7 +130,7 @@
                                     name="action_update_bom"
                                     string="Update BoM"
                                     type="object"
-                                    title="Note that another version of a BOM is available on one or more Manufacturing Orders."
+                                    title="Note that another version of a BOM is available on one or more Manufacturing Orders. Clicking this will update all Draft/Confirmed MO's with a changed BoM."
                                     class="text-danger"
                                     invisible="not is_outdated_bom"
                                 />
