@@ -266,7 +266,7 @@ class RmaSupplier(models.Model):
                                 "location_id": rma.out_location_id.id,
                                 "location_dest_id": rma.partner_id.property_stock_supplier.id
                                 or rma.in_operation_id.default_location_dest_id.id,
-                                "rma_line_id": line.id,
+                                "rma_supplier_line_id": line.id,
                                 "origin": rma.name,
                                 "lot_ids": line.lot_ids.ids,
                             },
@@ -298,7 +298,7 @@ class RmaSupplier(models.Model):
                                 "location_id": rma.partner_id.property_stock_supplier.id
                                 or rma.in_operation_id.default_location_src_id.id,
                                 "location_dest_id": rma.in_location_id.id,
-                                "rma_line_id": line.id,
+                                "rma_supplier_line_id": line.id,
                                 "origin": rma.name,
                                 "lot_ids": line.lot_ids.ids,
                             },

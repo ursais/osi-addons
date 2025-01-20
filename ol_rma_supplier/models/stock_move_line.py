@@ -9,8 +9,8 @@ class StockMoveLine(models.Model):
 
     # COLUMNS ######
 
-    rma_line_id = fields.Many2one(
-        related="move_id.rma_line_id",
+    rma_supplier_line_id = fields.Many2one(
+        related="move_id.rma_supplier_line_id",
         string="RMA Line",
         store=True,
     )

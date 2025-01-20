@@ -10,7 +10,7 @@
                 <field name="rma_in_id" invisible="1" />
             </xpath>
             <xpath expr="//field[@name='lot_ids']" position="before">
-                <field name="rma_line_id" optional="hide" />
+                <field name="rma_supplier_line_id" optional="hide" />
                 <field name="rma_note" optional="show" />
             </xpath>
         </field>
