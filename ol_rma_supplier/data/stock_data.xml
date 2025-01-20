@@ -54,7 +54,6 @@
         <field name="product_selectable" eval="False" />
         <field name="product_categ_selectable" eval="False" />
         <field name="warehouse_selectable" eval="False" />
-        <field name="rma_selectable" eval="True" />
     </record>
 
     <record id="rule_rma_supplier_out_pull" model="stock.rule">

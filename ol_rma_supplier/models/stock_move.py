@@ -9,13 +9,13 @@ class StockMove(models.Model):
 
     # COLUMNS ######
 
-    rma_line_id = fields.Many2one(
+    rma_supplier_line_id = fields.Many2one(
         "rma.supplier.order.line",
         string="RMA Line",
     )
     rma_note = fields.Text(
         string="RMA Note",
-        related="rma_line_id.note",
+        related="rma_supplier_line_id.note",
         store=True,
     )
 

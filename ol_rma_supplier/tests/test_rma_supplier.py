@@ -238,7 +238,7 @@ class TestRmaSupplierLine(common.TransactionCase):
                 "location_id": stock_location.id,
                 "location_dest_id": supplier_location.id,
                 "state": "done",
-                "rma_line_id": self.rma_line.id,
+                "rma_supplier_line_id": self.rma_line.id,
             }
         )
 
@@ -251,7 +251,7 @@ class TestRmaSupplierLine(common.TransactionCase):
                 "location_id": supplier_location.id,
                 "location_dest_id": stock_location.id,
                 "state": "done",
-                "rma_line_id": self.rma_line.id,
+                "rma_supplier_line_id": self.rma_line.id,
             }
         )
 

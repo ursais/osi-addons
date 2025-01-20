@@ -50,7 +50,7 @@ class RmaSupplierLine(models.Model):
     )
     move_ids = fields.One2many(
         "stock.move",
-        "rma_line_id",
+        "rma_supplier_line_id",
         string="Stock Moves",
     )
     qty_delivered = fields.Float(
