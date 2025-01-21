@@ -1,0 +1,19 @@
+<odoo>
+    <record id="view_account_journal_form_inherit_osi_nacha_80" model="ir.ui.view">
+        <field name="name">account.journal.form.inherit.osi_nacha_80</field>
+        <field name="model">account.journal</field>
+        <field name="priority">100</field>
+        <field name="inherit_id" ref="account.view_account_journal_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='outbound_payment_method_line_ids']/tree/field[@name='payment_method_id']"
+                position="attributes"
+            >
+                <attribute name="domain">[]</attribute>
+            </xpath>
+            <field name="nacha_immediate_destination" position="before">
+                <field name="nacha_file_type" />
+            </field>
+        </field>
+    </record>
+</odoo>
