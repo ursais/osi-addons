@@ -12,7 +12,7 @@
                         <field name="product_uom" />
                         <field name="qty_delivered" />
                         <field name="qty_received" />
-                        <field name="rma_order_id" />
+                        <field name="rma_supplier_order_ids" />
                     </group>
                 </sheet>
             </form>
@@ -29,7 +29,7 @@
                 <field name="product_uom" />
                 <field name="qty_delivered" />
                 <field name="qty_received" />
-                <field name="rma_order_id" />
+                <field name="rma_supplier_order_ids" />
             </tree>
         </field>
     </record>

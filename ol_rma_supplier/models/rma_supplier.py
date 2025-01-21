@@ -60,7 +60,7 @@ class RmaSupplier(models.Model):
     note = fields.Text("Note")
     line_ids = fields.One2many(
         "rma.supplier.order.line",
-        "rma_order_id",
+        "rma_supplier_order_ids",
         string="RMA Lines",
     )
     tag_ids = fields.Many2many(

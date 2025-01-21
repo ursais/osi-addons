@@ -42,7 +42,7 @@ class RmaSupplierLine(models.Model):
         "stock.lot",
         string="Serial Numbers",
     )
-    rma_order_id = fields.Many2one(
+    rma_supplier_order_ids = fields.Many2one(
         "rma.supplier.order",
         string="RMA Reference",
         ondelete="cascade",
@@ -75,15 +75,15 @@ class RmaSupplierLine(models.Model):
     # METHODS ##########
 
     @api.depends(
-        "rma_order_id",
-        "rma_order_id.name",
+        "rma_supplier_order_ids",
+        "rma_supplier_order_ids.name",
         "product_id",
         "product_id.name",
     )
     def _compute_name(self):
         for rma_line in self.sudo():
             name = "{} - {}".format(
-                rma_line.rma_order_id.name,
+                rma_line.rma_supplier_order_ids.name,
                 rma_line.name
                 and rma_line.name.split("\n")[0]
                 or rma_line.product_id.name,
