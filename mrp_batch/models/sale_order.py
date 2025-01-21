@@ -16,6 +16,12 @@ class SaleOrder(models.Model):
     # END #########
     # METHODS #####
 
+    def write(self,vals):
+        res = super().write(vals)
+        if vals.get("order_line",False):
+           self.with_delay().split_mo()
+        return res
+
     def _compute_is_mrp_warning(self):
         for so in self:
             is_mrp_warning = False
