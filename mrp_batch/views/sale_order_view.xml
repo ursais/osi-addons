@@ -14,7 +14,7 @@
                 </button>
             </xpath>
             <button name="action_unlock" position="replace">
-                <field name="is_mrp_warning" invisible="0" />
+                <field name="is_mrp_warning" invisible="1" />
                 <button
                     name="action_unlock"
                     type="object"
