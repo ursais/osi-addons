@@ -222,7 +222,7 @@
                                     <field name='is_outdated_bom' optional="hide" />
                                     <field name="main_exception_id" optional="hide" />
                                     <field name="exceptions_summary" optional="show" />
-                                    <button name="action_remove_batch" type="object" icon='fa-close' column_invisible="parent.state not in ('draft', 'progress', 'cancel') or parent.is_locked" />
+                                    <button name="action_remove_batch" type="object" icon="fa-close" column_invisible="parent.state not in ('draft', 'progress', 'cancel') or parent.is_locked" title="Close"/>
                                 </tree>
                             </field>
                         </page>
