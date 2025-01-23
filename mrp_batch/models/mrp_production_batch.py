@@ -2,6 +2,8 @@
 import html
 
 from odoo import _, api, fields, models
+from odoo.tools import float_compare
+from odoo.tools.misc import format_date
 
 
 class MrpProductionBatch(models.Model):
@@ -98,28 +100,20 @@ class MrpProductionBatch(models.Model):
     )
 
     # Booleans representing various states for UI controls
-    is_confirm_check = fields.Boolean(
-        string="show_state",
+    is_confirmed = fields.Boolean(
+        string="Confirmed",
         compute="_compute_mrp_production_confirm",
     )
-    is_reserved = fields.Boolean(
+    reserve_visible = fields.Boolean(
         string="Reserved",
         compute="_compute_reserve_and_unreserve_visible",
     )
-    is_reserved_batch = fields.Boolean(
-        string="Reserved Batch",
-        compute="_compute_mrp_production_reserve_batch",
-    )
-    is_unreserved = fields.Boolean(
+    unreserve_visible = fields.Boolean(
         string="Unreserved",
         compute="_compute_reserve_and_unreserve_visible",
     )
     is_cancel = fields.Boolean(
         string="Cancel",
-        compute="_compute_mrp_production_cancel",
-    )
-    is_cancel_id = fields.Boolean(
-        string="Is All Canceled",
         compute="_compute_mrp_production_cancel",
     )
     is_move_raw_ids = fields.Boolean(
@@ -130,16 +124,8 @@ class MrpProductionBatch(models.Model):
         string="Is All Produced",
         compute="_compute_mrp_production_done",
     )
-    is_workorder_ids = fields.Boolean(
-        string="Has Work Orders",
-        compute="_compute_is_planned",
-    )
     is_planned = fields.Boolean(
         string="Planned",
-        compute="_compute_is_planned",
-    )
-    is_plan = fields.Boolean(
-        string="Is Plan",
         compute="_compute_is_planned",
     )
     show_lock = fields.Boolean(
@@ -167,6 +153,38 @@ class MrpProductionBatch(models.Model):
         string="Deadline",
         compute="_compute_date_deadline",
         store=True,
+    )
+    components_availability = fields.Char(
+        string="Component Status",
+        compute="_compute_components_availability",
+        help="Latest component availability status for this MO. If green, then the MO's readiness status is ready, as per BOM configuration.",
+    )
+    components_availability_state = fields.Selection(
+        [
+            ("available", "Available"),
+            ("expected", "Expected"),
+            ("late", "Late"),
+            ("unavailable", "Not Available"),
+        ],
+        compute="_compute_components_availability",
+        search="_search_components_availability_state",
+    )
+    reservation_state = fields.Selection(
+        [
+            ("confirmed", "Waiting"),
+            ("assigned", "Ready"),
+            ("waiting", "Waiting Another Operation"),
+        ],
+        string="MO Readiness",
+        compute="_compute_reservation_state",
+        copy=False,
+        index=True,
+        readonly=True,
+        store=True,
+        tracking=True,
+        help="Manufacturing readiness for this MO, as per bill of material configuration:\n\
+            * Ready: The material is available to start the production.\n\
+            * Waiting: The material is not available to start the production.\n",
     )
 
     # Fields tracking the total and expected durations for the batch
@@ -338,11 +356,19 @@ class MrpProductionBatch(models.Model):
     def button_plan(self):
         # Plan the batch and its production orders
         for record in self:
-            record.is_queuing = True
-            if record.state == "draft":
-                record.state = "confirm"
-            for mrp_production in record.production_ids:
-                mrp_production.with_delay().button_plan()
+            productions = record.production_ids.filtered(
+                lambda x: x.state != "draft" and not x.is_planned
+            )
+            if productions:
+                for mo in productions:
+                    mo.with_delay().button_plan()
+
+                record.is_queuing = True
+
+                if record.state == "draft" and not any(
+                    productions.filtered(lambda p: p.state == "draft")
+                ):
+                    record.state = "confirm"
 
     def button_unplan(self):
         # Unplan all eligible manufacturing orders in the batch
@@ -776,6 +802,7 @@ class MrpProductionBatch(models.Model):
             )
 
     @api.depends(
+        "production_ids",
         "production_ids.procurement_group_id.mrp_production_ids.move_dest_ids.sale_line_id.price_unit",
         "production_ids.product_qty",
         "production_ids.state",
@@ -794,79 +821,81 @@ class MrpProductionBatch(models.Model):
             )
             record.total_revenue = total
 
-    @api.depends("production_ids.state")
+    @api.depends(
+        "production_ids",
+        "production_ids.state",
+    )
     def _compute_mrp_production_cancel(self):
         # Determine if all productions are canceled or in done state
         for record in self:
             record.is_cancel = False
-            record.is_cancel_id = False
             if record.production_ids:
-                record.is_cancel_id = all(
-                    production.id for production in record.production_ids
-                )
                 record.is_cancel = all(
                     production.state in ("done", "cancel")
                     for production in record.production_ids
                 )
 
     @api.depends(
+        "production_ids",
         "production_ids.state",
         "production_ids.is_planned",
-        "production_ids.workorder_ids",
     )
     def _compute_is_planned(self):
         for record in self:
+            record.is_planned = False
             # Filter out production orders with states 'to_close', 'done', or 'cancel'
             filtered_productions = record.production_ids.filtered(
                 lambda p: p.state not in ("progress", "to_close", "done", "cancel")
+                and p.workorder_ids
             )
-            record.is_workorder_ids = all(
-                production.workorder_ids for production in filtered_productions
-            )
-            record.is_plan = all(
-                production.state not in ("confirmed", "progress")
-                for production in filtered_productions
-            )
-            record.is_planned = all(
-                production.is_planned for production in filtered_productions
-            )
-
-    @api.depends("production_ids.state")
-    def _compute_mrp_production_confirm(self):
-        # Check if all production orders are confirmed or in progress
-        for record in self:
-            record.is_confirm_check = False
-            record.is_confirm_check = all(
-                production.state != "draft" for production in record.production_ids
-            )
-
-    @api.depends("production_ids.state")
-    def _compute_mrp_production_reserve_batch(self):
-        # Check if all productions are in a state where they can be reserved
-        for record in self:
-            record.is_reserved_batch = False
-            if record.production_ids:
-                record.is_reserved_batch = all(
-                    production.state in ("draft", "done", "cancel")
-                    for production in record.production_ids
+            # Set is_planned if all MO's that have workorders are planned.
+            if filtered_productions:
+                record.is_planned = all(
+                    production.is_planned for production in filtered_productions
                 )
 
     @api.depends(
+        "production_ids",
+        "production_ids.state",
+    )
+    def _compute_mrp_production_confirm(self):
+        # Check if all production orders are confirmed or in progress
+        for record in self:
+            record.is_confirmed = True
+            # Filter out production orders with states 'to_close', 'done', or 'cancel'
+            filtered_productions = record.production_ids.filtered(
+                lambda p: p.state == "draft"
+            )
+
+            # Set is_confirmed if all MO's that have workorders are planned.
+            if record.production_ids and filtered_productions:
+                record.is_confirmed = not any(
+                    production.state == "draft" for production in record.production_ids
+                )
+
+    @api.depends(
+        "production_ids",
         "production_ids.move_raw_ids",
         "production_ids.state",
         "production_ids.move_raw_ids.product_uom_qty",
+        "production_ids.unreserve_visible",
+        "production_ids.reserve_visible",
     )
     def _compute_reserve_and_unreserve_visible(self):
         # Determine the visibility of reserve/unreserve actions based on productions
         for record in self:
-            record.is_reserved = False
-            record.is_unreserved = False
+            record.reserve_visible = False
+            record.unreserve_visible = False
+            # Filter out production orders with states 'to_close', 'done', or 'cancel'
+            filtered_productions = record.production_ids.filtered(
+                lambda p: p.state not in ("progress", "to_close", "done", "cancel")
+            )
             if record.production_ids:
-                record.is_unreserved = all(
-                    production.unreserve_visible for production in record.production_ids
+                record.unreserve_visible = any(
+                    production.unreserve_visible for production in filtered_productions
                 )
-                record.is_reserved = all(
-                    production.reserve_visible for production in record.production_ids
+                record.reserve_visible = any(
+                    production.reserve_visible for production in filtered_productions
                 )
 
     @api.depends("production_ids.move_raw_ids")
@@ -925,6 +954,69 @@ class MrpProductionBatch(models.Model):
                 record.percent_complete = record.qty_produced / record.qty_producing
             else:
                 record.percent_complete = 0.0
+
+    @api.depends(
+        "production_ids",
+        "production_ids.state",
+        "production_ids.components_availability_state",
+        "production_ids.components_availability",
+    )
+    def _compute_components_availability(self):
+        for batch in self:
+            batch.components_availability_state = False
+            batch.components_availability = False
+
+            # Exclude canceled MOs
+            valid_productions = batch.production_ids.filtered(
+                lambda mo: mo.state not in ("draft", "cancel", "to_close", "done")
+            )
+            if not valid_productions:
+                continue
+
+            if any(
+                mo.components_availability_state == "unavailable"
+                for mo in valid_productions
+            ):
+                batch.components_availability_state = "unavailable"
+                batch.components_availability = _("Not Available")
+            else:
+                forecast_date = max(
+                    batch.production_ids.move_raw_ids.filtered(
+                        "forecast_expected_date"
+                    ).mapped("forecast_expected_date"),
+                    default=False,
+                )
+                if forecast_date:
+                    batch.components_availability = _(
+                        "Exp %s", format_date(self.env, forecast_date)
+                    )
+                    if batch.date_start:
+                        batch.components_availability_state = (
+                            "late" if forecast_date > batch.date_start else "expected"
+                        )
+                else:
+                    batch.components_availability_state = "available"
+                    batch.components_availability = _("Available")
+
+    @api.depends(
+        "production_ids",
+        "production_ids.state",
+        "production_ids.reservation_state",
+    )
+    def _compute_reservation_state(self):
+        for batch in self:
+            # Exclude canceled MOs
+            valid_productions = batch.production_ids.filtered(
+                lambda mo: mo.state != "cancel"
+            )
+            if any(mo.reservation_state == "waiting" for mo in valid_productions):
+                batch.reservation_state = "waiting"
+            elif any(mo.reservation_state == "confirmed" for mo in valid_productions):
+                batch.reservation_state = "confirm"
+            elif any(mo.reservation_state == "assigned" for mo in valid_productions):
+                batch.reservation_state = "assigned"
+            else:
+                batch.reservation_state = False
 
     # Smart Button Methods
     @api.depends("production_ids.move_raw_ids")
