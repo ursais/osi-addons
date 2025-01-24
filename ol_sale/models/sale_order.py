@@ -38,15 +38,22 @@ class SaleOrder(models.Model):
         """
         Inherit method for set up value for original_request_date and original_commitment_date
         """
-        res = super().action_confirm()
+
+        # First check for original request date and raise validation error if not set
         for rec in self:
-            rec.original_commitment_date = self.commitment_date or self.expected_date
             if not rec.original_request_date:
                 raise ValidationError(
                     _(
                         "Original Customer Requested Date is required to confirm the order."
                     )
                 )
+
+        # Call the parent method once for all records
+        res = super().action_confirm()
+
+        # Update original_commitment_date for each record after confirmation
+        for rec in self:
+            rec.original_commitment_date = self.commitment_date or self.expected_date
         return res
 
     # END #########

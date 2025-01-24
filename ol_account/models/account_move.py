@@ -8,7 +8,7 @@ class AccountMove(models.Model):
 
     _inherit = "account.move"
 
-    # Methods ######
+    # METHODS ######
 
     def unlink(self):
         """

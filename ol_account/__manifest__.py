@@ -12,9 +12,11 @@
     "depends": [
         "ol_base",
         "account",
+        "sale",
     ],
     # Data Loaded.
     "data": [
         "security/security.xml",
+        "views/res_config_settings_views.xml",
     ],
 }
