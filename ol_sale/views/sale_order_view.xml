@@ -43,9 +43,14 @@
                 <field name="integrator" />
             </xpath>
 
-            <!-- Don't show configurable products in the product_template_id field -->
+            <!-- Filter out configurable and company not allowed products in the product_template_id field -->
             <xpath expr="//tree/field[@name='product_template_id']" position="attributes">
-                <attribute name="domain">[('sale_ok', '=', True), ('config_ok', '=', False)]</attribute>
+                <attribute name="domain">[('sale_ok', '=', True), ('config_ok', '=', False), '|', ('company_ids_display', '=', False), ('company_ids_display', 'in', company_id)]</attribute>
+            </xpath>
+
+            <!-- Filter not company allowed products in the product__id field -->
+            <xpath expr="//tree/field[@name='product_id']" position="attributes">
+                <attribute name="domain">[('sale_ok', '=', True), '|', ('company_ids_display', '=', False), ('company_ids_display', 'in', company_id)]</attribute>
             </xpath>
         </field>
     </record>

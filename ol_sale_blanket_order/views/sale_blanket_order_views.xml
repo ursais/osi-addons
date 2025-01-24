@@ -8,6 +8,10 @@
             <xpath expr="//field[@name='product_id']" position="after">
                 <field name="product_state_id" optional="show" />
             </xpath>
+            <!-- Filter out company dependent products in the product_id field -->
+            <xpath expr="//field[@name='product_id']" position="attributes">
+                <attribute name="domain">[('sale_ok', '=', True), '|', ('company_ids_display', '=', False), ('company_ids_display', 'in', company_id)]</attribute>
+            </xpath>
             <xpath expr="//field[@name='product_uom']" position="after">
                 <field name="customer_lead" optional="show" />
                 <field name="purchase_price" optional="show" />
