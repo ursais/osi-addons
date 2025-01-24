@@ -1,0 +1,17 @@
+<odoo>
+
+    <!-- Add new group that allows deleting of draft account.move -->
+    <record id="group_account_move_delete" model="res.groups">
+        <field name="name">Allow Account Move Delete</field>
+    </record>
+
+    <!-- Restrict for base users -->
+    <record id="restrict_account_move_deletion" model="ir.rule">
+        <field name="name">Restrict Delete Account Moves</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="domain_force">[('id', '=', False)]</field>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+</odoo>

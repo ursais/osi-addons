@@ -11,11 +11,11 @@
     # any module necessary for this one to work correctly
     "depends": [
         "ol_base",
+        "ol_product_configurator",
         "sale_management",
         "product_state",
         "sale_subscription",
         "stock",
-        "ol_sale_mrp_tags",
         "product_configurator_sale_mrp",
     ],
     # always loaded

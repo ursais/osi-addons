@@ -12,6 +12,7 @@
     "depends": [
         "ol_base",
         "ol_sale",
+        "ol_product_configurator",
         "sale_blanket_order",
         "sale_product_approval",
         "product_configurator_sale_blanket_order",
