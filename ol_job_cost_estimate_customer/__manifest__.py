@@ -15,6 +15,7 @@
         "ol_base",
         "ol_product_pricing_review",
         "ol_crm_estimate",
+        "ol_product_configurator",
         "job_cost_estimate_customer",
         "product_configurator_mrp",
         "product_profile",
