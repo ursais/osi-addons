@@ -24,6 +24,9 @@
                 <field name="date_start" widget="datetime" options="{'show_time': false}" optional="show" />
                 <field name="earliest_start" widget="datetime" options="{'show_time': false}" optional="show" />
                 <field name="date_deadline" widget="datetime" options="{'show_time': false}" optional="show" />
+                <field name="components_availability_state" column_invisible="True" options='{"lazy": true}'/>
+                <field name="components_availability" options="{'lazy': true}" invisible="state not in ['done', 'cancel']" optional="show" decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'" decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')" decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')"/>
+                <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
                 <field name="total_revenue" widget="monetary" optional="hide" sum="Total" />
                 <field name="total_duration_expected" widget="float_time" optional="show" sum="Total" />
                 <field name="total_build_duration_expected" widget="float_time" optional="show" sum="Total" />
@@ -70,32 +73,29 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <field name="is_confirm_check" invisible="1" />
-                    <field name="is_reserved" invisible="1" />
-                    <field name="is_reserved_batch" invisible="1" />
-                    <field name="is_unreserved" invisible="1" />
+                    <field name="is_confirmed" invisible="1" />
+                    <field name="reserve_visible" invisible="1" />
+                    <field name="unreserve_visible" invisible="1" />
                     <field name="is_cancel" invisible="1" />
-                    <field name="is_cancel_id" invisible="1" />
                     <field name="is_move_raw_ids" invisible="1" />
                     <field name="is_produce_all" invisible="1" />
-                    <field name="is_workorder_ids" invisible="1" />
                     <field name="is_planned" invisible="1" />
-                    <field name="is_plan" invisible="1" />
                     <field name="is_delayed" invisible="1" />
                     <field name="show_lock" invisible="1" />
                     <field name="is_locked" invisible="1" />
                     <field name="is_queuing" invisible="1" />
                     <field name="currency_id" invisible="1" />
                     <field name='is_outdated_bom' invisible='1'/>
-                    <button name="action_confirm" type="object" string='Confirm' invisible="is_confirm_check" class="oe_highlight" />
-                    <button name="button_plan" type="object" string='Plan' invisible="is_plan or not is_workorder_ids or is_planned" class="oe_highlight" />
+                    <field name="reservation_state" invisible='1' />
+                    <button name="action_confirm" type="object" string='Confirm' invisible="is_confirmed" class="oe_highlight" />
+                    <button name="button_plan" type="object" string='Plan' invisible="is_planned" class="oe_highlight" />
                     <button name="action_done" type="object" string='Produce All' invisible="not is_move_raw_ids or not is_produce_all" class="oe_highlight" />
-                    <button name="action_assign" type="object" invisible="is_reserved_batch or not is_reserved" string='Check availability'/>
+                    <button name="action_assign" type="object" invisible="not reserve_visible" string='Check availability'/>
                     <button name="button_unplan" type="object" string='Unplan' invisible="not is_planned" />
-                    <button name="action_unreserve" type="object" invisible="not is_unreserved" string='Unreserve'/>
+                    <button name="action_unreserve" type="object" invisible="not unreserve_visible" string='Unreserve'/>
                     <button name="action_lock_and_unlock" type="object" invisible="not show_lock or is_locked" string='Lock'/>
                     <button name="action_lock_and_unlock" type="object" invisible="not show_lock or not is_locked" string='Unlock'/>
-                    <button name="action_cancel" type="object" invisible="not is_cancel_id or is_cancel" string='Cancel' confirm="Canceling the Batch will also cancel ALL the relaed Manufacturing Orders. Are you sure you want to continue?" />
+                    <button name="action_cancel" type="object" invisible="not is_cancel" string='Cancel' confirm="Canceling the Batch will also cancel ALL the related Manufacturing Orders. Are you sure you want to continue?" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done" />
                 </header>
             	<sheet>
@@ -143,6 +143,8 @@
                             <field name="date_start" readonly="state not in ('draft', 'confirm', 'cancel') or is_locked" />
                             <field name="earliest_start" readonly="state not in ('draft', 'confirm', 'cancel') or is_locked" />
                             <field name="date_deadline" readonly="state not in ('draft', 'confirm', 'cancel') or is_locked" />
+                            <field name="components_availability_state" invisible="1"/>
+                            <field name="components_availability" invisible="state in ['done', 'cancel']" decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'" decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')" decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')" />
                             <field name="responsible_id" readonly="state not in ('draft', 'confirm', 'cancel') or is_locked" />
                             <field name="exception_ids" widget="many2many_tags" invisible="1" />
                             <field name="exceptions_summary" invisible="1" />
@@ -214,7 +216,7 @@
                                     <field name="date_start" string="Scheduled Date" optional="show" />
                                     <field name="date_finished" string="End Date" optional="show" />
                                     <field name="components_availability_state" column_invisible="True" options="{&quot;lazy&quot;: true}" />
-                                    <field name="components_availability" options="{&quot;lazy&quot;: true}" invisible="state not in ['confirmed', 'progress']" optional="show" decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'" decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')" decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')" />
+                                    <field name="components_availability" options="{'lazy': true}" invisible="state not in ['done', 'cancel']" optional="show" decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'" decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')" decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')"/>
                                     <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'" />
                                     <field name="sale_order_id" string="Sale Order" optional="show" />
                                     <field name="duration_expected" widget="float_time" optional="show" />
@@ -222,7 +224,10 @@
                                     <field name='is_outdated_bom' optional="hide" />
                                     <field name="main_exception_id" optional="hide" />
                                     <field name="exceptions_summary" optional="show" />
-                                    <button name="action_remove_batch" type="object" icon="fa-close" column_invisible="parent.state not in ('draft', 'progress', 'cancel') or parent.is_locked" title="Close"/>
+                                    <field name="unreserve_visible" optional="hide" />
+                                    <field name="reserve_visible" optional="hide" />
+                                    <field name="is_planned" optional="hide" />
+                                    <button name="action_remove_batch" type="object" icon="fa-close" column_invisible="parent.state not in ('done', 'cancel') or parent.is_locked" title="Close"/>
                                 </tree>
                             </field>
                         </page>

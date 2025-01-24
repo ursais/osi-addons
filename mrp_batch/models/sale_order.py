@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import fields, models
+from odoo import fields, models, _
 
 
 class SaleOrder(models.Model):
@@ -16,10 +16,10 @@ class SaleOrder(models.Model):
     # END #########
     # METHODS #####
 
-    def write(self,vals):
+    def write(self, vals):
         res = super().write(vals)
-        if vals.get("order_line",False):
-           self.with_delay().split_mo()
+        if vals.get("order_line", False):
+            self.with_delay().split_mo()
         return res
 
     def _compute_is_mrp_warning(self):
