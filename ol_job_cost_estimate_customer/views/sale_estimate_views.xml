@@ -1,12 +1,13 @@
 <odoo>
 
-    <record
-        id="ol_job_cost_estimator_customer_view_sale_estimate_form_job"
-        model="ir.ui.view">
+    <record id="ol_job_cost_estimator_customer_view_sale_estimate_form_job" model="ir.ui.view">
         <field name="name">sale.estimate.job.customer.inherit.form</field>
         <field name="model">sale.estimate.job</field>
         <field name="inherit_id" ref="job_cost_estimate_customer.view_sale_estimate_form_job" />
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='estimate_ids']/tree/field[@name='job_type']" position="attributes">
+                <attribute name="optional">hide</attribute>
+            </xpath>
             <xpath expr="//field[@name='estimate_ids']/tree/field[@name='product_uom']" position="after">
                 <field name="customer_lead" optional="show" />
             </xpath>
@@ -18,6 +19,12 @@
             </xpath>
             <xpath expr="//field[@name='overhead_estimate_line_ids']/tree/field[@name='product_uom']" position="after">
                 <field name="customer_lead" optional="hide" />
+            </xpath>
+            <xpath expr="//field[@name='estimate_ids']/tree/field[@name='product_id']" position="after">
+                <field name="company_id" column_invisible="1" />
+            </xpath>
+            <xpath expr="//field[@name='estimate_ids']/tree/field[@name='product_id']" position="attributes">
+                <attribute name="domain">['|', ('company_ids_display', '=', False), ('company_ids_display', 'in', company_id)]</attribute>
             </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position = "inside">
                 <button
