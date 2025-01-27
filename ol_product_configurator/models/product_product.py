@@ -39,14 +39,19 @@ class ProductProduct(models.Model):
     def create(self, vals_list):
         products = super().create(vals_list)
         for product in products:
-            # Check if the product has a template and a default code
+            # Check if the product has a template, has a default code and is configurable
             if product.product_tmpl_id and product.product_tmpl_id.default_code:
                 # Generate the new product default code
-                product.write(
-                    {
-                        "default_code": f"{product.product_tmpl_id.default_code}-{product.id}"
-                    }
-                )
+                if product.product_tmpl_id.config_ok:
+                    product.write(
+                        {
+                            "default_code": f"{product.product_tmpl_id.default_code}-{product.id}"
+                        }
+                    )
+                else:
+                    product.write(
+                        {"default_code": product.product_tmpl_id.default_code}
+                    )
         return products
 
     # END ##########
