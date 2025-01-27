@@ -700,7 +700,7 @@ class ProductConfigurator(models.TransientModel):
         if not local_field_name and not local_custom_field and not local_domain_prefix and not local_qty_prefix:
             values = self._remove_dynamic_fields(values)
             field_onchange = self._remove_dynamic_fields(field_onchange)
-            res = super().onchange(values, field_names, field_onchange)
+            res = super(ProductConfigurator, self.with_context(parent_super=True)).onchange(values, field_names, field_onchange)
             return res
 
         view_val_ids = set()

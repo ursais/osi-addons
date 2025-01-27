@@ -389,16 +389,18 @@ class ProductConfigurator(models.TransientModel):
         """Override the onchange wrapper to return domains to dynamic
         fields as onchange isn't triggered for non-db fields
         """
-        onchange_values = self.apply_onchange_values(
-            values=values, field_names=field_names, field_onchange=fields_spec
-        )
-        field_prefix = self._prefixes.get("field_prefix")
-        vals = onchange_values.get("value", {})
-        for key, val in vals.items():
-            if isinstance(val, int) and key.startswith(field_prefix):
-                att_val = self.env["product.attribute.value"].browse(val)
-                vals[key] = (att_val.id, att_val.name)
-        return onchange_values
+        if not self._context.get('parent_super'):
+            onchange_values = self.apply_onchange_values(
+                values=values, field_names=field_names, field_onchange=fields_spec
+            )
+            field_prefix = self._prefixes.get("field_prefix")
+            vals = onchange_values.get("value", {})
+            for key, val in vals.items():
+                if isinstance(val, int) and key.startswith(field_prefix):
+                    att_val = self.env["product.attribute.value"].browse(val)
+                    vals[key] = (att_val.id, att_val.name)
+            return onchange_values
+        return super().onchange(values, field_names, fields_spec)
 
     config_session_id = fields.Many2one(
         required=True,
