@@ -11,6 +11,9 @@ class MRPBoMLine(models.Model):
 
     # COLUMNS ##########
 
-    estimate_line_id = fields.Many2one("sale.estimate.line.job", string="Estimate Line")
+    estimate_line_id = fields.Many2one(
+        comodel_name="sale.estimate.line.job",
+        string="Estimate Line",
+    )
 
     # END #########

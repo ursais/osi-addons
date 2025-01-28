@@ -12,7 +12,7 @@ class ProductTemplate(models.Model):
     # COLUMNS ##########
 
     estimate_id = fields.Many2one(
-        "sale.estimate.job",
+        comodel_name="sale.estimate.job",
         string="Estimate",
     )
 

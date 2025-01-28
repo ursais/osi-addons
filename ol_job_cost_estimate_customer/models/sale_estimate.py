@@ -11,8 +11,8 @@ class SaleEstimateJob(models.Model):
     # COLUMNS ######
 
     product_tmpl_ids = fields.One2many(
-        "product.template",
-        "estimate_id",
+        comodel_name="product.template",
+        inverse_name="estimate_id",
         string="Product Templates",
     )
     product_count = fields.Integer(
@@ -20,8 +20,8 @@ class SaleEstimateJob(models.Model):
         compute="_compute_product_count",
     )
     mrp_eco_ids = fields.One2many(
-        "mrp.eco",
-        "estimate_id",
+        comodel_name="mrp.eco",
+        inverse_name="estimate_id",
         string="ECOs",
     )
     mrp_eco_count = fields.Integer(
@@ -39,12 +39,12 @@ class SaleEstimateJob(models.Model):
         store=True,
     )
     margin_percent = fields.Float(
-        "Margin (%)",
+        string="Margin (%)",
         compute="_compute_total_cost_margin",
         store=True,
     )
     warehouse_id = fields.Many2one(
-        "stock.warehouse",
+        comodel_name="stock.warehouse",
         string="Warehouse",
         required=True,
         compute="_compute_warehouse_id",
@@ -53,15 +53,21 @@ class SaleEstimateJob(models.Model):
         precompute=True,
         check_company=True,
     )
-    has_active_pricelist = fields.Boolean(compute="_compute_has_active_pricelist")
-    show_update_pricelist = fields.Boolean(string="Has Pricelist Changed", store=False)
+    has_active_pricelist = fields.Boolean(
+        string="Has Pricelist",
+        compute="_compute_has_active_pricelist",
+    )
+    show_update_pricelist = fields.Boolean(
+        string="Has Pricelist Changed",
+        store=False,
+    )
     show_update_purchase_price = fields.Boolean(
         string="Ha Purchase Price Changed",
         compute="_compute_show_update_purchase_price",
     )
     quotation_ids = fields.One2many(
-        "sale.order",
-        "estimate_id",
+        comodel_name="sale.order",
+        inverse_name="estimate_id",
         string="Sales Quotations",
         readonly=True,
         copy=False,
@@ -163,59 +169,7 @@ class SaleEstimateJob(models.Model):
             "res_model": "product.creation.wizard",
             "view_mode": "form",
             "target": "new",
-        }
-
-    def action_create_eco_and_product(self, product_name, type):
-        """Action called via button to create a new prototype product."""
-        # Create the estimate
-        profile = self.env["mrp.eco.type"].search([("name", "=", "Prototype")], limit=1)
-        new_product = self.env["product.template"].create(
-            {
-                "name": product_name,
-                "profile_id": profile.id,
-                "estimate_id": self.id,
-            }
-        )
-
-        new_bom = self.env["mrp.bom"].create(
-            {
-                "product_tmpl_id": new_product.id,
-                "scaffolding_bom": True,
-                "type": "normal",
-            }
-        )
-        # Populate BOM lines based on estimate lines
-        for line in self.estimate_ids:
-            self.env["mrp.bom.line"].create(
-                {
-                    "bom_id": new_bom.id,
-                    "product_id": line.product_id.id,
-                    "product_qty": line.product_uom_qty,
-                }
-            )
-
-        # Create ECO
-        eco_stage = self.env["mrp.eco.stage"].search(
-            [("type_ids", "in", type.id)], limit=1
-        )
-        new_eco = self.env["mrp.eco"].create(
-            {
-                "name": product_name,
-                "type_id": type.id,
-                "type": "bom",
-                "product_tmpl_id": new_product.id,
-                "bom_id": new_bom.id,
-                "estimate_id": self.id,
-                "stage_id": eco_stage.id,
-            }
-        )
-        # Show the created eco
-        return {
-            "type": "ir.actions.act_window",
-            "res_model": "mrp.eco",
-            "view_mode": "form",
-            "res_id": new_eco.id,
-            "target": "current",
+            "context": {"default_estimate_id": self.id},
         }
 
     @api.depends("product_tmpl_ids")
@@ -362,7 +316,6 @@ class SaleEstimateJob(models.Model):
             "view_mode": "form",
             "res_model": "sale.order",
             "res_id": quotation.id,
-            # "domain": [("id", "in", self.mapped("quotation_ids").ids)],
             "context": self.env.context,
         }
 
