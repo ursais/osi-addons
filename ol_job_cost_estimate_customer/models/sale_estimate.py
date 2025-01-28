@@ -1,5 +1,6 @@
 # Import Odoo libs
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class SaleEstimateJob(models.Model):
@@ -52,17 +53,32 @@ class SaleEstimateJob(models.Model):
         precompute=True,
         check_company=True,
     )
-
     has_active_pricelist = fields.Boolean(compute="_compute_has_active_pricelist")
     show_update_pricelist = fields.Boolean(string="Has Pricelist Changed", store=False)
-
     show_update_purchase_price = fields.Boolean(
         string="Ha Purchase Price Changed",
         compute="_compute_show_update_purchase_price",
     )
+    quotation_ids = fields.One2many(
+        "sale.order",
+        "estimate_id",
+        string="Sales Quotations",
+        readonly=True,
+        copy=False,
+    )
+    quotation_count = fields.Integer(
+        string="Quotation Count",
+        compute="_compute_quotation_count",
+    )
 
     # END ##########
     # METHODS ##########
+
+    @api.depends("quotation_ids")
+    def _compute_quotation_count(self):
+        """Standard count method to count related Quotation's for smart button."""
+        for lead in self:
+            lead.quotation_count = len(lead.quotation_ids)
 
     def _compute_show_update_purchase_price(self):
         for rec in self:
@@ -311,3 +327,59 @@ class SaleEstimateJob(models.Model):
             "view_mode": "form",
             "target": "new",
         }
+
+    def estimate_to_quotation(self):
+        super().estimate_to_quotation()
+
+        for rec in self:
+            # Additional logic to create multiple quotations
+            if (
+                not rec.estimate_ids
+                and not rec.labour_estimate_line_ids
+                and not rec.overhead_estimate_line_ids
+            ):
+                raise UserError(_("Please enter Estimation Lines!"))
+
+            # Prepare data for multiple quotations
+            vals = [
+                {
+                    "partner_id": rec.partner_id.id,
+                    "origin": rec.number + " - Additional",
+                    "analytic_account_id": rec.analytic_id.id,
+                    "payment_term_id": rec.payment_term_id.id,
+                    "pricelist_id": rec.pricelist_id.id,
+                    "opportunity_id": rec.opportunity_id.id,
+                    "estimate_id": rec.id,
+                }
+            ]
+
+            # Create quotation
+            quotation = self.env["sale.order"].create(vals)
+            rec._prepare_quotation_line(quotation)
+        return {
+            "type": "ir.actions.act_window",
+            "name": _("Quotations"),
+            "view_mode": "form",
+            "res_model": "sale.order",
+            "res_id": quotation.id,
+            # "domain": [("id", "in", self.mapped("quotation_ids").ids)],
+            "context": self.env.context,
+        }
+
+    def view_custom_quotation(self):
+        """Override since we can now have multiple quotes from estimate."""
+        """Smart button action to open the Sale Order or list of Sale Order's if more than one."""
+        super().view_custom_quotation()
+        estimates = self.quotation_ids
+        action = self.env.ref("sale.action_quotations_with_onboarding").read()[0]
+        if len(estimates) == 1:
+            action["views"] = [
+                (
+                    self.env.ref("sale.view_order_form").id,
+                    "form",
+                )
+            ]
+            action["res_id"] = estimates.id
+        else:
+            action["domain"] = [("id", "in", estimates.ids)]
+        return action
