@@ -47,6 +47,7 @@ class QuotationWizard(models.TransientModel):
                 "payment_term_id": self.estimate_id.payment_term_id.id,
                 "pricelist_id": self.estimate_id.pricelist_id.id,
                 "opportunity_id": self.estimate_id.opportunity_id.id,
+                "estimate_id": self.estimate_id.id,
                 "order_line": [
                     (
                         0,
@@ -63,7 +64,7 @@ class QuotationWizard(models.TransientModel):
             # Set Unit Price on lines according to pricelist.
             quotation.order_line._compute_price_unit()
 
-            self.estimate_id.write({"state": "quotesend", "quotation_id": quotation.id})
+            self.estimate_id.write({"state": "quotesend"})
             return {
                 "type": "ir.actions.act_window",
                 "name": "Quotation",

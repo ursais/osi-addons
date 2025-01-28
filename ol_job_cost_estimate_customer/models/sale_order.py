@@ -2,14 +2,14 @@
 from odoo import fields, models
 
 
-class ProductTemplate(models.Model):
+class SaleOrder(models.Model):
     """
-    Inherit Product Template for adding fields.
+    Add new fields to Sale Order
     """
 
-    _inherit = "product.template"
+    _inherit = "sale.order"
 
-    # COLUMNS ##########
+    # COLUMNS #####
 
     estimate_id = fields.Many2one(
         comodel_name="sale.estimate.job",

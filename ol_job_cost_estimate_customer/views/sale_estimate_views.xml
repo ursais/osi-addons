@@ -26,6 +26,26 @@
             <xpath expr="//field[@name='estimate_ids']/tree/field[@name='product_id']" position="attributes">
                 <attribute name="domain">['|', ('company_ids_display', '=', False), ('company_ids_display', 'in', company_id)]</attribute>
             </xpath>
+            <xpath expr="//button[@name='view_custom_quotation']" position="replace">
+                <button
+                    name="view_custom_quotation"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-dollar"
+                    string="Quotations"
+                    invisible="quotation_count == 0">
+                    <field name="quotation_count" widget="statinfo" string="Quotations" />
+                </button>
+            </xpath>
+            <xpath expr="//button[@name='estimate_to_quotation']" position="replace">
+                <button
+                    name="estimate_to_quotation"
+                    type="object"
+                    string="Create Quotation"
+                    invisible="state in ('draft', 'approve', 'reject', 'cancel')"
+                    class="btn-primary"
+                />
+            </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position = "inside">
                 <button
                     type="object"

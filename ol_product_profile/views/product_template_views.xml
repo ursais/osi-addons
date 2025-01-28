@@ -11,13 +11,13 @@
             <field name="invoice_policy" position="attributes">
                 <attribute name="readonly">profile_id</attribute>
             </field>
-            <field name="categ_id" position="attributes">
-                <attribute name="readonly">profile_id</attribute>
-            </field>
             <field name="uom_id" position="attributes">
                 <attribute name="readonly">profile_id</attribute>
             </field>
             <field name="uom_po_id" position="attributes">
+                <attribute name="readonly">profile_id</attribute>
+            </field>
+            <field name="tracking" position="attributes">
                 <attribute name="readonly">profile_id</attribute>
             </field>
             <field name="route_ids" position="attributes">

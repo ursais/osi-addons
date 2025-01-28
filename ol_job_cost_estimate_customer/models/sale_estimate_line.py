@@ -18,13 +18,13 @@ class SaleEstimateLineJob(models.Model):
         precompute=True,
     )
     margin = fields.Float(
-        "Margin",
+        string="Margin",
         compute="_compute_margin",
         digits="Product Price",
         store=True,
     )
     margin_percent = fields.Float(
-        "Margin (%)",
+        string="Margin (%)",
         compute="_compute_margin",
         store=True,
     )
