@@ -1,5 +1,5 @@
 {
-    "name": "PLM ECO Sub State",
+    "name": "Onlogic PLM ECO Sub State",
     "version": "17.0.1.0.0",
     "author": "OnLogic",
     "website": "https://www.onlogic.com",
