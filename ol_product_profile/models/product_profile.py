@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import fields, models
+from odoo import api, fields, models
 import odoo.addons.product_profile.models.product_profile as product_profile_module
 
 
@@ -33,9 +33,6 @@ class ProductProfile(models.Model):
 
     # DEFAULT METHODS #####
 
-    def _get_default_category_id(self):
-        return self.env.ref("product.product_category_all")
-
     def _get_default_uom_id(self):
         return self.env.ref("uom.product_uom_unit")
 
@@ -45,12 +42,6 @@ class ProductProfile(models.Model):
     has_products = fields.Boolean(
         string="Has Products",
         compute="_compute_has_products",
-    )
-    categ_id = fields.Many2one(
-        "product.category",
-        string="Product Category",
-        change_default=True,
-        default=_get_default_category_id,
     )
     uom_id = fields.Many2one(
         "uom.uom",
@@ -79,6 +70,21 @@ class ProductProfile(models.Model):
         help="Ordered Quantity: Invoice quantities ordered by the customer.\n"
         "Delivered Quantity: Invoice quantities delivered to the customer.",
     )
+    tracking = fields.Selection(
+        [
+            ("serial", "By Unique Serial Number"),
+            ("lot", "By Lots"),
+            ("none", "No Tracking"),
+        ],
+        string="Tracking",
+        required=True,
+        default="none",
+        compute="_compute_tracking",
+        store=True,
+        readonly=False,
+        precompute=True,
+        help="Ensure the traceability of a storable product in your warehouse.",
+    )
 
     # END ##########
     # METHODS ##########
@@ -91,5 +97,13 @@ class ProductProfile(models.Model):
             products = self.env["product.product"].search([("profile_id", "=", rec.id)])
             if products:
                 rec.has_products = True
+
+    @api.depends("detailed_type")
+    def _compute_tracking(self):
+        self.filtered(
+            lambda t: not t.tracking
+            or t.detailed_type in ("consu", "service")
+            and t.tracking != "none"
+        ).tracking = "none"
 
     # END ##########
