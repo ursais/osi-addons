@@ -9,59 +9,59 @@
                 <div class="content-group" invisible="not module_account_check_printing">
                     <h2>Check Alignment</h2>
                     <div class="row">
-                        <label for="sequence_number_margin_top" class="col-lg-5" />
+                        <label for="sequence_number_margin_top" class="col-lg-5 o_light_label" />
                         <field name="sequence_number_margin_top" string="Check Number: Top" class="col-lg-1" />
                     </div>
                     <div class="row">
-                        <label for="sequence_number_margin_left" class="col-lg-5" />
+                        <label for="sequence_number_margin_left" class="col-lg-5 o_light_label" />
                         <field name="sequence_number_margin_left" string="Check Number: Left" class="col-lg-1" />
                     </div>
                     <div class="row">
-                        <label for="ckus_date_margin_top" class="col-lg-5" />
+                        <label for="ckus_date_margin_top" class="col-lg-5 o_light_label" />
                         <field name="ckus_date_margin_top" class="col-lg-1" />
                     </div>
                     <div class="row">
-                        <label for="ckus_date_margin_left" class="col-lg-5" />
+                        <label for="ckus_date_margin_left" class="col-lg-5 o_light_label" />
                         <field name="ckus_date_margin_left" class="col-lg-1" />
                     </div>
                     <div class="row">
-                        <label for="ckus_payee_name_margin_top" class="col-lg-5" />
+                        <label for="ckus_payee_name_margin_top" class="col-lg-5 o_light_label" />
                         <field name="ckus_payee_name_margin_top" class="col-lg-1" />
                     </div>
                     <div class="row">
-                        <label for="ckus_payee_name_margin_left" class="col-lg-5" />
+                        <label for="ckus_payee_name_margin_left" class="col-lg-5 o_light_label" />
                         <field name="ckus_payee_name_margin_left" class="col-lg-1" />
                     </div>
                     <div class="row">
-                        <label for="payee_address_margin_top" class="col-lg-5" />
+                        <label for="payee_address_margin_top" class="col-lg-5 o_light_label" />
                         <field name="payee_address_margin_top" class="col-lg-1" />
                     </div>
                     <div class="row">
-                        <label for="payee_address_margin_left" class="col-lg-5" />
+                        <label for="payee_address_margin_left" class="col-lg-5 o_light_label" />
                         <field name="payee_address_margin_left" class="col-lg-1" />
                     </div>
                     <div class="row">
-                        <label for="amount_margin_top" class="col-lg-5" />
+                        <label for="amount_margin_top" class="col-lg-5 o_light_label" />
                         <field name="amount_margin_top" class="col-lg-1" />
                     </div>
                     <div class="row">
-                        <label for="amount_margin_left" class="col-lg-5" />
+                        <label for="amount_margin_left" class="col-lg-5 o_light_label" />
                         <field name="amount_margin_left" class="col-lg-1" />
                     </div>
                     <div class="row">
-                        <label for="amount_word_margin_top" class="col-lg-5" />
+                        <label for="amount_word_margin_top" class="col-lg-5 o_light_label" />
                         <field name="amount_word_margin_top" class="col-lg-1" />
                     </div>
                     <div class="row">
-                        <label for="amount_word_margin_left" class="col-lg-5" />
+                        <label for="amount_word_margin_left" class="col-lg-5 o_light_label" />
                         <field name="amount_word_margin_left" class="col-lg-1" />
                     </div>
                     <div class="row">
-                        <label for="memo_margin_top" class="col-lg-5" />
+                        <label for="memo_margin_top" class="col-lg-5 o_light_label" />
                         <field name="memo_margin_top" class="col-lg-1" />
                     </div>
                     <div class="row">
-                        <label for="memo_margin_left" class="col-lg-5" />
+                        <label for="memo_margin_left" class="col-lg-5 o_light_label" />
                         <field name="memo_margin_left" class="col-lg-1" />
                     </div>
                 </div>
