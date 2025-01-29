@@ -18,6 +18,10 @@ class StockPicking(models.Model):
         """
         res = super().button_validate()
 
+        # Ensure this picking is a delivery order and linked to a Sale Order
+        if not self.sale_id or self.picking_type_id.code != "outgoing":
+            return res
+
         # Get settings
         auto_validate_invoice = (
             self.env["ir.config_parameter"]
@@ -35,7 +39,6 @@ class StockPicking(models.Model):
                     rec.product_id.invoice_policy == "delivery" for rec in self.move_ids
                 )
                 or not self.sale_id.invoice_ids
-                and self.sale_id
             ):
                 # Call the _create_invoices function on the associated sale
                 # to create the invoice ('final' being true will include down payments)
