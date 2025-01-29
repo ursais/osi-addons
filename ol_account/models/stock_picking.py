@@ -35,6 +35,7 @@ class StockPicking(models.Model):
                     rec.product_id.invoice_policy == "delivery" for rec in self.move_ids
                 )
                 or not self.sale_id.invoice_ids
+                and self.sale_id
             ):
                 # Call the _create_invoices function on the associated sale
                 # to create the invoice ('final' being true will include down payments)
