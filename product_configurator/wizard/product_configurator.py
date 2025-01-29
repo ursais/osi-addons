@@ -453,9 +453,7 @@ class ProductConfigurator(models.TransientModel):
         """Set value ids as from product preset"""
         preset_id = self.product_preset_id
         if not self._origin and self.product_tmpl_id and preset_id and self._context.get("allow_preset_selection"):
-            wizard_obj = self.env[self._name] 
-            wizard = wizard_obj.create({"product_tmpl_id": self.product_tmpl_id.id})
-            self  = wizard
+            self = self.env[self._name].create({"product_tmpl_id": self.product_tmpl_id.id})
         if not preset_id and self.env.context.get("preset_values"):
             preset_id = self.env.context.get("preset_values").get("product_preset_id")
             preset_id = self.env["product.product"].browse(preset_id)
