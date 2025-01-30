@@ -1,0 +1,15 @@
+<odoo>
+
+    <record id="group_stock_constrained_sku" model="res.groups">
+        <field name="name">Stock Constrained SKU</field>
+        <!-- OnLogic category -->
+        <field name="category_id" ref="ol_base.onlogic_groups"/>
+        <field name="comment">These users are allowed to use the Constrained SKU functionality</field>
+    </record>
+
+    <!-- Add constrained sku automatically to dev users -->
+    <record id="ol_base.dev_team" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('ol_stock_constrained_sku.group_stock_constrained_sku'))]"/>
+    </record>
+
+</odoo>

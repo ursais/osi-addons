@@ -1,0 +1,50 @@
+<odoo>
+
+    <!-- The unique product form view to only show information valuable for Accounting and stock inventory cost  -->
+    <record id="view_constrained_sku_wizard_form" model="ir.ui.view">
+        <field name="name">view.constrained.sku.wizard.form</field>
+        <field name="model">constrained.sku.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Constrained SKU Allocation" class="o_sale_order">
+                <div class="alert alert-info" role="alert">
+                    <strong>Select the SKUs that you want to include or exclude from the allocation</strong>
+                    <br/>You can only select SKUs contained in the list of Transfers!
+                    <br/>Produced systems are not selectable and won't be affected.
+                </div>
+
+                <div class="alert alert-warning" role="alert" invisible="component_ids">
+                    <strong>Setting the SKUs as blank in this tool will by default set the “include” option to either allocate/unallocate all SKUs</strong>
+                </div>
+
+                <group name="top_grp" colspan="4">
+                    <field name="allowed_component_ids" invisible="1" />
+                    <field name="component_ids" widget="many2many" domain="[('id', 'in', allowed_component_ids)]" required="1" options="{'no_create': True}">
+                        <tree default_order="default_code asc" create="true" delete="true" editable="true">
+                            <field name="default_code" string="SKU" />
+                            <field name="name" />
+                        </tree>
+                    </field>
+                </group>
+
+                <group name="line_grp" colspan="4">
+                    <field name="line_ids">
+                        <tree delete="true" create="false" editable="false">
+                            <field name="sequence" widget="handle" />
+                            <field name="picking_id" />
+                            <field name="sale_order_id" />
+                        </tree>
+                    </field>
+                </group>
+
+                <footer>
+                    <button name="action_allocate_included" string="Allocate Selected SKUs" type="object" class="btn-primary" groups="ol_stock_constrained_sku.group_stock_constrained_sku" />
+                    <button name="action_unallocate_included" string="Un-Allocate Selected SKUs" type="object" class="btn-primary"  groups="ol_stock_constrained_sku.group_stock_constrained_sku" />
+                    <button name="action_allocate_excluded" string="Allocate All except Selected SKUs" type="object" class="btn-primary"  groups="ol_stock_constrained_sku.group_stock_constrained_sku" />
+                    <button name="action_unallocate_excluded" string="Un-Allocate All except Selected SKUs" type="object" class="btn-primary"  groups="ol_stock_constrained_sku.group_stock_constrained_sku" />
+                    <button string="_Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

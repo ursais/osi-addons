@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sku_result_wizard_user,sku_result_wizard_user,model_constrained_sku_result_wizard,base.group_user,1,1,1,1
+access_constrained_sku_search_wizard_user,constrained_sku_search_wizard_user,model_constrained_sku_search_wizard,base.group_user,1,1,1,1
+access_constrained_sku_wizard_user,constrained_sku_wizard_user,model_constrained_sku_wizard,base.group_user,1,1,1,1
+access_constrained_sku_wizard_line_user,constrained_sku_wizard_line_user,model_constrained_sku_wizard_line,base.group_user,1,1,1,1
