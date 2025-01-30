@@ -1,0 +1,68 @@
+<odoo>
+
+    <record model="ir.ui.view" id="view_constrained_sku_search_wizard">
+        <field name="name">constrained.sku.search.wizard</field>
+        <field name="model">constrained.sku.search.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Constrained SKU Search Wizard">
+                <div class="alert alert-info" role="alert">
+                    <strong>Please select how you want to add or search for Sale Orders and Transfers</strong><br/>
+                    You can define the order of the records in the next step.<br/><br/>
+                    <ul>
+                        <li invisible="type == 'list'">Search and select the records you would like to add</li>
+                        <li invisible="type == 'search'">Add a comma separated list of `names`. Ex.: IN/54541,OUT/150665,IN/54540</li>
+                    </ul>
+                </div>
+                <group name="type_grp" colspan="4">
+                    <field name="type" />
+                </group>
+                <group name="search_grp" colspan="4" invisible="type != 'search'">
+                    <field name="sale_order_ids" widget="many2many" domain="[('state', 'not in', ['draft', 'sent', 'cancel'])]" options="{'no_create': True}">
+                        <tree default_order="id desc" create="true" delete="true" editable="true">
+                            <field name="company_id" invisible="1"/>
+                            <field name="name" />
+                            <field name="state" />
+                            <field name="partner_id"  />
+                        </tree>
+                    </field>
+                    <field name="picking_ids" widget="many2many" domain="[('picking_type_code', 'in', ['internal', 'outgoing']), ('state', 'not in', ['done', 'cancel'])]" options="{'no_create': True}">
+                        <tree default_order="id desc">
+                            <field name="name" optional="show" />
+                            <field name="origin" optional="show" />
+                            <field name="scheduled_date" optional="show" />
+                            <field name="location_id" optional="hide" />
+                            <field name="location_dest_id" optional="show" />
+                            <field name="state" optional="show" />
+                        </tree>
+                    </field>
+                </group>
+                <group name="list_grp" colspan="4" invisible="type != 'list'">
+                    <field name="sale_order_list" />
+                    <field name="picking_list" />
+                </group>
+                <footer>
+                    <button name="action_add" string="Add" type="object" class="btn-primary" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_constrained_sku_search_wizard" model="ir.actions.act_window">
+        <field name="name">Constrained SKU Allocation</field>
+        <field name="res_model">constrained.sku.search.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="view_id" ref="view_constrained_sku_search_wizard" />
+    </record>
+
+    <menuitem
+        id="menu_constrained_sku_search_wizard"
+        parent="stock.menu_stock_warehouse_mgmt"
+        name="Constrained SKU Allocation"
+        action="action_constrained_sku_search_wizard"
+        sequence="999"
+        groups="ol_stock_constrained_sku.group_stock_constrained_sku"
+    />
+
+</odoo>
