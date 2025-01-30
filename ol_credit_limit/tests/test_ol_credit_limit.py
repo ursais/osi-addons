@@ -1,5 +1,8 @@
 from odoo.tests import common, tagged, Form
-from odoo import exceptions
+from datetime import date, timedelta
+
+from odoo import fields,exceptions
+
 
 from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
 
@@ -10,10 +13,14 @@ class TestCreditLimit(common.TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         cls.env = cls.env(context=dict(cls.env.context, **DISABLED_MAIL_CONTEXT))
-
+        cls.blanket_order_obj = cls.env["sale.blanket.order"]
         cls.customer = cls.env.ref("hr.work_contact_mit")
         cls.product = cls.env.ref("product.product_product_6")
         cls.uom_unit = cls.env.ref("uom.product_uom_unit")
+        cls.payment_term = cls.env.ref("account.account_payment_term_immediate")
+        cls.sale_pricelist = cls.env["product.pricelist"].create(
+            {"name": "Test Pricelist", "currency_id": cls.env.ref("base.USD").id}
+        )
 
     def test_check_partner_rollup_id(self):
         PartnerObj = self.env["res.partner"]
@@ -188,3 +195,76 @@ class TestCreditLimit(common.TransactionCase):
         # order = order_form.save()
         # order.action_confirm()
         # self.assertEqual(order.mrp_production_count, 1)
+
+
+    def test_customer_deposit_balance(self):
+        PartnerObj = self.env["res.partner"]
+        journal =  self.env.ref("account.1_cash")
+        AccountPayment = self.env["account.payment"]
+        PaymentObj = self.env["account.payment"]
+        partner_1 = PartnerObj.create({"name":"Vandan"})
+        payment = AccountPayment.create({"partner_id":partner_1.id,"journal_id":journal.id,"amount":500.00})
+        self.assertEqual(partner_1.customer_deposit_balance, payment.amount)
+
+
+    def test_open_bo_balance(self):
+        PartnerObj = self.env["res.partner"]
+        SaleOrderObj = self.env["sale.order"]
+        self.customer.credit_limit = 400
+        partner_1 = PartnerObj.create({"name":"Vandan"})
+        
+        product = self.env["product.product"].create(
+            {
+                "name": "Test Product",
+                "type": "product",
+                "invoice_policy": "order",
+                "list_price": 200,
+            }
+        )
+
+        self.env['product.supplierinfo'].create([
+            {
+                'partner_id': partner_1.id,
+                'product_id': product.id,
+                'delay': 1,
+                'min_qty': 1,
+                'price': 20,
+            }])
+
+
+        blanket_order = self.blanket_order_obj.create(
+            {
+                "partner_id": self.customer.id,
+                "validity_date": fields.Date.to_string(date.today() + timedelta(days=1)),
+                "payment_term_id": self.payment_term.id,
+                "pricelist_id": self.sale_pricelist.id,
+                "auto_release": True,
+                "line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": product.id,
+                            "product_uom": self.product.uom_id.id,
+                            "original_uom_qty": 1.0,
+                            "price_unit": 30.0,
+                            "date_schedule": fields.Date.today(),
+                        },
+                    ),
+                ],
+            }
+        )
+
+        # Confirm the blanket order
+        blanket_order.action_confirm()
+        # Run the cron job to create sale orders from the blanket order
+        self.blanket_order_obj.create_sale_order_cron()
+        self.assertEqual(partner_1.customer_deposit_balance, payment.amount)
+        # View the sale orders created from the blanket order
+        view_action = blanket_order.action_view_sale_orders()
+        domain_ids = view_action["domain"][0][2]
+        # Browse the created sale order
+        sale_order = self.so_obj.browse(domain_ids)
+
+
+

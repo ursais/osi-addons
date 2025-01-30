@@ -39,6 +39,8 @@ class ResPartner(models.Model):
         store=True,
         help="Credit Remaining after sum of total_due plus all credit rollup partner’s total dues.",
     )
+    customer_deposit_balance = fields.Monetary(string="Customer Deposit Balance",store=True,compute="_compute_customer_deposit_balance", help="Computed sum of all deposits from relevant journal items for the partner and its rollup partners." )
+    open_bo_balance = fields.Monetary(string="Open BO Balance",store=True,compute="_compute_open_bo_balance",  help="Computed sum of remaining blanket order quantities multiplied by price, for the partner and its rollup partners.")
 
     # END #########
     # METHODS #####
@@ -122,5 +124,42 @@ class ResPartner(models.Model):
         if self.env.context.get("is_rollup_partner"):
             args += [("id", "!=", int(self.env.context.get("is_rollup_partner")))]
         return super().name_search(name=name, args=args, operator=operator, limit=limit)
+
+    def _get_deposit_accounts(self):
+        account_domain = [("account_type","=","asset_receivable"),("deprecated","=",False)]
+        return self.env["account.account"].search(account_domain)
+
+    @api.depends("partner_rollup_id","rollup_partner_ids","invoice_ids.line_ids.account_id","invoice_ids.line_ids.balance")
+    def _compute_customer_deposit_balance(self):
+        AML = self.env["account.move.line"]
+        for partner in self:
+            partners_to_include = partner.rollup_partner_ids | partner
+            deposit_accounts = partner._get_deposit_accounts()
+            domain = [("partner_id","in",partners_to_include.ids),
+            ("account_id","=",deposit_accounts.ids),
+            ("balance","<",0),]
+            deposit_balance = sum(AML.search(domain).mapped("balance")) *-1
+            partner.customer_deposit_balance = deposit_balance
+
+    @api.depends(
+        "partner_rollup_id","rollup_partner_ids",
+        "sale_order_ids.order_line.product_uom_qty",
+        "sale_order_ids.order_line.price_unit",
+        "sale_order_ids.order_line.state",
+        "rollup_partner_ids.sale_order_ids.order_line.product_uom_qty",
+        "rollup_partner_ids.sale_order_ids.order_line.price_unit",
+    )
+    def _compute_open_bo_balance(self):
+        SOL = self.env["sale.order.line"]
+        for partner in self:
+            partners_to_include = partner.rollup_partner_ids | partner
+            domain = [
+            ("order_id.partner_id","in",partners_to_include.ids),
+            ("blanket_order_line","!=",False),
+            ("order_id.state","not in",["cancel","done"]),
+            ("product_uom_qty",">",0),
+            ]
+            bo_balance = sum(SOL.search(domain).mapped(lambda l:l.product_uom_qty * l.price_unit))
+            partner.open_bo_balance = bo_balance
 
     # END #########
