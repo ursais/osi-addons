@@ -9,6 +9,6 @@ class CRMLead(models.Model):
 
     # COLUMNS ######
 
-    quantity = fields.Integer()
+    quantity = fields.Integer(string="Expected Volume")
 
     # END ##########
