@@ -183,7 +183,7 @@ class ConstrainedSkuWizard(models.TransientModel):
             </li>
             """
         msg += f"""<ul><br/>User: {self.env.user.name}"""
-        picking.message_post(body=msg)
+        picking.message_post(body=msg, body_is_html=True)
         _logger.info(msg)
 
 
