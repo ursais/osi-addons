@@ -5,18 +5,16 @@
         <field name="model">constrained.sku.result.wizard</field>
         <field name="arch" type="xml">
             <form string="Constrained SKU Result Wizard" class="o_sale_order">
-                <group name="info_grp" colspan="4">
-                    <div class="alert alert-info" role="alert">
-                        <field name="allocate" invisible="1" />
-                        <div invisible="not allocate">The following SKUs were allocated in these Transfers</div>
-                        <div invisible="allocate">The following SKUs were unallocated in these Transfers</div>
-                        <div>
-                        ✅ = Fully allocated
-                        ⚠️ = Partial allocation
-                        ❌ = No allocation
-                        </div>
+                <div class="alert alert-info" role="alert">
+                    <field name="allocate" invisible="1" />
+                    <div invisible="not allocate">The following SKUs were allocated in these Transfers</div>
+                    <div invisible="allocate">The following SKUs were unallocated in these Transfers</div>
+                    <div>
+                    ✅ = Fully allocated
+                    ⚠️ = Partial allocation
+                    ❌ = No allocation
                     </div>
-                </group>
+                </div>
 
                 <group name="line_grp" colspan="4">
                     <field name="processed_line_ids" readonly="1">

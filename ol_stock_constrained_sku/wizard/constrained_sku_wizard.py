@@ -69,9 +69,9 @@ class ConstrainedSkuWizard(models.TransientModel):
 
         # determine if the move got full, partial or no stock allocation
         def get_indicator(move):
-            if move.reserved_availability == move.product_qty:
+            if move.quantity == move.product_uom_qty:
                 return "✅"
-            elif move.reserved_availability == 0:
+            elif move.quantity == 0:
                 return "❌"
             return "⚠️"
 
