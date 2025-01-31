@@ -25,7 +25,7 @@
                 <field name="earliest_start" widget="datetime" options="{'show_time': false}" optional="show" />
                 <field name="date_deadline" widget="datetime" options="{'show_time': false}" optional="show" />
                 <field name="components_availability_state" column_invisible="True" options='{"lazy": true}'/>
-                <field name="components_availability" options="{'lazy': true}" invisible="state not in ['done', 'cancel']" optional="show" decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'" decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')" decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')"/>
+                <field name="components_availability" options="{'lazy': true}" invisible="state in ['done', 'cancel']" optional="show" decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'" decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')" decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')"/>
                 <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
                 <field name="total_revenue" widget="monetary" optional="hide" sum="Total" />
                 <field name="total_duration_expected" widget="float_time" optional="show" sum="Total" />
@@ -216,7 +216,7 @@
                                     <field name="date_start" string="Scheduled Date" optional="show" />
                                     <field name="date_finished" string="End Date" optional="show" />
                                     <field name="components_availability_state" column_invisible="True" options="{&quot;lazy&quot;: true}" />
-                                    <field name="components_availability" options="{'lazy': true}" invisible="state not in ['done', 'cancel']" optional="show" decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'" decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')" decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')"/>
+                                    <field name="components_availability" options="{'lazy': true}" invisible="state in ['done', 'cancel']" optional="show" decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'" decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')" decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')"/>
                                     <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'" />
                                     <field name="sale_order_id" string="Sale Order" optional="show" />
                                     <field name="duration_expected" widget="float_time" optional="show" />
@@ -227,7 +227,7 @@
                                     <field name="unreserve_visible" optional="hide" />
                                     <field name="reserve_visible" optional="hide" />
                                     <field name="is_planned" optional="hide" />
-                                    <button name="action_remove_batch" type="object" icon="fa-close" column_invisible="parent.state not in ('done', 'cancel') or parent.is_locked" title="Close"/>
+                                    <button name="action_remove_batch" type="object" icon="fa-close" column_invisible="parent.state in ('done', 'cancel') or parent.is_locked" title="Close"/>
                                 </tree>
                             </field>
                         </page>
