@@ -1,5 +1,6 @@
 from odoo import api, fields, models
 from odoo.tools.sql import drop_index, index_exists
+from odoo.addons.product.models.product_product import ProductProduct as pp
 
 
 class ProductProductAttributeValueQty(models.Model):
@@ -45,14 +46,6 @@ class ProductProduct(models.Model):
         compute="_compute_qty_combination_indices", store=True, index=True
     )
 
-    def init(self):
-        if index_exists(self.env.cr, "product_product_combination_unique"):
-            drop_index(self.env.cr, "product_product_combination_unique", self._table)
-
-        self.env.cr.execute(
-            "CREATE UNIQUE INDEX IF NOT EXISTS product_product_combination_qty_attrs_unique ON %s (product_tmpl_id, combination_indices,qty_combination_indices) WHERE active is true"
-            % self._table
-        )
 
     def _get_non_config_set_bom_lines(self):
         self.ensure_one()
@@ -133,3 +126,14 @@ class ProductProduct(models.Model):
                     )
             product.price_extra = sum(extra_prices.values())
         return result
+
+def init(self):
+    if index_exists(self.env.cr, "product_product_combination_unique"):
+        drop_index(self.env.cr, "product_product_combination_unique", self._table)
+
+    self.env.cr.execute(
+        "CREATE UNIQUE INDEX IF NOT EXISTS product_product_combination_qty_attrs_unique ON %s (product_tmpl_id, combination_indices,qty_combination_indices) WHERE active is true"
+        % self._table
+    )
+
+pp.init = init
