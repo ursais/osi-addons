@@ -1012,7 +1012,7 @@ class MrpProductionBatch(models.Model):
             if any(mo.reservation_state == "waiting" for mo in valid_productions):
                 batch.reservation_state = "waiting"
             elif any(mo.reservation_state == "confirmed" for mo in valid_productions):
-                batch.reservation_state = "confirm"
+                batch.reservation_state = "confirmed"
             elif any(mo.reservation_state == "assigned" for mo in valid_productions):
                 batch.reservation_state = "assigned"
             else:
