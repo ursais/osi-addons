@@ -18,7 +18,10 @@ class ProductTemplate(models.Model):
         store=True,
     )
     company_ids_display = fields.Many2many(
-        comodel_name="res.company",
+        "res.company",
+        'product_template_company_display_rel',
+        'product_temp_id'
+        'company_id',
         string="Enabled Companies",
         help=(
             """Used for eCommerce: If set, the product is limited to be sold
