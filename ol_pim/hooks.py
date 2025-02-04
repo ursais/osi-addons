@@ -154,14 +154,3 @@ def load_attribute_csv_data(env):
                 else:
                     env[model_name].create(row)
                     _logger.info(f"Created {model_name}: {row['name']}")
-    # After processing all CSV files, trigger XML import
-    load_xml_import(env)
-
-
-def load_xml_import(env):
-    # Define the path to the XML file in the module's `data` folder
-    xml_file_path = file_path("ol_pim/data/attribute_attribute_domain.xml")
-
-    # Trigger the XML import
-    with open(xml_file_path, "r") as f:
-        env["ir.importexport"].with_context(module="ol_pim").import_file(f.read())

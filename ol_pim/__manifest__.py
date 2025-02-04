@@ -22,6 +22,5 @@
     "data": [
         "data/documents_folder.xml",
         "views/product_template_views.xml",
-        # "data/attribute_attribute_domain.xml",
     ],
 }
