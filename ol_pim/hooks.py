@@ -93,6 +93,21 @@ def load_attribute_csv_data(env):
                         )
                         continue
 
+                # Convert relation_model_id from name to ID
+                if "relation_model_id" in row and row["relation_model_id"]:
+                    relation_model_record = env["ir.model"].search(
+                        [("model", "=", row["relation_model_id"])], limit=1
+                    )
+                    if relation_model_record:
+                        row["relation_model_id"] = (
+                            relation_model_record.id
+                        )  # Convert to ID
+                    else:
+                        _logger.warning(
+                            f"Relation Model '{row['relation_model_id']}' not found, skipping record."
+                        )
+                        continue
+
                 existing_record = env[model_name].search(search_domain, limit=1)
 
                 if existing_record:
@@ -139,12 +154,14 @@ def load_attribute_csv_data(env):
                 else:
                     env[model_name].create(row)
                     _logger.info(f"Created {model_name}: {row['name']}")
+    # After processing all CSV files, trigger XML import
+    load_xml_import(env)
 
 
-# def load_xml_import(env):
-#     # Define the path to the XML file in the module's `data` folder
-#     xml_file_path = file_path("ol_pim/data/attribute_attribute_domain.xml")
+def load_xml_import(env):
+    # Define the path to the XML file in the module's `data` folder
+    xml_file_path = file_path("ol_pim/data/attribute_attribute_domain.xml")
 
-#     # Trigger the XML import
-#     with open(xml_file_path, "r") as f:
-#         env["ir.importexport"].with_context(module="ol_pim").import_file(f.read())
+    # Trigger the XML import
+    with open(xml_file_path, "r") as f:
+        env["ir.importexport"].with_context(module="ol_pim").import_file(f.read())
