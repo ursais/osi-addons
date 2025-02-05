@@ -1,0 +1,15 @@
+<odoo>
+
+    <record id="action_update_bom" model="ir.actions.server">
+        <field name="name">Update BoM</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="mrp_batch.model_mrp_production_batch" />
+        <field name="binding_model_id" ref="mrp_batch.model_mrp_production_batch" />
+        <field name="state">code</field>
+        <field name="code">
+for rec in records:
+    if rec.is_outdated_bom and rec.state in ("draft", "confirmed"):
+        rec.action_update_bom()</field>
+    </record>
+
+</odoo>
