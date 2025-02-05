@@ -135,6 +135,7 @@ class MrpProductionBatch(models.Model):
     is_planned = fields.Boolean(
         string="Planned",
         compute="_compute_is_planned",
+        store=True,
     )
     show_lock = fields.Boolean(
         string="Show Lock Button",
@@ -1037,20 +1038,12 @@ class MrpProductionBatch(models.Model):
             valid_productions = batch.production_ids.filtered(
                 lambda mo: mo.state != "cancel"
             )
-<<<<<<< Updated upstream
-            if any(mo.reservation_state == "waiting" for mo in valid_productions):
-                batch.reservation_state = "waiting"
-            elif any(mo.reservation_state == "confirmed" for mo in valid_productions):
-                batch.reservation_state = "confirmed"
-            elif any(mo.reservation_state == "assigned" for mo in valid_productions):
-=======
 
             if not valid_productions:
                 batch.reservation_state = False
                 continue
 
             if any(mo.reservation_state == "assigned" for mo in valid_productions):
->>>>>>> Stashed changes
                 batch.reservation_state = "assigned"
             elif any(mo.reservation_state == "confirmed" for mo in valid_productions):
                 batch.reservation_state = "confirmed"
