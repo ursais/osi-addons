@@ -13,23 +13,21 @@ def import_attribute_sets(env):
     with open(csv_path, mode="r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
-            search_domain = [("code", "=", row["code"])]
+            search_domain = [("name", "=", row["name"])]
+
             existing_record = env["attribute.set"].search(search_domain, limit=1)
 
             if existing_record:
-                # Compare values and update if necessary
-                if existing_record.name != row["name"]:
-                    _logger.info(f"Updating Attribute Set: {row['name']}")
-                    existing_record.write({"name": row["name"]})
+                _logger.info(f"Skipping existing Attribute Set: {row['name']}")
                 continue
 
-            # Convert model_id from name to ID
+            # Convert model_id from name ("product.template") to ID
             if "model_id" in row and row["model_id"]:
                 model_record = env["ir.model"].search(
                     [("model", "=", row["model_id"])], limit=1
                 )
                 if model_record:
-                    row["model_id"] = model_record.id
+                    row["model_id"] = model_record.id  # Store the ID, not the name
                 else:
                     _logger.warning(
                         f"ir.model '{row['model_id']}' not found, skipping record."
@@ -47,27 +45,21 @@ def import_attribute_groups(env):
     with open(csv_path, mode="r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
-            search_domain = [("code", "=", row["code"])]
+            search_domain = [("name", "=", row["name"])]
+
             existing_record = env["attribute.group"].search(search_domain, limit=1)
 
             if existing_record:
-                # Compare values and update if necessary
-                if existing_record.name != row[
-                    "name"
-                ] or existing_record.sequence != int(row["sequence"]):
-                    _logger.info(f"Updating Attribute Group: {row['name']}")
-                    existing_record.write(
-                        {"name": row["name"], "sequence": int(row["sequence"])}
-                    )
+                _logger.info(f"Skipping existing Attribute Group: {row['name']}")
                 continue
 
-            # Convert model_id from name to ID
+            # Convert model_id from name ("product.template") to ID
             if "model_id" in row and row["model_id"]:
                 model_record = env["ir.model"].search(
                     [("model", "=", row["model_id"])], limit=1
                 )
                 if model_record:
-                    row["model_id"] = model_record.id
+                    row["model_id"] = model_record.id  # Store the ID, not the name
                 else:
                     _logger.warning(
                         f"ir.model '{row['model_id']}' not found, skipping record."
@@ -85,58 +77,14 @@ def import_attributes(env):
     with open(csv_path, mode="r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
-            search_domain = [("name", "=", row["name"])]
+            search_domain = [("field_description", "=", row["field_description"])]
+
             existing_record = env["attribute.attribute"].search(search_domain, limit=1)
 
             if existing_record:
-                # Compare values and update if necessary
-                update_fields = {}
-                if existing_record.field_description != row["field_description"]:
-                    update_fields["field_description"] = row["field_description"]
-                if existing_record.attribute_type != row["attribute_type"]:
-                    update_fields["attribute_type"] = row["attribute_type"]
-                if existing_record.widget != row["widget"]:
-                    update_fields["widget"] = row["widget"]
-                if existing_record.domain != row["domain"]:
-                    update_fields["domain"] = row["domain"]
-                if existing_record.required != (row["required"] == "TRUE"):
-                    update_fields["required"] = row["required"] == "TRUE"
-                if existing_record.sequence != int(row["sequence"]):
-                    update_fields["sequence"] = int(row["sequence"])
-
-                # Compare attribute_set_ids (Many2many field)
-                if "attribute_set_ids" in row and row["attribute_set_ids"]:
-                    set_names = row["attribute_set_ids"].split(
-                        ","
-                    )  # Split names by comma
-                    set_ids = (
-                        env["attribute.set"].search([("name", "in", set_names)]).ids
-                    )
-
-                    # Get the existing set IDs from the Many2many field
-                    existing_set_ids = existing_record.attribute_set_ids.ids
-
-                    if set_ids != existing_set_ids:
-                        update_fields["attribute_set_ids"] = [(6, 0, set_ids)]
-
-                if update_fields:
-                    _logger.info(f"Updating Attribute: {row['field_description']}")
-                    existing_record.write(update_fields)
+                _logger.info(f"Skipping existing Attribute: {row['field_description']}")
                 continue
 
-            # Convert model_id from name to ID
-            if "model_id" in row and row["model_id"]:
-                model_record = env["ir.model"].search(
-                    [("model", "=", row["model_id"])], limit=1
-                )
-                if model_record:
-                    row["model_id"] = model_record.id
-                else:
-                    _logger.warning(
-                        f"ir.model '{row['model_id']}' not found, skipping record."
-                    )
-                    continue
-
             # Convert attribute_group_id from name to ID
             if "attribute_group_id" in row and row["attribute_group_id"]:
                 group_record = env["attribute.group"].search(
@@ -150,32 +98,16 @@ def import_attributes(env):
                     )
                     continue
 
-            env["attribute.attribute"].create(row)
-            _logger.info(f"Created Attribute: {row['field_description']}")
-
-            # Convert model_id from name to ID
+            # Convert model_id from name ("product.template") to ID
             if "model_id" in row and row["model_id"]:
                 model_record = env["ir.model"].search(
                     [("model", "=", row["model_id"])], limit=1
                 )
                 if model_record:
-                    row["model_id"] = model_record.id
+                    row["model_id"] = model_record.id  # Store the ID, not the name
                 else:
                     _logger.warning(
                         f"ir.model '{row['model_id']}' not found, skipping record."
-                    )
-                    continue
-
-            # Convert attribute_group_id from name to ID
-            if "attribute_group_id" in row and row["attribute_group_id"]:
-                group_record = env["attribute.group"].search(
-                    [("name", "=", row["attribute_group_id"])], limit=1
-                )
-                if group_record:
-                    row["attribute_group_id"] = group_record.id
-                else:
-                    _logger.warning(
-                        f"Attribute Group '{row['attribute_group_id']}' not found, skipping record."
                     )
                     continue
 
@@ -190,14 +122,12 @@ def import_attribute_options(env):
     with open(csv_path, mode="r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
         for row in reader:
-            search_domain = [("code", "=", row["code"])]
+            search_domain = [("name", "=", row["name"])]
+
             existing_record = env["attribute.option"].search(search_domain, limit=1)
 
             if existing_record:
-                # Compare values and update if necessary
-                if existing_record.name != row["name"]:
-                    _logger.info(f"Updating Attribute Option: {row['name']}")
-                    existing_record.write({"name": row["name"]})
+                _logger.info(f"Skipping existing Attribute Option: {row['name']}")
                 continue
 
             # Convert attribute_id from field_description to ID
@@ -217,13 +147,13 @@ def import_attribute_options(env):
             _logger.info(f"Created Attribute Option: {row['name']}")
 
 
-def load_attribute_csv_data(env):
+def migrate(env):
     """Main Function to Import Data in Correct Order"""
     _logger.warning("*************** STARTING CSV IMPORT ***************")
 
     import_attribute_sets(env)  # Step 1: Sets first
     import_attribute_groups(env)  # Step 2: Groups (must belong to a set)
-    import_attributes(env)  # Step 3: Attributes (must belong to a group)
-    import_attribute_options(env)  # Step 4: Options (must belong to an attribute)
+    # import_attributes(env)  # Step 3: Attributes (must belong to a group)
+    # import_attribute_options(env)  # Step 4: Options (must belong to an attribute)
 
     _logger.warning("*************** CSV IMPORT COMPLETE ***************")

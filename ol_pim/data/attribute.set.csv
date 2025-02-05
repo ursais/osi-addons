@@ -1,18 +1,18 @@
-name,model_id
-Accessories,product.template
-Assembly & Validation,product.template
-Cables,product.template
-Cases,product.template
-Computers,product.template
-Displays,product.template
-Expansion,product.template
-Heatsinks,product.template
-Memory,product.template
-Motherboards,product.template
-Panel PCs,product.template
-Power Supplies,product.template
-Processors,product.template
-Services,product.template
-Software,product.template
-Storage,product.template
-Warranties,product.template
+name,code,model_id
+Accessories,accessories,product.template
+Assembly & Validation,assembly_validation,product.template
+Cables,cables,product.template
+Cases,cases,product.template
+Computers,computers,product.template
+Displays,displays,product.template
+Expansion,expansion,product.template
+Heatsinks,heatsinks,product.template
+Memory,memory,product.template
+Motherboards,motherboards,product.template
+Panel PCs,panel_pcs,product.template
+Power Supplies,power_supplies,product.template
+Processors,processors,product.template
+Services,services,product.template
+Software,software,product.template
+Storage,storage,product.template
+Warranties,warranties,product.template

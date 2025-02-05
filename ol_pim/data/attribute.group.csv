@@ -1,22 +1,22 @@
-name,model_id,sequence
-Product Manager,product.template,10
-Lifecycle,product.template,20
-Sales,product.template,30
-Operations,product.template,40
-Physical Properties,product.template,50
-Power,product.template,60
-Regulatory,product.template,70
-Shared Specifications,product.template,80
-Manufacturer Info,product.template,90
-Displays (Components),product.template,100
-Expansion Cards (Components),product.template,110
-Memory (Components),product.template,120
-Motherboards (Components),product.template,130
-Other Specifications (Components),product.template,140
-Processors (Components),product.template,150
-Storage (Components),product.template,160
-Machine Use,product.template,170
-Deprecated,product.template,180
-Relation attributes,product.template,190
-Relation product attributes,product.template,200
-Documents & Files,product.template,5
+name,code,model_id,sequence
+Product Manager,product_manager,product.template,10
+Lifecycle,lifecycle,product.template,20
+Sales,sales,product.template,30
+Operations,operations,product.template,40
+Physical Properties,physical_properties,product.template,50
+Power,power,product.template,60
+Regulatory,regulatory,product.template,70
+Shared Specifications,shared_specifications,product.template,80
+Manufacturer Info,manufacturer_info,product.template,90
+Displays (Components),displays,product.template,100
+Expansion Cards (Components),expansion_cards,product.template,110
+Memory (Components),memory,product.template,120
+Motherboards (Components),motherboards,product.template,130
+Other Specifications (Components),other_specifications,product.template,140
+Processors (Components),processors,product.template,150
+Storage (Components),storage,product.template,160
+Machine Use,machine_use,product.template,170
+Deprecated,deprecated,product.template,180
+Relation attributes,relation_attributes,product.template,190
+Relation product attributes,relation_product_attributes,product.template,200
+Documents & Files,documents_files,product.template,5

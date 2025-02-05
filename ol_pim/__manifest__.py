@@ -19,8 +19,13 @@
     ],
     # always loaded
     "post_init_hook": "load_attribute_csv_data",
+    "migrate": "migrate.migrate",
     "data": [
         "data/documents_folder.xml",
+        "views/attribute_attribute_views.xml",
+        "views/attribute_group_views.xml",
+        "views/attribute_option_views.xml",
+        "views/attribute_set_views.xml",
         "views/product_template_views.xml",
     ],
 }
