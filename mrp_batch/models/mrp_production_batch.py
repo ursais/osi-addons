@@ -60,6 +60,14 @@ class MrpProductionBatch(models.Model):
         copy=False,
     )
     tag_ids = fields.Many2many("mrp.production.batch.tag", string="Tags")
+    sale_order_ids = fields.Many2many(
+        "sale.order",
+        string="Sale Order(s)",
+        compute="_compute_sale_order_ids",
+        readonly=True,
+        index=True,
+        store=True,
+    )
     sale_tag_ids = fields.Many2many("crm.tag", compute="_compute_sale_tags")
     state = fields.Selection(
         [
@@ -127,6 +135,7 @@ class MrpProductionBatch(models.Model):
     is_planned = fields.Boolean(
         string="Planned",
         compute="_compute_is_planned",
+        store=True,
     )
     show_lock = fields.Boolean(
         string="Show Lock Button",
@@ -157,6 +166,7 @@ class MrpProductionBatch(models.Model):
     components_availability = fields.Char(
         string="Component Status",
         compute="_compute_components_availability",
+        store=True,
         help="Latest component availability status for this MO. If green, then the MO's readiness status is ready, as per BOM configuration.",
     )
     components_availability_state = fields.Selection(
@@ -167,6 +177,7 @@ class MrpProductionBatch(models.Model):
             ("unavailable", "Not Available"),
         ],
         compute="_compute_components_availability",
+        store=True,
         search="_search_components_availability_state",
     )
     reservation_state = fields.Selection(
@@ -278,7 +289,7 @@ class MrpProductionBatch(models.Model):
         store=True,
     )
     remaining_build_duration = fields.Float(
-        string="Remaining Duration",
+        string="Remaining Build Duration",
         compute="_compute_remaining_build_duration",
         store=True,
     )
@@ -504,6 +515,14 @@ class MrpProductionBatch(models.Model):
                 )
 
     @api.depends("production_ids")
+    def _compute_sale_order_ids(self):
+        # Compute the Sale Order(s) based on associated production records
+        for record in self:
+            record.sale_order_ids = False
+            if record.production_ids:
+                record.sale_order_ids = record.production_ids.sale_order_id.ids
+
+    @api.depends("production_ids")
     def _compute_product_ids(self):
         # Compute the product(s) based on associated production records
         for record in self:
@@ -520,6 +539,7 @@ class MrpProductionBatch(models.Model):
                 record.product_tmpl_ids = record.production_ids.product_tmpl_id.ids
 
     @api.depends(
+        "exception_ids",
         "production_ids.state",
         "production_ids.exception_ids",
         "production_ids.main_exception_id",
@@ -957,35 +977,48 @@ class MrpProductionBatch(models.Model):
 
     @api.depends(
         "production_ids",
-        "production_ids.state",
-        "production_ids.components_availability_state",
-        "production_ids.components_availability",
+        "production_ids.move_raw_ids",
     )
     def _compute_components_availability(self):
+        """Computes batch-level component availability based on MO statuses."""
         for batch in self:
-            batch.components_availability_state = False
             batch.components_availability = False
+            batch.components_availability_state = False
 
-            # Exclude canceled MOs
             valid_productions = batch.production_ids.filtered(
-                lambda mo: mo.state not in ("draft", "cancel", "to_close", "done")
+                lambda mo: mo.state not in ("draft", "cancel", "done", "to_close")
             )
             if not valid_productions:
                 continue
 
+            # Fetch all raw moves and precompute forecast availability
+            all_raw_moves = valid_productions.move_raw_ids
+            all_raw_moves._fields["forecast_availability"].compute_value(all_raw_moves)
+
+            # Check if any MO is completely unavailable
             if any(
-                mo.components_availability_state == "unavailable"
+                any(
+                    float_compare(
+                        move.forecast_availability,
+                        0 if move.state == "draft" else move.product_qty,
+                        precision_rounding=move.product_id.uom_id.rounding,
+                    )
+                    == -1
+                    for move in mo.move_raw_ids
+                )
                 for mo in valid_productions
             ):
-                batch.components_availability_state = "unavailable"
                 batch.components_availability = _("Not Available")
+                batch.components_availability_state = "unavailable"
             else:
+                # Get the latest expected forecast date across all MOs
                 forecast_date = max(
-                    batch.production_ids.move_raw_ids.filtered(
+                    all_raw_moves.filtered("forecast_expected_date").mapped(
                         "forecast_expected_date"
-                    ).mapped("forecast_expected_date"),
+                    ),
                     default=False,
                 )
+
                 if forecast_date:
                     batch.components_availability = _(
                         "Exp %s", format_date(self.env, forecast_date)
@@ -995,26 +1028,27 @@ class MrpProductionBatch(models.Model):
                             "late" if forecast_date > batch.date_start else "expected"
                         )
                 else:
-                    batch.components_availability_state = "available"
                     batch.components_availability = _("Available")
+                    batch.components_availability_state = "available"
 
-    @api.depends(
-        "production_ids",
-        "production_ids.state",
-        "production_ids.reservation_state",
-    )
+    @api.depends("production_ids", "production_ids.reservation_state")
     def _compute_reservation_state(self):
+        """Computes batch-level reservation state based on MO statuses."""
         for batch in self:
-            # Exclude canceled MOs
             valid_productions = batch.production_ids.filtered(
                 lambda mo: mo.state != "cancel"
             )
-            if any(mo.reservation_state == "waiting" for mo in valid_productions):
-                batch.reservation_state = "waiting"
+
+            if not valid_productions:
+                batch.reservation_state = False
+                continue
+
+            if any(mo.reservation_state == "assigned" for mo in valid_productions):
+                batch.reservation_state = "assigned"
             elif any(mo.reservation_state == "confirmed" for mo in valid_productions):
                 batch.reservation_state = "confirmed"
-            elif any(mo.reservation_state == "assigned" for mo in valid_productions):
-                batch.reservation_state = "assigned"
+            elif any(mo.reservation_state == "waiting" for mo in valid_productions):
+                batch.reservation_state = "waiting"
             else:
                 batch.reservation_state = False
 
