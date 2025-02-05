@@ -1,18 +1,18 @@
-id,name,model_id
-ol_pim.attribute_set_accessories,Accessories,product.template
-ol_pim.attribute_set_assembly_validation,Assembly & Validation,product.template
-ol_pim.attribute_set_cables,Cables,product.template
-ol_pim.attribute_set_cases,Cases,product.template
-ol_pim.attribute_set_computers,Computers,product.template
-ol_pim.attribute_set_displays,Displays,product.template
-ol_pim.attribute_set_expansion,Expansion,product.template
-ol_pim.attribute_set_heatsinks,Heatsinks,product.template
-ol_pim.attribute_set_memory,Memory,product.template
-ol_pim.attribute_set_motherboards,Motherboards,product.template
-ol_pim.attribute_set_panel_pcs,Panel PCs,product.template
-ol_pim.attribute_set_power_supplies,Power Supplies,product.template
-ol_pim.attribute_set_processors,Processors,product.template
-ol_pim.attribute_set_services,Services,product.template
-ol_pim.attribute_set_software,Software,product.template
-ol_pim.attribute_set_storage,Storage,product.template
-ol_pim.attribute_set_warranties,Warranties,product.template
+name,model_id
+Accessories,product.template
+Assembly & Validation,product.template
+Cables,product.template
+Cases,product.template
+Computers,product.template
+Displays,product.template
+Expansion,product.template
+Heatsinks,product.template
+Memory,product.template
+Motherboards,product.template
+Panel PCs,product.template
+Power Supplies,product.template
+Processors,product.template
+Services,product.template
+Software,product.template
+Storage,product.template
+Warranties,product.template

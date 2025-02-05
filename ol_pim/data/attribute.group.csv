@@ -1,22 +1,22 @@
-id,name,model_id,sequence
-ol_pim.attribute_group_product_manager,Product Manager,product.template,10
-ol_pim.attribute_group_lifecycle,Lifecycle,product.template,20
-ol_pim.attribute_group_sales,Sales,product.template,30
-ol_pim.attribute_group_operations,Operations,product.template,40
-ol_pim.attribute_group_physical_properties,Physical Properties,product.template,50
-ol_pim.attribute_group_power,Power,product.template,60
-ol_pim.attribute_group_regulatory,Regulatory,product.template,70
-ol_pim.attribute_group_shared_specifications,Shared Specifications,product.template,80
-ol_pim.attribute_group_manufacturer_info,Manufacturer Info,product.template,90
-ol_pim.attribute_group_displays_components,Displays (Components),product.template,100
-ol_pim.attribute_group_expansion_cards_components,Expansion Cards (Components),product.template,110
-ol_pim.attribute_group_memory_components,Memory (Components),product.template,120
-ol_pim.attribute_group_motherboards_components,Motherboards (Components),product.template,130
-ol_pim.attribute_group_other_specifications_components,Other Specifications (Components),product.template,140
-ol_pim.attribute_group_processors_components,Processors (Components),product.template,150
-ol_pim.attribute_group_storage_components,Storage (Components),product.template,160
-ol_pim.attribute_group_machine_use,Machine Use,product.template,170
-ol_pim.attribute_group_deprecated,Deprecated,product.template,180
-ol_pim.attribute_group_relation_attributes,Relation attributes,product.template,190
-ol_pim.attribute_group_relation_product_attributes,Relation product attributes,product.template,200
-ol_pim.attribute_group_documentation,Documents & Files,product.template,5
+name,model_id,sequence
+Product Manager,product.template,10
+Lifecycle,product.template,20
+Sales,product.template,30
+Operations,product.template,40
+Physical Properties,product.template,50
+Power,product.template,60
+Regulatory,product.template,70
+Shared Specifications,product.template,80
+Manufacturer Info,product.template,90
+Displays (Components),product.template,100
+Expansion Cards (Components),product.template,110
+Memory (Components),product.template,120
+Motherboards (Components),product.template,130
+Other Specifications (Components),product.template,140
+Processors (Components),product.template,150
+Storage (Components),product.template,160
+Machine Use,product.template,170
+Deprecated,product.template,180
+Relation attributes,product.template,190
+Relation product attributes,product.template,200
+Documents & Files,product.template,5
