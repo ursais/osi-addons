@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="mrp_batch.mrp_production_batch_tree_view"/>
         <field name="arch" type="xml">
             <field name="state" position="after">
-                <field name="rush_order" optional="show" />
+                <field name="rush_order" optional="hide" />
             </field>
         </field>
     </record>

@@ -21,6 +21,7 @@
         "data/ir_action_server.xml",
         "data/ir_sequence.xml",
         "data/mrp_exception_data.xml",
+        "data/mrp_production_batch_tag_data.xml",
         "data/workcenter_data.xml",
         "data/ir_config_parameter.xml",
         "wizard/mrp_production_add_to_existing_batch_wizard.xml",

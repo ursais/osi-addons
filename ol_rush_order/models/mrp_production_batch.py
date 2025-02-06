@@ -32,4 +32,26 @@ class MrpProductionBatch(models.Model):
                     for production in record.production_ids
                 )
 
+    @api.depends("is_delayed", "is_planned", "rush_order")
+    def _compute_tags(self):
+        # First call the original method in the base model using super()
+        super()._compute_tags()  # This will handle is_delayed and is_planned tags
+
+        for record in self:
+            rush_order_tag = self.env["mrp.production.batch.tag"].search(
+                [("name", "=", "Rush Order")], limit=1
+            )
+
+            # Add or remove Rush Order tag based on rush_order
+            if record.rush_order and rush_order_tag:
+                if rush_order_tag.id not in record.tag_ids.ids:
+                    # Add Rush Order tag
+                    record.tag_ids = [(4, rush_order_tag.id)]  # Add to existing tags
+            elif not record.rush_order and rush_order_tag:
+                if rush_order_tag.id in record.tag_ids.ids:
+                    # Remove Rush Order tag
+                    record.tag_ids = [
+                        (3, rush_order_tag.id)
+                    ]  # Remove from existing tags
+
     # END #########

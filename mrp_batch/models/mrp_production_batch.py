@@ -5,6 +5,7 @@ from odoo import _, api, fields, models
 from odoo.tools import float_compare
 from odoo.tools.misc import format_date
 from datetime import timedelta
+from odoo.exceptions import UserError
 
 
 class MrpProductionBatch(models.Model):
@@ -158,6 +159,7 @@ class MrpProductionBatch(models.Model):
     is_delayed = fields.Boolean(
         string="Is Delayed",
         compute="_compute_is_delayed",
+        store=True,
     )
     date_deadline = fields.Datetime(
         string="Deadline",
@@ -350,44 +352,44 @@ class MrpProductionBatch(models.Model):
     # Action and Button Methods
     def action_assign(self):
         # Assign raw materials to production orders that are not completed or canceled
-        for record in self:
-            record.is_queuing = True
-            for mo in record.production_ids.filtered(
+        for rec in self:
+            rec.is_queuing = True
+            for mo in rec.production_ids.filtered(
                 lambda x: x.state not in ("draft", "done", "cancel")
             ):
                 mo.with_delay().action_assign()
 
     def action_confirm(self):
         # Confirm the batch and associated manufacturing orders
-        for record in self:
-            record.is_queuing = True
-            record.state = "confirm"
-            for mo in record.production_ids.filtered(lambda x: x.state == "draft"):
+        for rec in self:
+            rec.is_queuing = True
+            rec.state = "confirm"
+            for mo in rec.production_ids.filtered(lambda x: x.state == "draft"):
                 mo.with_delay().action_confirm()
 
     def button_plan(self):
         # Plan the batch and its production orders
-        for record in self:
-            productions = record.production_ids.filtered(
+        for rec in self:
+            productions = rec.production_ids.filtered(
                 lambda x: x.state != "draft" and not x.is_planned
             )
             if productions:
                 for mo in productions:
                     mo.with_delay().button_plan()
 
-                record.is_queuing = True
+                rec.is_queuing = True
 
-                if record.state == "draft" and not any(
+                if rec.state == "draft" and not any(
                     productions.filtered(lambda p: p.state == "draft")
                 ):
-                    record.state = "confirm"
+                    rec.state = "confirm"
 
     def button_unplan(self):
         # Unplan all eligible manufacturing orders in the batch
-        for record in self:
-            record.is_queuing = True
+        for rec in self:
+            rec.is_queuing = True
             # Filter production orders to exclude ones that would cause a UserError
-            eligible_productions = record.production_ids.filtered(
+            eligible_productions = rec.production_ids.filtered(
                 lambda mo: not any(
                     wo.state in ("done", "progress") for wo in mo.workorder_ids
                 )
@@ -397,30 +399,30 @@ class MrpProductionBatch(models.Model):
 
     def action_unreserve(self):
         # Unreserve raw materials for production orders
-        for record in self:
-            record.is_queuing = True
-            for mo in record.production_ids.filtered(
+        for rec in self:
+            rec.is_queuing = True
+            for mo in rec.production_ids.filtered(
                 lambda x: x.state not in ("draft", "done", "cancel")
             ):
                 mo.with_delay().do_unreserve()
 
     def action_done(self):
         # Complete the batch and mark productions as done
-        for record in self:
-            record.is_queuing = True
-            record.state = "done"
-            for mo in record.production_ids.filtered(
+        for rec in self:
+            rec.is_queuing = True
+            rec.state = "done"
+            for mo in rec.production_ids.filtered(
                 lambda x: x.state not in ("done", "cancel")
             ):
                 mo.with_delay().button_mark_done()
 
     def action_cancel(self):
         # Cancel the batch and related eligible manufacturing orders
-        for record in self:
-            record.is_queuing = True
-            record.state = "cancel"
+        for rec in self:
+            rec.is_queuing = True
+            rec.state = "cancel"
             # Filter MOs to exclude those that cannot be canceled
-            eligible_productions = record.production_ids.filtered(
+            eligible_productions = rec.production_ids.filtered(
                 lambda mo: not any(wo.state == "done" for wo in mo.workorder_ids)
             )
             for mrp_production in eligible_productions:
@@ -428,8 +430,8 @@ class MrpProductionBatch(models.Model):
 
     def action_lock_and_unlock(self):
         # Lock all Manufacturing Orders in the batch.
-        for record in self:
-            for mo in record.production_ids:
+        for rec in self:
+            for mo in rec.production_ids:
                 mo.action_toggle_is_locked()
 
     def action_open_add_to_batch_wizard(self):
@@ -486,16 +488,20 @@ class MrpProductionBatch(models.Model):
         "production_ids.state",
     )
     def _compute_sale_tags(self):
-        for record in self:
+        for rec in self:
             # Exclude canceled MOs
-            valid_productions = record.production_ids.filtered(
+            valid_productions = rec.production_ids.filtered(
                 lambda mo: mo.state != "cancel"
             )
 
             # Collect sale tags
             all_tags = valid_productions.mapped("sale_order_id.tag_ids")
-            record.sale_tag_ids = [(6, 0, all_tags.ids)]
+            rec.sale_tag_ids = [(6, 0, all_tags.ids)]
 
+    @api.depends(
+        "date_start",
+        "date_deadline",
+    )
     def _compute_is_delayed(self):
         # Check if the scheduled date falls after deadline
         self.is_delayed = False
@@ -505,39 +511,42 @@ class MrpProductionBatch(models.Model):
                 deadline_date = rec.date_deadline.date()
                 rec.is_delayed = scheduled_date >= deadline_date
 
+            # Explicitly trigger _compute_tags after setting is_delayed
+            rec._compute_tags()
+
     @api.depends("production_ids")
     def _compute_partner_ids(self):
         # Compute the customer(s) based on associated production records
-        for record in self:
-            record.partner_ids = False
-            if record.production_ids:
-                record.partner_ids = (
-                    record.production_ids.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id.partner_id.ids
+        for rec in self:
+            rec.partner_ids = False
+            if rec.production_ids:
+                rec.partner_ids = (
+                    rec.production_ids.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id.partner_id.ids
                 )
 
     @api.depends("production_ids")
     def _compute_sale_order_ids(self):
         # Compute the Sale Order(s) based on associated production records
-        for record in self:
-            record.sale_order_ids = False
-            if record.production_ids:
-                record.sale_order_ids = record.production_ids.sale_order_id.ids
+        for rec in self:
+            rec.sale_order_ids = False
+            if rec.production_ids:
+                rec.sale_order_ids = rec.production_ids.sale_order_id.ids
 
     @api.depends("production_ids")
     def _compute_product_ids(self):
         # Compute the product(s) based on associated production records
-        for record in self:
-            record.product_ids = False
-            if record.production_ids:
-                record.product_ids = record.production_ids.product_id.ids
+        for rec in self:
+            rec.product_ids = False
+            if rec.production_ids:
+                rec.product_ids = rec.production_ids.product_id.ids
 
     @api.depends("production_ids")
     def _compute_product_tmpl_ids(self):
         # Compute the product template(s) based on associated production records
-        for record in self:
-            record.product_tmpl_ids = False
-            if record.production_ids:
-                record.product_tmpl_ids = record.production_ids.product_tmpl_id.ids
+        for rec in self:
+            rec.product_tmpl_ids = False
+            if rec.production_ids:
+                rec.product_tmpl_ids = rec.production_ids.product_tmpl_id.ids
 
     @api.depends(
         "exception_ids",
@@ -547,19 +556,19 @@ class MrpProductionBatch(models.Model):
         "production_ids.ignore_exception",
     )
     def _compute_exceptions(self):
-        for record in self:
+        for rec in self:
             # Exclude canceled MOs
-            valid_productions = record.production_ids.filtered(
+            valid_productions = rec.production_ids.filtered(
                 lambda mo: mo.state != "cancel"
             )
 
             # Collect exceptions
             all_exceptions = valid_productions.mapped("exception_ids")
-            record.exception_ids = [(6, 0, all_exceptions.ids)]
+            rec.exception_ids = [(6, 0, all_exceptions.ids)]
 
             # Compute exceptions summary
             if all_exceptions:
-                record.exceptions_summary = "<ul>%s</ul>" % "".join(
+                rec.exceptions_summary = "<ul>%s</ul>" % "".join(
                     [
                         f"<li>{html.escape(e.name)}: <i>{html.escape(e.description or '')}</i> <b>"
                         + _(
@@ -569,7 +578,7 @@ class MrpProductionBatch(models.Model):
                     ]
                 )
             else:
-                record.exceptions_summary = False
+                rec.exceptions_summary = False
 
     @api.depends(
         "production_ids",
@@ -578,26 +587,26 @@ class MrpProductionBatch(models.Model):
     )
     def _compute_earliest_start(self):
         # Determine the earliest start date among all productions in the batch
-        for record in self:
-            record.earliest_start = False
-            if record.production_ids:
+        for rec in self:
+            rec.earliest_start = False
+            if rec.production_ids:
                 start_date = min(
-                    production.date_start for production in record.production_ids
+                    production.date_start for production in rec.production_ids
                 )
-                record.earliest_start = start_date
+                rec.earliest_start = start_date
 
     @api.depends(
         "date_start",
         "remaining_duration",
     )
     def _compute_date_end(self):
-        for record in self:
-            if record.date_start and record.remaining_duration is not None:
-                record.date_end = record.date_start + timedelta(
-                    minutes=record.remaining_duration
+        for rec in self:
+            if rec.date_start and rec.remaining_duration is not None:
+                rec.date_end = rec.date_start + timedelta(
+                    minutes=rec.remaining_duration
                 )
             else:
-                record.date_end = False
+                rec.date_end = False
 
     @api.depends(
         "production_ids",
@@ -606,13 +615,13 @@ class MrpProductionBatch(models.Model):
     )
     def _compute_date_finished(self):
         # Determine the finished date among all productions in the batch
-        for record in self:
-            record.date_finished = False
-            if record.production_ids:
+        for rec in self:
+            rec.date_finished = False
+            if rec.production_ids:
                 start_date = min(
-                    production.date_finished for production in record.production_ids
+                    production.date_finished for production in rec.production_ids
                 )
-                record.date_finished = start_date
+                rec.date_finished = start_date
 
     @api.depends(
         "production_ids",
@@ -621,29 +630,27 @@ class MrpProductionBatch(models.Model):
     )
     def _compute_date_deadline(self):
         # Determine the deadline date among all productions in the batch
-        for record in self:
-            record.date_deadline = False
-            if record.production_ids:
+        for rec in self:
+            rec.date_deadline = False
+            if rec.production_ids:
                 # Filter out productions without a date_deadline
                 deadlines = [
                     production.date_deadline
-                    for production in record.production_ids
+                    for production in rec.production_ids
                     if production.date_deadline
                 ]
                 # Compute the maximum deadline if there are any valid dates
-                record.date_deadline = max(deadlines) if deadlines else False
+                rec.date_deadline = max(deadlines) if deadlines else False
 
     @api.depends(
         "production_ids",
         "production_ids.is_outdated_bom",
     )
     def _compute_outaged_bom(self):
-        for record in self:
+        for rec in self:
             # Exclude MOs in the "cancel" state
-            productions = record.production_ids.filtered(lambda p: p.state != "cancel")
-            record.is_outdated_bom = any(
-                productions.filtered(lambda p: p.is_outdated_bom)
-            )
+            productions = rec.production_ids.filtered(lambda p: p.state != "cancel")
+            rec.is_outdated_bom = any(productions.filtered(lambda p: p.is_outdated_bom))
 
     # Computes for Expected & Real durations
     @api.depends(
@@ -651,21 +658,19 @@ class MrpProductionBatch(models.Model):
         "production_ids.state",
     )
     def _compute_total_duration_expected(self):
-        for record in self:
+        for rec in self:
             # Exclude MOs in the "cancel" state
-            productions = record.production_ids.filtered(lambda p: p.state != "cancel")
-            record.total_duration_expected = sum(
-                productions.mapped("duration_expected")
-            )
+            productions = rec.production_ids.filtered(lambda p: p.state != "cancel")
+            rec.total_duration_expected = sum(productions.mapped("duration_expected"))
 
     @api.depends(
         "production_ids.duration",
     )
     def _compute_total_duration(self):
-        for record in self:
+        for rec in self:
             # Exclude MOs in the "cancel" state
-            productions = record.production_ids.filtered(lambda p: p.state != "cancel")
-            record.total_duration = sum(productions.mapped("duration"))
+            productions = rec.production_ids.filtered(lambda p: p.state != "cancel")
+            rec.total_duration = sum(productions.mapped("duration"))
 
     @api.depends(
         "production_ids.workorder_ids.operation_id.type",
@@ -673,20 +678,20 @@ class MrpProductionBatch(models.Model):
         "production_ids.state",
     )
     def _compute_build_test_other_durations_expected(self):
-        for record in self:
+        for rec in self:
             # Exclude MOs in the "cancel" state
-            productions = record.production_ids.filtered(lambda p: p.state != "cancel")
+            productions = rec.production_ids.filtered(lambda p: p.state != "cancel")
             workorders = productions.mapped("workorder_ids")
 
-            record.total_build_duration_expected = sum(
+            rec.total_build_duration_expected = sum(
                 wo.duration_expected
                 for wo in workorders
                 if wo.operation_type == "build"
             )
-            record.total_test_duration_expected = sum(
+            rec.total_test_duration_expected = sum(
                 wo.duration_expected for wo in workorders if wo.operation_type == "test"
             )
-            record.total_other_duration_expected = sum(
+            rec.total_other_duration_expected = sum(
                 wo.duration_expected
                 for wo in workorders
                 if wo.operation_type == "other"
@@ -697,20 +702,50 @@ class MrpProductionBatch(models.Model):
         "production_ids.duration",
     )
     def _compute_build_test_other_durations(self):
-        for record in self:
+        for rec in self:
             # Exclude MOs in the "cancel" state
-            productions = record.production_ids.filtered(lambda p: p.state != "cancel")
+            productions = rec.production_ids.filtered(lambda p: p.state != "cancel")
             workorders = productions.mapped("workorder_ids")
 
-            record.total_build_duration = sum(
+            rec.total_build_duration = sum(
                 wo.duration for wo in workorders if wo.operation_type == "build"
             )
-            record.total_test_duration = sum(
+            rec.total_test_duration = sum(
                 wo.duration for wo in workorders if wo.operation_type == "test"
             )
-            record.total_other_duration = sum(
+            rec.total_other_duration = sum(
                 wo.duration for wo in workorders if wo.operation_type == "other"
             )
+
+    @api.depends("is_delayed", "is_planned")
+    def _compute_tags(self):
+        for rec in self:
+            # Keep track of existing tags by their IDs
+            tag_ids = set(rec.tag_ids.ids)
+
+            # Find or create the tags for Delayed and Planned
+            delayed_tag = self.env["mrp.production.batch.tag"].search(
+                [("name", "=", "Delayed")], limit=1
+            )
+            planned_tag = self.env["mrp.production.batch.tag"].search(
+                [("name", "=", "Planned")], limit=1
+            )
+            # raise UserError("%s %s" % (delayed_tag, planned_tag))
+
+            # Add or remove Delayed tag based on is_delayed
+            if rec.is_delayed and delayed_tag:
+                tag_ids.add(delayed_tag.id)  # Add tag if it's True
+            else:
+                tag_ids.discard(delayed_tag.id)  # Remove tag if it's False
+
+            # Add or remove Planned tag based on is_planned
+            if rec.is_planned and planned_tag:
+                tag_ids.add(planned_tag.id)  # Add tag if it's True
+            else:
+                tag_ids.discard(planned_tag.id)  # Remove tag if it's False
+
+            # Assign the tags to the rec (update the tag_ids field)
+            rec.tag_ids = [(6, 0, list(tag_ids))]  # Set the updated list of tag IDs
 
     # Computes for Average Unit Expected & Real durations
     @api.depends(
@@ -718,10 +753,10 @@ class MrpProductionBatch(models.Model):
         "production_ids.state",
     )
     def _compute_avg_unit_duration_expected(self):
-        for record in self:
-            productions = record.production_ids.filtered(lambda p: p.state != "cancel")
+        for rec in self:
+            productions = rec.production_ids.filtered(lambda p: p.state != "cancel")
             durations = productions.mapped("duration_expected")
-            record.avg_duration_expected = (
+            rec.avg_duration_expected = (
                 sum(durations) / len(durations) if durations else 0
             )
 
@@ -729,10 +764,10 @@ class MrpProductionBatch(models.Model):
         "production_ids.duration",
     )
     def _compute_avg_unit_duration(self):
-        for record in self:
-            productions = record.production_ids.filtered(lambda p: p.state != "cancel")
+        for rec in self:
+            productions = rec.production_ids.filtered(lambda p: p.state != "cancel")
             durations = productions.mapped("duration")
-            record.avg_duration = sum(durations) / len(durations) if durations else 0
+            rec.avg_duration = sum(durations) / len(durations) if durations else 0
 
     @api.depends(
         "production_ids.workorder_ids.operation_id.type",
@@ -740,8 +775,8 @@ class MrpProductionBatch(models.Model):
         "production_ids.state",
     )
     def _compute_build_test_unit_other_durations_expected(self):
-        for record in self:
-            productions = record.production_ids.filtered(lambda p: p.state != "cancel")
+        for rec in self:
+            productions = rec.production_ids.filtered(lambda p: p.state != "cancel")
             workorders = productions.mapped("workorder_ids")
 
             build_durations = [
@@ -758,13 +793,13 @@ class MrpProductionBatch(models.Model):
                 if wo.operation_type == "other"
             ]
 
-            record.avg_build_duration_expected = (
+            rec.avg_build_duration_expected = (
                 sum(build_durations) / len(build_durations) if build_durations else 0
             )
-            record.avg_test_duration_expected = (
+            rec.avg_test_duration_expected = (
                 sum(test_durations) / len(test_durations) if test_durations else 0
             )
-            record.avg_other_duration_expected = (
+            rec.avg_other_duration_expected = (
                 sum(other_durations) / len(other_durations) if other_durations else 0
             )
 
@@ -773,8 +808,8 @@ class MrpProductionBatch(models.Model):
         "production_ids.duration",
     )
     def _compute_build_test_unit_other_durations(self):
-        for record in self:
-            productions = record.production_ids.filtered(lambda p: p.state != "cancel")
+        for rec in self:
+            productions = rec.production_ids.filtered(lambda p: p.state != "cancel")
             workorders = productions.mapped("workorder_ids")
 
             build_durations = [
@@ -787,13 +822,13 @@ class MrpProductionBatch(models.Model):
                 wo.duration for wo in workorders if wo.operation_type == "other"
             ]
 
-            record.avg_build_duration = (
+            rec.avg_build_duration = (
                 sum(build_durations) / len(build_durations) if build_durations else 0
             )
-            record.avg_test_duration = (
+            rec.avg_test_duration = (
                 sum(test_durations) / len(test_durations) if test_durations else 0
             )
-            record.avg_other_duration = (
+            rec.avg_other_duration = (
                 sum(other_durations) / len(other_durations) if other_durations else 0
             )
 
@@ -842,9 +877,9 @@ class MrpProductionBatch(models.Model):
         "production_ids.state",
     )
     def _compute_revenue(self):
-        for record in self:
+        for rec in self:
             # Exclude canceled MOs
-            valid_productions = record.production_ids.filtered(
+            valid_productions = rec.production_ids.filtered(
                 lambda mo: mo.state != "cancel"
             )
             # Compute revenue
@@ -853,7 +888,7 @@ class MrpProductionBatch(models.Model):
                 for mo in valid_productions
                 for sale_line in mo.procurement_group_id.mrp_production_ids.move_dest_ids.sale_line_id
             )
-            record.total_revenue = total
+            rec.total_revenue = total
 
     @api.depends(
         "production_ids",
@@ -861,12 +896,12 @@ class MrpProductionBatch(models.Model):
     )
     def _compute_mrp_production_cancel(self):
         # Determine if all productions are canceled or in done state
-        for record in self:
-            record.is_cancel = False
-            if record.production_ids:
-                record.is_cancel = all(
+        for rec in self:
+            rec.is_cancel = False
+            if rec.production_ids:
+                rec.is_cancel = all(
                     production.state in ("done", "cancel")
-                    for production in record.production_ids
+                    for production in rec.production_ids
                 )
 
     @api.depends(
@@ -875,18 +910,20 @@ class MrpProductionBatch(models.Model):
         "production_ids.is_planned",
     )
     def _compute_is_planned(self):
-        for record in self:
-            record.is_planned = False
+        for rec in self:
+            rec.is_planned = False
             # Filter out production orders with states 'to_close', 'done', or 'cancel'
-            filtered_productions = record.production_ids.filtered(
+            filtered_productions = rec.production_ids.filtered(
                 lambda p: p.state not in ("progress", "to_close", "done", "cancel")
                 and p.workorder_ids
             )
             # Set is_planned if all MO's that have workorders are planned.
             if filtered_productions:
-                record.is_planned = all(
+                rec.is_planned = all(
                     production.is_planned for production in filtered_productions
                 )
+            # Explicitly trigger _compute_tags after setting is_delayed
+            rec._compute_tags()
 
     @api.depends(
         "production_ids",
@@ -894,17 +931,17 @@ class MrpProductionBatch(models.Model):
     )
     def _compute_mrp_production_confirm(self):
         # Check if all production orders are confirmed or in progress
-        for record in self:
-            record.is_confirmed = True
+        for rec in self:
+            rec.is_confirmed = True
             # Filter out production orders with states 'to_close', 'done', or 'cancel'
-            filtered_productions = record.production_ids.filtered(
+            filtered_productions = rec.production_ids.filtered(
                 lambda p: p.state == "draft"
             )
 
             # Set is_confirmed if all MO's that have workorders are planned.
-            if record.production_ids and filtered_productions:
-                record.is_confirmed = not any(
-                    production.state == "draft" for production in record.production_ids
+            if rec.production_ids and filtered_productions:
+                rec.is_confirmed = not any(
+                    production.state == "draft" for production in rec.production_ids
                 )
 
     @api.depends(
@@ -917,52 +954,52 @@ class MrpProductionBatch(models.Model):
     )
     def _compute_reserve_and_unreserve_visible(self):
         # Determine the visibility of reserve/unreserve actions based on productions
-        for record in self:
-            record.reserve_visible = False
-            record.unreserve_visible = False
+        for rec in self:
+            rec.reserve_visible = False
+            rec.unreserve_visible = False
             # Filter out production orders with states 'to_close', 'done', or 'cancel'
-            filtered_productions = record.production_ids.filtered(
+            filtered_productions = rec.production_ids.filtered(
                 lambda p: p.state not in ("progress", "to_close", "done", "cancel")
             )
-            if record.production_ids:
-                record.unreserve_visible = any(
+            if rec.production_ids:
+                rec.unreserve_visible = any(
                     production.unreserve_visible for production in filtered_productions
                 )
-                record.reserve_visible = any(
+                rec.reserve_visible = any(
                     production.reserve_visible for production in filtered_productions
                 )
 
     @api.depends("production_ids.move_raw_ids")
     def _compute_mrp_production_done(self):
         # Check if all move lines are open or if all productions are completed
-        for record in self:
-            record.is_move_raw_ids = False
-            record.is_produce_all = False
-            if record.production_ids:
-                record.is_move_raw_ids = all(
+        for rec in self:
+            rec.is_move_raw_ids = False
+            rec.is_produce_all = False
+            if rec.production_ids:
+                rec.is_move_raw_ids = all(
                     move.state not in ("done", "cancel")
-                    for production in record.production_ids
+                    for production in rec.production_ids
                     for move in production.move_raw_ids
                 )
-                record.is_produce_all = all(
-                    production.qty_producing for production in record.production_ids
+                rec.is_produce_all = all(
+                    production.qty_producing for production in rec.production_ids
                 )
 
     @api.depends("production_ids.workorder_ids.state")
     def _compute_lock(self):
         # Determine if the lock button should be displayed based on work order states
-        for record in self:
-            record.show_lock = False
-            record.is_locked = False
-            if record.production_ids and record.state != "cancel":
-                record.show_lock = all(
+        for rec in self:
+            rec.show_lock = False
+            rec.is_locked = False
+            if rec.production_ids and rec.state != "cancel":
+                rec.show_lock = all(
                     wo.state in ("done", "cancel")
-                    for production in record.production_ids
+                    for production in rec.production_ids
                     for wo in production.workorder_ids
                 )
-                record.is_locked = any(
+                rec.is_locked = any(
                     wo.state in ("done", "cancel")
-                    for production in record.production_ids
+                    for production in rec.production_ids
                     for wo in production.workorder_ids
                 )
 
@@ -972,22 +1009,22 @@ class MrpProductionBatch(models.Model):
         "production_ids.qty_produced",
     )
     def _compute_qty(self):
-        for record in self:
+        for rec in self:
             # Exclude canceled MOs
-            valid_productions = record.production_ids.filtered(
+            valid_productions = rec.production_ids.filtered(
                 lambda mo: mo.state != "cancel"
             )
 
             # Compute quantities
-            record.qty_producing = sum(mo.product_qty for mo in valid_productions)
-            record.qty_produced = sum(mo.qty_produced for mo in valid_productions)
-            record.qty_remaining = record.qty_producing - record.qty_produced
+            rec.qty_producing = sum(mo.product_qty for mo in valid_productions)
+            rec.qty_produced = sum(mo.qty_produced for mo in valid_productions)
+            rec.qty_remaining = rec.qty_producing - rec.qty_produced
 
             # Compute percentage complete
-            if record.qty_producing > 0.0:
-                record.percent_complete = record.qty_produced / record.qty_producing
+            if rec.qty_producing > 0.0:
+                rec.percent_complete = rec.qty_produced / rec.qty_producing
             else:
-                record.percent_complete = 0.0
+                rec.percent_complete = 0.0
 
     @api.depends(
         "production_ids",
@@ -1070,8 +1107,8 @@ class MrpProductionBatch(models.Model):
     @api.depends("production_ids.move_raw_ids")
     def _compute_sale_order_count(self):
         # Compute the total count of sales orders associated with productions
-        for record in self:
-            record.sale_order_count
+        for rec in self:
+            rec.sale_order_count
 
     def action_view_sale(self):
         # Ensure the method is called on a single record

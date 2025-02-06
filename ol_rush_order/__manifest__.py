@@ -19,6 +19,7 @@
     ],
     # always loaded
     "data": [
+        "data/mrp_production_batch_tag_data.xml",
         "views/product_template_view.xml",
         "views/mrp_production_batch_view.xml",
         "views/mrp_production_view.xml",
