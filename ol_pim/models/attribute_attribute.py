@@ -24,4 +24,6 @@ class AttributeAttribute(models.Model):
         for record in self:
             existing_record = self.search([("code", "=", record.code)], limit=1)
             if existing_record and existing_record.id != record.id:
-                raise ValidationError("The code must be unique.")
+                raise ValidationError(
+                    f"The Attribute Code '{record.code}' must be unique. Please choose a different code."
+                )
