@@ -381,13 +381,16 @@ class AttributeAttribute(models.Model):
         self.ensure_one()
         custom_field = self.name
         for obj in self.env[self.model].search([]):
-            if obj.fields_get(custom_field):
-                for value in obj[custom_field]:
-                    if value not in options:
-                        if self.attribute_type == "select":
-                            obj.write({custom_field: False})
-                        elif self.attribute_type == "multiselect":
-                            obj.write({custom_field: [(3, value.id, 0)]})
+            field_value = obj[custom_field]
+            if field_value:  # Proceed only if the field has a truthy value
+                # Check if it's a many2many field (iterable)
+                if isinstance(field_value, (list, tuple)):
+                    for value in field_value:
+                        if value not in options:
+                            if self.attribute_type == "select":
+                                obj.write({custom_field: False})
+                            elif self.attribute_type == "multiselect":
+                                obj.write({custom_field: [(3, value.id, 0)]})
 
     def write(self, vals):
         # Prevent from changing Attribute's type
