@@ -594,7 +594,7 @@ class MrpProductionBatch(models.Model):
         for record in self:
             if record.date_start and record.remaining_duration is not None:
                 record.date_end = record.date_start + timedelta(
-                    hours=record.remaining_duration
+                    minutes=record.remaining_duration
                 )
             else:
                 record.date_end = False
