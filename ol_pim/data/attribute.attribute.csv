@@ -1,197 +1,197 @@
-id,model_id,field_description,name,attribute_type,relation_model_id,widget,translate,serialized,size,required,required_on_views,sequence,attribute_group_id,attribute_set_ids
-ol_pim.attribute_brand,Product,Brand,x_brand,Select,,,,,0,,,0,Product Manager,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Software,Storage"
-ol_pim.attribute_customer_facing_name,Product,Customer Facing Name,x_customer_facing_name,Char,,,TRUE,,0,,,0,Product Manager,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
-ol_pim.attribute_customer_facing_short_name,Product,Customer Facing Short Name,x_customer_facing_short_name,Char,,,TRUE,,0,,,0,Product Manager,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
-ol_pim.attribute_eu_product_tax_code,Product,EU Product Tax Code,x_eu_product_tax_code,Select,,,,,0,,,0,Product Manager,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
-ol_pim.attribute_gtin,Product,GTIN,x_gtin,Char,,,TRUE,,0,,,0,Product Manager,"Accessories,Cables,Cases,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
-ol_pim.attribute_hardware_line,Product,Hardware Line,x_hardware_line,Select,,,,,0,,,0,Product Manager,"Computers,Panel PCs"
-ol_pim.attribute_partner_series,Product,Partner,x_partner_series,Select,,,,,0,,,0,Product Manager,"Computers,Panel PCs"
-ol_pim.attribute_reporting_category_category,Product,Reporting Category: Category,x_reporting_category_category,Select,,,,,0,,,0,Product Manager,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
-ol_pim.attribute_reporting_category_line,Product,Reporting Category: Line,x_reporting_category_line,Select,,,,,0,,,0,Product Manager,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
-ol_pim.attribute_reporting_category_series,Product,Reporting Category: Series,x_reporting_category_series,Select,,,,,0,,,0,Product Manager,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
-ol_pim.attribute_reporting_category_system,Product,Reporting Category: System,x_reporting_category_system,Select,,,,,0,,,0,Product Manager,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
-ol_pim.attribute_series,Product,Series,x_series,Select,,,,,0,,,0,Product Manager,"Computers,Panel PCs"
-ol_pim.attribute_short_description,Product,Short Description,x_short_description,Text,,,TRUE,,0,,,0,Product Manager,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
-ol_pim.attribute_suitable_environments,Product,Suitable Environments,x_suitable_environments,Multiselect,,many2many_tags,,,0,,,0,Product Manager,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Software"
-ol_pim.attribute_upc,Product,UPC,x_upc,Char,,,TRUE,,0,,,0,Product Manager,"Accessories,Cables,Cases,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
-ol_pim.attribute_us_product_tax_code,Product,US Product Tax Code,x_us_product_tax_code,Select,,,,,0,,,0,Product Manager,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
-ol_pim.attribute_lifecycle_discontinued_date,Product,Discontinued Date,x_lifecycle_discontinued_date,Date,,,,,0,,,0,Lifecycle,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Storage"
-ol_pim.attribute_lifecycle_eol_date,Product,End of Life Date,x_lifecycle_eol_date,Date,,,,,0,,,0,Lifecycle,"Accessories,Cables,Cases,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
-ol_pim.attribute_lifecycle_expected_lifespan,Product,Expected Lifespan,x_lifecycle_expected_lifespan,Integer,,,,,0,,,0,Lifecycle,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Software,Storage"
-ol_pim.attribute_lifecycle_launch_date,Product,Launch Date,x_lifecycle_launch_date,Date,,,,,0,,,0,Lifecycle,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Software,Storage"
-ol_pim.attribute_is_consigned,Product,Consigned Product,x_is_consigned,Boolean,,boolean_toggle,,,0,,,0,Sales,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Storage"
-ol_pim.attribute_solution_categories,Product,Solution Categories,x_solution_categories,Multiselect,,many2many_tags,,,0,,,0,Sales,"Computers,Panel PCs"
-ol_pim.attribute_system_categories,Product,System Categories,x_system_categories,Multiselect,,many2many_tags,,,0,,,0,Sales,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
-ol_pim.attribute_testing_status,Product,Testing Status,x_testing_status,Select,,,,,0,,,0,Sales,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
-ol_pim.attribute_tier,Product,Tier,x_tier,Select,,,,,0,,,0,Sales,"Computers,Panel PCs"
-ol_pim.attribute_eu_shipping_buffer,Product,Shipping Buffer (EU),x_eu_shipping_buffer,Integer,,,,,0,,,0,Operations,"Accessories,Assembly & Validation"
-ol_pim.attribute_shipping_height,Product,Shipping Height,x_shipping_height,Float,,,,,0,,,0,Operations,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
-ol_pim.attribute_shipping_length,Product,Shipping Length,x_shipping_length,Float,,,,,0,,,0,Operations,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
-ol_pim.attribute_shipping_weight,Product,Shipping Weight,x_shipping_weight,Float,,,,,0,,,0,Operations,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
-ol_pim.attribute_shipping_width,Product,Shipping Width,x_shipping_width,Float,,,,,0,,,0,Operations,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
-ol_pim.attribute_us_shipping_buffer,Product,Shipping Buffer (US),x_us_shipping_buffer,Integer,,,,,0,,,0,Operations,"Accessories,Assembly & Validation"
-ol_pim.attribute_dimensions,Product,Dimensions,x_dimensions,Text,,,TRUE,,0,,,0,Physical Properties,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Services,Storage"
-ol_pim.attribute_length,Product,Length,x_length,Integer,,,,,0,,,0,Physical Properties,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Storage"
-ol_pim.attribute_input_current_max,Product,Input Current Maximum,x_input_current_max,Integer,,,,,0,,,0,Power,"Accessories,Computers,Displays,Expansion,Motherboards,Panel PCs,Power Supplies,Storage"
-ol_pim.attribute_input_current_min,Product,Input Current Minimum,x_input_current_min,Integer,,,,,0,,,0,Power,"Accessories,Computers,Displays,Expansion,Motherboards,Panel PCs,Power Supplies,Storage"
-ol_pim.attribute_input_power_max,Product,Input Power Maximum,x_input_power_max,Integer,,,,,0,,,0,Power,"Accessories,Computers,Displays,Expansion,Motherboards,Panel PCs,Power Supplies,Storage"
-ol_pim.attribute_input_power_min,Product,Input Power Minimum,x_input_power_min,Integer,,,,,0,,,0,Power,"Accessories,Computers,Displays,Expansion,Motherboards,Panel PCs,Power Supplies,Storage"
-ol_pim.attribute_input_voltage_max,Product,Input Voltage Maximum,x_input_voltage_max,Float,,,,,0,,,0,Power,"Accessories,Computers,Displays,Expansion,Motherboards,Panel PCs,Power Supplies,Storage"
-ol_pim.attribute_input_voltage_min,Product,Input Voltage Minimum,x_input_voltage_min,Float,,,,,0,,,0,Power,"Accessories,Computers,Displays,Expansion,Motherboards,Panel PCs,Power Supplies,Storage"
-ol_pim.attribute_input_voltage_type,Product,Input Voltage Type,x_input_voltage_type,Select,,,,,0,,,0,Power,"Accessories,Computers,Displays,Expansion,Motherboards,Panel PCs,Power Supplies,Storage"
-ol_pim.attribute_output_current_max,Product,Output Current Maximum,x_output_current_max,Float,,,,,0,,,0,Power,Power Supplies
-ol_pim.attribute_output_current_min,Product,Output Current Minimum,x_output_current_min,Float,,,,,0,,,0,Power,Power Supplies
-ol_pim.attribute_output_power_max,Product,Output Power Maximum,x_output_power_max,Integer,,,,,0,,,0,Power,"Expansion,Power Supplies"
-ol_pim.attribute_output_power_min,Product,Output Power Minimum,x_output_power_min,Integer,,,,,0,,,0,Power,"Expansion,Power Supplies"
-ol_pim.attribute_output_voltage_max,Product,Output Voltage Maximum,x_output_voltage_max,Integer,,,,,0,,,0,Power,"Expansion,Panel PCs,Power Supplies"
-ol_pim.attribute_output_voltage_min,Product,Output Voltage Minimum,x_output_voltage_min,Integer,,,,,0,,,0,Power,"Expansion,Panel PCs,Power Supplies"
-ol_pim.attribute_output_voltage_type,Product,Output Voltage Type,x_output_voltage_type,Select,,,,,0,,,0,Power,"Accessories,Computers,Displays,Expansion,Motherboards,Panel PCs,Power Supplies,Storage"
-ol_pim.attribute_power_cable_connectors,Product,Power Cable Connectors,x_power_cable_connectors,Select,,,,,0,,,0,Power,Power Supplies
-ol_pim.attribute_power_consumption,Product,Power Consumption,x_power_consumption,Float,,,,,0,,,0,Power,"Accessories,Displays,Expansion,Heatsinks,Memory,Motherboards,Processors,Storage"
-ol_pim.attribute_power_conversion_note,Product,Input Voltage Conversion Note,x_power_conversion_note,Char,,,TRUE,,0,,,0,Power,"Accessories,Computers,Displays,Expansion,Motherboards,Panel PCs,Power Supplies,Storage"
-ol_pim.attribute_regulatory_certifications,Product,Regulatory Certifications,x_regulatory_certifications,Multiselect,,many2many_tags,,,0,,,0,Regulatory,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
-ol_pim.attribute_regulatory_notes,Product,Regulatory Notes,x_regulatory_notes,Text,,,TRUE,,0,,,0,Regulatory,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
-ol_pim.attribute_additional_features,Product,Additional Features,x_additional_features,Multiselect,,many2many_tags,,,0,,,0,Shared Specifications,"Computers,Panel PCs"
-ol_pim.attribute_cpu_cooler_height,Product,CPU Cooler Height,x_cpu_cooler_height,Integer,,,,,0,,,0,Shared Specifications,"Accessories,Cases,Computers,Heatsinks,Motherboards"
-ol_pim.attribute_expansion_options,Product,Expansion Options,x_expansion_options,Multiselect,,many2many_tags,,,0,,,0,Shared Specifications,"Computers,Expansion,Motherboards,Panel PCs"
-ol_pim.attribute_graphics_gpu,Product,Graphics/GPU,x_graphics_gpu,Multiselect,,many2many_tags,,,0,,,0,Shared Specifications,"Computers,Expansion,Motherboards,Panel PCs,Processors"
-ol_pim.attribute_hardware_type,Product,Hardware Type,x_hardware_type,Multiselect,,many2many_tags,,,0,,,0,Shared Specifications,"Computers,Displays,Panel PCs"
-ol_pim.attribute_humidity_operating_max,Product,Humidity (Operating Maximum),x_humidity_operating_max,Integer,,,,,0,,,0,Shared Specifications,"Computers,Displays,Expansion,Memory,Motherboards,Panel PCs,Power Supplies"
-ol_pim.attribute_humidity_operating_min,Product,Humidity (Operating Minimum),x_humidity_operating_min,Integer,,,,,0,,,0,Shared Specifications,"Computers,Displays,Expansion,Memory,Motherboards,Panel PCs,Power Supplies"
-ol_pim.attribute_humidity_operating_non_condensing_max,Product,Humidity (Non-Condensing Operating Maximum),x_humidity_operating_non_condensing_max,Integer,,,,,0,,,0,Shared Specifications,"Computers,Displays,Expansion,Memory,Motherboards,Panel PCs,Power Supplies"
-ol_pim.attribute_humidity_operating_non_condensing_min,Product,Humidity (Non-Condensing Operating Minimum),x_humidity_operating_non_condensing_min,Integer,,,,,0,,,0,Shared Specifications,"Computers,Displays,Expansion,Memory,Motherboards,Panel PCs,Power Supplies"
-ol_pim.attribute_included_accessories,Product,Included Accessories,x_included_accessories,Text,,,TRUE,,0,,,0,Shared Specifications,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Services,Software"
-ol_pim.attribute_included_power_supply,Product,Included Power Supply,x_included_power_supply,Text,,,TRUE,,0,,,0,Shared Specifications,"Computers,Motherboards,Panel PCs"
-ol_pim.attribute_included_storage,Product,Included Storage,x_included_storage,Text,,,TRUE,,0,,,0,Shared Specifications,"Computers,Motherboards,Panel PCs"
-ol_pim.attribute_included_wireless,Product,Included Wireless,x_included_wireless,Text,,,TRUE,,0,,,0,Shared Specifications,"Computers,Panel PCs"
-ol_pim.attribute_lan_controller,Product,LAN Controller,x_lan_controller,Multiselect,,many2many_tags,,,0,,,0,Shared Specifications,"Computers,Expansion,Motherboards,Panel PCs"
-ol_pim.attribute_lan_ports,Product,LAN Ports,x_lan_ports,Integer,,,,,0,,,0,Shared Specifications,"Cables,Computers,Expansion,Motherboards"
-ol_pim.attribute_notes,Product,Notes,x_notes,Text,,,TRUE,,0,,,0,Shared Specifications,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
-ol_pim.attribute_poe_ports,Product,PoE Ports,x_poe_ports,Integer,,,,,0,,,0,Shared Specifications,"Computers,Expansion,Motherboards,Panel PCs"
-ol_pim.attribute_power_input_connectors,Product,Power Input Connector,x_power_input_connectors,Multiselect,,many2many_tags,,,0,,,0,Shared Specifications,"Cables,Computers,Displays,Expansion,Motherboards,Panel PCs,Power Supplies"
-ol_pim.attribute_recommended_applications,Product,Recommended Applications,x_recommended_applications,Multiselect,,many2many_tags,,,0,,,0,Shared Specifications,"Accessories,Cables,Cases,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Services,Software"
-ol_pim.attribute_serial_ports,Product,Serial Ports,x_serial_ports,Integer,,,,,0,,,0,Shared Specifications,"Cables,Computers,Displays,Expansion,Motherboards,Panel PCs"
-ol_pim.attribute_shock_tolerance_non_operating,Product,Shock Tolerance (Non-operating),x_shock_tolerance_non_operating,Char,,,TRUE,,0,,,0,Shared Specifications,"Computers,Displays,Expansion,Memory,Motherboards,Panel PCs,Power Supplies,Storage"
-ol_pim.attribute_shock_tolerance_operating,Product,Shock Tolerance (Operating),x_shock_tolerance_operating,Char,,,TRUE,,0,,,0,Shared Specifications,"Computers,Displays,Expansion,Memory,Motherboards,Panel PCs,Power Supplies,Storage"
-ol_pim.attribute_size,Product,Size,x_size,Multiselect,,many2many_tags,,,0,,,0,Shared Specifications,"Computers,Panel PCs"
-ol_pim.attribute_spec_front_io,Product,Front I/O,x_spec_front_io,Text,,,TRUE,,0,,,0,Shared Specifications,"Cases,Computers,Displays,Motherboards,Panel PCs"
-ol_pim.attribute_spec_onboard_io,Product,Onboard I/O,x_spec_onboard_io,Text,,,TRUE,,0,,,0,Shared Specifications,"Cases,Computers,Displays,Motherboards,Panel PCs"
-ol_pim.attribute_spec_rear_io,Product,Rear I/O,x_spec_rear_io,Text,,,TRUE,,0,,,0,Shared Specifications,"Cases,Computers,Displays,Motherboards,Panel PCs"
-ol_pim.attribute_system_monitoring,Product,System Monitoring,x_system_monitoring,Multiselect,,many2many_tags,,,0,,,0,Shared Specifications,"Computers,Motherboards,Panel PCs"
-ol_pim.attribute_system_processor_core_options,Product,System Processor Core Options,x_system_processor_core_options,Multiselect,,many2many_tags,,,0,,,0,Shared Specifications,"Computers,Motherboards,Panel PCs,Processors"
-ol_pim.attribute_temperature_operating_max,Product,Temperature (Operating Maximum),x_temperature_operating_max,Integer,,,,,0,,,0,Shared Specifications,"Accessories,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Storage"
-ol_pim.attribute_temperature_operating_min,Product,Temperature (Operating Minimum),x_temperature_operating_min,Integer,,,,,0,,,0,Shared Specifications,"Accessories,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Storage"
-ol_pim.attribute_temperature_operating_notes,Product,Temperature (Operating) Notes,x_temperature_operating_notes,Text,,,TRUE,,0,,,0,Shared Specifications,"Accessories,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Storage"
-ol_pim.attribute_usb_ports,Product,USB Ports,x_usb_ports,Integer,,,,,0,,,0,Shared Specifications,"Cables,Computers,Displays,Expansion,Motherboards,Panel PCs"
-ol_pim.attribute_vibration_tolerance_non_operating,Product,Vibration Tolerance (Non-operating),x_vibration_tolerance_non_operating,Char,,,TRUE,,0,,,0,Shared Specifications,"Computers,Displays,Expansion,Memory,Motherboards,Panel PCs,Power Supplies,Storage"
-ol_pim.attribute_vibration_tolerance_operating,Product,Vibration Tolerance (Operating),x_vibration_tolerance_operating,Char,,,TRUE,,0,,,0,Shared Specifications,"Computers,Displays,Expansion,Memory,Motherboards,Panel PCs,Power Supplies,Storage"
-ol_pim.attribute_video_encoding_standards,Product,Video Encoding Standards,x_video_encoding_standards,Multiselect,,many2many_tags,,,0,,,0,Shared Specifications,"Computers,Expansion,Motherboards,Panel PCs"
-ol_pim.attribute_video_input,Product,Video Input,x_video_input,Multiselect,,many2many_tags,,,0,,,0,Shared Specifications,"Computers,Expansion,Motherboards,Panel PCs"
-ol_pim.attribute_video_interface,Product,Video Interface,x_video_interface,Multiselect,,many2many_tags,,,0,,,0,Shared Specifications,"Accessories,Cables,Computers,Displays,Expansion,Heatsinks,Motherboards"
-ol_pim.attribute_manufacturer_component_warranty,Product,Manufacturer Component Warranty,x_manufacturer_component_warranty,Select,,,,,0,,,0,Manufacturer Info,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Storage"
-ol_pim.attribute_manufacturer_expected_lifecycle,Product,Manufacturer Expected Lifecycle,x_manufacturer_expected_lifecycle,Integer,,,,,0,,,0,Manufacturer Info,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Software,Storage"
-ol_pim.attribute_manufacturer_launch_date,Product,Manufacturer Launch Date,x_manufacturer_launch_date,Date,,,,,0,,,0,Manufacturer Info,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
-ol_pim.attribute_manufacturer_product_link,Product,Manufacturer Product Link,x_manufacturer_product_link,Char,,,TRUE,,0,,,0,Manufacturer Info,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
-ol_pim.attribute_display_aspect_ratio,Product,Display Aspect Ratio,x_display_aspect_ratio,Select,,,,,0,,,0,Displays (Components),"Displays,Panel PCs"
-ol_pim.attribute_display_brightness,Product,Display Brightness,x_display_brightness,Integer,,,,,0,,,0,Displays (Components),"Displays,Panel PCs"
-ol_pim.attribute_display_contrast_ratio,Product,Display Contrast Ratio,x_display_contrast_ratio,Select,,,,,0,,,0,Displays (Components),"Displays,Panel PCs"
-ol_pim.attribute_display_mounting_options,Product,Display Mounting Options,x_display_mounting_options,Multiselect,,many2many_tags,,,0,,,0,Displays (Components),"Accessories,Cases,Computers,Displays,Panel PCs"
-ol_pim.attribute_display_note,Product,Display Note,x_display_note,Char,,,TRUE,,0,,,0,Displays (Components),"Computers,Motherboards,Panel PCs"
-ol_pim.attribute_display_output_type,Product,Display Output Type,x_display_output_type,Multiselect,,many2many_tags,,,0,,,0,Displays (Components),"Computers,Panel PCs"
-ol_pim.attribute_display_resolution,Product,Display Resolution,x_display_resolution,Multiselect,,many2many_tags,,,0,,,0,Displays (Components),"Displays,Expansion,Motherboards,Panel PCs"
-ol_pim.attribute_display_screen_size,Product,Display Screen Size,x_display_screen_size,Float,,,,,0,,,0,Displays (Components),"Displays,Panel PCs"
-ol_pim.attribute_display_touchscreen_type,Product,Display Touchscreen Type,x_display_touchscreen_type,Select,,,,,0,,,0,Displays (Components),"Displays,Panel PCs"
-ol_pim.attribute_display_viewing_angle,Product,Display Viewing Angle,x_display_viewing_angle,Char,,,TRUE,,0,,,0,Displays (Components),"Displays,Panel PCs"
-ol_pim.attribute_authentication_protocols,Product,Authentication Protocols,x_authentication_protocols,Text,,,TRUE,,0,,,0,Expansion Cards (Components),Expansion
-ol_pim.attribute_data_rate,Product,Data Rate,x_data_rate,Multiselect,,many2many_tags,,,0,,,0,Expansion Cards (Components),Expansion
-ol_pim.attribute_drivers_supported,Product,Drivers Supported,x_drivers_supported,Multiselect,,many2many_tags,,,0,,,0,Expansion Cards (Components),Expansion
-ol_pim.attribute_expansion_acoustics,Product,Expansion Acoustics,x_expansion_acoustics,Float,,,,,0,,,0,Expansion Cards (Components),"Accessories,Expansion,Heatsinks"
-ol_pim.attribute_expansion_mobile_carriers,Product,Expansion Mobile Carriers,x_expansion_mobile_carriers,Multiselect,,many2many_tags,,,0,,,0,Expansion Cards (Components),"Computers,Expansion,Panel PCs"
-ol_pim.attribute_expansion_wireless_frequency,Product,Expansion Wireless Frequency,x_expansion_wireless_frequency,Text,,,TRUE,,0,,,0,Expansion Cards (Components),Expansion
-ol_pim.attribute_interface_type,Product,Interface Type,x_interface_type,Multiselect,,many2many_tags,,,0,,,0,Expansion Cards (Components),Expansion
-ol_pim.attribute_signal_type,Product,Signal Type,x_signal_type,Multiselect,,many2many_tags,,,0,,,0,Expansion Cards (Components),Expansion
-ol_pim.attribute_memory_bandwidth,Product,Memory Bandwidth,x_memory_bandwidth,Char,,,TRUE,,0,,,0,Memory (Components),Expansion
-ol_pim.attribute_memory_buffer,Product,Memory Buffer,x_memory_buffer,Multiselect,,many2many_tags,,,0,,,0,Memory (Components),Memory
-ol_pim.attribute_memory_capacity,Product,Memory Capacity,x_memory_capacity,Integer,,,,,0,,,0,Memory (Components),"Computers,Memory,Motherboards,Panel PCs,Processors"
-ol_pim.attribute_memory_cas_latency,Product,Memory CAS Latency,x_memory_cas_latency,Char,,,TRUE,,0,,,0,Memory (Components),Storage
-ol_pim.attribute_memory_channels,Product,Memory Channels,x_memory_channels,Select,,,,,0,,,0,Memory (Components),"Computers,Panel PCs,Processors"
-ol_pim.attribute_memory_speed,Product,Memory Clock Speed,x_memory_speed,Integer,,,,,0,,,0,Memory (Components),"Computers,Memory,Motherboards,Panel PCs"
-ol_pim.attribute_memory_type,Product,Memory Type,x_memory_type,Select,,,,,0,,,0,Memory (Components),"Computers,Memory,Motherboards,Panel PCs"
-ol_pim.attribute_motherboard_chipset,Product,Motherboard Chipset,x_motherboard_chipset,Select,,,,,0,,,0,Motherboards (Components),"Computers,Motherboards,Panel PCs"
-ol_pim.attribute_motherboard_expansion_slots,Product,Motherboard Expansion Slots,x_motherboard_expansion_slots,Integer,,,,,0,,,0,Motherboards (Components),"Cases,Computers,Expansion,Motherboards,Panel PCs"
-ol_pim.attribute_motherboard_form_factor,Product,Motherboard Form Factor,x_motherboard_form_factor,Multiselect,,many2many_tags,,,0,,,0,Motherboards (Components),"Cases,Computers,Motherboards,Panel PCs"
-ol_pim.attribute_motherboard_memory_slots,Product,Motherboard Memory Slots,x_motherboard_memory_slots,Integer,,,,,0,,,0,Motherboards (Components),"Computers,Motherboards,Panel PCs"
-ol_pim.attribute_motherboard_raid_support,Product,Motherboard Raid Support,x_motherboard_raid_support,Multiselect,,many2many_tags,,,0,,,0,Motherboards (Components),"Computers,Expansion,Motherboards,Panel PCs"
-ol_pim.attribute_pcie_count,Product,PCIe Count,x_pcie_count,Integer,,,,,0,,,0,Motherboards (Components),"Computers,Expansion,Motherboards,Panel PCs"
-ol_pim.attribute_pcie_count_note,Product,PCIe Count Note,x_pcie_count_note,Char,,,TRUE,,0,,,0,Motherboards (Components),"Computers,Expansion,Motherboards,Panel PCs"
-ol_pim.attribute_cable_connectors,Product,Cable Connectors,x_cable_connectors,Multiselect,,many2many_tags,,,0,,,0,Other Specifications (Components),"Accessories,Cables,Computers,Displays,Expansion,Heatsinks,Motherboards,Panel PCs,Power Supplies"
-ol_pim.attribute_cable_dc_connector,Product,Cable DC Connector,x_cable_dc_connector,Multiselect,,many2many_tags,,,0,,,0,Other Specifications (Components),"Cables,Computers,Displays,Motherboards,Panel PCs,Power Supplies"
-ol_pim.attribute_cable_length,Product,Cable Length,x_cable_length,Integer,,,,,0,,,0,Other Specifications (Components),Cables
-ol_pim.attribute_cable_type,Product,Cable Type,x_cable_type,Multiselect,,many2many_tags,,,0,,,0,Other Specifications (Components),Cables
-ol_pim.attribute_case_color,Product,Case Color,x_case_color,Select,,,,,0,,,0,Other Specifications (Components),"Cases,Displays,Panel PCs"
-ol_pim.attribute_case_material,Product,Case Material,x_case_material,Multiselect,,many2many_tags,,,0,,,0,Other Specifications (Components),"Cases,Computers,Displays,Panel PCs"
-ol_pim.attribute_case_mounting,Product,Case Mounting Options,x_case_mounting,Multiselect,,many2many_tags,,,0,,,0,Other Specifications (Components),"Accessories,Cases,Computers,Displays,Panel PCs"
-ol_pim.attribute_case_port_punchouts,Product,Case Port Punchouts,x_case_port_punchouts,Multiselect,,many2many_tags,,,0,,,0,Other Specifications (Components),"Cases,Computers,Panel PCs"
-ol_pim.attribute_case_type_chassis,Product,Case Type (Chassis),x_case_type_chassis,Multiselect,,many2many_tags,,,0,,,0,Other Specifications (Components),"Cases,Computers,Displays,Panel PCs"
-ol_pim.attribute_connectivity,Product,Connectivity,x_connectivity,Multiselect,,many2many_tags,,,0,,,0,Other Specifications (Components),Expansion
-ol_pim.attribute_fan_bearing_rpm,Product,Fan Bearing RPM,x_fan_bearing_rpm,Integer,,,,,0,,,0,Other Specifications (Components),"Accessories,Heatsinks"
-ol_pim.attribute_fan_bearing_type,Product,Fan Bearing Type,x_fan_bearing_type,Select,,,,,0,,,0,Other Specifications (Components),"Accessories,Heatsinks"
-ol_pim.attribute_heat_sink_air_flow,Product,Heat Sink Air Flow,x_heat_sink_air_flow,Float,,,,,0,,,0,Other Specifications (Components),"Accessories,Heatsinks"
-ol_pim.attribute_mobile_frequency_bands,Product,Mobile Frequency Bands,x_mobile_frequency_bands,Multiselect,,many2many_tags,,,0,,,0,Other Specifications (Components),Expansion
-ol_pim.attribute_network_standards,Product,Network Standards,x_network_standards,Select,,,,,0,,,0,Other Specifications (Components),Expansion
-ol_pim.attribute_networking_type,Product,Networking Type,x_networking_type,Select,,,,,0,,,0,Other Specifications (Components),Expansion
-ol_pim.attribute_number_of_displays_supported,Product,Number of Displays Supported,x_number_of_displays_supported,Integer,,,,,0,,,0,Other Specifications (Components),"Computers,Motherboards,Panel PCs"
-ol_pim.attribute_optical_drive_bay,Product,Optical Drive Bay,x_optical_drive_bay,Select,,,,,0,,,0,Other Specifications (Components),"Accessories,Cases,Heatsinks"
-ol_pim.attribute_os_minimum_footprint,Product,OS Minimum Footprint,x_os_minimum_footprint,Float,,,,,0,,,0,Other Specifications (Components),Software
-ol_pim.attribute_power_ac_frequency_max,Product,Power AC Frequency Maximum,x_power_ac_frequency_max,Integer,,,,,0,,,0,Other Specifications (Components),Power Supplies
-ol_pim.attribute_power_ac_frequency_min,Product,Power AC Frequency Minimum,x_power_ac_frequency_min,Integer,,,,,0,,,0,Other Specifications (Components),Power Supplies
-ol_pim.attribute_power_automotive_features,Product,Power Automotive Features,x_power_automotive_features,Multiselect,,many2many_tags,,,0,,,0,Other Specifications (Components),"Computers,Displays,Motherboards,Panel PCs,Power Supplies"
-ol_pim.attribute_power_cable_coupler,Product,Power Cable Coupler,x_power_cable_coupler,Select,,,,,0,,,0,Other Specifications (Components),"Cables,Power Supplies"
-ol_pim.attribute_power_cord_length,Product,Power Cord Length,x_power_cord_length,Float,,,,,0,,,0,Other Specifications (Components),Power Supplies
-ol_pim.attribute_power_form_factor,Product,PSU Form Factor,x_power_form_factor,Multiselect,,many2many_tags,,,0,,,0,Other Specifications (Components),Power Supplies
-ol_pim.attribute_psu_modularity,Product,PSU Modularity,x_psu_modularity,Select,,,,,0,,,0,Other Specifications (Components),Power Supplies
-ol_pim.attribute_psu_protection,Product,PSU Protection,x_psu_protection,Multiselect,,many2many_tags,,,0,,,0,Other Specifications (Components),Power Supplies
-ol_pim.attribute_psu_rails,Product,PSU Rails,x_psu_rails,Multiselect,,many2many_tags,,,0,,,0,Other Specifications (Components),Power Supplies
-ol_pim.attribute_psu_rating,Product,PSU Rating,x_psu_rating,Select,,,,,0,,,0,Other Specifications (Components),Power Supplies
-ol_pim.attribute_rs_232_pin_header_type,Product,RS-232 Pin Header Type,x_rs_232_pin_header_type,Select,,,,,0,,,0,Other Specifications (Components),"Cables,Expansion,Motherboards,Panel PCs"
-ol_pim.attribute_sata_connectors,Product,SATA Connectors,x_sata_connectors,Integer,,,,,0,,,0,Other Specifications (Components),"Cables,Memory,Motherboards,Panel PCs"
-ol_pim.attribute_software_certifications,Product,Compatible Software,x_software_certifications,Multiselect,,many2many_tags,,,0,,,0,Other Specifications (Components),"Computers,Panel PCs"
-ol_pim.attribute_system_cooling_type,Product,Cooling Type,x_system_cooling_type,Select,,,,,0,,,0,Other Specifications (Components),"Computers,Panel PCs"
-ol_pim.attribute_max_burst_frequency,Product,Max Burst Frequency,x_max_burst_frequency,Char,,,TRUE,,0,,,0,Processors (Components),"Computers,Motherboards"
-ol_pim.attribute_processor,Product,Processor,x_processor,Multiselect,,many2many_tags,,,0,,,0,Processors (Components),"Computers,Motherboards,Panel PCs,Processors"
-ol_pim.attribute_processor_cache,Product,Processor Cache,x_processor_cache,Float,,,,,0,,,0,Processors (Components),"Processors,Storage"
-ol_pim.attribute_processor_clock_speed,Product,Processor Clock Speed,x_processor_clock_speed,Float,,,,,0,,,0,Processors (Components),"Computers,Motherboards,Panel PCs,Processors"
-ol_pim.attribute_processor_clock_speed_notes,Product,Processor Clock Speed Notes,x_processor_clock_speed_notes,Text,,,TRUE,,0,,,0,Processors (Components),"Computers,Motherboards,Panel PCs,Processors"
-ol_pim.attribute_processor_cores,Product,Processor Cores,x_processor_cores,Integer,,,,,0,,,0,Processors (Components),"Computers,Motherboards,Panel PCs,Processors"
-ol_pim.attribute_processor_family,Product,Processor Family,x_processor_family,Select,,,,,0,,,0,Processors (Components),"Computers,Motherboards,Panel PCs,Processors"
-ol_pim.attribute_processor_features,Product,Processor Features,x_processor_features,Multiselect,,many2many_tags,,,0,,,0,Processors (Components),Processors
-ol_pim.attribute_processor_generation,Product,Processor Generation,x_processor_generation,Multiselect,,many2many_tags,,,0,,,0,Processors (Components),"Computers,Motherboards,Panel PCs,Processors"
-ol_pim.attribute_processor_model,Product,Processor Model,x_processor_model,Char,,,TRUE,,0,,,0,Processors (Components),"Computers,Motherboards,Panel PCs,Processors"
-ol_pim.attribute_processor_socket,Product,Processor Socket,x_processor_socket,Multiselect,,many2many_tags,,,0,,,0,Processors (Components),"Accessories,Computers,Motherboards,Panel PCs,Processors"
-ol_pim.attribute_processor_tdp,Product,Processor TDP,x_processor_tdp,Integer,,,,,0,,,0,Processors (Components),Processors
-ol_pim.attribute_processor_threads,Product,Processor Threads,x_processor_threads,Integer,,,,,0,,,0,Processors (Components),Processors
-ol_pim.attribute_processor_tjunction_tmax,Product,Processor Tjunction/Tmax,x_processor_tjunction_tmax,Float,,,,,0,,,0,Processors (Components),"Computers,Processors"
-ol_pim.attribute_processor_turbo_frequency_max,Product,Processor Turbo Frequency Maximum,x_processor_turbo_frequency_max,Float,,,,,0,,,0,Processors (Components),"Computers,Processors"
-ol_pim.attribute_disk_speed,Product,Disk Speed,x_disk_speed,Integer,,,,,0,,,0,Storage (Components),Storage
-ol_pim.attribute_endurance,Product,Endurance,x_endurance,Char,,,TRUE,,0,,,0,Storage (Components),Storage
-ol_pim.attribute_idle_current,Product,Idle Current,x_idle_current,Float,,,,,0,,,0,Storage (Components),Storage
-ol_pim.attribute_seek_current,Product,Seek Current,x_seek_current,Float,,,,,0,,,0,Storage (Components),Storage
-ol_pim.attribute_seek_time,Product,Seek Time,x_seek_time,Integer,,,,,0,,,0,Storage (Components),Storage
-ol_pim.attribute_storage_capacity,Product,Storage Capacity,x_storage_capacity,Integer,,,,,0,,,0,Storage (Components),Storage
-ol_pim.attribute_storage_disk_features,Product,Storage Disk Features,x_storage_disk_features,Multiselect,,many2many_tags,,,0,,,0,Storage (Components),Storage
-ol_pim.attribute_storage_flash_memory_type,Product,Storage Flash Memory Type,x_storage_flash_memory_type,Select,,,,,0,,,0,Storage (Components),Storage
-ol_pim.attribute_storage_options,Product,Storage Options,x_storage_options,Multiselect,,many2many_tags,,,0,,,0,Storage (Components),"Computers,Expansion,Motherboards,Panel PCs,Storage"
-ol_pim.attribute_storage_read_speed,Product,Storage Read Speed,x_storage_read_speed,Integer,,,,,0,,,0,Storage (Components),Storage
-ol_pim.attribute_storage_sata_interface,Product,Storage SATA Interface,x_storage_sata_interface,Multiselect,,many2many_tags,,,0,,,0,Storage (Components),"Motherboards,Panel PCs,Storage"
-ol_pim.attribute_storage_type,Product,Storage Type,x_storage_type,Multiselect,,many2many_tags,,,0,,,0,Storage (Components),"Computers,Expansion,Motherboards,Panel PCs,Storage"
-ol_pim.attribute_storage_write_speed,Product,Storage Write Speed,x_storage_write_speed,Integer,,,,,0,,,0,Storage (Components),Storage
-ol_pim.attribute_duplicated_date,Product,Duplicated on,x_duplicated_date,Date,,,,,0,,,0,Machine Use,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
-ol_pim.attribute_duplicated_from_id,Product,Duplicated from ID,x_duplicated_from_id,Char,,,TRUE,,0,,,0,Machine Use,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
-ol_pim.attribute_duplicated_from_uuid,Product,Duplicated from UUID,x_duplicated_from_uuid,Char,,,TRUE,,0,,,0,Machine Use,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
-ol_pim.attribute_sync_information,Product,Sync Information,x_sync_information,Char,,,,,0,,,0,Machine Use,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
-ol_pim.attribute_ean,Product,EAN (Deprecated),x_ean,Char,,,TRUE,,0,,,0,Deprecated,"Accessories,Cables,Cases,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
-ol_pim.attribute_documentation,Product,Documentation,x_documentation,Multiselect,documents.document,,,,0,,,0,Documents & Files,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
-ol_pim.attribute_drivers,Product,Drivers,x_drivers,Multiselect,documents.document,,,,0,,,0,Documents & Files,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
-ol_pim.attribute_regulatory,Product,Regulatory,x_regulatory,Multiselect,documents.document,,,,0,,,0,Documents & Files,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
-ol_pim.attribute_support,Product,Support,x_support,Multiselect,documents.document,,,,0,,,0,Documents & Files,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
-ol_pim.attribute_application_notes,Product,Application Notes,x_application_notes,Multiselect,documents.document,,,,0,,,0,Documents & Files,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
+model_id,field_description,name,code,attribute_type,relation_model_id,widget,domain,translate,serialized,size,required,required_on_views,sequence,attribute_group_id,attribute_set_ids
+product.template,Brand,x_brand,brand,select,,,,,,0,,,0,Product Manager,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Software,Storage"
+product.template,Customer Facing Name,x_customer_facing_name,customer_facing_name,char,,,,TRUE,,0,,,0,Product Manager,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
+product.template,Customer Facing Short Name,x_customer_facing_short_name,customer_facing_short_name,char,,,,TRUE,,0,,,0,Product Manager,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
+product.template,EU Product Tax Code,x_eu_product_tax_code,eu_product_tacode,select,,,,,,0,,,0,Product Manager,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
+product.template,GTIN,x_gtin,gtin,char,,,,TRUE,,0,,,0,Product Manager,"Accessories,Cables,Cases,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
+product.template,Hardware Line,x_hardware_line,hardware_line,select,,,,,,0,,,0,Product Manager,"Computers,Panel PCs"
+product.template,Partner,x_partner_series,partner_series,select,,,,,,0,,,0,Product Manager,"Computers,Panel PCs"
+product.template,Reporting Category: Category,x_reporting_category_category,reporting_category_category,select,,,,,,0,,,0,Product Manager,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
+product.template,Reporting Category: Line,x_reporting_category_line,reporting_category_line,select,,,,,,0,,,0,Product Manager,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
+product.template,Reporting Category: Series,x_reporting_category_series,reporting_category_series,select,,,,,,0,,,0,Product Manager,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
+product.template,Reporting Category: System,x_reporting_category_system,reporting_category_system,select,,,,,,0,,,0,Product Manager,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
+product.template,Series,x_series,series,select,,,,,,0,,,0,Product Manager,"Computers,Panel PCs"
+product.template,Short Description,x_short_description,short_description,text,,,,TRUE,,0,,,0,Product Manager,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
+product.template,Suitable Environments,x_suitable_environments,suitable_environments,multiselect,,many2many_tags,,,,0,,,0,Product Manager,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Software"
+product.template,UPC,x_upc,upc,char,,,,TRUE,,0,,,0,Product Manager,"Accessories,Cables,Cases,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
+product.template,US Product Tax Code,x_us_product_tax_code,us_product_tacode,select,,,,,,0,,,0,Product Manager,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
+product.template,Discontinued date,x_lifecycle_discontinued_date,lifecycle_discontinued_date,date,,,,,,0,,,0,Lifecycle,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Storage"
+product.template,End of Life date,x_lifecycle_eol_date,lifecycle_eol_date,date,,,,,,0,,,0,Lifecycle,"Accessories,Cables,Cases,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
+product.template,Expected Lifespan,x_lifecycle_expected_lifespan,lifecycle_expected_lifespan,integer,,,,,,0,,,0,Lifecycle,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Software,Storage"
+product.template,Launch date,x_lifecycle_launch_date,lifecycle_launch_date,date,,,,,,0,,,0,Lifecycle,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Software,Storage"
+product.template,Consigned product.template,x_is_consigned,is_consigned,boolean,,boolean_toggle,,,,0,,,0,Sales,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Storage"
+product.template,Solution Categories,x_solution_categories,solution_categories,multiselect,,many2many_tags,,,,0,,,0,Sales,"Computers,Panel PCs"
+product.template,System Categories,x_system_categories,system_categories,multiselect,,many2many_tags,,,,0,,,0,Sales,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
+product.template,Testing Status,x_testing_status,testing_status,select,,,,,,0,,,0,Sales,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
+product.template,Tier,x_tier,tier,select,,,,,,0,,,0,Sales,"Computers,Panel PCs"
+product.template,Shipping Buffer (EU),x_eu_shipping_buffer,eu_shipping_buffer,integer,,,,,,0,,,0,Operations,"Accessories,Assembly & Validation"
+product.template,Shipping Height,x_shipping_height,shipping_height,float,,,,,,0,,,0,Operations,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
+product.template,Shipping Length,x_shipping_length,shipping_length,float,,,,,,0,,,0,Operations,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
+product.template,Shipping Weight,x_shipping_weight,shipping_weight,float,,,,,,0,,,0,Operations,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
+product.template,Shipping Width,x_shipping_width,shipping_width,float,,,,,,0,,,0,Operations,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
+product.template,Shipping Buffer (US),x_us_shipping_buffer,us_shipping_buffer,integer,,,,,,0,,,0,Operations,"Accessories,Assembly & Validation"
+product.template,Dimensions,x_dimensions,dimensions,text,,,,TRUE,,0,,,0,Physical Properties,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Services,Storage"
+product.template,Length,x_length,length,integer,,,,,,0,,,0,Physical Properties,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Storage"
+product.template,Input Current Maximum,x_input_current_max,input_current_max,integer,,,,,,0,,,0,Power,"Accessories,Computers,Displays,Expansion,Motherboards,Panel PCs,Power Supplies,Storage"
+product.template,Input Current Minimum,x_input_current_min,input_current_min,integer,,,,,,0,,,0,Power,"Accessories,Computers,Displays,Expansion,Motherboards,Panel PCs,Power Supplies,Storage"
+product.template,Input Power Maximum,x_input_power_max,input_power_max,integer,,,,,,0,,,0,Power,"Accessories,Computers,Displays,Expansion,Motherboards,Panel PCs,Power Supplies,Storage"
+product.template,Input Power Minimum,x_input_power_min,input_power_min,integer,,,,,,0,,,0,Power,"Accessories,Computers,Displays,Expansion,Motherboards,Panel PCs,Power Supplies,Storage"
+product.template,Input Voltage Maximum,x_input_voltage_max,input_voltage_max,float,,,,,,0,,,0,Power,"Accessories,Computers,Displays,Expansion,Motherboards,Panel PCs,Power Supplies,Storage"
+product.template,Input Voltage Minimum,x_input_voltage_min,input_voltage_min,float,,,,,,0,,,0,Power,"Accessories,Computers,Displays,Expansion,Motherboards,Panel PCs,Power Supplies,Storage"
+product.template,Input Voltage Type,x_input_voltage_type,input_voltage_type,select,,,,,,0,,,0,Power,"Accessories,Computers,Displays,Expansion,Motherboards,Panel PCs,Power Supplies,Storage"
+product.template,Output Current Maximum,x_output_current_max,output_current_max,float,,,,,,0,,,0,Power,Power Supplies
+product.template,Output Current Minimum,x_output_current_min,output_current_min,float,,,,,,0,,,0,Power,Power Supplies
+product.template,Output Power Maximum,x_output_power_max,output_power_max,integer,,,,,,0,,,0,Power,"Expansion,Power Supplies"
+product.template,Output Power Minimum,x_output_power_min,output_power_min,integer,,,,,,0,,,0,Power,"Expansion,Power Supplies"
+product.template,Output Voltage Maximum,x_output_voltage_max,output_voltage_max,integer,,,,,,0,,,0,Power,"Expansion,Panel PCs,Power Supplies"
+product.template,Output Voltage Minimum,x_output_voltage_min,output_voltage_min,integer,,,,,,0,,,0,Power,"Expansion,Panel PCs,Power Supplies"
+product.template,Output Voltage Type,x_output_voltage_type,output_voltage_type,select,,,,,,0,,,0,Power,"Accessories,Computers,Displays,Expansion,Motherboards,Panel PCs,Power Supplies,Storage"
+product.template,Power Cable Connectors,x_power_cable_connectors,power_cable_connectors,select,,,,,,0,,,0,Power,Power Supplies
+product.template,Power Consumption,x_power_consumption,power_consumption,float,,,,,,0,,,0,Power,"Accessories,Displays,Expansion,Heatsinks,Memory,Motherboards,Processors,Storage"
+product.template,Input Voltage Conversion Note,x_power_conversion_note,power_conversion_note,char,,,,TRUE,,0,,,0,Power,"Accessories,Computers,Displays,Expansion,Motherboards,Panel PCs,Power Supplies,Storage"
+product.template,Regulatory Certifications,x_regulatory_certifications,regulatory_certifications,multiselect,,many2many_tags,,,,0,,,0,Regulatory,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
+product.template,Regulatory Notes,x_regulatory_notes,regulatory_notes,text,,,,TRUE,,0,,,0,Regulatory,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
+product.template,Additional Features,x_additional_features,additional_features,multiselect,,many2many_tags,,,,0,,,0,Shared Specifications,"Computers,Panel PCs"
+product.template,CPU Cooler Height,x_cpu_cooler_height,cpu_cooler_height,integer,,,,,,0,,,0,Shared Specifications,"Accessories,Cases,Computers,Heatsinks,Motherboards"
+product.template,Expansion Options,x_expansion_options,expansion_options,multiselect,,many2many_tags,,,,0,,,0,Shared Specifications,"Computers,Expansion,Motherboards,Panel PCs"
+product.template,Graphics/GPU,x_graphics_gpu,graphics_gpu,multiselect,,many2many_tags,,,,0,,,0,Shared Specifications,"Computers,Expansion,Motherboards,Panel PCs,Processors"
+product.template,Hardware Type,x_hardware_type,hardware_type,multiselect,,many2many_tags,,,,0,,,0,Shared Specifications,"Computers,Displays,Panel PCs"
+product.template,Humidity (Operating Maximum),x_humidity_operating_max,humidity_operating_max,integer,,,,,,0,,,0,Shared Specifications,"Computers,Displays,Expansion,Memory,Motherboards,Panel PCs,Power Supplies"
+product.template,Humidity (Operating Minimum),x_humidity_operating_min,humidity_operating_min,integer,,,,,,0,,,0,Shared Specifications,"Computers,Displays,Expansion,Memory,Motherboards,Panel PCs,Power Supplies"
+product.template,Humidity (Non-Condensing Operating Maximum),x_humidity_operating_non_condensing_max,humidity_operating_non_condensing_max,integer,,,,,,0,,,0,Shared Specifications,"Computers,Displays,Expansion,Memory,Motherboards,Panel PCs,Power Supplies"
+product.template,Humidity (Non-Condensing Operating Minimum),x_humidity_operating_non_condensing_min,humidity_operating_non_condensing_min,integer,,,,,,0,,,0,Shared Specifications,"Computers,Displays,Expansion,Memory,Motherboards,Panel PCs,Power Supplies"
+product.template,Included Accessories,x_included_accessories,included_accessories,text,,,,TRUE,,0,,,0,Shared Specifications,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Services,Software"
+product.template,Included Power Supply,x_included_power_supply,included_power_supply,text,,,,TRUE,,0,,,0,Shared Specifications,"Computers,Motherboards,Panel PCs"
+product.template,Included Storage,x_included_storage,included_storage,text,,,,TRUE,,0,,,0,Shared Specifications,"Computers,Motherboards,Panel PCs"
+product.template,Included Wireless,x_included_wireless,included_wireless,text,,,,TRUE,,0,,,0,Shared Specifications,"Computers,Panel PCs"
+product.template,LAN Controller,x_lan_controller,lan_controller,multiselect,,many2many_tags,,,,0,,,0,Shared Specifications,"Computers,Expansion,Motherboards,Panel PCs"
+product.template,LAN Ports,x_lan_ports,lan_ports,integer,,,,,,0,,,0,Shared Specifications,"Cables,Computers,Expansion,Motherboards"
+product.template,Notes,x_notes,notes,text,,,,TRUE,,0,,,0,Shared Specifications,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
+product.template,PoE Ports,x_poe_ports,poe_ports,integer,,,,,,0,,,0,Shared Specifications,"Computers,Expansion,Motherboards,Panel PCs"
+product.template,Power Input Connector,x_power_input_connectors,power_input_connectors,multiselect,,many2many_tags,,,,0,,,0,Shared Specifications,"Cables,Computers,Displays,Expansion,Motherboards,Panel PCs,Power Supplies"
+product.template,Recommended Applications,x_recommended_applications,recommended_applications,multiselect,,many2many_tags,,,,0,,,0,Shared Specifications,"Accessories,Cables,Cases,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Services,Software"
+product.template,Serial Ports,x_serial_ports,serial_ports,integer,,,,,,0,,,0,Shared Specifications,"Cables,Computers,Displays,Expansion,Motherboards,Panel PCs"
+product.template,Shock Tolerance (Non-operating),x_shock_tolerance_non_operating,shock_tolerance_non_operating,char,,,,TRUE,,0,,,0,Shared Specifications,"Computers,Displays,Expansion,Memory,Motherboards,Panel PCs,Power Supplies,Storage"
+product.template,Shock Tolerance (Operating),x_shock_tolerance_operating,shock_tolerance_operating,char,,,,TRUE,,0,,,0,Shared Specifications,"Computers,Displays,Expansion,Memory,Motherboards,Panel PCs,Power Supplies,Storage"
+product.template,Size,x_size,size,multiselect,,many2many_tags,,,,0,,,0,Shared Specifications,"Computers,Panel PCs"
+product.template,Front I/O,x_spec_front_io,spec_front_io,text,,,,TRUE,,0,,,0,Shared Specifications,"Cases,Computers,Displays,Motherboards,Panel PCs"
+product.template,Onboard I/O,x_spec_onboard_io,spec_onboard_io,text,,,,TRUE,,0,,,0,Shared Specifications,"Cases,Computers,Displays,Motherboards,Panel PCs"
+product.template,Rear I/O,x_spec_rear_io,spec_rear_io,text,,,,TRUE,,0,,,0,Shared Specifications,"Cases,Computers,Displays,Motherboards,Panel PCs"
+product.template,System Monitoring,x_system_monitoring,system_monitoring,multiselect,,many2many_tags,,,,0,,,0,Shared Specifications,"Computers,Motherboards,Panel PCs"
+product.template,System Processor Core Options,x_system_processor_core_options,system_processor_core_options,multiselect,,many2many_tags,,,,0,,,0,Shared Specifications,"Computers,Motherboards,Panel PCs,Processors"
+product.template,Temperature (Operating Maximum),x_temperature_operating_max,temperature_operating_max,integer,,,,,,0,,,0,Shared Specifications,"Accessories,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Storage"
+product.template,Temperature (Operating Minimum),x_temperature_operating_min,temperature_operating_min,integer,,,,,,0,,,0,Shared Specifications,"Accessories,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Storage"
+product.template,Temperature (Operating) Notes,x_temperature_operating_notes,temperature_operating_notes,text,,,,TRUE,,0,,,0,Shared Specifications,"Accessories,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Storage"
+product.template,USB Ports,x_usb_ports,usb_ports,integer,,,,,,0,,,0,Shared Specifications,"Cables,Computers,Displays,Expansion,Motherboards,Panel PCs"
+product.template,Vibration Tolerance (Non-operating),x_vibration_tolerance_non_operating,vibration_tolerance_non_operating,char,,,,TRUE,,0,,,0,Shared Specifications,"Computers,Displays,Expansion,Memory,Motherboards,Panel PCs,Power Supplies,Storage"
+product.template,Vibration Tolerance (Operating),x_vibration_tolerance_operating,vibration_tolerance_operating,char,,,,TRUE,,0,,,0,Shared Specifications,"Computers,Displays,Expansion,Memory,Motherboards,Panel PCs,Power Supplies,Storage"
+product.template,Video Encoding Standards,x_video_encoding_standards,video_encoding_standards,multiselect,,many2many_tags,,,,0,,,0,Shared Specifications,"Computers,Expansion,Motherboards,Panel PCs"
+product.template,Video Input,x_video_input,video_input,multiselect,,many2many_tags,,,,0,,,0,Shared Specifications,"Computers,Expansion,Motherboards,Panel PCs"
+product.template,Video Interface,x_video_interface,video_interface,multiselect,,many2many_tags,,,,0,,,0,Shared Specifications,"Accessories,Cables,Computers,Displays,Expansion,Heatsinks,Motherboards"
+product.template,Manufacturer Component Warranty,x_manufacturer_component_warranty,manufacturer_component_warranty,select,,,,,,0,,,0,Manufacturer Info,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Storage"
+product.template,Manufacturer Expected Lifecycle,x_manufacturer_expected_lifecycle,manufacturer_expected_lifecycle,integer,,,,,,0,,,0,Manufacturer Info,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Software,Storage"
+product.template,Manufacturer Launch date,x_manufacturer_launch_date,manufacturer_launch_date,date,,,,,,0,,,0,Manufacturer Info,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
+product.template,Manufacturer Product Link,x_manufacturer_product_link,manufacturer_product_link,char,,,,TRUE,,0,,,0,Manufacturer Info,"Accessories,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
+product.template,Display Aspect Ratio,x_display_aspect_ratio,display_aspect_ratio,select,,,,,,0,,,0,Displays (Components),"Displays,Panel PCs"
+product.template,Display Brightness,x_display_brightness,display_brightness,integer,,,,,,0,,,0,Displays (Components),"Displays,Panel PCs"
+product.template,Display Contrast Ratio,x_display_contrast_ratio,display_contrast_ratio,select,,,,,,0,,,0,Displays (Components),"Displays,Panel PCs"
+product.template,Display Mounting Options,x_display_mounting_options,display_mounting_options,multiselect,,many2many_tags,,,,0,,,0,Displays (Components),"Accessories,Cases,Computers,Displays,Panel PCs"
+product.template,Display Note,x_display_note,display_note,char,,,,TRUE,,0,,,0,Displays (Components),"Computers,Motherboards,Panel PCs"
+product.template,Display Output Type,x_display_output_type,display_output_type,multiselect,,many2many_tags,,,,0,,,0,Displays (Components),"Computers,Panel PCs"
+product.template,Display Resolution,x_display_resolution,display_resolution,multiselect,,many2many_tags,,,,0,,,0,Displays (Components),"Displays,Expansion,Motherboards,Panel PCs"
+product.template,Display Screen Size,x_display_screen_size,display_screen_size,float,,,,,,0,,,0,Displays (Components),"Displays,Panel PCs"
+product.template,Display Touchscreen Type,x_display_touchscreen_type,display_touchscreen_type,select,,,,,,0,,,0,Displays (Components),"Displays,Panel PCs"
+product.template,Display Viewing Angle,x_display_viewing_angle,display_viewing_angle,char,,,,TRUE,,0,,,0,Displays (Components),"Displays,Panel PCs"
+product.template,Authentication Protocols,x_authentication_protocols,authentication_protocols,text,,,,TRUE,,0,,,0,Expansion Cards (Components),Expansion
+product.template,Data Rate,x_data_rate,data_rate,multiselect,,many2many_tags,,,,0,,,0,Expansion Cards (Components),Expansion
+product.template,Drivers Supported,x_drivers_supported,drivers_supported,multiselect,,many2many_tags,,,,0,,,0,Expansion Cards (Components),Expansion
+product.template,Expansion Acoustics,x_expansion_acoustics,expansion_acoustics,float,,,,,,0,,,0,Expansion Cards (Components),"Accessories,Expansion,Heatsinks"
+product.template,Expansion Mobile Carriers,x_expansion_mobile_carriers,expansion_mobile_carriers,multiselect,,many2many_tags,,,,0,,,0,Expansion Cards (Components),"Computers,Expansion,Panel PCs"
+product.template,Expansion Wireless Frequency,x_expansion_wireless_frequency,expansion_wireless_frequency,text,,,,TRUE,,0,,,0,Expansion Cards (Components),Expansion
+product.template,Interface Type,x_interface_type,interface_type,multiselect,,many2many_tags,,,,0,,,0,Expansion Cards (Components),Expansion
+product.template,Signal Type,x_signal_type,signal_type,multiselect,,many2many_tags,,,,0,,,0,Expansion Cards (Components),Expansion
+product.template,Memory Bandwidth,x_memory_bandwidth,memory_bandwidth,char,,,,TRUE,,0,,,0,Memory (Components),Expansion
+product.template,Memory Buffer,x_memory_buffer,memory_buffer,multiselect,,many2many_tags,,,,0,,,0,Memory (Components),Memory
+product.template,Memory Capacity,x_memory_capacity,memory_capacity,integer,,,,,,0,,,0,Memory (Components),"Computers,Memory,Motherboards,Panel PCs,Processors"
+product.template,Memory CAS Latency,x_memory_cas_latency,memory_cas_latency,char,,,,TRUE,,0,,,0,Memory (Components),Storage
+product.template,Memory Channels,x_memory_channels,memory_channels,select,,,,,,0,,,0,Memory (Components),"Computers,Panel PCs,Processors"
+product.template,Memory Clock Speed,x_memory_speed,memory_speed,integer,,,,,,0,,,0,Memory (Components),"Computers,Memory,Motherboards,Panel PCs"
+product.template,Memory Type,x_memory_type,memory_type,select,,,,,,0,,,0,Memory (Components),"Computers,Memory,Motherboards,Panel PCs"
+product.template,Motherboard Chipset,x_motherboard_chipset,motherboard_chipset,select,,,,,,0,,,0,Motherboards (Components),"Computers,Motherboards,Panel PCs"
+product.template,Motherboard Expansion Slots,x_motherboard_expansion_slots,motherboard_expansion_slots,integer,,,,,,0,,,0,Motherboards (Components),"Cases,Computers,Expansion,Motherboards,Panel PCs"
+product.template,Motherboard Form Factor,x_motherboard_form_factor,motherboard_form_factor,multiselect,,many2many_tags,,,,0,,,0,Motherboards (Components),"Cases,Computers,Motherboards,Panel PCs"
+product.template,Motherboard Memory Slots,x_motherboard_memory_slots,motherboard_memory_slots,integer,,,,,,0,,,0,Motherboards (Components),"Computers,Motherboards,Panel PCs"
+product.template,Motherboard Raid Support,x_motherboard_raid_support,motherboard_raid_support,multiselect,,many2many_tags,,,,0,,,0,Motherboards (Components),"Computers,Expansion,Motherboards,Panel PCs"
+product.template,PCIe Count,x_pcie_count,pcie_count,integer,,,,,,0,,,0,Motherboards (Components),"Computers,Expansion,Motherboards,Panel PCs"
+product.template,PCIe Count Note,x_pcie_count_note,pcie_count_note,char,,,,TRUE,,0,,,0,Motherboards (Components),"Computers,Expansion,Motherboards,Panel PCs"
+product.template,Cable Connectors,x_cable_connectors,cable_connectors,multiselect,,many2many_tags,,,,0,,,0,Other Specifications (Components),"Accessories,Cables,Computers,Displays,Expansion,Heatsinks,Motherboards,Panel PCs,Power Supplies"
+product.template,Cable DC Connector,x_cable_dc_connector,cable_dc_connector,multiselect,,many2many_tags,,,,0,,,0,Other Specifications (Components),"Cables,Computers,Displays,Motherboards,Panel PCs,Power Supplies"
+product.template,Cable Length,x_cable_length,cable_length,integer,,,,,,0,,,0,Other Specifications (Components),Cables
+product.template,Cable Type,x_cable_type,cable_type,multiselect,,many2many_tags,,,,0,,,0,Other Specifications (Components),Cables
+product.template,Case Color,x_case_color,case_color,select,,,,,,0,,,0,Other Specifications (Components),"Cases,Displays,Panel PCs"
+product.template,Case Material,x_case_material,case_material,multiselect,,many2many_tags,,,,0,,,0,Other Specifications (Components),"Cases,Computers,Displays,Panel PCs"
+product.template,Case Mounting Options,x_case_mounting,case_mounting,multiselect,,many2many_tags,,,,0,,,0,Other Specifications (Components),"Accessories,Cases,Computers,Displays,Panel PCs"
+product.template,Case Port Punchouts,x_case_port_punchouts,case_port_punchouts,multiselect,,many2many_tags,,,,0,,,0,Other Specifications (Components),"Cases,Computers,Panel PCs"
+product.template,Case Type (Chassis),x_case_type_chassis,case_type_chassis,multiselect,,many2many_tags,,,,0,,,0,Other Specifications (Components),"Cases,Computers,Displays,Panel PCs"
+product.template,Connectivity,x_connectivity,connectivity,multiselect,,many2many_tags,,,,0,,,0,Other Specifications (Components),Expansion
+product.template,Fan Bearing RPM,x_fan_bearing_rpm,fan_bearing_rpm,integer,,,,,,0,,,0,Other Specifications (Components),"Accessories,Heatsinks"
+product.template,Fan Bearing Type,x_fan_bearing_type,fan_bearing_type,select,,,,,,0,,,0,Other Specifications (Components),"Accessories,Heatsinks"
+product.template,Heat Sink Air Flow,x_heat_sink_air_flow,heat_sink_air_flow,float,,,,,,0,,,0,Other Specifications (Components),"Accessories,Heatsinks"
+product.template,Mobile Frequency Bands,x_mobile_frequency_bands,mobile_frequency_bands,multiselect,,many2many_tags,,,,0,,,0,Other Specifications (Components),Expansion
+product.template,Network Standards,x_network_standards,network_standards,select,,,,,,0,,,0,Other Specifications (Components),Expansion
+product.template,Networking Type,x_networking_type,networking_type,select,,,,,,0,,,0,Other Specifications (Components),Expansion
+product.template,Number of Displays Supported,x_number_of_displays_supported,number_of_displays_supported,integer,,,,,,0,,,0,Other Specifications (Components),"Computers,Motherboards,Panel PCs"
+product.template,Optical Drive Bay,x_optical_drive_bay,optical_drive_bay,select,,,,,,0,,,0,Other Specifications (Components),"Accessories,Cases,Heatsinks"
+product.template,OS Minimum Footprint,x_os_minimum_footprint,os_minimum_footprint,float,,,,,,0,,,0,Other Specifications (Components),Software
+product.template,Power AC Frequency Maximum,x_power_ac_frequency_max,power_ac_frequency_max,integer,,,,,,0,,,0,Other Specifications (Components),Power Supplies
+product.template,Power AC Frequency Minimum,x_power_ac_frequency_min,power_ac_frequency_min,integer,,,,,,0,,,0,Other Specifications (Components),Power Supplies
+product.template,Power Automotive Features,x_power_automotive_features,power_automotive_features,multiselect,,many2many_tags,,,,0,,,0,Other Specifications (Components),"Computers,Displays,Motherboards,Panel PCs,Power Supplies"
+product.template,Power Cable Coupler,x_power_cable_coupler,power_cable_coupler,select,,,,,,0,,,0,Other Specifications (Components),"Cables,Power Supplies"
+product.template,Power Cord Length,x_power_cord_length,power_cord_length,float,,,,,,0,,,0,Other Specifications (Components),Power Supplies
+product.template,PSU Form Factor,x_power_form_factor,power_form_factor,multiselect,,many2many_tags,,,,0,,,0,Other Specifications (Components),Power Supplies
+product.template,PSU Modularity,x_psu_modularity,psu_modularity,select,,,,,,0,,,0,Other Specifications (Components),Power Supplies
+product.template,PSU Protection,x_psu_protection,psu_protection,multiselect,,many2many_tags,,,,0,,,0,Other Specifications (Components),Power Supplies
+product.template,PSU Rails,x_psu_rails,psu_rails,multiselect,,many2many_tags,,,,0,,,0,Other Specifications (Components),Power Supplies
+product.template,PSU Rating,x_psu_rating,psu_rating,select,,,,,,0,,,0,Other Specifications (Components),Power Supplies
+product.template,RS-232 Pin Header Type,x_rs_232_pin_header_type,rs_232_pin_header_type,select,,,,,,0,,,0,Other Specifications (Components),"Cables,Expansion,Motherboards,Panel PCs"
+product.template,SATA Connectors,x_sata_connectors,sata_connectors,integer,,,,,,0,,,0,Other Specifications (Components),"Cables,Memory,Motherboards,Panel PCs"
+product.template,Compatible Software,x_software_certifications,software_certifications,multiselect,,many2many_tags,,,,0,,,0,Other Specifications (Components),"Computers,Panel PCs"
+product.template,Cooling Type,x_system_cooling_type,system_cooling_type,select,,,,,,0,,,0,Other Specifications (Components),"Computers,Panel PCs"
+product.template,Max Burst Frequency,x_max_burst_frequency,maburst_frequency,char,,,,TRUE,,0,,,0,Processors (Components),"Computers,Motherboards"
+product.template,Processor,x_processor,processor,multiselect,,many2many_tags,,,,0,,,0,Processors (Components),"Computers,Motherboards,Panel PCs,Processors"
+product.template,Processor Cache,x_processor_cache,processor_cache,float,,,,,,0,,,0,Processors (Components),"Processors,Storage"
+product.template,Processor Clock Speed,x_processor_clock_speed,processor_clock_speed,float,,,,,,0,,,0,Processors (Components),"Computers,Motherboards,Panel PCs,Processors"
+product.template,Processor Clock Speed Notes,x_processor_clock_speed_notes,processor_clock_speed_notes,text,,,,TRUE,,0,,,0,Processors (Components),"Computers,Motherboards,Panel PCs,Processors"
+product.template,Processor Cores,x_processor_cores,processor_cores,integer,,,,,,0,,,0,Processors (Components),"Computers,Motherboards,Panel PCs,Processors"
+product.template,Processor Family,x_processor_family,processor_family,select,,,,,,0,,,0,Processors (Components),"Computers,Motherboards,Panel PCs,Processors"
+product.template,Processor Features,x_processor_features,processor_features,multiselect,,many2many_tags,,,,0,,,0,Processors (Components),Processors
+product.template,Processor Generation,x_processor_generation,processor_generation,multiselect,,many2many_tags,,,,0,,,0,Processors (Components),"Computers,Motherboards,Panel PCs,Processors"
+product.template,Processor Model,x_processor_model,processor_model,char,,,,TRUE,,0,,,0,Processors (Components),"Computers,Motherboards,Panel PCs,Processors"
+product.template,Processor Socket,x_processor_socket,processor_socket,multiselect,,many2many_tags,,,,0,,,0,Processors (Components),"Accessories,Computers,Motherboards,Panel PCs,Processors"
+product.template,Processor TDP,x_processor_tdp,processor_tdp,integer,,,,,,0,,,0,Processors (Components),Processors
+product.template,Processor Threads,x_processor_threads,processor_threads,integer,,,,,,0,,,0,Processors (Components),Processors
+product.template,Processor Tjunction/Tmax,x_processor_tjunction_tmax,processor_tjunction_tmax,float,,,,,,0,,,0,Processors (Components),"Computers,Processors"
+product.template,Processor Turbo Frequency Maximum,x_processor_turbo_frequency_max,processor_turbo_frequency_max,float,,,,,,0,,,0,Processors (Components),"Computers,Processors"
+product.template,Disk Speed,x_disk_speed,disk_speed,integer,,,,,,0,,,0,Storage (Components),Storage
+product.template,Endurance,x_endurance,endurance,char,,,,TRUE,,0,,,0,Storage (Components),Storage
+product.template,Idle Current,x_idle_current,idle_current,float,,,,,,0,,,0,Storage (Components),Storage
+product.template,Seek Current,x_seek_current,seek_current,float,,,,,,0,,,0,Storage (Components),Storage
+product.template,Seek Time,x_seek_time,seek_time,integer,,,,,,0,,,0,Storage (Components),Storage
+product.template,Storage Capacity,x_storage_capacity,storage_capacity,integer,,,,,,0,,,0,Storage (Components),Storage
+product.template,Storage Disk Features,x_storage_disk_features,storage_disk_features,multiselect,,many2many_tags,,,,0,,,0,Storage (Components),Storage
+product.template,Storage Flash Memory Type,x_storage_flash_memory_type,storage_flash_memory_type,select,,,,,,0,,,0,Storage (Components),Storage
+product.template,Storage Options,x_storage_options,storage_options,multiselect,,many2many_tags,,,,0,,,0,Storage (Components),"Computers,Expansion,Motherboards,Panel PCs,Storage"
+product.template,Storage Read Speed,x_storage_read_speed,storage_read_speed,integer,,,,,,0,,,0,Storage (Components),Storage
+product.template,Storage SATA Interface,x_storage_sata_interface,storage_sata_interface,multiselect,,many2many_tags,,,,0,,,0,Storage (Components),"Motherboards,Panel PCs,Storage"
+product.template,Storage Type,x_storage_type,storage_type,multiselect,,many2many_tags,,,,0,,,0,Storage (Components),"Computers,Expansion,Motherboards,Panel PCs,Storage"
+product.template,Storage Write Speed,x_storage_write_speed,storage_write_speed,integer,,,,,,0,,,0,Storage (Components),Storage
+product.template,Duplicated on,x_duplicated_date,duplicated_date,date,,,,,,0,,,0,Machine Use,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
+product.template,Duplicated from ID,x_duplicated_from_id,duplicated_from_id,char,,,,TRUE,,0,,,0,Machine Use,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
+product.template,Duplicated from UUID,x_duplicated_from_uuid,duplicated_from_uuid,char,,,,TRUE,,0,,,0,Machine Use,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
+product.template,Sync Information,x_sync_information,sync_information,char,,,,,,0,,,0,Machine Use,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
+product.template,EAN (Deprecated),x_ean,ean,char,,,,TRUE,,0,,,0,Deprecated,"Accessories,Cables,Cases,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage"
+product.template,Documentation,x_documentation,documentation,multiselect,documents.document,,"[('folder_id.name','=','Documentation')]",,,0,,,0,Documents & Files,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
+product.template,Drivers,x_drivers,drivers,multiselect,documents.document,,"[('folder_id.name','=','Drivers')]",,,0,,,0,Documents & Files,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
+product.template,Regulatory,x_regulatory,regulatory,multiselect,documents.document,,"[('folder_id.name','=','Regulatory')]",,,0,,,0,Documents & Files,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
+product.template,Support,x_support,support,multiselect,documents.document,,"[('folder_id.name','=','Support')]",,,0,,,0,Documents & Files,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
+product.template,Application Notes,x_application_notes,application_notes,multiselect,documents.document,,"[('folder_id.name','=','Application Notes')]",,,0,,,0,Documents & Files,"Accessories,Assembly & Validation,Cables,Cases,Computers,Displays,Expansion,Heatsinks,Memory,Motherboards,Panel PCs,Power Supplies,Processors,Services,Software,Storage,Warranties"
