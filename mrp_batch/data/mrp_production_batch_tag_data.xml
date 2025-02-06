@@ -1,0 +1,12 @@
+<odoo noupdate="1">
+
+    <record id="tag_delayed" model="mrp.production.batch.tag">
+        <field name="name">Delayed</field>
+        <field name="color">3</field>
+    </record>
+    <record id="tag_planned" model="mrp.production.batch.tag">
+        <field name="name">Planned</field>
+        <field name="color">10</field>
+    </record>
+
+</odoo>

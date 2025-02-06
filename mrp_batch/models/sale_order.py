@@ -39,10 +39,6 @@ class SaleOrder(models.Model):
         # Initializes the MRP Production Batch model.
         batch_obj = self.env["mrp.production.batch"]
         for rec in self:
-            # Sets up batch creation values with the current user as responsible.
-            vals = {
-                "responsible_id": rec.env.user.id,
-            }
             # Iterates over each manufacturing order in `mrp_production_ids`.
             for mo in rec.mrp_production_ids:
                 # Checks if the product requires serial tracking and is
@@ -57,11 +53,20 @@ class SaleOrder(models.Model):
                     # last item.
                     if qty > 1:
                         mo.sudo()._split_productions({mo: ([1] * int(qty))})[:-1]
-            # Creates a new batch record with the specified values.
-            mrp_batch_id = batch_obj.create(vals)
-            # Assigns the new batch ID to each manufacturing order
-            # in `mrp_production_ids`.
-            rec.mrp_production_ids.write({"mrp_batch_id": mrp_batch_id.id})
+
+                    # Check if the current MO already has an assigned batch
+                    if not mo.mrp_batch_id:
+                        # If no batch exists, create a new batch
+                        vals = {
+                            "responsible_id": rec.env.user.id,
+                        }
+                        mrp_batch_id = batch_obj.create(vals)
+                        mo.write({"mrp_batch_id": mrp_batch_id.id})
+                        mo.backorder_ids.write({"mrp_batch_id": mrp_batch_id.id})
+                    else:
+                        # If a batch is already set, assign the same batch to the new MOs
+                        mo.write({"mrp_batch_id": mo.mrp_batch_id.id})
+                        mo.backorder_ids.write({"mrp_batch_id": mo.mrp_batch_id.id})
 
     # Methods for Batch Smart Button
     def _compute_mrp_production_batch_id_count(self):
