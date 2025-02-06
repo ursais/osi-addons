@@ -35,15 +35,6 @@ class SaleOrder(models.Model):
 
             so.is_mrp_warning = is_mrp_warning
 
-    def action_confirm(self):
-        # Calls the original `action_confirm` method from the super class to
-        # confirm the record.
-        res = super().action_confirm()
-        # Asynchronously triggers the `split_mo` method to split
-        # manufacturing orders (MOs).
-        self.with_delay().split_mo()
-        return res
-
     def split_mo(self):
         # Initializes the MRP Production Batch model.
         batch_obj = self.env["mrp.production.batch"]
