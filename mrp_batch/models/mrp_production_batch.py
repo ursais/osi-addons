@@ -4,6 +4,7 @@ import html
 from odoo import _, api, fields, models
 from odoo.tools import float_compare
 from odoo.tools.misc import format_date
+from datetime import timedelta
 
 
 class MrpProductionBatch(models.Model):
@@ -17,11 +18,6 @@ class MrpProductionBatch(models.Model):
 
     name = fields.Char(string="Name", index=True)
     sequence = fields.Integer()
-    daily_sequence = fields.Integer(
-        string="Daily Sequence",
-        compute="_compute_daily_sequence",
-        store=True,
-    )
     notes = fields.Text(string="Notes")
     partner_ids = fields.Many2many(
         "res.partner",
@@ -92,6 +88,11 @@ class MrpProductionBatch(models.Model):
         required=True,
     )
     date_start = fields.Datetime(string="Scheduled Date")
+    date_end = fields.Datetime(
+        string="Date End",
+        compute="_compute_date_end",
+        store=True,
+    )
     date_finished = fields.Datetime(
         string="Date Finished",
         compute="_compute_date_finished",
@@ -584,6 +585,19 @@ class MrpProductionBatch(models.Model):
                     production.date_start for production in record.production_ids
                 )
                 record.earliest_start = start_date
+
+    @api.depends(
+        "date_start",
+        "remaining_duration",
+    )
+    def _compute_date_end(self):
+        for record in self:
+            if record.date_start and record.remaining_duration is not None:
+                record.date_end = record.date_start + timedelta(
+                    hours=record.remaining_duration
+                )
+            else:
+                record.date_end = False
 
     @api.depends(
         "production_ids",
@@ -1109,9 +1123,7 @@ class MrpProductionBatch(models.Model):
             vals["name"] = (
                 self.env["ir.sequence"].next_by_code("mrp.production.batch") or "New"
             )
-        res = super().create(vals_list)
-        res._compute_daily_sequence()
-        return res
+        return super().create(vals_list)
 
     def write(self, vals):
         res = super().write(vals)
@@ -1122,8 +1134,6 @@ class MrpProductionBatch(models.Model):
                     # If the job is related to a manufacturing order, check its batch
                     if mo.state in ("draft", "confirmed"):
                         mo.date_start = batch.date_start
-                batch._compute_daily_sequence()
-
         return res
 
     def _check_and_update_queuing(self):
@@ -1149,32 +1159,5 @@ class MrpProductionBatch(models.Model):
             # or 'cancelled' states, mark the batch as no longer in a queuing state
             if all(job.state in ["done", "failed", "cancelled"] for job in jobs):
                 batch.is_queuing = False
-
-    @api.depends("date_start")
-    def _compute_daily_sequence(self):
-        for record in self:
-            if record.date_start:
-                # Get the start and end of the day
-                start_of_day = fields.Datetime.context_timestamp(
-                    record, record.date_start
-                ).replace(hour=0, minute=0, second=0, microsecond=0)
-                end_of_day = start_of_day.replace(hour=23, minute=59, second=59)
-
-                # Fetch all records for the same day
-                same_day_records = self.search(
-                    [
-                        (
-                            "date_start",
-                            ">=",
-                            fields.Datetime.to_string(start_of_day),
-                        ),
-                        ("date_start", "<=", fields.Datetime.to_string(end_of_day)),
-                    ],
-                    order="date_start asc, id asc",
-                )  # Sort by date_start (and id for stability)
-
-                # Assign daily_sequence
-                for idx, rec in enumerate(same_day_records, start=1):
-                    rec.daily_sequence = idx
 
     # END #########

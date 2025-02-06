@@ -13,14 +13,12 @@
                     <button name="action_cancel" type="object" string="Cancel" />
                 </header>
                 <field name="currency_id" column_invisible="1" />
-                <field name="sequence" widget="handle" />
-                <field name="daily_sequence" optional="show" />
                 <field name="name" optional="show" />
                 <field name="workcenter_tag_id" optional="show" />
                 <field name="partner_ids" widget="many2many_tags" optional="show" />
-                <field name="product_tmpl_ids" widget="many2many_tags" optional="show" />
+                <field name="product_tmpl_ids" widget="many2many_tags" optional="hide" />
                 <field name="sale_order_ids" widget="many2many_tags" optional="show" />
-                <field name="product_ids" widget="many2many_tags" optional="hide" />
+                <field name="product_ids" widget="many2many_tags" optional="show" />
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show" />
                 <field name="sale_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show" />
                 <field name="date_start" widget="datetime" options="{'show_time': false}" optional="show" />
@@ -30,24 +28,24 @@
                 <field name="components_availability" options="{'lazy': true}" invisible="state in ['done', 'cancel']" optional="show" decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'" decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')" decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')"/>
                 <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
                 <field name="total_revenue" widget="monetary" optional="hide" sum="Total" />
-                <field name="total_duration_expected" widget="float_time" optional="show" sum="Total" />
-                <field name="total_build_duration_expected" widget="float_time" optional="show" sum="Total" />
-                <field name="total_test_duration_expected" widget="float_time" optional="show" sum="Total" />
-                <field name="total_other_duration_expected" widget="float_time" optional="show" sum="Total" />
+                <field name="total_duration_expected" widget="float_time" optional="hide" sum="Total" />
+                <field name="total_build_duration_expected" widget="float_time" optional="hide" sum="Total" />
+                <field name="total_test_duration_expected" widget="float_time" optional="hide" sum="Total" />
+                <field name="total_other_duration_expected" widget="float_time" optional="hide" sum="Total" />
                 <field name="total_duration" widget="float_time" optional="hide" sum="Total" />
                 <field name="total_build_duration" widget="float_time" optional="hide" sum="Total" />
                 <field name="total_test_duration" widget="float_time" optional="hide" sum="Total" />
                 <field name="total_other_duration" widget="float_time" optional="hide" sum="Total" />
 
                 <field name="remaining_duration" widget="float_time" optional="hide" sum="Total" />
-                <field name="remaining_build_duration" widget="float_time" optional="hide" sum="Total" />
+                <field name="remaining_build_duration" widget="float_time" optional="show" sum="Total" />
                 <field name="remaining_test_duration" widget="float_time" optional="hide" sum="Total" />
                 <field name="remaining_other_duration" widget="float_time" optional="hide" sum="Total" />
 
-                <field name="avg_duration_expected" widget="float_time" optional="show" sum="Total" />
+                <field name="avg_duration_expected" widget="float_time" optional="hide" sum="Total" />
                 <field name="avg_build_duration_expected" widget="float_time" optional="show" sum="Total" />
-                <field name="avg_test_duration_expected" widget="float_time" optional="show" sum="Total" />
-                <field name="avg_other_duration_expected" widget="float_time" optional="show" sum="Total" />
+                <field name="avg_test_duration_expected" widget="float_time" optional="hide" sum="Total" />
+                <field name="avg_other_duration_expected" widget="float_time" optional="hide" sum="Total" />
                 <field name="avg_duration" widget="float_time" optional="hide" sum="Total" />
                 <field name="avg_build_duration" widget="float_time" optional="hide" sum="Total" />
                 <field name="avg_test_duration" widget="float_time" optional="hide" sum="Total" />
@@ -55,16 +53,16 @@
 
                 <field name="qty_producing" optional="hide" sum="Total" />
                 <field name="qty_produced" optional="hide" sum="Total" />
-                <field name="qty_remaining" optional="hide" sum="Total" />
+                <field name="qty_remaining" optional="show" sum="Total" />
                 <field name="percent_complete" widget="percentage" optional="hide" />
                 <field name="responsible_id" optional="hide" />
                 <field name='is_outdated_bom' optional="hide" />
                 <field name="exception_ids" widget="many2many_tags" optional="hide" />
                 <field name="exceptions_summary" optional="show" />
-                <field name="notes" optional="hide" />
+                <field name="notes" optional="show" />
                 <field name="state" decoration-success="state == 'done'" decoration-warning="state == 'progress'" decoration-info="state == 'confirm'" decoration-danger="state == 'hold'" decoration-muted="state in ('cancel', 'draft')" optional="show" widget="badge" class="text-dark" />
                 <field name="is_delayed" optional="show" />
-                <field name="is_planned" widget="boolean_toggle" readonly="1" />
+                <field name="is_planned" widget="boolean_toggle" readonly="1" optional="show" />
             </tree>
         </field>
     </record>
@@ -262,7 +260,7 @@
         <field name="arch" type="xml">
             <gantt
                 date_start="date_start"
-                date_stop="date_finished"
+                date_stop="date_end"
                 string="Manufacturing Batch Gantt"
                 default_group_by="workcenter_tag_id"
                 progress="percent_complete"

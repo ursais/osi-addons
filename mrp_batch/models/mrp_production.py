@@ -90,4 +90,15 @@ class MrpProduction(models.Model):
 
         return res
 
+    def write(self, vals):
+        res = super().write(vals)
+
+        # Check if state is changing to 'confirmed'
+        if "state" in vals and vals["state"] == "confirmed":
+            sale_orders = self.mapped("sale_order_id")  # Get related Sale Orders
+            for so in sale_orders:
+                so.with_delay().split_mo()
+
+        return res
+
     # END #########
