@@ -18,5 +18,20 @@ class ResConfigSettings(models.TransientModel):
         config_parameter="mrp_batch.default_days_to_prepare_mo",
         default=1,
     )
+    mo_batch_mode = fields.Selection(
+        [
+            (
+                "single",
+                "Single Batch for ALL Manufacturing Orders on Sale Order Confirmation",
+            ),
+            (
+                "multiple",
+                "Separate Batch for EACH Manufacturing Orders on Sale Order Confirmation",
+            ),
+        ],
+        string="MO Batch Mode",
+        config_parameter="mrp_batch.batch_mode",
+        default="single",
+    )
 
     # END #########

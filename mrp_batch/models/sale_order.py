@@ -16,6 +16,12 @@ class SaleOrder(models.Model):
     # END #########
     # METHODS #####
 
+    def write(self, vals):
+        res = super().write(vals)
+        if vals.get("order_line", False):
+            self.with_delay().split_mo()
+        return res
+
     def _compute_is_mrp_warning(self):
         for so in self:
             is_mrp_warning = False
@@ -29,38 +35,69 @@ class SaleOrder(models.Model):
 
             so.is_mrp_warning = is_mrp_warning
 
+    def action_confirm(self):
+        # Calls the original `action_confirm` method from the super class to
+        # confirm the record.
+        res = super().action_confirm()
+        # Asynchronously triggers the `split_mo` method to split
+        # manufacturing orders (MOs).
+        self.with_delay().split_mo()
+        return res
+
     def split_mo(self):
-        # Initializes the MRP Production Batch model.
         batch_obj = self.env["mrp.production.batch"]
+        batch_mode = (
+            self.env["ir.config_parameter"].sudo().get_param("mrp_batch.batch_mode")
+        )
+
         for rec in self:
-            # Iterates over each manufacturing order in `mrp_production_ids`.
+            existing_batch_id = None
+
+            if batch_mode == "single":
+                # Create a single batch for all MOs in this record
+                existing_batch_id = batch_obj.create(
+                    {"responsible_id": rec.env.user.id}
+                )
+
             for mo in rec.mrp_production_ids:
-                # Checks if the product requires serial tracking and is
-                # allowed to split MOs.
                 if (
                     mo.product_id.tracking == "serial"
                     and mo.product_id.is_allow_split_mo
                 ):
                     qty = mo.product_qty
-                    # If the quantity is greater than 1, splits the MO into units
-                    # of 1 and removes the original MO entry by slicing off the
-                    # last item.
                     if qty > 1:
-                        mo.sudo()._split_productions({mo: ([1] * int(qty))})[:-1]
+                        # Perform the split and get new MOs
+                        new_mos = mo.sudo()._split_productions({mo: ([1] * int(qty))})[
+                            :-1
+                        ]
 
-                    # Check if the current MO already has an assigned batch
-                    if not mo.mrp_batch_id:
-                        # If no batch exists, create a new batch
-                        vals = {
-                            "responsible_id": rec.env.user.id,
+                        # Assign the batch to newly created MOs
+                        for new_mo in new_mos:
+                            new_mo.write(
+                                {
+                                    "mrp_batch_id": (
+                                        existing_batch_id.id
+                                        if batch_mode == "single"
+                                        else batch_obj.create(
+                                            {"responsible_id": rec.env.user.id}
+                                        ).id
+                                    )
+                                }
+                            )
+
+                    # Assign batch to original MO and its backorders
+                    mo.write(
+                        {
+                            "mrp_batch_id": (
+                                existing_batch_id.id
+                                if batch_mode == "single"
+                                else batch_obj.create(
+                                    {"responsible_id": rec.env.user.id}
+                                ).id
+                            )
                         }
-                        mrp_batch_id = batch_obj.create(vals)
-                        mo.write({"mrp_batch_id": mrp_batch_id.id})
-                        mo.backorder_ids.write({"mrp_batch_id": mrp_batch_id.id})
-                    else:
-                        # If a batch is already set, assign the same batch to the new MOs
-                        mo.write({"mrp_batch_id": mo.mrp_batch_id.id})
-                        mo.backorder_ids.write({"mrp_batch_id": mo.mrp_batch_id.id})
+                    )
+                    mo.backorder_ids.write({"mrp_batch_id": mo.mrp_batch_id.id})
 
     # Methods for Batch Smart Button
     def _compute_mrp_production_batch_id_count(self):
