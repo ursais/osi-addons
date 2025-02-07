@@ -1,0 +1,30 @@
+<odoo>
+
+    <!-- Required records for traveler stages -->
+    <record id="undefined_stage" model="mrp.assembly.stage">
+        <field name="name">UNDEFINED</field>
+    </record>
+    <record id="custom_work_stage" model="mrp.assembly.stage">
+        <field name="name">CUSTOM WORK INSTRUCTIONS</field>
+    </record>
+    <record id="standard_work_stage" model="mrp.assembly.stage">
+        <field name="name">Standard Work Instructions</field>
+    </record>
+
+    <!-- Repair stages and options -->
+    <record id="repair_stage" model="mrp.assembly.stage">
+        <field name="name">Repair</field>
+        <field name="show_on_repair_traveler">True</field>
+        <field name="show_when_empty">False</field>
+    </record>
+    <record id="repair_add_stage" model="mrp.assembly.stage">
+        <field name="name">Repair Additions</field>
+        <field name="show_on_repair_traveler">True</field>
+        <field name="show_when_empty">False</field>
+    </record>
+    <record id="repair_add_classification" model="product.attribute.classification">
+        <field name="name">Add</field>
+        <field name="stage_id" ref="repair_add_stage" />
+    </record>
+
+</odoo>

@@ -1,0 +1,66 @@
+<odoo>
+
+    <!-- Only linked to a stage -->
+    <record id="stage_only_check" model="mrp.assembly.check">
+        <field name="name">Seat 2 Stage check</field>
+        <field name="priority">10</field>
+        <field name="text">[BOTH] Seat 2 only</field>
+        <field name="type">both</field>
+        <field name="stage_id" ref="seat_2_stage"/>
+    </record>
+
+    <!-- Product and stage -->
+    <record id="product_and_seat_2_check" model="mrp.assembly.check">
+        <field name="name">E3930-P/E3950-P in BoM, Seat 2 stage</field>
+        <field name="priority">0</field>
+        <field name="text">[OUTPUT] E3930-P or E3950-P in BoM, Seat 2</field>
+        <field name="type">output</field>
+        <field name="stage_id" ref="seat_2_stage"/>
+        <field name="product_ids" eval="[(4, ref('ol_base.e3930_p')),(4, ref('ol_base.e3950_p'))]" />
+    </record>
+    <record id="product_and_seat_3_check" model="mrp.assembly.check">
+        <field name="name">E3930-P/E3950-P in BoM, Seat 3 stage</field>
+        <field name="priority">0</field>
+        <field name="text">[OUTPUT] E3930-P or E3950-P in BoM, Seat 3</field>
+        <field name="type">output</field>
+        <field name="product_ids" eval="[(4, ref('ol_base.e3930_p')),(4, ref('ol_base.e3950_p'))]" />
+        <field name="stage_id" ref="seat_3_stage"/>
+    </record>
+
+    <!-- Classification and Stage -->
+    <record id="ac_adaptor_and_boxing_check" model="mrp.assembly.check">
+        <field name="name">AC Adapter in Boxing</field>
+        <field name="priority">10</field>
+        <field name="text">[NOTE] AC Adapter in Boxing</field>
+        <field name="type">note</field>
+        <field name="classification_id" ref="ol_product_classification.ac_adapter_classification"/>
+        <field name="stage_id" ref="boxing_stage"/>
+    </record>
+    <record id="motherboard_and_unboxing_check" model="mrp.assembly.check">
+        <field name="name">Motherboard in Unboxing</field>
+        <field name="priority">10</field>
+        <field name="text">[NOTE] Motherboard in Unboxing</field>
+        <field name="type">note</field>
+        <field name="classification_id" ref="ol_product_classification.motherboard_classification"/>
+        <field name="stage_id" ref="unboxing_stage"/>
+    </record>
+
+    <!-- Product but no stage -->
+    <record id="storage_without_stage_check" model="mrp.assembly.check">
+        <field name="name">TS32 or TS64 in any stage</field>
+        <field name="priority">10</field>
+        <field name="text">[INPUT] TS32 or TS64 in any stage</field>
+        <field name="type">input</field>
+        <field name="product_ids" eval="[(4, ref('ol_base.ts32gmts800')),(4, ref('ol_base.ts64gmts800'))]" />
+    </record>
+
+    <!-- Classification but no stage -->
+    <record id="motherboard_without_stage_check" model="mrp.assembly.check">
+        <field name="name">Motherboard classification in any stage</field>
+        <field name="priority">10</field>
+        <field name="text">[OUTPUT] Motherboard classification in any stage</field>
+        <field name="type">output</field>
+        <field name="classification_id" ref="ol_product_classification.motherboard_classification"/>
+    </record>
+
+</odoo>

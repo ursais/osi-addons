@@ -1,0 +1,105 @@
+<odoo>
+
+    <record id="ol_mrp_traveler.custom_work_stage" model="mrp.assembly.stage">
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="ol_mrp_traveler.standard_work_stage" model="mrp.assembly.stage">
+        <field name="sequence">4</field>
+    </record>
+
+    <record id="customer_c_and_p_stage" model="mrp.assembly.stage">
+        <field name="name">Customer C&amp;Ps</field>
+        <field name="sequence">5</field>
+        <field name="show_on_repair_traveler">True</field>
+        <field name="show_on_traveler">True</field>
+        <field name="show_when_empty">False</field>
+    </record>
+
+    <record id="unboxing_stage" model="mrp.assembly.stage">
+        <field name="name">Unboxing</field>
+        <field name="sequence">6</field>
+        <field name="show_on_traveler">True</field>
+        <field name="show_when_empty">True</field>
+    </record>
+
+    <record id="seat_1_stage" model="mrp.assembly.stage">
+        <field name="name">Seat 1</field>
+        <field name="sequence">7</field>
+        <field name="show_on_traveler">True</field>
+        <field name="show_when_empty">True</field>
+    </record>
+
+    <record id="seat_2_stage" model="mrp.assembly.stage">
+        <field name="name">Seat 2</field>
+        <field name="sequence">8</field>
+        <field name="show_on_traveler">True</field>
+        <field name="show_when_empty">True</field>
+    </record>
+
+    <record id="seat_3_stage" model="mrp.assembly.stage">
+        <field name="name">Seat 3</field>
+        <field name="sequence">9</field>
+        <field name="show_on_traveler">True</field>
+        <field name="show_when_empty">True</field>
+    </record>
+
+    <record id="q_a_stage" model="mrp.assembly.stage">
+        <field name="name">Q/A</field>
+        <field name="sequence">10</field>
+        <field name="show_on_repair_traveler">False</field>
+        <field name="show_on_traveler">False</field>
+        <field name="show_when_empty">False</field>
+    </record>
+
+    <record id="ol_mrp_traveler.repair_stage" model="mrp.assembly.stage">
+        <field name="sequence">11</field>
+    </record>
+
+    <record id="ol_mrp_traveler.repair_add_stage" model="mrp.assembly.stage">
+        <field name="sequence">12</field>
+    </record>
+
+    <record id="testing_setup_stage" model="mrp.assembly.stage">
+        <field name="name">Testing - Set-Up</field>
+        <field name="sequence">13</field>
+        <field name="show_on_repair_traveler">True</field>
+        <field name="show_on_traveler">True</field>
+        <field name="show_when_empty">True</field>
+    </record>
+
+    <record id="testing_takedown_stage" model="mrp.assembly.stage">
+        <field name="name">Testing - Take-Down</field>
+        <field name="sequence">14</field>
+        <field name="show_on_repair_traveler">True</field>
+        <field name="show_on_traveler">True</field>
+        <field name="show_when_empty">True</field>
+    </record>
+
+    <record id="boxing_stage" model="mrp.assembly.stage">
+        <field name="name">Boxing</field>
+        <field name="sequence">15</field>
+        <field name="show_on_repair_traveler">False</field>
+        <field name="show_on_traveler">True</field>
+        <field name="show_when_empty">True</field>
+    </record>
+
+    <record id="order_notes_stage" model="mrp.assembly.stage">
+        <field name="name">Order Notes</field>
+        <field name="sequence">16</field>
+        <field name="show_on_traveler">False</field>
+        <field name="show_when_empty">False</field>
+    </record>
+
+    <record id="disabled_stage" model="mrp.assembly.stage">
+        <field name="name">DISABLED</field>
+        <field name="sequence">17</field>
+        <field name="show_on_traveler">False</field>
+        <field name="show_when_empty">False</field>
+    </record>
+
+    <record id="ol_mrp_traveler.undefined_stage" model="mrp.assembly.stage">
+        <field name="sequence">19</field>
+    </record>
+
+</odoo>
