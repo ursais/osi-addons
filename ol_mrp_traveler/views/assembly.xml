@@ -1,0 +1,150 @@
+<odoo>
+
+    <!-- Assembly Stage Tree View -->
+    <record id="mrp_assembly_stage_tree_view" model="ir.ui.view">
+        <field name="name">mrp.assembly.stage.tree</field>
+        <field name="model">mrp.assembly.stage</field>
+        <field name="arch" type="xml">
+            <tree string="Assembly Stages">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="show_on_traveler"/>
+                <field name="show_when_empty"/>
+                <field name="show_on_repair_traveler"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Assembly Stage Form View -->
+    <record id="mrp_assembly_stage_form_view" model="ir.ui.view">
+        <field name="name">mrp.assembly.stage.form</field>
+        <field name="model">mrp.assembly.stage</field>
+        <field name="arch" type="xml">
+            <form string="Assembly Stage" class="o_sale_order">
+                <sheet style="max-width: 90%;">
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="show_on_traveler"/>
+                            <field name="show_when_empty"/>
+                        </group>
+                        <group>
+                            <field name="show_on_repair_traveler"/>
+                        </group>
+                    </group>
+
+                    <notebook name="main_tabs" position="inside">
+                        <page name="checks" string="Checks">
+                            <group>
+                                <field name="check_ids" widget="many2many">
+                                    <tree editable="bottom">
+                                        <field name="priority"/>
+                                        <field name="classification_id"/>
+                                        <field name="products_count"/>
+                                        <field name="text"/>
+                                        <field name="type"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Assembly Check Search View -->
+    <record id="mrp_assembly_check_search" model="ir.ui.view">
+        <field name="name">mrp.assembly.check.search</field>
+        <field name="model">mrp.assembly.check</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Search Checks">
+                <group string="Filters">
+                    <filter string="Repair Checks" name="repair_check_filter" domain="[('repair_check', '=', True)]"/>
+
+                    <filter string="Assembly Checks" name="assembly_check_filter" domain="[('assembly_check', '=', True)]"/>
+                </group>
+                <group string="Group by ...">
+                    <filter string="Group by Stage" name="group_by_stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                    <filter string="Group by Check Type" name="group_by_checktype" domain="[]" context="{'group_by': 'type'}"/>
+                </group>
+                <field name="name" string="Check Name"/>
+                <field name="stage_id" string="Assembly Stage"/>
+                <field name="classification_id" string="BoM Classification"/>
+                <field name="product_ids" string="Product"/>
+                <field name="template_ids" string="Template"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Assembly Check Tree View -->
+    <record id="mrp_assembly_check_tree_view" model="ir.ui.view">
+        <field name="name">mrp.assembly.check.tree</field>
+        <field name="model">mrp.assembly.check</field>
+        <field name="arch" type="xml">
+            <tree string="Assembly Checks">
+                <field name="priority"/>
+                <field name="display_name"/>
+                <field name="repair_check" invisible="1"/>
+                <button name="" string="Repair Check" icon="fa-search-plus" invisible="not repair_check" />
+                <field name="assembly_check" invisible="1"/>
+                <button name="" string="Assembly Check" icon="fa-dot-circle-o" invisible="not assembly_check" />
+                <field name="stage_id"/>
+                <field name="classification_id"/>
+                <field name="products_count"/>
+                <field name="templates_count"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Assembly Check Form View -->
+    <record id="mrp_assembly_check_form_view" model="ir.ui.view">
+        <field name="name">mrp.assembly.check.form</field>
+        <field name="model">mrp.assembly.check</field>
+        <field name="arch" type="xml">
+            <form string="Assembly Check">
+                <group>
+                    <field name="name"/>
+                </group>
+                <group>
+                    <group>
+                        <field name="type"/>
+                        <field name="priority"/>
+                        <field name="assembly_check"/>
+                        <field name="repair_check"/>
+                    </group>
+                    <group>
+                        <field name="stage_id"/>
+                        <field name="classification_id"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="text" size="50"/>
+                </group>
+                <group>
+                    <field name="product_ids">
+                        <tree editable="bottom">
+                            <field name="default_code" string="SKU" readonly="1"/>
+                            <field name="name" readonly="1"/>
+                        </tree>
+                    </field>
+                    <field name="template_ids">
+                        <tree editable="bottom">
+                            <field name="default_code" string="SKU" readonly="1"/>
+                            <field name="name" readonly="1"/>
+                        </tree>
+                    </field>
+                </group>
+            </form>
+        </field>
+    </record>
+
+</odoo>
