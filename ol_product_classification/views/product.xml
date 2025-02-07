@@ -1,0 +1,16 @@
+<odoo>
+
+    <record id="ol_product_classification_product_normal_form_view" model="ir.ui.view">
+        <field name="name">ol_product_classification.product_normal_form_view</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <page name="inventory" position="inside">
+                <group string="Classifications with this Product" name="classification_group" colspan="4" invisible="not classification_ids">
+                    <field name="classification_ids" colspan="2" nolabel="1" widget="many2many_tags" />
+                </group>
+            </page>
+        </field>
+    </record>
+
+</odoo>
