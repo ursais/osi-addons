@@ -20,6 +20,13 @@
                         </div>
                     </div>
                 </setting>
+                <setting id="mo_batch_mode" string="Batch Creation Mode">
+                    <div class="content-group">
+                        <div class="mt16" >
+                            <field name="mo_batch_mode" class="oe_inline"/>
+                        </div>
+                    </div>
+                </setting>
             </xpath>
         </field>
     </record>
