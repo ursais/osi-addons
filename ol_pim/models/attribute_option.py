@@ -19,12 +19,17 @@ class AttributeOption(models.Model):
 
     # END ##########
 
-    # Commenting this out until there is confirmation that these should be unique
-    # @api.constrains("code")
-    # def _check_unique_code(self):
-    #     for record in self:
-    #         existing_record = self.search([("code", "=", record.code)], limit=1)
-    #         if existing_record and existing_record.id != record.id:
-    #             raise ValidationError(
-    #                 f"The Attribute Option Code '{record.code}' must be unique. Please choose a different code."
-    #             )
+    @api.constrains("code", "attribute_id")
+    def _check_unique_code_per_attribute(self):
+        for record in self:
+            existing_record = self.search(
+                [
+                    ("code", "=", record.code),
+                    ("attribute_id", "=", record.attribute_id.id),
+                ],
+                limit=1,
+            )
+            if existing_record and existing_record.id != record.id:
+                raise ValidationError(
+                    f"The Attribute Option Code '{record.code}' must be unique for the Attribute '{record.attribute_id.name}'."
+                )
