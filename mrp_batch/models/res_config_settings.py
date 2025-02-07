@@ -26,7 +26,7 @@ class ResConfigSettings(models.TransientModel):
             ),
             (
                 "multiple",
-                "Separate Batch for EACH Manufacturing Orders on Sale Order Confirmation",
+                "Separate Batch for EACH Manufacturing Order on Sale Order Confirmation",
             ),
         ],
         string="MO Batch Mode",

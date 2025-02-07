@@ -13,6 +13,7 @@
                     <button name="action_cancel" type="object" string="Cancel" />
                 </header>
                 <field name="currency_id" column_invisible="1" />
+                <field name="mrp_batch_schedule_id" widget="Many2one" optional="show" />
                 <field name="name" optional="show" />
                 <field name="workcenter_tag_id" optional="show" />
                 <field name="partner_ids" widget="many2many_tags" optional="show" />
@@ -61,6 +62,7 @@
                 <field name="exceptions_summary" optional="show" />
                 <field name="notes" optional="show" />
                 <field name="state" decoration-success="state == 'done'" decoration-warning="state == 'progress'" decoration-info="state == 'confirm'" decoration-danger="state == 'hold'" decoration-muted="state in ('cancel', 'draft')" optional="show" widget="badge" class="text-dark" />
+                <field name="company_id" optional="hide" />
                 <field name="is_delayed" optional="hide" />
                 <field name="is_planned" widget="boolean_toggle" readonly="1" optional="hide" />
             </tree>
@@ -122,6 +124,7 @@
                     <group>
                         <group>
                             <field name="workcenter_tag_id" />
+                            <field name="mrp_batch_schedule_id" />
                             <field name="partner_ids" widget="many2many_tags" />
                             <label for="product_ids" name="product_ids_label"/>
                             <div class="o_row" name="upgrade bom_div">
@@ -149,6 +152,7 @@
                             <field name="responsible_id" readonly="state not in ('draft', 'confirm', 'cancel') or is_locked" />
                             <field name="exception_ids" widget="many2many_tags" invisible="1" />
                             <field name="exceptions_summary" invisible="1" />
+                            <field name="company_id" invisible="1" />
                         </group>
                         <group>
                             <label for="qty_producing" string="Quantity" />
@@ -350,6 +354,7 @@
                 <separator/>
                 <filter name="filter_date_start" string="Date" date="date_start"/>
                 <filter name="filter_plan_date" invisible="1" string="Date: Last 365 Days" domain="[('date_start', '&gt;', (datetime.datetime.now() + relativedelta(days=-365)).to_utc().strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                <filter name="mrp_batch_schedule_id" string="Schedule" context="{'group_by': 'mrp_batch_schedule_id'}" />
                 <filter name="workcenter_tag_id" string="Workcenter Tag" context="{'group_by': 'workcenter_tag_id'}" />
                 <filter name="partner_ids" string="Customer" context="{'group_by': 'partner_ids'}" />
                 <filter name="product_ids" string="Product" context="{'group_by': 'product_ids'}" />

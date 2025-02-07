@@ -4,7 +4,7 @@ import html
 from odoo import _, api, fields, models
 from odoo.tools import float_compare
 from odoo.tools.misc import format_date
-from datetime import timedelta
+from datetime import datetime, timedelta
 from odoo.exceptions import UserError
 
 
@@ -104,9 +104,14 @@ class MrpProductionBatch(models.Model):
         string="Workcenter Tag",
     )
     is_outdated_bom = fields.Boolean(
-        "Outdated BoM",
+        string="Outdated BoM",
         compute="_compute_outaged_bom",
         help="The BoM has been updated since creation of the MO",
+    )
+    mrp_batch_schedule_id = fields.Many2one(
+        "mrp.production.batch.schedule",
+        string="Day",
+        help="The schedule is used to group batch's by day.",
     )
 
     # Booleans representing various states for UI controls
@@ -338,6 +343,12 @@ class MrpProductionBatch(models.Model):
         string="Currency",
         required=True,
         default=lambda self: self.env.company.currency_id,
+    )
+    company_id = fields.Many2one(
+        "res.company",
+        string="Company",
+        required=True,
+        default=lambda self: self.env.company,
     )
 
     # Count of associated sale orders
@@ -1160,6 +1171,12 @@ class MrpProductionBatch(models.Model):
             vals["name"] = (
                 self.env["ir.sequence"].next_by_code("mrp.production.batch") or "New"
             )
+
+            # Set mrp_batch_schedule_id
+            if "date_start" in vals and "workcenter_tag_id" in vals:
+                vals["mrp_batch_schedule_id"] = self._get_or_create_schedule(
+                    vals["date_start"], vals["workcenter_tag_id"]
+                ).id
         return super().create(vals_list)
 
     def write(self, vals):
@@ -1171,7 +1188,39 @@ class MrpProductionBatch(models.Model):
                     # If the job is related to a manufacturing order, check its batch
                     if mo.state in ("draft", "confirmed"):
                         mo.date_start = batch.date_start
+
+            # Set mrp_batch_schedule_id
+            if "date_start" in vals or "workcenter_tag_id" in vals:
+                date_start = (
+                    vals.get("date_start", batch.date_start) or batch.date_start
+                )
+                workcenter_tag_id = (
+                    vals.get("workcenter_tag_id", batch.workcenter_tag_id.id)
+                    or batch.workcenter_tag_id
+                )
+                if date_start and workcenter_tag_id:
+                    batch.mrp_batch_schedule_id = batch._get_or_create_schedule(
+                        date_start, workcenter_tag_id
+                    )
         return res
+
+    def _get_or_create_schedule(self, date_start, workcenter_tag_id):
+        """Find or create a schedule based on date_start and workcenter_tag_id."""
+        schedule_date = fields.Date.to_date(date_start)
+        domain = [
+            ("date", "=", schedule_date),
+            ("workcenter_tag_id", "=", workcenter_tag_id),
+        ]
+        schedule = self.env["mrp.production.batch.schedule"].search(domain, limit=1)
+
+        if not schedule:
+            schedule = self.env["mrp.production.batch.schedule"].create(
+                {
+                    "date": schedule_date,
+                    "workcenter_tag_id": workcenter_tag_id,
+                }
+            )
+        return schedule
 
     def _check_and_update_queuing(self):
         # For each batch, check the status of any related queue jobs
