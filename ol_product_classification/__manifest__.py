@@ -1,17 +1,19 @@
-# pylint: disable=pointless-statement
 {
     "name": "OnLogic Product Classification",
     "summary": "Adds Product Classification functionality",
+    "description": """Adds Product Classification functionality""",
+    "author": "OnLogic",
+    "website": "https://www.onlogic.com",
+    "onlogic": True,
+    "category": "Products",
     "version": "17.0.0.1.0",
+    "license": "AGPL-3",
+    # any module necessary for this one to work correctly
     "depends": [
         "ol_base",
         "product",
     ],
-    "author": "OnLogic",
-    "website": "https://www.onlogic.com",
-    "onlogic": True,
-    "category": "Sales",
-    "description": """Adds Product Classification functionality""",
+    # always loaded
     "data": [
         "data/classification.xml",
         "security/ir.model.access.csv",
