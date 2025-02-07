@@ -30,6 +30,7 @@
         "report/mrp_batch_report_view.xml",
         "views/mrp_production_batch_tag_view.xml",
         "views/mrp_production_batch_view.xml",
+        "views/mrp_production_batch_schedule_view.xml",
         "views/mrp_production_view.xml",
         "views/mrp_routing_workcenter.xml",
         "views/mrp_workcenter.xml",
