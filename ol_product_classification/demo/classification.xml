@@ -1,0 +1,55 @@
+<odoo>
+
+    <record id="accessories_classification" model="product.attribute.classification">
+        <field name="name">Accessories</field>
+    </record>
+
+    <record id="hidden_classification" model="product.attribute.classification">
+        <field name="name">Hidden</field>
+    </record>
+
+    <record id="motherboard_classification" model="product.attribute.classification">
+        <field name="name">Motherboard</field>
+    </record>
+
+    <record id="primary_storage_classification" model="product.attribute.classification">
+        <field name="name">Primary Storage</field>
+    </record>
+
+    <record id="memory_ram_classification" model="product.attribute.classification">
+        <field name="name">Memory (RAM)</field>
+    </record>
+
+    <record id="internal_cabling_1_classification" model="product.attribute.classification">
+        <field name="name">Internal Cabling 1</field>
+    </record>
+
+    <record id="internal_cabling_2_classification" model="product.attribute.classification">
+        <field name="name">Internal Cabling 2</field>
+    </record>
+
+    <record id="case_component_classification" model="product.attribute.classification">
+        <field name="name">Case Component</field>
+    </record>
+
+    <record id="operating_system_classification" model="product.attribute.classification">
+        <field name="name">Operating System</field>
+    </record>
+
+    <record id="case_classification" model="product.attribute.classification">
+        <field name="name">Case</field>
+    </record>
+
+    <record id="ac_adapter_classification" model="product.attribute.classification">
+        <field name="name">AC Adapter</field>
+    </record>
+
+    <record id="addon_module_classification" model="product.attribute.classification">
+        <field name="name">Add-on Module</field>
+    </record>
+
+    <record id="bios_classification" model="product.attribute.classification">
+        <field name="name">BIOS</field>
+    </record>
+
+</odoo>
