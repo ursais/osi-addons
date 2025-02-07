@@ -6,7 +6,7 @@
         <field name="sequence">71</field>
         <field name="model">mrp.production</field>
         <field name="exception_type">by_domain</field>
-        <field name="domain">[("sale_order_id.locked", "=", False)]</field>
+        <field name="domain">[("sale_order_id.locked", "=", False), ("state", "not in", ["draft", "done", "cancel"])]</field>
         <field name="active" eval="True" />
     </record>
 
