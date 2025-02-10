@@ -12,6 +12,7 @@ class MrpProductionBatchSchedule(models.Model):
 
     _name = "mrp.production.batch.schedule"
     _rec_name = "date"
+    _order = "date, workcenter_tag_id"
     _description = "Manufacturing Schedule"
 
     # COLUMNS #########
