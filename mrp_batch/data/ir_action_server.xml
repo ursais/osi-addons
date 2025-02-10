@@ -9,7 +9,24 @@
         <field name="code">
 for rec in records:
     if rec.is_outdated_bom and rec.state in ("draft", "confirmed"):
-        rec.action_update_bom()</field>
+        rec.action_update_bom()
+        </field>
+    </record>
+
+    <record id="action_run_computes" model="ir.actions.server">
+        <field name="name">Manually Trigger Computes</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="mrp_batch.model_mrp_production_batch" />
+        <field name="binding_model_id" ref="mrp_batch.model_mrp_production_batch" />
+        <field name="state">code</field>
+        <field name="code">
+for rec in records:
+    rec._compute_mrp_production_cancel()
+    rec._compute_mrp_production_done()
+    rec._compute_lock()
+    rec._compute_is_planned()
+    rec._compute_is_delayed()
+        </field>
     </record>
 
     <record id="action_set_batch_schedule" model="ir.actions.server">

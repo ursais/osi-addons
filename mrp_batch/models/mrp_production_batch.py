@@ -4,8 +4,7 @@ import html
 from odoo import _, api, fields, models
 from odoo.tools import float_compare
 from odoo.tools.misc import format_date
-from datetime import datetime, timedelta
-from odoo.exceptions import UserError
+from datetime import timedelta
 
 
 class MrpProductionBatch(models.Model):
@@ -13,6 +12,7 @@ class MrpProductionBatch(models.Model):
 
     _name = "mrp.production.batch"
     _inherit = ["mail.thread", "mail.activity.mixin"]
+    _order = "mrp_batch_schedule_id, date_start, workcenter_tag_id"
     _description = "Manufacturing Batch"
 
     # COLUMNS #########
@@ -465,6 +465,20 @@ class MrpProductionBatch(models.Model):
                     "confirmed",
                 ]:
                     production.action_update_bom()
+
+    def action_open_mrp_batch_schedule(self):
+        """Opens the related schedule in form view."""
+        self.ensure_one()
+        if self.mrp_batch_schedule_id:
+            return {
+                "type": "ir.actions.act_window",
+                "name": "Manufacturing Batch Schedule",
+                "res_model": "mrp.production.batch.schedule",
+                "view_mode": "form",
+                "res_id": self.mrp_batch_schedule_id.id,
+                "target": "current",  # Opens in the same window
+                "context": "{'create': False}",
+            }
 
     # Compute Methods
     @api.depends(
