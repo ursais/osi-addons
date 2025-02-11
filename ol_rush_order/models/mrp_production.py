@@ -12,13 +12,14 @@ class MrpProduction(models.Model):
     # COLUMNS ##########
 
     rush_order = fields.Boolean(
-        "Rush Order",
+        string="Rush Order",
         related="procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id.rush_order",
         readonly=False,
         tracking=True,
     )
     rush_order_sale_id = fields.Many2one(
-        related="procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id"
+        string="Rush Sale Order",
+        related="procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id",
     )
 
     # END ##########

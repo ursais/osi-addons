@@ -14,7 +14,7 @@
                 </header>
                 <field name="currency_id" column_invisible="1" />
                 <field name="mrp_batch_schedule_id" widget="Many2one" optional="hide" />
-                <button name="action_open_mrp_batch_schedule" type="object" icon="fa-calendar" invisible="not mrp_batch_schedule_id" />
+                <button name="action_open_mrp_batch_schedule" type="object" icon="fa-calendar" title="Open Schedule" invisible="not mrp_batch_schedule_id" />
                 <field name="date_start" widget="datetime" options="{'show_time': false}" optional="show" />
                 <field name="workcenter_tag_id" optional="show" />
                 <field name="name" optional="show" />
