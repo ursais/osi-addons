@@ -20,4 +20,7 @@ class ProductTemplateAttributeValue(models.Model):
         related="product_attribute_value_id.company_ids",
     )
 
+    visible_to_user = fields.Boolean(string="Visible to User", default=True)
+
     # END ##########
+    

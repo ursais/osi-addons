@@ -1,0 +1,53 @@
+<odoo noupdate="0">
+
+    <!-- Enable Create/Edit on PTAL/attribute_id -->
+    <record id="product_template_attribute_line_attribute_id" model="m2x.create.edit.option">
+        <field name="model_id" ref="product_configurator.model_product_template_attribute_line"/>
+        <field name="field_id" ref="product.field_product_template_attribute_line__attribute_id"/>
+        <field name="option_create">set_false</field>
+        <field name="option_create_edit">set_true</field>
+        <field name="option_create_edit_wizard">1</field>
+    </record>
+
+    <!-- Enable Create/Edit on PTAL/value_ids -->
+    <record id="product_template_attribute_line_value_ids" model="m2x.create.edit.option">
+        <field name="model_id" ref="product_configurator.model_product_template_attribute_line"/>
+        <field name="field_id" ref="product.field_product_template_attribute_line__value_ids"/>
+        <field name="option_create">set_false</field>
+        <field name="option_create_edit">set_true</field>
+        <field name="option_create_edit_wizard">1</field>
+    </record>
+
+    <!-- Enable Create/Edit on Configuration Step/config_step_id -->
+    <record id="product_config_step_line_config_step_id" model="m2x.create.edit.option">
+        <field name="model_id" ref="product_configurator.model_product_config_step_line"/>
+        <field name="field_id" ref="product_configurator.field_product_config_step_line__config_step_id"/>
+        <field name="option_create">set_false</field>
+        <field name="option_create_edit">set_true</field>
+        <field name="option_create_edit_wizard">1</field>
+    </record>
+
+    <!-- Enable Create/Edit on Product Config Restrictions/attribute_line_id -->
+    <record id="product_config_line_config_attribute_line_id" model="m2x.create.edit.option">
+        <field name="model_id" ref="product_configurator.model_product_config_line"/>
+        <field name="field_id" ref="product_configurator.field_product_config_line__attribute_line_id"/>
+        <field name="option_create">set_false</field>
+        <field name="option_create_edit">set_true</field>
+        <field name="option_create_edit_wizard">1</field>
+    </record>
+
+        <!-- Enable Create/Edit on Product Config Restrictions/attribute_line_id -->
+    <record id="product_config_line_config_attribute_domain_id" model="m2x.create.edit.option">
+        <field name="model_id" ref="product_configurator.model_product_config_line"/>
+        <field name="field_id" ref="product_configurator.field_product_config_line__domain_id"/>
+        <field name="option_create">set_false</field>
+        <field name="option_create_edit">set_true</field>
+        <field name="option_create_edit_wizard">1</field>
+    </record>
+    
+
+
+
+    
+
+</odoo>
