@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class ProductTemplate(models.Model):
@@ -12,25 +12,53 @@ class ProductTemplate(models.Model):
 
     # COLUMNS ##########
     default_code = fields.Char(
-        "Internal Reference",
+        string="Internal Reference",
         compute="",
         inverse="",
         store=True,
     )
     company_ids_display = fields.Many2many(
-        "res.company",
-        'product_template_company_display_rel',
-        'product_temp_id'
-        'company_id',
+        comodel_name="res.company",
+        relation="product_template_company_display_rel",
+        column1="product_template_id",
+        column2="company_id",
         string="Enabled Companies",
         help=(
-            """Used for eCommerce: If set, the product is limited to be sold
-            only in these regions."""
+            "Used for eCommerce: If set, the product is limited to be sold "
+            "only in these regions."
         ),
+    )
+
+    has_advanced_configuration = fields.Boolean(
+        compute="_compute_has_advanced_configuration",
+        store=True,
     )
 
     # END ##########
     # METHODS ##########
+
+    @api.depends(
+        "config_line_ids",
+        "bom_ids.scaffolding_bom",
+        "bom_ids.bom_line_ids.config_set_id",
+    )
+    def _compute_has_advanced_configuration(self):
+        """
+        Compute the `has_advanced_configuration` field:
+        - True if there are any `config_line_ids`
+        - True if the product has a scaffolding BoM with at least one component
+          missing `config_set_id`
+        - False otherwise
+        """
+        for product in self:
+            product.has_advanced_configuration = bool(
+                product.config_line_ids
+                or any(
+                    bom.scaffolding_bom
+                    and any(not line.config_set_id for line in bom.bom_line_ids)
+                    for bom in product.bom_ids
+                )
+            )
 
     def write(self, vals):
         # Check if 'default_code' is being updated
