@@ -43,7 +43,9 @@ class MrpProductionBatchSchedule(models.Model):
     def _compute_display_name(self):
         for record in self:
             record.display_name = (
-                record.date.strftime("%m/%d/%y") if record.date else "Undefined"
+                f"{record.date.strftime('%m/%d/%y')} ({record.workcenter_tag_id.name})"
+                if record.date and record.workcenter_tag_id
+                else "Undefined"
             )
 
     @api.constrains(

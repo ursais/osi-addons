@@ -353,6 +353,18 @@
                 <separator/>
                 <filter string="Late Components" name="late" domain="[('components_availability_state', '=', 'late')]"/>
                 <separator/>
+                <!-- Date Filters -->
+                <filter string="Today" name="today" domain="[('date_start', '&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))]" />
+                <filter name="this_week_filter" string="This Week" domain="[
+                    ('date_start', '>=', (datetime.datetime.combine(context_today() + relativedelta(weeks=-1, days=1, weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
+                    ('date_start', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(days=1, weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]" />
+                <filter name="next_week_filter" string="Next Week" domain="[
+                    ('date_start', '>=', (datetime.datetime.combine(context_today() + relativedelta(weeks=1, weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
+                    ('date_start', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(weeks=2, weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]" />
+                <separator/>
+                <filter name="past_due" string="Past Due" domain="[['date_start', '&lt;', context_today()]]" />
+                <filter name="upcoming" string="Upcoming" domain="[['date_start', '&gt;', context_today()]]" />
+                <separator/>
                 <filter name="filter_date_start" string="Date" date="date_start"/>
                 <filter name="filter_plan_date" invisible="1" string="Date: Last 365 Days" domain="[('date_start', '&gt;', (datetime.datetime.now() + relativedelta(days=-365)).to_utc().strftime('%Y-%m-%d %H:%M:%S'))]"/>
                 <filter name="mrp_batch_schedule_id" string="Schedule" context="{'group_by': 'mrp_batch_schedule_id'}" />

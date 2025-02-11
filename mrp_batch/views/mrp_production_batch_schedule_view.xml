@@ -98,14 +98,32 @@
         <field name="model">mrp.production.batch.schedule</field>
         <field name="arch" type="xml">
             <search>
+                <!-- Searchable Fields -->
                 <field name="date" />
                 <field name="workcenter_tag_id" />
                 <field name="mrp_batch_ids" />
-                <filter name="workcenter_tag_id" string="Workcenter Tag" context="{'group_by': 'workcenter_tag_id'}" />
-                <filter name="company_id" string="Schedule" context="{'group_by': 'company_id'}" />
+
+                <!-- Date Filters -->
+                <filter name="date_today" string="Today" domain="[['date', '=', context_today()]]" />
+                <filter name="this_week_filter" string="This Week" domain="[
+                    ('date', '>=', (datetime.datetime.combine(context_today() + relativedelta(weeks=-1, days=1, weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
+                    ('date', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(days=1, weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                <filter name="next_week_filter" string="Next Week" domain="[
+                    ('date', '>=', (datetime.datetime.combine(context_today() + relativedelta(weeks=1, weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
+                    ('date', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(weeks=2, weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                <separator/>
+                <filter name="past_due" string="Past Due" domain="[['date', '&lt;', context_today()]]" />
+                <filter name="upcoming" string="Upcoming" domain="[['date', '&gt;', context_today()]]" />
+
+                <!-- Group By Options -->
+                <group expand="0" string="Group By">
+                    <filter name="workcenter_tag_id" string="Workcenter Tag" context="{'group_by': 'workcenter_tag_id'}" />
+                    <filter name="company_id" string="Company" context="{'group_by': 'company_id'}" />
+                </group>
             </search>
         </field>
     </record>
+
 
      <record id="action_mrp_production_batch_schedule" model="ir.actions.act_window">
         <field name="name">MRP Batch Schedules</field>
