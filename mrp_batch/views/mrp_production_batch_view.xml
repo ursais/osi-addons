@@ -218,6 +218,7 @@
                                     <field name="company_id" optional="hide" />
                                     <field name="name" string="Manufacturing Orders" optional="show" />
                                     <field name="product_qty" string="Quantity" optional="show" />
+                                    <field name="lot_producing_id" optional="hide" />
                                     <field name="state" decoration-success="state == 'done'" decoration-warning="state == 'confirm'" decoration-info="state == 'confirmed'" decoration-danger="state == 'cancel'" decoration-muted="state == 'draft'" widget="badge" class="text-dark" optional="show" />
                                     <field name="date_start" string="Scheduled Date" optional="show" />
                                     <field name="date_finished" string="End Date" optional="show" />

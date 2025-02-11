@@ -37,6 +37,20 @@ class MrpProduction(models.Model):
     # END #########
     # METHODS #####
 
+    def button_plan(self):
+        """
+        Override button_plan to generate a serial number if
+        the product is serialized
+        """
+        res = super().button_plan()
+
+        for order in self:
+            if order.product_id.tracking == "serial" and not order.lot_producing_id:
+                # Call Odoo's method to generate the serial
+                order.action_generate_serial()
+
+        return res
+
     def action_remove_batch(self):
         if self.filtered(lambda batch: not batch.mrp_batch_id):
             raise UserError(
