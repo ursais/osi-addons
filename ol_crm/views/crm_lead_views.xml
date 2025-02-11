@@ -17,7 +17,7 @@
     </record>
 
     <record id="ol_crm_crm_case_tree_view_oppor_inherit" model="ir.ui.view">
-        <field name="name">crm.lead.form.inherit</field>
+        <field name="name">crm.lead.tree.inherit</field>
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
         <field name="arch" type="xml">
@@ -26,4 +26,17 @@
             </field>
         </field>
     </record>
+
+    <record id="ol_crm_crm_case_tree_view_leads_inherit" model="ir.ui.view">
+        <field name="name">crm.lead.tree.inherit</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_tree_view_leads"/>
+        <field name="arch" type="xml">
+            <field name="probability" position="after">
+                <field name="quantity" optional="hide"/>
+            </field>
+        </field>
+    </record>
+    
+
 </odoo>
