@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="crm.crm_lead_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('col-auto')][2]" position="after">
-                <div class="col-auto">
+                <div class="col-auto" style="margin-left:12px !important">
                     <label for="quantity" class="d-inline-block"/>
                     <div id="quantity" class="d-flex align-items-baseline">
                         <field name="quantity" class="p-2 o_input_13ch"/>
@@ -16,4 +16,14 @@
         </field>
     </record>
 
+    <record id="ol_crm_crm_case_tree_view_oppor_inherit" model="ir.ui.view">
+        <field name="name">crm.lead.form.inherit</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
+        <field name="arch" type="xml">
+            <field name="expected_revenue" position="after">
+                <field name="quantity" optional="hide"/>
+            </field>
+        </field>
+    </record>
 </odoo>
