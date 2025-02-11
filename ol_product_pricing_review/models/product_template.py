@@ -148,13 +148,11 @@ class ProductTemplate(models.Model):
                 rec.last_purchase_price_converted = rec.last_purchase_price
 
     @api.depends(
-        "last_purchase_line_id",
         "last_purchase_line_id.price_unit",
     )
     def _compute_last_purchase_margin(self, from_review=False, from_threshold=False):
         """This will compute the last purchase margin."""
         for rec in self:
-            # if rec.last_purchase_line_id.state in ("purchase", "done"):
             last_purchase_margin = rec.last_purchase_margin or 0.0
 
             # Convert last purchase price if different currency

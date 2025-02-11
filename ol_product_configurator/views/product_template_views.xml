@@ -6,6 +6,15 @@
         <field name="priority">100</field>
         <field name="inherit_id" ref="product.product_template_form_view" />
         <field name="arch" type="xml">
+            <!-- Add alert message if has_advanced_configuration is True -->
+            <xpath expr="//field[@name='product_variant_count']" position="before">
+                <field name="has_advanced_configuration" invisible="1" />
+                <div class="alert alert-warning" role="alert" invisible="not has_advanced_configuration">
+                    <strong>Advanced Configuration Enabled!</strong><br/>
+                    Not compatible with eCommerce: This product template has advanced configurations that are not currently compatible with eCommerce due to configuration restrictions or BoM lines without configuration sets.
+                </div>
+            </xpath>
+            <!-- Add company_ids_display field -->
             <xpath expr="//group[@name='sale']" position="before">
                 <group>
                     <group name="visibility">
