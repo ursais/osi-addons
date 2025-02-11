@@ -146,6 +146,12 @@
                     invisible="state == 'cancel'"
                 />
             </field>
+            <xpath expr="//notebook/page[3]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <field name="overhead_total" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
         </field>
     </record>
 
