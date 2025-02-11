@@ -26,6 +26,7 @@ class BlanketOrderWizard(models.TransientModel):
         partner_invoice_id,
         partner_shipping_id,
     ):
+        date_schedule = min(self.line_ids.mapped("date_schedule"))
         return {
             "partner_id": customer,
             "origin": self.blanket_order_id.name,
@@ -37,6 +38,7 @@ class BlanketOrderWizard(models.TransientModel):
             "analytic_account_id": self.blanket_order_id.analytic_account_id.id,
             "partner_invoice_id": partner_invoice_id,
             "partner_shipping_id": partner_shipping_id,
+            "original_request_date": date_schedule,
         }
 
     def create_sale_order(self):
