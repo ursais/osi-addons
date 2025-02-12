@@ -8,4 +8,12 @@
         <field name="name">Sales Prototype</field>
     </record>
 
+    <record id="crm_tag_no_split_ship" model="crm.tag">
+        <field name="name">No Split Ship</field>
+    </record>
+
+    <record id="crm_tag_no_early_ship" model="crm.tag">
+        <field name="name">No Early Ship</field>
+    </record>
+
 </odoo>
