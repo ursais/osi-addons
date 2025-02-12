@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -55,5 +55,9 @@ class SaleOrder(models.Model):
         for rec in self:
             rec.original_commitment_date = self.commitment_date or self.expected_date
         return res
+
+    @api.onchange("partner_id")
+    def _onchange_partner_id_sale_order_tag_ids(self):
+        self.tag_ids = self.partner_id.sale_order_tag_ids
 
     # END #########
