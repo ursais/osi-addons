@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -53,6 +53,24 @@ class ProductCreationWizard(models.TransientModel):
         MrpBomLine = self.env["mrp.bom.line"]
         ProductProfile = self.env["product.profile"]
         EcoStage = self.env["mrp.eco.stage"]
+
+        # Added the validation for Prototype Product Name Duplication
+        if self.product_type == "prototype_system":
+            list_product = (
+                self.estimate_id.estimate_ids.filtered(
+                    lambda l: not l.product_id.candidate_bom
+                )
+                .mapped("product_id")
+                .mapped("name")
+            )
+            if any(self.product_name.lower() == name.lower() for name in list_product):
+                raise UserError(
+                    _(
+                        "The product [%s] on the estimate that is not allowed to be on a BoM."
+                        "Please update the estimate line and try again."
+                        % (self.product_name)
+                    )
+                )
 
         # Fetch common ECO stage
         eco_stage = EcoStage.search([("type_ids", "in", self.eco_type_id.id)], limit=1)
