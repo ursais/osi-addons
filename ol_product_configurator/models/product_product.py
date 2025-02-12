@@ -12,7 +12,9 @@ class ProductProduct(models.Model):
     # COLUMNS ##########
 
     values_company_diff = fields.Boolean(
-        default=False, copy=False, compute="_compute_values_company_diff"
+        default=False,
+        copy=False,
+        compute="_compute_values_company_diff",
     )
 
     # END ##########

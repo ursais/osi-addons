@@ -19,6 +19,11 @@ class AttributeValue(models.Model):
         store=True,
         readonly=False,
     )
+    visible_to_user = fields.Boolean(
+        string="Visible to User",
+        default=True,
+        copy=True,
+    )
 
     # END ##########
     # METHODS ##########
