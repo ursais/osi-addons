@@ -7,6 +7,19 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
 
+            <!-- Add guest checkout field and text -->
+            <sheet position="before">
+                <field name="is_guest_checkout" invisible="1"/>
+                <div
+                    class="alert alert-info"
+                    role="alert"
+                    style="margin-bottom:0px; text-align: center"
+                    invisible="not is_guest_checkout"
+                >
+                    <p><strong >Guest Checkout</strong></p>
+                </div>
+            </sheet>
+
             <!-- Added  Original Shipment Commitment Date -->
             <xpath expr="//group[@name='sale_shipping']" position="inside">
                 <div class="o_td_label">

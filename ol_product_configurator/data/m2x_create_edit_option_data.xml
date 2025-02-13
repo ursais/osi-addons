@@ -9,15 +9,6 @@
         <field name="option_create_edit_wizard">1</field>
     </record>
 
-    <!-- Enable Create/Edit on PTAL/value_ids -->
-    <record id="product_template_attribute_line_value_ids" model="m2x.create.edit.option">
-        <field name="model_id" ref="product_configurator.model_product_template_attribute_line"/>
-        <field name="field_id" ref="product.field_product_template_attribute_line__value_ids"/>
-        <field name="option_create">set_false</field>
-        <field name="option_create_edit">set_true</field>
-        <field name="option_create_edit_wizard">1</field>
-    </record>
-
     <!-- Enable Create/Edit on Configuration Step/config_step_id -->
     <record id="product_config_step_line_config_step_id" model="m2x.create.edit.option">
         <field name="model_id" ref="product_configurator.model_product_config_step_line"/>
@@ -44,10 +35,5 @@
         <field name="option_create_edit">set_true</field>
         <field name="option_create_edit_wizard">1</field>
     </record>
-    
-
-
-
-    
 
 </odoo>

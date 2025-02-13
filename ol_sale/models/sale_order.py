@@ -30,6 +30,12 @@ class SaleOrder(models.Model):
     delivery_note = fields.Text(string="Delivery Note")
     mrp_note = fields.Text(string="Manufacturing Note")
 
+    # This field is populated via Integrations, but also used in emails
+    is_guest_checkout = fields.Boolean(
+        string="Guest checkout",
+        copy=False,
+    )
+
     # END #########
 
     # METHODS #########
