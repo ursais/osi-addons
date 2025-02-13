@@ -7,13 +7,14 @@
         <field name="inherit_id" ref="product.product_template_attribute_value_view_tree" />
         <field name="arch" type="xml">
             <field name="price_extra" position="after">
+                <field name="visible_to_user"/>
             	<field name="product_id" />
                 <field name="company_ids" widget="many2many_tags" />
-                <field name="visible_to_user"/>
             </field>
         </field>
     </record>
 
+    <!-- Form View -->
     <record id="ol_product_configurator_product_template_attribute_value_view_form_inherit" model="ir.ui.view">
         <field name="name">product.template.attribute.value.view.from</field>
         <field name="model">product.template.attribute.value</field>
@@ -24,6 +25,5 @@
             </field>
         </field>
     </record>
-    
 
 </odoo>

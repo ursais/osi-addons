@@ -10,7 +10,9 @@ class MrpProduction(models.Model):
     # COLUMNS #####
 
     mrp_note = fields.Text(
-        string="Manufacturing Note", related="sale_order_id.mrp_note", store=True
+        string="Manufacturing Note",
+        related="sale_order_id.mrp_note",
+        store=True,
     )
 
     # END #########

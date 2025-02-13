@@ -13,9 +13,9 @@ class ProductTemplate(models.Model):
 
     template_check_ids = fields.Many2many(
         comodel_name="mrp.assembly.check",
-        string="Assembly Checks",
+        string="Template Assembly Checks",
     )
-    template_bios_name = fields.Char(string="BIOS Name")
+    template_bios_name = fields.Char(string="Template BIOS Name")
     work_documentation_url = fields.Char(
         string="Work Documentation URL",
     )

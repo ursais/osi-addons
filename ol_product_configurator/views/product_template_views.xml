@@ -25,17 +25,4 @@
         </field>
     </record>
 
-
-    <record id="ol_product_configurator_product_template_only_form_view" model="ir.ui.view">
-        <field name="name">product.template.product.form</field>
-        <field name="model">product.template</field>
-        <field name="priority">100</field>
-        <field name="inherit_id" ref="product.product_template_only_form_view" />
-        <field name="arch" type="xml">
-            <xpath expr="//page[@name='variants']/field[@name='attribute_line_ids']/tree/button[@name='action_open_attribute_values']" position="before">
-                <field name='visible_to_user'/>
-            </xpath>
-        </field>
-    </record>
-
 </odoo>

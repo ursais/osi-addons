@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <record id="provider_microsoft_sso" model="auth.oauth.provider">
+        <field name="name">Microsoft OAuth2</field>
+        <field name="client_id">dummy</field>
+        <field name="microsoft_secret_key">dummy</field>
+        <field name="microsoft_tenant_id">common</field>
+        <field name="auth_endpoint">https://login.microsoftonline.com/common/oauth2/v2.0/authorize</field>
+        <field name="scope">offline_access User.Read User.ReadWrite.All Contacts.ReadWrite</field>
+        <field name="validation_endpoint">https://login.microsoftonline.com/common/oauth2/v2.0/token</field>
+        <field name="data_endpoint">https://graph.microsoft.com</field>
+        <field name="css_class">fa fa-fw fa-windows</field>
+        <field name="body">Log in with Microsoft</field>
+    </record>
+</odoo>

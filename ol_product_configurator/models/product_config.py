@@ -12,7 +12,9 @@ class ProductConfigSession(models.Model):
     # COLUMNS ##########
 
     company_id = fields.Many2one(
-        "res.company", string="Company", default=lambda self: self.env.company
+        "res.company",
+        string="Company",
+        default=lambda self: self.env.company,
     )
 
     # END ##########
