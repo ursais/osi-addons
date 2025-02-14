@@ -28,7 +28,6 @@ class ProductTemplate(models.Model):
             "only in these regions."
         ),
     )
-
     has_advanced_configuration = fields.Boolean(
         compute="_compute_has_advanced_configuration",
         store=True,

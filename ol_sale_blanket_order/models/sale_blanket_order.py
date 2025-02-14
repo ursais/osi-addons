@@ -46,7 +46,7 @@ class SaleBlanketOrder(models.Model):
         help="The shipping address to be used on sale orders.",
     )
     carrier_id = fields.Many2one(
-        "delivery.carrier",
+        comodel_name="delivery.carrier",
         string="Delivery Method",
         check_company=True,
         help="Fill this field if you plan to invoice the shipping based on picking.",
@@ -54,12 +54,12 @@ class SaleBlanketOrder(models.Model):
     show_update_pricelist = fields.Boolean(string="Has Pricelist Changed", store=False)
     has_active_pricelist = fields.Boolean(compute="_compute_has_active_pricelist")
     margin = fields.Monetary(
-        "Margin",
+        string="Margin",
         compute="_compute_margin",
         store=True,
     )
     margin_percent = fields.Float(
-        "Margin (%)",
+        string="Margin (%)",
         compute="_compute_margin",
         store=True,
         group_operator="avg",

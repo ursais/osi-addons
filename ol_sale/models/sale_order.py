@@ -20,13 +20,13 @@ class SaleOrder(models.Model):
         copy=False,
     )
     account_manager_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         related="partner_id.account_manager_id",
         string="Account Manager",
         store=True,
     )
-    end_user = fields.Many2one("res.partner")
-    integrator = fields.Many2one("res.partner")
+    end_user = fields.Many2one(comodel_name="res.partner")
+    integrator = fields.Many2one(comodel_name="res.partner")
     delivery_note = fields.Text(string="Delivery Note")
     mrp_note = fields.Text(string="Manufacturing Note")
 

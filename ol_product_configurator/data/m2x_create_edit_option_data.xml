@@ -19,15 +19,6 @@
     </record>
 
     <!-- Enable Create/Edit on Product Config Restrictions/attribute_line_id -->
-    <record id="product_config_line_config_attribute_line_id" model="m2x.create.edit.option">
-        <field name="model_id" ref="product_configurator.model_product_config_line"/>
-        <field name="field_id" ref="product_configurator.field_product_config_line__attribute_line_id"/>
-        <field name="option_create">set_false</field>
-        <field name="option_create_edit">set_true</field>
-        <field name="option_create_edit_wizard">1</field>
-    </record>
-
-        <!-- Enable Create/Edit on Product Config Restrictions/attribute_line_id -->
     <record id="product_config_line_config_attribute_domain_id" model="m2x.create.edit.option">
         <field name="model_id" ref="product_configurator.model_product_config_line"/>
         <field name="field_id" ref="product_configurator.field_product_config_line__domain_id"/>
