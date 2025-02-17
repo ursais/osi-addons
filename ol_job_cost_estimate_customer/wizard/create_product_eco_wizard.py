@@ -63,7 +63,7 @@ class ProductCreationWizard(models.TransientModel):
                 .mapped("product_id")
                 .mapped("name")
             )
-            if any(self.product_name.lower() == name.lower() for name in list_product):
+            if list_product:
                 raise UserError(
                     _(
                         "The product [%s] on the estimate that is not allowed to be on a BoM."
