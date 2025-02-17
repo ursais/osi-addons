@@ -19,7 +19,7 @@ class SaleBlanketOrderLine(models.Model):
         precompute=True,
     )
     product_state_id = fields.Many2one(
-        "product.state",
+        comodel_name="product.state",
         related="product_id.product_state_id",
     )
     discount = fields.Float(
@@ -31,14 +31,14 @@ class SaleBlanketOrderLine(models.Model):
         precompute=True,
     )
     margin = fields.Float(
-        "Margin",
+        string="Margin",
         compute="_compute_margin",
         digits="Product Price",
         store=True,
         groups="base.group_user",
     )
     margin_percent = fields.Float(
-        "Margin (%)",
+        string="Margin (%)",
         compute="_compute_margin",
         store=True,
         groups="base.group_user",

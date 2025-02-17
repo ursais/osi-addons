@@ -10,7 +10,7 @@ class ResPartner(models.Model):
     # COLUMNS #####
 
     account_manager_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Account Manager",
     )
     sale_order_tag_ids = fields.Many2many(

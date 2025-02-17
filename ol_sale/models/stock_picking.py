@@ -10,7 +10,9 @@ class StockPicking(models.Model):
     # COLUMNS #####
 
     delivery_note = fields.Text(
-        string="Delivery Note", related="sale_id.delivery_note", store=True
+        string="Delivery Note",
+        related="sale_id.delivery_note",
+        store=True,
     )
 
     # END #########
