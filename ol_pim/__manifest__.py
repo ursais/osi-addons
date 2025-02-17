@@ -8,7 +8,7 @@
     "website": "https://www.onlogic.com",
     "onlogic": True,
     "category": "Products",
-    "version": "17.0.0.2.0",
+    "version": "17.0.0.1.1",
     "license": "AGPL-3",
     # any module necessary for this one to work correctly
     "depends": [
