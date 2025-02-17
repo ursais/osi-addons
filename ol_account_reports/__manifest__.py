@@ -1,4 +1,3 @@
-# pylint: disable=pointless-statement
 {
     "onlogic": True,
     "name": "OnLogic Account Report",
@@ -13,8 +12,8 @@
     "license": "AGPL-3",
     # any module necessary for this one to work correctly
     "depends": [
-        'account_reports',
-        'ol_base',
+        "account_reports",
+        "ol_base",
     ],
     "assets": {
         "web.assets_backend": [
