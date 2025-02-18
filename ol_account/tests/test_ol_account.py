@@ -1,6 +1,7 @@
 from odoo.tests import common, tagged
 from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase
+from odoo import fields
 
 
 @tagged("-at_install", "post_install")
@@ -23,6 +24,8 @@ class TestAutoInvoiceOnDelivery(common.TransactionCase):
         cls.sale_order = cls.sale_order_model.create(
             {
                 "partner_id": cls.partner.id,
+                "override_saleable_exception": True,
+                "original_request_date": fields.Datetime.today(),
                 "order_line": [
                     (
                         0,
@@ -31,6 +34,40 @@ class TestAutoInvoiceOnDelivery(common.TransactionCase):
                             "product_id": cls.product.id,
                             "product_uom_qty": 1,
                             "price_unit": 100,
+                        },
+                    )
+                ],
+            }
+        )
+
+        # Create a storable product
+        cls.product_1 = cls.env["product.product"].create(
+            {
+                "name": "Test Product",
+                "detailed_type": "product",  # Storable product
+                "list_price": 100.0,
+                "ship_ok": True,
+            }
+        )
+        location_id = cls.env.ref("stock.stock_location_stock")
+        cls.env["stock.quant"]._update_available_quantity(
+            cls.product_1, location_id, 500
+        )
+
+        # Create a sale order
+        cls.sale_order_1 = cls.env["sale.order"].create(
+            {
+                "partner_id": cls.partner.id,
+                "override_saleable_exception": True,
+                "original_request_date": fields.Datetime.today(),
+                "order_line": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": cls.product_1.id,
+                            "product_uom_qty": 1,
+                            "price_unit": cls.product.list_price,
                         },
                     )
                 ],
@@ -100,4 +137,64 @@ class TestAutoInvoiceOnDelivery(common.TransactionCase):
                 "ol_account.auto_post_invoice_delivery_validate"
             ),
             "Auto post invoice on delivery setting should be saved.",
+        )
+
+    def test_sale_order_downpayment(self):
+        # Confirm Sale Order
+        self.sale_order_1.action_confirm()
+        self.assertEqual(self.sale_order_1.state, "sale", "Sale Order not confirmed")
+        so_context = {
+            "active_model": "sale.order",
+            "active_ids": [self.sale_order_1.id],
+            "active_id": self.sale_order_1.id,
+            # 'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+        # Register 20% Down Payment
+        downpayment_20 = (
+            self.env["sale.advance.payment.inv"]
+            .with_context(so_context)
+            .create(
+                {
+                    "advance_payment_method": "percentage",
+                    "amount": 20.0,
+                }
+            )
+        )
+        downpayment_20.create_invoices()
+
+        # Register 10% Down Payment
+        downpayment_10 = (
+            self.env["sale.advance.payment.inv"]
+            .with_context(so_context)
+            .create(
+                {
+                    "advance_payment_method": "percentage",
+                    "amount": 10.0,
+                }
+            )
+        )
+        downpayment_10.create_invoices()
+        self.sale_order_1.invoice_ids.action_post()
+        downpayment_ids = self.sale_order_1.invoice_ids
+        # Confirm Delivery
+        picking = self.sale_order_1.picking_ids.filtered(lambda p: p.state != "done")
+        picking.action_confirm()
+        picking.action_assign()
+        picking.button_validate()
+        self.assertEqual(picking.state, "done", "Delivery not confirmed")
+
+        # Create Final Invoice
+        invoice_wizard = (
+            self.env["sale.advance.payment.inv"]
+            .with_context(so_context)
+            .create({"advance_payment_method": "delivered"})
+        )
+        invoice_wizard.create_invoices()
+        invoice = self.sale_order_1.invoice_ids.filtered(
+            lambda inv: inv.state != "cancel"
+        )
+        invoice.action_post()
+
+        self.assertEqual(
+            invoice.state, "posted", "Final Invoice not created and posted"
         )
