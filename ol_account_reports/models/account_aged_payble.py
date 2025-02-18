@@ -47,35 +47,55 @@ class AgedPayableCustomHandler(models.AbstractModel):
             previous_options (dict, optional): Previous report options.
             Defaults to None.
         """
-        previous_payable_accounts_ids = (
-            previous_options and previous_options.get("selected_payable_accounts") or []
+        # previous_payable_accounts_ids = (
+        #     previous_options and previous_options.get("selected_payable_accounts") or []
+        # )
+
+        # # Ensure IDs are integers if provided as a list
+        # if isinstance(previous_payable_accounts_ids, list):
+        #     previous_payable_accounts_ids = [
+        #         int(account) for account in previous_payable_accounts_ids
+        #     ]
+
+        #     # Fetch selected payable accounts from database
+        #     selected_payable_accounts = (
+        #         self.env["account.account"]
+        #         .with_context(active_test=False)
+        #         .search([("id", "in", previous_payable_accounts_ids)])
+        #         or []
+        #     )
+
+        # # Store selected payable account IDs in options
+        # options["selected_payable_accounts"] = (
+        #     selected_payable_accounts
+        #     and selected_payable_accounts.ids
+        #     or selected_payable_accounts
+        # )
+
+        # # Store selected payable account names in options
+        # options["selected_receivable_accounts_names"] = (
+        #     selected_payable_accounts and selected_payable_accounts.mapped("name")
+        # )
+
+        account_ids = self.env["account.account"].search(
+            [("account_type", "=", "liability_payable")]
         )
-
-        # Ensure IDs are integers if provided as a list
-        if isinstance(previous_payable_accounts_ids, list):
-            previous_payable_accounts_ids = [
-                int(account) for account in previous_payable_accounts_ids
-            ]
-
-            # Fetch selected payable accounts from database
-            selected_payable_accounts = (
-                self.env["account.account"]
-                .with_context(active_test=False)
-                .search([("id", "in", previous_payable_accounts_ids)])
-                or []
+        account_type_list = []
+        for account in account_ids:
+            account_type_list.append(
+                {"id": account.id, "name": account.display_name, "selected": False}
             )
 
-        # Store selected payable account IDs in options
-        options["selected_payable_accounts"] = (
-            selected_payable_accounts
-            and selected_payable_accounts.ids
-            or selected_payable_accounts
-        )
+        options["selected_payable_accounts"] = account_type_list
 
-        # Store selected payable account names in options
-        options["selected_receivable_accounts_names"] = (
-            selected_payable_accounts and selected_payable_accounts.mapped("name")
-        )
+        if previous_options and previous_options.get("selected_payable_accounts"):
+            previously_selected_ids = {
+                x["id"]
+                for x in previous_options["selected_payable_accounts"]
+                if x.get("selected")
+            }
+            for opt in options["selected_payable_accounts"]:
+                opt["selected"] = opt["id"] in previously_selected_ids
 
 
 class AccountReport(models.Model):
@@ -95,8 +115,13 @@ class AccountReport(models.Model):
         Returns:
             list: Domain filter for payable accounts.
         """
-        if options.get("selected_payable_accounts", []):
-            return [("account_id", "in", options.get("selected_payable_accounts", []))]
+        ids_list = []
+        for option in options.get("selected_payable_accounts", []):
+            if option.get("selected"):
+                ids_list.append(option.get("id"))
+
+        if ids_list:
+            return [("account_id", "in", ids_list)]
         return []
 
     def _get_options_domain(self, options, date_scope):
