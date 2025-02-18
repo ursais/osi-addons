@@ -40,4 +40,49 @@ class AccountMove(models.Model):
                 )
         return super(AccountMove, self).unlink()
 
+    def _auto_reconcile_deposits(self):
+        """
+        Automatically reconciles downpayment deposits with their corresponding invoices.
+        - Filters invoices of type 'out_invoice'.
+        - Identifies related sale orders.
+        - Checks for unpaid downpayment invoices.
+        - Matches and reconciles downpayment journal items with corresponding invoices.
+        """
+        for move in self.filtered(lambda m: m.move_type == "out_invoice"):
+            so = self.env["sale.order"].search(
+                [("invoice_ids", "in", [move.id])], limit=1
+            )
+            if not so:
+                continue
+
+            downpayment_moves = so.invoice_ids.filtered(
+                lambda inv: inv.move_type == "out_invoice"
+                and inv.payment_state != "paid"
+                and inv.id != move.id
+            )
+
+            if not downpayment_moves:
+                continue
+
+            downpayment_lines = move.line_ids.filtered(lambda line: line.is_downpayment)
+
+            for dp_move in downpayment_moves:
+                dp_journal_items = dp_move.line_ids.filtered(
+                    lambda line: line.is_downpayment and not line.reconciled
+                )
+
+                for dp_line in downpayment_lines:
+                    matching_lines = dp_journal_items.filtered(
+                        lambda line: line.balance == -dp_line.balance
+                        and not line.reconciled
+                    )
+
+                    if matching_lines:
+                        (matching_lines | dp_line).reconcile()
+
+    def action_post(self):
+        result = super().action_post()
+        self._auto_reconcile_deposits()
+        return result
+
     # END ##########
