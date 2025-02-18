@@ -17,6 +17,7 @@
         "sale_subscription",
         "stock",
         "product_configurator_sale_mrp",
+        "mrp_batch",
     ],
     # always loaded
     "data": [
