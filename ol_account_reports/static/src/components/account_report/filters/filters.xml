@@ -8,18 +8,10 @@
                         <i class="fa fa-folder-open me-1"/>Receivable Account
                     </t>
 
-                    <!-- <div class="dropdown-item">
+                    <div class="dropdown-item">
                         <label>Account</label>
-                        <MultiRecordSelector t-props="getMultiRecordSelectorProps('account.account', 'selected_receivable_accounts')"/>
-                    </div> -->
-                    <t t-foreach="controller.options.selected_receivable_accounts" t-as="selected_receivable_accounts" t-key="selected_receivable_accounts_index">
-                        <DropdownItem
-                            class="{ 'selected': selected_receivable_accounts.selected }"
-                            onSelected="() => this.toggleFilter('selected_receivable_accounts.' + selected_receivable_accounts_index + '.selected')"
-                        >
-                            <t t-out="selected_receivable_accounts.name"/>
-                        </DropdownItem>
-                    </t>
+                        <MultiRecordSelector t-props="getMultiRecordSelectorProps('account.account', 'selected_receivable_accounts')" domain="[['id', 'in', controller.options.selected_receivable_accounts_ids]]"/>
+                    </div>
                 </Dropdown>
             </div>
         </xpath>
@@ -33,18 +25,11 @@
                         <i class="fa fa-folder-open me-1"/>Payable Account
                     </t>
 
-                    <!-- <div class="dropdown-item">
+                    <div class="dropdown-item">
                         <label>Account</label>
-                        <MultiRecordSelector t-props="getMultiRecordSelectorProps('account.account', 'selected_payable_accounts')"/>
-                    </div> -->
-                    <t t-foreach="controller.options.selected_payable_accounts" t-as="selected_payable_accounts" t-key="selected_payable_accounts_index">
-                        <DropdownItem
-                            class="{ 'selected': selected_payable_accounts.selected }"
-                            onSelected="() => this.toggleFilter('selected_payable_accounts.' + selected_payable_accounts_index + '.selected')"
-                        >
-                            <t t-out="selected_payable_accounts.name"/>
-                        </DropdownItem>
-                    </t>
+                        <MultiRecordSelector t-props="getMultiRecordSelectorProps('account.account', 'selected_payable_accounts')"
+                            domain="[['id', 'in', controller.options.selected_payable_accounts_ids]]"/>
+                    </div>
                 </Dropdown>
             </div>
         </xpath>
