@@ -77,6 +77,10 @@ class AgedPayableCustomHandler(models.AbstractModel):
             selected_payable_accounts and selected_payable_accounts.mapped("name")
         )
 
+        account_ids = self.env["account.account"].search(
+            [("account_type", "=", "liability_payable")]
+        )
+        options["selected_payable_accounts_ids"] = account_ids.ids
 
 class AccountReport(models.Model):
     """

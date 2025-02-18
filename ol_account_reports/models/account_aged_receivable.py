@@ -1,5 +1,5 @@
 # Import Odoo Libs
-from odoo import models
+from odoo import models, _
 
 
 class AgedReceivableCustomHandler(models.AbstractModel):
@@ -75,9 +75,13 @@ class AgedReceivableCustomHandler(models.AbstractModel):
         )
 
         # Store selected receivable account names in options
-        options["selected_receivable_accounts_names"] = (
-            selected_receivable_accounts and selected_receivable_accounts.mapped("name")
+        options[
+            "selected_receivable_accounts_names"
+        ] = selected_receivable_accounts and selected_receivable_accounts.mapped("name")
+        account_ids = self.env["account.account"].search(
+            [("account_type", "=", "asset_receivable")]
         )
+        options["selected_receivable_accounts_ids"] = account_ids.ids
 
 
 class AccountReport(models.Model):

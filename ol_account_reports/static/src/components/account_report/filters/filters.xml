@@ -10,7 +10,7 @@
 
                     <div class="dropdown-item">
                         <label>Account</label>
-                        <MultiRecordSelector t-props="getMultiRecordSelectorProps('account.account', 'selected_receivable_accounts')"/>
+                        <MultiRecordSelector t-props="getMultiRecordSelectorProps('account.account', 'selected_receivable_accounts')" domain="[['id', 'in', controller.options.selected_receivable_accounts_ids]]"/>
                     </div>
                 </Dropdown>
             </div>
@@ -27,7 +27,8 @@
 
                     <div class="dropdown-item">
                         <label>Account</label>
-                        <MultiRecordSelector t-props="getMultiRecordSelectorProps('account.account', 'selected_payable_accounts')"/>
+                        <MultiRecordSelector t-props="getMultiRecordSelectorProps('account.account', 'selected_payable_accounts')"
+                            domain="[['id', 'in', controller.options.selected_payable_accounts_ids]]"/>
                     </div>
                 </Dropdown>
             </div>
