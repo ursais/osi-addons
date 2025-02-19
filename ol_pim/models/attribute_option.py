@@ -1,6 +1,5 @@
 # Import Odoo libs
-from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo import fields, models
 
 
 class AttributeOption(models.Model):
@@ -17,19 +16,12 @@ class AttributeOption(models.Model):
         required=True,
     )
 
+    _sql_constraints = [
+        (
+            "unique_code_per_attribute",
+            "UNIQUE(code, attribute_id)",
+            """The Attribute Option Code must be unique for each Attribute.
+             Please choose a different code.""",
+        )
+    ]
     # END ##########
-
-    @api.constrains("code", "attribute_id")
-    def _check_unique_code_per_attribute(self):
-        for record in self:
-            existing_record = self.search(
-                [
-                    ("code", "=", record.code),
-                    ("attribute_id", "=", record.attribute_id.id),
-                ],
-                limit=1,
-            )
-            if existing_record and existing_record.id != record.id:
-                raise ValidationError(
-                    f"The Attribute Option Code '{record.code}' must be unique for the Attribute '{record.attribute_id.name}'."
-                )
