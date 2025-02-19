@@ -46,8 +46,19 @@ class MrpProduction(models.Model):
 
         for order in self:
             if order.product_id.tracking == "serial" and not order.lot_producing_id:
-                # Call Odoo's method to generate the serial
-                order.action_generate_serial()
+                # Generate serial number for the finished product during plan
+                if order.product_id.tracking == "serial":
+                    lot = self.env["stock.lot"].create(
+                        {
+                            "name": self.env["ir.sequence"].next_by_code(
+                                "stock.lot.serial"
+                            )
+                            or "/",
+                            "product_id": order.product_id.id,
+                            "company_id": order.company_id.id,
+                        }
+                    )
+                    order.lot_producing_id = lot.id
 
         return res
 
