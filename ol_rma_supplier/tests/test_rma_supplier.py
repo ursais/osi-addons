@@ -258,6 +258,14 @@ class TestRmaSupplierLine(common.TransactionCase):
         # Computed quantities
         self.rma_line._compute_qty_delivered_received()
 
+        # Assertions
+        self.assertEqual(
+            self.rma_line.qty_delivered, 5.0, "Delivered quantity should be 5.0"
+        )
+        self.assertEqual(
+            self.rma_line.qty_received, 3.0, "Received quantity should be 3.0"
+        )
+
     def test_qty_delivered_and_qty_received_no_moves(self):
         """Test that delivered and received quantities are 0 when there are no moves."""
         # Ensure that qty_delivered and qty_received are 0 when there are no stock moves

@@ -115,6 +115,11 @@ class TestAutoInvoiceOnDelivery(common.TransactionCase):
         self.env.uid = 1
         account_move.unlink()
 
+        # Assert that the account_move was unlinked
+        self.assertFalse(
+            self.env["account.move"].search([("id", "=", account_move.id)])
+        )
+
     def test_res_config_settings(self):
         """Test the settings model fields."""
         settings = self.env["res.config.settings"].create(

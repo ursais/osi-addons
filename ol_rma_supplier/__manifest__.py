@@ -9,6 +9,7 @@
     "category": "",
     "images": [],
     "depends": [
+        "ol_base",
         "stock",
         "delivery",
     ],
