@@ -1053,7 +1053,9 @@ class MrpProductionBatch(models.Model):
 
     @api.depends(
         "production_ids",
+        "production_ids.reservation_state",
         "production_ids.move_raw_ids",
+        "production_ids.move_raw_ids.forecast_availability",
     )
     def _compute_components_availability(self):
         """Computes batch-level component availability based on MO statuses."""
@@ -1107,7 +1109,11 @@ class MrpProductionBatch(models.Model):
                     batch.components_availability = _("Available")
                     batch.components_availability_state = "available"
 
-    @api.depends("production_ids", "production_ids.reservation_state")
+    @api.depends(
+        "production_ids",
+        "production_ids.reservation_state",
+        "production_ids.move_raw_ids.state",
+    )
     def _compute_reservation_state(self):
         """Computes batch-level reservation state based on MO statuses."""
         for batch in self:

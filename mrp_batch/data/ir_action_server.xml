@@ -8,7 +8,7 @@
         <field name="state">code</field>
         <field name="code">
 for rec in records:
-    if rec.is_outdated_bom and rec.state in ("draft", "confirmed"):
+    if rec.is_outdated_bom and rec.state in ("draft", "confirm"):
         rec.action_update_bom()
         </field>
     </record>
