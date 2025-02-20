@@ -114,7 +114,7 @@ class RmaSupplierLine(models.Model):
                     move.origin_returned_move_id and move.to_refund
                 ):
                     outgoing_moves |= move
-            elif move.location_dest_id.usage != "supplier":  # and move.to_refund:
+            elif move.location_dest_id.usage != "supplier":
                 incoming_moves |= move
 
         return outgoing_moves, incoming_moves
@@ -130,7 +130,6 @@ class RmaSupplierLine(models.Model):
             delivered_qty = 0.0
             received_qty = 0.0
             outgoing_moves, incoming_moves = line._get_outgoing_incoming_moves()
-            # raise UserError("%s, %s" % (outgoing_moves, incoming_moves))
             for move in outgoing_moves:
                 if move.state == "done":
                     delivered_qty += move.product_uom._compute_quantity(

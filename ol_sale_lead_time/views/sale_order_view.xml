@@ -1,0 +1,29 @@
+<odoo>
+
+    <record id="ol_sale_lead_time_view_order_form" model="ir.ui.view">
+        <field name="name">lead.time.sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_confirm']" position="after">
+                <button
+                    name="action_compute_esd"
+                    type="object"
+                    string="Calculate ESD"
+                    class="btn-primary"
+                />
+            </xpath>
+            <xpath expr="//field[@name='product_template_id']" position="before">
+                <field name="bom_id" column_invisible="1" />
+                <button
+                    name="action_open_bom_overview"
+                    title="BoM Overview: Shows the bom, part availability at this time with expected dates/lead times."
+                    type="object"
+                    icon="fa-list"
+                    invisible="not bom_id"
+                />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
