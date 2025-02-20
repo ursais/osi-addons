@@ -13,6 +13,7 @@
         "ol_base",
         "sale_management",
         "mrp",
+        "product_configurator_sale",
     ],
     # always loaded
     "data": [

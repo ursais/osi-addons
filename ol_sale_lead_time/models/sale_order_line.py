@@ -72,3 +72,27 @@ class SaleOrderLine(models.Model):
                 "active_ids": [self.bom_id.id],
             },
         }
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """
+        Sale order lines created from the product configurator won't
+        trigger lead compute so we can do so in create method.
+        """
+        res = super().create(vals_list)
+        for line in res:
+            if line.config_session_id:
+                line._compute_customer_lead()
+        return res
+
+    def write(self, vals):
+        """
+        If the product_id is being changed either by user or re-configure
+        product wizard we recompute the lead time.
+        """
+        res = super().write(vals)
+
+        for line in self:
+            if "product_id" in vals:
+                line._compute_customer_lead()
+        return res
