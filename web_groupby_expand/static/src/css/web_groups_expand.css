@@ -1,0 +1,10 @@
+.expand-compress-btn:focus{
+    box-shadow: none !important;
+}
+
+.groupby-header-btn{
+    display: flex;
+    gap: 5px;
+    padding: 10px 10px;
+    background: #fff;
+}
