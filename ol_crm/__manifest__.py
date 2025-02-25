@@ -11,12 +11,13 @@
     # Modules required to this module to work properly
     "depends": [
         "ol_base",
-        "crm",
+        "sale_crm",
     ],
     # Data Loaded.
     "data": [
         "data/sale_team_data.xml",
         "data/crm_stage_data.xml",
         "views/crm_lead_views.xml",
+        "views/crm_stage_views.xml",
     ],
 }
