@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="web.ListView" t-inherit-mode="extension">
+        <xpath expr="//Layout/t[@t-set-slot='control-panel-always-buttons']" position="after">
+            <div class="groupby-header-btn">
+              <button t-if="model.root.groupBy.length > 0" type="button" class="btn btn-secondary expand-compress-btn exp-btn" t-on-click="() => this.expandlist()">
+                <a class="fa fa-expand"/>
+              </button>
+              <button t-if="model.root.groupBy.length > 0" type="button" class="btn btn-secondary expand-compress-btn cmp-btn o_hidden" t-on-click="() => this.compresslist()">
+                <a class="fa fa-compress"/>
+              </button>
+            </div>
+        </xpath>
+    </t>
+</templates>

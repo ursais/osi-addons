@@ -1,6 +1,6 @@
 {
-    "name": "Onlogic CRM",
-    "summary": "CRM Enhancements.",
+    "name": "Onlogic CRM to Estimate",
+    "summary": "Create Estimates from CRM Opportunities.",
     "description": """CRM Enhancements.""",
     "author": "Onlogic",
     "website": "https://www.onlogic.com",
