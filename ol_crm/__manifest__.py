@@ -9,7 +9,10 @@
     "version": "17.0.0.1.0",
     "license": "AGPL-3",
     # Modules required to this module to work properly
-    "depends": ["ol_base", "sale_crm",],
+    "depends": [
+        "ol_base",
+        "sale_crm",
+    ],
     # Data Loaded.
     "data": [
         "data/sale_team_data.xml",
