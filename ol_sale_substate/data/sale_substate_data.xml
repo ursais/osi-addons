@@ -1,52 +1,59 @@
 <odoo noupdate="1">
 
-    <!-- Quote has been sent -->
-    <record id="target_state_value_quot_sent" model="target.state.value">
+    <!-- Quote has been sent type -->
+    <record id="target_state_value_sent" model="target.state.value">
         <field name="name">Quotation Sent</field>
         <field name="base_substate_type_id" ref="sale_substate.base_substate_type_sale" />
         <field name="target_state_value">sent</field>
     </record>
 
+    <!-- Quote has been sent -->
+    <record id="base_substate__quot_sent" model="base.substate">
+        <field name="name">Quotation Sent</field>
+        <field name="sequence">1</field>
+        <field name="target_state_value_id" ref="target_state_value_sent" />
+    </record>
+
     <!-- Order to be confirmed when exceptions are cleared -->
-    <record id="target_state_value_order_review" model="target.state.value">
+    <record id="base_substate__order_review" model="base.substate">
         <field name="name">Order Review</field>
-        <field name="base_substate_type_id" ref="sale_substate.base_substate_type_sale" />
-        <field name="target_state_value">sent</field>
+        <field name="sequence">2</field>
+        <field name="target_state_value_id" ref="target_state_value_sent" />
     </record>
 
     <!-- Order confirmed awaiting production -->
-    <record id="target_state_value_waiting" model="target.state.value">
+    <record id="base_substate__waiting" model="base.substate">
         <field name="name">Waiting</field>
-        <field name="base_substate_type_id" ref="sale_substate.base_substate_type_sale" />
-        <field name="target_state_value">sale</field>
+        <field name="sequence">3</field>
+        <field name="target_state_value_id" ref="sale_substate.target_state_value_sale" />
     </record>
 
     <!-- Order is partially or fully planned -->
-    <record id="target_state_value_sent" model="target.state.value">
+    <record id="base_substate__sent" model="base.substate">
         <field name="name">In Production</field>
-        <field name="base_substate_type_id" ref="sale_substate.base_substate_type_sale" />
-        <field name="target_state_value">sale</field>
+        <field name="sequence">4</field>
+        <field name="target_state_value_id" ref="sale_substate.target_state_value_sale" />
     </record>
 
     <!-- Order partially invoiced -->
-    <record id="target_state_value_partially_invoiced" model="target.state.value">
+    <record id="base_substate__partially_invoiced" model="base.substate">
         <field name="name">Partially Invoiced</field>
-        <field name="base_substate_type_id" ref="sale_substate.base_substate_type_sale" />
-        <field name="target_state_value">sale</field>
+        <field name="sequence">5</field>
+        <field name="target_state_value_id" ref="sale_substate.target_state_value_sale" />
     </record>
 
     <!-- Order fully invoiced -->
-    <record id="target_state_value_full_invoiced" model="target.state.value">
+    <record id="base_substate__full_invoiced" model="base.substate">
         <field name="name">Invoiced</field>
-        <field name="base_substate_type_id" ref="sale_substate.base_substate_type_sale" />
-        <field name="target_state_value">sale</field>
+        <field name="sequence">6</field>
+        <field name="target_state_value_id" ref="sale_substate.target_state_value_sale" />
     </record>
 
     <!-- Order fully invoiced and paid -->
-    <record id="target_state_value_complete" model="target.state.value">
+    <record id="base_substate__complete" model="base.substate">
         <field name="name">Complete</field>
-        <field name="base_substate_type_id" ref="sale_substate.base_substate_type_sale" />
-        <field name="target_state_value">sale</field>
+        <field name="sequence">7</field>
+        <field name="target_state_value_id" ref="sale_substate.target_state_value_sale" />
     </record>
 
 </odoo>
