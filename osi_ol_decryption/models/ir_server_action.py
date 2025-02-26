@@ -41,8 +41,10 @@ class IrActionsServer(models.Model):
                 AND (col.character_maximum_length > 64 OR col.character_maximum_length IS NULL)
                 AND tab.table_name NOT LIKE 'mail%'
                 AND col.table_name NOT LIKE 'report%'
-                -- AND col.table_name = ''
-                AND col.table_name NOT IN ('res_config_settings', 'res_country', 'res_country_group', 'res_groups', 'res_lang','account_invoice_extract_words')
+
+                AND col.table_name in ('mrp_assembly_check', 'mrp_assembly_stage')
+                --AND col.table_name ~* '^[p-zP-Z]'
+                AND col.table_name NOT IN ('res_config_settings', 'res_groups', 'res_lang','account_invoice_extract_words')
                 ORDER BY col.table_name, col.ordinal_position;"""
         )
         table_columns_list_set = self.env.cr.fetchall()
@@ -143,7 +145,9 @@ class IrActionsServer(models.Model):
                 #     "\n Skipping table  %s  as it doesn't have id column" % (table)
                 # )
                 continue
-            batch_size = 200000
+            batch_size = 100000
+            if table in ('project_task'):
+                batch_size = 10000
             offset = 0
             self.env.cr.execute("select count(*) from %s" % (table))
             records = self.env.cr.fetchall()
@@ -224,7 +228,7 @@ class IrActionsServer(models.Model):
                             "Saved %s records of %s from table %s"
                             % (offset, records[0][0], table)
                         )
-                    runningLog += (
+                    runningLog = (
                         "\n\nUpdate %s records from table %s with columns %s"
                         % (
                             len(set_data),
@@ -427,6 +431,7 @@ class IrActionsServer(models.Model):
                 AND (col.character_maximum_length > 64 OR col.character_maximum_length IS NULL)
                 AND tab.table_name NOT LIKE 'mail%'
                 AND col.table_name NOT LIKE 'report%'
+                -- AND col.table_name in ('res_company')
                 AND col.table_name NOT IN ('res_config_settings', 'res_country_group', 'res_lang', 'knowledge_article')
                 AND col.column_name NOT LIKE 'analytic%'
                 ORDER BY col.table_name, col.ordinal_position;"""
@@ -450,9 +455,9 @@ class IrActionsServer(models.Model):
             "res_partner": [
                 "contact_address_complete",
             ],
-            # "account_move": [
-            #     "sequence_prefix",
-            # ],
+             "account_move": [
+                 "sequence_prefix",
+             ],
         }
         columns_missing = []
         tables_missing = []
