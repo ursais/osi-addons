@@ -15,18 +15,19 @@ class StockPicking(models.Model):
 
     # END #########
     # METHODS #####
-
     def update_ignore_exceptions(self):
-        self.write({"ignore_exception": True})
+        self.ensure_one()
+        query = """
+            UPDATE stock_picking 
+            SET ignore_exception = TRUE 
+            WHERE id IN %s
+        """
+        self.env.cr.execute(query, (tuple(self.ids),))
 
-    @api.depends("sale_id","sale_id.credit_hold", "sale_id.override_credit_limit_hold")
+    @api.depends("sale_id.credit_hold", "sale_id.override_credit_limit_hold")
     def _compute_credit_hold(self):
-        for pick in self:
-            credit_hold = False
-            if pick.sale_id.credit_hold:
-                credit_hold = True
-            pick.credit_hold = credit_hold
-            if not credit_hold:
-                pick.update_ignore_exceptions()
-
+    for pick in self:
+        pick.credit_hold = bool(pick.sale_id.credit_hold)
+        if not pick.credit_hold:
+            pick.update_ignore_exceptions()
     # # END #########
