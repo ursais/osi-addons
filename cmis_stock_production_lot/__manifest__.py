@@ -7,7 +7,7 @@
     "summary": "Upload CMIS documents on the Lot/SN Number",
     "version": "10.0.1.0.0",
     "license": "AGPL-3",
-    "author": "Open Source Integrators, Odoo Community Association (OCA)",
+    "author": "Open Source Integrators",
     "category": "Inventory",
     "maintainer": ["max3903"],
     "development_status": "Beta",
