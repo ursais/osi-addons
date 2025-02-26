@@ -6,8 +6,7 @@
     'summary': 'Link rma orders to an agreement',
     'version': '11.0.0.0.1',
     'category': 'Contract',
-    'author': 'Open Source Integrators, '
-              'Odoo Community Association (OCA)',
+    'author': 'Open Source Integrators',
     'website': 'https://github.com/ursais/osi-addons',
     'depends': [
         'agreement',
