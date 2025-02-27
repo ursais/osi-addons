@@ -2,6 +2,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 import logging
+
 _logger = logging.getLogger(__name__)
 
 
@@ -41,8 +42,18 @@ class ResPartner(models.Model):
         store=True,
         help="Credit Remaining after sum of total_due plus all credit rollup partner’s total dues.",
     )
-    customer_deposit_balance = fields.Monetary(string="Customer Deposit Balance",store=True,compute="_compute_customer_deposit_balance", help="Computed sum of all deposits from relevant journal items for the partner and its rollup partners." )
-    open_bo_balance = fields.Monetary(string="Open BO Balance",store=True,compute="_compute_open_bo_balance",  help="Computed sum of remaining blanket order quantities multiplied by price, for the partner and its rollup partners.")
+    customer_deposit_balance = fields.Monetary(
+        string="Customer Deposit Balance",
+        store=True,
+        compute="_compute_customer_deposit_balance",
+        help="Computed sum of all deposits from relevant journal items for the partner and its rollup partners.",
+    )
+    open_bo_balance = fields.Monetary(
+        string="Open BO Balance",
+        store=True,
+        compute="_compute_open_bo_balance",
+        help="Computed sum of remaining blanket order quantities multiplied by price, for the partner and its rollup partners.",
+    )
 
     # END #########
     # METHODS #####
@@ -58,13 +69,13 @@ class ResPartner(models.Model):
         self.env.cr.execute(query, (self.id,))
         total_amount = self.env.cr.fetchone()[0]
         return total_amount
-    
+
     @api.depends(
-    "credit_limit",
-    "open_so_balance",
-    "credit_hold",
-    "partner_rollup_id.remaining_credit",
-    "remaining_credit",
+        "credit_limit",
+        "open_so_balance",
+        "credit_hold",
+        "partner_rollup_id.remaining_credit",
+        "remaining_credit",
     )
     def _compute_credit_hold(self):
         for partner in self:
@@ -75,7 +86,6 @@ class ResPartner(models.Model):
             # If the partner has a rollup partner, inherit its credit hold status
             if partner.partner_rollup_id:
                 partner.credit_hold = partner.partner_rollup_id.remaining_credit < 0
-
 
     # @api.depends(
     #     "sale_order_ids",
@@ -98,24 +108,27 @@ class ResPartner(models.Model):
     #         partner.open_so_balance = sum(open_so.mapped('amount_total'))+ sum(open_so_balance) + sum(not_paid_invoices.mapped("amount_residual_signed"))
 
     @api.depends(
-    "sale_order_ids",
-    "sale_order_ids.partner_id",
-    "sale_order_ids.amount_total",
-    "sale_order_ids.invoice_status",
-    "sale_order_ids.state",
-    "rollup_partner_ids.sale_order_ids.invoice_status",
-    "invoice_ids",
-    "invoice_ids.amount_residual_signed",
-    "invoice_ids.payment_state",
-    "invoice_ids.state",
-)
+        "sale_order_ids",
+        "sale_order_ids.partner_id",
+        "sale_order_ids.amount_total",
+        "sale_order_ids.invoice_status",
+        "sale_order_ids.state",
+        "rollup_partner_ids.sale_order_ids.invoice_status",
+        "invoice_ids",
+        "invoice_ids.amount_residual_signed",
+        "invoice_ids.payment_state",
+        "invoice_ids.state",
+    )
     def _compute_open_so_balance(self):
         self.filtered(lambda l: not l.credit_limit).open_so_balance = 0
         for partner in self.filtered(lambda l: l.credit_limit):
             # Use raw SQL query to get all child IDs efficiently
-            self.env.cr.execute("""
+            self.env.cr.execute(
+                """
                 SELECT id FROM res_partner WHERE parent_id in %s
-            """, (tuple(partner.ids),))
+            """,
+                (tuple(partner.ids),),
+            )
             all_child_ids = [row[0] for row in self.env.cr.fetchall()]
             all_child_ids.append(partner.id)
             _logger.info("_compute_open_so_balance %s", partner.id)
@@ -123,34 +136,41 @@ class ResPartner(models.Model):
 
             # Aggregate draft invoices using raw SQL query
             not_paid_invoices = 0
-            
-            self.env.cr.execute("""
+
+            self.env.cr.execute(
+                """
                 SELECT COALESCE(SUM(amount_residual_signed), 0) 
                 FROM account_move 
                 WHERE move_type = 'out_invoice' 
                 AND partner_id IN %s 
                 AND state = 'draft'
-            """, (tuple(all_child_ids),))
+            """,
+                (tuple(all_child_ids),),
+            )
             not_paid_invoices = self.env.cr.fetchone()[0] or 0
 
             open_so_balance = (
-                open_so +
-                sum(partner.rollup_partner_ids.mapped("open_so_balance")) +
-                not_paid_invoices
+                open_so
+                + sum(partner.rollup_partner_ids.mapped("open_so_balance"))
+                + not_paid_invoices
             )
 
             partner.open_so_balance = open_so_balance
 
-
     @api.depends(
-        "credit_limit", "total_due", "rollup_partner_ids.total_due", "partner_rollup_id", "invoice_ids","open_so_balance",
+        "credit_limit",
+        "total_due",
+        "rollup_partner_ids.total_due",
+        "partner_rollup_id",
+        "invoice_ids",
+        "open_so_balance",
         "invoice_ids.amount_residual_signed",
         "invoice_ids.payment_state",
         "invoice_ids.state",
         "sale_order_ids.amount_total",
         "sale_order_ids.invoice_status",
         "sale_order_ids.partner_id",
-        "sale_order_ids.state"
+        "sale_order_ids.state",
     )
     def _compute_remaining_credit(self):
         self.filtered(lambda l: not l.credit_limit).remaining_credit = 0
@@ -159,15 +179,21 @@ class ResPartner(models.Model):
             # print ("\n ------_compute_remaining_credit------",)
             rollup_used_credit = 0
             if partner.rollup_partner_ids:
-                rollup_credit_data = partner.rollup_partner_ids.read_group([], ["open_so_balance:sum", "credit:sum"], [])
-                rollup_used_credit = sum(
-                    rollup_credit_data[0].values()
-                ) if rollup_credit_data else 0
+                rollup_credit_data = partner.rollup_partner_ids.read_group(
+                    [], ["open_so_balance:sum", "credit:sum"], []
+                )
+                rollup_used_credit = (
+                    sum(rollup_credit_data[0].values()) if rollup_credit_data else 0
+                )
 
-            used_credit = partner.open_so_balance + (partner.credit if partner.credit > 0 else 0) + rollup_used_credit
-            partner.remaining_credit = partner.credit_limit - used_credit if partner.credit_limit else 0
-
-
+            used_credit = (
+                partner.open_so_balance
+                + (partner.credit if partner.credit > 0 else 0)
+                + rollup_used_credit
+            )
+            partner.remaining_credit = (
+                partner.credit_limit - used_credit if partner.credit_limit else 0
+            )
 
     # @api.depends(
     #     "credit_limit", "total_due", "rollup_partner_ids.total_due", "partner_rollup_id", "invoice_ids","open_so_balance",
@@ -218,7 +244,12 @@ class ResPartner(models.Model):
         deposit_accounts = tuple(row[0] for row in self.env.cr.fetchall())
         return deposit_accounts
 
-    @api.depends("partner_rollup_id","rollup_partner_ids","invoice_ids.line_ids.account_id","invoice_ids.line_ids.balance")
+    @api.depends(
+        "partner_rollup_id",
+        "rollup_partner_ids",
+        "invoice_ids.line_ids.account_id",
+        "invoice_ids.line_ids.balance",
+    )
     def _compute_customer_deposit_balance(self):
         deposit_accounts = self._get_deposit_accounts()
         for partner in self:
@@ -227,7 +258,7 @@ class ResPartner(models.Model):
             # if not partners_to_include or not deposit_accounts:
             #     partner.customer_deposit_balance = 0.0
             #     continue
-            
+
             query = """
                 SELECT SUM(aml.balance) * -1
                 FROM account_move_line aml
@@ -235,13 +266,14 @@ class ResPartner(models.Model):
                 AND aml.account_id IN %s
                 AND aml.balance < 0
             """
-        
+
             self.env.cr.execute(query, (partners_to_include, deposit_accounts))
             result = self.env.cr.fetchone()[0] or 0.0
             partner.customer_deposit_balance = result
 
     @api.depends(
-        "partner_rollup_id","rollup_partner_ids",
+        "partner_rollup_id",
+        "rollup_partner_ids",
         "sale_order_ids.order_line.product_uom_qty",
         "sale_order_ids.order_line.price_unit",
         "sale_order_ids.order_line.state",
@@ -261,7 +293,7 @@ class ResPartner(models.Model):
                 AND so.state NOT IN ('cancel', 'done')
                 AND sol.product_uom_qty > 0
             """
-            
+
             self.env.cr.execute(query, (partners_to_include,))
             result = self.env.cr.fetchone()[0] or 0.0
             partner.open_bo_balance = result

@@ -12,10 +12,14 @@ class SaleOrder(models.Model):
     # COLUMNS #####
 
     credit_hold = fields.Boolean(
-        "Credit Hold", compute="_compute_credit_hold", store=True
+        "Credit Hold",
+        compute="_compute_credit_hold",
+        store=True,
     )
     uninvoiced_balance = fields.Monetary(
-        string="Uninvoiced Balance", compute="_compute_uninvoiced_balance", store=True
+        string="Uninvoiced Balance",
+        compute="_compute_uninvoiced_balance",
+        store=True,
     )
     override_credit_limit_hold = fields.Boolean("Override Credit Limit Hold")
 
