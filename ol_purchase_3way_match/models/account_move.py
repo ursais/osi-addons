@@ -23,7 +23,7 @@ class AccountMove(models.Model):
     def _compute_po_line_price_difference(self):
         for move in self:
             po_price_difference = False
-            if move.move_type == "in_invoice":  # Only for Vendor Bills
+            if move.move_type == "in_invoice" and move.payment_state != "paid":
                 po_price_difference = any(
                     line.po_line_price_difference for line in move.line_ids
                 )

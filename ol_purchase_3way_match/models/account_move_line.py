@@ -19,17 +19,23 @@ class AccountMoveLine(models.Model):
 
     # METHODS ######
 
-    @api.depends("purchase_line_id", "price_unit")
+    @api.depends(
+        "purchase_line_id",
+        "price_unit",
+        "move_id.payment_state",
+    )
     def _compute_po_line_price_difference(self):
         for line in self:
             po_line_price_difference = False
-            if line.purchase_line_id and line.product_id.detailed_type in [
-                "product",
-                "consu",
-            ]:
+            if (
+                line.purchase_line_id
+                and line.product_id.detailed_type in ["product", "consu"]
+                and line.move_id.payment_state != "paid"
+            ):
                 po_price = line.purchase_line_id.price_unit
                 bill_price = line.price_unit
                 po_line_price_difference = bool(po_price != bill_price)
+
             line.po_line_price_difference = po_line_price_difference
 
     # END ##########
