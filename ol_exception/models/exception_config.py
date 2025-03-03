@@ -43,13 +43,22 @@ class ExceptionConfig(models.Model):
         Returns a dictionary of fields related to trigger_field_ids for the configured model.
         """
         self.ensure_one()  # Ensure we are operating on a single record
-        related_fields = self.env["ir.model.fields"].search(
-            [
-                ("ttype", "=", "related"),
-                ("related", "!=", False),
-                ("model_id", "!=", self.model_id.id),  # Related fields in other models
-                ("related", "ilike", f"{self.model_id.model}.%"),
-            ]
+        # sudo is used in search as non-admins don't have direct access to ir.model
+        related_fields = (
+            self.env["ir.model.fields"]
+            .sudo()
+            .search(
+                [
+                    ("ttype", "=", "related"),
+                    ("related", "!=", False),
+                    (
+                        "model_id",
+                        "!=",
+                        self.model_id.id,
+                    ),  # Related fields in other models
+                    ("related", "ilike", f"{self.model_id.model}.%"),
+                ]
+            )
         )
         # Filter fields that are directly related to trigger fields
         trigger_field_names = {field.name for field in self.trigger_field_ids}
@@ -71,20 +80,25 @@ class ExceptionConfig(models.Model):
         trigger_field_names = self.trigger_field_ids.mapped("name")
 
         # Get models that have exception.config records
+        # sudo is used as non-admins don't have direct access to ir.model
         exception_models = (
-            self.env["exception.config"].search([]).mapped("model_id.model")
+            self.env["exception.config"].sudo().search([]).mapped("model_id.model")
         )
 
         # Find related fields pointing to this model's fields, limited to models with exception configs
-        related_fields = self.env["ir.model.fields"].search(
-            [
-                ("related", "!=", False),
-                (
-                    "model_id.model",
-                    "in",
-                    exception_models,
-                ),  # Only consider models with exception configs
-            ]
+        related_fields = (
+            self.env["ir.model.fields"]
+            .sudo()
+            .search(
+                [
+                    ("related", "!=", False),
+                    (
+                        "model_id.model",
+                        "in",
+                        exception_models,
+                    ),  # Only consider models with exception configs
+                ]
+            )
         )
         field_mapping = {}
         for field in related_fields:
