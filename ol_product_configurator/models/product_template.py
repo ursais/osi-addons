@@ -59,6 +59,158 @@ class ProductTemplate(models.Model):
                 )
             )
 
+    def action_create_rebuild_scaffolding_bom(self):
+        # Models
+        Bom = self.env["mrp.bom"]
+        BomLine = self.env["mrp.bom.line"]
+        BomLineConfig = self.env["mrp.bom.line.configuration"]
+        BomLineConfigSet = self.env["mrp.bom.line.configuration.set"]
+        ProductTemplateAttributeLine = self.env["product.template.attribute.line"]
+
+        for product_template in self:
+            existing_scaffold_bom = Bom.search(
+                [
+                    ("product_tmpl_id", "=", product_template.id),
+                    ("scaffolding_bom", "=", True),
+                ]
+            )
+            if existing_scaffold_bom:
+                existing_scaffold_bom.unlink()
+
+            # Find all attribute lines related to the selected product template
+            attribute_lines = ProductTemplateAttributeLine.search(
+                [("product_tmpl_id", "=", product_template.id)]
+            )
+
+            # Create a Bill of Materials for the product template
+            bom_vals = {
+                "product_tmpl_id": product_template.id,
+                "product_qty": 1.0,
+                "type": "normal",  # Choose 'normal' or 'phantom' depending on your need
+                "scaffolding_bom": True,
+            }
+            new_bom = Bom.create(bom_vals)
+
+            # Add BoM lines for each product associated with the attribute values
+            for line in attribute_lines:
+                attribute_values = line.value_ids
+                for value in attribute_values:
+                    product = value.product_id
+                    if product:
+                        # Attempt to find an existing configuration set
+                        bom_line_config_set = BomLineConfigSet.search(
+                            [("name", "=", product.display_name)], limit=1
+                        )
+                        # If not found, create a new one
+                        if not bom_line_config_set:
+                            bom_line_config_set = BomLineConfigSet.create(
+                                {"name": product.display_name}
+                            )
+
+                        # Ensure value_ids is a list of IDs
+                        value_ids = [value.id] if value else []
+
+                        # Create the configuration
+                        if value_ids:
+                            existing_bom_line_config = BomLineConfig.search(
+                                [
+                                    ("config_set_id", "=", bom_line_config_set.id),
+                                    (
+                                        "value_ids",
+                                        "in",
+                                        value.id,
+                                    ),
+                                ]
+                            )
+                            if not existing_bom_line_config:
+                                BomLineConfig.create(
+                                    {
+                                        "config_set_id": bom_line_config_set.id,
+                                        "value_ids": [(6, 0, value_ids)],
+                                    }
+                                )
+
+                        bom_line_vals = {
+                            "bom_id": new_bom.id,
+                            "product_id": product.id,
+                            "product_qty": 1.0,  # Set the quantity needed for this product in the BoM
+                            "config_set_id": bom_line_config_set.id,
+                        }
+                        BomLine.create(bom_line_vals)
+
+        # cr = self.env.cr  # Cursor for direct SQL operations
+
+        # for product_template in self:
+        #     attribute_lines = product_template.attribute_line_ids
+        #     if attribute_lines:
+        #         # Check for existing scaffold BOMs
+        #         existing_scaffold_bom_query = """SELECT id FROM mrp_bom WHERE active = true AND scaffolding_bom = true AND product_tmpl_id = %s"""
+        #         cr.execute(existing_scaffold_bom_query, (product_template.id,))
+        #         existing_scaffold_bom = cr.fetchall()
+        #         if existing_scaffold_bom:
+        #             for bom_id in existing_scaffold_bom:
+        #                 bom_record = self.env["mrp.bom"].browse(bom_id[0])
+        #                 if bom_record.code:
+        #                     code = (
+        #                         bom_record.code
+        #                         + " - Archived via Scaffold Bom Rebuild Action"
+        #                     )
+        #                 else:
+        #                     code = "Archived via Scaffold Bom Rebuild Action"
+        #                 bom_record.write(
+        #                     {
+        #                         "active": False,
+        #                         "code": code,
+        #                     }
+        #                 )
+
+        #         # Create a Bill of Materials for the product template
+        #         bom_vals = {
+        #             "product_tmpl_id": product_template.id,
+        #             "product_qty": 1.0,
+        #             "type": "normal",  # Adjust type if needed
+        #             "scaffolding_bom": True,
+        #         }
+        #         new_bom = self.env["mrp.bom"].create(bom_vals)
+
+        #         # Add BoM lines for each product associated with the attribute values
+        #         for line in attribute_lines:
+        #             attribute_values = line.value_ids
+        #             for value in attribute_values:
+        #                 product = value.product_id
+        #                 classification = value.attribute_id.classification_id
+        #                 if product:
+        #                     # Attempt to find or create a configuration set
+        #                     bom_line_config_set = self.env[
+        #                         "mrp.bom.line.configuration.set"
+        #                     ].search([("name", "=", product.display_name)], limit=1)
+        #                     if not bom_line_config_set:
+        #                         bom_line_config_set = self.env[
+        #                             "mrp.bom.line.configuration.set"
+        #                         ].create({"name": product.display_name})
+        #                     # Ensure value_ids is a list of IDs
+        #                     value_ids = [(6, 0, [value.id])] if value else []
+        #                     select_query = """select * from mrp_bom_line_configuration_product_attribute_value_rel where product_attribute_value_id = %s"""
+        #                     cr.execute(select_query, (value.id,))
+        #                     value_new = cr.fetchall()
+        #                     if not value_new:
+        #                         self.env["mrp.bom.line.configuration"].create(
+        #                             {
+        #                                 "config_set_id": bom_line_config_set.id,
+        #                                 "value_ids": value_ids,
+        #                             }
+        #                         )
+        #                     bom_line_vals = {
+        #                         "bom_id": new_bom.id,
+        #                         "product_id": product.id,
+        #                         "classification_id": classification.id,
+        #                         "product_qty": 1.0,
+        #                         "config_set_id": bom_line_config_set.id,
+        #                     }
+        #                     self.env["mrp.bom.line"].create(bom_line_vals)
+        #         # Commit changes after processing each Product
+        #         cr.commit()
+
     def write(self, vals):
         # Check if 'default_code' is being updated
         if "default_code" in vals:

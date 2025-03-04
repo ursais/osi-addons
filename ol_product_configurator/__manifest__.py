@@ -19,6 +19,7 @@
     ],
     # always loaded
     "data": [
+        "data/ir_action_server.xml",
         "data/m2x_create_edit_option_data.xml",
         "views/attribute_value_views.xml",
         "views/product_attribute_views.xml",
