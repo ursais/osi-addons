@@ -205,6 +205,11 @@ class MrpProductionBatch(models.Model):
             * Ready: The material is available to start the production.\n\
             * Waiting: The material is not available to start the production.\n",
     )
+    components_availability_details = fields.Text(
+        string="Components Availability Details",
+        compute="_compute_components_availability_details",
+        store=True,
+    )
 
     # Fields tracking the total and expected durations for the batch
     total_duration_expected = fields.Float(
@@ -364,80 +369,162 @@ class MrpProductionBatch(models.Model):
     def action_assign(self):
         # Assign raw materials to production orders that are not completed or canceled
         for rec in self:
-            rec.is_queuing = True
+            queued = False
+            enable_delay = (
+                self.env["ir.config_parameter"]
+                .sudo()
+                .get_param("mrp_batch.enable_delay_action_assign", "True")
+                == "True"
+            )
             for mo in rec.production_ids.filtered(
                 lambda x: x.state not in ("draft", "done", "cancel")
             ):
-                mo.with_delay().action_assign()
+                if enable_delay:
+                    mo.with_delay().action_assign()
+                    queued = True
+                else:
+                    mo.action_assign()
+            if queued:
+                rec.is_queuing = True
 
     def action_confirm(self):
         # Confirm the batch and associated manufacturing orders
         for rec in self:
-            rec.is_queuing = True
+            queued = False
             rec.state = "confirm"
+            enable_delay = (
+                self.env["ir.config_parameter"]
+                .sudo()
+                .get_param("mrp_batch.enable_delay_action_confirm", "True")
+                == "True"
+            )
             for mo in rec.production_ids.filtered(lambda x: x.state == "draft"):
-                mo.with_delay().action_confirm()
+                if enable_delay:
+                    mo.with_delay().action_confirm()
+                    queued = True
+                else:
+                    mo.action_confirm()
+            if queued:
+                rec.is_queuing = True
 
     def button_plan(self):
-        # Plan the batch and its production orders
         for rec in self:
+            queued = False
             productions = rec.production_ids.filtered(
                 lambda x: x.state != "draft" and not x.is_planned
             )
             if productions:
-                for mo in productions:
-                    mo.with_delay().button_plan()
+                enable_delay = (
+                    self.env["ir.config_parameter"]
+                    .sudo()
+                    .get_param("mrp_batch.enable_delay_button_plan", "True")
+                    == "True"
+                )
 
-                rec.is_queuing = True
+                for mo in productions:
+                    if enable_delay:
+                        mo.with_delay().button_plan()
+                        queued = True
+                    else:
+                        mo.button_plan()
 
                 if rec.state == "draft" and not any(
                     productions.filtered(lambda p: p.state == "draft")
                 ):
                     rec.state = "confirm"
+            if queued:
+                rec.is_queuing = True
 
     def button_unplan(self):
-        # Unplan all eligible manufacturing orders in the batch
         for rec in self:
-            rec.is_queuing = True
-            # Filter production orders to exclude ones that would cause a UserError
+            queued = False
+            enable_delay = (
+                self.env["ir.config_parameter"]
+                .sudo()
+                .get_param("mrp_batch.enable_delay_button_unplan", "True")
+                == "True"
+            )
+
             eligible_productions = rec.production_ids.filtered(
                 lambda mo: not any(
                     wo.state in ("done", "progress") for wo in mo.workorder_ids
                 )
             )
+
             for mrp_production in eligible_productions:
-                mrp_production.with_delay().button_unplan()
+                if enable_delay:
+                    mrp_production.with_delay().button_unplan()
+                    queued = True
+                else:
+                    mrp_production.button_unplan()
+            if queued:
+                rec.is_queuing = True
 
     def action_unreserve(self):
-        # Unreserve raw materials for production orders
         for rec in self:
-            rec.is_queuing = True
+            queued = False
+            enable_delay = (
+                self.env["ir.config_parameter"]
+                .sudo()
+                .get_param("mrp_batch.enable_delay_action_unreserve", "True")
+                == "True"
+            )
+
             for mo in rec.production_ids.filtered(
                 lambda x: x.state not in ("draft", "done", "cancel")
             ):
-                mo.with_delay().do_unreserve()
+                if enable_delay:
+                    mo.with_delay().do_unreserve()
+                    queued = True
+                else:
+                    mo.do_unreserve()
+            if queued:
+                rec.is_queuing = True
 
     def action_done(self):
-        # Complete the batch and mark productions as done
         for rec in self:
-            rec.is_queuing = True
+            queued = False
             rec.state = "done"
+            enable_delay = (
+                self.env["ir.config_parameter"]
+                .sudo()
+                .get_param("mrp_batch.enable_delay_action_done", "True")
+                == "True"
+            )
+
             for mo in rec.production_ids.filtered(
                 lambda x: x.state not in ("done", "cancel")
             ):
-                mo.with_delay().button_mark_done()
+                if enable_delay:
+                    mo.with_delay().button_mark_done()
+                    queued = True
+                else:
+                    mo.button_mark_done()
+            if queued:
+                rec.is_queuing = True
 
     def action_cancel(self):
-        # Cancel the batch and related eligible manufacturing orders
         for rec in self:
-            rec.is_queuing = True
+            queued = False
             rec.state = "cancel"
-            # Filter MOs to exclude those that cannot be canceled
+            enable_delay = (
+                self.env["ir.config_parameter"]
+                .sudo()
+                .get_param("mrp_batch.enable_delay_action_cancel", "True")
+                == "True"
+            )
+
             eligible_productions = rec.production_ids.filtered(
                 lambda mo: not any(wo.state == "done" for wo in mo.workorder_ids)
             )
             for mrp_production in eligible_productions:
-                mrp_production.with_delay().action_cancel()
+                if enable_delay:
+                    mrp_production.with_delay().action_cancel()
+                    queued = True
+                else:
+                    mrp_production.action_cancel()
+            if queued:
+                rec.is_queuing = True
 
     def action_lock_and_unlock(self):
         # Lock all Manufacturing Orders in the batch.
@@ -1053,9 +1140,8 @@ class MrpProductionBatch(models.Model):
 
     @api.depends(
         "production_ids",
+        "production_ids.state",
         "production_ids.reservation_state",
-        "production_ids.move_raw_ids",
-        "production_ids.move_raw_ids.forecast_availability",
     )
     def _compute_components_availability(self):
         """Computes batch-level component availability based on MO statuses."""
@@ -1069,45 +1155,107 @@ class MrpProductionBatch(models.Model):
             if not valid_productions:
                 continue
 
-            # Fetch all raw moves and precompute forecast availability
+            # Fetch all raw moves and ensure calculations are up to date
             all_raw_moves = valid_productions.move_raw_ids
             all_raw_moves._fields["forecast_availability"].compute_value(all_raw_moves)
 
-            # Check if any MO is completely unavailable
-            if any(
-                any(
+            latest_forecast_date = False
+            is_unavailable = False
+
+            for move in all_raw_moves:
+                product = move.product_id
+
+                required_qty = 0 if move.state == "draft" else move.product_qty
+                if (
                     float_compare(
                         move.forecast_availability,
-                        0 if move.state == "draft" else move.product_qty,
-                        precision_rounding=move.product_id.uom_id.rounding,
+                        required_qty,
+                        precision_rounding=product.uom_id.rounding,
                     )
                     == -1
-                    for move in mo.move_raw_ids
-                )
-                for mo in valid_productions
-            ):
+                ):
+                    is_unavailable = True
+
+                if move.forecast_expected_date:
+                    latest_forecast_date = (
+                        max(latest_forecast_date, move.forecast_expected_date)
+                        if latest_forecast_date
+                        else move.forecast_expected_date
+                    )
+
+            # Set batch-level availability based on the worst-case scenario
+            if is_unavailable:
                 batch.components_availability = _("Not Available")
                 batch.components_availability_state = "unavailable"
-            else:
-                # Get the latest expected forecast date across all MOs
-                forecast_date = max(
-                    all_raw_moves.filtered("forecast_expected_date").mapped(
-                        "forecast_expected_date"
-                    ),
-                    default=False,
+            elif latest_forecast_date:
+                batch.components_availability = _(
+                    "Exp %s", format_date(self.env, latest_forecast_date)
                 )
+                batch.components_availability_state = (
+                    "late"
+                    if batch.date_start and latest_forecast_date > batch.date_start
+                    else "expected"
+                )
+            else:
+                batch.components_availability = _("Available")
+                batch.components_availability_state = "available"
+            enable_component_details_delay = (
+                self.env["ir.config_parameter"]
+                .sudo()
+                .get_param(
+                    "mrp_batch.enable_delay_component_availability_details", "True"
+                )
+                == "True"
+            )
+            if enable_component_details_delay:
+                batch.with_delay()._compute_components_availability_details()
+            else:
+                batch._compute_components_availability_details()
 
-                if forecast_date:
-                    batch.components_availability = _(
-                        "Exp %s", format_date(self.env, forecast_date)
+    def _compute_components_availability_details(self):
+        """Computes batch-level component availability based on MO statuses."""
+        for batch in self:
+            batch.components_availability_details = ""
+
+            valid_productions = batch.production_ids.filtered(
+                lambda mo: mo.state not in ("draft", "cancel", "done", "to_close")
+            )
+            if not valid_productions:
+                continue
+
+            # Fetch all raw moves and ensure calculations are up to date
+            all_raw_moves = valid_productions.move_raw_ids
+            all_raw_moves._fields["forecast_availability"].compute_value(all_raw_moves)
+
+            product_status_map = {}
+
+            for move in all_raw_moves:
+                product = move.product_id
+                if product.id in product_status_map:
+                    continue  # Skip duplicate product
+
+                required_qty = 0 if move.state == "draft" else move.product_qty
+                if (
+                    float_compare(
+                        move.forecast_availability,
+                        required_qty,
+                        precision_rounding=product.uom_id.rounding,
                     )
-                    if batch.date_start:
-                        batch.components_availability_state = (
-                            "late" if forecast_date > batch.date_start else "expected"
-                        )
-                else:
-                    batch.components_availability = _("Available")
-                    batch.components_availability_state = "available"
+                    == -1
+                ):
+                    product_status_map[product.id] = (
+                        f"{product.default_code}: Not Available"
+                    )
+
+                if move.forecast_expected_date:
+                    product_status_map[product.id] = (
+                        f"{product.default_code}: Exp. {format_date(self.env, move.forecast_expected_date)}"
+                    )
+
+            # Populate the details field
+            batch.components_availability_details = "\n".join(
+                product_status_map.values()
+            )
 
     @api.depends(
         "production_ids",
