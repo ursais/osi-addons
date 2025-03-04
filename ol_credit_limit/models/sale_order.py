@@ -25,7 +25,7 @@ class SaleOrder(models.Model):
 
     # END #########
     # METHODS #####
-        def _get_open_sale_order(self, partner_id):
+    def _get_open_sale_order(self, partner_id):
         so_obj = self.env['sale.order']
         if not partner_id:
             return so_obj
