@@ -25,6 +25,22 @@ class SaleOrder(models.Model):
 
     # END #########
     # METHODS #####
+    def _get_open_sale_order(self, partner_id):
+        so_obj = self.env['sale.order']
+        if not partner_id:
+            return so_obj
+
+        query = """
+            SELECT id
+            FROM sale_order
+            WHERE partner_id = %s
+            AND invoice_status != 'invoiced'
+            AND state != 'cancel'
+        """
+        self.env.cr.execute(query, (partner_id.id,))
+        so_list = [so[0] for so in self.env.cr.fetchall()]
+        return so_obj.browse(so_list)
+
 
     @api.depends(
         "partner_id.remaining_credit",
@@ -32,7 +48,7 @@ class SaleOrder(models.Model):
         "override_credit_limit_hold",
     )
     def _compute_credit_hold(self):
-        open_saleorders = self.partner_id._get_open_sale_order()
+        open_saleorders = self._get_open_sale_order(self.partner_id)
         counter_total = 0
         credit_hold = False
         all_child = (
