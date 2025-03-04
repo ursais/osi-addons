@@ -8,6 +8,8 @@ class ProductConfigSession(models.Model):
     session_value_quantity_ids = fields.One2many(
         "product.config.session.value.qty", "session_id", string="Quantities"
     )
+    #Helper Field for Fetch Values while Default Values set on Qty Attribute
+    default_qty_ids = fields.Many2many("product.attribute.value",string="",help="It a hidden Field which help to fatch value when we set default_val in PTAL")
 
     @api.model
     def search_variant(self, value_ids=None, product_tmpl_id=None):
@@ -88,6 +90,7 @@ class ProductConfigSession(models.Model):
                 default_val_ids = product_tmpl.attribute_line_ids.filtered(
                     lambda line: line.default_val and line.is_qty_required
                 )
+                default_qty_ids = default_val_ids.default_val
                 for line in default_val_ids:
                     template_attribute_value2 = attribute_value_qty_obj2.search(
                         [
@@ -96,6 +99,7 @@ class ProductConfigSession(models.Model):
                             ("product_attribute_value_id", "=", line.default_val.id),
                         ]
                     )
+
                     template_attribute_value = attribute_value_qty_obj.search(
                         [
                             ("product_tmpl_id", "=", product_tmpl.id),
@@ -120,7 +124,7 @@ class ProductConfigSession(models.Model):
                     )
             # Added Context quantity_val_create which use to bypass Core Vals Creation over Custom vals.
             if not self._context.get("quantity_val_create"):
-                val.update({"session_value_quantity_ids": session_qty_list})
+                val.update({"session_value_quantity_ids": session_qty_list,"default_qty_ids":[(6,0,default_qty_ids.ids)]})
         return super().create(vals_list)
 
     # ============================

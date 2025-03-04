@@ -40,8 +40,14 @@ class AttributeValueQty(models.Model):
                 and self._context.get("field_name").split(qty_field_prefix)[1]
                 or False
             )
+            local_values_dict = wiz_id.values_dict and ast.literal_eval(wiz_id.values_dict) or {}
+            for default_val in wiz_id.config_session_id.default_qty_ids:
+                qty_attr_ids = self.search([("product_attribute_id","=",default_val.attribute_id.id),("product_tmpl_id","=",wiz_id.config_session_id.product_tmpl_id.id),("product_attribute_value_id","=",default_val.id)])
+                qty_field_name = qty_field_prefix+str(default_val.attribute_id.id)
+                if qty_field_name not in local_values_dict:
+                    local_values_dict.update({qty_field_name:qty_attr_ids.ids})
             domain = [("product_tmpl_id", "=", wiz_id.product_tmpl_id.id)]
-            values_dict = ast.literal_eval(wiz_id.values_dict)
+            values_dict = local_values_dict
             if self._context.get("field_name") and values_dict.get(self._context.get("field_name")):
                 domain += [("id","in",values_dict.get(self._context.get("field_name")))]
             args = domain
