@@ -30,8 +30,12 @@ class StockPicking(models.Model):
             pickings.with_context(check_exception=False)._check_exception()
 
     def _fields_trigger_check_exception(self):
-        config_records = self.env["exception.config"].search(
-            [("model_id.model", "=", self._name)]
+        # Search for exception configs: sudo is used as non-admins don't
+        # have direct access to ir.model
+        config_records = (
+            self.env["exception.config"]
+            .sudo()
+            .search([("model_id.model", "=", self._name)])
         )
         fields_to_check = set()
         for config in config_records:

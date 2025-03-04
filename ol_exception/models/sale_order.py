@@ -13,8 +13,12 @@ class SaleOrder(models.Model):
     # METHODS ##########
 
     def _fields_trigger_check_exception(self):
-        config_records = self.env["exception.config"].search(
-            [("model_id.model", "=", self._name)]
+        # Search for exception configs: sudo is used as non-admins don't
+        # have direct access to ir.model
+        config_records = (
+            self.env["exception.config"]
+            .sudo()
+            .search([("model_id.model", "=", self._name)])
         )
         fields_to_check = set()
         for config in config_records:
@@ -31,9 +35,12 @@ class SaleOrder(models.Model):
             field: vals[field] for field in trigger_fields if field in vals
         }
 
-        # Get field mappings from exception.config
-        config_records = self.env["exception.config"].search(
-            [("model_id.model", "=", "sale.order")]
+        # Get field mappings from exception.config: sudo is used as non-admins don't
+        # have direct access to ir.model
+        config_records = (
+            self.env["exception.config"]
+            .sudo()
+            .search([("model_id.model", "=", "sale.order")])
         )
         field_mapping = {}
         for config in config_records:

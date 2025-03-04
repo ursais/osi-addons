@@ -28,6 +28,7 @@
                 <field name="date_deadline" widget="datetime" options="{'show_time': false}" optional="show" />
                 <field name="components_availability_state" column_invisible="True" options='{"lazy": true}'/>
                 <field name="components_availability" options="{'lazy': true}" invisible="state in ['done', 'cancel']" optional="show" decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'" decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')" decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')"/>
+                <field name="components_availability_details" options="{'lazy': true}" invisible="state in ['done', 'cancel']" optional="show" decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'" decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')" decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')"/>
                 <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
                 <field name="total_revenue" widget="monetary" optional="hide" sum="Total" />
                 <field name="total_duration_expected" widget="float_time" optional="hide" sum="Total" />
@@ -150,6 +151,7 @@
                             <field name="date_deadline" readonly="state not in ('draft', 'confirm', 'cancel') or is_locked" />
                             <field name="components_availability_state" invisible="1"/>
                             <field name="components_availability" invisible="state in ['done', 'cancel']" decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'" decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')" decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')" />
+                            <field name="components_availability_details" />
                             <field name="responsible_id" readonly="state not in ('draft', 'confirm', 'cancel') or is_locked" />
                             <field name="exception_ids" widget="many2many_tags" invisible="1" />
                             <field name="exceptions_summary" invisible="1" />

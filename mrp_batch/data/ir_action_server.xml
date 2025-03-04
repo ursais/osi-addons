@@ -26,6 +26,9 @@ for rec in records:
     rec._compute_lock()
     rec._compute_is_planned()
     rec._compute_is_delayed()
+    rec._compute_components_availability()
+    rec._compute_reservation_state()
+    rec._compute_components_availability()
         </field>
     </record>
 
