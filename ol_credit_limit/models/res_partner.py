@@ -59,6 +59,7 @@ class ResPartner(models.Model):
     # METHODS #####
 
     def _get_open_sale_order(self):
+        """Method is used for Get Open Sale Orders based on Partners!"""
         so_obj = self.env['sale.order']
         if not self:
             return so_obj
@@ -73,7 +74,6 @@ class ResPartner(models.Model):
         self.env.cr.execute(query, (self.id,))
         so_list = [so[0] for so in self.env.cr.fetchall()]
         return so_obj.browse(so_list)
-
 
     @api.depends(
         "credit_limit",
@@ -155,7 +155,7 @@ class ResPartner(models.Model):
             not_paid_invoices = self.env.cr.fetchone()[0] or 0
 
             open_so_balance = (
-                open_so
+                sum(open_so.mapped("amount_total"))
                 + sum(partner.rollup_partner_ids.mapped("open_so_balance"))
                 + not_paid_invoices
             )
@@ -181,7 +181,6 @@ class ResPartner(models.Model):
         self.filtered(lambda l: not l.credit_limit).remaining_credit = 0
         for partner in self.filtered(lambda l: l.credit_limit):
             _logger.info("_compute_remaining_credit %s", partner.id)
-            # print ("\n ------_compute_remaining_credit------",)
             rollup_used_credit = 0
             if partner.rollup_partner_ids:
                 rollup_credit_data = partner.rollup_partner_ids.read_group(
@@ -269,8 +268,9 @@ class ResPartner(models.Model):
                 FROM account_move_line aml
                 WHERE aml.partner_id IN %s
                 AND aml.account_id IN %s
-                AND aml.balance < 0
+                -- AND aml.balance < 0
             """
+            
 
             self.env.cr.execute(query, (partners_to_include, deposit_accounts))
             result = self.env.cr.fetchone()[0] or 0.0
