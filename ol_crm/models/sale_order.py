@@ -37,6 +37,9 @@ class SaleOrder(models.Model):
         if self.opportunity_id:
             previous_opportunity = self._origin.opportunity_id
             self._remove_tags_from_previous_opportunity(previous_opportunity)
+            if not previous_opportunity:
+                #It will execute When Sale Order is not saved from opportunity.
+                self.tag_ids = False
             self._update_tags_from_opportunity()
 
     # END ##########
