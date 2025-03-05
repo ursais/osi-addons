@@ -59,16 +59,21 @@ class ResPartner(models.Model):
     # METHODS #####
 
     def _get_open_sale_order(self):
+        so_obj = self.env['sale.order']
+        if not self:
+            return so_obj
+
         query = """
-            SELECT COALESCE(SUM(amount_total), 0)
+            SELECT id
             FROM sale_order
             WHERE partner_id = %s
             AND invoice_status != 'invoiced'
             AND state != 'cancel'
         """
         self.env.cr.execute(query, (self.id,))
-        total_amount = self.env.cr.fetchone()[0]
-        return total_amount
+        so_list = [so[0] for so in self.env.cr.fetchall()]
+        return so_obj.browse(so_list)
+
 
     @api.depends(
         "credit_limit",
