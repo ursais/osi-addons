@@ -34,7 +34,6 @@
             </xpath>
             <xpath expr="//group[hasclass('oe_subtotal_footer')]" position="after">
                 <group class="oe_subtotal_footer oe_right">
-                    <div class="oe_subtotal_footer_separator"/>
                     <field name="remaining_amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}" />
                     <field name="remaining_amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}" />
                     <label for="amount_total"/>
