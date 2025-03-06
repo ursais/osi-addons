@@ -27,6 +27,22 @@
                     </field>
                 </page>
             </xpath>
+            <xpath expr="//field[@name='line_ids']/tree/field[@name='remaining_uom_qty']" position="after">
+                <field name="remaining_price_subtotal" widget="monetary" options="{'currency_field': 'currency_id'}" optional="hide" />
+                <field name="remaining_price_total" widget="monetary" options="{'currency_field': 'currency_id'}" optional="hide" />
+                <field name="remaining_price_tax" widget="monetary" options="{'currency_field': 'currency_id'}" optional="hide" />
+            </xpath>
+            <xpath expr="//group[hasclass('oe_subtotal_footer')]" position="after">
+                <group class="oe_subtotal_footer oe_right">
+                    <div class="oe_subtotal_footer_separator"/>
+                    <field name="remaining_amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                    <field name="remaining_amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                    <label for="amount_total"/>
+                    <div class="oe_subtotal_footer_separator">
+                        <field name="remaining_amount_total" widget="monetary" options="{'currency_field': 'currency_id'}" />
+                    </div>
+                </group>
+            </xpath>
         </field>
     </record>
 
