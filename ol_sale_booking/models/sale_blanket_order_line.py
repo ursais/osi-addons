@@ -1,9 +1,11 @@
+# Import Odoo libs
 from odoo import fields, models, api
 
 
 class SaleBlanketOrderLine(models.Model):
     _inherit = "sale.blanket.order.line"
 
+    # COLUMNS ###
     remaining_price_subtotal = fields.Monetary(
         compute="_compute_remaining_amount",
         string="Remaining Subtotal",
@@ -19,6 +21,9 @@ class SaleBlanketOrderLine(models.Model):
         string="Remaining Tax",
         store=True,
     )
+
+    # METHODS ###
+    # END #######
 
     @api.depends(
         "remaining_uom_qty",
@@ -47,3 +52,5 @@ class SaleBlanketOrderLine(models.Model):
                     "remaining_price_subtotal": taxes["total_excluded"],
                 }
             )
+
+    # END #######
