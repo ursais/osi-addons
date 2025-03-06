@@ -1,0 +1,115 @@
+<odoo>
+
+    <!-- Form View -->
+    <record id="view_sale_booking_form" model="ir.ui.view">
+        <field name="name">sale.booking.view.form</field>
+        <field name="model">sale.booking</field>
+        <field name="arch" type="xml">
+            <form string="Sale Booking" class="o_sale_order">
+                <sheet>
+                    <!-- Helpdesk Group -->
+                    <group name="top_grp" colspan="4" col="3">
+                        <group name="main_left_grp">
+                            <field name="origin" />
+                            <field name="order_id" />
+                            <field name="blanket_order_id" />
+                            <field name="currency_id" />
+                            <field name="amount" />
+                            <field name="amount_untaxed" />
+                            <field name="order_amount_total" />
+                            <field name="order_amount_total_untaxed" />
+                            <field name="tax_amount" />
+                            <field name="order_prev_amount_total" />
+                            <field name="order_prev_amount_total_untaxed" />
+                            <field name="prev_tax_amount" />
+                        </group>
+                        <group name="main_right_grp">
+                            <field name="user_id" />
+                            <field name="account_manager" />
+                            <field name="company_id" />
+                            <field name="order_detailed_state" />
+                            <field name="chatter_entry_date" />
+                        </group>
+                    </group>
+
+                    <!-- Booking Lines Group -->
+                    <field name="booking_line_ids">
+                        <tree create="false" delete="false" edit="false" decoration-info="is_delivery == True">
+                            <field name="product_id" readonly="1" optional="show" />
+                            <field name="price_unit" readonly="1" optional="show" />
+                            <field name="original_price_unit" readonly="1" optional="hide" />
+                            <field name="product_lst_price" readonly="1" optional="hide" />
+                            <field name="product_uom_qty" readonly="1" optional="show" />
+                            <field name="price_subtotal" readonly="1" optional="show" />
+                            <field name="tax_id" widget="many2many_tags" readonly="1" optional="show" />
+                            <field name="price_tax" readonly="1" optional="show" />
+                            <field name="price_total" readonly="1" optional="show" />
+                            <field name="invoice_status" readonly="1" optional="hide" />
+                            <field name="product_free_qty" readonly="1" optional="hide" />
+                            <field name="product_qty_onhand" readonly="1" optional="hide" />
+                            <field name="product_qty_incoming" readonly="1" optional="hide" />
+                            <field name="product_qty_draft" readonly="1" optional="hide" />
+                            <field name="product_uom" readonly="1" optional="hide" />
+                            <field name="is_delivery" readonly="1" optional="hide" />
+                            <field name="product_qty" readonly="1" optional="hide" />
+                            <field name="sale_order_line_id" readonly="1" optional="hide" />
+                            <field name="name" readonly="1" optional="hide" />
+                            <field name="invoice_lines" readonly="1" optional="hide" />
+                        </tree>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Sale Booking main Tree view-->
+    <record id="sale_booking_tree" model="ir.ui.view">
+        <field name="name">sale.booking.tree</field>
+        <field name="model">sale.booking</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Sale Booking">
+                <field name="origin" optional="show" />
+                <field name="order_id" optional="hide" />
+                <field name="blanket_order_id" optional="hide" />
+                <field name="amount_untaxed" sum="Booking Amount Untaxed" widget="monetary" optional="show" />
+                <field name="currency_id" optional="hide" />
+                <field name="sale_order_currency_id" optional="hide" />
+                <field name="sale_blanket_order_currency_id" optional="hide" />
+                <field name="partner_id" optional="show" />
+                <field name="user_id" optional="show" />
+                <field name="account_manager" optional="show" />
+                <field name="create_date" optional="show" />
+                <field name="order_detailed_state" optional="show" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="sale_booking_tree_search" model="ir.ui.view">
+        <field name="name">sale.booking.search</field>
+        <field name="model">sale.booking</field>
+        <field name="arch" type="xml">
+            <search string="Search Sale Booking">
+                <field name="origin" />
+                <field name="order_id" />
+                <field name="blanket_order_id" />
+                <field name="user_id" />
+                <field name="account_manager" />
+                <field name="order_detailed_state" />
+                <group>
+                    <filter string="Last 3 months" name="last_3_months" domain="[('create_date', '&gt;=', ((context_today() - relativedelta(months=3)).strftime('%%Y-%%m-%%d')))]" />
+                    <filter string="Last 6 months" name="last_6_months" domain="[('create_date', '&gt;=', ((context_today() - relativedelta(months=6)).strftime('%%Y-%%m-%%d')))]" />
+                </group>
+                <group expand="0" string="Group By">
+                    <filter string="Order State" name="group_by_order_state" domain="[]" context="{'group_by':'order_detailed_state'}" />
+                    <filter string="Account Manager" name="group_by_account_manager" domain="[]" context="{'group_by':'account_manager'}" />
+                    <filter string="Salesperson" name="group_by_user_id" domain="[]" context="{'group_by':'user_id'}" />
+                    <filter string="Sale/Blanket Order" name="group_by_origin" domain="[]" context="{'group_by':'origin'}" />
+                    <filter string="Sale Order" name="group_by_sale_order" domain="[]" context="{'group_by':'order_id'}" />
+                    <filter string="Blanket Order" name="group_by_sale_blanket_order" domain="[]" context="{'group_by':'blanket_order_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+</odoo>

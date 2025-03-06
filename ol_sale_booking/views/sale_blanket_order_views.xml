@@ -1,0 +1,33 @@
+<odoo>
+
+    <!-- Form View -->
+    <record id="ol_sale_booking_view_blanket_order_form" model="ir.ui.view">
+        <field name="name">ol_sale_booking.view_blanket_order_form</field>
+        <field name="model">sale.blanket.order</field>
+        <field name="inherit_id" ref="sale_blanket_order.view_blanket_order_form" />
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
+            <xpath expr="/form[1]/sheet[1]/notebook[1]/page[last()]" position="after">
+                <page string="Bookings">
+                    <field name="booking_ids" nolabel="1" readonly="1">
+                        <tree string="Bookings" default_order="id desc">
+                            <field name="id" optional="show" />
+                            <field name="create_date" />
+                            <field name="sale_blanket_order_currency_id" invisible="1" />
+                            <field name="amount" optional="show" />
+                            <field name="amount_untaxed" optional="show" />
+                            <field name="order_amount_total" optional="show" />
+                            <field name="order_amount_total_untaxed" optional="show" />
+                            <field name="tax_amount" optional="show" />
+                            <field name="order_prev_amount_total" optional="hide" />
+                            <field name="order_prev_amount_total_untaxed" optional="hide" />
+                            <field name="prev_tax_amount" optional="hide" />
+                            <field name="order_detailed_state" optional="hide" />
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
