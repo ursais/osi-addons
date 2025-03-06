@@ -82,8 +82,8 @@ class SaleBlanketOrder(models.Model):
         return res
 
     @api.depends(
-        "line_ids.remaining_price_total",
-        "line_ids.remaining_uom_qty",
+        "remaining_amount_untaxed",
+        "remaining_amount_total",
         "remaining_amount_tax",
     )
     def _amount_all(self):
