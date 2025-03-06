@@ -1,1 +1,1 @@
-from . import helpdesk_ticket_import_sale
+from . import sale_blanket_order_wizard
