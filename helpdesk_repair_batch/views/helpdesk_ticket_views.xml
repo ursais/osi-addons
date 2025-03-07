@@ -24,10 +24,10 @@
                         context="{'default_ticket_id': active_id}"
                     />
                     <group name="repair_batches" string="Repair Batches">
-                        <field nolabel="1" colspan="4" name="repair_batch_ids" />
+                        <field nolabel="1" colspan="2" name="repair_batch_ids" />
                     </group>
                     <group name="repair_orders" string="Repair Orders">
-                        <field nolabel="1" colspan="4" name="repair_ids" >
+                        <field nolabel="1" colspan="2" name="repair_ids" >
                             <tree string="Repairs order" multi_edit="1" sample="1" decoration-info="state == 'draft'">
                                 <field name="company_id" column_invisible="True"/>
                                 <field name="priority" optional="show" widget="priority" nolabel="1"/>
