@@ -1,0 +1,15 @@
+<odoo>
+
+    <record id="ol_helpdesk_repair_view_repair_order_form" model="ir.ui.view">
+		<field name="name">helpdesk.ticket.repair.order.form</field>
+        <field name="model">repair.order</field>
+        <field name="inherit_id" ref="repair.view_repair_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="ticket_id" />
+                <field name="repair_batch_id" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
