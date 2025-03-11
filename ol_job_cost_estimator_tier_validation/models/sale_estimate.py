@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import models
+from odoo import api, models
 
 
 class SaleEstimateJob(models.Model):
@@ -26,3 +26,14 @@ class SaleEstimateJob(models.Model):
     ]
     _cancel_state = ["cancel"]
     _tier_validation_manual_config = False
+
+    # METHODS #####
+
+    @api.model
+    def _get_under_validation_exceptions(self):
+        res = super()._get_under_validation_exceptions()
+        res.append("quotation_id")
+        res.append("state")
+        return res
+
+    # END #########
