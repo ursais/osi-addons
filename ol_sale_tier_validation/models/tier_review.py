@@ -1,7 +1,12 @@
+# Import Odoo libs
 from odoo import _, models
 
 
 class TierReview(models.Model):
+    """
+    Inherit tier reviews to change state from/to definitions for Tier Validation Usage
+    """
+
     _inherit = "tier.review"
 
     def write(self, vals):
