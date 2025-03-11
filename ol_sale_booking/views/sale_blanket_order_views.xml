@@ -12,16 +12,17 @@
                     <field name="booking_ids" nolabel="1" readonly="1">
                         <tree string="Bookings" default_order="id desc">
                             <field name="id" optional="show" />
+                            <field name="currency_id" column_invisible="1" />
                             <field name="create_date" />
                             <field name="sale_blanket_order_currency_id" invisible="1" />
-                            <field name="amount" optional="show" />
-                            <field name="amount_untaxed" optional="show" />
-                            <field name="order_amount_total" optional="show" />
-                            <field name="order_amount_total_untaxed" optional="show" />
-                            <field name="tax_amount" optional="show" />
-                            <field name="order_prev_amount_total" optional="hide" />
-                            <field name="order_prev_amount_total_untaxed" optional="hide" />
-                            <field name="prev_tax_amount" optional="hide" />
+                            <field name="amount" sum="Booking Amount" optional="show" />
+                            <field name="amount_untaxed" sum="Booking Amount Untaxed" optional="show" />
+                            <field name="order_amount_total" sum="Total Amount" optional="show" />
+                            <field name="order_amount_total_untaxed" sum="Untaxed Amount" optional="show" />
+                            <field name="tax_amount" sum="Tax Amount" optional="show" />
+                            <field name="order_prev_amount_total" sum="Previous Total Amount" optional="hide" />
+                            <field name="order_prev_amount_total_untaxed" sum="Previous Total Amount Untaxed" optional="hide" />
+                            <field name="prev_tax_amount" sum="Previous Tax Amount" optional="hide" />
                             <field name="order_detailed_state" optional="hide" />
                         </tree>
                     </field>
