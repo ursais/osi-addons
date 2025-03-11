@@ -133,9 +133,9 @@ class RmaSupplier(models.Model):
     )
     deliver_status = fields.Selection(
         [
-            ("pending", "Not Received"),
-            ("partial", "Partially Received"),
-            ("full", "Fully Received"),
+            ("pending", "Not Delivered"),
+            ("partial", "Partially Delivered"),
+            ("full", "Fully Delivered"),
         ],
         string="Deliver Status",
         compute="_compute_receipt_deliver_status",

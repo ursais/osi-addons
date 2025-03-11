@@ -93,7 +93,11 @@ class TierDefinition(models.Model):
         help="If set, reviewers will be notified by email when a reviews related "
         "to this definition are restarted.",
     )
-    has_comment = fields.Boolean(string="Comment", default=False)
+    has_comment = fields.Boolean(
+        string="Comment",
+        default=False,
+        help="If set, Allow the reviewer to leave a comment on the review.",
+    )
     notify_reminder_delay = fields.Integer(
         string="Send reminder message on pending reviews",
         help="Number of days after which a message must be posted to remind about "
