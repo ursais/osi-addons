@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class RepairOrder(models.Model):
@@ -13,9 +13,24 @@ class RepairOrder(models.Model):
         string="Component History",
         related="lot_id.component_history_ids",
     )
+    show_invisible = fields.Boolean(
+        string="Show All History",
+        default=True,
+        help="By default, only 'current' components are shown so if a component was removed the removed line will show and the original is hidden. Click to see the full history.",
+    )
+    visible_component_history_ids = fields.One2many(
+        comodel_name="component.history",
+        inverse_name="lot_id",
+        string="Visible Component History",
+        compute="_compute_visible_component_history_ids",
+    )
 
     # END #######
     # METHODS #######
+
+    def toggle_show_invisible(self):
+        """Toggles the visibility of invisible component history records."""
+        self.show_invisible = not self.show_invisible
 
     def action_repair_done(self):
         res = super().action_repair_done()
@@ -39,5 +54,15 @@ class RepairOrder(models.Model):
                         }
                     )
         return res
+
+    @api.depends("show_invisible", "component_history_ids")
+    def _compute_visible_component_history_ids(self):
+        for lot in self:
+            if lot.show_invisible:
+                lot.visible_component_history_ids = lot.component_history_ids
+            else:
+                lot.visible_component_history_ids = lot.component_history_ids.filtered(
+                    lambda r: not r.invisible
+                )
 
     # END #######

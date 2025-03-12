@@ -6,6 +6,7 @@
         <field name="model">component.history</field>
         <field name="arch" type="xml">
             <tree decoration-danger="change_type in ('remove', 'recycle')" decoration-success="change_type == 'add'">
+                <field name="invisible" />
                 <field name="lot_id" />
                 <field name="change_type" />
                 <field name="product_id" />
@@ -30,6 +31,7 @@
                         <field name="qty_changed" />
                         <field name="change_type" />
                         <field name="source_id" />
+                        <field name="invisible" />
                         <field name="component_lot_ids" widget="many2many_tags" />
                     </group>
                 </sheet>
@@ -47,6 +49,8 @@
                 <field name="component_lot_ids" />
                 <field name="product_id" />
                 <field name="source_id" />
+                <filter name="visible" string="Visible" domain="[['invisible', '=', False]]" />
+                <filter name="invisible" string="Invisible" domain="[['invisible', '=', True]]" />
                 <group expand="0" string="Group By">
                     <filter string="Serial Number" name="group_by_lot_id" domain="[]" context="{'group_by':'lot_id'}" />
                 </group>
@@ -59,7 +63,7 @@
         <field name="name">Component History</field>
         <field name="res_model">component.history</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{'search_default_group_by_lot_id': True}</field>
+        <field name="context">{'search_default_visible': True, 'search_default_group_by_lot_id': True}</field>
     </record>
 
     <menuitem
