@@ -1,5 +1,5 @@
 <odoo>
-    <!-- Modification of Partner - Adding Tab for Idenification Numbers -->
+    <!-- Modification of Partner - Adding Tab for Identification Numbers -->
     <record model="ir.ui.view" id="view_partner_form">
         <field name="name">res.partner.form.id_number</field>
         <field name="model">res.partner</field>
