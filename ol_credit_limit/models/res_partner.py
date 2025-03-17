@@ -125,8 +125,8 @@ class ResPartner(models.Model):
         "invoice_ids.state",
     )
     def _compute_open_so_balance(self):
-        self.filtered(lambda l: not l.credit_limit).open_so_balance = 0
-        for partner in self.filtered(lambda l: l.credit_limit):
+        # self.filtered(lambda l: not l.credit_limit).open_so_balance = 0
+        for partner in self:
             # Use raw SQL query to get all child IDs efficiently
             self.env.cr.execute(
                 """
@@ -253,12 +253,14 @@ class ResPartner(models.Model):
         "rollup_partner_ids",
         "invoice_ids.line_ids.account_id",
         "invoice_ids.line_ids.balance",
+        "invoice_ids.payment_ids",
+        "invoice_ids.payment_state",
     )
     def _compute_customer_deposit_balance(self):
         deposit_accounts = self._get_deposit_accounts()
         for partner in self:
-            _logger.info("_compute_customer_deposit_balance %s", partner.id)
-            partners_to_include = tuple(partner.rollup_partner_ids.ids + [partner.id])
+            _logger.info("_compute_customer_deposit_balance %s", partner._origin.id)
+            partners_to_include = tuple(partner.rollup_partner_ids.ids + [partner._origin.id])
             # if not partners_to_include or not deposit_accounts:
             #     partner.customer_deposit_balance = 0.0
             #     continue
@@ -268,12 +270,18 @@ class ResPartner(models.Model):
                 FROM account_move_line aml
                 WHERE aml.partner_id IN %s
                 AND aml.account_id IN %s
+                -- AND aml.full_reconcile_id IS NOT NULL
                 -- AND aml.balance < 0
+            """
+
+            query2 = """
+                SELECT SUM(ap.amount) FROM account_payment AS ap WHERE ap.partner_id IN %s
             """
             
 
             self.env.cr.execute(query, (partners_to_include, deposit_accounts))
             result = self.env.cr.fetchone()[0] or 0.0
+            print("result========result",result)
             partner.customer_deposit_balance = result
 
     @api.depends(
@@ -287,8 +295,8 @@ class ResPartner(models.Model):
     )
     def _compute_open_bo_balance(self):
         for partner in self:
-            _logger.info("_compute_open_bo_balance %s", partner.id)
-            partners_to_include = tuple(partner.rollup_partner_ids.ids + [partner.id])
+            _logger.info("_compute_open_bo_balance %s", partner._origin.id)
+            partners_to_include = tuple(partner.rollup_partner_ids.ids + [ partner._origin.id])
             query = """
                 SELECT SUM(sol.product_uom_qty * sol.price_unit)
                 FROM sale_order_line sol
@@ -298,7 +306,7 @@ class ResPartner(models.Model):
                 AND so.state NOT IN ('cancel', 'done')
                 AND sol.product_uom_qty > 0
             """
-
+            print("#######partners_to_include#######",partners_to_include)
             self.env.cr.execute(query, (partners_to_include,))
             result = self.env.cr.fetchone()[0] or 0.0
             partner.open_bo_balance = result
