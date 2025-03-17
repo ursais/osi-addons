@@ -1491,7 +1491,7 @@ class ProductConfigSession(models.Model):
         # in values, but it might have more attributes!  These are NOT
         # matches
         more_attrs = products.filtered(
-            lambda p: len(p.product_template_attribute_value_ids) != len(value_ids)
+            lambda p: len(p.product_template_attribute_value_ids.mapped("attribute_line_id").filtered(lambda l: l.active)) != len(value_ids)
         )
         products -= more_attrs
         return products
