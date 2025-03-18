@@ -1,0 +1,13 @@
+<odoo noupdate="1">
+
+    <record id="maxmind_client_id" model="ir.config_parameter">
+        <field name="key">ol_fraud_detection.maxmind_client_id</field>
+        <field name="value">41765</field>
+    </record>
+
+    <record id="maxmind_key" model="ir.config_parameter">
+        <field name="key">ol_fraud_detection.maxmind_key</field>
+        <field name="value">changeme</field>
+    </record>
+
+</odoo>

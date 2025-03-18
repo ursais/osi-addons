@@ -1,0 +1,27 @@
+<odoo>
+
+    <!-- Add check_risk field to payment method form view -->
+    <record id="payment_method_fraud_check_form_view" model="ir.ui.view">
+        <field name="name">payment.method.fraud.check.form</field>
+        <field name="model">payment.method</field>
+        <field name="inherit_id" ref="payment.payment_method_form" />
+        <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="check_risk" />
+            </field>
+        </field>
+    </record>
+
+    <!-- Add check_risk field to payment method tree view -->
+    <record id="payment_method_fraud_check_tree_view" model="ir.ui.view">
+        <field name="name">payment.method.fraud.check.tree</field>
+        <field name="model">payment.method</field>
+        <field name="inherit_id" ref="payment.payment_method_tree" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="check_risk" />
+            </field>
+        </field>
+    </record>
+
+</odoo>
