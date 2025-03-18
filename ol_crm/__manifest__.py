@@ -19,5 +19,6 @@
         "data/crm_stage_data.xml",
         "views/crm_lead_views.xml",
         "views/crm_stage_views.xml",
+        "views/res_partner_views.xml",
     ],
 }
