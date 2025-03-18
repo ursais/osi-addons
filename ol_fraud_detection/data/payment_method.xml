@@ -1,0 +1,13 @@
+<odoo>
+
+    <!-- Set check_risk for PayPal payment method -->
+    <record id="payment.payment_method_paypal" model="payment.method">
+        <field name="check_risk" eval="True" />
+    </record>
+
+    <!-- Set check_risk for Card payment method -->
+    <record id="payment.payment_method_card" model="payment.method">
+        <field name="check_risk" eval="True" />
+    </record>
+
+</odoo>
