@@ -1,0 +1,18 @@
+<odoo>
+
+    <record id="res_config_settings_view_form_inherit_ol_sale_email" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='sale_management']" position="inside">
+                <block title="Backorder Email Setting" id="sale_backorder_email">
+                    <setting id="enable_backorder_email" string="Backorder Email" help="Enable the backorder email functionality on sale orders. If enabled then the backorder email will send during confirmation unless user disables it via the smart button.">
+                        <field name="enable_backorder_email" class="oe_inline"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

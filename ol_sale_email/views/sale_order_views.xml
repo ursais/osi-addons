@@ -7,11 +7,13 @@
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_view_invoice']" position="before">
                 <field name="to_send_backorder_email" invisible="1" />
+                <field name="enable_backorder_email" invisible="1" />
                 <button
                     type="object"
                     name="toggle_backorder_email"
                     class="oe_stat_button"
                     icon="fa-envelope"
+                    invisible="not enable_backorder_email"
                 >
                     <div class="o_field_widget o_stat_info">
                         <span

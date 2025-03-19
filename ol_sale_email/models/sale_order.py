@@ -17,12 +17,32 @@ class SaleOrder(models.Model):
     # COLUMNS #####
 
     to_send_backorder_email = fields.Boolean(
-        string="Send backorder email", default=True, copy=False
+        string="Send backorder email",
+        default=True,
+        copy=False,
+    )
+    enable_backorder_email = fields.Boolean(
+        string="Backorder Email Enabled",
+        compute="_compute_enable_backorder_email",
     )
 
     # END #########
 
     # METHODS #########
+
+    def _compute_enable_backorder_email(self):
+        """
+        Helper method to determine whether to show/hide the email smart button.
+        Fetch the global setting for enabling backorder emails.
+        """
+        param = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("sale.enable_backorder_email")
+            == "True"
+        )
+        for order in self:
+            order.enable_backorder_email = param
 
     def toggle_backorder_email(self):
         """
@@ -68,7 +88,9 @@ class SaleOrder(models.Model):
 
         self.ensure_one()
 
-        if not self.to_send_backorder_email:
+        if not self.to_send_backorder_email or not self.env[
+            "ir.config_parameter"
+        ].sudo().get_param("sale.enable_backorder_email"):
             return False
 
         self.send_backorder_email()
