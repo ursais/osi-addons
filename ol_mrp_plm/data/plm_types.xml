@@ -1,12 +1,12 @@
 <odoo noupdate="1">
 
     <record id="new_sku" model="mrp.eco.type">
-        <field name="name">New SKU</field>
+        <field name="name">New SKU Enablement</field>
         <field name="sequence">1</field>
     </record>
 
     <record id="new_system" model="mrp.eco.type">
-        <field name="name">New System</field>
+        <field name="name">New System Enablement</field>
         <field name="sequence">2</field>
     </record>
 
@@ -35,4 +35,13 @@
         <field name="sequence">7</field>
     </record>
 
+    <record id="bom_revision" model="mrp.eco.type">
+        <field name="name">BoM Revision</field>
+        <field name="sequence">8</field>
+    </record>
+
+    <record id="tech_exception" model="mrp.eco.type">
+        <field name="name">Tech Exception</field>
+        <field name="sequence">9</field> 
+    </record>
 </odoo>
