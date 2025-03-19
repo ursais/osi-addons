@@ -89,6 +89,14 @@ class ProductTemplate(models.Model):
         compute="_compute_last_purchase_price_converted",
         help="Product cost on most recent confirmed purchase",
     )
+    price_review_count = fields.Integer(
+        string="# Price Reviews",
+        compute="_compute_price_review",
+    )
+    can_create_price_review = fields.Boolean(
+        string="Can Create Price Review",
+        compute="_compute_can_create_price_review",
+    )
 
     # END ##########
     # METHODS ##########
@@ -222,6 +230,21 @@ class ProductTemplate(models.Model):
                 elif not rec.enable_margin_threshold:
                     self._create_or_update_price_review(rec)
 
+    def _compute_price_review(self):
+        """Computes the number of price reviews to show in the smart button."""
+        for rec in self:
+            rec.price_review_count = self.env["product.price.review"].search_count(
+                [("product_id", "in", rec.product_variant_ids.ids)]
+            )
+
+    def _compute_can_create_price_review(self):
+        """Checks if the product template can createa price review."""
+        for rec in self:
+            # check if it's standard product and has a single variant
+            rec.can_create_price_review = (
+                not rec.config_ok and len(rec.product_variant_ids) == 1
+            )
+
     @api.model
     def _create_or_update_price_review(self, rec):
         """Helper method to update or create a new price review."""
@@ -258,5 +281,20 @@ class ProductTemplate(models.Model):
             if "margin_min" in vals or "margin_max" in vals:
                 rec._compute_last_purchase_margin(from_threshold=True)
         return res
+
+    def action_view_price_reviews(self):
+        """Action to open related price reviews from smart button."""
+        action = self.product_variant_id.action_view_price_reviews()
+        action["domain"] = [("product_id", "in", self.product_variant_ids.ids)]
+        ctx = action.get('context')
+        ctx.update({'create': False})
+        action['context'] = ctx
+        return action
+
+    def action_price_review(self):
+        """Action for the Price Review button, opens an existing
+        review (Draft/In Progress), otherwise opens a new one."""
+        return self.product_variant_id.action_price_review()
+
 
     # END ##########

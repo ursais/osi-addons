@@ -29,9 +29,19 @@
         <field name="priority">100</field>
         <field name="inherit_id" ref="product.product_template_form_view" />
         <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" name="action_view_price_reviews" type="object" groups="ol_product_pricing_review.group_pricing_review_user" 
+                    invisible="detailed_type not in ['product', 'consu']" icon="fa-flask">
+                    <field string="Price Reviews" name="price_review_count" widget="statinfo" />
+                </button>
+            </div>
             <field name="product_variant_count" position="after">
                 <field name="has_configurable_attributes" invisible="1" />
+                <field name="can_create_price_review" invisible="1"/>
             </field>
+            <xpath expr="//button[@name='action_open_label_layout']" position="after">
+                <button string="Price Review" type="object" name="action_price_review" invisible="not can_create_price_review" />
+            </xpath>
             <xpath expr="//page[@name='general_information']" position="after">
                 <page string="Pricing" name="pricing">
                     <group>
