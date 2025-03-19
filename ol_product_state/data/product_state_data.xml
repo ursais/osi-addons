@@ -95,6 +95,11 @@
         <field name="approved_ship" eval="False" />
     </record>
 
+    <record id="product_tech_exception" model="product.state">
+        <field name="code">TE</field>
+        <field name="name">Tech Exception</field>
+    </record>
+
     <!-- Stage Server Action: Allows for prototype products to change initial stages which don't require PLM. -->
     <record id="action_move_initial_stage" model="ir.actions.server">
         <field name="name">Change State to New/Development</field>
