@@ -20,6 +20,7 @@
         "views/classification.xml",
         "views/mrp.xml",
         "views/product.xml",
+        "views/product_attribute_view.xml"
     ],
     # only loaded in demonstration mode
     "demo": [
