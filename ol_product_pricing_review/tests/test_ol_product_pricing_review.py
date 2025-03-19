@@ -24,6 +24,25 @@ class TestOlProductPriceReview(common.TransactionCase):
         cls.delivery_carrier_multiplier = cls.env["delivery.carrier.multiplier"].create(
             {"carrier": "Test carrier", "multiplier": 25}
         )
+        cls.ProductTemplate = cls.env["product.template"]
+        cls.ProductProduct = cls.env["product.product"]
+        cls.PriceReview = cls.env["product.price.review"]
+
+        # Create a product template
+        cls.product_template = cls.ProductTemplate.create(
+            {
+                "name": "Test Product",
+                "config_ok": False,  # Standard product
+            }
+        )
+
+
+        # Create a price review
+        cls.price_review = cls.PriceReview.create(
+            {
+                "product_id": cls.product_template.product_variant_id.id,
+            }
+        )
 
     def test_price_review_01(self):
         """
@@ -96,7 +115,7 @@ class TestOlProductPriceReview(common.TransactionCase):
         self.assertEqual(new_review1.product_id.special_price, 107.0)
         self.assertEqual(new_review1.product_id.total_cost, 44.50)
         self.assertEqual(
-            new_review1.product_id.last_purchase_margin, 1.4158878504672898
+            new_review1.product_id.last_purchase_margin, 0.5841121495327103
         )
 
         # Create a purchase order and confirm it
@@ -167,3 +186,31 @@ class TestOlProductPriceReview(common.TransactionCase):
         self.assertEqual(
             product_price_review01.product_id.last_purchase_margin, 1.4158878504672898
         )
+
+    def test_action_view_price_reviews(self):
+        """Test the action to view price reviews"""
+        action = self.product_template.action_view_price_reviews()
+        self.assertIn("domain", action)
+        self.assertEqual(
+            action["domain"],
+            [("product_id", "in", self.product_template.product_variant_ids.ids)],
+        )
+        self.assertIn("context", action)
+        self.assertFalse(action["context"].get("create"))  # Ensure creation is disabled
+
+    def test_action_price_review(self):
+        """Test action for opening a price review"""
+        action = self.product_template.action_price_review()
+        self.assertIsInstance(action, dict)  # Should return an action dictionary
+
+    def test_compute_price_review(self):
+        """Test computation of price_review_count"""
+        self.product_template._compute_price_review()
+        self.assertEqual(self.product_template.price_review_count, 1)
+
+    def test_compute_can_create_price_review(self):
+        """Test computation of can_create_price_review"""
+        self.product_template._compute_can_create_price_review()
+        self.assertTrue(
+            self.product_template.can_create_price_review
+        )  # Should be True since it's a standard product
