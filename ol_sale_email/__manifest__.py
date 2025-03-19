@@ -18,5 +18,6 @@
         "data/sale_exception.xml",
         "views/product_template_views.xml",
         "views/sale_order_views.xml",
+        "views/res_config_settings_views.xml",
     ],
 }
