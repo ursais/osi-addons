@@ -63,6 +63,7 @@
         "data/res_users_role.xml",
         "data/warehouse_data.xml",
         "data/m2x_create_edit_option_data.xml",
+        "data/stock.location.csv",
         "security/res_groups.xml",
         "views/res_company.xml",
         "views/stock_picking.xml",
