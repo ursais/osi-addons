@@ -13,6 +13,7 @@
         "ol_base",
         "account",
         "sale",
+        "account_check_printing",
     ],
     # Data Loaded.
     "data": [
