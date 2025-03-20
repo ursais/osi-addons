@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="action_inventory_valuation_ondate" model="ir.actions.report">
+        <field name="name">Stock Valuation Report</field>
+        <field name="model">stock.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field
+            name="report_name"
+        >osi_inventory_by_date.inventory_valuation_ondate_report</field>
+        <field
+            name="report_file"
+        >osi_inventory_by_date.inventory_valuation_ondate_report</field>
+        <field name="print_report_name">'Follow-up of - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="stock.model_stock_move" />
+        <field name="binding_type">report</field>
+    </record>
+</odoo>
