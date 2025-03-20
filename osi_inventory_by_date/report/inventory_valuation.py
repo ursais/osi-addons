@@ -177,8 +177,8 @@ class InventoryValuationCategory(models.AbstractModel):
                     LEFT JOIN account_account acc2 on (acc2.id =
                         substr(irp2.value_reference,strpos(irp2.value_reference, ',') + 1)::int)
                     LEFT JOIN ir_property cost on (cost.res_id =
-                        concat('product.product,', pp.id) AND
-                        cost.name='standard_price')
+                        concat('product.product,', pp.id))
+                        -- AND cost.name='standard_price')
                     WHERE  m.date > %s AND m.date < %s AND
                         (m.location_id in %s) AND (m.location_dest_id in %s) AND
                         m.state='done' AND pp.active=True AND
@@ -217,8 +217,8 @@ class InventoryValuationCategory(models.AbstractModel):
                     LEFT JOIN account_account acc2 on (acc2.id =
                         substr(irp2.value_reference, strpos(irp2.value_reference, ',') + 1)::int)
                     LEFT JOIN ir_property cost on (cost.res_id =
-                        concat('product.product,', pp.id) AND
-                        cost.name='standard_price')
+                        concat('product.product,', pp.id))
+                        -- AND cost.name='standard_price')
                     WHERE  m.date > %s AND m.date < %s AND (m.location_id in %s) AND
                         (m.location_dest_id not in %s) AND m.state='done' AND
                         pp.active=True AND pt.type = 'product' AND
@@ -257,8 +257,8 @@ class InventoryValuationCategory(models.AbstractModel):
                     LEFT JOIN account_account acc2 on (acc2.id =
                         substr(irp2.value_reference, strpos(irp2.value_reference, ',') + 1)::int)
                     LEFT JOIN ir_property cost on (cost.res_id =
-                        concat('product.product,', pp.id) AND
-                        cost.name='standard_price')
+                        concat('product.product,', pp.id))
+                        -- AND cost.name='standard_price')
                     WHERE  m.date > %s AND m.date < %s AND
                         (m.location_dest_id in %s) AND
                         (m.location_id not in %s) AND m.state='done' AND
@@ -298,8 +298,8 @@ class InventoryValuationCategory(models.AbstractModel):
                     LEFT JOIN account_account acc2 on (acc2.id =
                         substr(irp2.value_reference, strpos(irp2.value_reference, ',') + 1)::int)
                     LEFT JOIN ir_property cost on (cost.res_id =
-                        concat('product.product,', pp.id) AND
-                        cost.name='standard_price')
+                        concat('product.product,', pp.id))
+                        -- AND cost.name='standard_price')
                     WHERE  m.date > %s AND m.date < %s AND
                         (m.location_dest_id in %s) AND (m.location_id in %s) AND
                         m.state='done' AND pp.active=True AND
