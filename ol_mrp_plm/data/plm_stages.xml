@@ -3,6 +3,9 @@
     <record id="onl_new_pm" model="mrp.eco.stage">
         <field name="name">New-PM</field>
         <field name="type_ids" eval="[(6,0,[ref('new_sku')])]" />
+        <field name="sequence">1</field>
+        <field name="allow_bom_edits">True</field>
+        <field name="product_state_id" ref="product_state.product_state_draft"/>
     </record>
 
     <record id="product_state_procurement" model="mrp.eco.stage">
@@ -10,19 +13,22 @@
         <field name="allow_bom_edits">True</field>
         <field name="product_state_id" ref="product_state.product_state_draft"/>
         <field name="allow_bom_edits">True</field>
+        <field name="sequence">2</field>
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.new_sku')])]" />
     </record>
 
     <record id="product_state_engi_assessment" model="mrp.eco.stage">
         <field name="name">Engineering Assessment</field>
-        <field name="is_approval_stage">True</field>
+        <field name="is_approval_stage">False</field>
         <field name="product_state_id" ref="product_state.product_state_draft"/>
         <field name="allow_bom_edits">True</field>
+        <field name="sequence">3</field>
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.new_sku')])]" />
     </record>
 
     <record id="product_state_ops_enablement" model="mrp.eco.stage">
         <field name="name">OPS Enablement</field>
+        <field name="sequence">4</field>
         <field name="product_state_id" ref="ol_product_state.product_state_pre_order"/>
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.new_sku')])]" />
     </record>
@@ -31,118 +37,124 @@
         <field name="name">Final PM Review</field>
         <field name="product_state_id" ref="ol_product_state.product_state_pre_order"/>
         <field name="allow_apply_change">True</field>
+        <field name="sequence">5</field>
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.new_sku')])]" />
     </record>
 
     <record id="product_state_enablement2" model="mrp.eco.stage">
         <field name="name">Enablement</field>
-        <field name="is_approval_stage">True</field>
+        <field name="is_approval_stage">False</field>
         <field name="product_state_id" ref="product_state.product_state_draft"/>
+        <field name="sequence">9</field>
+        <field name="allow_bom_edits">True</field>
         <field name="allow_apply_change">True</field>
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.operations_new_consumable')])]" />
     </record>
 
     <record id="product_state_evt" model="mrp.eco.stage">
         <field name="name">EVT</field>
-        <field name="is_approval_stage">True</field>
+        <field name="is_approval_stage">False</field>
         <field name="product_state_id" ref="product_state.product_state_draft"/>
         <field name="allow_bom_edits">True</field>
+        <field name="sequence">6</field>
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.new_system')])]" />
     </record>
 
     <record id="product_state_dvt" model="mrp.eco.stage">
         <field name="name">DVT</field>
-        <field name="is_approval_stage">True</field>
+        <field name="is_approval_stage">False</field>
         <field name="product_state_id" ref="product_state.product_state_draft"/>
         <field name="allow_bom_edits">True</field>
+        <field name="sequence">7</field>
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.new_system')])]" />
     </record>
 
     <record id="product_state_pvt" model="mrp.eco.stage">
         <field name="name">PVT</field>
-        <field name="is_approval_stage">True</field>
+        <field name="is_approval_stage">False</field>
         <field name="product_state_id" ref="ol_product_state.product_state_pre_order"/>
         <field name="allow_apply_change">True</field>
+        <field name="sequence">8</field>
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.new_system')])]" />
     </record>
 
     <record id="product_state_pre_eco" model="mrp.eco.stage">
         <field name="name">Pre-ECO</field>
-        <field name="is_approval_stage">True</field>
-        <field name="product_state_id" ref="ol_product_state.product_state_active"/>
+        <field name="is_approval_stage">False</field>
+        <field name="sequence">10</field>
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.engineering_change_order')])]" />
     </record>
 
     <record id="product_state_eco_approval" model="mrp.eco.stage">
         <field name="name">ECO Approval</field>
-        <field name="is_approval_stage">True</field>
-        <field name="product_state_id" ref="ol_product_state.product_state_active"/>
+        <field name="is_approval_stage">False</field>
+        <field name="allow_apply_change">True</field>
+        <field name="sequence">11</field>
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.engineering_change_order')])]" />
     </record>
 
     <record id="product_state_implementation" model="mrp.eco.stage">
         <field name="name">Implementation</field>
-        <field name="is_approval_stage">True</field>
+        <field name="is_approval_stage">False</field>
         <field name="product_state_id" ref="ol_product_state.product_state_pre_order"/>
-        <field name="allow_apply_change">True</field>
+        <field name="final_stage">True</field>
+        <field name="sequence">12</field>
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.engineering_change_order')])]" />
     </record>
 
     <record id="product_state_pre_pcn" model="mrp.eco.stage">
         <field name="name">Pre-PCN</field>
-        <field name="is_approval_stage">True</field>
-        <field name="product_state_id" ref="ol_product_state.product_state_active"/>
+        <field name="is_approval_stage">False</field>
+        <field name="sequence">13</field>
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.product_change_notifications')])]" />
     </record>
 
     <record id="product_state_pcn_approval" model="mrp.eco.stage">
         <field name="name">PCN Approval</field>
-        <field name="is_approval_stage">True</field>
-        <field name="product_state_id" ref="ol_product_state.product_state_pre_order"/>
+        <field name="is_approval_stage">False</field>
         <field name="allow_apply_change">True</field>
+        <field name="sequence">14</field>
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.product_change_notifications')])]" />
     </record>
 
     <record id="product_state_discontinuation_approval" model="mrp.eco.stage">
         <field name="name">Discontinuation Approval</field>
-        <field name="is_approval_stage">True</field>
+        <field name="is_approval_stage">False</field>
         <field name="product_state_id" ref="ol_product_state.product_state_active"/>
+        <field name="sequence">15</field>
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.end_of_sale'), ref('ol_mrp_plm.end_of_life')])]" />
     </record>
 
     <record id="product_state_eos_approval" model="mrp.eco.stage">
         <field name="name">EOS Approval</field>
-        <field name="is_approval_stage">True</field>
+        <field name="is_approval_stage">False</field>
         <field name="product_state_id" ref="ol_product_state.product_state_discontinued"/>
         <field name="allow_apply_change">True</field>
+        <field name="sequence">16</field>
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.end_of_sale')])]" />
     </record>
 
     <record id="product_state_eol_approval" model="mrp.eco.stage">
         <field name="name">EOL Approval</field>
-        <field name="is_approval_stage">True</field>
+        <field name="is_approval_stage">False</field>
         <field name="product_state_id" ref="ol_product_state.product_state_discontinued"/>
         <field name="allow_apply_change">True</field>
+        <field name="sequence">17</field>
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.end_of_life')])]" />
-    </record>
-
-    <record id="product_state_end_of_life" model="mrp.eco.stage">
-        <field name="name">Done</field>
-        <field name="final_stage">True</field>
-        <field name="product_state_id" ref="ol_product_state.product_state_discontinued"/>
-        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.end_of_sale'), ref('ol_mrp_plm.end_of_life')])]" />
     </record>
 
     <record id="product_pm_approval" model="mrp.eco.stage">
         <field name="name">PM Approval</field>
         <field name="allow_bom_edits">True</field>
         <field name="allow_apply_change">True</field>
+        <field name="sequence">18</field>
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.bom_revision')])]" />
     </record>
 
     <record id="product_techex_initiation" model="mrp.eco.stage">
         <field name="name">TechEx Initiation</field>
         <field name="allow_apply_change">True</field>
+        <field name="sequence">19</field>
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.tech_exception')])]" />
     </record>
 
@@ -150,25 +162,37 @@
         <field name="name">TechEx Removal</field>
         <field name="final_stage">True</field>
         <field name="cancel_stage">True</field>
+        <field name="sequence">20</field>
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.tech_exception')])]" />
-    </record>
-
-    <record id="bom_revision_done" model="mrp.eco.stage">
-        <field name="name">Done</field>
-        <field name="final_stage">True</field>
-        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.bom_revision')])]" />
     </record>
 
     <record id="product_state_done" model="mrp.eco.stage">
         <field name="name">Done</field>
         <field name="final_stage">True</field>
+        <field name="sequence">21</field>
         <field name="product_state_id" ref="ol_product_state.product_state_active"/>
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.new_sku'), ref('ol_mrp_plm.new_system'), ref('ol_mrp_plm.product_change_notifications'), ref('ol_mrp_plm.operations_new_consumable')])]" />
+    </record>
+
+    <record id="product_state_end_of_life" model="mrp.eco.stage">
+        <field name="name">Done</field>
+        <field name="final_stage">True</field>
+        <field name="product_state_id" ref="ol_product_state.product_state_discontinued"/>
+        <field name="sequence">22</field>
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.end_of_sale'), ref('ol_mrp_plm.end_of_life')])]" />
+    </record>
+
+    <record id="bom_revision_done" model="mrp.eco.stage">
+        <field name="name">Done</field>
+        <field name="final_stage">True</field>
+        <field name="sequence">23</field>
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.bom_revision')])]" />
     </record>
 
     <record id="product_state_cancel" model="mrp.eco.stage">
         <field name="name">Cancel</field>
         <field name="cancel_stage">True</field>
+        <field name="sequence">24</field>
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.new_sku'), ref('ol_mrp_plm.new_system'), ref('ol_mrp_plm.engineering_change_order'), ref('ol_mrp_plm.product_change_notifications'), ref('ol_mrp_plm.operations_new_consumable'), ref('ol_mrp_plm.end_of_sale'), ref('ol_mrp_plm.end_of_life'), ref('ol_mrp_plm.bom_revision')])]" />
     </record>
 
