@@ -127,6 +127,8 @@ class InventoryValuationCategory(models.AbstractModel):
         location_id = data["form"] and data["form"].get("location_id") or False
         if location_id:
             locations = [location_id]
+        elif not location_id and not data["form"].get("warehouse_ids", []):
+            locations = self.env["stock.location"].sudo().search([("company_id", "=", self.company_id.id or self.env.company.id), ("usage", "in", ("internal", "transit"))]).ids
         else:
             locations = self._find_locations(warehouse_ids)
 
@@ -143,6 +145,7 @@ class InventoryValuationCategory(models.AbstractModel):
                 ELSE code2
                 END as account,
                 coalesce(sum(qty), 0.0) as qty,
+                lot_name,
                 coalesce(sum(value), 0.0) as value,
                 CASE
                 WHEN coalesce(sum(qty),0.0) = 0.0 THEN 0.0
@@ -159,7 +162,8 @@ class InventoryValuationCategory(models.AbstractModel):
                         coalesce(sum(-abs(m.qty_done*uom2.factor/uom.factor))::
                         decimal, 0.0) AS qty,
                         coalesce(sum(-abs(m.qty_done*uom2.factor/uom.factor) *
-                        cost.value_float)::decimal, 0.0) AS value
+                        cost.value_float)::decimal, 0.0) AS value,
+                        CASE WHEN pt.tracking = 'none' THEN NULL ELSE slot.name END AS lot_name
                     FROM product_product pp
                     LEFT JOIN stock_move_line m ON (m.product_id=pp.id)
                     LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
@@ -178,7 +182,8 @@ class InventoryValuationCategory(models.AbstractModel):
                         substr(irp2.value_reference,strpos(irp2.value_reference, ',') + 1)::int)
                     LEFT JOIN ir_property cost on (cost.res_id =
                         concat('product.product,', pp.id))
-                        -- AND cost.name='standard_price')
+                        -- AND cost.name='standard_price'
+                    LEFT JOIN stock_lot slot ON (slot.id=m.lot_id)
                     WHERE  m.date > %s AND m.date < %s AND
                         (m.location_id in %s) AND (m.location_dest_id in %s) AND
                         m.state='done' AND pp.active=True AND
@@ -186,7 +191,10 @@ class InventoryValuationCategory(models.AbstractModel):
                         (acc2.company_id = m.company_id or acc1.company_id = m.company_id)
                     GROUP BY pp.id, l.complete_name, pc.name, pt.name,
                         acc1.code, acc2.code, pp.default_code, m.date,
-                        uom.factor, uom2.factor
+                        uom.factor, uom2.factor,
+                        CASE
+                        WHEN pt.tracking = 'none' THEN NULL
+                        ELSE slot.name END
                     )
                     UNION ALL
                     (
@@ -199,7 +207,11 @@ class InventoryValuationCategory(models.AbstractModel):
                         coalesce(sum(-abs(m.qty_done*uom2.factor/uom.factor))::
                         decimal, 0.0) AS qty,
                         coalesce(sum(-abs(m.qty_done*uom2.factor/uom.factor) *
-                        cost.value_float)::decimal, 0.0) AS value
+                        cost.value_float)::decimal, 0.0) AS value,
+                        CASE
+                        WHEN pt.tracking = 'none' THEN NULL
+                        ELSE slot.name 
+                        END AS lot_name
                     FROM product_product pp
                     LEFT JOIN stock_move_line m ON (m.product_id=pp.id)
                     LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
@@ -218,7 +230,8 @@ class InventoryValuationCategory(models.AbstractModel):
                         substr(irp2.value_reference, strpos(irp2.value_reference, ',') + 1)::int)
                     LEFT JOIN ir_property cost on (cost.res_id =
                         concat('product.product,', pp.id))
-                        -- AND cost.name='standard_price')
+                        -- AND cost.name='standard_price'
+                    LEFT JOIN stock_lot slot ON (slot.id=m.lot_id)
                     WHERE  m.date > %s AND m.date < %s AND (m.location_id in %s) AND
                         (m.location_dest_id not in %s) AND m.state='done' AND
                         pp.active=True AND pt.type = 'product' AND
@@ -226,7 +239,10 @@ class InventoryValuationCategory(models.AbstractModel):
                          (acc2.company_id = m.company_id or acc1.company_id = m.company_id)
                     GROUP BY pp.id, l.complete_name, pc.name, pt.name,
                         acc1.code, acc2.code, pp.default_code, m.date,
-                        uom.factor, uom2.factor
+                        uom.factor, uom2.factor,
+                        CASE
+                        WHEN pt.tracking = 'none' THEN NULL
+                        ELSE slot.name END
                     )
                     UNION ALL
                     (
@@ -239,7 +255,11 @@ class InventoryValuationCategory(models.AbstractModel):
                         coalesce(sum(abs(m.qty_done*uom2.factor/uom.factor))::
                         decimal, 0.0) AS qty,
                         coalesce(sum(abs(m.qty_done*uom2.factor/uom.factor) *
-                        cost.value_float)::decimal, 0.0) AS value
+                        cost.value_float)::decimal, 0.0) AS value,
+                        CASE
+                        WHEN pt.tracking = 'none' THEN NULL
+                        ELSE slot.name
+                        END AS lot_name
                     FROM product_product pp
                     LEFT JOIN stock_move_line m ON (m.product_id=pp.id)
                     LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
@@ -258,7 +278,8 @@ class InventoryValuationCategory(models.AbstractModel):
                         substr(irp2.value_reference, strpos(irp2.value_reference, ',') + 1)::int)
                     LEFT JOIN ir_property cost on (cost.res_id =
                         concat('product.product,', pp.id))
-                        -- AND cost.name='standard_price')
+                        -- AND cost.name='standard_price'
+                    LEFT JOIN stock_lot slot ON (slot.id=m.lot_id)
                     WHERE  m.date > %s AND m.date < %s AND
                         (m.location_dest_id in %s) AND
                         (m.location_id not in %s) AND m.state='done' AND
@@ -267,7 +288,10 @@ class InventoryValuationCategory(models.AbstractModel):
                         (acc2.company_id = m.company_id or acc1.company_id = m.company_id)
                     GROUP BY pp.id, l.complete_name, pc.name, pt.name,
                     acc1.code, acc2.code, pp.default_code, m.date, uom.factor,
-                    uom2.factor
+                    uom2.factor,
+                    CASE
+                    WHEN pt.tracking = 'none' THEN NULL
+                    ELSE slot.name END
                     )
                     UNION ALL
                     (
@@ -280,7 +304,11 @@ class InventoryValuationCategory(models.AbstractModel):
                         coalesce(sum(abs(m.qty_done*uom2.factor/uom.factor))::
                         decimal, 0.0) AS qty,
                         coalesce(sum(abs(m.qty_done*uom2.factor/uom.factor) *
-                        cost.value_float)::decimal, 0.0) AS value
+                        cost.value_float)::decimal, 0.0) AS value,
+                        CASE
+                        WHEN pt.tracking = 'none' THEN NULL
+                        ELSE slot.name
+                        END AS lot_name
                     FROM product_product pp
                     LEFT JOIN stock_move_line m ON (m.product_id=pp.id)
                     LEFT JOIN product_template pt ON (pp.product_tmpl_id=pt.id)
@@ -299,7 +327,8 @@ class InventoryValuationCategory(models.AbstractModel):
                         substr(irp2.value_reference, strpos(irp2.value_reference, ',') + 1)::int)
                     LEFT JOIN ir_property cost on (cost.res_id =
                         concat('product.product,', pp.id))
-                        -- AND cost.name='standard_price')
+                        -- AND cost.name='standard_price'
+                    LEFT JOIN stock_lot slot ON (slot.id=m.lot_id)
                     WHERE  m.date > %s AND m.date < %s AND
                         (m.location_dest_id in %s) AND (m.location_id in %s) AND
                         m.state='done' AND pp.active=True AND
@@ -307,11 +336,15 @@ class InventoryValuationCategory(models.AbstractModel):
                         (acc2.company_id = m.company_id or acc1.company_id = m.company_id)
                     GROUP BY pp.id, l.complete_name, pc.name,pt.name,
                        acc1.code, acc2.code, pp.default_code, m.date,
-                       uom.factor, uom2.factor
+                       uom.factor, uom2.factor,
+                       CASE
+                       WHEN pt.tracking = 'none' THEN NULL
+                       ELSE slot.name
+                       END
                     ))
                 AS foo
                 WHERE qty !=  0.0
-                GROUP BY id, location, category, product, barcode, sku, account
+                GROUP BY id, location, category, product, barcode, sku, account, lot_name
             """,
             (
                 start_date,

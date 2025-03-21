@@ -85,6 +85,9 @@ class InventoryValuationDateReport(models.TransientModel, InventoryValuationCate
                     ]
                 )
             location_ids = addtional_ids
+            if not self.warehouse_ids:
+                location_ids.extend(location_obj.search([("company_id", "=", self.company_id.id or self.env.company.id), ("usage", "in", ("internal", "transit"))]).ids)
+
         else:
             location_ids = [p.id for p in location_ids]
         return {
@@ -324,6 +327,8 @@ class InventoryValuationDateReport(models.TransientModel, InventoryValuationCate
             sheet.col(7).width = 256 * 20
             sheet.write(header_row_start, 8, "Value", header_tstyle_c)
             sheet.col(8).width = 256 * 20
+            sheet.write(header_row_start, 9, "Serial Number", header_tstyle_c)
+            sheet.col(9).width = 256 * 20
             row = 9
             total_value = 0.0
             total_qty = 0.0
@@ -341,6 +346,7 @@ class InventoryValuationDateReport(models.TransientModel, InventoryValuationCate
                     sheet.write(row, 6, line.get("qty", ""), other_tstyle_c)
                     sheet.write(row, 7, line.get("cost", ""), other_tstyle_c)
                     sheet.write(row, 8, line.get("value", ""), other_tstyle_c)
+                    sheet.write(row, 9, line.get("lot_name", ""), other_tstyle_c)
                     total_qty += line.get("qty")
                     total_value += line.get("value", 0.0)
                     row += 1
