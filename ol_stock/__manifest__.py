@@ -14,6 +14,11 @@
         "stock",
         "delivery_stock_picking_batch",
     ],
+    'assets': {
+        'web.assets_backend': [
+            'ol_stock/static/src/js/receipt_non_editable.js',
+        ],
+    },
     # always loaded
     "data": [
         "data/stock_location_data.xml",
