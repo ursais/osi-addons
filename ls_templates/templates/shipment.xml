@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="shipment">
+    <div class="ls_block_title" t-esc="block_title"/>
+    <div class="ls_block_data" t-esc="shipment.name"/>
+    <div class="ls-tracking-numbers">
+      <t t-call="ls_templates.tracking_numbers"/>
+    </div>
+  </template>
+
+
+  <template id="tracking_numbers">
+    <t t-if="tracking_numbers and not hide_tracking">
+      <tag>Tracking Numbers</tag>:
+      <br/>
+      <div style="color: #4d90fe; margin-bottom: 10px; padding: 0 10px;">
+        <t t-foreach="tracking_numbers or []" t-as="tracking_number">
+
+          <t t-if="tracking_number.custom_title">
+            <span t-field="tracking_number.custom_title"/>:
+          </t>
+          <t t-else="">
+            <span t-field="tracking_number.carrier_id.name"/>:
+          </t>
+          <t t-if="tracking_number.url">
+            <a t-attf-href="{{tracking_number.url}}" target="_blank" style="text-decoration: none; color: #4d90fe;">
+              <t t-esc="tracking_number.number"/>
+            </a>
+          </t>
+          <t t-if="not tracking_number.url">
+            <span t-esc="tracking_number.number"/>
+          </t>,
+        </t>
+      </div>
+    </t>
+  </template>
+
+  <!--The main products section in the report-->
+  <template id="report_shipping_method">
+    <div class="ls_report_notes_and_totals ls_flex ls_flex_just_cont_flex_end">
+      <div class="ls_report_products_row ls_shipment_block">
+        <div class="ls_products_header ls_flex ls_flex_just_cont_space_between">
+          <div class="ls_products_title ls_flex ls_flex_reverse">
+            <!--The title-->
+            <t t-esc="products_title"/>
+          </div>
+          <div class="ls_products_list_header ls_flex ls_flex_just_cont_space_between"/>
+        </div>
+
+        <div class="ls_product_lines">
+          <t t-foreach="shipping_lines" t-as="shipping_line">
+            <div class="ls_products_line">
+
+              <!--Product: image, name, sku, data-->
+              <div class="ls_flex ls_flex_just_cont_space_between">
+                <div class="ls_shipping_carrier_name">
+                  <t t-esc="shipping_line.product_id.name" t-options='{"widget": "cap_formatter", "case":"upper"}'/>
+                </div>
+                <div class="ls_shipping_name"/>
+                <div class="ls_shipping_price">
+                  <t t-if="sale_order.delivery_account_number">
+                    <tag>Account:</tag>
+                    <t t-esc="sale_order.delivery_account_number"/>
+                  </t>
+                  <t t-else="">
+                    <t t-esc="shipping_line.price_subtotal"
+                       t-options="{'widget': 'monetary_currency_dependent', 'display_currency': sale_order.currency_id}"/>
+                  </t>
+                </div>
+              </div>
+
+            </div>
+          </t>
+        </div>
+
+      </div>
+    </div>
+  </template>
+</odoo>

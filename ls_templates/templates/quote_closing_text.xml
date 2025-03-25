@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!--Notes and totals-->
+  <template id="quote_closing_text">
+    <div class="ls_quote_closing_text ls_margin_top_20">
+      <p t-if="sale_order.company_id.short_name != 'eu'">
+        <strong>Validity</strong>: Processors, RAM, storage devices, and other commodity components, as well as End of Life product prices are valid for 24 hours. All
+        other pricing is valid for 14 days unless otherwise noted. Prices are for MOQ as stated.<br/>
+        <strong>Payment</strong>: Prepayment by Credit Card, Bank or Wire transfer required on all orders, unless credit terms are approved.<br/>
+        <strong>Lead Time</strong>: Lead times depend on order quantity and product availability.<br/>
+        <strong>Returns &amp; Cancellations</strong>: Special Order items and items ordered in 5+ system quantities or 10+ component quantities are non-returnable and
+        non-cancelable. Please see our complete Terms and Conditions at www.onlogic.com/terms<br/>
+        <strong>Warranty</strong>: Systems built and tested by OnLogic are covered under a two year warranty. Additional warranty plans are available.
+      </p>
+      <p t-if="sale_order.company_id.short_name == 'eu'">
+        <strong>Validity</strong>: Processors, RAM, storage devices, and other commodity components, as well as End of Life product prices are valid for 24 hours. All
+other quoted pricing is valid for 14 days unless otherwise noted. Prices are for MOQ as stated.<br/>
+        <strong>Payment</strong>: Prepayment by Credit Card, Bank or Wire transfer required on all orders, unless credit terms are approved.<br/>
+        <strong>Lead Time</strong>: Lead times depend on order quantity and product availability.<br/>
+        <strong>Returns &amp; Cancellations</strong>: Special Order items, system orders, products delivered on the basis of volume orders and products delivered on the
+basis of a tailor-made quotation are non-returnable and non-cancelable. Please see our complete Terms and Conditions attached.<br/>
+        <strong>Warranty</strong>: Systems built and tested by OnLogic are covered under a two year warranty. Additional warranty plans are available.
+      </p>
+    </div>
+
+  </template>
+</odoo>

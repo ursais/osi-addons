@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- Report Action -->
+  <record id="action_packing_slip_report" model="ir.actions.report">
+    <field name="name">Packing Slip</field>
+    <field name="model">stock.picking</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="print_report_name">'%s Packing Slip' % (object.name or '')</field>
+    <field name="report_name">ls_pdf_reports.report_packing_slip</field>
+    <field name="report_file">ls_pdf_reports.report_packing_slip</field>
+    <field name="binding_model_id" ref="stock.model_stock_picking" />
+    <field name="paperformat_xmlid_base">ls_templates.ls_report_picking_list_paper_format</field>
+  </record>
+
+  <!-- Main template -->
+  <template id="report_packing_slip">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="doc">
+        <!-- Set some useful variables -->
+        <!-- TODO: "doc.helpdesk_rma_id" field not found -->
+        <t t-set="rma" t-value="doc.helpdesk_rma_id"/>
+        <t t-set="sale_order" t-value="doc.related_sale_id or rma.sale_order_id"/>
+
+        <!-- Find the correct language-->
+        <t t-set="language"
+           t-value="sale_order.get_language() or doc.create_uid.lang"/>
+        <!-- Re-browse of the record with the correct language -->
+        <t t-set="picking" t-value="doc.with_context(lang=language)"/>
+        <!-- Call the template document with the language set -->
+        <t t-call="ls_pdf_reports.report_packing_slip_document" t-lang="language"/>
+      </t>
+    </t>
+  </template>
+
+  <template id="report_packing_slip_document">
+
+    <t t-call="ls_templates.external_layout">
+      <!-- Set the name and title of the Report -->
+      <t t-set="report_title">Packing Slip</t>
+      <!--Set template variables-->
+      <t t-set="title" t-value="report_title"/>
+      <t t-set="ship_date" t-value="datetime.datetime.now().strftime('%Y-%m-%d %I:%M:%S')" />
+      <t t-set="packing_product_lines" t-value="picking.get_packing_product_lines()"/>
+      <t t-set="hide_tracking" t-value="True"/>
+      <t t-if="picking.blind_drop_ship or picking.blind_ship_from">
+        <t t-set="blind_drop_ship" t-value="True"/>
+      </t>
+      <t t-if="picking.rush_order">
+        <t t-set="rush_order" t-value="True"/>
+      </t>
+      <t t-set="customer_company_name"
+         t-value="sale_order.partner_id.get_company_name() or picking.partner_id.get_company_name()"/>
+      <t t-set="currency" t-value="sale_order.currency_id"/>
+      <t t-set="company" t-value="sale_order.company_id or picking.company_id"/>
+
+      <!-- Report specific styling -->
+      <t t-set="report_custom_page_style">
+        .ls-sale-line{
+        margin-bottom: 30px;
+        }
+        .subtotal-text.taxes{
+        text-align: right;
+        font-size: 10px;
+        }
+        .ls-spacer {
+        width: 50%;
+        height: 100px;
+        display: inline-block;
+        }
+        .ls-spacer-half {
+        width: 50%;
+        height: 50px;
+        display: inline-block;
+        }
+        .ls-address {
+        width: 30%;
+        float: left;
+        }
+        .ls-sale-line-name {
+        font-size: 18px;
+        }
+      </t>
+
+      <!--The first main information block-->
+      <div class="ls_report_info_row ls_flex">
+
+        <!--Basic Invoice information-->
+        <div t-if="not blind_drop_ship" class="ls_report_info_row_col info">
+
+          <div class="ls_report_info_row_col_title ls_flex">
+            <div class="key">
+              <tag>Sale Order</tag>
+            </div>
+            <div class="value">
+              <t t-esc="sale_order.name"/>
+            </div>
+          </div>
+
+          <t t-if="rma">
+            <div class="ls_report_info_row_col_line ls_flex">
+              <div class="key">
+                <tag>RMA</tag>
+              </div>
+              <div class="value">
+                <t t-esc="rma.name"/>
+              </div>
+            </div>
+          </t>
+
+          <div class="ls_report_info_row_col_line ls_flex">
+            <div class="key">
+              <tag>Order Date</tag>
+            </div>
+            <div class="value">
+              <t t-esc="sale_order.date_order" t-options='{"widget": "date_formatter"}'/>
+            </div>
+          </div>
+
+
+          <div class="ls_report_info_row_col_line ls_flex">
+            <div class="key">
+              <tag>Ship Date</tag>
+            </div>
+            <div class="value">
+              <t t-esc="ship_date" t-options='{"widget": "date_formatter"}'/>
+            </div>
+          </div>
+
+          <t t-if="sale_order.client_order_ref and not rma">
+            <div class="ls_report_info_row_col_line ls_flex">
+              <div class="key">
+                <tag>Customer PO</tag>
+              </div>
+              <div class="value">
+                <t t-esc="sale_order.client_order_ref"/>
+              </div>
+            </div>
+          </t>
+
+          <div class="ls_account_manager_cont ls_margin_top_10">
+
+            <t t-call="ls_templates.address">
+              <t t-set="sender" t-value="True"/>
+              <t t-set="text">
+                Sender
+              </t>
+              <t t-set="address" t-value="company"/>
+            </t>
+
+          </div>
+
+        </div>
+
+        <div t-if="blind_drop_ship" class="ls_report_info_row_col info">
+
+          <div class="ls_report_info_row_col_title ls_flex">
+            <div class="key">
+              <tag>Delivery Order</tag>
+            </div>
+            <div class="value">
+              <t t-esc="picking.name"/>
+            </div>
+          </div>
+
+          <div class="ls_report_info_row_col_line ls_flex">
+            <div class="key">
+              <tag>Ship Date</tag>
+            </div>
+            <div class="value">
+              <t t-esc="ship_date" t-options='{"widget": "date_formatter"}'/>
+            </div>
+          </div>
+
+          <div class="ls_account_manager_cont ls_margin_top_10">
+
+            <t t-call="ls_templates.address">
+              <t t-set="sender" t-value="True"/>
+              <t t-set="text">
+                Sender
+              </t>
+              <t t-set="address" t-value="picking.blind_ship_from or sale_order.partner_id.commercial_partner_id"/>
+            </t>
+
+          </div>
+
+        </div>
+
+        <!--Billing related information-->
+        <div class="ls_report_info_row_col billing">
+          <t t-if="picking.csv_import">
+            <t t-call="ls_templates.ls_blind_bill_address">
+              <t t-set="text">Bill To</t>
+              <t t-set="address" t-value="sale_order.partner_invoice_id or picking.partner_id"/>
+            </t>
+          </t>
+          <t t-else="">
+            <t t-call="ls_templates.address">
+              <t t-set="text">Bill To</t>
+              <t t-set="address" t-value="sale_order.partner_invoice_id or picking.partner_id"/>
+            </t>
+          </t>
+        </div>
+
+        <!--Shipping related information-->
+        <div class="ls_report_info_row_col shipping">
+          <t t-if="picking.csv_import">
+            <t t-call="ls_templates.ls_blind_ship_address">
+              <t t-set="text">Ship To</t>
+              <t t-set="address" t-value="picking.csv_partner_shipping_id"/>
+            </t>
+          </t>
+          <t t-else="">
+            <t t-call="ls_templates.address">
+              <t t-set="text">Ship To</t>
+              <t t-set="address" t-value="sale_order.partner_shipping_id or picking.partner_id"/>
+            </t>
+          </t>
+
+          <t t-call="ls_templates.shipment" t-if="sale_order.carrier_id and not blind_drop_ship">
+            <t t-set="block_title">Shipping Method</t>
+            <t t-if="sale_order">
+              <t t-set="shipment" t-value="picking.carrier_id"/>
+              <t t-set="tracking_numbers" t-value="sale_order.mapped('picking_ids.tracking_ids')"/>
+            </t>
+            <t t-if="rma">
+              <t t-set="shipment" t-value="rma.shipping_method"/>
+            </t>
+          </t>
+        </div>
+
+      </div>
+
+      <!--Product list-->
+      <t t-call="ls_pdf_reports.report_packing_products">
+        <t t-set="products_title">
+          Products
+        </t>
+      </t>
+
+      <t t-if="not blind_drop_ship" t-call="ls_pdf_reports.packing_closing_text"/>
+
+      <div style="page-break-after: always"/>
+
+    </t>
+
+    <t t-call="ls_pdf_reports.report_picking_list_document">
+      <!-- Set the name and title of the Report -->
+      <t t-set="report_title">Picking List</t>
+    </t>
+
+  </template>
+
+  <!--The main products section in the report-->
+  <template id="report_packing_products">
+    <div class="ls_report_products_row">
+      <div class="ls_products_header ls_flex ls_flex_just_cont_space_between">
+        <div class="ls_products_list_header ls_slip ls_flex">
+          <div class="ls_products_list_header_item qty">
+            <!--The info table header-->
+            <tag>QTY</tag>
+          </div>
+          <div class="ls_products_list_header_item products">
+            <tag>Products</tag>
+          </div>
+          <div class="ls_products_list_header_item model">
+            <tag>Model</tag>
+          </div>
+        </div>
+      </div>
+
+      <!--The list of products-->
+      <t t-call="ls_pdf_reports.report_packing_product_lines"/>
+
+    </div>
+  </template>
+
+  <!--Products list template-->
+  <template id="report_packing_product_lines">
+    <div class="ls_product_lines">
+      <t t-foreach="packing_product_lines" t-as="product_line">
+
+        <t t-set="sale_line" t-value="product_line['sale_line']"/>
+        <div class="ls_products_line">
+
+          <!--Product: image, name, sku, data-->
+
+          <div class="ls_products_main_cont">
+
+            <div class="ls_products_info_cont ls_flex ls_slip">
+
+              <div class="ls_products_line_data_item product_qty packing">
+                <t t-esc="product_line['qty']" t-options="{'widget': 'integer'}"/>
+              </div>
+
+              <div class="ls_product_name ls_slip packing">
+                <t t-esc="product_line['product_name']"/>
+              </div>
+
+              <div class="ls_product_default_code">
+                <div class="ls_product_default_code packing" t-esc="product_line['product_default_code']"/>
+              </div>
+
+            </div>
+
+            <!--System configuration-->
+            <t t-if="not blind_drop_ship and sale_line">
+              <div class="ls_products_system_configuration ls_slip">
+                <div class="system-configuration" t-if="sale_line.quote_config_id">
+                  <div class="system-configuration-line ls_flex"
+                       t-foreach="sale_line.quote_config_id.quote_config_line_ids.filtered(
+          lambda l: l.description_type != 'hide')"
+                       t-as="quote_line">
+                    <div class="system-configuration-attribute ls_slip">
+                      <t t-esc="quote_line.qty" t-options="{'widget': 'integer'}"/>
+                      x
+                      <t t-esc="quote_line.product_id.name"/>
+                    </div>
+                    <div class="system-configuration-product ls_slip">
+                      <t t-esc="quote_line.product_id.product_tmpl_id.default_code"/>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </t>
+          </div>
+
+          <t t-if="not blind_drop_ship and sale_line">
+            <!--System serial numbers and Product notes-->
+            <t t-set="system_serial_numbers" t-value="product_line['system_serial_numbers']"/>
+            <div class="product-notes" t-if="sale_line.quote_config_id.notes or system_serial_numbers">
+              <strong>
+                <tag>Product Notes</tag>
+              </strong>
+              <br/>
+              <br/>
+              <t t-if="system_serial_numbers">
+                <t t-call="ls_templates.serial_numbers">
+                  <t t-set="serial_title">System Serial Numbers</t>
+                  <t t-set="system_serial_numbers" t-value="system_serial_numbers"/>
+                </t>
+              </t>
+              <br/>
+              <span t-esc="sale_line.quote_config_id.notes"/>
+            </div>
+          </t>
+
+        </div>
+      </t>
+    </div>
+  </template>
+
+  <!--Notes and totals-->
+  <template id="packing_closing_text">
+    <div class="ls_packing_closing_text">
+      Thank you for ordering from OnLogic!
+    </div>
+  </template>
+
+</odoo>

@@ -1,0 +1,179 @@
+div.po_doc_header {
+
+    h1 {
+        font-size: 26pt;
+        font-weight: bold;
+        text-align: left;
+        margin-top: 0;
+        margin-bottom: 20px;
+        padding-top: 0;
+    }
+
+    .labels {
+        clear: both;
+        width: 60%;
+        font-weight: bold;
+    }
+
+    .doc-name {
+        padding-bottom: 6px;
+        font-size: 14pt;
+        float: left;
+        width: 140px;
+        display: inline-block;
+    }
+
+    .po_number {
+        display: inline-block;
+        width: 140px;
+        font-size: 14pt;
+    }
+
+    .page-number {
+        font-size: 14pt;
+        width: 130px;
+        display: inline-block;
+        padding-left: 2px;
+    }
+
+    .title {
+        display: inline-block;
+    }
+}
+
+div.po_doc {
+
+    body {
+        padding-top: 15px;
+    }
+
+    h1 {
+        font-size: 36pt;
+        font-weight: bold;
+        clear: both;
+        text-align: left;
+        margin-top: 0;
+        margin-bottom: 20px;
+    }
+
+    .doc-name {
+        font-size: 12pt;
+        font-weight: bold;
+    }
+
+    .sub_header,
+    .product_header > td {
+        border-bottom: 2px solid #F57F39;
+        font-weight: bold;
+        margin-bottom:5px;
+    }
+
+    .hanging-column {
+        padding-left: 10px;
+        margin: 0 0 5px -10px;
+    }
+
+    .product-list > td {
+        padding-top:7px;
+    }
+
+    .full-page-table {
+        width: 100%;
+        font-size: 18px;
+    }
+
+    .address-table {
+        td {
+            padding: 0 22px 0 10px;
+        }
+
+        td:last-child {
+            padding-right: 0;
+        }
+    }
+
+    .address-header-cell {
+        font-weight: bold;
+        padding-left: 10px;
+        margin: 0 0 5px -10px;
+        width: 311px;
+        border-bottom: 2px solid #F57F39;
+    }
+
+    .notes-header-cell {
+        font-weight: bold;
+        padding-left: 10px;
+        margin: 15px 0 5px -10px;
+        width: 100%;
+        border-bottom: 2px solid #F57F39;
+    }
+
+    .header_table {
+        margin-bottom: 15px;
+    }
+
+    .footer-table {
+        cell-padding: 20px
+    }
+
+    .center-column {
+        text-align: center;
+    }
+
+    .right-column {
+        text-align: right;
+    }
+
+    .col-med {
+        width: 160px;
+    }
+
+    .col-small {
+        width: 100px;
+    }
+
+    td {
+        vertical-align: top;
+    }
+
+    tr {
+        page-break-inside: avoid;
+    }
+
+    .floating-head {
+        float:left;
+        width: 33%;
+        font-size: 18px;
+    }
+    .margin-fix {
+        font-size: 18px;
+    }
+
+    .floating-head:last-child {
+        margin-right: 0;
+    }
+
+    .clear-layout {
+        clear: both;
+    }
+
+    .invisible {
+        font-size:0pt;
+        text-indent:-9999px;
+        color:white;
+    }
+
+    .avoid-break {
+        page-break-inside: avoid;
+    }
+
+    .doc-name {
+        font-size: 10pt;
+        font-weight: bold;
+        height: 12pt;
+    }
+
+    .prod-cell { font-size: 18px; }
+
+    .line-note { padding-left: 10px; font-size: 11pt; }
+}

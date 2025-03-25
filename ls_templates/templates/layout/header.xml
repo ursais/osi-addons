@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!--The header of the report-->
+  <template id="report_header">
+
+    <t t-if="blind_drop_ship">
+
+      <div class="report_header_cont ls_flex ls_flex_just_cont_space_between">
+        <div class="ls_header_report_info blind_drop_ship ls_flex ls_flex_reverse">
+          <div class="ls_document_type">
+            <t t-out="report_title" t-options='{"widget": "cap_formatter", "case":"upper"}'/>
+          </div>
+          <div t-if="blind_drop_ship and report_title != 'Packing Slip'" style="margin-top: 10px;">
+            <span class="ls_blind_drop_title">
+              <tag>BLIND
+                <span t-if="rush_order">,</span>
+              </tag>
+            </span>
+            <span t-if="rush_order" class="ls_rush_order_title">
+              <tag>RUSH</tag>
+            </span>
+          </div>
+        </div>
+      </div>
+    </t>
+    <t t-else="">
+      <div class="report_header_cont ls_flex ls_flex_just_cont_space_between">
+        <div class="ls_header_report_info">
+          <div class="ls_document_type">
+            <t t-out="report_title" t-options='{"widget": "cap_formatter", "case":"upper"}'/>
+          </div>
+          <div t-if="rush_order" style="margin-top: 10px;">
+            <span class="ls_rush_order_title">
+              <tag>RUSH</tag>
+            </span>
+          </div>
+        </div>
+        <div class="ls_header_logo">
+          <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+        </div>
+      </div>
+
+    </t>
+
+  </template>
+</odoo>

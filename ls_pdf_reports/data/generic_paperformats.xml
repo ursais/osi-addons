@@ -1,0 +1,17 @@
+<odoo>
+  <!-- Paper format for Bin Labels -->
+  <record id="bin_label_paperformat" model="report.paperformat">
+    <field name="name">Bin Label Custom Format</field>
+    <field name="format">custom</field>
+    <field name="page_height">102</field>
+    <field name="page_width">152</field>
+    <field name="orientation">Portrait</field>
+    <field name="margin_top" eval="10"/>
+    <field name="margin_bottom" eval="0"/>
+    <field name="margin_left" eval="5"/>
+    <field name="margin_right" eval="5"/>
+    <field name="header_line" eval="False"/>
+    <field name="header_spacing">20</field>
+    <field name="dpi">90</field>
+  </record>
+</odoo>

@@ -1,0 +1,15 @@
+<odoo>
+
+    <!-- Add a new Group For Report Extra Content -->
+    <record id="ls_pdf_reports.report_extra_content" model="res.groups">
+        <field name="name">Report Extra Content</field>
+        <field name="category_id" ref="ol_base.onlogic_groups"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_no_one'))]"/>
+    </record>
+
+    <!-- Make sure developers have access to it by default -->
+    <record id="ol_base.dev_team" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('ls_pdf_reports.report_extra_content'), 0)]"/>
+    </record>
+
+</odoo>
