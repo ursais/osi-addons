@@ -12,13 +12,13 @@ def get_product_description(product):
     # Check if the product has template attribute values
     if product.product_template_attribute_value_ids:
         for attribute_value in product.product_template_attribute_value_ids:
-            # Retrieve the attribute line for the current attribute value
-            attribute_line = product.product_tmpl_id.attribute_line_ids.filtered(
+            # Retrieve the attribute line(s) for the current attribute value
+            attribute_lines = product.product_tmpl_id.attribute_line_ids.filtered(
                 lambda line: line.attribute_id == attribute_value.attribute_id
             )
 
-            # If 'used_in_sale_description' is True, add attribute to description
-            if attribute_line and attribute_line.used_in_sale_description:
+            # If any of the lines have 'used_in_sale_description' enabled, add to description
+            if any(attribute_lines.mapped("used_in_sale_description")):
                 description += "\n  " + attribute_value.display_name
 
     return description
