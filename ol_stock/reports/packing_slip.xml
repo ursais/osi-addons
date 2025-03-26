@@ -10,7 +10,7 @@
     <field name="report_name">ol_stock.report_packing_slip</field>
     <field name="report_file">ol_stock.report_packing_slip</field>
     <field name="binding_model_id" ref="stock.model_stock_picking" />
-    <field name="paperformat_xmlid_base">ls_templates.ls_report_picking_list_paper_format</field>
+    <field name="paperformat_xmlid_base">ol_templates.ls_report_picking_list_paper_format</field>
   </record>
 
   <!-- Main template -->
@@ -40,7 +40,7 @@
 
   <template id="report_packing_slip_document">
 
-    <t t-call="ls_templates.external_layout">
+    <t t-call="ol_templates.external_layout">
       <!-- Set the name and title of the Report -->
       <t t-set="report_title">Packing Slip</t>
       <!--Set template variables-->
@@ -149,7 +149,7 @@
 
           <div class="ls_account_manager_cont ls_margin_top_10">
 
-            <t t-call="ls_templates.address">
+            <t t-call="ol_templates.address">
               <t t-set="sender" t-value="True"/>
               <t t-set="text">
                 Sender
@@ -183,7 +183,7 @@
 
           <div class="ls_account_manager_cont ls_margin_top_10">
 
-            <t t-call="ls_templates.address">
+            <t t-call="ol_templates.address">
               <t t-set="sender" t-value="True"/>
               <t t-set="text">
                 Sender
@@ -202,13 +202,13 @@
           <!-- TODO: picking.csv_import field not found  -->
           <!-- <t t-if="picking.csv_import"> -->
           <t t-if="not picking">
-            <t t-call="ls_templates.ls_blind_bill_address">
+            <t t-call="ol_templates.ls_blind_bill_address">
               <t t-set="text">Bill To</t>
               <t t-set="address" t-value="sale_order.partner_invoice_id or picking.partner_id"/>
             </t>
           </t>
           <t t-else="">
-            <t t-call="ls_templates.address">
+            <t t-call="ol_templates.address">
               <t t-set="text">Bill To</t>
               <t t-set="address" t-value="sale_order.partner_invoice_id or picking.partner_id"/>
             </t>
@@ -220,20 +220,20 @@
           <!-- TODO: picking.csv_import field not found  -->
           <!-- <t t-if="picking.csv_import"> -->
           <t t-if="not picking">
-            <t t-call="ls_templates.ls_blind_ship_address">
+            <t t-call="ol_templates.ls_blind_ship_address">
               <t t-set="text">Ship To</t>
               <!-- TODO: picking.csv_partner_shipping_id field not found  -->
               <!-- <t t-set="address" t-value="picking.csv_partner_shipping_id"/> -->
             </t>
           </t>
           <t t-else="">
-            <t t-call="ls_templates.address">
+            <t t-call="ol_templates.address">
               <t t-set="text">Ship To</t>
               <t t-set="address" t-value="sale_order.partner_shipping_id or picking.partner_id"/>
             </t>
           </t>
 
-          <t t-call="ls_templates.shipment" t-if="sale_order.carrier_id and not blind_drop_ship">
+          <t t-call="ol_templates.shipment" t-if="sale_order.carrier_id and not blind_drop_ship">
             <t t-set="block_title">Shipping Method</t>
             <t t-if="sale_order">
               <t t-set="shipment" t-value="picking.carrier_id"/>
@@ -354,7 +354,7 @@
               <br/>
               <br/>
               <t t-if="system_serial_numbers">
-                <t t-call="ls_templates.serial_numbers">
+                <t t-call="ol_templates.serial_numbers">
                   <t t-set="serial_title">System Serial Numbers</t>
                   <t t-set="system_serial_numbers" t-value="system_serial_numbers"/>
                 </t>

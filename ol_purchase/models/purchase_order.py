@@ -1,7 +1,7 @@
 # Import Odoo libs
 from odoo import fields, models
 from odoo.tools.misc import formatLang
-from odoo.addons.ls_pdf_reports.models.tools import newline_to_br
+from odoo.addons.ol_pdf_reports.models.tools import newline_to_br
 
 
 class PurchaseOrder(models.Model):

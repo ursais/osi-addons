@@ -9,7 +9,7 @@
     <field name="report_name">ol_stock.report_packing_slip_from_so</field>
     <field name="report_file">ol_stock.report_packing_slip_from_so</field>
     <field name="binding_model_id" ref="sale.model_sale_order" />
-    <field name="paperformat_xmlid_base">ls_templates.ls_report_picking_list_paper_format</field>
+    <field name="paperformat_xmlid_base">ol_templates.ls_report_picking_list_paper_format</field>
   </record>
 
   <!-- Main template -->

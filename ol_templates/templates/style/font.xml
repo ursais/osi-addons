@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- Add Heebo to default report layout -->
+  <record id="update_default_layout" model="ir.ui.view">
+    <field name="name">ol_templates.update_default_layout</field>
+    <field name="inherit_id" ref="web.report_layout"/>
+    <field name="arch" type="xml">
+      <xpath expr="//head" position="inside">
+        <!-- Add Heebo font -->
+        <link href="https://fonts.googleapis.com/css?family=Heebo:400,500,700" rel="stylesheet"/>
+      </xpath>
+    </field>
+  </record>
+
+  <!-- Add Heebo to default minimal report layout (used to make pdfs)-->
+  <record id="update_default_minimal_layout" model="ir.ui.view">
+    <field name="name">ol_templates.update_default_minimal_layout</field>
+    <field name="inherit_id" ref="web.minimal_layout"/>
+    <field name="arch" type="xml">
+
+      <xpath expr="//head" position="inside">
+        <!-- Add Heebo font -->
+        <link href="https://fonts.googleapis.com/css?family=Heebo:400,500,700" rel="stylesheet"/>
+      </xpath>
+    </field>
+  </record>
+
+</odoo>

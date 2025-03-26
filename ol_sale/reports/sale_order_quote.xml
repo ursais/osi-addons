@@ -13,7 +13,7 @@
     <!-- TODO: object.detailed_name field not found -->
     <!-- <field name="attachment">'Quote_%s.pdf' % (object.detailed_name)</field> -->
     <field name="attachment">'Quote_%s.pdf' % (object.name)</field>
-    <field name="paperformat_xmlid_base">ls_templates.ls_report_paper_format</field>
+    <field name="paperformat_xmlid_base">ol_templates.ls_report_paper_format</field>
   </record>
 
   <!-- Main template -->
@@ -37,7 +37,7 @@
 
   <template id="report_sale_order_quote_document">
 
-    <t t-call="ls_templates.external_layout">
+    <t t-call="ol_templates.external_layout">
       <!-- Set the name and title of the Report -->
       <!-- TODO: sale_order.quote_type field not found -->
       <!-- <t t-if="sale_order.quote_type == 'budgetary'">
@@ -167,7 +167,7 @@
 
         <!--Billing related information-->
         <div class="ls_report_info_row_col billing">
-          <t t-call="ls_templates.address">
+          <t t-call="ol_templates.address">
             <t t-set="text">Bill To</t>
             <t t-set="address" t-value="partner_invoice_id"/>
           </t>
@@ -175,7 +175,7 @@
 
         <!--Shipping related information-->
         <div class="ls_report_info_row_col shipping">
-          <t t-call="ls_templates.address">
+          <t t-call="ol_templates.address">
             <t t-set="text">Ship To</t>
             <t t-set="address" t-value="sale_order.partner_shipping_id"/>
           </t>
@@ -184,7 +184,7 @@
       </div>
 
       <!--Product list-->
-      <t t-call="ls_templates.report_products">
+      <t t-call="ol_templates.report_products">
         <t t-set="products_title">
           Hardware Solution
         </t>
@@ -198,7 +198,7 @@
 
       <!--Shipping list-->
       <t t-if="shipping_lines">
-        <t t-call="ls_templates.report_shipping_method">
+        <t t-call="ol_templates.report_shipping_method">
           <t t-set="products_title">
             Shipping Method
           </t>
@@ -206,9 +206,9 @@
       </t>
 
       <!--Order noted and totals-->
-      <t t-call="ls_templates.report_notes_and_totals"/>
+      <t t-call="ol_templates.report_notes_and_totals"/>
 
-      <t t-call="ls_templates.quote_closing_text"/>
+      <t t-call="ol_templates.quote_closing_text"/>
 
     </t>
   </template>

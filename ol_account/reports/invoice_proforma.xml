@@ -10,7 +10,7 @@
     <field name="report_name">ol_account.report_proforma_invoice</field>
     <field name="report_file">ol_account.report_proforma_invoice</field>
     <field name="binding_model_id" ref="ls_payment_method.model_sale_order_payment_method" />
-    <field name="paperformat_xmlid_base">ls_templates.ls_report_paper_format</field>
+    <field name="paperformat_xmlid_base">ol_templates.ls_report_paper_format</field>
   </record>
 
   <!-- Main template -->
@@ -34,7 +34,7 @@
 
 
   <template id="report_sale_order_proforma_invoice_document">
-    <t t-call="ls_templates.external_layout">
+    <t t-call="ol_templates.external_layout">
       <!-- Set the name and title of the Report -->
       <t t-set="report_title">Proforma Invoice</t>
       <!--Set template variables-->
@@ -117,11 +117,11 @@
 
         <!--Billing related information-->
         <div class="ls_report_info_row_col billing">
-          <t t-call="ls_templates.address">
+          <t t-call="ol_templates.address">
             <t t-set="text">Bill To</t>
             <t t-set="address" t-value="partner_invoice_id"/>
           </t>
-          <t t-call="ls_templates.payment" t-if="sale_order.payment_method_id">
+          <t t-call="ol_templates.payment" t-if="sale_order.payment_method_id">
             <t t-set="block_title">Payment Method</t>
             <t t-set="payment_method" t-value="sale_order.payment_method_id"/>
           </t>
@@ -129,12 +129,12 @@
 
         <!--Shipping related information-->
         <div class="ls_report_info_row_col shipping">
-          <t t-call="ls_templates.address">
+          <t t-call="ol_templates.address">
             <t t-set="text">Ship To</t>
             <t t-set="show_vat_id" t-value="True"/>
             <t t-set="address" t-value="sale_order.partner_shipping_id"/>
           </t>
-          <t t-call="ls_templates.shipment" t-if="sale_order.carrier_id">
+          <t t-call="ol_templates.shipment" t-if="sale_order.carrier_id">
             <t t-set="block_title">Shipping Method</t>
             <t t-if="sale_order">
               <t t-set="shipment" t-value="sale_order.carrier_id"/>
@@ -146,14 +146,14 @@
       </div>
 
       <!--Product list-->
-      <t t-call="ls_templates.report_products">
+      <t t-call="ol_templates.report_products">
         <t t-set="products_title">
           Hardware Solution
         </t>
       </t>
 
       <!--Order noted and totals-->
-      <t t-call="ls_templates.report_notes_and_totals"/>
+      <t t-call="ol_templates.report_notes_and_totals"/>
 
     </t>
   </template>

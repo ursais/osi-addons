@@ -9,7 +9,7 @@
     <field name="report_name">ol_stock.report_picking_list</field>
     <field name="report_file">ol_stock.report_picking_list</field>
     <field name="binding_model_id" ref="stock.model_stock_picking" />
-    <field name="paperformat_xmlid_base">ls_templates.ls_report_picking_list_paper_format</field>
+    <field name="paperformat_xmlid_base">ol_templates.ls_report_picking_list_paper_format</field>
   </record>
 
   <!-- Main template -->
@@ -40,7 +40,7 @@
 
   <template id="report_picking_list_document">
 
-    <t t-call="ls_templates.external_layout">
+    <t t-call="ol_templates.external_layout">
       <!-- Set the name and title of the Report -->
       <t t-set="report_title">Picking List</t>
       <!--Set template variables-->
@@ -207,7 +207,7 @@
     <!--Replace the normal footer-->
     <div class="footer">
       <!-- This gets stripped out and reformatted by Odoo in `report/models/report.py get_pdf()`-->
-      <t t-call="ls_templates.report_footer_style"/>
+      <t t-call="ol_templates.report_footer_style"/>
       <t t-call="ol_stock.picking_footer"/>
     </div>
 

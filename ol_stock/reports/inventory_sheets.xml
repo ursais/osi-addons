@@ -10,7 +10,7 @@
     <field name="report_name">ol_stock.report_inventory_sheets</field>
     <field name="report_file">ol_stock.report_inventory_sheets</field>
     <field name="binding_model_id" ref="stock_inventory.model_stock_inventory"/>
-    <field name="paperformat_xmlid_base">ls_templates.ls_report_paper_format_landscape</field>
+    <field name="paperformat_xmlid_base">ol_templates.ls_report_paper_format_landscape</field>
   </record>
 
   <!-- Main template -->
