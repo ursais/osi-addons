@@ -8,8 +8,8 @@
     <field name="model">sale.order</field>
     <field name="binding_model_id" ref="sale.model_sale_order"/>
     <field name="report_type">qweb-pdf</field>
-    <field name="report_name">ls_pdf_reports.report_sale_order_quote</field>
-    <field name="report_file">ls_pdf_reports.report_sale_order_quote</field>
+    <field name="report_name">ol_sale.report_sale_order_quote</field>
+    <field name="report_file">ol_sale.report_sale_order_quote</field>
     <!-- TODO: object.detailed_name field not found -->
     <!-- <field name="attachment">'Quote_%s.pdf' % (object.detailed_name)</field> -->
     <field name="attachment">'Quote_%s.pdf' % (object.name)</field>
@@ -30,7 +30,7 @@
         <t t-set="sale_order" t-value="doc.with_context(lang=language)"/>
 
         <!-- Call the template document with the language set -->
-        <t t-call="ls_pdf_reports.report_sale_order_quote_document" t-lang="language"/>
+        <t t-call="ol_sale.report_sale_order_quote_document" t-lang="language"/>
       </t>
     </t>
   </template>

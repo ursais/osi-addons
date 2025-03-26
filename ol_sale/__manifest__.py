@@ -30,5 +30,6 @@
         "views/sale_subscription_views.xml",
         "views/stock_picking_view.xml",
         "views/mrp_production_view.xml",
+        "reports/sale_order_quote.xml",
     ],
 }

@@ -1,7 +1,4 @@
 from . import tools
-from . import sale
-# TODO: "sale.order.payment.method" model not found
-# from . import payment_method
 from . import stock_picking
 from . import mrp
 # TODO: "helpdesk.rma" model not found

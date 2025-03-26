@@ -3,7 +3,7 @@ from odoo import api, models
 
 
 class ReportSaleOrderQuote(models.AbstractModel):
-    _name = 'report.ls_pdf_reports.report_sale_order_quote'
+    _name = 'report.ol_sale.report_sale_order_quote'
     _description = 'Sale Order Quote'
 
     @api.model

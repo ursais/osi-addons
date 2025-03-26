@@ -38,7 +38,6 @@
         # 'reports/rma_repair_summary.xml',
         # 'reports/rma_bin_label.xml',
         'reports/mo_bin_label.xml',
-        'reports/sale_order_quote.xml',
         'reports/inventory_sheets.xml',
         'reports/automation_test.xml',
         'reports/purchase_order_doc.xml',
