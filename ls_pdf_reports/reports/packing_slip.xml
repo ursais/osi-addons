@@ -19,12 +19,17 @@
       <t t-foreach="docs" t-as="doc">
         <!-- Set some useful variables -->
         <!-- TODO: "doc.helpdesk_rma_id" field not found -->
-        <t t-set="rma" t-value="doc.helpdesk_rma_id"/>
-        <t t-set="sale_order" t-value="doc.related_sale_id or rma.sale_order_id"/>
+        <!-- <t t-set="rma" t-value="doc.helpdesk_rma_id"/> -->
+        <t t-set="rma" t-value="False"/>
+        <!-- TODO: "doc.related_sale_id or rma.sale_order_id" field not found -->
+        <!-- <t t-set="sale_order" t-value="doc.related_sale_id or rma.sale_order_id"/> -->
+        <t t-set="sale_order" t-value="doc.env['sale.order'].browse(1)"/>
 
         <!-- Find the correct language-->
-        <t t-set="language"
-           t-value="sale_order.get_language() or doc.create_uid.lang"/>
+        <!-- TODO: doc.get_language() method not found -->
+        <!-- <t t-set="language"
+           t-value="sale_order.get_language() or doc.create_uid.lang"/> -->
+        <t t-set="language" t-value="sale_order.partner_id.lang or doc.create_uid.lang"/>
         <!-- Re-browse of the record with the correct language -->
         <t t-set="picking" t-value="doc.with_context(lang=language)"/>
         <!-- Call the template document with the language set -->
@@ -43,14 +48,18 @@
       <t t-set="ship_date" t-value="datetime.datetime.now().strftime('%Y-%m-%d %I:%M:%S')" />
       <t t-set="packing_product_lines" t-value="picking.get_packing_product_lines()"/>
       <t t-set="hide_tracking" t-value="True"/>
-      <t t-if="picking.blind_drop_ship or picking.blind_ship_from">
+      <!-- TODO: picking.blind_ship_from field not found -->
+      <!-- <t t-if="picking.blind_drop_ship or picking.blind_ship_from"> -->
+      <t t-if="picking.blind_drop_ship">
         <t t-set="blind_drop_ship" t-value="True"/>
       </t>
       <t t-if="picking.rush_order">
         <t t-set="rush_order" t-value="True"/>
       </t>
-      <t t-set="customer_company_name"
-         t-value="sale_order.partner_id.get_company_name() or picking.partner_id.get_company_name()"/>
+      <!-- TODO: sale_order.partner_id.get_company_name() or picking.partner_id.get_company_name() method not found -->
+      <!-- <t t-set="customer_company_name"
+         t-value="sale_order.partner_id.get_company_name() or picking.partner_id.get_company_name()"/> -->
+      <t t-set="customer_company_name" t-value="sale_order.partner_id.company_name or picking.partner_id.company_name"/>
       <t t-set="currency" t-value="sale_order.currency_id"/>
       <t t-set="company" t-value="sale_order.company_id or picking.company_id"/>
 
@@ -179,7 +188,9 @@
               <t t-set="text">
                 Sender
               </t>
-              <t t-set="address" t-value="picking.blind_ship_from or sale_order.partner_id.commercial_partner_id"/>
+              <!-- TODO: picking.blind_ship_from field not found  -->
+              <!-- <t t-set="address" t-value="picking.blind_ship_from or sale_order.partner_id.commercial_partner_id"/> -->
+              <t t-set="address" t-value="sale_order.partner_id.commercial_partner_id"/>
             </t>
 
           </div>
@@ -188,7 +199,9 @@
 
         <!--Billing related information-->
         <div class="ls_report_info_row_col billing">
-          <t t-if="picking.csv_import">
+          <!-- TODO: picking.csv_import field not found  -->
+          <!-- <t t-if="picking.csv_import"> -->
+          <t t-if="not picking">
             <t t-call="ls_templates.ls_blind_bill_address">
               <t t-set="text">Bill To</t>
               <t t-set="address" t-value="sale_order.partner_invoice_id or picking.partner_id"/>
@@ -204,10 +217,13 @@
 
         <!--Shipping related information-->
         <div class="ls_report_info_row_col shipping">
-          <t t-if="picking.csv_import">
+          <!-- TODO: picking.csv_import field not found  -->
+          <!-- <t t-if="picking.csv_import"> -->
+          <t t-if="not picking">
             <t t-call="ls_templates.ls_blind_ship_address">
               <t t-set="text">Ship To</t>
-              <t t-set="address" t-value="picking.csv_partner_shipping_id"/>
+              <!-- TODO: picking.csv_partner_shipping_id field not found  -->
+              <!-- <t t-set="address" t-value="picking.csv_partner_shipping_id"/> -->
             </t>
           </t>
           <t t-else="">
@@ -306,7 +322,8 @@
             <!--System configuration-->
             <t t-if="not blind_drop_ship and sale_line">
               <div class="ls_products_system_configuration ls_slip">
-                <div class="system-configuration" t-if="sale_line.quote_config_id">
+	            <!-- TODO: "sale_line.quote_config_id" Field not found -->
+                <!-- <div class="system-configuration" t-if="sale_line.quote_config_id">
                   <div class="system-configuration-line ls_flex"
                        t-foreach="sale_line.quote_config_id.quote_config_line_ids.filtered(
           lambda l: l.description_type != 'hide')"
@@ -320,7 +337,7 @@
                       <t t-esc="quote_line.product_id.product_tmpl_id.default_code"/>
                     </div>
                   </div>
-                </div>
+                </div> -->
               </div>
             </t>
           </div>
@@ -328,7 +345,9 @@
           <t t-if="not blind_drop_ship and sale_line">
             <!--System serial numbers and Product notes-->
             <t t-set="system_serial_numbers" t-value="product_line['system_serial_numbers']"/>
-            <div class="product-notes" t-if="sale_line.quote_config_id.notes or system_serial_numbers">
+            <!-- TODO: "sale_line.quote_config_id.notes" field not found -->
+            <!-- <div class="product-notes" t-if="sale_line.quote_config_id.notes or system_serial_numbers"> -->
+            <div class="product-notes">
               <strong>
                 <tag>Product Notes</tag>
               </strong>
@@ -341,7 +360,8 @@
                 </t>
               </t>
               <br/>
-              <span t-esc="sale_line.quote_config_id.notes"/>
+              <!-- TODO: "sale_line.quote_config_id.notes" Field not found -->
+              <!-- <span t-esc="sale_line.quote_config_id.notes"/> -->
             </div>
           </t>
 

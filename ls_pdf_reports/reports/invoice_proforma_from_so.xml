@@ -19,8 +19,10 @@
       <t t-foreach="docs" t-as="doc">
 
         <!-- Find the correct language-->
-        <t t-set="language"
-           t-value="doc.get_language()"/>
+        <!-- TODO: doc.get_language() method not found -->
+        <!-- <t t-set="language"
+           t-value="doc.get_language()"/> -->
+        <t t-set="language" t-value="doc.partner_id.lang"/>
 
         <t t-set="sale_order" t-value="doc.with_context(lang=language)"/>
 

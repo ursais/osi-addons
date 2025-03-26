@@ -13,7 +13,9 @@ class StockPicking(models.Model):
         Get the price of all the related sale lines
         """
         self.ensure_one()
-        return sum(self.mapped('move_ids.origin_sale_line_ids.price_subtotal'))
+        # TODO: move_ids.origin_sale_line_ids field not found
+        # return sum(self.mapped('move_ids.origin_sale_line_ids.price_subtotal'))
+        return sum(self.mapped('move_ids.sale_line_id.price_subtotal'))
 
     def get_packing_product_lines(self):
         """Collect the data for the Packing/Picking product lines"""
@@ -75,14 +77,18 @@ class StockPicking(models.Model):
                     qty_adjusted_sale_order_lines[sale_order_line.id] = similar_product_line.get('uuid')
                 continue
 
-            lot_ids = self.get_serials_for_product(product_id=move_product)
+            # TODO: self.get_serials_for_product() method not found
+            # lot_ids = self.get_serials_for_product(product_id=move_product)
+            lot_ids = []
             serials = lot_ids.mapped('name') if lot_ids else False
 
             # Assemble the product dict
             product_line_data = {
                 # Generate a unique identifier for this product line
                 'uuid': str(uuid.uuid4()),
-                'production_id': move.origin_production_id.id or False,
+                # TODO: move.origin_production_id.id field not found
+                # 'production_id': move.origin_production_id.id or False,
+                'production_id': False,
                 'product_id': product.id,
                 'product_default_code': product.product_tmpl_id.default_code,
                 'product_name': product.name,
@@ -130,7 +136,9 @@ class StockPicking(models.Model):
                 None,
             )
 
-            lot_ids = self.get_serials_for_product(product_id=move.product_id)
+            # TODO: self.get_serials_for_product() method not found
+            # lot_ids = self.get_serials_for_product(product_id=move.product_id)
+            lot_ids = []
             serials = lot_ids.mapped('name') if lot_ids else False
 
             if similar_product_line:
@@ -140,7 +148,9 @@ class StockPicking(models.Model):
             else:
                 # If there is no similar line we want to create a new one
                 product_line_data = {
-                    'production_id': move.origin_production_id.id or False,
+                    # TODO: move.origin_production_id.id field not found
+                    # 'production_id': move.origin_production_id.id or False,
+                    'production_id': False,
                     'product_id': move.product_id.id,
                     'product_default_code': move.product_id.product_tmpl_id.default_code,
                     'product_name': move.product_id.name,

@@ -51,12 +51,13 @@
       <p>
         <span t-if="text" class="ls-address-text" t-esc="text"/>
         <br/>
-        <t t-if="address.csv_company_name">
+        <!-- TODO: address.csv_company_name field not found -->
+        <!-- <t t-if="address.csv_company_name">
           <strong>
             <t t-esc="address.csv_company_name"/>
           </strong>
           <br/>
-        </t>
+        </t> -->
         <t t-esc="address.name"/>
         <br/>
         <t t-esc="address.street"/>
@@ -90,7 +91,9 @@
         <span t-if="text" class="ls-address-text" t-esc="text"/>
         <br/>
         <strong>
-          <t t-esc="address.get_company_name()"/>
+          <!-- TODO: address.get_company_name() method not found -->
+          <!-- <t t-esc="address.get_company_name()"/> -->
+          <t t-esc="address.company_name"/>
         </strong>
         <br/>
         <t t-esc="address.street"/>

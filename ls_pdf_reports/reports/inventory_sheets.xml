@@ -70,7 +70,8 @@
               </th>
             </tr>
           </thead>
-          <tr t-foreach="inventory.line_ids" t-as="line">
+          <!-- TODO: "inventory.line_ids" Field not found -->
+          <!-- <tr t-foreach="inventory.line_ids" t-as="line">
             <t t-if="not line.product_id.categ_id.hide_in_inventory">
               <td class="text-left">
                 <span t-field="line.product_row"/>
@@ -89,7 +90,7 @@
               </td>
               <td></td>
             </t>
-          </tr>
+          </tr> -->
         </table>
       </div>
     </t>

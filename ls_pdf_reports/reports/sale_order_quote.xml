@@ -10,6 +10,7 @@
     <field name="report_type">qweb-pdf</field>
     <field name="report_name">ls_pdf_reports.report_sale_order_quote</field>
     <field name="report_file">ls_pdf_reports.report_sale_order_quote</field>
+    <!-- TODO: object.detailed_name field not found -->
     <!-- <field name="attachment">'Quote_%s.pdf' % (object.detailed_name)</field> -->
     <field name="attachment">'Quote_%s.pdf' % (object.name)</field>
     <field name="paperformat_xmlid_base">ls_templates.ls_report_paper_format</field>
