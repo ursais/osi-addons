@@ -30,11 +30,6 @@
         'security/ir.model.access.csv',
         'data/generic_paperformats.xml',
         # 'reports/invoice_rma_refund.xml',
-        'views/account_invoice.xml',
-        'reports/invoice_generic.xml',
-        # TODO: sale.order.payment.method model not found
-        # 'reports/invoice_proforma.xml',
-        'reports/invoice_proforma_from_so.xml',
         'reports/packing_slip.xml',
         'reports/packing_slip_from_so.xml',
         'reports/picking_list.xml',

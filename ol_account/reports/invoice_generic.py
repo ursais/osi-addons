@@ -3,7 +3,7 @@ from odoo import api, models
 
 
 class ReportGenericInvoice(models.AbstractModel):
-    _name = 'report.ls_pdf_reports.report_generic_invoice'
+    _name = 'report.ol_account.report_generic_invoice'
     _description = 'Generic Invoice Report'
 
     @api.model

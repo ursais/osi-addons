@@ -4,7 +4,7 @@ from odoo.exceptions import ValidationError
 
 
 class ReportProformaInvoiceFromSo(models.AbstractModel):
-    _name = 'report.ls_pdf_reports.report_proforma_invoice_from_so'
+    _name = 'report.ol_account.report_proforma_invoice_from_so'
     _description = 'Pro-forma Invoice Report (from Sale Order)'
 
     @api.model
@@ -15,9 +15,11 @@ class ReportProformaInvoiceFromSo(models.AbstractModel):
         report = self.env['ir.actions.report']._get_report_from_name(self._name.replace('report.', ''))
 
         sale_orders = self.env[report.model].browse(docids)
-        sale_order_payment_methods = self.env['sale.order.payment.method'].search(
-            [('order_id', 'in', sale_orders.ids)]
-        )
+        # TODO: sale.order.payment.method model not found
+        # sale_order_payment_methods = self.env['sale.order.payment.method'].search(
+        #     [('order_id', 'in', sale_orders.ids)]
+        # )
+        sale_order_payment_methods = []
 
         if not sale_order_payment_methods:
             raise ValidationError(

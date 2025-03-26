@@ -1,6 +1,5 @@
 from . import tools
 from . import sale
-from . import account_move
 # TODO: "sale.order.payment.method" model not found
 # from . import payment_method
 from . import stock_picking

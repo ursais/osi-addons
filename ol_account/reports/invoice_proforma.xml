@@ -7,8 +7,8 @@
     <field name="print_report_name">'Proforma Invoice'</field>
     <field name="model">sale.order.payment.method</field>
     <field name="report_type">qweb-pdf</field>
-    <field name="report_name">ls_pdf_reports.report_proforma_invoice</field>
-    <field name="report_file">ls_pdf_reports.report_proforma_invoice</field>
+    <field name="report_name">ol_account.report_proforma_invoice</field>
+    <field name="report_file">ol_account.report_proforma_invoice</field>
     <field name="binding_model_id" ref="ls_payment_method.model_sale_order_payment_method" />
     <field name="paperformat_xmlid_base">ls_templates.ls_report_paper_format</field>
   </record>
@@ -27,7 +27,7 @@
         <t t-set="payment_method" t-value="doc.with_context(lang=language)"/>
 
         <!-- Call the template document with the language set -->
-        <t t-call="ls_pdf_reports.report_sale_order_proforma_invoice_document" t-lang="language"/>
+        <t t-call="ol_account.report_sale_order_proforma_invoice_document" t-lang="language"/>
       </t>
     </t>
   </template>

@@ -3,7 +3,7 @@ from odoo import api, models
 
 
 class ReportProformaInvoice(models.AbstractModel):
-    _name = 'report.ls_pdf_reports.report_proforma_invoice'
+    _name = 'report.ol_account.report_proforma_invoice'
     _description = 'Pro-forma Invoice Report'
 
     @api.model
