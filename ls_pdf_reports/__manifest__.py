@@ -35,7 +35,6 @@
         # 'reports/rma_bin_label.xml',
         'reports/mo_bin_label.xml',
         'reports/automation_test.xml',
-        'reports/purchase_order_doc.xml',
         'data/purchase_mail_data.xml',
         'views/report_extra_content.xml',
     ],

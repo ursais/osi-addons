@@ -20,8 +20,8 @@
     <field name="model">purchase.order</field>
     <field name="report_type">qweb-pdf</field>
     <field name="print_report_name">'Purchase Order'</field>
-    <field name="report_name">ls_pdf_reports.report_purchase_order_doc</field>
-    <field name="report_file">ls_pdf_reports.report_purchase_order_doc</field>
+    <field name="report_name">ol_purchase.report_purchase_order_doc</field>
+    <field name="report_file">ol_purchase.report_purchase_order_doc</field>
     <field name="binding_model_id" ref="purchase.model_purchase_order"/>
     <field name="paperformat_id" ref="purchase_order_doc_paperformat_a4" />
   </record>
@@ -37,11 +37,11 @@
     <t t-foreach="docs" t-as="purchase_order">
       <t t-call="web.html_container">
         <t t-set="body">
-          <t t-call="ls_pdf_reports.report_po_doc_header" />
+          <t t-call="ol_purchase.report_po_doc_header" />
           <div class="article">
-            <t t-call="ls_pdf_reports.report_po_doc_contents" />
+            <t t-call="ol_purchase.report_po_doc_contents" />
           </div>
-          <t t-call="ls_pdf_reports.report_po_doc_footer" />
+          <t t-call="ol_purchase.report_po_doc_footer" />
         </t>
         <t t-call="web.minimal_layout">
         </t>

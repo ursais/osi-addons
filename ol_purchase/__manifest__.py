@@ -21,5 +21,6 @@
         "views/res_partner_view.xml",
         "views/purchase_order_view.xml",
         "views/product_view.xml",
+        "reports/purchase_order_doc.xml",
     ],
 }
