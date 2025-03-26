@@ -1,20 +1,31 @@
 # Import Python libs
 import base64
 
-# Import Odoo libs
-from odoo import models
+# Import Odoo Libs
+from odoo import api, fields, models
+
+
+class ProductTemplate(models.Model):
+    """
+    Updates to product template to add Row,Rack,and Case fields
+    """
+
+    _inherit = "product.template"
+
+    # COLUMNS #####
+    loc_rack = fields.Char(string="Rack")
+    loc_row = fields.Char(string="Row")
+    loc_case = fields.Char(string="Case")
+    # END #########
 
 
 class ProductProduct(models.Model):
     """
     Reporting functions
     """
-
     _inherit = 'product.product'
 
-    # COLUMNS #####
-
-    # END #########
+    # METHODS #####
 
     def get_label_barcode(self):
         """
@@ -42,3 +53,5 @@ class ProductProduct(models.Model):
             return self.default_code
 
         return seller_ids[0].product_code
+
+    # END #########

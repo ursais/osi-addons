@@ -43,8 +43,8 @@
     <field name="model">stock.picking</field>
     <field name="report_type">qweb-pdf</field>
     <field name="print_report_name">'%s Picking Labels' % (object.name or '')</field>
-    <field name="report_name">ls_pdf_reports.report_picking_product_label</field>
-    <field name="report_file">ls_pdf_reports.report_picking_product_label</field>
+    <field name="report_name">ol_product.report_picking_product_label</field>
+    <field name="report_file">ol_product.report_picking_product_label</field>
     <field name="binding_model_id" ref="stock.model_stock_picking"/>
     <field name="paperformat_id" ref="product_label_paperformat" />
   </record>
@@ -55,8 +55,8 @@
     <field name="model">product.product</field>
     <field name="report_type">qweb-pdf</field>
     <field name="print_report_name">'%s Product Package Label' % (object.default_code or 'NO SKU')</field>
-    <field name="report_name">ls_pdf_reports.report_product_package_label</field>
-    <field name="report_file">ls_pdf_reports.report_product_package_label</field>
+    <field name="report_name">ol_product.report_product_package_label</field>
+    <field name="report_file">ol_product.report_product_package_label</field>
     <field name="binding_model_id" ref="product.model_product_product"/>
     <field name="paperformat_id" ref="product_label_paperformat" />
   </record>
@@ -67,8 +67,8 @@
     <field name="model">product.product</field>
     <field name="report_type">qweb-pdf</field>
     <field name="print_report_name">'%s Product Shelf Label' % (object.default_code or 'NO SKU')</field>
-    <field name="report_name">ls_pdf_reports.report_product_shelf_label</field>
-    <field name="report_file">ls_pdf_reports.report_product_shelf_label</field>
+    <field name="report_name">ol_product.report_product_shelf_label</field>
+    <field name="report_file">ol_product.report_product_shelf_label</field>
     <field name="binding_model_id" ref="product.model_product_product"/>
     <field name="paperformat_id" ref="product_label_paperformat" />
   </record>
@@ -77,8 +77,8 @@
     <field name="model">product.product</field>
     <field name="report_type">qweb-pdf</field>
     <field name="print_report_name">'%s Product Shelf Label' % (object.default_code or 'NO SKU')</field>
-    <field name="report_name">ls_pdf_reports.report_product_shelf_label_portrait</field>
-    <field name="report_file">ls_pdf_reports.report_product_shelf_label_portrait</field>
+    <field name="report_name">ol_product.report_product_shelf_label_portrait</field>
+    <field name="report_file">ol_product.report_product_shelf_label_portrait</field>
     <field name="binding_model_id" ref="product.model_product_product"/>
     <field name="paperformat_id" ref="product_label_paperformat_portrait" />
   </record>
@@ -93,7 +93,7 @@
       <t t-set="purchase_order" t-value="picking.purchase_id" />
 
       <t t-foreach="picking.move_ids.product_id" t-as="product">
-        <t t-call="ls_pdf_reports.individual_product_label" />
+        <t t-call="ol_product.individual_product_label" />
       </t>
     </t>
   </template>
@@ -101,7 +101,7 @@
   <!-- Product package label -->
   <template id="report_product_package_label">
     <t t-foreach="docs" t-as="product">
-      <t t-call="ls_pdf_reports.individual_product_label" />
+      <t t-call="ol_product.individual_product_label" />
     </t>
   </template>
 
@@ -150,7 +150,7 @@
             </div>
             <t t-if="not picking or not picking.blind_drop_ship">
               <div class="logo">
-                <img src="/ls_pdf_reports/static/src/img/onlogic_horizontal_black.png"/>
+                <img src="/ol_product/static/src/img/onlogic_horizontal_black.png"/>
               </div>
             </t>
             <div class="barcode">
@@ -165,7 +165,7 @@
 
   <!-- Label for product shelf -->
   <template id="report_product_shelf_label_portrait">
-    <t t-call="ls_pdf_reports.report_product_shelf_label" />
+    <t t-call="ol_product.report_product_shelf_label" />
   </template>
 
   <template id="report_product_shelf_label">

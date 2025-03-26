@@ -7,8 +7,8 @@
     <field name="model">stock.picking</field>
     <field name="report_type">qweb-pdf</field>
     <field name="print_report_name">'%s Packing Slip' % (object.name or '')</field>
-    <field name="report_name">ls_pdf_reports.report_packing_slip</field>
-    <field name="report_file">ls_pdf_reports.report_packing_slip</field>
+    <field name="report_name">ol_stock.report_packing_slip</field>
+    <field name="report_file">ol_stock.report_packing_slip</field>
     <field name="binding_model_id" ref="stock.model_stock_picking" />
     <field name="paperformat_xmlid_base">ls_templates.ls_report_picking_list_paper_format</field>
   </record>
@@ -33,7 +33,7 @@
         <!-- Re-browse of the record with the correct language -->
         <t t-set="picking" t-value="doc.with_context(lang=language)"/>
         <!-- Call the template document with the language set -->
-        <t t-call="ls_pdf_reports.report_packing_slip_document" t-lang="language"/>
+        <t t-call="ol_stock.report_packing_slip_document" t-lang="language"/>
       </t>
     </t>
   </template>
@@ -248,19 +248,19 @@
       </div>
 
       <!--Product list-->
-      <t t-call="ls_pdf_reports.report_packing_products">
+      <t t-call="ol_stock.report_packing_products">
         <t t-set="products_title">
           Products
         </t>
       </t>
 
-      <t t-if="not blind_drop_ship" t-call="ls_pdf_reports.packing_closing_text"/>
+      <t t-if="not blind_drop_ship" t-call="ol_stock.packing_closing_text"/>
 
       <div style="page-break-after: always"/>
 
     </t>
 
-    <t t-call="ls_pdf_reports.report_picking_list_document">
+    <t t-call="ol_stock.report_picking_list_document">
       <!-- Set the name and title of the Report -->
       <t t-set="report_title">Picking List</t>
     </t>
@@ -286,7 +286,7 @@
       </div>
 
       <!--The list of products-->
-      <t t-call="ls_pdf_reports.report_packing_product_lines"/>
+      <t t-call="ol_stock.report_packing_product_lines"/>
 
     </div>
   </template>

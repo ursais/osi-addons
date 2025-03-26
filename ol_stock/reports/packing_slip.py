@@ -3,7 +3,7 @@ from odoo import api, models
 
 
 class ReportPackingSlip(models.AbstractModel):
-    _name = 'report.ls_pdf_reports.report_packing_slip'
+    _name = 'report.ol_stock.report_packing_slip'
     _description = 'Packing Slip Report'
 
     @api.model

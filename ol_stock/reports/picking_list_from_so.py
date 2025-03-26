@@ -2,7 +2,7 @@ from odoo import api, models, fields
 
 
 class ReportPickingListFromSo(models.AbstractModel):
-    _name = 'report.ls_pdf_reports.report_picking_list_from_so'
+    _name = 'report.ol_stock.report_picking_list_from_so'
     _description = 'Picking List (from Sale Order)'
 
     @api.model

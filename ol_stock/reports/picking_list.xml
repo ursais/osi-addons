@@ -6,8 +6,8 @@
     <field name="print_report_name">'%s Picking List' % (object.name or '')</field>
     <field name="model">stock.picking</field>
     <field name="report_type">qweb-pdf</field>
-    <field name="report_name">ls_pdf_reports.report_picking_list</field>
-    <field name="report_file">ls_pdf_reports.report_picking_list</field>
+    <field name="report_name">ol_stock.report_picking_list</field>
+    <field name="report_file">ol_stock.report_picking_list</field>
     <field name="binding_model_id" ref="stock.model_stock_picking" />
     <field name="paperformat_xmlid_base">ls_templates.ls_report_picking_list_paper_format</field>
   </record>
@@ -33,7 +33,7 @@
         <!-- Re-browse of the record with the correct language -->
         <t t-set="picking" t-value="doc.with_context(lang=language)"/>
         <!-- Call the template document with the language set -->
-        <t t-call="ls_pdf_reports.report_picking_list_document" t-lang="language"/>
+        <t t-call="ol_stock.report_picking_list_document" t-lang="language"/>
       </t>
     </t>
   </template>
@@ -195,20 +195,20 @@
       </div>
 
       <!--Product list-->
-      <t t-call="ls_pdf_reports.picking_products">
+      <t t-call="ol_stock.picking_products">
         <t t-set="products_title">
           Products
         </t>
       </t>
 
-      <t t-call="ls_pdf_reports.picking_comments"/>
+      <t t-call="ol_stock.picking_comments"/>
     </t>
 
     <!--Replace the normal footer-->
     <div class="footer">
       <!-- This gets stripped out and reformatted by Odoo in `report/models/report.py get_pdf()`-->
       <t t-call="ls_templates.report_footer_style"/>
-      <t t-call="ls_pdf_reports.picking_footer"/>
+      <t t-call="ol_stock.picking_footer"/>
     </div>
 
   </template>
@@ -238,7 +238,7 @@
       </div>
 
       <!--The list of products-->
-      <t t-call="ls_pdf_reports.picking_product_lines"/>
+      <t t-call="ol_stock.picking_product_lines"/>
 
     </div>
   </template>
