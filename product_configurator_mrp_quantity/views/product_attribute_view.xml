@@ -20,7 +20,6 @@
                 <field
                     name="is_qty_required"
                     groups="product_configurator.group_product_configurator_manager"
-                    invisible="1"
                 />
                 <field
                     name="default_qty"
