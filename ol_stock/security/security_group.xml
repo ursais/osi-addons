@@ -1,0 +1,10 @@
+
+<odoo>
+
+    <record id="group_allow_incoming_move_addition" model="res.groups">
+        <field name="name">Receipts: Allow Adding Lines to Incoming Transfers</field>
+        <field name="category_id" ref="ol_base.onlogic_groups"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+    </record>
+
+</odoo>
