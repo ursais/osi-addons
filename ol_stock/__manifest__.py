@@ -17,5 +17,6 @@
     # always loaded
     "data": [
         "data/stock_location_data.xml",
+        "security/security_group.xml",
     ],
 }
