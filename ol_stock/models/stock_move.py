@@ -4,7 +4,7 @@ from odoo.exceptions import ValidationError
 
 
 class StockMove(models.Model):
-    """Inherit stock move to override set location functionality."""
+    """Inherit stock move to add group for adding receipt lines."""
 
     _inherit = "stock.move"
 
