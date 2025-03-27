@@ -22,10 +22,6 @@
         'security/res_groups.xml',
         'security/ir.model.access.csv',
         'data/generic_paperformats.xml',
-        # 'reports/invoice_rma_refund.xml',
-        # TODO: "helpdesk.rma" model not found
-        # 'reports/rma_repair_summary.xml',
-        # 'reports/rma_bin_label.xml',
         'reports/mo_bin_label.xml',
         'reports/automation_test.xml',
         # 'data/purchase_mail_data.xml',

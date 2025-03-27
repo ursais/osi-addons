@@ -9,7 +9,7 @@
     <field name="print_report_name">'%s Repair Summary' % (object.name or '')</field>
     <field name="report_name">ol_pdf_reports.report_rma_repair_summary</field>
     <field name="report_file">ol_pdf_reports.report_rma_repair_summary</field>
-    <field name="binding_model_id" ref="ls_rma.model_helpdesk_rma" />
+    <field name="binding_model_id" ref="ol_rma.model_helpdesk_rma" />
     <field name="paperformat_xmlid_base">ol_templates.ls_report_paper_format</field>
   </record>
 
