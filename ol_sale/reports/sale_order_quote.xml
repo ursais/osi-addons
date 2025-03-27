@@ -10,10 +10,8 @@
     <field name="report_type">qweb-pdf</field>
     <field name="report_name">ol_sale.report_sale_order_quote</field>
     <field name="report_file">ol_sale.report_sale_order_quote</field>
-    <!-- TODO: object.detailed_name field not found -->
-    <!-- <field name="attachment">'Quote_%s.pdf' % (object.detailed_name)</field> -->
     <field name="attachment">'Quote_%s.pdf' % (object.name)</field>
-    <field name="paperformat_xmlid_base">ol_templates.ls_report_paper_format</field>
+    <field name="paperformat_xmlid_base">ol_templates.ol_report_paper_format</field>
   </record>
 
   <!-- Main template -->
@@ -21,10 +19,7 @@
     <t t-call="web.html_container">
       <t t-foreach="docs" t-as="doc">
 
-        <!-- TODO: doc.get_language() method not found -->
         <!-- Find the correct language-->
-        <!-- <t t-set="language"
-           t-value="doc.get_language()"/> -->
         <t t-set="language" t-value="doc.partner_id.lang"/>
 
         <t t-set="sale_order" t-value="doc.with_context(lang=language)"/>
@@ -39,7 +34,7 @@
 
     <t t-call="ol_templates.external_layout">
       <!-- Set the name and title of the Report -->
-      <!-- TODO: sale_order.quote_type field not found -->
+      <!-- TODO: NC : sale_order.quote_type field not found -->
       <!-- <t t-if="sale_order.quote_type == 'budgetary'">
         <t t-set="report_title">Budgetary Quote</t>
       </t> -->
@@ -49,46 +44,40 @@
 
       <!--Set template variables-->
       <t t-set="title" t-value="'Quote'"/>
-      <!-- TODO: sale_order.quote_type field not found -->
+      <!-- TODO: NC : sale_order.quote_type field not found -->
       <!-- <t t-set="budgetary_quote" t-value="sale_order.quote_type == 'budgetary'"/> -->
       <t t-set="budgetary_quote" t-value="budgetary"/>
       <t t-set="account_manager"
          t-value="sale_order.account_manager_id and sale_order.account_manager_id or sale_order.user_id"/>
       <t t-set="partner_invoice_id" t-value="sale_order.partner_invoice_id"/>
-      <!-- TODO: sale_order.partner_id.get_company_name() method not found -->
-      <!-- <t t-set="customer_company_name" t-value="sale_order.partner_id.get_company_name()"/> -->
-      <t t-set="customer_company_name" t-value="sale_order.partner_id.company_name"/>
+      <t t-set="customer_company_name" t-value="sale_order.partner_id.company_name or sale_order.partner_id.commercial_company_name"/>
       <t t-set="currency" t-value="sale_order.currency_id"/>
       <t t-set="company" t-value="sale_order.company_id"/>
-      <!-- TODO: sale_order.detailed_state field not found -->
-      <!-- <t t-set="state" t-value="sale_order.detailed_state"/> -->
       <t t-set="state" t-value="sale_order.state"/>
       <t t-set="product_lines" t-value="onlogic_data[sale_order.id]['product_lines']"/>
       <t t-set="shipping_lines" t-value="onlogic_data[sale_order.id]['shipping_lines']"/>
       <t t-set="product_subtotal_amount" t-value="onlogic_data[sale_order.id]['product_subtotal_amount']"/>
       <t t-set="shipping_subtotal_amount" t-value="onlogic_data[sale_order.id]['shipping_subtotal_amount']"/>
-       <!-- TODO: sale_order.has_active_holds() method not found -->
+       <!-- TODO: NC : sale_order.has_active_holds() method not found -->
       <!-- <t t-set="has_active_holds" t-value="sale_order.has_active_holds()"/> -->
       <t t-set="has_active_holds" t-value="true"/>
 
       <!--The first main information block-->
-      <div class="ls_report_info_row ls_flex">
+      <div class="ol_report_info_row ol_flex">
 
         <!--Basic Invoice information-->
-        <div class="ls_report_info_row_col info">
+        <div class="ol_report_info_row_col info">
 
-          <div class="ls_report_info_row_col_title ls_flex">
+          <div class="ol_report_info_row_col_title ol_flex">
             <div class="key">
               <t t-esc="report_title" t-options='{"widget": "cap_formatter", "case":"title"}'/>
             </div>
             <div class="value">
-              <!-- TODO: sale_order.detailed_name field not found -->
-              <!-- <t t-esc="sale_order.detailed_name"/> -->
               <t t-esc="sale_order.name"/>
             </div>
           </div>
 
-          <div class="ls_report_info_row_col_line ls_flex">
+          <div class="ol_report_info_row_col_line ol_flex">
             <div class="key">
               <strong>
                 <tag>Quote Date</tag>
@@ -102,7 +91,7 @@
           </div>
 
 
-          <div class="ls_report_info_row_col_line ls_flex">
+          <div class="ol_report_info_row_col_line ol_flex">
             <div class="key">
               <strong>
                 <tag>Quote Expiration</tag>
@@ -115,7 +104,7 @@
             </div>
           </div>
 
-          <div t-if="sale_order.client_order_ref" class="ls_report_info_row_col_line ls_flex">
+          <div t-if="sale_order.client_order_ref" class="ol_report_info_row_col_line ol_flex">
             <div class="key">
               <strong>
                 <tag>Your Reference</tag>
@@ -128,13 +117,13 @@
             </div>
           </div>
 
-          <div t-if="account_manager" class="ls_account_manager_cont ls_margin_top_20">
-            <div class="account_manager_title ls_margin_bottom_5">
+          <div t-if="account_manager" class="ol_account_manager_cont ol_margin_top_20">
+            <div class="account_manager_title ol_margin_bottom_5">
               <tag>Account Manager</tag>
             </div>
 
-            <div class="account_manager_data_cont ls_flex">
-              <div class="ls_account_manager_pic">
+            <div class="account_manager_data_cont ol_flex">
+              <div class="ol_account_manager_pic">
                 <t t-if="account_manager.image_128">
                   <img t-attf-src="data:image;base64,{{account_manager.image_128}}"/>
                 </t>
@@ -142,18 +131,18 @@
                   <img t-attf-src="data:image;base64,{{company.placeholder_image_profile_picture}}"/>
                 </t>
               </div>
-              <div class="ls_account_manager_info">
-                <div class="ls_account_manager_name">
+              <div class="ol_account_manager_info">
+                <div class="ol_account_manager_name">
                   <span t-esc="account_manager.name"/>
                 </div>
-                <div t-if="account_manager.phone" class="ls_account_manager_phone">
-                  <span class="ls-email-icon">
+                <div t-if="account_manager.phone" class="ol_account_manager_phone">
+                  <span class="ol-email-icon">
                     <img t-attf-src="data:image;base64,{{company.placeholder_image_phone_icon}}"/>
                   </span>
                   <span t-esc="account_manager.phone"/>
                 </div>
-                <div t-if="account_manager.email" class="ls_account_manager_email">
-                  <span class="ls-email-icon email">
+                <div t-if="account_manager.email" class="ol_account_manager_email">
+                  <span class="ol-email-icon email">
                     <img t-attf-src="data:image;base64,{{company.placeholder_image_email_icon}}"/>
                   </span>
                   <span t-esc="account_manager.email"/>
@@ -166,7 +155,7 @@
         </div>
 
         <!--Billing related information-->
-        <div class="ls_report_info_row_col billing">
+        <div class="ol_report_info_row_col billing">
           <t t-call="ol_templates.address">
             <t t-set="text">Bill To</t>
             <t t-set="address" t-value="partner_invoice_id"/>
@@ -174,7 +163,7 @@
         </div>
 
         <!--Shipping related information-->
-        <div class="ls_report_info_row_col shipping">
+        <div class="ol_report_info_row_col shipping">
           <t t-call="ol_templates.address">
             <t t-set="text">Ship To</t>
             <t t-set="address" t-value="sale_order.partner_shipping_id"/>
@@ -191,7 +180,7 @@
       </t>
 
       <t t-if="state == 'draft' or has_active_holds">
-        <div class="ls_watermark">
+        <div class="ol_watermark">
           <tag>FOR INTERNAL USE ONLY</tag>
         </div>
       </t>

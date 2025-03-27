@@ -2,15 +2,13 @@
 <odoo>
 
   <template id="address">
-    <div class="ls-address">
+    <div class="ol-address">
       <p>
-        <span t-if="text" class="ls-address-text" t-esc="text"/>
+        <span t-if="text" class="ol-address-text" t-esc="text"/>
         <br/>
         <t t-if="not sender">
           <strong>
-            <!-- TODO: address.get_company_name() method not found -->
-            <!-- <t t-esc="address.get_company_name()"/> -->
-            <t t-esc="address.company_name"/>
+            <t t-esc="address.company_name or address.commercial_company_name"/>
           </strong>
           <br/>
           <t t-esc="address.name"/>
@@ -46,18 +44,17 @@
     </div>
   </template>
 
-  <template id="ol_templates.ls_blind_ship_address">
-    <div class="ls-address">
+  <template id="ol_templates.ol_blind_ship_address">
+    <div class="ol-address">
       <p>
-        <span t-if="text" class="ls-address-text" t-esc="text"/>
+        <span t-if="text" class="ol-address-text" t-esc="text"/>
         <br/>
-        <!-- TODO: address.csv_company_name field not found -->
-        <!-- <t t-if="address.csv_company_name">
+        <t t-if="address.csv_company_name">
           <strong>
             <t t-esc="address.csv_company_name"/>
           </strong>
           <br/>
-        </t> -->
+        </t>
         <t t-esc="address.name"/>
         <br/>
         <t t-esc="address.street"/>
@@ -85,15 +82,13 @@
     </div>
   </template>
 
-  <template id="ol_templates.ls_blind_bill_address">
-    <div class="ls-address">
+  <template id="ol_templates.ol_blind_bill_address">
+    <div class="ol-address">
       <p>
-        <span t-if="text" class="ls-address-text" t-esc="text"/>
+        <span t-if="text" class="ol-address-text" t-esc="text"/>
         <br/>
         <strong>
-          <!-- TODO: address.get_company_name() method not found -->
-          <!-- <t t-esc="address.get_company_name()"/> -->
-          <t t-esc="address.company_name"/>
+          <t t-esc="address.company_name or address.commercial_company_name"/>
         </strong>
         <br/>
         <t t-esc="address.street"/>

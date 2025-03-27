@@ -14,7 +14,7 @@
         # Data
         # TODO: Do not migrate yet
         # 'data/email_templates.xml',
-        # 'data/paper_formats.xml',
+        'data/paper_formats.xml',
 
         # Styles
         'templates/style/font.xml',

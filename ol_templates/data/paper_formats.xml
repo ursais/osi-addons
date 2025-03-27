@@ -10,7 +10,7 @@
   as it was not possible to load them conditionally via XML
   and we didn't want to overwrite the default company paper formats
   -->
-  <record id="ls_report_paper_format_us" model="report.paperformat">
+  <record id="ol_report_paper_format_us" model="report.paperformat">
     <field name="name">LS Report paper format US</field>
     <field name="default" eval="True"/>
     <field name="format">Letter</field>
@@ -24,7 +24,7 @@
     <field name="dpi">90</field>
   </record>
 
-  <record id="ls_report_paper_format_eu" model="report.paperformat">
+  <record id="ol_report_paper_format_eu" model="report.paperformat">
     <field name="name">LS Report paper format EU</field>
     <field name="default" eval="True"/>
     <field name="format">A4</field>
@@ -38,7 +38,7 @@
     <field name="dpi">90</field>
   </record>
 
-  <record id="ls_report_paper_format_landscape_us" model="report.paperformat">
+  <record id="ol_report_paper_format_landscape_us" model="report.paperformat">
     <field name="name">LS Report paper format Landscape US</field>
     <field name="default" eval="True"/>
     <field name="format">Letter</field>
@@ -52,7 +52,7 @@
     <field name="dpi">90</field>
   </record>
 
-  <record id="ls_report_paper_format_landscape_eu" model="report.paperformat">
+  <record id="ol_report_paper_format_landscape_eu" model="report.paperformat">
     <field name="name">LS Report paper format Landscape EU</field>
     <field name="default" eval="True"/>
     <field name="format">A4</field>
@@ -66,7 +66,7 @@
     <field name="dpi">90</field>
   </record>
 
-  <record id="ls_report_picking_list_paper_format_us" model="report.paperformat">
+  <record id="ol_report_picking_list_paper_format_us" model="report.paperformat">
     <field name="name">LS Report Picking List paper format US</field>
     <field name="default" eval="True"/>
     <field name="format">Letter</field>
@@ -80,7 +80,7 @@
     <field name="dpi">90</field>
   </record>
 
-  <record id="ls_report_picking_list_paper_format_eu" model="report.paperformat">
+  <record id="ol_report_picking_list_paper_format_eu" model="report.paperformat">
     <field name="name">LS Report Picking List paper format EU</field>
     <field name="default" eval="True"/>
     <field name="format">A4</field>
@@ -94,7 +94,7 @@
     <field name="dpi">90</field>
   </record>
 
-  <record id="ls_report_production_automation_test_paper_format_us" model="report.paperformat">
+  <record id="ol_report_production_automation_test_paper_format_us" model="report.paperformat">
     <field name="name">LS Report Production Automation Test paper format US</field>
     <field name="default" eval="True"/>
     <field name="format">Letter</field>
@@ -108,7 +108,7 @@
     <field name="dpi">90</field>
   </record>
 
-  <record id="ls_report_production_automation_test_paper_format_eu" model="report.paperformat">
+  <record id="ol_report_production_automation_test_paper_format_eu" model="report.paperformat">
     <field name="name">LS Report Production Automation Test paper format EU</field>
     <field name="default" eval="True"/>
     <field name="format">A4</field>

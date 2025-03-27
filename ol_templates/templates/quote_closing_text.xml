@@ -3,7 +3,7 @@
 
   <!--Notes and totals-->
   <template id="quote_closing_text">
-    <div class="ls_quote_closing_text ls_margin_top_20">
+    <div class="ol_quote_closing_text ol_margin_top_20">
       <p t-if="sale_order.company_id.short_name != 'eu'">
         <strong>Validity</strong>: Processors, RAM, storage devices, and other commodity components, as well as End of Life product prices are valid for 24 hours. All
         other pricing is valid for 14 days unless otherwise noted. Prices are for MOQ as stated.<br/>

@@ -12,8 +12,8 @@
                     class="oe_highlight"
                     string="Print"
                     type="object"
+                    invisible="state == 'draft' or move_type in ('out_invoice', 'out_refund')"
                      />
-                     <!-- invisible="state == 'draft' or move_type in ('out_invoice', 'out_refund')" -->
             </button>
         </field>
     </record>

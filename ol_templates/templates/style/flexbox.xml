@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <template id="ls_flex_style">
+  <template id="ol_flex_style">
     <!--Our current wkhtmltopdf version 12.4 can't handle flexbox directly-->
     <!--this is the CSS that mimics the same behaviour with webkit-box-->
     <style>
-      .ls_flex{
+      .ol_flex{
         display: -webkit-box;
         display: -webkit-flex;
         display: flex;
       }
 
-      .ls_flex_just_cont_space_between{
+      .ol_flex_just_cont_space_between{
         -webkit-box-pack: justify;
         -webkit-justify-content: space-between;
         justify-content: space-between;
       }
 
-      .ls_flex_just_cont_flex_end{
+      .ol_flex_just_cont_flex_end{
         -webkit-box-pack: end;
         -webkit-justify-content: flex-end;
         justify-content: flex-end;
       }
 
-      .ls_flex_reverse{
+      .ol_flex_reverse{
         box-orient: vertical; /* As specified */
         -moz-box-orient: vertical; /* Mozilla */
         -webkit-box-orient: vertical;

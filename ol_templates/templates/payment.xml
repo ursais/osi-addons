@@ -2,8 +2,8 @@
 <odoo>
 
   <template id="payment">
-    <div class="ls_block_title" t-esc="block_title"/>
-    <div class="ls_block_data" t-esc="payment_method.get_display_name()"/>
+    <div class="ol_block_title" t-esc="block_title"/>
+    <div class="ol_block_data" t-esc="payment_method.get_display_name()"/>
   </template>
 
 </odoo>

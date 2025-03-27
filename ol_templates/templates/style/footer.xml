@@ -2,58 +2,58 @@
 <odoo>
   <template id="report_footer_style">
     <!-- We need to define specific styles for each section header/page/footer -->
-    <t t-call="ol_templates.ls_flex_style"/>
+    <t t-call="ol_templates.ol_flex_style"/>
     <style>
 
-      .ls_report_footer {
+      .ol_report_footer {
       font-size: 11px;
       line-height: 12px;
       margin: 40px 0 0 0;
       }
 
-      .ls_report_footer_company_row {
+      .ol_report_footer_company_row {
       padding-top: 5px;
       border-top: 1px solid #595A5C;
       }
 
-      .ls_report_footer_company_row,
-      .ls_report_footer_page{
+      .ol_report_footer_company_row,
+      .ol_report_footer_page{
       color: #595A5C;
       }
 
-      .ls_report_footer_info_row .key {
+      .ol_report_footer_info_row .key {
       font-weight: 600;
       }
 
-      .ls_report_footer_company_contact .key {
+      .ol_report_footer_company_contact .key {
       width: 25%;
       }
 
-      .ls_report_footer_payment_info .key {
+      .ol_report_footer_payment_info .key {
       width: 40%;
       }
 
-      .ls_report_footer_company_contact .value {
+      .ol_report_footer_company_contact .value {
       width: 75%;
       }
 
-      .ls_report_footer_payment_info .value {
+      .ol_report_footer_payment_info .value {
       width: 60%;
       }
 
-      .ls_report_footer_company_contact {
+      .ol_report_footer_company_contact {
       width: 200px;
       }
 
-      .ls_report_footer_page_info {
+      .ol_report_footer_page_info {
       text-align: right;
       }
 
-      .ls_report_footer_page {
+      .ol_report_footer_page {
       width: 100%;
       }
 
-      .ls_report_footer_title{
+      .ol_report_footer_title{
       color: #595A5C;
       font-weight: 600;
       font-size: 16px;
@@ -67,7 +67,7 @@
       margin: 0 0 5px 5px;
       }
 
-      .ls_picking_footer_block.ls_flex.ls_flex_just_cont_space_between {
+      .ol_picking_footer_block.ol_flex.ol_flex_just_cont_space_between {
       height: 50px;
       align-items: flex-end;
       box-align: end;
@@ -86,7 +86,7 @@
       padding: 0;
       }
 
-      .ls_report_footer_payment_info {
+      .ol_report_footer_payment_info {
         min-width: 225px;
       }
     </style>

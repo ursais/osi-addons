@@ -2,22 +2,22 @@
 <odoo>
   <template id="report_header_style">
     <!-- We need to define specific styles for each section header/page/footer -->
-    <t t-call="ol_templates.ls_flex_style"/>
+    <t t-call="ol_templates.ol_flex_style"/>
     <style>
       .report_header_cont {
         margin-bottom: 30px;
         width: 100%;
       }
 
-      .ls_header_logo{
+      .ol_header_logo{
         margin-top: 90px;
       }
 
-      .ls_header_logo img{
+      .ol_header_logo img{
         max-width: 221px;
       }
 
-      .ls_header_report_info {
+      .ol_header_report_info {
         color: #595A5C;
         font-weight: 600;
         line-height: 1em;
@@ -25,25 +25,25 @@
         width: 50%;
       }
 
-      .ls_header_report_info.blind_drop_ship{
+      .ol_header_report_info.blind_drop_ship{
       text-align: initial;
       }
 
-      .ls_customer_name {
+      .ol_customer_name {
       font-size: 14px;
       }
 
-      .ls_blind_drop_title{
+      .ol_blind_drop_title{
       font-size: 1.5em;
       color: #007bff;
       }
 
-      .ls_rush_order_title{
+      .ol_rush_order_title{
       font-size: 1.5em;
       color: #a94442;
       }
 
-      .ls_document_type {
+      .ol_document_type {
         font-size: 34px;
         line-height: 1em;
       }

@@ -7,7 +7,7 @@ from odoo import api, models
 
 
 class ReportRmaRepairSummary(models.AbstractModel):
-    _name = 'report.ol_pdf_reports.report_rma_repair_summary'
+    _name = 'report.ol_rma.report_rma_repair_summary'
     _description = 'RMA Progress Report'
 
     @api.model

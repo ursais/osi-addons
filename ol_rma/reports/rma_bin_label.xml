@@ -1,16 +1,32 @@
 <odoo>
   <data>
 
+    <!-- Paper format for Bin Labels -->
+    <record id="bin_label_paperformat" model="report.paperformat">
+        <field name="name">Bin Label Custom Format</field>
+        <field name="format">custom</field>
+        <field name="page_height">102</field>
+        <field name="page_width">152</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top" eval="10"/>
+        <field name="margin_bottom" eval="0"/>
+        <field name="margin_left" eval="5"/>
+        <field name="margin_right" eval="5"/>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">20</field>
+        <field name="dpi">90</field>
+    </record>
+  
     <!-- Report Action -->
     <record id="action_report_rma_bin_label" model="ir.actions.report">
       <field name="name">RMA Bin Label</field>
       <field name="model">helpdesk.rma</field>
       <field name="report_type">qweb-pdf</field>
       <field name="print_report_name">'%s Bin Label' % (object.name or '')</field>
-      <field name="report_name">ol_pdf_reports.report_rma_bin_label</field>
-      <field name="report_file">ol_pdf_reports.report_rma_bin_label</field>
+      <field name="report_name">ol_rma.report_rma_bin_label</field>
+      <field name="report_file">ol_rma.report_rma_bin_label</field>
       <field name="binding_model_id" ref="ol_rma.model_helpdesk_rma"/>
-      <field name="paperformat_id" ref="ol_pdf_reports.bin_label_paperformat"/>
+      <field name="paperformat_id" ref="ol_rma.bin_label_paperformat"/>
     </record>
 
   </data>
@@ -76,7 +92,7 @@
   </template>
 
   <!-- first check if rma_record.company_id can be used before resorting to o.company_id -->
-  <template id="ls_internal_layout" inherit_id="web.internal_layout">
+  <template id="ol_internal_layout" inherit_id="web.internal_layout">
     <xpath expr="//t[@t-if='company_id']" position="after">
       <t t-elif="rma_record and rma_record.company_id">
         <t t-set="company" t-value="rma_record.company_id" />

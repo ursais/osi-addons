@@ -13,12 +13,12 @@ class ReportProformaInvoice(models.AbstractModel):
         # Get the module/report name from the class name
         report = self.env['ir.actions.report']._get_report_from_name(self._name.replace('report.', ''))
 
-        sale_order_payment_methods = self.env[report.model].browse(docids)
+        sale_order = self.env[report.model].browse(docids)
 
         return {
             'doc_ids': docids,
             'doc_model': report.model,
             'data': data,
-            'docs': sale_order_payment_methods,
-            'onlogic_data': sale_order_payment_methods.get_payment_method_report_data(),
+            'docs': sale_order,
+            'onlogic_data': sale_order.get_quote_report_data(),
         }

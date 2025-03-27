@@ -2,7 +2,7 @@
 import base64
 
 # Import Odoo Libs
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class ProductTemplate(models.Model):

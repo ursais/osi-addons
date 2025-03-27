@@ -24,7 +24,7 @@
 
                     <div class="oe_button_box" name="button_box"></div>
 
-                    <div class="ls-information-block-cont"/>
+                    <div class="ol-information-block-cont"/>
                     <group name="main_grp" colspan="4" col="3">
                         <field name="name"/>
                         <field name="pdf" filename="pdf_filename"/>

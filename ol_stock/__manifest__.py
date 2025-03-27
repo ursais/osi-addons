@@ -13,6 +13,10 @@
         "ol_base",
         "stock",
         "delivery_stock_picking_batch",
+        "ol_templates",
+        "ol_stock_loadcsv",
+        "stock_inventory",
+        "ol_rush_order",
     ],
     # always loaded
     "data": [

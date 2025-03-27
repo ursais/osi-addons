@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <odoo>
-  <template id="ol_templates.ls_email">
+  <template id="ol_templates.ol_email">
     <!--
         === Expected inputs ===
         - title: The title of the email
@@ -234,16 +234,16 @@
               <tr>
               <td>
               <![endif]-->
-          <t t-call="ol_templates.ls_standard_email_header"/>
+          <t t-call="ol_templates.ol_standard_email_header"/>
 
           <!-- Email Body : BEGIN -->
           <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%"
                  style="max-width: 600px;" class="email-container">
             <t t-raw="0"/>
-            <t t-call="ol_templates.ls_email_spacer"/>
+            <t t-call="ol_templates.ol_email_spacer"/>
           </table>
           <!-- Email Body : END -->
-          <t t-call="ol_templates.ls_standard_email_footer"/>
+          <t t-call="ol_templates.ol_standard_email_footer"/>
 
           <!--[if mso]>
               </td>
@@ -256,7 +256,7 @@
 
   </template>
 
-  <template id="ol_templates.ls_email_internal">
+  <template id="ol_templates.ol_email_internal">
     <!--
         === Expected inputs ===
         - title: The title of the email
@@ -480,7 +480,7 @@
           <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%"
                  style="max-width: 600px;" class="email-container">
             <t t-raw="0"/>
-            <t t-call="ol_templates.ls_email_spacer"/>
+            <t t-call="ol_templates.ol_email_spacer"/>
           </table>
           <!-- Email Body : END -->
           <!--[if mso]>
@@ -494,7 +494,7 @@
 
   </template>
 
-  <template id="ol_templates.ls_email_text_content">
+  <template id="ol_templates.ol_email_text_content">
     <!--
         === Expected inputs ===
         body from calling template
@@ -524,7 +524,7 @@
     </tr>
   </template>
 
-  <template id="ol_templates.ls_email_spacer">
+  <template id="ol_templates.ol_email_spacer">
     <!-- Spacer : BEGIN -->
     <tr>
       <td aria-hidden="true" height="20" bgcolor="#ffffff" style="font-size: 0; line-height: 0;">
@@ -534,7 +534,7 @@
     <!-- Spacer : END -->
   </template>
 
-  <template id="ls_standard_email_header">
+  <template id="ol_standard_email_header">
     <!-- START: Standard Header -->
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%"
            style="max-width: 600px;">
@@ -550,7 +550,7 @@
     <!-- END: Standard Header -->
   </template>
 
-  <template id="ol_templates.ls_standard_email_footer">
+  <template id="ol_templates.ol_standard_email_footer">
     <!--
         === Expected inputs ===
         - include_newsletter_disclaimer: boolean to turn the newsletter text on or off
@@ -679,15 +679,15 @@
     <!-- END: ls footer -->
   </template>
 
-  <template id="ol_templates.ls_format_address_for_report">
+  <template id="ol_templates.ol_format_address_for_report">
     <!--
         === Expected inputs ===
         - text: 'Bill To', 'Ship To', etc
         - address: res.partner object
     -->
-    <div class="ls-address">
+    <div class="ol-address">
       <p>
-        <span class="ls-address-text" t-esc="text"/>
+        <span class="ol-address-text" t-esc="text"/>
         <br/>
         <t t-esc="address.name"/>
         <br/>
@@ -710,14 +710,14 @@
         <br/>
       </p>
       <br t-if="not address.street2"/>
-      <div class="ls-address-phone">
-        <span class="ls-phone-icon">
+      <div class="ol-address-phone">
+        <span class="ol-phone-icon">
           <img t-attf-src="data:image;base64,{{company.placeholder_image_phone_icon}}"/>
         </span>
         <p t-esc="address.phone" t-options='{"widget": "phone_formatter", "country_id": address.country_id}'/>
       </div>
-      <div class="ls-address-email">
-        <span class="ls-email-icon">
+      <div class="ol-address-email">
+        <span class="ol-email-icon">
           <img t-attf-src="data:image;base64,{{company.placeholder_image_email_icon}}"/>
         </span>
         <p t-esc="address.email"/>
@@ -725,7 +725,7 @@
     </div>
   </template>
 
-  <template id="ol_templates.ls_format_address_for_email">
+  <template id="ol_templates.ol_format_address_for_email">
     <!--
         === Expected inputs ===
         - text: 'Bill To', 'Ship To', etc
@@ -744,7 +744,7 @@
                   <p style="margin: 0 0 5px 0;">
                     <span style="font-weight: 500;" t-esc="text"/>
                     <br/>
-                    <t t-esc="address.get_company_name()"/>
+                    <t t-esc="address.company_name or address.commercial_company_name"/>
                     <br/>
                     <t t-esc="address.name"/>
                     <br/>
@@ -775,7 +775,7 @@
     </div>
   </template>
 
-  <template id="ol_templates.ls_billing_shipping_info">
+  <template id="ol_templates.ol_billing_shipping_info">
     <!--
         === Expected inputs ===
         - billing_address: res.partner object
@@ -807,7 +807,7 @@
                   <tr>
                   <td align="left" valign="top" width="260">
                   <![endif]-->
-              <t t-call="ol_templates.ls_format_address_for_email">
+              <t t-call="ol_templates.ol_format_address_for_email">
                 <t t-set="text">Bill To</t>
                 <t t-set="address" t-value="billing_address"/>
               </t>
@@ -816,7 +816,7 @@
                   <td align="left" valign="top" width="260">
                   <![endif]-->
 
-              <t t-call="ol_templates.ls_format_address_for_email">
+              <t t-call="ol_templates.ol_format_address_for_email">
                 <t t-set="text">Ship To</t>
                 <t t-set="address" t-value="shipping_address"/>
               </t>
@@ -837,7 +837,7 @@
     </tr>
   </template>
 
-  <template id="ol_templates.ls_domestic_ach_info_us">
+  <template id="ol_templates.ol_domestic_ach_info_us">
     <!-- TODO: get the info dynamically (based on company)!! -->
     <!-- START: Domestic: ACH Payment Instructions -->
     <tr>
@@ -1092,7 +1092,7 @@
     <!-- END: Domestic: ACH Payment Instructions -->
   </template>
 
-  <template id="ol_templates.ls_international_ach_info_us">
+  <template id="ol_templates.ol_international_ach_info_us">
     <!-- TODO: get the info dynamically!! (based on company) -->
     <!-- START: International: Wire Payment Instructions -->
     <tr>
@@ -1386,7 +1386,7 @@
     <!-- END: International: Wire Payment Instructions -->
   </template>
 
-  <template id="ol_templates.ls_domestic_ach_info_eu">
+  <template id="ol_templates.ol_domestic_ach_info_eu">
     <!-- TODO: get the info dynamically (based on company)!! -->
     <!-- START: Domestic: ACH Payment Instructions -->
     <tr>
@@ -1640,7 +1640,7 @@
     <!-- END: Domestic: ACH Payment Instructions -->
   </template>
 
-  <template id="ol_templates.ls_contact_info">
+  <template id="ol_templates.ol_contact_info">
     <t t-if="contact_intro_text" t-esc="contact_intro_text"/>
     <t t-if="not contact_intro_text">
       <tag>If you have any questions, please contact us at</tag>
@@ -1668,7 +1668,7 @@
     <tag style="font-size: 16px; line-height: 28px;">The OnLogic Team</tag>
   </template>
 
-  <template id="ol_templates.ls_no_account_info">
+  <template id="ol_templates.ol_no_account_info">
     <t t-if="not contact_intro_text">
       <tag>If you do not have an account, or have any other questions, please contact us at</tag>
     </t>
@@ -1686,7 +1686,7 @@
     <tag style="display: inline-block; font-weight: 500;">
       Your Order Number
     </tag>
-    <span style="font-weight: 500;" t-esc="order.detailed_name"/>
+    <span style="font-weight: 500;" t-esc="order.name"/>
     <t t-if="order.client_order_ref">
       <br/>
       <tag style="padding-bottom: 6px; display: inline-block; font-weight: 500;">

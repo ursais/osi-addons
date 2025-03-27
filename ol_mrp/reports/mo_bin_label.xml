@@ -1,14 +1,31 @@
 <odoo>
+
+    <!-- Paper format for Bin Labels -->
+    <record id="bin_label_paperformat" model="report.paperformat">
+        <field name="name">Bin Label Custom Format</field>
+        <field name="format">custom</field>
+        <field name="page_height">102</field>
+        <field name="page_width">152</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top" eval="10"/>
+        <field name="margin_bottom" eval="0"/>
+        <field name="margin_left" eval="5"/>
+        <field name="margin_right" eval="5"/>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">20</field>
+        <field name="dpi">90</field>
+    </record>
+
   <!-- Report Action -->
   <record id="action_report_mo_bin_label" model="ir.actions.report">
     <field name="name">MO Bin Label</field>
     <field name="model">mrp.production</field>
     <field name="report_type">qweb-pdf</field>
     <field name="print_report_name">'%s Bin Label' % (object.name or 'MO')</field>
-    <field name="report_name">ol_pdf_reports.report_mo_bin_label</field>
-    <field name="report_file">ol_pdf_reports.report_mo_bin_label</field>
+    <field name="report_name">ol_mrp.report_mo_bin_label</field>
+    <field name="report_file">ol_mrp.report_mo_bin_label</field>
     <field name="binding_model_id" ref="mrp.model_mrp_production"/>
-    <field name="paperformat_id" ref="ol_pdf_reports.bin_label_paperformat"/>
+    <field name="paperformat_id" ref="ol_mrp.bin_label_paperformat"/>
   </record>
 
   <!-- Template -->

@@ -150,7 +150,7 @@
             </div>
             <t t-if="not picking or not picking.blind_drop_ship">
               <div class="logo">
-                <img src="/ol_product/static/src/img/onlogic_horizontal_black.png"/>
+                <img src="/ol_product/static/img/onlogic_horizontal_black.png"/>
               </div>
             </t>
             <div class="barcode">
@@ -173,7 +173,7 @@
       <t t-call="web.html_container">
         <div class="article">
           <div class="page product-label">
-            <div class="content ls_flex ls_flex_just_cont_space_between padding-top-10">
+            <div class="content ol_flex ol_flex_just_cont_space_between padding-top-10">
               <div class="label-box">
                 <div class="label-line">
                   <tag>Location:</tag>

@@ -3,7 +3,7 @@ from odoo import api, models
 
 
 class ReportRefundInvoice(models.AbstractModel):
-    _name = 'report.ol_pdf_reports.report_refund_invoice'
+    _name = 'report.ol_rma.report_refund_invoice'
     _description = 'RMA Refund Invoice Report'
 
     @api.model

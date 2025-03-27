@@ -90,7 +90,7 @@ class SaleOrder(models.Model):
 
         for sale_order_line in product_lines:
 
-            # TODO: "sale_order_line.quote_config_id" Field not found
+            # TODO: NC : "sale_order_line.quote_config_id" Field not found
             quote_config = sorted_quote_lines = False
             # quote_config = sale_order_line.quote_config_id or False
             #

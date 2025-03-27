@@ -3,15 +3,15 @@
 
   <template id="serial_numbers">
 
-    <div class="ls-serial-numbers-title">
+    <div class="ol-serial-numbers-title">
       <tag>
         <t t-esc="serial_title"/>
         (<t t-esc="len(system_serial_numbers)"/>):
       </tag>
     </div>
-    <div class="ls-serial-numbers-cont">
+    <div class="ol-serial-numbers-cont">
       <t t-foreach="system_serial_numbers" t-as="serial_number">
-        <div class="ls-serial-number" t-esc="serial_number"/>
+        <div class="ol-serial-number" t-esc="serial_number"/>
       </t>
     </div>
   </template>

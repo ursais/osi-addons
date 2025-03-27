@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
   <template id="eu_tax_exempt">
-    <!-- TODO: sale_order.tax_exempt_message_needed() method not found -->
-    <!-- <t t-if="sale_order.tax_exempt_message_needed()"> -->
     <t>
       <!--We need to show this message on the EU side if the customer company has a valid VAT id-->
       <br/>

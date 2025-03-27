@@ -27,11 +27,11 @@ class PurchaseOrder(models.Model):
         """
         self.ensure_one()
         billing_partner = self.company_id.partner_id
-        # TODO: "billing_partner.get_contacts()" method not found
+        # TODO: NC : "billing_partner.get_contacts()" method not found
         # ap_contacts = billing_partner.get_contacts('ap').filtered('email')
         ap_contacts = billing_partner
         res = {
-            # TODO: "self.shipping_notes" field not found
+            # TODO: NC : "self.shipping_notes" field not found
             # 'shipping_notes': newline_to_br(self.shipping_notes) if self.shipping_notes else '',
             'shipping_notes': '',
             'supplier_notes': newline_to_br(self.notes) if self.notes else '',
@@ -73,7 +73,7 @@ class PurchaseOrder(models.Model):
                     'qty': line.product_qty,
                     'unit_price': formatLang(self.env, line.price_unit, currency_obj=self.currency_id),
                     'line_subtotal': formatLang(self.env, line.price_subtotal, currency_obj=self.currency_id),
-                    # TODO: "line.note" field not found
+                    # TODO: NC : "line.note" field not found
                     # 'line_note': newline_to_br(line.note) if line.note else '',
                     'line_note': newline_to_br(line.name) if line.display_type == 'line_note' else "",
                     'product_tariff_code': tariff_code_line,

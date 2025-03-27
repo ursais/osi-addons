@@ -10,7 +10,7 @@
     <field name="report_name">ol_account.report_proforma_invoice_from_so</field>
     <field name="report_file">ol_account.report_proforma_invoice_from_so</field>
     <field name="binding_model_id" ref="sale.model_sale_order" />
-    <field name="paperformat_xmlid_base">ol_templates.ls_report_paper_format</field>
+    <field name="paperformat_xmlid_base">ol_templates.ol_report_paper_format</field>
   </record>
 
   <!-- Main template -->
@@ -19,9 +19,6 @@
       <t t-foreach="docs" t-as="doc">
 
         <!-- Find the correct language-->
-        <!-- TODO: doc.get_language() method not found -->
-        <!-- <t t-set="language"
-           t-value="doc.get_language()"/> -->
         <t t-set="language" t-value="doc.partner_id.lang"/>
 
         <t t-set="sale_order" t-value="doc.with_context(lang=language)"/>

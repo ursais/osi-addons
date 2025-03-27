@@ -28,9 +28,9 @@ class IrActionsReport(models.Model):
 
         # Get the company specific paper format we defined in `ol_templates/report/report_definitions.xml`
         paper_format_obj = None
-        if user_company.short_name == 'eu':
+        if user_company.short_name.lower() == 'eu':
             paper_format_obj = self.env.ref(format_base + '_eu', False)
-        elif user_company.short_name == 'us':
+        elif user_company.short_name.lower() == 'us':
             paper_format_obj = self.env.ref(format_base + '_us', False)
 
         if not paper_format_obj:

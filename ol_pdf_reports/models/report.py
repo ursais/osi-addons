@@ -1,6 +1,6 @@
 # Import Python libs
 # from pypdf import PdfWriter, PdfReader
-from odoo.tools.pdf import PdfFileWriter, PdfFileReader, PdfReadError
+from odoo.tools.pdf import PdfFileWriter, PdfFileReader
 import base64
 from io import BytesIO
 import logging

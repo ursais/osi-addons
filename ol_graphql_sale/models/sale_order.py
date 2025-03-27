@@ -88,7 +88,7 @@ class SaleOrder(models.Model):
                 "Error during Website Sale Order payment handling.\nEcommerce Payment"
                 f" Details:{ecommerce_payment_method_details}\nError: {error}"
             )
-            self.env.ref("ls_graphql_sale.order_stripe_import_error").create_hold(
+            self.env.ref("ol_graphql_sale.order_stripe_import_error").create_hold(
                 order=self, custom_msg=msg
             )
 
@@ -114,7 +114,7 @@ class SaleOrder(models.Model):
         # Manually encode totals, we use these for verification but also
         # to set Commercetools in case of edits. Don't override if we're currently
         # reviewing disparity.
-        tax_check_id = self.env.ref("ls_graphql_sale.order_import_tax_difference").id
+        tax_check_id = self.env.ref("ol_graphql_sale.order_import_tax_difference").id
         active_tax_holds = self.hold_ids.filtered(
             lambda x: (x.check_id.id == tax_check_id and not x.resolve_user_id)
         )
@@ -146,7 +146,7 @@ class SaleOrder(models.Model):
     #             msg = "Ecommerce Tax: {:.2f} <br/>Odoo Tax: {:.2f}".format(
     #                 self.ecommerce_tax, self.amount_tax
     #             )
-    #             self.env.ref("ls_graphql_sale.order_import_tax_difference").create_hold(
+    #             self.env.ref("ol_graphql_sale.order_import_tax_difference").create_hold(
     #                 self, custom_msg=msg
     #             )
 
@@ -156,20 +156,20 @@ class SaleOrder(models.Model):
     #                 self.ecommerce_total, self.amount_total
     #             )
     #             self.env.ref(
-    #                 "ls_graphql_sale.order_import_amount_total_difference"
+    #                 "ol_graphql_sale.order_import_amount_total_difference"
     #             ).create_hold(self, custom_msg=msg)
 
     #         # Add a hold if the sale order has sale order lines that have 0 price total set
     #         if self.has_zero_value_lines():
     #             msg = "One or multiple order lines have 0 as total value"
     #             self.env.ref(
-    #                 "ls_graphql_sale.order_import_zero_value_lines"
+    #                 "ol_graphql_sale.order_import_zero_value_lines"
     #             ).create_hold(self, custom_msg=msg)
 
     #         # If we get this far and still don't have holds, create one because something has gone wrong
     #         if self.state == "draft" and not self.has_active_holds():
     #             msg = "No Holds Created, but something went wrong on import, call IT."
-    #             self.env.ref("ls_graphql_sale.generic_import_error_check").create_hold(
+    #             self.env.ref("ol_graphql_sale.generic_import_error_check").create_hold(
     #                 self, custom_msg=msg
     #             )
 
@@ -189,7 +189,7 @@ class SaleOrder(models.Model):
     #                     f" {transaction}"
     #                 )
     #                 self.env.ref(
-    #                     "ls_graphql_sale.order_import_transaction_check"
+    #                     "ol_graphql_sale.order_import_transaction_check"
     #                 ).create_hold(self, custom_msg=msg)
     #                 continue
 
@@ -231,7 +231,7 @@ class SaleOrder(models.Model):
     #             f"| Company: {self.env.company.short_name.upper()}"
     #             f"| Error: {e}"
     #         )
-    #         self.env.ref("ls_graphql_sale.order_import_valid_check").create_hold(
+    #         self.env.ref("ol_graphql_sale.order_import_valid_check").create_hold(
     #             self, custom_msg=msg
     #         )
 
@@ -289,12 +289,12 @@ class SaleOrder(models.Model):
             'Sale Order Line Import Error':
                 {
                     'custom_msg': '',
-                    'ref': 'ls_graphql_sale.order_line_import_error_check'
+                    'ref': 'ol_graphql_sale.order_line_import_error_check'
                 },
             'Something else is wrong':
                 {
                     'custom_msg': '',
-                    'ref': 'ls_graphql_sale.order_line_import_error_check'
+                    'ref': 'ol_graphql_sale.order_line_import_error_check'
                 }
         }
         """

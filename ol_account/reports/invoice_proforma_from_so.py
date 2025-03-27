@@ -15,7 +15,7 @@ class ReportProformaInvoiceFromSo(models.AbstractModel):
         report = self.env['ir.actions.report']._get_report_from_name(self._name.replace('report.', ''))
 
         sale_orders = self.env[report.model].browse(docids)
-        # TODO: sale.order.payment.method model not found
+        # TODO: NC : sale.order.payment.method model not found
         # sale_order_payment_methods = self.env['sale.order.payment.method'].search(
         #     [('order_id', 'in', sale_orders.ids)]
         # )

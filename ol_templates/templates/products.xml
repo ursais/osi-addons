@@ -3,21 +3,21 @@
 
   <!--The main products section in the report-->
   <template id="report_products">
-    <div class="ls_report_products_row">
-      <div class="ls_products_header ls_flex ls_flex_just_cont_space_between">
-        <div class="ls_products_title ls_flex ls_flex_reverse">
+    <div class="ol_report_products_row">
+      <div class="ol_products_header ol_flex ol_flex_just_cont_space_between">
+        <div class="ol_products_title ol_flex ol_flex_reverse">
           <!--The title-->
           <t t-esc="products_title"/>
         </div>
-        <div class="ls_products_list_header ls_flex ls_flex_just_cont_space_between">
-          <div class="ls_products_list_header_item">
+        <div class="ol_products_list_header ol_flex ol_flex_just_cont_space_between">
+          <div class="ol_products_list_header_item">
             <!--The info table header-->
             <tag>Price</tag>
           </div>
-          <div class="ls_products_list_header_item">
+          <div class="ol_products_list_header_item">
             <tag>QTY</tag>
           </div>
-          <div class="ls_products_list_header_item">
+          <div class="ol_products_list_header_item">
             <tag>Subtotal</tag>
           </div>
         </div>
@@ -31,27 +31,27 @@
 
   <!--Products list template-->
   <template id="report_product_lines">
-    <div class="ls_product_lines">
+    <div class="ol_product_lines">
       <t t-foreach="product_lines" t-as="product_line">
         <t t-set="sale_order_line" t-value="product_line.get('order_line', False)"/>
         <t t-set="invoice_line" t-value="product_line.get('invoice_line')"/>
-        <div class="ls_products_line">
+        <div class="ol_products_line">
 
           <!--Product: image, name, sku, data-->
-          <div class="ls_products_main_cont ls_flex">
-            <div class="ls_product_image">
+          <div class="ol_products_main_cont ol_flex">
+            <div class="ol_product_image">
               <t t-if="sale_order_line.product_id.image_128">
                 <img t-attf-src="data:image;base64,{{sale_order_line.product_id.image_128}}"/>
               </t>
             </div>
-            <div class="ls_product_data">
-              <div class="ls_products_info_cont ls_flex ls_flex_just_cont_space_between">
+            <div class="ol_product_data">
+              <div class="ol_products_info_cont ol_flex ol_flex_just_cont_space_between">
 
                 <div class="product_info_name">
-                  <div class="ls_product_name">
+                  <div class="ol_product_name">
                     <t t-esc="sale_order_line.product_id.name"/>
                   </div>
-                  <div class="ls_product_default_code" t-esc="sale_order_line.product_id.product_tmpl_id.default_code"/>
+                  <div class="ol_product_default_code" t-esc="sale_order_line.product_id.product_tmpl_id.default_code"/>
                 </div>
 
                 <!-- Show tier pricing lines for budgetary quotes and proforma invoices -->
@@ -61,9 +61,9 @@
 
                 <!-- Not a budgetary quote or proforma invoice, just show the sale line's values -->
                 <t t-if="not budgetary_quote">
-                  <div class="ls_products_line_data ls_flex ls_flex_just_cont_space_between">
+                  <div class="ol_products_line_data ol_flex ol_flex_just_cont_space_between">
 
-                    <div class="ls_products_line_data_item product_price">
+                    <div class="ol_products_line_data_item product_price">
                       <t t-if="invoice_line">
                         <span t-field="invoice_line.price_unit" t-options="{'widget': 'monetary_currency_dependent', 'display_currency': sale_order.currency_id}"/>
                       </t>
@@ -72,7 +72,7 @@
                       </t>
                     </div>
 
-                    <div class="ls_products_line_data_item product_qty">
+                    <div class="ol_products_line_data_item product_qty">
                       <t t-if="invoice_line">
                         <t t-esc="invoice_line.quantity" t-options="{'widget': 'integer'}"/>
                       </t>
@@ -81,7 +81,7 @@
                       </t>
                     </div>
 
-                    <div class="ls_products_line_data_item product_subtotal">
+                    <div class="ol_products_line_data_item product_subtotal">
                       <t t-if="invoice_line">
                         <span t-field="invoice_line.price_subtotal" t-options="{'widget': 'monetary_currency_dependent', 'display_currency': sale_order.currency_id}"/>
                       </t>
@@ -96,10 +96,10 @@
               </div>
 
               <!--System configuration-->
-              <div class="ls_products_system_configuration">
+              <div class="ol_products_system_configuration">
                 <div class="system-configuration" t-if="product_line['quote_config']">
                   <t t-set="quote_lines" t-value="product_line['quote_lines']"/>
-                  <div class="system-configuration-line ls_flex ls_flex_just_cont_space_between"
+                  <div class="system-configuration-line ol_flex ol_flex_just_cont_space_between"
                        t-foreach="quote_lines" t-as="quote_line">
                     <div class="system-configuration-attribute">
                       <t t-if="quote_line.attribute_id.classification_id.name != 'Hidden'">

@@ -3,7 +3,7 @@ from odoo import api, models
 
 
 class ReportProductionAutomationTest(models.AbstractModel):
-    _name = 'report.ol_pdf_reports.report_mo_automation_test_results'
+    _name = 'report.ol_sale.report_mo_automation_test_results'
     _description = 'Automation Test Results for MOs'
 
     @api.model

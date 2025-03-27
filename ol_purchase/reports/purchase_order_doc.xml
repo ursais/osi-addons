@@ -57,7 +57,7 @@
       <h1 class="title"><b>PURCHASE ORDER</b></h1>
 
       <t t-if="purchase_order.company_id.template_logo">
-        <img t-att-src="'data:image/png;base64,%s' % to_text(purchase_order.company_id.template_logo)"
+        <img t-attf-src="data:image/png;base64,#{purchase_order.company_id.template_logo}"
         style="float: right; display: inline-block; max-width: 178.75px; max-height: 45px;"/>
       </t>
 
@@ -73,42 +73,40 @@
   <!-- Footer Template -->
   <!-- =============== -->
   <template id="report_po_doc_footer">
-    <div class="footer" style="height:500px !important;">
+    <div class="footer" style="height:800px !important;">
       <div id="static-footer">
         This Purchase Order is subject to OnLogic's General Terms and Conditions of Purchase available here: <a href="https://www.onlogic.com/supplier-terms/" target="_blank">https://www.onlogic.com/supplier-terms/</a>
-        <tag></tag>
-        <table style='padding-top: 6px;'>
-          <col width='30'/>
-          <col width='200'/>
-          <col width='220'/>
-          <col width='140'/>
+        <tag/>
+        <br/>
+        <table style="padding-top: 16px !important;margin-top: 20px !important;" class="table-borderless">
+          <col width="50"/>
+          <col width="280"/>
+          <col width="280"/>
+          <col width="280"/>
           <tr>
             <td>
-              <b>Tel:</b><br />
-              <b>Fax:</b><br />
+              <b>Tel:</b><br/>
             </td>
             <td style="vertical-align: top;">
-              <t t-esc="purchase_order.company_id.phone"/><br />
-              <!-- TODO: "purchase_order.company_id.partner_id.fax" field not found -->
-              <!-- <t t-esc="purchase_order.company_id.partner_id.fax"/><br /> -->
+              <t t-esc="purchase_order.company_id.phone"/><br/>
             </td>
-            <t t-if="purchase_order.company_id.short_name == 'us'">
-              <td style='border-left:1px solid #000; border-right:1px solid #000; padding-left: 16px;'>
-                <b>Federal ID</b><br />
+            <t t-if="purchase_order.company_id.short_name.lower() == 'us'">
+              <td style="border-left:1px solid #000; border-right:1px solid #000; padding-left: 16px;">
+                <b>Federal ID</b><br/>
                 20-0558657
               </td>
-              <td style='padding-left: 16px;'>
-                <b>Reseller ID</b><br />
+              <td style="padding-left: 16px;">
+                <b>Reseller ID</b><br/>
                 450-200558657F-01
               </td>
             </t>
-            <t t-if="purchase_order.company_id.short_name == 'eu'">
-              <td style='border-left:1px solid #000; border-right:1px solid #000; padding-left: 16px;'>
-                <b>KVK</b><br />
+            <t t-if="purchase_order.company_id.short_name.lower() == 'eu'">
+              <td style="border-left:1px solid #000; border-right:1px solid #000; padding-left: 16px;">
+                <b>KVK</b><br/>
                 51190486
               </td>
-              <td style='padding-left: 16px;'>
-                <b>VAT</b><br />
+              <td style="padding-left: 16px;">
+                <b>VAT</b><br/>
                 NL8231.36.978B01
               </td>
             </t>
@@ -119,21 +117,14 @@
   </template>
 
   <template id="report_po_doc_contents">
-    <t t-set="data" t-value="purchase_order.get_purchase_order_doc_data()" />
+    <t t-set="data" t-value="purchase_order.get_purchase_order_doc_data()"/>
     <div class="page">
       <div class="content po_doc">
-        <div class='clear-layout'></div>
-        <div class='floating-head'>
-          <table cellpadding="0" cellspacing="0" class='margin-fix'>
-            <col width='140'/>
-            <col width='140'/>
-            <!-- TODO: "purchase_order.version" field not found -->
-            <!-- <t t-if="purchase_order.version">
-              <tr class='doc-name'>
-                <td>Version</td>
-                <td><span t-esc="purchase_order.version"/></td>
-              </tr>
-            </t> -->
+        <div class="clear-layout"/>
+        <div class="floating-head">
+          <table cellpadding="0" cellspacing="0" class="margin-fix table-borderless">
+            <col width="140"/>
+            <col width="140"/>
             <tr>
               <td>Submitted</td>
               <td>
@@ -162,43 +153,38 @@
             </tr>
           </table>
         </div>
-        <div class='floating-head'>
-          <table class='margin-fix' cellspacing="0" cellpadding="0">
-            <col width='100'/>
-            <col width='210'/>
+        <div class="floating-head">
+          <table class="margin-fix table-borderless" cellspacing="0" cellpadding="0">
+            <col width="100"/>
+            <col width="210"/>
             <tr>
               <td rowspan="2">Vendor</td>
               <td rowspan="2">
-                <span t-esc="purchase_order.partner_id"
-                      t-options='{"widget": "contact",
-                                 "fields": ["address", "name", "phone", "fax"],
-                                 "no_marker": True}'/>
+                <span t-esc="purchase_order.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;,                                  &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;, &quot;fax&quot;],                                  &quot;no_marker&quot;: True}"/>
               </td>
             </tr>
           </table>
         </div>
-        <div class='floating-head'>
-          <table class='margin-fix' cellspacing="0" cellpadding="0">
-            <col width='60'/>
-            <col width='135'/>
+        <div class="floating-head">
+          <table class="margin-fix table-borderless" cellspacing="0" cellpadding="0">
+            <col width="100"/>
+            <col width="210"/>
             <tr>
               <td>Contact</td>
-              <!-- TODO: "purchase_order.contact_id.name" field not found -->
-              <td><!-- <span t-esc="purchase_order.contact_id.name"/> --></td>
+              <td><span t-esc="purchase_order.partner_id.name"/></td>
             </tr>
             <tr>
               <td>Tel</td>
-              <!-- TODO: "purchase_order.contact_id.phone" field not found -->
-              <td><!-- <span t-esc="purchase_order.contact_id.phone"/> --></td>
+              <td ><span t-esc="purchase_order.partner_id.phone"/></td>
             </tr>
           </table>
         </div>
-        <div class='clear-layout' style='padding-bottom: 20px;'></div>
-        <table cellspacing="0" class='full-page-table address-table' style='margin-bottom:20px;'>
+        <div class="clear-layout" style="padding-bottom: 20px;"/>
+        <table cellspacing="0" class="full-page-table address-table" style="margin-bottom:20px;">
           <tr>
-            <td><div class='address-header-cell'>Bill To</div></td>
-            <td><div class='address-header-cell'>Ship To</div></td>
-            <td><div class='address-header-cell'>Shipping Method</div></td>
+            <td><div class="address-header-cell prod-cell">Bill To</div></td>
+            <td><div class="address-header-cell prod-cell">Ship To</div></td>
+            <td><div class="address-header-cell prod-cell">Shipping Method</div></td>
           </tr>
           <tr>
             <td>
@@ -212,10 +198,6 @@
               <span t-raw="data['shipping_address']"/>
             </td>
             <td>
-                <!-- TODO: "purchase_order.delivery_method" field not found -->
-              <!-- <t t-if="purchase_order.delivery_method">
-                Method: <span t-esc="purchase_order.delivery_method.name"/><br/>
-              </t> -->
               <t t-if="data.get('shipping_notes')">
                 Notes: <span t-raw="data['shipping_notes']"/>
               </t>
@@ -223,30 +205,30 @@
           </tr>
           <t t-if="data.get('supplier_notes')">
             <tr>
-              <td colspan="3"><div class='notes-header-cell'>Notes to Supplier</div></td>
+              <td colspan="3"><div class="notes-header-cell">Notes to Supplier</div></td>
             </tr>
             <tr>
               <td colspan="3"><span t-raw="data['supplier_notes']"/></td>
             </tr>
           </t>
         </table>
-        <table cellspacing="0" cellpadding="0" class='full-page-table'>
-          <col width='300'/>
-          <col width='120'/>
-          <col width='20'/>
-          <col width='65'/>
-          <col width='65'/>
-          <tr class='product_header'>
-            <td class='hanging-column'>Product</td>
-            <td class='col-med'>Model</td>
-            <td class='col-small'><div class='center-column'>QTY</div></td>
-            <td class='col-small'><div style='text-align:right;'>Price (<span t-esc="purchase_order.currency_id.name"/>)</div></td>
-            <td><div style='text-align:right;'>Amount</div></td>
+        <table cellspacing="0" cellpadding="0" class="full-page-table">
+          <col width="300"/>
+          <col width="120"/>
+          <col width="20"/>
+          <col width="65"/>
+          <col width="65"/>
+          <tr class="product_header">
+            <td class="hanging-column">Product</td>
+            <td class="col-med">Model</td>
+            <td class="col-small"><div class="center-column">QTY</div></td>
+            <td class="col-small"><div style="text-align:right;">Price (<span t-esc="purchase_order.currency_id.name"/>)</div></td>
+            <td><div style="text-align:right;">Amount</div></td>
           </tr>
           <t t-foreach="data['lines']" t-as="line">
-            <tr class='product-list'>
-              <td class='hanging-column'>
-                <div class='prod-cell avoid-break'>
+            <tr class="product-list">
+              <td class="hanging-column">
+                <div class="prod-cell avoid-break">
                   <span t-esc="line['name']"/>
                   <div class="line-note">
                     <span t-esc="line['line_note']"/>
@@ -254,33 +236,33 @@
                 </div>
                 <b><span t-esc="line['product_tariff_code']"/></b>
               </td>
-              <td class='col-med'>
-                <div class='prod-cell avoid-break'>
+              <td class="col-med">
+                <div class="prod-cell avoid-break">
                   <span t-esc="line['sku']"/>
                 </div>
               </td>
-              <td class='col-small'>
-                <div class='prod-cell center-column avoid-break'>
+              <td class="col-small">
+                <div class="prod-cell center-column avoid-break">
                   <span t-esc="line['qty']"/>
                 </div>
               </td>
-              <td class='col-small'>
-                <div class='prod-cell right-column avoid-break'>
+              <td class="col-small">
+                <div class="prod-cell right-column avoid-break">
                   <span t-esc="line['unit_price']"/>
                 </div>
               </td>
               <td>
-                <div class='prod-cell right-column avoid-break'>
+                <div class="prod-cell right-column avoid-break">
                   <span t-esc="line['line_subtotal']"/>
                 </div>
               </td>
             </tr>
           </t>
         </table>
-        <div style='border-top: 2px solid #F57F39; width: 230px; float:right; margin-top:30px; page-break-inside: avoid;'>
-          <table style='text-align: right;' class="full-page-table">
-            <col width='90px'/>
-            <col width='130px'/>
+        <div style="border-top: 2px solid #F57F39; width: 230px; float:right; margin-top:30px; page-break-inside: avoid;">
+          <table style="text-align: right;" class="full-page-table">
+            <col width="90px"/>
+            <col width="130px"/>
             <tr>
               <td>Subtotal</td>
               <td><span t-esc="data['amount_untaxed']"/></td>

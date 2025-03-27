@@ -13,6 +13,7 @@
         "ol_base",
         "account",
         "sale",
+        "ol_templates"
     ],
     # Data Loaded.
     "data": [
@@ -20,8 +21,7 @@
         "views/res_config_settings_views.xml",
         "views/account_invoice.xml",
         "reports/invoice_generic.xml",
-        "reports/invoice_proforma_from_so.xml",
-        # TODO: sale.order.payment.method model not found
-        # "reports/invoice_proforma.xml",
+        # "reports/invoice_proforma_from_so.xml",
+        "reports/invoice_proforma.xml",
     ],
 }

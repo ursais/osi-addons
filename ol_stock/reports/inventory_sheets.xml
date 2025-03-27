@@ -10,7 +10,7 @@
     <field name="report_name">ol_stock.report_inventory_sheets</field>
     <field name="report_file">ol_stock.report_inventory_sheets</field>
     <field name="binding_model_id" ref="stock_inventory.model_stock_inventory"/>
-    <field name="paperformat_xmlid_base">ol_templates.ls_report_paper_format_landscape</field>
+    <field name="paperformat_xmlid_base">ol_templates.ol_report_paper_format_landscape</field>
   </record>
 
   <!-- Main template -->
@@ -70,7 +70,7 @@
               </th>
             </tr>
           </thead>
-          <!-- TODO: "inventory.line_ids" Field not found -->
+          <!-- TODO: NC : "inventory.line_ids" Field not found -->
           <!-- <tr t-foreach="inventory.line_ids" t-as="line">
             <t t-if="not line.product_id.categ_id.hide_in_inventory">
               <td class="text-left">

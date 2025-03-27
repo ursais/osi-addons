@@ -21,14 +21,14 @@
         'security/ir_rule.xml',
         'security/res_groups.xml',
         'security/ir.model.access.csv',
-        'data/generic_paperformats.xml',
-        'reports/mo_bin_label.xml',
-        'reports/automation_test.xml',
         # 'data/purchase_mail_data.xml',
         'views/report_extra_content.xml',
     ],
     "assets": {
         "web.report_assets_common": [
+            "/ol_pdf_reports/static/src/scss/*.scss"
+        ],
+        "web.report_assets_pdf": [
             "/ol_pdf_reports/static/src/scss/*.scss"
         ]
     },

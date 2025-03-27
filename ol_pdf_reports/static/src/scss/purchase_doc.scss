@@ -40,11 +40,18 @@ div.po_doc_header {
         display: inline-block;
     }
 }
-
 div.po_doc {
-
+ table {
+    tbody, thead, tfoot, tr, td, th {
+        border: 0 none;
+    }
+    > :not(:first-child) {
+        border-top-style: none;
+    }
+ 
+ }
     body {
-        padding-top: 15px;
+        padding-top: 15px !important;
     }
 
     h1 {
@@ -53,7 +60,7 @@ div.po_doc {
         clear: both;
         text-align: left;
         margin-top: 0;
-        margin-bottom: 20px;
+        margin-bottom: 20px !important;
     }
 
     .doc-name {
@@ -65,16 +72,16 @@ div.po_doc {
     .product_header > td {
         border-bottom: 2px solid #F57F39;
         font-weight: bold;
-        margin-bottom:5px;
+        margin-bottom:5px !important;
     }
 
     .hanging-column {
-        padding-left: 10px;
-        margin: 0 0 5px -10px;
+        padding-left: 10px !important;
+        margin: 0 0 5px -10px !important;
     }
 
     .product-list > td {
-        padding-top:7px;
+        padding-top:7px !important;
     }
 
     .full-page-table {
@@ -84,56 +91,56 @@ div.po_doc {
 
     .address-table {
         td {
-            padding: 0 22px 0 10px;
+            padding: 0 22px 0 10px !important;
         }
 
         td:last-child {
-            padding-right: 0;
+            padding-right: 0 !important;
         }
     }
 
     .address-header-cell {
         font-weight: bold;
-        padding-left: 10px;
-        margin: 0 0 5px -10px;
+        padding-left: 10px !important;
+        margin: 0 0 5px -10px !important;
         width: 311px;
         border-bottom: 2px solid #F57F39;
     }
 
     .notes-header-cell {
         font-weight: bold;
-        padding-left: 10px;
-        margin: 15px 0 5px -10px;
+        padding-left: 10px !important;
+        margin: 15px 0 5px -10px !important;
         width: 100%;
         border-bottom: 2px solid #F57F39;
     }
 
     .header_table {
-        margin-bottom: 15px;
+        margin-bottom: 15px !important;
     }
 
     .footer-table {
-        cell-padding: 20px
+        cell-padding: 20px !important;
     }
 
     .center-column {
-        text-align: center;
+        text-align: center !important;
     }
 
     .right-column {
-        text-align: right;
+        text-align: right !important;
     }
 
     .col-med {
-        width: 160px;
+        width: 160px !important;
     }
 
     .col-small {
-        width: 100px;
+        width: 100px !important;
     }
 
     td {
-        vertical-align: top;
+        vertical-align: top !important;
     }
 
     tr {
@@ -150,7 +157,7 @@ div.po_doc {
     }
 
     .floating-head:last-child {
-        margin-right: 0;
+        margin-right: 0 !important;
     }
 
     .clear-layout {
@@ -175,5 +182,5 @@ div.po_doc {
 
     .prod-cell { font-size: 18px; }
 
-    .line-note { padding-left: 10px; font-size: 11pt; }
+    .line-note { padding-left: 10px !important; font-size: 11pt; }
 }

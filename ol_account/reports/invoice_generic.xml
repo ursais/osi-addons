@@ -10,7 +10,7 @@
     <field name="report_name">ol_account.report_generic_invoice</field>
     <field name="report_file">ol_account.report_generic_invoice</field>
     <field name="binding_model_id" ref="account.model_account_move" />
-    <field name="paperformat_xmlid_base">ol_templates.ls_report_paper_format</field>
+    <field name="paperformat_xmlid_base">ol_templates.ol_report_paper_format</field>
   </record>
 
   <!-- Main template -->
@@ -18,10 +18,7 @@
     <t t-call="web.html_container">
       <t t-foreach="docs" t-as="doc">
 
-        <!-- TODO: doc.get_language() method not found -->
         <!-- Find the correct language-->
-        <!-- <t t-set="language"
-           t-value="doc.get_language()"/> -->
         <t t-set="language" t-value="doc.partner_id.lang"/>
 
         <t t-set="invoice" t-value="doc.with_context(lang=language)"/>
@@ -45,12 +42,10 @@
       </t>
       <!--Set template variables-->
       <t t-set="title" t-value="'Invoice PDF Report'"/>
-      <!-- TODO: invoice.partner_id.get_company_name() method not found -->
-      <!-- <t t-set="customer_company_name" t-value="invoice.partner_id.get_company_name()"/> -->
-      <t t-set="customer_company_name" t-value="invoice.partner_id.company_name"/>
+      <t t-set="customer_company_name" t-value="invoice.partner_id.company_name or invoice.partner_id.commercial_company_name"/>
       <t t-set="sale_order" t-value="invoice.line_ids.sale_line_ids.order_id"/>
       <t t-set="partner_invoice_id" t-value="invoice.partner_id or sale_order.partner_invoice_id"/>
-      <!-- TODO: sale_order.quote_type field not found -->
+      <!-- TODO: NC : sale_order.quote_type field not found -->
       <!-- <t t-set="budgetary_quote" t-value="sale_order.quote_type == 'budgetary'"/> -->
       <t t-set="budgetary_quote" t-value="budgetary"/>
       <t t-set="currency" t-value="invoice.currency_id"/>
@@ -68,11 +63,11 @@
       </t>
 
       <!--The first main information block-->
-      <div class="ls_report_info_row ls_flex">
+      <div class="ol_report_info_row ol_flex">
 
         <!--Basic Invoice information-->
-        <div class="ls_report_info_row_col info">
-          <div class="ls_report_info_row_col_title ls_flex">
+        <div class="ol_report_info_row_col info">
+          <div class="ol_report_info_row_col_title ol_flex">
             <div class="key">
               <t t-esc="report_title" t-options='{"widget": "cap_formatter", "case":"title"}'/>
             </div>
@@ -89,7 +84,7 @@
             </t>
           </div>
 
-          <div class="ls_report_info_row_col_line ls_flex">
+          <div class="ol_report_info_row_col_line ol_flex">
             <div class="key">
               <tag>Invoice Date</tag>
             </div>
@@ -98,7 +93,7 @@
             </div>
           </div>
 
-          <div class="ls_report_info_row_col_line ls_flex">
+          <div class="ol_report_info_row_col_line ol_flex">
             <div class="key">
               <tag>Payment Due Date</tag>
             </div>
@@ -107,18 +102,16 @@
             </div>
           </div>
 
-          <div class="ls_report_info_row_col_line ls_flex">
+          <div class="ol_report_info_row_col_line ol_flex">
             <div class="key">
               <tag>Order</tag>
             </div>
             <div class="value">
-              <!-- TODO: sale_order.detailed_name field not found -->
-              <!-- <t t-esc="sale_order.detailed_name"/> -->
               <t t-esc="sale_order.name"/>
             </div>
           </div>
 
-          <div class="ls_report_info_row_col_line ls_flex">
+          <div class="ol_report_info_row_col_line ol_flex">
             <div class="key">
               <tag>Order Date</tag>
             </div>
@@ -127,15 +120,12 @@
             </div>
           </div>
 
-          <!-- TODO: invoice.custom_po field not found -->
-          <!-- <t t-esc="invoice.custom_po or sale_order.client_order_ref"/> -->
           <t t-if="sale_order.client_order_ref">
-            <div class="ls_report_info_row_col_line ls_flex">
+            <div class="ol_report_info_row_col_line ol_flex">
               <div class="key">
                 <tag>Customer PO</tag>
               </div>
               <div class="value">
-                <!-- <t t-esc="invoice.custom_po or sale_order.client_order_ref"/> -->
                 <t t-esc="sale_order.client_order_ref"/>
               </div>
             </div>
@@ -144,12 +134,12 @@
         </div>
 
         <!--Billing related information-->
-        <div class="ls_report_info_row_col billing">
+        <div class="ol_report_info_row_col billing">
           <t t-call="ol_templates.address">
             <t t-set="text">Bill To</t>
             <t t-set="address" t-value="partner_invoice_id"/>
           </t>
-          <!-- TODO: sale_order.payment_method_id field not found -->
+          <!-- TODO: NC : sale_order.payment_method_id field not found -->
           <!-- <t t-call="ol_templates.payment" t-if="sale_order.payment_method_id">
             <t t-set="block_title">Payment Method</t>
             <t t-set="payment_method" t-value="sale_order.payment_method_id"/>
@@ -157,7 +147,7 @@
         </div>
 
         <!--Shipping related information-->
-        <div class="ls_report_info_row_col shipping">
+        <div class="ol_report_info_row_col shipping">
           <t t-call="ol_templates.address">
             <t t-set="text">Ship To</t>
             <t t-set="show_vat_id" t-value="True"/>
@@ -168,7 +158,9 @@
             <t t-if="sale_order">
               <t t-set="shipment" t-value="sale_order.carrier_id"/>
             </t>
-            <t t-set="tracking_numbers" t-value="sale_order.mapped('picking_ids.tracking_ids')"/>
+            <!-- TODO: NC : picking_ids.tracking_ids field not found -->
+            <!-- <t t-set="tracking_numbers" t-value="sale_order.mapped('picking_ids.tracking_ids')"/> -->
+            <t t-set="tracking_numbers" t-value="sale_order.mapped('picking_ids.lot_id')"/>
           </t>
         </div>
 

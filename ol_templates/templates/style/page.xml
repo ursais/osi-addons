@@ -2,7 +2,7 @@
 <odoo>
   <template id="report_page_style">
     <!-- We need to define specific styles for each section header/page/footer -->
-    <t t-call="ol_templates.ls_flex_style"/>
+    <t t-call="ol_templates.ol_flex_style"/>
     <style>
       /****** General settings ******/
       * {
@@ -20,15 +20,15 @@
       color: #595A5C;
       }
 
-      .ls-document-section {
+      .ol-document-section {
       margin-top: 30px;
       }
 
-      .ls-document-section .content > div {
+      .ol-document-section .content > div {
       margin-top: 15px;
       }
 
-      .ls-section-title {
+      .ol-section-title {
       text-align: left;
       font-size: 18px;
       border-bottom: solid #595A5C 1px;
@@ -36,88 +36,88 @@
       margin-bottom: 1px;
       }
 
-      .ls-section-title > div {
+      .ol-section-title > div {
       display: inline-block;
       font-size: 12px;
       font-weight: 600;
       }
 
-      .ls-section-title .product-name {
+      .ol-section-title .product-name {
       width: 390px;
       }
 
       /****** Info section settings ******/
-      .ls_doc_info {
+      .ol_doc_info {
       float: left;
       width: 50%;
       }
 
-      .ls_doc_info_row span {
+      .ol_doc_info_row span {
       width: 150px;
       display: inline-block;
       }
 
-      .ls_doc_info_row .key {
+      .ol_doc_info_row .key {
       font-weight: 600;
       }
 
-      .ls-address {
+      .ol-address {
       display: inline-block;
       width: 49%;
       }
 
-      .ls-address .ls-address-text {
+      .ol-address .ol-address-text {
       font-weight: 600;
       font-size: 16px;
       line-height: normal;
       }
 
-      .ls-phone-icon,
-      .ls-email-icon {
+      .ol-phone-icon,
+      .ol-email-icon {
       width: 20px;
       display: inline-block;
       vertical-align: middle;
       }
 
       /* PDF rendering is dumb for this one icon, hence the weird dimensions */
-      .ls-phone-icon img {
+      .ol-phone-icon img {
       height: 13px;
       width: 25px;
       margin-left: -5px;
       display: inline-block;
       }
 
-      .ls-address-phone p,
-      .ls-address-email p {
+      .ol-address-phone p,
+      .ol-address-email p {
       display: inline-block;
       margin: 0px;
       vertical-align: middle;
       max-width: calc(100% - 30px);
       }
 
-      .ls-email-icon img {
+      .ol-email-icon img {
       height: 8px;
       width: 13px;
       display: inline-block;
       }
 
-      .ls-account-manager {
+      .ol-account-manager {
       float: left;
       width: 350px;
       }
 
-      .ls-account-manager-image {
+      .ol-account-manager-image {
       float: left;
       }
 
-      .ls-account-manager-image img {
+      .ol-account-manager-image img {
       width: 40px;
       border-radius: 50%;
       padding: 0;
       margin: 10px 20px 10px 0px;
       }
 
-      .ls-shipping-and-payment {
+      .ol-shipping-and-payment {
       display: inline-block;
       width: 30%;
       float: right;
@@ -125,7 +125,7 @@
 
       /****** Sale line blocks ******/
 
-      .ls-sale-line {
+      .ol-sale-line {
       width: 100%;
       display: inline-block;
       }
@@ -185,12 +185,12 @@
       width: 25%;
       }
 
-      .system-configuration-attribute.ls_slip {
+      .system-configuration-attribute.ol_slip {
       width: 75%;
       margin-left: 5%;
       }
 
-      .system-configuration-product.ls_slip{
+      .system-configuration-product.ol_slip{
       width: 20%;
       }
 
@@ -210,7 +210,7 @@
         font-size: 16px;
       }
 
-      .ls-sale-line-spacer {
+      .ol-sale-line-spacer {
       border-bottom: dashed #E6E6E6 1px;
       margin-top: 10px;
       margin-bottom: 10px;
@@ -268,7 +268,7 @@
       float: right;
       }
 
-      .ls_report_info_row .ls-address {
+      .ol_report_info_row .ol-address {
       display: block;
       float: none;
       clear: both;
@@ -276,77 +276,77 @@
       line-height: 15px;
       }
 
-      .ls_report_info_row_col.billing,
-      .ls_report_info_row_col.shipping{
+      .ol_report_info_row_col.billing,
+      .ol_report_info_row_col.shipping{
       width: 28%;
       }
 
-      .ls_report_info_row_col_title .key,
-      .ls_report_info_row_col_line .key {
+      .ol_report_info_row_col_title .key,
+      .ol_report_info_row_col_line .key {
         width: 135px;
       }
 
-      .ls_report_info_row_col_title .value,
-      .ls_report_info_row_col_line .value {
+      .ol_report_info_row_col_title .value,
+      .ol_report_info_row_col_line .value {
       width: 120px;
       }
 
-      .ls_report_info_row_col.info .ls_report_info_row_col_title .key,
-      .ls_report_info_row_col.info .ls_report_info_row_col_title .value {
+      .ol_report_info_row_col.info .ol_report_info_row_col_title .key,
+      .ol_report_info_row_col.info .ol_report_info_row_col_title .value {
       font-weight: 600;
       font-size: 16px;
       line-height: normal;
       }
 
-      .ls_report_info_row_col.info {
+      .ol_report_info_row_col.info {
       line-height: 15px;
       }
 
-      .ls_report_info_row_col.billing,
-      .ls_report_info_row_col.shipping{
+      .ol_report_info_row_col.billing,
+      .ol_report_info_row_col.shipping{
       width: 170px;
       margin-left: 20px;
       }
 
-      .ls_block_title {
+      .ol_block_title {
       font-weight: 600;
       line-height: 15px;
       margin-top: 15px;
       }
 
-      .ls_block_data,
-      .ls-tracking-numbers {
+      .ol_block_data,
+      .ol-tracking-numbers {
       line-height: 15px;
       }
 
-      .ls_report_products_row {
+      .ol_report_products_row {
       margin-top: 50px;
       }
 
-      .ls_products_title {
+      .ol_products_title {
       width: 56.5%;
       font-weight: 600;
       font-size: 16px;
       line-height: 15px;
       }
-      .ls_products_title.ls_rma{
+      .ol_products_title.ol_rma{
       width: 40%;
       }
 
-      .ls_products_list_header {
+      .ol_products_list_header {
       width: 43.5%;
       }
 
-      .ls_products_list_header.ls_rma{
+      .ol_products_list_header.ol_rma{
       width: 53%;
       }
 
-      .ls_products_list_header.ls_slip,
-      .ls_products_list_header.ls_picking {
+      .ol_products_list_header.ol_slip,
+      .ol_products_list_header.ol_picking {
       width: 100%;
       }
 
-      .ls_products_header {
+      .ol_products_header {
       border-bottom: 1px solid #595A5C;
       font-weight: 600;
       font-size: 16px;
@@ -354,36 +354,36 @@
       padding-bottom: 5px;
       }
 
-      .ls_product_default_code {
+      .ol_product_default_code {
       font-size: 14px;
       line-height: 15px;
       }
 
-      .ls_products_line{
+      .ol_products_line{
       page-break-inside: avoid;
       padding: 20px 0 25px 0;
       border-bottom: 1px #eee dashed;
       }
 
-      .ls_products_line:last-child {
+      .ol_products_line:last-child {
       padding: 20px 0 0 0;
       border-bottom: none;
       }
 
-      .ls_products_line_info {
+      .ol_products_line_info {
       width: 90%;
       }
 
-      .ls_product_image{
+      .ol_product_image{
       text-align: center;
       width: 10%;
       }
 
-      .ls_product_image img{
+      .ol_product_image img{
       width: 56px;
       }
 
-      .ls_product_data{
+      .ol_product_data{
       width: 90%;
       padding-left: 25px;
       }
@@ -392,98 +392,98 @@
       width: 50%;
       }
 
-      .product_info_name.ls_changed{
+      .product_info_name.ol_changed{
       padding: 0;
       }
-      .product_info_name.ls_rma{
+      .product_info_name.ol_rma{
       width: 40%;
       }
 
-      .ls_products_line_data{
+      .ol_products_line_data{
         width: 50%;
         font-size: 16px;
         font-weight: 300;
       }
 
-      .ls_products_line_data.ls_refund{
+      .ol_products_line_data.ol_refund{
       width: 35%;
       }
 
-      .ls_products_line_data.tier-pricing{
+      .ol_products_line_data.tier-pricing{
       width: 100%;
       }
 
-      .ls_products_line_data_item.product_subtotal {
+      .ol_products_line_data_item.product_subtotal {
       text-align: right;
       width: 35%;
       }
 
-      .ls_products_line_data_item.product_qty {
+      .ol_products_line_data_item.product_qty {
       width: 20%;
       }
 
-      .ls_products_line_data_item.product_price {
+      .ol_products_line_data_item.product_price {
       width: 45%;
       text-align: left;
       }
 
-      .ls_products_line_data.ls_rma{
+      .ol_products_line_data.ol_rma{
       width: 60%;
       }
 
-      .ls_products_line_data.ls_rma.ls_components{
+      .ol_products_line_data.ol_rma.ol_components{
       width: 60%;
       }
 
-      .ls_products_list_header_item.ls_rma {
+      .ol_products_list_header_item.ol_rma {
       width: 25%;
       text-align: center;
       }
 
-      .ls_product_name {
+      .ol_product_name {
       font-weight: 600;
       font-size: 16px;
       }
 
-      .ls_product_name.compressed {
+      .ol_product_name.compressed {
       font-weight: 300;
       }
 
-      .ls_products_system_configuration.ls_slip {
+      .ol_products_system_configuration.ol_slip {
       margin-left: 0;
       padding-left: 0;
       }
 
 
-      .ls_products_info_cont.ls_picking .ls_products_line_data_item.product_qty,
-      .ls_products_info_cont.ls_slip .ls_products_line_data_item.product_qty{
+      .ol_products_info_cont.ol_picking .ol_products_line_data_item.product_qty,
+      .ol_products_info_cont.ol_slip .ol_products_line_data_item.product_qty{
       width: 5%;
       }
 
-      .ls_products_info_cont.ls_slip > .ls_product_name{
+      .ol_products_info_cont.ol_slip > .ol_product_name{
       width: 75%;
       }
 
-      .ls_products_info_cont.ls_picking > .ls_product_name{
+      .ol_products_info_cont.ol_picking > .ol_product_name{
       width: 35%;
       font-weight: 100;
       font-size: 12px;
       }
 
-      .ls_products_info_cont.ls_slip > .ls_product_default_code{
+      .ol_products_info_cont.ol_slip > .ol_product_default_code{
       width: 25%;
       }
 
-      .ls_products_info_cont.ls_picking > .ls_product_location{
+      .ol_products_info_cont.ol_picking > .ol_product_location{
       width: 15%;
       }
 
-      .ls_products_info_cont.ls_picking > .ls_product_default_code,
-      .ls_products_info_cont.ls_picking > .ls_product_default_code{
+      .ol_products_info_cont.ol_picking > .ol_product_default_code,
+      .ol_products_info_cont.ol_picking > .ol_product_default_code{
       width: 25%;
       }
 
-      .ls_products_system_configuration.ls_product_destination {
+      .ol_products_system_configuration.ol_product_destination {
       margin-left: 0;
       padding-left: 0;
       }
@@ -492,31 +492,31 @@
       list-style-position: inside;
       }
 
-      .ls_report_order_notes_full{
+      .ol_report_order_notes_full{
       width: 100%;
       }
 
-      .ls_report_order_notes_full .order_notes {
+      .ol_report_order_notes_full .order_notes {
         font-size: 16px;
       }
 
-      .ls_report_order_notes,
-      .ls_report_totals{
+      .ol_report_order_notes,
+      .ol_report_totals{
       width: 50%;
       }
 
 
-      .ls_products_line_data.tier-pricing:not(:first-child) {
+      .ol_products_line_data.tier-pricing:not(:first-child) {
       color: #999999;
       }
 
-      .ls_report_totals {
+      .ol_report_totals {
         font-size: 16px;
         line-height: 180%;
         padding: 0 0 0 20px;
       }
 
-      .ls_report_notes_and_totals {
+      .ol_report_notes_and_totals {
       margin: 50px 0 20px 0;
       }
 
@@ -529,86 +529,86 @@
       font-size: 16px;
       }
 
-      .ls_residual{
+      .ol_residual{
       margin-top: 20px;
       }
 
-      .ls_changed_items_title {
+      .ol_changed_items_title {
       border-bottom: 1px solid #595A5C;
       }
 
-      .ls_products_line_data.ls_rma > .ls_products_line_data_item{
+      .ol_products_line_data.ol_rma > .ol_products_line_data_item{
       width: 25%;
       text-align: center;
       }
 
-      .ls_margin_top_20{
+      .ol_margin_top_20{
       margin-top: 20px;
       }
 
-      .ls_margin_top_10{
+      .ol_margin_top_10{
       margin-top: 10px;
       }
 
-      .ls_margin_top_5{
+      .ol_margin_top_5{
       margin-top: 5px;
       }
 
-      .ls_margin_right_20{
+      .ol_margin_right_20{
       margin-right: 20px;
       }
 
-      .ls_margin_right_10{
+      .ol_margin_right_10{
       margin-right: 10px;
       }
 
-      .ls_margin_right_5{
+      .ol_margin_right_5{
       margin-right: 5px;
       }
 
-      .ls_margin_bottom_20{
+      .ol_margin_bottom_20{
       margin-bottom: 20px;
       }
 
-      .ls_margin_bottom_10{
+      .ol_margin_bottom_10{
       margin-bottom: 10px;
       }
 
-      .ls_margin_bottom_5{
+      .ol_margin_bottom_5{
       margin-bottom: 5px;
       }
 
 
-      .ls_margin_left_20{
+      .ol_margin_left_20{
       margin-left: 20px;
       }
 
-      .ls_margin_left_10{
+      .ol_margin_left_10{
       margin-left: 10px;
       }
 
-      .ls_margin_left_5{
+      .ol_margin_left_5{
       margin-left: 5px;
       }
 
-      .ls_product_name{
+      .ol_product_name{
       line-height: 120%;
       }
 
-      .ls_account_manager_name{
+      .ol_account_manager_name{
       margin-bottom: 5px;
       }
 
-      .ls_product_name.ls_picking,
-      .ls_product_name.ls_slip{
+      .ol_product_name.ol_picking,
+      .ol_product_name.ol_slip{
       line-height: 170%;
       }
 
-      .ls_account_manager_pic {
+      .ol_account_manager_pic {
       float: none;
       }
 
-      .ls_account_manager_pic img {
+      .ol_account_manager_pic img {
       width: 50px;
       height: 50px;
       border-radius: 50%;
@@ -621,51 +621,51 @@
         font-weight: 600;
       }
 
-      .ls-email-icon img {
+      .ol-email-icon img {
       height: inherit;
       width: 10px;
       display: inline-block;
       }
 
-      .ls-email-icon.email img {
+      .ol-email-icon.email img {
       width: 14px;
       }
 
-      .ls_packing_closing_text {
+      .ol_packing_closing_text {
         font-size: 16px;
         font-weight: 600;
         margin-top: 50px;
       }
 
-      .ls_products_list_header_item.qty{
+      .ol_products_list_header_item.qty{
       width: 5%;
       }
 
-      .ls_products_list_header_item.products{
+      .ol_products_list_header_item.products{
       width: 75%;
       }
 
-      .ls_products_list_header_item.model{
+      .ol_products_list_header_item.model{
       width: 20%;
       }
 
-      .ls_products_list_header.ls_picking .ls_products_list_header_item.products{
+      .ol_products_list_header.ol_picking .ol_products_list_header_item.products{
       width: 35%;
       }
 
-      .ls_products_list_header.ls_picking .ls_products_list_header_item.model{
+      .ol_products_list_header.ol_picking .ol_products_list_header_item.model{
       width: 25%;
       }
 
-      .ls_products_list_header.ls_picking .ls_products_list_header_item.location{
+      .ol_products_list_header.ol_picking .ol_products_list_header_item.location{
       width: 15%;
       }
 
-      .ls_products_list_header.ls_picking .ls_products_list_header_item.destination{
+      .ol_products_list_header.ol_picking .ol_products_list_header_item.destination{
       width: 25%;
       }
 
-      .ls_picking_comments_header {
+      .ol_picking_comments_header {
       border-bottom: 1px solid #595A5C;
       color: #595A5C;
       font-weight: 600;
@@ -673,89 +673,89 @@
       margin-top: 50px;
       }
 
-      .ls_report_info_row_col.picking_extra {
+      .ol_report_info_row_col.picking_extra {
       width: 40%;
       }
 
-      .ls_account_manager_info {
+      .ol_account_manager_info {
       padding: 10px 0 0 0;
       }
 
-      .ls_report_footer_terms a {
+      .ol_report_footer_terms a {
       text-decoration: none;
       color: #59595b;
       }
 
-      .ls_account_manager_email {
+      .ol_account_manager_email {
       margin-top: 2px;
       }
 
-      .ls_quote_closing_text {
+      .ol_quote_closing_text {
       font-size: 11px;
       }
 
-      .picking_extra > .ls_report_info_row_col_line .key {
+      .picking_extra > .ol_report_info_row_col_line .key {
       width: 150px;
       }
 
-      .ls_product_default_code.ls_picking {
+      .ol_product_default_code.ol_picking {
       font-size: 14px;
       line-height: 16px;
       }
 
-      .product_line.ls_picking {
+      .product_line.ol_picking {
       padding: 10px 0;
       }
 
-      .ls_report_products_row.ls_picking{
+      .ol_report_products_row.ol_picking{
       margin-top: 20px;
       }
 
-      .ls_report_info_row_col.info.picking{
+      .ol_report_info_row_col.info.picking{
       width: 350px;
       }
 
-      .ls_report_info_row_col_title.picking .value,
-      .ls_report_info_row_col_line.picking .value{
+      .ol_report_info_row_col_title.picking .value,
+      .ol_report_info_row_col_line.picking .value{
       width: 200px;
       }
 
-      .ls_products_main_cont,
-      .ls_report_notes_and_totals,
-      .ls-document-section,
-      .ls-serial-numbers-cont{
+      .ol_products_main_cont,
+      .ol_report_notes_and_totals,
+      .ol-document-section,
+      .ol-serial-numbers-cont{
       page-break-inside: avoid;
       }
 
-      .ls-serial-number{
+      .ol-serial-number{
       width: 24%;
       display: inline-block;
       }
 
-      .ls-serial-numbers-title {
+      .ol-serial-numbers-title {
         margin-bottom: 10px;
       }
 
-      .ls_products_line_data_item.product_qty.packing,
-      .ls_product_default_code.ls_picking.packing,
-      .ls_product_name.ls_slip.packing,
-      .ls_product_location.packing,
-      .ls_product_default_code.packing{
+      .ol_products_line_data_item.product_qty.packing,
+      .ol_product_default_code.ol_picking.packing,
+      .ol_product_name.ol_slip.packing,
+      .ol_product_location.packing,
+      .ol_product_default_code.packing{
       font-size: 16px;
       line-height: 16px;
       font-weight: 600;
       }
 
-      .product_info_name.ls_invoice_lines{
+      .product_info_name.ol_invoice_lines{
       width: 65%;
       }
 
-      .ls_product_data.ls_invoice_lines{
+      .ol_product_data.ol_invoice_lines{
       width: 100%;
       padding-left: 0;
       }
 
-      .ls_watermark {
+      .ol_watermark {
       position: absolute;
       opacity: 0.30;
       z-index: 1000;
@@ -765,7 +765,7 @@
       font-size: 55px;
       }
 
-      .ls_shipment_block{
+      .ol_shipment_block{
       width: 50%;
       padding: 0 0 0 20px;
       }
