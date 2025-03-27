@@ -102,6 +102,8 @@ class HelpdeskTicket(models.Model):
                     )
                     if not value:
                         value = field.default_value
+                    else:
+                        value = value[rec.id]
                     headers.append(head)
                     vals.append(value)
                 writer.writerow(headers)

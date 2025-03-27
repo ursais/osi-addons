@@ -24,6 +24,15 @@ For Example:- If the Started stage sequence is 6.
 
 * Go to Settings > Automated Actions > FSM Order Started Stage Update > Apply on > [["stage_id.sequence","=",6]]
 
+Features on the mobile application will be visible depending on the groups set on this model. 
+
+Usage
+=============
+1) Navigate to the "Field Service" application
+2) Under menu item "Configuration", select "FSM Mobile Features"
+3) Select Installed Modules for FSM Mobile Dynamic Menu and it's records
+4) Select a feature and add/remove groups
+
 Credits
 =======
 

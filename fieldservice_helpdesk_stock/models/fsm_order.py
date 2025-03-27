@@ -19,7 +19,7 @@ class FSMOrder(models.Model):
         if "ticket_id" in vals:
             for line in self.stock_request_ids:
                 if line.state in ("draft", "cancelled"):
-                    line.ticket_id = vals.get("ticket_id")
+                    line.helpdesk_ticket_id = vals.get("ticket_id")
         return res
 
     @api.onchange("location_id")

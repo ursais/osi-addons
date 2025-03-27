@@ -9,7 +9,7 @@
 
 # OSI Addons
 
-None
+OSI Addons
 
 <!-- /!\ do not modify below this line -->
 

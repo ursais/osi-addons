@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="rma_return_label_view" model="ir.ui.view">
+        <field name="name">rma.return.label.view.form</field>
+        <field name="model">rma</field>
+        <field name="inherit_id" ref="rma.rma_view_form" />
+        <field name="arch" type="xml">
+            <button name="action_unlock" position="after">
+                <button
+                    type="object"
+                    string="Print Return Label"
+                    name="action_print_return_label"
+                    attrs="{'invisible':['|', ('can_generate_return', '=', False), ('state', 'in', ['draft', 'done', 'cancel', 'received'])]}"
+                />
+            </button>
+            <field name="can_be_replaced" position="after">
+                <field name="can_generate_return" invisible="1" />
+            </field>
+        </field>
+    </record>
+
+</odoo>
