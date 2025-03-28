@@ -19,6 +19,7 @@
         "account",
         "ol_exception",
         "mrp_batch",
+        "ol_sale_blanket_order",
     ],
     # always loaded
     "data": [
