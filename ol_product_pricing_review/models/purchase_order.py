@@ -33,7 +33,7 @@ class PurchaseOrder(models.Model):
 
         # Create or update price reviews for the relevant products
         for product in products_to_create_review:
-            product.product_tmpl_id._create_or_update_price_review(
+            product.product_tmpl_id.sudo()._create_or_update_price_review(
                 product.product_tmpl_id
             )
 
