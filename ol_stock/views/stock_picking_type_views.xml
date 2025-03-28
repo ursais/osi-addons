@@ -1,0 +1,15 @@
+<odoo>
+
+    <record id="ol_stock_view_picking_type_form" model="ir.ui.view">
+        <field name="name">stock.picking.type.form</field>
+        <field name="model">stock.picking.type</field>
+        <field name="inherit_id" ref="stock.view_picking_type_form"/>
+        <field name="arch" type="xml">
+            <!-- Add unreserve_on_create field after the Reserve Method field -->
+            <xpath expr="//field[@name='reservation_method']" position="after">
+                <field name="unreserve_on_create" invisible="not hide_reservation_method" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
