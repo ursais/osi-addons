@@ -33,6 +33,8 @@ class PurchaseOrder(models.Model):
 
         # Create or update price reviews for the relevant products
         for product in products_to_create_review:
+            # We use sudo here because we need the system to create or update a price
+            # Even if the user triggering this doesn't have permission or only read only
             product.product_tmpl_id.sudo()._create_or_update_price_review(
                 product.product_tmpl_id
             )
