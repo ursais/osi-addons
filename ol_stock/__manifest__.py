@@ -18,5 +18,6 @@
     "data": [
         "data/stock_location_data.xml",
         "security/security_group.xml",
+        "views/stock_picking_type_views.xml",
     ],
 }
