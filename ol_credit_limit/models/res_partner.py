@@ -60,20 +60,13 @@ class ResPartner(models.Model):
 
     def _get_open_sale_order(self):
         """Method is used for Get Open Sale Orders based on Partners!"""
-        so_obj = self.env['sale.order']
+        open_so_balance = self.env["sale.order"]
         if not self:
-            return so_obj
-
-        query = """
-            SELECT id
-            FROM sale_order
-            WHERE partner_id = %s
-            AND invoice_status != 'invoiced'
-            AND state != 'cancel'
-        """
-        self.env.cr.execute(query, (self.id,))
-        so_list = [so[0] for so in self.env.cr.fetchall()]
-        return so_obj.browse(so_list)
+            return open_so_balance
+        open_so_balance = self.sale_order_ids.filtered(
+            lambda l: l.state == "sale" and l.invoice_status == "no"
+        )
+        return open_so_balance
 
     @api.depends(
         "credit_limit",
@@ -259,57 +252,44 @@ class ResPartner(models.Model):
     def _compute_customer_deposit_balance(self):
         deposit_accounts = self._get_deposit_accounts()
         for partner in self:
-            _logger.info("_compute_customer_deposit_balance %s", partner._origin.id)
-            partners_to_include = tuple(partner.rollup_partner_ids.ids + [partner._origin.id])
-            # if not partners_to_include or not deposit_accounts:
-            #     partner.customer_deposit_balance = 0.0
-            #     continue
+            partners_to_include = partner.rollup_partner_ids + partner._origin
+            invoice_line_ids = partners_to_include.invoice_ids.mapped(
+                "invoice_line_ids"
+            ).filtered(
+                lambda l: l.product_id.id
+                == l.company_id.sale_down_payment_product_id.id
+                and not l.full_reconcile_id
+            )
+            customer_deposit_balance = sum(invoice_line_ids.mapped("balance"))
+            customer_deposit_balance = customer_deposit_balance * -1
+            partner.customer_deposit_balance = customer_deposit_balance
 
-            query = """
-                SELECT SUM(aml.balance) * -1
-                FROM account_move_line aml
-                WHERE aml.partner_id IN %s
-                AND aml.account_id IN %s
-                -- AND aml.full_reconcile_id IS NOT NULL
-                -- AND aml.balance < 0
-            """
-
-            query2 = """
-                SELECT SUM(ap.amount) FROM account_payment AS ap WHERE ap.partner_id IN %s
-            """
-            
-
-            self.env.cr.execute(query, (partners_to_include, deposit_accounts))
-            result = self.env.cr.fetchone()[0] or 0.0
-            print("result========result",result)
-            partner.customer_deposit_balance = result
-
-    @api.depends(
-        "partner_rollup_id",
-        "rollup_partner_ids",
-        "sale_order_ids.order_line.product_uom_qty",
-        "sale_order_ids.order_line.price_unit",
-        "sale_order_ids.order_line.state",
-        "rollup_partner_ids.sale_order_ids.order_line.product_uom_qty",
-        "rollup_partner_ids.sale_order_ids.order_line.price_unit",
-    )
-    def _compute_open_bo_balance(self):
-        for partner in self:
-            _logger.info("_compute_open_bo_balance %s", partner._origin.id)
-            partners_to_include = tuple(partner.rollup_partner_ids.ids + [ partner._origin.id])
-            query = """
-                SELECT SUM(sol.product_uom_qty * sol.price_unit)
-                FROM sale_order_line sol
-                JOIN sale_order so ON sol.order_id = so.id
-                WHERE so.partner_id IN %s
-                AND sol.blanket_order_line IS NOT NULL
-                AND so.state NOT IN ('cancel', 'done')
-                AND sol.product_uom_qty > 0
-            """
-            print("#######partners_to_include#######",partners_to_include)
-            self.env.cr.execute(query, (partners_to_include,))
-            result = self.env.cr.fetchone()[0] or 0.0
-            partner.open_bo_balance = result
+    # @api.depends(
+    #     "partner_rollup_id",
+    #     "rollup_partner_ids",
+    #     "sale_order_ids.order_line.product_uom_qty",
+    #     "sale_order_ids.order_line.price_unit",
+    #     "sale_order_ids.order_line.state",
+    #     "rollup_partner_ids.sale_order_ids.order_line.product_uom_qty",
+    #     "rollup_partner_ids.sale_order_ids.order_line.price_unit",
+    # )
+    # def _compute_open_bo_balance(self):
+    #     for partner in self:
+    #         _logger.info("_compute_open_bo_balance %s", partner._origin.id)
+    #         partners_to_include = tuple(partner.rollup_partner_ids.ids + [ partner._origin.id])
+    #         query = """
+    #             SELECT SUM(sol.product_uom_qty * sol.price_unit)
+    #             FROM sale_order_line sol
+    #             JOIN sale_order so ON sol.order_id = so.id
+    #             WHERE so.partner_id IN %s
+    #             AND sol.blanket_order_line IS NOT NULL
+    #             AND so.state NOT IN ('cancel', 'done')
+    #             AND sol.product_uom_qty > 0
+    #         """
+    #         print("#######partners_to_include#######",partners_to_include)
+    #         self.env.cr.execute(query, (partners_to_include,))
+    #         result = self.env.cr.fetchone()[0] or 0.0
+    #         partner.open_bo_balance = result
 
     # def _compute_open_bo_balance(self):
     #     SOL = self.env["sale.order.line"]
@@ -323,5 +303,28 @@ class ResPartner(models.Model):
     #         ]
     #         bo_balance = sum(SOL.search(domain).mapped(lambda l:l.product_uom_qty * l.price_unit))
     #         partner.open_bo_balance = bo_balance
+
+    @api.depends(
+        "partner_rollup_id",
+        "rollup_partner_ids",
+        "sale_blanket_order_ids",
+        "sale_blanket_order_ids.state",
+        "sale_blanket_order_ids.line_ids",
+    )
+    def _compute_open_bo_balance(self):
+        for partner in self:
+            _logger.info("_compute_open_bo_balance %s", partner._origin.id)
+            partners_to_include = partner.rollup_partner_ids + partner._origin
+            sale_blanket_order_lines = partners_to_include.sale_blanket_order_ids.filtered(
+                lambda l: l.state == "open"
+            ).mapped(
+                "line_ids"
+            )
+            open_bo_balance = 0
+            for blanket_order_line in sale_blanket_order_lines:
+                open_bo_balance += (
+                    blanket_order_line.remaining_uom_qty * blanket_order_line.price_unit
+                )
+            partner.open_bo_balance = open_bo_balance
 
     # END #########
