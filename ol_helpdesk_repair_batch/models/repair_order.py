@@ -19,3 +19,16 @@ class RepairOrder(models.Model):
     )
 
     # END #######
+    # METHODS ###
+
+    def _action_repair_confirm(self):
+        """
+        This is called with confirm wizard when qty is less than zero.
+        We want to trigger the _update_batch_state after
+        """
+        res = super()._action_repair_confirm()
+        if self.repair_batch_id:
+            self.repair_batch_id._update_batch_state()
+        return res
+
+    # END #######

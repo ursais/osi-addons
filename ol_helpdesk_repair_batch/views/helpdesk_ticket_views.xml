@@ -1,0 +1,63 @@
+<odoo>
+
+    <record id="action_helpdesk_import_sale" model="ir.actions.act_window">
+        <field name="name">Import Sale Order</field>
+        <field name="res_model">helpdesk.ticket.import.sale</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="ol_helpdesk_repair_helpdesk_ticket_view_form_inherit_stock_user" model="ir.ui.view">
+		<field name="name">helpdesk.ticket.repair.form</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="priority">100</field>
+        <field name="inherit_id" ref="helpdesk_repair.helpdesk_ticket_view_form_inherit_stock_user" />
+        <field name="arch" type="xml">
+            <field name="name" position="attributes">
+                <attribute name="readonly">team_id.sequence_id != False</attribute>
+            </field>
+            <xpath expr="//page[@name='description']" position="after">
+                <field name="use_product_repairs" invisible="1" groups="stock.group_stock_user" />
+                <page name="repairs" string="Repairs" invisible="not use_product_repairs">
+                    <button
+                        name="%(action_helpdesk_import_sale)d"
+                        string="Import from Sales Order"
+                        type="action"
+                        class="btn-secondary"
+                        context="{'default_ticket_id': active_id}"
+                    />
+                    <group name="repair_batches" string="Repair Batches">
+                        <field nolabel="1" colspan="2" name="repair_batch_ids" />
+                    </group>
+                    <group name="repair_orders" string="Repair Orders">
+                        <field nolabel="1" colspan="2" name="repair_ids" >
+                            <tree string="Repairs order" multi_edit="1" sample="1" decoration-info="state == 'draft'">
+                                <field name="company_id" column_invisible="True" />
+                                <field name="priority" optional="show" widget="priority" nolabel="1" />
+                                <field name="name" />
+                                <field name="schedule_date" optional="show" widget="remaining_days" />
+                                <field name="product_id" readonly="1" optional="show" />
+                                <field name="parts_availability_state" column_invisible="True" />
+                                <field name="parts_availability" invisible="state not in ['confirmed', 'under_repair']" optional="show" decoration-success="parts_availability_state == 'available'" decoration-warning="parts_availability_state == 'expected'" decoration-danger="parts_availability_state == 'late'" />
+                                <field name="product_qty" optional="hide" string="Quantity" readonly="state != 'draft'" />
+                                <field name="product_uom" string="Unit of Measure" readonly="1" groups="uom.group_uom" optional="hide" />
+                                <field name="user_id" optional="hide" widget='many2one_avatar_user'/>
+                                <field name="partner_id" readonly="1" optional="hide" />
+                                <field name="picking_id" optional="hide" />
+                                <field name="is_returned" optional="hide" />
+                                <field name="sale_order_id" optional="hide" />
+                                <field name="lot_id" optional="show" />
+                                <field name="location_id" optional="hide" />
+                                <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show" />
+                                <field name="state" optional="show" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')" />
+                                <field name="activity_exception_decoration" widget="activity_exception" />
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+            <button name="action_repair_order_form" position="replace" />
+        </field>
+    </record>
+
+</odoo>

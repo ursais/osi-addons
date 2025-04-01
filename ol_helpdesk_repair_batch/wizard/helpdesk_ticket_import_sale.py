@@ -7,11 +7,19 @@ class HelpdeskTicketImportSale(models.TransientModel):
     _description = "Import Sale Order for Repairs"
 
     ticket_id = fields.Many2one(
-        "helpdesk.ticket", string="Helpdesk Ticket", required=True
+        comodel_name="helpdesk.ticket",
+        string="Helpdesk Ticket",
+        required=True,
     )
-    sale_order_id = fields.Many2one("sale.order", string="Sale Order", required=True)
+    sale_order_id = fields.Many2one(
+        comodel_name="sale.order",
+        string="Sale Order",
+        required=True,
+    )
     line_ids = fields.One2many(
-        "helpdesk.ticket.import.sale.line", "wizard_id", string="Sale Order Lines"
+        comodel_name="helpdesk.ticket.import.sale.line",
+        inverse_name="wizard_id",
+        string="Sale Order Lines",
     )
 
     @api.onchange("sale_order_id")
@@ -67,12 +75,13 @@ class HelpdeskTicketImportSale(models.TransientModel):
             if existing_batch:
                 continue  # Avoid creating duplicate batches
 
+            # Create the new repair batch
             repair_batch_model.create(
                 {
                     "ticket_id": self.ticket_id.id,
                     "product_id": line.product_id.id,
                     "qty": line.qty,
-                    "lot_ids": [(6, 0, line.lot_ids.ids)],  # Add lots to repair batch
+                    "lot_ids": [(6, 0, line.lot_ids.ids)],
                 }
             )
         return {"type": "ir.actions.act_window_close"}
@@ -82,11 +91,29 @@ class HelpdeskTicketImportSaleLine(models.TransientModel):
     _name = "helpdesk.ticket.import.sale.line"
     _description = "Sale Order Line for Repair Import"
 
-    wizard_id = fields.Many2one("helpdesk.ticket.import.sale", required=True)
-    sale_order_line_id = fields.Many2one("sale.order.line", string="Sale Order Line")
-    product_id = fields.Many2one("product.product", string="Product", required=True)
-    qty = fields.Float(string="Quantity", default=1.0)
+    wizard_id = fields.Many2one(
+        comodel_name="helpdesk.ticket.import.sale",
+        required=True,
+    )
+    sale_order_line_id = fields.Many2one(
+        comodel_name="sale.order.line",
+        string="Sale Order Line",
+    )
+    sale_order_id = fields.Many2one(
+        comodel_name="sale.order",
+        string="Sale Order",
+        related="sale_order_line_id.order_id",
+    )
+    product_id = fields.Many2one(
+        comodel_name="product.product",
+        string="Product",
+        required=True,
+    )
+    qty = fields.Float(
+        string="Quantity",
+        default=1.0,
+    )
     lot_ids = fields.Many2many(
-        "stock.lot",
+        comodel_name="stock.lot",
         string="Serial Numbers",
     )

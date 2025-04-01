@@ -1,6 +1,5 @@
 # Import Odoo libs
 from odoo import _, api, fields, models
-from odoo.tools import float_is_zero
 from odoo.exceptions import ValidationError
 
 
@@ -14,6 +13,9 @@ class RepairBatch(models.Model):
 
     # COLUMNS ###
 
+    name = fields.Char(
+        string="Name",
+    )
     ticket_id = fields.Many2one(
         comodel_name="helpdesk.ticket",
         string="Helpdesk Ticket",
@@ -36,6 +38,11 @@ class RepairBatch(models.Model):
     lot_ids = fields.Many2many(
         comodel_name="stock.lot",
         string="Serial Numbers",
+    )
+    lot_ids_domain = fields.Binary(
+        string="Serial/Lot Domain",
+        help="Dynamic domain used for limiting serial numbers based on product.",
+        compute="_compute_lot_ids_domain",
     )
     state = fields.Selection(
         [
@@ -66,14 +73,14 @@ class RepairBatch(models.Model):
         compute="_compute_repair_count",
     )
     schedule_date = fields.Datetime(
-        "Scheduled Date",
+        string="Scheduled Date",
         default=fields.Datetime.now,
         index=True,
         required=True,
         copy=False,
     )
     user_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Responsible",
         default=lambda self: self.env.user,
         check_company=True,
@@ -88,9 +95,47 @@ class RepairBatch(models.Model):
         inverse_name="repair_batch_id",
         string="Parts",
     )
+    unreserve_visible = fields.Boolean(
+        string="Unreserve Button Visible",
+        compute="_compute_unreserve_visible",
+    )
+    reserve_visible = fields.Boolean(
+        string="Reserve Button Visible",
+        compute="_compute_reserve_visible",
+    )
+    start_repair_visible = fields.Boolean(
+        string="Start Repair Button Visible",
+        compute="_compute_repair_buttons_visible",
+    )
+    end_repair_visible = fields.Boolean(
+        string="End Repair Button Visible",
+        compute="_compute_repair_buttons_visible",
+    )
+    cancel_visible = fields.Boolean(
+        string="Cancel Button Visible",
+        compute="_compute_repair_buttons_visible",
+    )
 
     # END #######
     # METHODS ###
+
+    @api.onchange("lot_ids")
+    def _onchange_lot_ids(self):
+        """Auto-set product_id from selected lot if not set, then trigger domain update."""
+        if not self.product_id and self.lot_ids:
+            self.product_id = self.lot_ids[0].product_id
+
+    @api.depends("product_id")
+    def _compute_lot_ids_domain(self):
+        """
+        Sets the domain of the lot_ids field based on the selected product.
+        This allows a user to initially choose a serial instead of going in on the product side.
+        """
+        for rec in self:
+            domain = []
+            if rec.product_id:
+                domain = [("product_id", "=", rec.product_id.id)]
+            rec.lot_ids_domain = domain
 
     def _compute_repair_count(self):
         """Helper field compute to show/hide create repairs button."""
@@ -155,6 +200,12 @@ class RepairBatch(models.Model):
     def create(self, vals_list):
         batches = super().create(vals_list)
         for batch in batches:
+            # Override create to assign a sequence number to the new batch record
+            batch["name"] = (
+                self.env["ir.sequence"].next_by_code("repair.batch") or "New"
+            )
+
+            # Ensure all open repair orders get the same move_ids linked to batch lines.
             batch._propagate_parts_to_repairs()
         return batches
 
@@ -219,6 +270,42 @@ class RepairBatch(models.Model):
 
     # ACTION BUTTONS
 
+    @api.depends("repair_ids.unreserve_visible")
+    def _compute_unreserve_visible(self):
+        for batch in self:
+            batch.unreserve_visible = any(batch.repair_ids.mapped("unreserve_visible"))
+
+    @api.depends("repair_ids.reserve_visible")
+    def _compute_reserve_visible(self):
+        for batch in self:
+            batch.reserve_visible = any(batch.repair_ids.mapped("reserve_visible"))
+
+    @api.depends("repair_ids.state")
+    def _compute_repair_buttons_visible(self):
+        for batch in self:
+            batch.start_repair_visible = any(
+                repair.state == "confirmed" for repair in batch.repair_ids
+            )
+            batch.end_repair_visible = any(
+                repair.state in ("under_repair") for repair in batch.repair_ids
+            )
+            batch.cancel_visible = any(
+                repair.state in ("confirmed", "under_repair")
+                for repair in batch.repair_ids
+            )
+
+    def action_assign(self):
+        for batch in self:
+            for repair in batch.repair_ids:
+                repair.move_ids._action_assign()
+
+    def action_unreserve(self):
+        for batch in self:
+            for repair in batch.repair_ids:
+                repair.move_ids.filtered(
+                    lambda m: m.state in ("assigned", "partially_available")
+                )._do_unreserve()
+
     def action_validate(self):
         """Confirm all related repair orders"""
         warning_actions = []
@@ -249,14 +336,6 @@ class RepairBatch(models.Model):
             batch.repair_ids.filtered(
                 lambda r: r.state == "under_repair"
             ).action_repair_end()
-        batch._update_batch_state()
-
-    def action_repair_done(self):
-        """Complete all related repair orders"""
-        for batch in self:
-            batch.repair_ids.filtered(
-                lambda r: r.state == "under_repair"
-            ).action_repair_done()
         batch._update_batch_state()
 
     def action_repair_cancel(self):
