@@ -5,13 +5,13 @@
     "name": "OSI SO Backorder Report",
     "version": "11.0.1.0.0",
     "license": "AGPL-3",
-    "author": "Open Source Integrators, Odoo Community Association (OCA)",
+    "author": "Open Source Integrators",
     "summary": "Adds the ability to view and print a report of UIGD and "
                "Backorder quantities and values",
     "category": "Customers",
     "maintainer": "Open Source Integrators",
-    "website": "http://www.opensourceintegrators.com",
-    "depends": ["sale", "sale_stock"],
+    "website": "https://github.com/ursais/osi-addons",
+    "depends": ["sale_stock"],
     "data": [
         "views/so_backorder_view.xml",
         "views/sale_view.xml",

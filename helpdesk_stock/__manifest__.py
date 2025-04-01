@@ -21,7 +21,6 @@
     'license': 'LGPL-3',
     'maintainers': [
         'osimallen',
-        'wolfhall',
         'max3903',
     ],
 }

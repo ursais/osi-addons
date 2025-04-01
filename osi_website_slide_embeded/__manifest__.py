@@ -8,7 +8,7 @@
     "license": "AGPL-3",
     "author": "Open Source Integrators",
     "category": "Website",
-    "website": "http://www.opensourceintegrators.com",
+    "website": "https://github.com/ursais/osi-addons",
     "depends": ["website_slides"],
     "data": [
         "views/website_slides_embed.xml",

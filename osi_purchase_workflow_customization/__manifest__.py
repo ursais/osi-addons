@@ -9,7 +9,7 @@
     "license": "AGPL-3",
     "author": "Open Source Integrators",
     "category": "Purchase",
-    "website": "http://www.opensourceintegrators.com",
+    "website": "https://github.com/ursais/osi-addons",
     "depends": [
         "purchase",
         "hr",
@@ -21,5 +21,5 @@
         "views/purchase_approval_view.xml",
     ],
     "installable": True,
-    "maintainers": ["bodedra"]
+    "maintainers": ["ursais"]
 }

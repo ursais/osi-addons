@@ -5,9 +5,9 @@
     "name": "Delivery Order comment",
     "version": "11.0.1.0.0",
     "license": "AGPL-3",
-    "author": "Open Source Integrators, Odoo Community Association (OCA)",
+    "author": "Open Source Integrators",
     "maintainer": "Open Source Integrators",
-    "website": "https://www.opensourceintegrators.com",
+    "website": "https://github.com/ursais/osi-addons",
     "category": "Inventory",
     "images": [],
     "depends": [
