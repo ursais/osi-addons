@@ -7,9 +7,9 @@
                "is scanned on a picking",
     "version": "11.0.1.0.0",
     "license": "LGPL-3",
-    "author": "Open Source Integrators, Odoo Community Association (OCA)",
+    "author": "Open Source Integrators",
     "category": "Inventory",
-    "website": "http://www.opensourceintegrators.com",
+    "website": "https://github.com/ursais/osi-addons",
     "depends": ["stock_barcode"],
     "data": [
     ],
