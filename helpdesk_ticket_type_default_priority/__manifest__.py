@@ -17,7 +17,6 @@
     'installable': True,
     'license': 'LGPL-3',
     'maintainers': [
-        'wolfhall',
         'max3903',
     ],
 }
