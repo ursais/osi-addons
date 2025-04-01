@@ -7,9 +7,9 @@
                "supplier as a generic supplier in PO",
     "version": "11.0.1.0.0",
     "license": "AGPL-3",
-    "author": "Open Source Integrators, Odoo Community Association (OCA)",
+    "author": "Open Source Integrators",
     "category": "Purchase",
-    "website": "http://www.opensourceintegrators.com",
+    "website": "https://github.com/ursais/osi-addons",
     "depends": ["purchase", "sale"],
     "data": [
         "views/res_partner_view.xml",
