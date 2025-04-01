@@ -9,7 +9,7 @@
     "summary": "Print the Packing Barcode on the Picking Report",
     "category": "Stock",
     "maintainer": "Open Source Integrators",
-    "website": "http://www.opensourceintegrators.com",
+    "website": "https://github.com/ursais/osi-addons",
     "depends": [
         "stock",
         "sale",
