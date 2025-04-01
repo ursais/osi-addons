@@ -17,7 +17,6 @@
     'license': 'LGPL-3',
     'development_status': 'Beta',
     'maintainers': [
-        'wolfhall',
         'max3903',
     ],
 }
