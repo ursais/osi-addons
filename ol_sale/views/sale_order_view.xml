@@ -79,4 +79,15 @@
         </field>
     </record>
 
+    <record id="sale_order_line_search_ol_sales" model="ir.ui.view">
+        <field name="name">sale.order.line.search</field>
+        <field name="model">sale.order.line</field>
+        <field name="inherit_id" ref="sale.view_sales_order_line_filter" />
+        <field name="arch" type="xml">
+            <field name="order_id" position="after">
+                <field name="bom_id" string="Components" filter_domain="[('bom_id.bom_line_ids.product_id.default_code', '=', self)]"/>
+            </field>
+        </field>
+    </record>
+
 </odoo>
