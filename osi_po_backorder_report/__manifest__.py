@@ -10,7 +10,7 @@
                "Backorder quantities and values",
     "category": "Customers",
     "maintainer": "Open Source Integrators",
-    "website": "http://www.opensourceintegrators.com",
+    "website": "https://github.com/ursais/osi-addons",
     "depends": ["purchase"],
     "data": [
         "views/po_backorder_view.xml",
