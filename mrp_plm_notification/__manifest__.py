@@ -6,7 +6,7 @@
     "version": "18.0.1.0.0",
     "category": "Manufacturing",
     "license": "AGPL-3",
-    "maintainers": "Open Source Integrators",
+    "maintainers": ["Open Source Integrators"],
     "depends": ["mrp_plm"],
     "summary": "Adds email templates to ECO Stages.",
     "author": "Open Source Integrators",

@@ -26,8 +26,8 @@ class MrpEco(models.Model):
             res["stage_id"] = (
                 eco.stage_id.template_id,
                 {
-                    "auto_delete_message": True,
-                    "subtype_id": self.env["ir.model.data"].xmlid_to_res_id(
+                    "auto_delete_keep_log": False,
+                    "subtype_id": self.env["ir.model.data"]._xmlid_to_res_id(
                         "mail.mt_note"
                     ),
                     "email_layout_xmlid": "mail.mail_notification_light",
