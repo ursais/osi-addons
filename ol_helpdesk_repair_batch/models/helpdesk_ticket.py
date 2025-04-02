@@ -137,21 +137,39 @@ class HelpdeskTicket(models.Model):
             raise ValueError("No repair batches linked to this ticket.")
 
         product_quantities = {}  # {product_id: {"qty": total_qty, "lots": []}}
-        locations = {"source": [], "destination": []}
+
+        # Set source as Customer Virtual Location
+        customer_location = self.env["stock.location"].search(
+            [("usage", "=", "customer")], limit=1
+        )
+        if not customer_location:
+            raise ValueError("Customer virtual location not found.")
+
+        source_location_id = customer_location.id
+
+        # Collect repair locations
+        repair_locations = {
+            repair.location_id.id
+            for batch in self.repair_batch_ids
+            for repair in batch.repair_ids
+        }
+        if len(repair_locations) > 1:
+            raise ValueError(
+                "Multiple repair locations found. Ensure all repairs use the same location."
+            )
+
+        destination_location_id = repair_locations.pop() if repair_locations else False
+        if not destination_location_id:
+            raise ValueError("Could not determine the repair destination location.")
 
         for batch in self.repair_batch_ids:
             for repair in batch.repair_ids.filtered(
                 lambda r: r.state not in ("done", "under_repair", "cancel")
             ):
-                if repair.location_id:
-                    locations["source"].append(repair.location_id.id)
-                if repair.location_dest_id:
-                    locations["destination"].append(repair.location_dest_id.id)
-
                 product_id = repair.product_id.id
                 lot_id = (
                     repair.lot_id.id if repair.lot_id else False
-                )  # ✅ Use lot_id from repair
+                )  # Use lot_id from repair
 
                 if product_id not in product_quantities:
                     product_quantities[product_id] = {"qty": 0, "lots": []}
@@ -165,30 +183,13 @@ class HelpdeskTicket(models.Model):
                             0,
                             {
                                 "lot_id": lot_id,
-                                "qty_done": repair.product_qty,  # ✅ Match quantity with repair qty
+                                "qty_done": repair.product_qty,  # Match quantity with repair qty
                             },
                         )
                     )
 
         if not product_quantities:
             raise ValueError("No valid products found to create a receipt.")
-
-        # Determine the most common source & destination location (fallback to first if multiple)
-        source_location_id = (
-            Counter(locations["source"]).most_common(1)[0][0]
-            if locations["source"]
-            else False
-        )
-        destination_location_id = (
-            Counter(locations["destination"]).most_common(1)[0][0]
-            if locations["destination"]
-            else False
-        )
-
-        if not source_location_id or not destination_location_id:
-            raise ValueError(
-                "Could not determine valid source and destination locations."
-            )
 
         picking_type = self.env["stock.picking.type"].search(
             [
@@ -228,8 +229,32 @@ class HelpdeskTicket(models.Model):
 
             # Create stock move lines with lot tracking
             for lot in data["lots"]:
-                lot[2]["move_id"] = stock_move.id
-                stock_move_line_obj.create(lot[2])
+                lot_data = lot[2]  # Lot data dictionary
+
+                # Ensure product_id and lot_id are correctly set in the move line
+                lot_data["move_id"] = stock_move.id
+                lot_data["product_id"] = stock_move.product_id.id
+                lot_data["location_id"] = source_location_id
+                lot_data["location_dest_id"] = destination_location_id
+
+                # Fetch the lot record using lot_id (if lot_id is an integer ID)
+                lot_record = self.env["stock.lot"].browse(lot_data["lot_id"])
+
+                # Ensure lot_record is valid
+                if not lot_record.exists():
+                    raise ValueError(f"Lot ID {lot_data['lot_id']} does not exist.")
+
+                # Ensure product_id is consistent between the lot and the product being moved
+                if lot_record.product_id != stock_move.product_id:
+                    raise ValueError(
+                        f"Lot {lot_record.name} is incompatible with product {stock_move.product_id.name}"
+                    )
+
+                # Assign the product_id to the move line (in case it's missing from lot_data)
+                lot_data["lot_id"] = lot_record.id
+
+                # Create the stock move line
+                stock_move_line_obj.create(lot_data)
 
         return {
             "name": "Receipt Transfer",
