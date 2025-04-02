@@ -3,7 +3,7 @@
 {
     "name": "RMA - Helpdesk",
     "summary": "Link Return Merchandise Authorization with Helpdesk Tickets",
-    "version": "14.0.1.0.0",
+    "version": "18.0.1.0.0",
     "development_status": "Production/Stable",
     "category": "RMA",
     "website": "https://github.com/ursais/osi-addons",

@@ -15,9 +15,8 @@ class Rma(models.Model):
 
     @api.onchange("partner_id")
     def _onchange_partner_id(self):
-        res = super()._onchange_partner_id()
-        self.ticket_id = False
-        return res
+        if self.partner_id:
+            self.ticket_id = False
 
     @api.onchange("ticket_id")
     def _onchange_order_id(self):

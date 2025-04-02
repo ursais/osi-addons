@@ -21,19 +21,19 @@ class HelpdeskTicket(models.Model):
 
     def create_rma(self):
         self.ensure_one()
-        rma_model = self.env["rma"]
-        vals_list = []
+        rma_vals_list = []
         for rec in self:
-            vals = {
-                "partner_id": rec.partner_id.id,
-                "origin": rec.name,
-                "company_id": rec.company_id.id,
-                "product_id": rec.product_id.id,
-                "description": rec.description,
-                "ticket_id": rec.id,
-            }
-            vals_list.append(vals)
-        rma = rma_model.create(vals_list)
+            rma_vals_list.append(
+                {
+                    "partner_id": rec.partner_id.id,
+                    "origin": rec.name,
+                    "company_id": rec.company_id.id,
+                    "product_id": rec.product_id.id,
+                    "description": rec.description,
+                    "ticket_id": rec.id,
+                }
+            )
+        rma = self.env["rma"].create(rma_vals_list)
         return rma
 
     def create_and_open_rma(self):
