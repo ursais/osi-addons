@@ -20,7 +20,7 @@ class MrpEco(models.Model):
     _inherit = ["mrp.eco", "mail.thread.cc", "mail.activity.mixin"]
 
     def _track_template(self, changes):
-        res = super(MrpEco, self)._track_template(changes)
+        res = super()._track_template(changes)
         eco = self[0]
         if "stage_id" in changes and eco.stage_id.template_id:
             res["stage_id"] = (
