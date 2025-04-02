@@ -37,6 +37,7 @@
                 <field name="use_product_repairs" invisible="1" groups="stock.group_stock_user" />
                 <page name="repairs" string="Repairs" invisible="not use_product_repairs">
                     <field name="show_generate_repairs" invisible="1" />
+                    <field name="show_create_sale" invisible="1" />
                     <button
                         name="%(action_helpdesk_import_sale)d"
                         string="Import from Sales Order"
@@ -57,6 +58,7 @@
                         string="Create Receipt Transfer"
                         class="btn-secondary"
                         groups="stock.group_stock_user"
+                        invisible="not repair_ids"
                     />
                     <button
                         name="action_create_sale_order"
@@ -64,6 +66,7 @@
                         string="Create Repair Sale Order"
                         class="oe_highlight"
                         groups="stock.group_stock_user"
+                        invisible="not show_create_sale"
                     />
                     <field name="repair_sale_order_ids" readonly="1" widget="many2many_tags" />
                     <group name="repair_batches" string="Repair Batches">

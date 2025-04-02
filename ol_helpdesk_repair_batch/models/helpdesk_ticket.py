@@ -30,14 +30,22 @@ class HelpdeskTicket(models.Model):
     out_transfer_count = fields.Integer(
         string="OUT Count",
         compute="_compute_transfer_counts",
+        help="Counts the number of OUT transfers",
     )
     in_transfer_count = fields.Integer(
         string="IN Count",
         compute="_compute_transfer_counts",
+        help="Counts the number of IN transfers",
     )
     show_generate_repairs = fields.Boolean(
         string="Show Generate Repairs Button",
         compute="_compute_show_generate_repairs",
+        help="Helper field used by the visibility attribute of the button.",
+    )
+    show_create_sale = fields.Boolean(
+        string="Show Create Sale Order Button",
+        compute="_compute_show_create_sale",
+        help="Helper field used by the visibility attribute of the button.",
     )
 
     # END #######
@@ -93,6 +101,15 @@ class HelpdeskTicket(models.Model):
         for ticket in self:
             ticket.show_generate_repairs = any(
                 batch.repair_count < batch.qty for batch in ticket.repair_batch_ids
+            )
+
+    @api.depends(
+        "repair_batch_ids.state",
+    )
+    def _compute_show_create_sale(self):
+        for ticket in self:
+            ticket.show_create_sale = any(
+                batch.state == "done" for batch in ticket.repair_batch_ids
             )
 
     def action_generate_repairs(self):
