@@ -14,13 +14,13 @@
                     groups="helpdesk.group_helpdesk_user"
                 />
             </button>
-            <button name="preview_sale_order" position="before">
+            <button name="action_view_invoice" position="before">
                 <button
                     name="action_view_tickets"
                     type="object"
                     class="oe_stat_button"
                     icon="fa-life-ring"
-                    attrs="{'invisible': [('ticket_count', '=', 0)]}"
+                    invisible="ticket_count == 0"
                     groups="helpdesk.group_helpdesk_user"
                 >
                     <field name="ticket_count" widget="statinfo" string="Tickets" />

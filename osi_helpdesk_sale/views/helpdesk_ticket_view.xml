@@ -8,28 +8,31 @@
             <xpath expr="//field[@name='legend_blocked']" position="before">
                 <field name="use_helpdesk_sale_orders" invisible="1" />
             </xpath>
-            <button name="assign_ticket_to_self" position="after">
+            <field name="stage_id" position="before">
                 <button
                     name="create_sale_order"
                     string="Create Sale Order"
                     type="object"
                     class="btn btn-primary"
-                    attrs="{'invisible': [('use_helpdesk_sale_orders', '=', False)]}"
+                    invisible="not use_helpdesk_sale_orders"
                     groups="sales_team.group_sale_salesman"
                 />
-            </button>
-            <button name="action_open_helpdesk_ticket" position="after">
+            </field>
+            <xpath
+                expr="//div[@name='button_box']/button[@name='action_open_helpdesk_ticket']"
+                position="after"
+            >
                 <button
                     name="action_view_sale_order"
                     type="object"
                     class="oe_stat_button"
                     icon="fa-dollar"
-                    attrs="{'invisible': [('sale_count', '=', 0), ('use_helpdesk_sale_orders', '=', False)]}"
+                    invisible="sale_count == 0 and not use_helpdesk_sale_orders"
                     groups="sales_team.group_sale_salesman"
                 >
                     <field name="sale_count" widget="statinfo" string="Sales" />
                 </button>
-            </button>
+            </xpath>
         </field>
     </record>
 

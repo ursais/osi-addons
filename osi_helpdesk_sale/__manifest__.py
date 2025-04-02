@@ -2,7 +2,7 @@
 # License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
 {
     "name": "OSI Helpdesk Sale",
-    "version": "16.0.1.0.0",
+    "version": "18.0.1.0.0",
     "category": "Helpdesk",
     "license": "LGPL-3",
     "summary": """Adds the ability to create sales orders from tickets and
