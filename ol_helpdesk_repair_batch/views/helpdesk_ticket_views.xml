@@ -7,15 +7,32 @@
         <field name="target">new</field>
     </record>
 
-    <record id="ol_helpdesk_repair_helpdesk_ticket_view_form_inherit_stock_user" model="ir.ui.view">
+    <record id="ol_helpdesk_repair_batch_helpdesk_ticket_view_form_inherit_stock_user" model="ir.ui.view">
 		<field name="name">helpdesk.ticket.repair.form</field>
         <field name="model">helpdesk.ticket</field>
         <field name="priority">100</field>
         <field name="inherit_id" ref="helpdesk_repair.helpdesk_ticket_view_form_inherit_stock_user" />
         <field name="arch" type="xml">
-            <field name="name" position="attributes">
-                <attribute name="readonly">team_id.sequence_id != False</attribute>
-            </field>
+            <button name="action_open_helpdesk_ticket" position="before">
+                <button
+                    name="action_view_out_transfers"
+                    string="OUT Transfers"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-truck"
+                    invisible="out_transfer_count == 0">
+                    <field name="out_transfer_count" widget="statinfo"/>
+                </button>
+                <button
+                    name="action_view_in_transfers"
+                    string="IN Transfers"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-arrow-down"
+                    invisible="in_transfer_count == 0">
+                    <field name="in_transfer_count" widget="statinfo"/>
+                </button>
+            </button>
             <xpath expr="//page[@name='description']" position="after">
                 <field name="use_product_repairs" invisible="1" groups="stock.group_stock_user" />
                 <page name="repairs" string="Repairs" invisible="not use_product_repairs">
@@ -24,8 +41,23 @@
                         string="Import from Sales Order"
                         type="action"
                         class="btn-secondary"
-                        context="{'default_ticket_id': active_id}"
+                        context="{'default_ticket_id': active_id, 'default_partner_id': partner_id}"
                     />
+                    <button
+                        name="action_create_receipt"
+                        type="object"
+                        string="Create Receipt Transfer"
+                        class="btn-secondary"
+                        groups="stock.group_stock_user"
+                    />
+                    <button
+                        name="action_create_sale_order"
+                        type="object"
+                        string="Create Repair Sale Order"
+                        class="btn-secondary"
+                        groups="stock.group_stock_user"
+                    />
+                    <field name="repair_sale_order_ids" readonly="1" widget="many2many_tags" />
                     <group name="repair_batches" string="Repair Batches">
                         <field nolabel="1" colspan="2" name="repair_batch_ids" />
                     </group>

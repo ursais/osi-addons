@@ -1,6 +1,6 @@
 <odoo>
 
-    <record id="ol_helpdesk_repair_repair_batch_view_tree" model="ir.ui.view">
+    <record id="ol_helpdesk_repair_batch_view_tree" model="ir.ui.view">
         <field name="name">repair.batch.tree</field>
         <field name="model">repair.batch</field>
         <field name="arch" type="xml">
@@ -22,7 +22,7 @@
         </field>
     </record>
 
-    <record id="ol_helpdesk_repair_repair_batch_view_form" model="ir.ui.view">
+    <record id="ol_helpdesk_repair_batch_view_form" model="ir.ui.view">
         <field name="name">repair.batch.form</field>
         <field name="model">repair.batch</field>
         <field name="arch" type="xml">
@@ -53,12 +53,12 @@
                     <group name="information">
                         <group name="general">
                             <field name="tracking" invisible="1" />
-                            <field name="ticket_id" />
                             <field name="product_id" />
                             <field name="qty" />
                         </group>
                         <group name="sale_info">
                             <field name="schedule_date" />
+                            <field name="ticket_id" />
                             <field name="sale_id" />
                             <field name="sale_line_id" />
                             <field name="schedule_date" readonly="state in ['done', 'cancel']" />
@@ -80,9 +80,6 @@
                                 </tree>
                             </field>
                             <div class="clearfix" />
-                        </page>
-                        <page string="Product History" invisible="tracking != 'serial'">
-                        The plan is to show original build and changes here.
                         </page>
                         <page string="Repair Orders">
                             <field name="repair_ids" >

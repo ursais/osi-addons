@@ -60,6 +60,10 @@ class RepairBatch(models.Model):
         inverse_name="repair_batch_id",
         string="Repairs",
     )
+    repair_count = fields.Integer(
+        string="Repair Count",
+        compute="_compute_repair_count",
+    )
     sale_line_id = fields.Many2one(
         comodel_name="sale.order.line",
         string="SO Line",
@@ -67,10 +71,6 @@ class RepairBatch(models.Model):
     sale_id = fields.Many2one(
         comodel_name="sale.order",
         string="Sale Order",
-    )
-    repair_count = fields.Integer(
-        string="Repair Count",
-        compute="_compute_repair_count",
     )
     schedule_date = fields.Datetime(
         string="Scheduled Date",

@@ -21,6 +21,10 @@ class HelpdeskTicketImportSale(models.TransientModel):
         inverse_name="wizard_id",
         string="Sale Order Lines",
     )
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Customer",
+    )
 
     @api.onchange("sale_order_id")
     def _onchange_sale_order(self):
@@ -84,6 +88,8 @@ class HelpdeskTicketImportSale(models.TransientModel):
                     "lot_ids": [(6, 0, line.lot_ids.ids)],
                 }
             )
+            if not self.ticket_id.partner_id:
+                self.ticket_id.partner_id = self.partner_id
         return {"type": "ir.actions.act_window_close"}
 
 
