@@ -81,9 +81,9 @@ class SaleBlanketOrder(models.Model):
                 }
             )
 
-        # Check if the values changed and trigger sale_blanket_booking_trigger
-        if any(order[field] != previous_values[field] for field in previous_values):
-            order.sale_blanket_booking_trigger()
+            # Check if the values changed and trigger sale_blanket_booking_trigger
+            if any(order[field] != previous_values[field] for field in previous_values):
+                order.sale_blanket_booking_trigger()
 
     def get_booking_trigger_fields(self):
         """
