@@ -1,6 +1,9 @@
+# Import libs
+from collections import Counter
+
 # Import Odoo libs
 from odoo import _, api, fields, models
-from collections import Counter
+from odoo.exceptions import ValidationError
 
 
 class HelpdeskTicket(models.Model):
@@ -31,6 +34,10 @@ class HelpdeskTicket(models.Model):
     in_transfer_count = fields.Integer(
         string="IN Count",
         compute="_compute_transfer_counts",
+    )
+    show_generate_repairs = fields.Boolean(
+        string="Show Generate Repairs Button",
+        compute="_compute_show_generate_repairs",
     )
 
     # END #######
@@ -77,6 +84,28 @@ class HelpdeskTicket(models.Model):
             )
 
         return action
+
+    @api.depends(
+        "repair_batch_ids.repair_count",
+        "repair_batch_ids.qty",
+    )
+    def _compute_show_generate_repairs(self):
+        for ticket in self:
+            ticket.show_generate_repairs = any(
+                batch.repair_count < batch.qty for batch in ticket.repair_batch_ids
+            )
+
+    def action_generate_repairs(self):
+        """Runs `action_generate_repairs` on all batches where the button is visible."""
+        batches_to_process = self.repair_batch_ids.filtered(
+            lambda batch: batch.repair_count < batch.qty
+            and batch.state not in ("done", "cancel")
+        )
+        if not batches_to_process:
+            raise ValidationError(_("No batches require repair generation."))
+
+        for batch in batches_to_process:
+            batch.action_generate_repairs()
 
     def action_view_in_transfers(self):
         """View inbound transfers (receipts) related to this ticket."""
