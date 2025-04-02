@@ -25,8 +25,9 @@ class SaleOrder(models.Model):
 
     # END #########
     # METHODS #####
+
     def _get_open_sale_order(self, partner_id):
-        so_obj = self.env['sale.order']
+        so_obj = self.env["sale.order"]
         if not partner_id:
             return so_obj
 
@@ -37,10 +38,13 @@ class SaleOrder(models.Model):
             AND invoice_status != 'invoiced'
             AND state != 'cancel'
         """
-        self.env.cr.execute(query, (partner_id.id,))
-        so_list = [so[0] for so in self.env.cr.fetchall()]
-        return so_obj.browse(so_list)
 
+        so_list = []
+        for partner in partner_id:
+            self.env.cr.execute(query, (partner.id,))
+            so_list.extend([so[0] for so in self.env.cr.fetchall()])
+
+        return so_obj.browse(so_list)
 
     @api.depends(
         "partner_id.remaining_credit",
