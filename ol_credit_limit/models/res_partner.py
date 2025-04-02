@@ -120,6 +120,11 @@ class ResPartner(models.Model):
     def _compute_open_so_balance(self):
         # self.filtered(lambda l: not l.credit_limit).open_so_balance = 0
         for partner in self:
+            # Skip computation if the partner is new (i.e., hasn't been saved yet)
+            if not partner.id:
+                partner.open_so_balance = 0
+                continue
+
             # Use raw SQL query to get all child IDs efficiently
             self.env.cr.execute(
                 """
@@ -315,10 +320,10 @@ class ResPartner(models.Model):
         for partner in self:
             _logger.info("_compute_open_bo_balance %s", partner._origin.id)
             partners_to_include = partner.rollup_partner_ids + partner._origin
-            sale_blanket_order_lines = partners_to_include.sale_blanket_order_ids.filtered(
-                lambda l: l.state == "open"
-            ).mapped(
-                "line_ids"
+            sale_blanket_order_lines = (
+                partners_to_include.sale_blanket_order_ids.filtered(
+                    lambda l: l.state == "open"
+                ).mapped("line_ids")
             )
             open_bo_balance = 0
             for blanket_order_line in sale_blanket_order_lines:
