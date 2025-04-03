@@ -23,18 +23,18 @@ class HelpdeskTicket(models.Model):
         inverse_name="helpdesk_ticket_id",
         string="Related Sale Orders",
     )
-    out_transfer_count = fields.Integer(
-        string="OUT Count",
-        compute="_compute_transfer_counts",
+    repair_sale_order_count = fields.Integer(
+        string="Repair Sale Order Count",
+        compute="_compute_button_counts",
     )
     out_transfer_count = fields.Integer(
         string="OUT Count",
-        compute="_compute_transfer_counts",
+        compute="_compute_button_counts",
         help="Counts the number of OUT transfers",
     )
     in_transfer_count = fields.Integer(
         string="IN Count",
-        compute="_compute_transfer_counts",
+        compute="_compute_button_counts",
         help="Counts the number of IN transfers",
     )
     show_generate_repairs = fields.Boolean(
@@ -63,14 +63,38 @@ class HelpdeskTicket(models.Model):
                 )
         return vals
 
-    def _compute_transfer_counts(self):
+    def _compute_button_counts(self):
         for ticket in self:
+            ticket.repair_sale_order_count = len(ticket.repair_sale_order_ids)
             ticket.out_transfer_count = len(
                 ticket.repair_sale_order_ids.mapped("picking_ids")
             )
             ticket.in_transfer_count = len(
                 self.env["stock.picking"].search([("ticket_id", "=", self.id)])
             )
+
+    def action_view_repair_sale_orders(self):
+        self.ensure_one()
+        action = {
+            "res_model": "sale.order",
+            "type": "ir.actions.act_window",
+        }
+        if len(self.repair_sale_order_ids) == 1:
+            action.update(
+                {
+                    "view_mode": "form",
+                    "res_id": self.repair_sale_order_ids[0].id,
+                }
+            )
+        else:
+            action.update(
+                {
+                    "name": _("Repair Sale Orders %s", self.name),
+                    "domain": [("id", "in", self.repair_sale_order_ids.ids)],
+                    "view_mode": "tree,form",
+                }
+            )
+        return action
 
     def action_view_out_transfers(self):
         """View outbound transfers related to sale order deliveries."""
@@ -292,17 +316,21 @@ class HelpdeskTicket(models.Model):
         if not repair_orders:
             raise ValueError("No repairs qualify for a new sale order.")
 
-        new_sale_orders = []
+        # Aggregate product quantities across all batches (including repair orders' product_id)
+        product_quantities = {}
+        move_repair_map = {}
+        repair_product_map = {}
 
         for batch in self.repair_batch_ids:
-            batch_repairs = batch.repair_ids.filtered(lambda r: not r.sale_order_id)
-            if not batch_repairs:
-                continue
+            for repair in batch.repair_ids.filtered(lambda r: not r.sale_order_id):
+                # Aggregate based on repair product_id
+                if repair.product_id:
+                    product_id = repair.product_id.id
+                    repair_product_map[product_id] = (
+                        repair_product_map.get(product_id, 0) + repair.product_qty
+                    )
 
-            product_quantities = {}
-            move_repair_map = {}
-
-            for repair in batch_repairs:
+                # Aggregate based on move_ids (added components)
                 for move in repair.move_ids.filtered(
                     lambda m: m.repair_line_type == "add"
                 ):
@@ -312,50 +340,58 @@ class HelpdeskTicket(models.Model):
                     )
                     move_repair_map.setdefault(product_id, []).append((move, repair))
 
-            if not product_quantities:
-                continue  # Skip if no valid moves for this batch
+        # Merge repair product quantities into product_quantities (set price to zero for these)
+        for product_id, qty in repair_product_map.items():
+            if product_id not in product_quantities:
+                product_quantities[product_id] = qty
+            else:
+                product_quantities[product_id] += qty  # Ensure correct total quantity
 
-            sale_order = sale_order_obj.create(
-                {
-                    "partner_id": self.partner_id.id,
-                    "origin": self.name,
-                }
-            )
-            new_sale_orders.append(sale_order.id)
-
-            product_sale_lines = {}
-
-            for product_id, qty in product_quantities.items():
-                product = self.env["product.product"].browse(product_id)
-                sale_line = sale_order_line_obj.create(
-                    {
-                        "order_id": sale_order.id,
-                        "product_id": product_id,
-                        "product_uom_qty": qty,
-                        "product_uom": product.uom_id.id,
-                        "price_unit": product.list_price,
-                    }
-                )
-                product_sale_lines[product_id] = sale_line.id
-
-            # Link repair orders and moves to the created sale order and sale lines
-            for product_id, move_repairs in move_repair_map.items():
-                sale_line_id = product_sale_lines.get(product_id)
-                for move, repair in move_repairs:
-                    repair.sale_order_id = sale_order.id
-                    repair.sale_order_line_id = sale_line_id
-
-        if not new_sale_orders:
+        if not product_quantities:
             raise ValueError("No valid products found to create a sale order.")
 
-        self.repair_sale_order_ids = [(6, 0, new_sale_orders)]  # Assign multiple SOs
+        # Create a single sale order
+        sale_order = sale_order_obj.create(
+            {
+                "partner_id": self.partner_id.id,
+                "origin": self.name,
+            }
+        )
+
+        product_sale_lines = {}
+
+        for product_id, qty in product_quantities.items():
+            product = self.env["product.product"].browse(product_id)
+
+            # Set price to 0.0 if the product comes from `repair_product_map`
+            price_unit = 0.0 if product_id in repair_product_map else product.list_price
+
+            sale_line = sale_order_line_obj.create(
+                {
+                    "order_id": sale_order.id,
+                    "product_id": product_id,
+                    "product_uom_qty": qty,
+                    "product_uom": product.uom_id.id,
+                    "price_unit": price_unit,
+                }
+            )
+            product_sale_lines[product_id] = sale_line.id
+
+        # Link repairs and moves to the sale order & sale lines
+        for product_id, move_repairs in move_repair_map.items():
+            sale_line_id = product_sale_lines.get(product_id)
+            for move, repair in move_repairs:
+                repair.sale_order_id = sale_order.id
+                repair.sale_order_line_id = sale_line_id
+
+        self.repair_sale_order_ids = [(6, 0, [sale_order.id])]  # Assign single SO
 
         return {
-            "name": "Sale Orders",
+            "name": "Sale Order",
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
-            "view_mode": "tree,form",
-            "domain": [("id", "in", new_sale_orders)],
+            "view_mode": "form",
+            "res_id": sale_order.id,
         }
 
     @api.model_create_multi

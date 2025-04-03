@@ -57,39 +57,45 @@ class HelpdeskTicketImportSale(models.TransientModel):
             self.line_ids = lines
 
     def action_confirm(self):
-        """Create repair.batch records based on selected lines."""
+        """Create a single repair batch per product, summing quantities and merging lot_ids."""
         if not self.line_ids:
             raise UserError("No sale order lines selected.")
 
         repair_batch_model = self.env["repair.batch"]
+        repair_batches = {}
+
         for line in self.line_ids:
             if line.qty <= 0:
                 raise UserError(f"Invalid quantity for product {line.product_id.name}.")
 
-            # Check if a repair batch already exists for the same product and ticket
-            existing_batch = repair_batch_model.search(
-                [
-                    ("ticket_id", "=", self.ticket_id.id),
-                    ("product_id", "=", line.product_id.id),
-                    ("qty", "=", line.qty),
-                ],
-                limit=1,
-            )
+            product_id = line.product_id.id
+            lot_ids = set(line.lot_ids.ids)  # Use a set to merge unique lot IDs
 
-            if existing_batch:
-                continue  # Avoid creating duplicate batches
+            if product_id in repair_batches:
+                repair_batches[product_id]["qty"] += line.qty
+                repair_batches[product_id]["lot_ids"].update(lot_ids)
+            else:
+                repair_batches[product_id] = {
+                    "qty": line.qty,
+                    "lot_ids": lot_ids,
+                }
 
-            # Create the new repair batch
+        # Create repair batches
+        for product_id, data in repair_batches.items():
             repair_batch_model.create(
                 {
                     "ticket_id": self.ticket_id.id,
-                    "product_id": line.product_id.id,
-                    "qty": line.qty,
-                    "lot_ids": [(6, 0, line.lot_ids.ids)],
+                    "partner_id": self.partner_id.id,
+                    "product_id": product_id,
+                    "qty": data["qty"],
+                    "lot_ids": [(6, 0, list(data["lot_ids"]))],  # Convert set to list
                 }
             )
-            if not self.ticket_id.partner_id:
-                self.ticket_id.partner_id = self.partner_id
+
+        # Assign partner if not already set
+        if not self.ticket_id.partner_id:
+            self.ticket_id.partner_id = self.partner_id
+
         return {"type": "ir.actions.act_window_close"}
 
 

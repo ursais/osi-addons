@@ -15,22 +15,31 @@
         <field name="arch" type="xml">
             <button name="action_open_helpdesk_ticket" position="before">
                 <button
-                    name="action_view_out_transfers"
-                    string="OUT Transfers"
-                    type="object"
-                    class="oe_stat_button"
-                    icon="fa-truck"
-                    invisible="out_transfer_count == 0">
-                    <field name="out_transfer_count" widget="statinfo"/>
-                </button>
-                <button
                     name="action_view_in_transfers"
-                    string="IN Transfers"
+                    string="IN Transfer(s)"
                     type="object"
                     class="oe_stat_button"
                     icon="fa-arrow-down"
                     invisible="in_transfer_count == 0">
                     <field name="in_transfer_count" widget="statinfo"/>
+                </button>
+                <button
+                    name="action_view_repair_sale_orders"
+                    string="Repair SO(s)"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-usd"
+                    invisible="repair_sale_order_count == 0">
+                    <field name="repair_sale_order_count" widget="statinfo"/>
+                </button>
+                <button
+                    name="action_view_out_transfers"
+                    string="OUT Transfer(s)"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-truck"
+                    invisible="out_transfer_count == 0">
+                    <field name="out_transfer_count" widget="statinfo"/>
                 </button>
             </button>
             <xpath expr="//page[@name='description']" position="after">
@@ -68,7 +77,6 @@
                         groups="stock.group_stock_user"
                         invisible="not show_create_sale"
                     />
-                    <field name="repair_sale_order_ids" readonly="1" widget="many2many_tags" />
                     <group name="repair_batches" string="Repair Batches">
                         <field nolabel="1" colspan="2" name="repair_batch_ids" />
                     </group>

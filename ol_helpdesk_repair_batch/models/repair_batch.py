@@ -27,6 +27,10 @@ class RepairBatch(models.Model):
         string="Product",
         required=True,
     )
+    partner_id = fields.Many2one(
+        comodel_name="res.partner",
+        string="Partner",
+    )
     tracking = fields.Selection(
         string="Serial/Lot Tracking",
         related="product_id.tracking",
@@ -166,20 +170,24 @@ class RepairBatch(models.Model):
                                 "product_qty": 1.0,
                                 "ticket_id": batch.ticket_id.id,
                                 "repair_batch_id": batch.id,
-                                "partner_id": batch.ticket_id.partner_id.id,
+                                "partner_id": batch.partner_id.id,
                             }
                         )
                     else:
                         continue
             else:
-                if not repair_order_model.search(
+                repair_orders = repair_order_model.search(
                     [
                         ("product_id", "=", batch.product_id.id),
                         ("state", "not in", ["done", "cancel"]),
+                        ("partner_id", "=", batch.ticket_id.partner_id.id),
                     ]
-                ):
+                )
+
+                if not repair_orders:
                     repair_order_model.create(
                         {
+                            "partner_id": batch.partner_id.id,
                             "product_id": batch.product_id.id,
                             "product_qty": batch.qty,
                             "ticket_id": batch.ticket_id.id,
@@ -187,10 +195,12 @@ class RepairBatch(models.Model):
                         }
                     )
                 else:
+                    repair_order_names = ", ".join(repair_orders.mapped("name"))
                     raise ValidationError(
                         _(
-                            """There is already an open repair order for one or more of the products."""
+                            """There is already an open repair order for one or more of the products: %s"""
                         )
+                        % repair_order_names
                     )
 
             # Ensure moves are created immediately after generating repairs

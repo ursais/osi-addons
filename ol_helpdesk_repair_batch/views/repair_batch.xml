@@ -7,14 +7,15 @@
             <tree string="Repair Batch">
                 <field name="name" optional="show" />
                 <field name="repair_count" column_invisible="1" />
+                <field name="partner_id" optional="hide" />
                 <field name="ticket_id" optional="hide" />
                 <field name="product_id" optional="show" />
                 <field name="qty" optional="show" />
                 <field name="lot_ids" widget="many2many_tags" optional="show" />
-                <field name="schedule_date" optional="show" />
+                <field name="schedule_date" optional="hide" />
                 <field name="sale_id" optional="hide" />
                 <field name="sale_line_id" optional="hide" />
-                <field name="company_id" optional="show" />
+                <field name="company_id" optional="hide" />
                 <field name="repair_ids" optional="show" />
                 <field name="state" optional="show" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')" />
                 <button name="action_generate_repairs" type="object" string="Create Repairs" class="btn-secondary" invisible="repair_count >= qty" />
@@ -53,6 +54,7 @@
                     <group name="information">
                         <group name="general">
                             <field name="tracking" invisible="1" />
+                            <field name="partner_id" />
                             <field name="product_id" />
                             <field name="qty" />
                         </group>
