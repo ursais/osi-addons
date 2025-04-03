@@ -91,7 +91,7 @@ class TestOlProductPriceReview(common.TransactionCase):
         )
         self.assertEqual(new_review1.calculated_price, 44.5)
         self.assertEqual(new_review1.final_price, 102.0)
-        self.assertEqual(new_review1.total_cost, 44.50)
+        self.assertEqual(new_review1.approved_total_cost, 44.50)
         self.assertEqual(new_review1.margin, 57.50)
         self.assertEqual(new_review1.margin_percent, 0.5637254901960784)
         self.assertEqual(new_review1.origin_default_shipping_cost, 37.5)
@@ -113,7 +113,7 @@ class TestOlProductPriceReview(common.TransactionCase):
         self.assertEqual(new_review1.product_id.defrayment_cost, 5.0)
         self.assertEqual(new_review1.product_id.override_price, 102.0)
         self.assertEqual(new_review1.product_id.special_price, 107.0)
-        self.assertEqual(new_review1.product_id.total_cost, 44.50)
+        self.assertEqual(new_review1.product_id.approved_total_cost, 44.50)
         self.assertEqual(
             new_review1.product_id.last_purchase_margin, 0.5841121495327103
         )
@@ -182,7 +182,7 @@ class TestOlProductPriceReview(common.TransactionCase):
         self.assertEqual(product_price_review01.product_id.defrayment_cost, 5.0)
         self.assertEqual(product_price_review01.product_id.override_price, 102.0)
         self.assertEqual(product_price_review01.product_id.special_price, 107.0)
-        self.assertEqual(product_price_review01.product_id.total_cost, 44.50)
+        self.assertEqual(product_price_review01.product_id.approved_total_cost, 44.50)
         self.assertEqual(
             product_price_review01.product_id.last_purchase_margin, 1.4158878504672898
         )
