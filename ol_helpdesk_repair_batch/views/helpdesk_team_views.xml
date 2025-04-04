@@ -1,0 +1,28 @@
+<odoo>
+
+    <record id="ol_helpdesk_repair_batch_helpdesk_team_view_form" model="ir.ui.view">
+		<field name="name">helpdesk.team.repair.form</field>
+        <field name="model">helpdesk.team</field>
+        <field name="priority">100</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_team_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='productivity']" position="after">
+                <div class="row mt16 o_settings_container" id="productivity">
+                        <div class="col-lg-6">
+                        <setting class="col-lg-12">
+                            <label for="sequence_id" />
+                            <div class="text-muted">
+                                Choose a sequence to use for this helpdesk team. When set the name of the tickets will use the sequence.
+                            </div>
+                            <div class="mt16">
+                                <span><b>Sequence </b></span>
+                                <field name="sequence_id" string="Ticket Sequence" domain="[('code', '=', 'helpdesk.ticket')]" />
+                            </div>
+                        </setting>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

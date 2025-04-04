@@ -1,0 +1,19 @@
+<odoo noupdate="1">
+
+    <record id="ir_sequence_repair_batch" model="ir.sequence">
+        <field name="name">Repair Batch Number</field>
+        <field name="code">repair.batch</field>
+        <field name="prefix">RB/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False" />
+    </record>
+
+    <record id="ir_sequence_helpdesk_ticket_rma" model="ir.sequence">
+        <field name="name">Ticket RMA Number</field>
+        <field name="code">helpdesk.ticket</field>
+        <field name="prefix">CRMA/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="company_id" eval="False" />
+    </record>
+
+</odoo>
