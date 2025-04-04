@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import _, api, fields, models
+from odoo import _, api, models
 from odoo.exceptions import UserError
 
 
@@ -10,11 +10,6 @@ class MRPEco(models.Model):
 
     _inherit = "mrp.eco"
 
-    # COLUMNS ##########
-
-    company_id = fields.Many2one("res.company", string="Company", default=False)
-
-    # END ##############
     # METHODS ##########
 
     @api.model_create_multi
