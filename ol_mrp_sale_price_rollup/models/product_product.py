@@ -84,7 +84,6 @@ class ProductProduct(models.Model):
             additional_total = product._get_non_config_set_bom_lines()
             return additional_total + sum(extra_prices.values())
 
-
     @api.onchange("lst_price")
     def _set_product_lst_price(self):
         """
@@ -171,7 +170,6 @@ class ProductProduct(models.Model):
         self.ensure_one()
         bom = self.env["mrp.bom"]._bom_find(self)[self]
         if bom:
-
             self.bom_lst_price = self._compute_bom_sale_price(
                 bom, boms_to_recompute=boms_to_recompute
             )
@@ -371,7 +369,11 @@ class ProductProduct(models.Model):
 
             # Get BoM components for this product variant
             bom = self.env["mrp.bom"]._bom_find(product)[product]
-            allowed_kit_component_cost = self.env['ir.config_parameter'].sudo().get_param('ol_mrp_sale_price_rollup.allowed_kit_component_cost',False)
+            allowed_kit_component_cost = (
+                self.env["ir.config_parameter"]
+                .sudo()
+                .get_param("ol_mrp_sale_price_rollup.allowed_kit_component_cost", False)
+            )
             bom_component_product_ids = (
                 bom.bom_line_ids.mapped("product_id.id") if bom else []
             )
@@ -402,11 +404,11 @@ class ProductProduct(models.Model):
 
             # Set attr_val_lst_price as an informative field
             product.attr_val_lst_price = attr_val_lst_price
+
             # Final calculation for price_extra
             total_price_extra = product.bom_lst_price + attr_val_lst_price
-            if allowed_kit_component_cost and bom.type == 'phantom':
+            if allowed_kit_component_cost and bom.type == "phantom":
                 total_price_extra = attr_val_lst_price
-                
 
             # Directly assign to override any existing value
             product.price_extra = total_price_extra
