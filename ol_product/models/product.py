@@ -2,28 +2,15 @@
 import base64
 
 # Import Odoo Libs
-from odoo import fields, models
-
-
-class ProductTemplate(models.Model):
-    """
-    Updates to product template to add Row,Rack,and Case fields
-    """
-
-    _inherit = "product.template"
-
-    # COLUMNS #####
-    loc_rack = fields.Char(string="Rack")
-    loc_row = fields.Char(string="Row")
-    loc_case = fields.Char(string="Case")
-    # END #########
+from odoo import models
 
 
 class ProductProduct(models.Model):
     """
     Reporting functions
     """
-    _inherit = 'product.product'
+
+    _inherit = "product.product"
 
     # METHODS #####
 
@@ -33,7 +20,9 @@ class ProductProduct(models.Model):
         """
         self.ensure_one()
 
-        barcode = self.env['ir.actions.report'].barcode('Code128', self.default_code, width=600, height=160)
+        barcode = self.env["ir.actions.report"].barcode(
+            "Code128", self.default_code, width=600, height=160
+        )
 
         # turn the barcode string into base64 encoding ready to be put into <img src="..." />
         return base64.b64encode(barcode)

@@ -21,9 +21,7 @@
         <field name="arch" type="xml">
             <form string="Report Extra Content" class="o_sale_order">
                 <sheet>
-
                     <div class="oe_button_box" name="button_box"></div>
-
                     <div class="ol-information-block-cont"/>
                     <group name="main_grp" colspan="4" col="3">
                         <field name="name"/>
@@ -46,6 +44,13 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem name="Report Extra Content" action="action_view_report_extra_content_tree" id="menu_report_extra_content" sequence="999" parent="sale.menu_sale_report" groups="ol_pdf_reports.report_extra_content"/>
+    <menuitem
+        name="Report Extra Content"
+        action="action_view_report_extra_content_tree"
+        id="menu_report_extra_content"
+        sequence="999"
+        parent="sale.menu_sale_report"
+        groups="ol_pdf_reports.report_extra_content"
+    />
 
 </odoo>

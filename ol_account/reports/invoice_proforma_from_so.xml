@@ -1,40 +1,36 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-  <!-- Report Action -->
-  <record id="action_proforma_invoice_report_from_so" model="ir.actions.report">
-    <field name="name">Proforma Invoice</field>
-    <field name="print_report_name">'Proforma Invoice'</field>
-    <field name="model">sale.order</field>
-    <field name="report_type">qweb-pdf</field>
-    <field name="report_name">ol_account.report_proforma_invoice_from_so</field>
-    <field name="report_file">ol_account.report_proforma_invoice_from_so</field>
-    <field name="binding_model_id" ref="sale.model_sale_order" />
-    <field name="paperformat_xmlid_base">ol_templates.ol_report_paper_format</field>
-  </record>
+    <!-- Report Action -->
+    <record id="action_proforma_invoice_report_from_so" model="ir.actions.report">
+        <field name="name">Proforma Invoice</field>
+        <field name="print_report_name">'Proforma Invoice'</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ol_account.report_proforma_invoice_from_so</field>
+        <field name="report_file">ol_account.report_proforma_invoice_from_so</field>
+        <field name="binding_model_id" ref="sale.model_sale_order" />
+        <field name="paperformat_xmlid_base">ol_templates.ol_report_paper_format</field>
+    </record>
 
-  <!-- Main template -->
-  <template id="report_proforma_invoice_from_so">
-    <t t-call="web.html_container">
-      <t t-foreach="docs" t-as="doc">
-
-        <!-- Find the correct language-->
-        <t t-set="language" t-value="doc.partner_id.lang"/>
-
-        <t t-set="sale_order" t-value="doc.with_context(lang=language)"/>
-
-        <!-- Call the template document with the language set -->
-        <t t-call="ol_account.report_sale_order_proforma_invoice_from_so_document" t-lang="language"/>
-      </t>
-    </t>
-  </template>
+    <!-- Main template -->
+    <template id="report_proforma_invoice_from_so">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <!-- Find the correct language-->
+                <t t-set="language" t-value="doc.partner_id.lang"/>
+                <t t-set="sale_order" t-value="doc.with_context(lang=language)"/>
+                <!-- Call the template document with the language set -->
+                <t t-call="ol_account.report_sale_order_proforma_invoice_from_so_document" t-lang="language"/>
+            </t>
+        </t>
+    </template>
 
 
-  <template id="report_sale_order_proforma_invoice_from_so_document">
-    <t t-foreach="payment_methods" t-as="payment_method">
-      <t t-set="payment_method" t-value="payment_method.with_context(lang=language)"/>
-      <t t-call="ol_account.report_sale_order_proforma_invoice_document" t-lang="language"/>
-    </t>
-  </template>
+    <template id="report_sale_order_proforma_invoice_from_so_document">
+        <t t-foreach="payment_methods" t-as="payment_method">
+            <t t-set="payment_method" t-value="payment_method.with_context(lang=language)"/>
+            <t t-call="ol_account.report_sale_order_proforma_invoice_document" t-lang="language"/>
+        </t>
+    </template>
 
 </odoo>
