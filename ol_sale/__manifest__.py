@@ -11,6 +11,7 @@
     # any module necessary for this one to work correctly
     "depends": [
         "ol_base",
+        "ol_templates",
         "ol_product_configurator",
         "sale_management",
         "product_state",
@@ -31,6 +32,6 @@
         "views/stock_picking_view.xml",
         "views/mrp_production_view.xml",
         "reports/sale_order_quote.xml",
-        'reports/automation_test.xml',
+        "reports/automation_test.xml",
     ],
 }

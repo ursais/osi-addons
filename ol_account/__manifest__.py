@@ -11,9 +11,9 @@
     # Modules required to this module to work properly
     "depends": [
         "ol_base",
+        "ol_templates",
         "account",
         "sale",
-        "ol_templates"
     ],
     # Data Loaded.
     "data": [
