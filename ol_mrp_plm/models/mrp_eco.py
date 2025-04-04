@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import _, api, fields, models
+from odoo import _, api, models
 from odoo.exceptions import UserError
 
 
@@ -10,11 +10,6 @@ class MRPEco(models.Model):
 
     _inherit = "mrp.eco"
 
-    # COLUMNS ##########
-
-    company_id = fields.Many2one("res.company", string="Company", default=False)
-
-    # END ##############
     # METHODS ##########
 
     @api.model_create_multi
@@ -37,7 +32,6 @@ class MRPEco(models.Model):
             for eco in self:
                 # Check if final_stage is True
                 if stage.final_stage:
-
                     product_template = eco.product_tmpl_id
                     # Validate if product_tmpl_id is not purchase_ok and has no vendor pricelist
                     if product_template.purchase_ok and not product_template.seller_ids:
@@ -56,6 +50,23 @@ class MRPEco(models.Model):
             and self.stage_id.product_state_id
         ):
             self.product_tmpl_id.product_state_id = self.stage_id.product_state_id.id
+        return res
+
+    @api.model
+    def default_get(self, default_fields):
+        """
+        Overrides the default_get method to modify default values for record creation.
+        This method first retrieves the default values using the superclass's
+        default_get method. If the 'company_id' field exists in the default values,
+        it sets 'company_id' to False.
+        Args:
+            default_fields (list): A list of fields for which default values are requested.
+        Returns:
+            dict: A dictionary containing the default values, with 'company_id' set to False if it was initially present.
+        """
+        res = super().default_get(default_fields)
+        if res.get("company_id"):
+            res.update({"company_id": False})
         return res
 
     # END #########
