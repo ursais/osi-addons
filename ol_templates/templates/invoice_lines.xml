@@ -107,7 +107,7 @@
             <div class="ol_product_data ol_refund ol_invoice_lines">
               <div class="ol_products_info_cont ol_flex ol_flex_just_cont_space_between">
 
-                <div class="product_info_name ol_rma">
+                <div class="product_info_name">
                   <div class="ol_product_name">
                     <t t-esc="invoice_line.product_id.name"/>
                   </div>
