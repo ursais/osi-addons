@@ -13,10 +13,15 @@
         "ol_base",
         "account",
         "sale",
+        "ol_templates"
     ],
     # Data Loaded.
     "data": [
         "security/security.xml",
         "views/res_config_settings_views.xml",
+        "views/account_invoice.xml",
+        "reports/invoice_generic.xml",
+        # "reports/invoice_proforma_from_so.xml",
+        "reports/invoice_proforma.xml",
     ],
 }

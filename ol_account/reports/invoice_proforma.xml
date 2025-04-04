@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- Report Action -->
+  <record id="action_proforma_invoice_report" model="ir.actions.report">
+    <field name="name">Proforma Invoice</field>
+    <field name="print_report_name">'Proforma Invoice'</field>
+    <field name="model">sale.order</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">ol_account.report_proforma_invoice</field>
+    <field name="report_file">ol_account.report_proforma_invoice</field>
+    <field name="binding_model_id" ref="sale.model_sale_order" />
+    <field name="paperformat_xmlid_base">ol_templates.ol_report_paper_format</field>
+  </record>
+
+  <!-- Main template -->
+  <template id="report_proforma_invoice">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="doc">
+
+        <!-- Find the correct language-->
+        <t t-set="language" t-value="doc.partner_id.lang"/>
+
+        <t t-set="sale_order" t-value="doc.with_context(lang=language)"/>
+
+        <!-- Call the template document with the language set -->
+        <t t-call="ol_account.report_sale_order_proforma_invoice_document" t-lang="language"/>
+      </t>
+    </t>
+  </template>
+
+
+  <template id="report_sale_order_proforma_invoice_document">
+    <t t-call="ol_templates.external_layout">
+      <!-- Set the name and title of the Report -->
+      <t t-set="report_title">Proforma Invoice</t>
+      <!--Set template variables-->
+      <t t-set="proforma_invoice" t-value="true"/>
+      <t t-set="title" t-value="'Proforma Invoice PDF Report'"/>
+      <t t-set="partner_invoice_id" t-value="sale_order.partner_invoice_id"/>
+      <!-- TODO: NC : sale_order.quote_type field not found -->
+      <!-- <t t-set="budgetary_quote" t-value="sale_order.quote_type == 'budgetary'"/> -->
+      <t t-set="budgetary_quote" t-value="budgetary"/>
+      <t t-set="customer_company_name" t-value="sale_order.partner_id.company_name or sale_order.partner_id.commercial_company_name"/>
+      <t t-set="currency" t-value="sale_order.currency_id"/>
+      <t t-set="company" t-value="sale_order.company_id"/>
+      <t t-set="hide_tracking" t-value="True"/>
+      <t t-set="product_lines" t-value="onlogic_data[sale_order.id]['product_lines']"/>
+      <t t-set="shipping_lines" t-value="onlogic_data[sale_order.id]['shipping_lines']"/>
+      <t t-set="product_subtotal_amount"
+         t-value="onlogic_data[sale_order.id]['product_subtotal_amount']"/>
+      <t t-set="shipping_subtotal_amount"
+         t-value="onlogic_data[sale_order.id]['shipping_subtotal_amount']"/>
+
+      <!-- Report specific styling -->
+
+      <!--The first main information block-->
+      <div class="ol_report_info_row ol_flex">
+
+        <!--Basic Invoice information-->
+        <div class="ol_report_info_row_col info">
+
+          <div class="ol_report_info_row_col_title ol_flex">
+            <div class="key">
+              <tag>Order</tag>
+            </div>
+            <div class="value">
+              <t t-esc="sale_order.name"/>
+            </div>
+          </div>
+
+          <div class="ol_report_info_row_col_line ol_flex">
+            <div class="key">
+              <tag>Order Date</tag>
+            </div>
+            <div class="value">
+              <t t-esc="sale_order.date_order" t-options='{"widget": "date_formatter"}'/>
+            </div>
+          </div>
+
+
+          <div class="ol_report_info_row_col_line ol_flex">
+            <div class="key">
+              <tag>Proforma Expiration</tag>
+            </div>
+            <div class="value">
+              <t t-esc="sale_order.validity_date" t-options='{"widget": "date_formatter"}'/>
+            </div>
+          </div>
+
+          <t t-if="sale_order.client_order_ref">
+            <div class="ol_report_info_row_col_line ol_flex">
+              <div class="key">
+                <tag>Customer PO</tag>
+              </div>
+              <div class="value">
+                <t t-esc="sale_order.client_order_ref"/>
+              </div>
+            </div>
+          </t>
+
+          <div class="balance-due ol_flex ol_flex_just_cont_space_between">
+            <div class="subtotal-text">
+              <tag>Balance Due</tag>
+            </div>
+            <div class="subtotal-amount">
+              <t t-esc="sale_order.amount_total"
+                 t-options="{'widget': 'monetary_currency_dependent', 'display_currency': sale_order.currency_id}"/>
+            </div>
+          </div>
+
+        </div>
+
+        <!--Billing related information-->
+        <div class="ol_report_info_row_col billing">
+          <t t-call="ol_templates.address">
+            <t t-set="text">Bill To</t>
+            <t t-set="address" t-value="partner_invoice_id"/>
+          </t>
+        </div>
+
+        <!--Shipping related information-->
+        <div class="ol_report_info_row_col shipping">
+          <t t-call="ol_templates.address">
+            <t t-set="text">Ship To</t>
+            <t t-set="show_vat_id" t-value="True"/>
+            <t t-set="address" t-value="sale_order.partner_shipping_id"/>
+          </t>
+          <t t-call="ol_templates.shipment" t-if="sale_order.carrier_id">
+            <t t-set="block_title">Shipping Method</t>
+            <t t-if="sale_order">
+              <t t-set="shipment" t-value="sale_order.carrier_id"/>
+            </t>
+            <!-- TODO: NC : picking_ids.tracking_ids field not found -->
+            <!-- <t t-set="tracking_numbers" t-value="sale_order.mapped('picking_ids.tracking_ids')"/> -->
+            <t t-set="tracking_numbers" t-value="sale_order.mapped('picking_ids.lot_id')"/>
+          </t>
+        </div>
+
+      </div>
+
+      <!--Product list-->
+      <t t-call="ol_templates.report_products">
+        <t t-set="products_title">
+          Hardware Solution
+        </t>
+      </t>
+
+      <!--Order noted and totals-->
+      <t t-call="ol_templates.report_notes_and_totals"/>
+
+    </t>
+  </template>
+</odoo>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- Report Action -->
+  <record id="action_inventory_sheets_report" model="ir.actions.report">
+    <field name="name">Inventory Sheets</field>
+    <field name="print_report_name">'Inventory Sheets'</field>
+    <field name="model">stock.inventory</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">ol_stock.report_inventory_sheets</field>
+    <field name="report_file">ol_stock.report_inventory_sheets</field>
+    <field name="binding_model_id" ref="stock_inventory.model_stock_inventory"/>
+    <field name="paperformat_xmlid_base">ol_templates.ol_report_paper_format_landscape</field>
+  </record>
+
+  <!-- Main template -->
+  <template id="report_inventory_sheets">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="doc">
+        <t t-set="inventory" t-value="doc"/>
+        <!-- Call the template document with the language set -->
+        <t t-call="ol_stock.report_inventory_sheets_document"/>
+      </t>
+    </t>
+  </template>
+
+  <template id="report_inventory_sheets_document">
+    <t t-call="web.external_layout">
+      <div class="page">
+        <h2>Inventory Sheets</h2>
+        <table class="table table-condensed">
+          <thead>
+            <tr>
+              <th class="text-left">
+                <strong>Inventory</strong>
+              </th>
+              <th class="text-right">
+                <strong>Date</strong>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left">
+                <span t-field="inventory.name"/>
+              </td>
+              <td class="text-right">
+                <span t-field="inventory.date"/>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table class="table table-condensed">
+          <thead>
+            <tr>
+              <th class="text-left">
+                <strong>Location</strong>
+              </th>
+              <th class="text-left">
+                <strong>SKU</strong>
+              </th>
+              <th class="text-left">
+                <strong>Description</strong>
+              </th>
+              <th class="text-right">
+                <strong>Expected Qty</strong>
+              </th>
+              <th class="text-right">
+                <strong>Actual Qty</strong>
+              </th>
+            </tr>
+          </thead>
+          <!-- TODO: NC : "inventory.line_ids" Field not found -->
+          <!-- <tr t-foreach="inventory.line_ids" t-as="line">
+            <t t-if="not line.product_id.categ_id.hide_in_inventory">
+              <td class="text-left">
+                <span t-field="line.product_row"/>
+                <span t-field="line.product_rack"/>
+                <span t-field="line.product_case"/>
+              </td>
+              <td class="text-left">
+                <span t-field="line.product_id.code"/>
+              </td>
+              <td class="text-left">
+                <span t-field="line.product_id.name"/>
+              </td>
+              <td class="text-right">
+                <span t-field="line.theoretical_qty"/>
+                <span t-field="line.product_uom_id" groups="product.group_uom"/>
+              </td>
+              <td></td>
+            </t>
+          </tr> -->
+        </table>
+      </div>
+    </t>
+  </template>
+
+</odoo>

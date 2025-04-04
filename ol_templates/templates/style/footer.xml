@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="report_footer_style">
+    <!-- We need to define specific styles for each section header/page/footer -->
+    <t t-call="ol_templates.ol_flex_style"/>
+    <style>
+
+      .ol_report_footer {
+      font-size: 11px;
+      line-height: 12px;
+      margin: 40px 0 0 0;
+      }
+
+      .ol_report_footer_company_row {
+      padding-top: 5px;
+      border-top: 1px solid #595A5C;
+      }
+
+      .ol_report_footer_company_row,
+      .ol_report_footer_page{
+      color: #595A5C;
+      }
+
+      .ol_report_footer_info_row .key {
+      font-weight: 600;
+      }
+
+      .ol_report_footer_company_contact .key {
+      width: 25%;
+      }
+
+      .ol_report_footer_payment_info .key {
+      width: 40%;
+      }
+
+      .ol_report_footer_company_contact .value {
+      width: 75%;
+      }
+
+      .ol_report_footer_payment_info .value {
+      width: 60%;
+      }
+
+      .ol_report_footer_company_contact {
+      width: 200px;
+      }
+
+      .ol_report_footer_page_info {
+      text-align: right;
+      }
+
+      .ol_report_footer_page {
+      width: 100%;
+      }
+
+      .ol_report_footer_title{
+      color: #595A5C;
+      font-weight: 600;
+      font-size: 16px;
+      padding-bottom: 5px;
+      }
+
+      .footer_block_line{
+      border-bottom: 2px solid #595A5C;
+      height: auto;
+      width: 75px;
+      margin: 0 0 5px 5px;
+      }
+
+      .ol_picking_footer_block.ol_flex.ol_flex_just_cont_space_between {
+      height: 50px;
+      align-items: flex-end;
+      box-align: end;
+      -moz-box-align: end;
+      -webkit-box-align: end;
+      }
+
+      .list-inline &gt; li {
+      display: inline-block;
+      padding-left: 3px;
+      padding-right: 3px;
+      }
+
+      .list-inline &gt; li.topage,
+      .list-inline &gt; li.page{
+      padding: 0;
+      }
+
+      .ol_report_footer_payment_info {
+        min-width: 225px;
+      }
+    </style>
+  </template>
+</odoo>

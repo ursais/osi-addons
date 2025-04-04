@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <!-- Report Action -->
+  <record id="action_automation_test_report" model="ir.actions.report">
+    <field name="name">MO Automation Test Report</field>
+    <field name="print_report_name">'%s Automation Test Report' % (object.name or 'MO')</field>
+    <field name="model">mrp.production</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">ol_sale.report_mo_automation_test_results</field>
+    <field name="report_file">ol_sale.report_mo_automation_test_results</field>
+    <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+    <field name="paperformat_xmlid_base">ol_templates.ol_report_production_automation_test_paper_format</field>
+  </record>
+
+  <!-- Main template -->
+  <template id="report_mo_automation_test_results">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="doc">
+
+        <!-- Find the correct language-->
+        <t t-set="language" t-value="doc.sale_order_id.partner_id.lang"/>
+
+        <t t-set="mo" t-value="doc.with_context(lang=language)"/>
+
+        <!-- Call the template document with the language set -->
+        <t t-call="ol_sale.report_mo_automation_test_document" t-lang="language"/>
+      </t>
+    </t>
+  </template>
+
+
+  <template id="report_mo_automation_test_document">
+    <t t-call="ol_templates.external_layout">
+      <!-- Set the name and title of the Report -->
+      <t t-set="report_title">MO Automation Test Report</t>
+      <!--Set template variables-->
+      <t t-set="report_name" t-value="'Testing Results'"/>
+      <t t-set="title" t-value="'Testing Results Report ' + mo.name"/>
+      <t t-set="sale_order" t-value="mo.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id and mo.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id[0]"/>
+      <t t-set="sales_contact" t-value="sale_order.account_manager_id or sale_order.user_id"/>
+      <t t-set="company" t-value="sale_order.company_id"/>
+      <t t-set="partner" t-value="sale_order.partner_id"/>
+      <t t-set="customer_company_name" t-value="sale_order.commercial_partner_id.name"/>
+      <t t-set="partner_shipping_id" t-value="sale_order.partner_shipping_id"/>
+      <t t-set="partner_invoice_id" t-value="sale_order.partner_invoice_id"/>
+      <!-- TODO: NC : "mo.finished_lot_ids" Field not found -->
+      <!-- <t t-set="serial_numbers" t-value="mo.finished_lot_ids.sorted(lambda r: r.name)"/> -->
+      <t t-set="serial_numbers" t-value="[]"/>
+      <!-- TODO: NC : "mo.get_serial_test_dict()" Field not found -->
+      <!-- <t t-set="serial_dict" t-value="mo.get_serial_test_dict()"/> -->
+      <t t-set="serial_dict" t-value="{}"/>
+
+      <t t-set="report_custom_page_style">
+        .ol_section_header,.ol_results_list_header {
+        border-bottom: 1px solid #595A5C;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 15px;
+        margin-bottom: 5px;
+        padding-bottom: 10px;
+        padding-top: 20px;
+        }
+
+        .salesperson_info {
+        padding-left: 40px;
+        }
+
+        .ol_parameter_section .ol_report_info_row_col_line {
+        padding-bottom: 5px;
+        }
+
+        .ol_parameter_section .ol_report_info_row_col_line .key {
+        font-weight: 600;
+        }
+
+        .ol_results_list_row.even {
+        background-color: #ffffff;
+        }
+
+        .ol_results_list_row.odd {
+        background-color: #f3f3f3;
+        }
+
+        .ol_report_info_row.key {
+        width: 120px;
+        }
+
+        .ol_report_info_row_col_line {
+        padding-top: 5px;
+        }
+
+        .serial_number_name {
+        font-weight: 600;
+        }
+
+        .key {
+        font-weight: 600;
+        }
+
+        /* Pass/Fail Colors */
+        .passed {
+        color: #00a14b;
+        font-size: 11px;
+        font-weight: 600;
+        }
+        .failed, .incomplete, .out-of-date {
+        color: #f20000;
+        font-size: 11px;
+        font-weight: 600;
+        }
+      </t>
+
+      <!--The first main information block-->
+      <div class="ol_report_info_row ol_flex">
+
+        <!-- Basic MO information-->
+        <div class="ol_report_info_row_col info">
+          <div class="ol_report_info_row_col_title ol_flex">
+            <div class="key">
+              <tag>Manufacturing Order</tag>
+            </div>
+            <div class="value">
+              <t t-esc="mo.name"/>
+            </div>
+          </div>
+
+          <div class="ol_report_info_row_col_line ol_flex">
+            <div class="key">
+              <tag>Sale Order</tag>
+            </div>
+            <div class="value">
+              <t t-esc="sale_order.name"/>
+            </div>
+          </div>
+
+          <div class="ol_report_info_row_col_line ol_flex">
+            <div class="key">
+              <tag>Date</tag>
+            </div>
+            <div class="value">
+              <t t-esc="context_timestamp(datetime.datetime.now()).strftime('%D')"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Customer Info -->
+        <div class="ol_report_info_row_col customer_info">
+          <t t-call="ol_templates.address">
+            <t t-set="text">Customer</t>
+            <t t-set="address" t-value="partner_invoice_id or partner"/>
+          </t>
+        </div>
+
+        <!-- Sales Contact Info -->
+        <div class="ol_report_info_row_col salesperson_info">
+          <div class="ol-address">
+            <p>
+              <span class="ol-address-text">Your Solution Specialist</span>
+              <br/>
+              <strong>
+                <t t-esc="sales_contact.name"/>
+              </strong>
+              <br/>
+              <strong>
+                <t t-esc="res_company.name"/>
+              </strong>
+              <br/>
+              <t t-esc="res_company.street"/>
+              <br/>
+              <t t-if="res_company.street2">
+                <t t-esc="res_company.street2"/>
+                <br/>
+              </t>
+              <t t-esc="res_company.city"/>,
+              <t t-if="res_company.country_id.code == 'US'">
+                <t t-esc="res_company.state_id.code"/>
+              </t>
+              <t t-else="">
+                <t t-esc="res_company.state_id.name"/>
+              </t>
+              <t t-esc="res_company.zip"/>
+              <br/>
+              <t t-esc="res_company.country_id.name"/>
+              <br/>
+            </p>
+          </div>
+        </div>
+      </div> <!-- END FIRST BLOCK -->
+
+      <!-- Testing parameter description -->
+      <div class="ol_report_info_row info">
+        <div class="ol_report_info_row_col">
+          <div class="ol_report_info_row_col_title ol_section_header">
+            Testing Parameters
+          </div>
+        </div>
+      </div>
+      <div class="ol_report_info_row ol_flex info">
+        <div class="ol_report_info_row_col">
+          <div class="ol_report_info_row_col_line ol_flex">
+            <div class="key">Processor</div>
+            <div class="param_description">The CPU has been stressed and monitored for stability.</div>
+          </div>
+          <div class="ol_report_info_row_col_line ol_flex">
+            <div class="key">Memory</div>
+            <div class="param_description">
+              Memory has been stressed to confirm storage and retrieval of data.
+            </div>
+          </div>
+          <div class="ol_report_info_row_col_line ol_flex">
+            <div class="key">Network</div>
+            <div class="param_description">
+              All network interfaces were checked and validated, a connection has been established
+              and a file transfer has been achieved.
+            </div>
+          </div>
+          <!-- TODO: NC : mo.task_ids field not found -->
+          <!-- <t t-if="'identify_storage' in mo.task_ids.mapped('type_id.name')">
+            <div class="ol_report_info_row_col_line ol_flex">
+              <div class="key">Storage</div>
+              <div class="param_description">
+                Storage devices have been tested and are working properly.
+              </div>
+            </div>
+          </t> -->
+          <div class="ol_report_info_row_col_line ol_flex">
+            <div class="key">Thermals</div>
+            <div class="param_description">Temperatures fall within expected ranges.</div>
+          </div>
+          <div class="ol_report_info_row_col_line ol_flex">
+            <div class="key">I/O</div>
+            <div class="param_description">
+              Common I/O connections have been tested and are functional.
+            </div>
+          </div>
+        </div>
+      </div> <!-- END parameter descriptions -->
+
+      <!-- BEGIN results -->
+      <div class="ol_report_results_row">
+
+        <div class="ol_results_list_header ol_flex_just_cont_space_between ol_flex">
+          <div>
+            <!--The info table header-->
+            <tag>Test Results</tag>
+          </div>
+          <div>
+            <tag>Result</tag>
+          </div>
+        </div>
+        <t t-foreach="serial_numbers" t-as="serial_number">
+          <t t-set="result" t-value="serial_dict[serial_number]"/>
+          <div t-attf-class="ol_results_list_row ol_flex ol_flex_just_cont_space_between {{ serial_number_parity }}">
+            <div t-esc="serial_number.name" class="serial_number_name"/>
+            <div class="">
+              <span t-attf-class="{{ result.replace(' ', '-').lower() }}">
+                <t t-esc="result"/>
+              </span>
+            </div>
+          </div>
+        </t>
+      </div>
+      <!-- END results -->
+    </t>
+  </template>
+</odoo>

@@ -1,0 +1,103 @@
+<odoo>
+  <data>
+
+    <!-- Paper format for Bin Labels -->
+    <record id="bin_label_paperformat" model="report.paperformat">
+        <field name="name">Bin Label Custom Format</field>
+        <field name="format">custom</field>
+        <field name="page_height">102</field>
+        <field name="page_width">152</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top" eval="10"/>
+        <field name="margin_bottom" eval="0"/>
+        <field name="margin_left" eval="5"/>
+        <field name="margin_right" eval="5"/>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">20</field>
+        <field name="dpi">90</field>
+    </record>
+  
+    <!-- Report Action -->
+    <record id="action_report_rma_bin_label" model="ir.actions.report">
+      <field name="name">RMA Bin Label</field>
+      <field name="model">helpdesk.rma</field>
+      <field name="report_type">qweb-pdf</field>
+      <field name="print_report_name">'%s Bin Label' % (object.name or '')</field>
+      <field name="report_name">ol_rma.report_rma_bin_label</field>
+      <field name="report_file">ol_rma.report_rma_bin_label</field>
+      <field name="binding_model_id" ref="ol_rma.model_helpdesk_rma"/>
+      <field name="paperformat_id" ref="ol_rma.bin_label_paperformat"/>
+    </record>
+
+  </data>
+
+  <template id="report_rma_bin_label">
+    <t t-foreach="docs" t-as="rma_record">
+      <t t-set="rma_data" t-value="rma_record.get_bin_label_data()" />
+      <t t-call="web.html_container">
+        <t t-call="web.internal_layout">
+          <div class="page">
+            <div class="content bin_label">
+              <div>
+                <div class="main-info">
+                  <div class="flag">
+                    <t t-if="rma_data['rush_order']">
+                      RUSH
+                    </t>
+                  </div>
+                  <t t-esc="rma_data['customer'] or ''"/>
+                  <br/>
+                  <span class="sale-info">
+                    <t t-esc="rma_data['sale_order'] or ''"/>
+                  </span>
+                </div>
+              </div>
+
+              <h1 class="name">
+                <t t-esc="rma_data['name']"/>
+              </h1>
+
+              <t t-foreach="rma_data['products']" t-as="product">
+                <div class="product">
+                  <t t-esc="product"/>
+                </div>
+              </t>
+
+              <div class="footer-left bold">Account Manager:</div>
+
+              <div class="footer-right bold">Received:</div>
+
+              <div class="footer-left">
+                <t t-esc="rma_data['account_manager'] or ''"/>
+              </div>
+
+              <t t-if="rma_data['received']">
+                <div class="footer-right">
+                  <t t-esc="rma_data['received']"/>
+                </div>
+              </t>
+
+              <t t-else="">
+                <div class="footer-right bold">
+                  *** NOT RECEIVED ***
+                </div>
+              </t>
+
+            </div>
+          </div>
+
+        </t>
+      </t>
+    </t>
+  </template>
+
+  <!-- first check if rma_record.company_id can be used before resorting to o.company_id -->
+  <template id="ol_internal_layout" inherit_id="web.internal_layout">
+    <xpath expr="//t[@t-if='company_id']" position="after">
+      <t t-elif="rma_record and rma_record.company_id">
+        <t t-set="company" t-value="rma_record.company_id" />
+      </t>
+    </xpath>
+  </template>
+
+</odoo>

@@ -72,7 +72,7 @@ class Uuid(models.AbstractModel):
 
     def get_uuid(self, string=True, force_new=False):
         """
-        Override the `ls_base` version
+        Override the `ol_base` version
         so we return the existing UUID if it already exists.
         """
         if self.uuid and not force_new:

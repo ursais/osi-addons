@@ -1,0 +1,8 @@
+<odoo>
+
+    <!-- Add the PO PDF to the PO confirmation email-->
+    <record id="purchase.email_template_edi_purchase_done" model="mail.template">
+        <field name="report_template_ids" eval="[(4, ref('ol_pdf_reports.action_report_purchase_order_doc_label'))]"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <record id="action_packing_slip_report_from_so" model="ir.actions.report">
+    <field name="name">Packing Slip</field>
+    <field name="print_report_name">'Packing Slip'</field>
+    <field name="model">sale.order</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="report_name">ol_stock.report_packing_slip_from_so</field>
+    <field name="report_file">ol_stock.report_packing_slip_from_so</field>
+    <field name="binding_model_id" ref="sale.model_sale_order" />
+    <field name="paperformat_xmlid_base">ol_templates.ol_report_picking_list_paper_format</field>
+  </record>
+
+  <!-- Main template -->
+  <template id="report_packing_slip_from_so">
+    <t t-call="web.html_container">
+      <t t-foreach="docs" t-as="sale_order">
+        <!-- Find the correct language-->
+        <t t-set="language" t-value="sale_order.partner_id.lang"/>
+        <!-- Re-browse of the record with the correct language -->
+        <t t-set="sale_order" t-value="sale_order.with_context(lang=language)"/>
+        <!-- Call the template document with the language set -->
+        <t t-call="ol_stock.report_packing_slip_from_so_document" t-lang="language"/>
+      </t>
+    </t>
+  </template>
+
+  <!-- Translatable template -->
+  <template id="report_packing_slip_from_so_document">
+
+    <t t-foreach="stock_pickings" t-as="picking">
+      <t t-set="picking" t-value="picking.with_context(lang=language)"/>
+      <t t-set="doc" t-value="picking"/>
+      <t t-call="ol_stock.report_packing_slip_document" t-lang="language"/>
+    </t>
+
+  </template>
+
+</odoo>

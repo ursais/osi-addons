@@ -1,0 +1,139 @@
+.product-label {
+    .ol_flex{
+        display: -webkit-box;
+        display: -webkit-flex;
+        display: flex;
+    }
+
+    .ol_flex_just_cont_space_between{
+        -webkit-box-pack: justify;
+        -webkit-justify-content: space-between;
+        justify-content: space-between;
+    }
+
+    .ol_flex_just_cont_flex_end{
+        -webkit-box-pack: end;
+        -webkit-justify-content: flex-end;
+        justify-content: flex-end;
+    }
+
+    .ol_flex_reverse{
+        box-orient: vertical; /* As specified */
+        -moz-box-orient: vertical; /* Mozilla */
+        -webkit-box-orient: vertical;
+        box-pack: end; /* As specified */
+        -moz-box-pack: end; /* Mozilla */
+        -webkit-box-pack: end; /* WebKit */
+        flex-direction: column;
+        justify-content: flex-end;
+    }
+    .product-header {
+        font-size: 36pt;
+        font-weight: bold;
+        padding: 0;
+    }
+    .divider-line {
+        background-color: #000;
+        width: 100%;
+        height: 5px;
+        margin-bottom: 5px;
+    }
+    .spacemaker {
+        position: relative;
+        height: 150px;
+    }
+    .name {
+        font-size: 18pt;
+        font-weight: bold;
+    }
+    .supplier-code {
+        font-size: 18pt;
+        font-weight: bold;
+    }
+    .label-line {
+        font-size: 14pt;
+        font-weight: bold;
+    }
+    .margin-top-5{
+        margin-top: 50px;
+    }
+    .margin-top-10{
+        margin-top: 40px;
+    }
+    .margin-top-30{
+        margin-top: 30px;
+    }
+    .margin-top-50{
+        margin-top: 50px;
+    }
+    .padding-top-5{
+        padding-top: 50px;
+    }
+    .padding-top-10{
+        padding-top: 40px;
+    }
+    .padding-top-30{
+        padding-top: 30px;
+    }
+    .padding-top-50{
+        padding-top: 50px;
+    }
+    .padding-bottom-5{
+        padding-top: 50px;
+    }
+    .padding-bottom-10{
+        padding-top: 40px;
+    }
+    .padding-bottom-30{
+        padding-top: 30px;
+    }
+    .padding-bottom-50{
+        padding-top: 50px;
+    }
+    .margin-bottom-5{
+        margin-top: 50px;
+    }
+    .margin-bottom-10{
+        margin-top: 40px;
+    }
+    .margin-bottom-30{
+        margin-top: 30px;
+    }
+    .margin-bottom-50{
+        margin-top: 50px;
+    }
+    .label-box,
+    .barcode-box{
+        width: 50%;
+    }
+    .barcode-box{
+        text-align: right;
+    }
+    .supplier {
+        font-weight: bold;
+        font-size: 15pt;
+    }
+    .po-num {
+        position: absolute;
+        top: 75px;
+        font-style: italic;
+        font-weight: normal;
+        font-size: 30pt;
+    }
+    .location {
+        background-color: #000;
+        color: #FFF;
+        font-size: 23pt;
+        padding: 0 0 1px 1px;
+        margin: 5px 0 5px 0;
+        min-height: 20px;
+    }
+    .barcode {
+        display: inline-block;
+        height: 70px;
+    }
+    .logo img {
+        width: 175px;
+        float: right;
+    }
+}

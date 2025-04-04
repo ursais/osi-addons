@@ -4,7 +4,7 @@ from unittest.mock import patch
 from datetime import timedelta
 
 # Import Odoo libs
-from odoo.addons.ls_sale_workflow.tests.common import BaseSaleWorkflowTest
+from odoo.addons.ol_sale_workflow.tests.common import BaseSaleWorkflowTest
 
 _logger = logging.getLogger(__name__)
 
@@ -16,8 +16,8 @@ DATE_FORMAT = '%Y-%m-%d'
 class TestSaleBooking(BaseSaleWorkflowTest):
     """ Test end date computation """
 
-    @patch('odoo.addons.ls_sale_workflow.models.sale.SaleOrder.validate_for_confirm')
-    @patch('odoo.addons.ls_sale_workflow.models.sale.SaleOrder.validate_quote')
+    @patch('odoo.addons.ol_sale_workflow.models.sale.SaleOrder.validate_for_confirm')
+    @patch('odoo.addons.ol_sale_workflow.models.sale.SaleOrder.validate_quote')
     def test_sale_booking(self, validate_for_confirm, validate_quote):
         # Draft -> Customer Review (via pdf download)
         self.sale_order.action_quotation_pdf()

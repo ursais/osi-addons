@@ -1,0 +1,285 @@
+<odoo>
+  <!-- Specific paperformat for this document -->
+  <!-- A4 -->
+  <record id="purchase_order_doc_paperformat_a4" model="report.paperformat">
+    <field name="orientation">Portrait</field>
+    <field name="format">A4</field>
+    <field name="margin_top" eval="47.0"/>
+    <field name="margin_bottom" eval="45.0"/>
+    <field name="name">Purchase Order Doc Paperformat EU</field>
+    <field name="margin_left">5</field>
+    <field name="margin_right">5</field>
+    <field name="header_line" eval="False" />
+    <field name="header_spacing">35</field>
+    <field name="dpi">90</field>
+  </record>
+
+  <!-- Report Action -->
+  <record id="action_report_purchase_order_doc_label" model="ir.actions.report">
+    <field name="name">Purchase Order Doc</field>
+    <field name="model">purchase.order</field>
+    <field name="report_type">qweb-pdf</field>
+    <field name="print_report_name">'Purchase Order'</field>
+    <field name="report_name">ol_purchase.report_purchase_order_doc</field>
+    <field name="report_file">ol_purchase.report_purchase_order_doc</field>
+    <field name="binding_model_id" ref="purchase.model_purchase_order"/>
+    <field name="paperformat_id" ref="purchase_order_doc_paperformat_a4" />
+  </record>
+
+  <!-- ========= -->
+  <!-- Templates -->
+  <!-- ========= -->
+
+  <!-- ========================= -->
+  <!-- Overall document template -->
+  <!-- ========================= -->
+  <template id="report_purchase_order_doc">
+    <t t-foreach="docs" t-as="purchase_order">
+      <t t-call="web.html_container">
+        <t t-set="body">
+          <t t-call="ol_purchase.report_po_doc_header" />
+          <div class="article">
+            <t t-call="ol_purchase.report_po_doc_contents" />
+          </div>
+          <t t-call="ol_purchase.report_po_doc_footer" />
+        </t>
+        <t t-call="web.minimal_layout">
+        </t>
+      </t>
+    </t>
+  </template>
+
+  <!-- =============== -->
+  <!-- Header template -->
+  <!-- =============== -->
+  <template id="report_po_doc_header">
+    <div class="header po_doc_header">
+      <h1 class="title"><b>PURCHASE ORDER</b></h1>
+
+      <t t-if="purchase_order.company_id.template_logo">
+        <img t-attf-src="data:image/png;base64,#{purchase_order.company_id.template_logo}"
+        style="float: right; display: inline-block; max-width: 178.75px; max-height: 45px;"/>
+      </t>
+
+      <div class="labels">
+        <div class='doc-name'>PO Number</div>
+        <div class="po_number"><t t-esc="purchase_order.name" /></div>
+        <div class="page-number"><span> Page </span><span class="page" /> of <span class="topage" /></div>
+      </div>
+    </div>
+  </template>
+
+  <!-- =============== -->
+  <!-- Footer Template -->
+  <!-- =============== -->
+  <template id="report_po_doc_footer">
+    <div class="footer" style="height:800px !important;">
+      <div id="static-footer">
+        This Purchase Order is subject to OnLogic's General Terms and Conditions of Purchase available here: <a href="https://www.onlogic.com/supplier-terms/" target="_blank">https://www.onlogic.com/supplier-terms/</a>
+        <tag/>
+        <br/>
+        <table style="padding-top: 16px !important;margin-top: 20px !important;" class="table-borderless">
+          <col width="50"/>
+          <col width="280"/>
+          <col width="280"/>
+          <col width="280"/>
+          <tr>
+            <td>
+              <b>Tel:</b><br/>
+            </td>
+            <td style="vertical-align: top;">
+              <t t-esc="purchase_order.company_id.phone"/><br/>
+            </td>
+            <t t-if="purchase_order.company_id.short_name.lower() == 'us'">
+              <td style="border-left:1px solid #000; border-right:1px solid #000; padding-left: 16px;">
+                <b>Federal ID</b><br/>
+                20-0558657
+              </td>
+              <td style="padding-left: 16px;">
+                <b>Reseller ID</b><br/>
+                450-200558657F-01
+              </td>
+            </t>
+            <t t-if="purchase_order.company_id.short_name.lower() == 'eu'">
+              <td style="border-left:1px solid #000; border-right:1px solid #000; padding-left: 16px;">
+                <b>KVK</b><br/>
+                51190486
+              </td>
+              <td style="padding-left: 16px;">
+                <b>VAT</b><br/>
+                NL8231.36.978B01
+              </td>
+            </t>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </template>
+
+  <template id="report_po_doc_contents">
+    <t t-set="data" t-value="purchase_order.get_purchase_order_doc_data()"/>
+    <div class="page">
+      <div class="content po_doc">
+        <div class="clear-layout"/>
+        <div class="floating-head">
+          <table cellpadding="0" cellspacing="0" class="margin-fix table-borderless">
+            <col width="140"/>
+            <col width="140"/>
+            <tr>
+              <td>Submitted</td>
+              <td>
+                <t t-if="data.get('order_date')">
+                  <span t-esc="data['order_date']" t-options="{'widget': 'date'}"/>
+                </t>
+                <t t-else="">
+                  <span t-esc="purchase_order.date_approve" t-options="{'widget': 'date'}"/>
+                </t>
+              </td>
+            </tr>
+            <tr>
+              <td>Ordered By</td>
+              <td>
+                <t t-if="data.get('submitted_by')">
+                  <span t-esc="data['submitted_by']"/>
+                </t>
+                <t t-else="">
+                  <span t-esc="purchase_order.create_uid.name"/>
+                </t>
+              </td>
+            </tr>
+            <tr>
+              <td>Pay Terms</td>
+              <td><span t-esc="data['payment_terms']"/></td>
+            </tr>
+          </table>
+        </div>
+        <div class="floating-head">
+          <table class="margin-fix table-borderless" cellspacing="0" cellpadding="0">
+            <col width="100"/>
+            <col width="210"/>
+            <tr>
+              <td rowspan="2">Vendor</td>
+              <td rowspan="2">
+                <span t-esc="purchase_order.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;,                                  &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;, &quot;fax&quot;],                                  &quot;no_marker&quot;: True}"/>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="floating-head">
+          <table class="margin-fix table-borderless" cellspacing="0" cellpadding="0">
+            <col width="100"/>
+            <col width="210"/>
+            <tr>
+              <td>Contact</td>
+              <td><span t-esc="purchase_order.partner_id.name"/></td>
+            </tr>
+            <tr>
+              <td>Tel</td>
+              <td ><span t-esc="purchase_order.partner_id.phone"/></td>
+            </tr>
+          </table>
+        </div>
+        <div class="clear-layout" style="padding-bottom: 20px;"/>
+        <table cellspacing="0" class="full-page-table address-table" style="margin-bottom:20px;">
+          <tr>
+            <td><div class="address-header-cell prod-cell">Bill To</div></td>
+            <td><div class="address-header-cell prod-cell">Ship To</div></td>
+            <td><div class="address-header-cell prod-cell">Shipping Method</div></td>
+          </tr>
+          <tr>
+            <td>
+              <span t-esc="data['billing_name']"/>
+              <br/>Attention: Accounts Payable<br/>
+              <span t-esc="data['billing_email']"/>
+              <br/>
+              <span t-raw="data['billing_address']"/>
+            </td>
+            <td>
+              <span t-raw="data['shipping_address']"/>
+            </td>
+            <td>
+              <t t-if="data.get('shipping_notes')">
+                Notes: <span t-raw="data['shipping_notes']"/>
+              </t>
+            </td>
+          </tr>
+          <t t-if="data.get('supplier_notes')">
+            <tr>
+              <td colspan="3"><div class="notes-header-cell">Notes to Supplier</div></td>
+            </tr>
+            <tr>
+              <td colspan="3"><span t-raw="data['supplier_notes']"/></td>
+            </tr>
+          </t>
+        </table>
+        <table cellspacing="0" cellpadding="0" class="full-page-table">
+          <col width="300"/>
+          <col width="120"/>
+          <col width="20"/>
+          <col width="65"/>
+          <col width="65"/>
+          <tr class="product_header">
+            <td class="hanging-column">Product</td>
+            <td class="col-med">Model</td>
+            <td class="col-small"><div class="center-column">QTY</div></td>
+            <td class="col-small"><div style="text-align:right;">Price (<span t-esc="purchase_order.currency_id.name"/>)</div></td>
+            <td><div style="text-align:right;">Amount</div></td>
+          </tr>
+          <t t-foreach="data['lines']" t-as="line">
+            <tr class="product-list">
+              <td class="hanging-column">
+                <div class="prod-cell avoid-break">
+                  <span t-esc="line['name']"/>
+                  <div class="line-note">
+                    <span t-esc="line['line_note']"/>
+                  </div>
+                </div>
+                <b><span t-esc="line['product_tariff_code']"/></b>
+              </td>
+              <td class="col-med">
+                <div class="prod-cell avoid-break">
+                  <span t-esc="line['sku']"/>
+                </div>
+              </td>
+              <td class="col-small">
+                <div class="prod-cell center-column avoid-break">
+                  <span t-esc="line['qty']"/>
+                </div>
+              </td>
+              <td class="col-small">
+                <div class="prod-cell right-column avoid-break">
+                  <span t-esc="line['unit_price']"/>
+                </div>
+              </td>
+              <td>
+                <div class="prod-cell right-column avoid-break">
+                  <span t-esc="line['line_subtotal']"/>
+                </div>
+              </td>
+            </tr>
+          </t>
+        </table>
+        <div style="border-top: 2px solid #F57F39; width: 230px; float:right; margin-top:30px; page-break-inside: avoid;">
+          <table style="text-align: right;" class="full-page-table">
+            <col width="90px"/>
+            <col width="130px"/>
+            <tr>
+              <td>Subtotal</td>
+              <td><span t-esc="data['amount_untaxed']"/></td>
+            </tr>
+            <tr>
+              <td>Taxes</td>
+              <td><span t-esc="data['amount_tax']"/></td>
+            </tr>
+            <tr>
+              <td><b>Total</b></td>
+              <td><b><span t-esc="data['amount_total']"/></b></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </template>
+
+
+</odoo>
