@@ -16,6 +16,6 @@ Usage
 =====
 
 When the Delivery order is validated, if a serial number is set on the move line it will look to see if a product with a warranty period is on the variants attribute values.
-If there are it will use the longest one it finds and set the warranty expiration date using today's date plus the number of years from the warranty period on the serial record.
+If there are several warranty values it will use the longest one it finds and set the warranty expiration date using today's date plus the number of years from the warranty period on the serial record.
 
 Warranty expiration date is also visible on repair orders, related to the serial number.

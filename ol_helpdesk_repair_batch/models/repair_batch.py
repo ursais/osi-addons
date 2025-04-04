@@ -123,6 +123,16 @@ class RepairBatch(models.Model):
     # END #######
     # METHODS ###
 
+    def open_batch_full_form(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "repair.batch",
+            "res_id": self.id,
+            "view_mode": "form",
+            "target": "current",
+        }
+
     @api.onchange("lot_ids")
     def _onchange_lot_ids(self):
         """Auto-set product_id from selected lot if not set, then trigger domain update."""
@@ -155,6 +165,20 @@ class RepairBatch(models.Model):
         repair_order_model = self.env["repair.order"]
         for batch in self:
             if batch.product_id.tracking == "serial":
+                # Validation: Ensure number of serial numbers matches quantity
+                if len(batch.lot_ids) != batch.qty:
+                    raise ValidationError(
+                        _(
+                            "%s: The number of serial numbers (%d) does not match the quantity (%d) for product %s."
+                        )
+                        % (
+                            batch.name,
+                            len(batch.lot_ids),
+                            batch.qty,
+                            batch.product_id.default_code,
+                        )
+                    )
+
                 for lot in batch.lot_ids:
                     if not repair_order_model.search(
                         [

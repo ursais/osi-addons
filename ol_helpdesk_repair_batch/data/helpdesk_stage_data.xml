@@ -1,0 +1,38 @@
+<odoo noupdate="1">
+
+    <!-- Helpdesk Stages -->
+    <record id="helpdesk_stage_new" model="helpdesk.stage">
+        <field name="name">RMA Requested</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team_customer_rma'))]"/>
+        <field name="sequence">11</field>
+        <field name="template_id" ref="email_template_rma_request_received"/>
+    </record>
+
+    <record id="helpdesk_stage_rma_accepted" model="helpdesk.stage">
+        <field name="name">RMA Accepted</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team_customer_rma'))]"/>
+        <field name="sequence">12</field>
+        <field name="template_id" ref="email_template_rma_accepted"/>
+    </record>
+
+    <record id="helpdesk_stage_rma_received" model="helpdesk.stage">
+        <field name="name">RMA Received</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team_customer_rma'))]"/>
+        <field name="sequence">13</field>
+        <field name="template_id" ref="email_template_rma_received"/>
+    </record>
+
+    <record id="helpdesk_stage_rma_in_progress" model="helpdesk.stage">
+        <field name="name">RMA In Progress</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team_customer_rma'))]"/>
+        <field name="sequence">14</field>
+    </record>
+
+    <record id="helpdesk_stage_rma_shipped" model="helpdesk.stage">
+        <field name="name">RMA Shipped</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team_customer_rma'))]"/>
+        <field name="sequence">15</field>
+        <field name="template_id" ref="email_template_rma_shipped"/>
+    </record>
+
+</odoo>

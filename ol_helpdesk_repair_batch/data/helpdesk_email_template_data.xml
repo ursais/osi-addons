@@ -1,0 +1,72 @@
+<odoo noupdate="1">
+
+    <!-- Email Template: RMA Request Received -->
+    <record id="email_template_rma_request_received" model="mail.template">
+        <field name="name">RMA Accepted</field>
+        <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+        <field name="subject">Your RMA request has been received</field>
+        <field name="email_from">${(object.user_id.email or user.email)|safe}</field>
+        <field name="email_to">${object.partner_id.email|safe}</field>
+        <field name="body_html">
+            <![CDATA[
+            <p>Hello ${object.partner_id.name},</p>
+            <p>Your RMA request has been received and under review.</p>
+            <p>Best Regards,</p>
+            <p>RMA Support Team</p>
+            ]]>
+        </field>
+    </record>
+
+    <!-- Email Template: RMA Accepted -->
+    <record id="email_template_rma_accepted" model="mail.template">
+        <field name="name">RMA Accepted</field>
+        <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+        <field name="subject">Your RMA has been accepted</field>
+        <field name="email_from">${(object.user_id.email or user.email)|safe}</field>
+        <field name="email_to">${object.partner_id.email|safe}</field>
+        <field name="body_html">
+            <![CDATA[
+            <p>Hello ${object.partner_id.name},</p>
+            <p>Your RMA request has been accepted. Please ship your item to the following address:</p>
+            <p><strong>Company Address</strong></p>
+            <p>Best Regards,</p>
+            <p>RMA Support Team</p>
+            ]]>
+        </field>
+    </record>
+
+    <!-- Email Template: RMA Received -->
+    <record id="email_template_rma_received" model="mail.template">
+        <field name="name">RMA Received</field>
+        <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+        <field name="subject">We have received your RMA product</field>
+        <field name="email_from">${(object.user_id.email or user.email)|safe}</field>
+        <field name="email_to">${object.partner_id.email|safe}</field>
+        <field name="body_html">
+            <![CDATA[
+            <p>Hello ${object.partner_id.name},</p>
+            <p>We have received your RMA product and will start processing it shortly.</p>
+            <p>Best Regards,</p>
+            <p>RMA Support Team</p>
+            ]]>
+        </field>
+    </record>
+
+    <!-- Email Template: RMA Shipped -->
+    <record id="email_template_rma_shipped" model="mail.template">
+        <field name="name">RMA Shipped</field>
+        <field name="model_id" ref="helpdesk.model_helpdesk_ticket"/>
+        <field name="subject">Your RMA product has been shipped</field>
+        <field name="email_from">${(object.user_id.email or user.email)|safe}</field>
+        <field name="email_to">${object.partner_id.email|safe}</field>
+        <field name="body_html">
+            <![CDATA[
+            <p>Hello ${object.partner_id.name},</p>
+            <p>Your RMA product has been shipped. You will receive tracking details soon.</p>
+            <p>Best Regards,</p>
+            <p>RMA Support Team</p>
+            ]]>
+        </field>
+    </record>
+
+</odoo>

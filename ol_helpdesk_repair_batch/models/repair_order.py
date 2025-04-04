@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class RepairOrder(models.Model):
@@ -29,6 +29,22 @@ class RepairOrder(models.Model):
         res = super()._action_repair_confirm()
         if self.repair_batch_id:
             self.repair_batch_id._update_batch_state()
+        return res
+
+    def write(self, vals):
+        """
+        If the repair state is changing we want to make sure the batch
+        state is also updated.
+        """
+        res = super().write(vals)
+
+        # Check if the state is changing
+        if "state" in vals:
+            for order in self:
+                if order.repair_batch_id:
+                    # Trigger the _update_batch_state method on the batch
+                    order.repair_batch_id._update_batch_state()
+
         return res
 
     # END #######

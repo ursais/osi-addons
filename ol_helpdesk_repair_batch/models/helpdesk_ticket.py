@@ -24,16 +24,16 @@ class HelpdeskTicket(models.Model):
         string="Related Sale Orders",
     )
     repair_sale_order_count = fields.Integer(
-        string="Repair Sale Order Count",
+        string="Sale Order(s)",
         compute="_compute_button_counts",
     )
     out_transfer_count = fields.Integer(
-        string="OUT Count",
+        string="OUT(s)",
         compute="_compute_button_counts",
         help="Counts the number of OUT transfers",
     )
     in_transfer_count = fields.Integer(
-        string="IN Count",
+        string="IN(s)",
         compute="_compute_button_counts",
         help="Counts the number of IN transfers",
     )
@@ -106,12 +106,50 @@ class HelpdeskTicket(models.Model):
                 {
                     "view_mode": "form",
                     "res_id": transfers.id,
+                    "views": [(self.env.ref("stock.view_picking_form").id, "form")],
                 }
             )
         else:
             action.update(
                 {
                     "domain": [("id", "in", transfers.ids)],
+                    "view_mode": "tree,form",
+                    "views": [
+                        (self.env.ref("stock.vpicktree").id, "tree"),
+                        (self.env.ref("stock.view_picking_form").id, "form"),
+                    ],
+                }
+            )
+
+        return action
+
+    def action_view_in_transfers(self):
+        """View inbound transfers (receipts) related to this ticket."""
+        action = self.env.ref("stock.action_picking_tree_incoming").read()[0]
+        transfers = self.env["stock.picking"].search(
+            [
+                ("ticket_id", "=", self.id),
+                ("picking_type_code", "=", "incoming"),
+            ]
+        )
+
+        if len(transfers) == 1:
+            action.update(
+                {
+                    "view_mode": "form",
+                    "res_id": transfers.id,
+                    "views": [(self.env.ref("stock.view_picking_form").id, "form")],
+                }
+            )
+        else:
+            action.update(
+                {
+                    "domain": [("id", "in", transfers.ids)],
+                    "view_mode": "tree,form",
+                    "views": [
+                        (self.env.ref("stock.vpicktree").id, "tree"),
+                        (self.env.ref("stock.view_picking_form").id, "form"),
+                    ],
                 }
             )
 
@@ -129,12 +167,21 @@ class HelpdeskTicket(models.Model):
 
     @api.depends(
         "repair_batch_ids.state",
+        "repair_batch_ids.repair_ids.state",
+        "repair_batch_ids.repair_ids.sale_order_id",
     )
     def _compute_show_create_sale(self):
         for ticket in self:
-            ticket.show_create_sale = any(
-                batch.state == "done" for batch in ticket.repair_batch_ids
-            )
+            if any(batch.state == "done" for batch in ticket.repair_batch_ids):
+                # Check if ALL repair orders have sale_order_id
+                all_repairs_have_sale = all(
+                    repair.sale_order_id
+                    for batch in ticket.repair_batch_ids
+                    for repair in batch.repair_ids
+                )
+                ticket.show_create_sale = not all_repairs_have_sale
+            else:
+                ticket.show_create_sale = False
 
     def action_generate_repairs(self):
         """Runs `action_generate_repairs` on all batches where the button is visible."""
@@ -147,27 +194,6 @@ class HelpdeskTicket(models.Model):
 
         for batch in batches_to_process:
             batch.action_generate_repairs()
-
-    def action_view_in_transfers(self):
-        """View inbound transfers (receipts) related to this ticket."""
-        action = self.env.ref("stock.action_picking_tree_all").read()[0]
-        transfers = self.env["stock.picking"].search([("ticket_id", "=", self.id)])
-
-        if len(transfers) == 1:
-            action.update(
-                {
-                    "view_mode": "form",
-                    "res_id": transfers.id,
-                }
-            )
-        else:
-            action.update(
-                {
-                    "domain": [("id", "in", transfers.ids)],
-                }
-            )
-
-        return action
 
     def action_create_receipt(self):
         stock_picking_obj = self.env["stock.picking"]
@@ -224,7 +250,7 @@ class HelpdeskTicket(models.Model):
                             0,
                             {
                                 "lot_id": lot_id,
-                                "qty_done": repair.product_qty,  # Match quantity with repair qty
+                                "qty_done": repair.product_qty,
                             },
                         )
                     )
@@ -260,7 +286,7 @@ class HelpdeskTicket(models.Model):
                 {
                     "picking_id": receipt.id,
                     "product_id": product_id,
-                    "name": product.display_name,  # ✅ Set product name as move description
+                    "name": product.display_name,
                     "product_uom": product.uom_id.id,
                     "product_uom_qty": data["qty"],
                     "location_id": source_location_id,
@@ -379,10 +405,8 @@ class HelpdeskTicket(models.Model):
 
         # Link repairs and moves to the sale order & sale lines
         for product_id, move_repairs in move_repair_map.items():
-            sale_line_id = product_sale_lines.get(product_id)
             for move, repair in move_repairs:
                 repair.sale_order_id = sale_order.id
-                repair.sale_order_line_id = sale_line_id
 
         self.repair_sale_order_ids = [(6, 0, [sale_order.id])]  # Assign single SO
 

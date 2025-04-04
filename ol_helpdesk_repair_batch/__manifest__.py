@@ -17,6 +17,9 @@
     # always loaded
     "data": [
         "data/ir_sequence.xml",
+        "data/helpdesk_team_data.xml",
+        "data/helpdesk_email_template_data.xml",
+        "data/helpdesk_stage_data.xml",
         "security/ir.model.access.csv",
         "views/helpdesk_team_views.xml",
         "views/helpdesk_ticket_views.xml",

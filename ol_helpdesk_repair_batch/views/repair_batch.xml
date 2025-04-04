@@ -115,4 +115,35 @@
         </field>
     </record>
 
+    <record id="ol_helpdesk_repair_batch_view_search" model="ir.ui.view">
+        <field name="name">repair.batch.search</field>
+        <field name="model">repair.batch</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="ticket_id"/>
+                <field name="product_id"/>
+                <field name="partner_id"/>
+                <field name="sale_id"/>
+                <field name="user_id" string="Responsible"/>
+                <field name="schedule_date"/>
+
+                <filter name="filter_draft" string="Draft" domain="[('state', '=', 'draft')]" />
+                <filter name="filter_confirmed" string="Confirmed" domain="[('state', '=', 'confirmed')]" />
+                <filter name="filter_under_repair" string="Under Repair" domain="[('state', '=', 'under_repair')]" />
+                <filter name="filter_done" string="Done" domain="[('state', '=', 'done')]" />
+                <filter name="filter_cancel" string="Cancelled" domain="[('state', '=', 'cancel')]" />
+
+                <group expand="1" string="Group By">
+                    <filter name="group_by_ticket" string="Ticket" context="{'group_by': 'ticket_id'}"/>
+                    <filter name="group_by_partner" string="Partner" context="{'group_by': 'partner_id'}"/>
+                    <filter name="group_by_user" string="Responsible" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_by_product" string="Product" context="{'group_by': 'product_id'}"/>
+                    <filter name="group_by_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_by_date" string="Scheduled Date" context="{'group_by': 'schedule_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
 </odoo>
