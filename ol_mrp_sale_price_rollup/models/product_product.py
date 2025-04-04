@@ -369,6 +369,11 @@ class ProductProduct(models.Model):
 
             # Get BoM components for this product variant
             bom = self.env["mrp.bom"]._bom_find(product)[product]
+            allowed_kit_component_cost = (
+                self.env["ir.config_parameter"]
+                .sudo()
+                .get_param("ol_mrp_sale_price_rollup.allowed_kit_component_cost", False)
+            )
             bom_component_product_ids = (
                 bom.bom_line_ids.mapped("product_id.id") if bom else []
             )
@@ -402,6 +407,8 @@ class ProductProduct(models.Model):
 
             # Final calculation for price_extra
             total_price_extra = product.bom_lst_price + attr_val_lst_price
+            if allowed_kit_component_cost and bom.type == "phantom":
+                total_price_extra = attr_val_lst_price
 
             # Directly assign to override any existing value
             product.price_extra = total_price_extra
