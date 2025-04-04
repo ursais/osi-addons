@@ -329,16 +329,9 @@
       font-size: 16px;
       line-height: 15px;
       }
-      .ol_products_title.ol_rma{
-      width: 40%;
-      }
 
       .ol_products_list_header {
       width: 43.5%;
-      }
-
-      .ol_products_list_header.ol_rma{
-      width: 53%;
       }
 
       .ol_products_list_header.ol_slip,
@@ -395,9 +388,6 @@
       .product_info_name.ol_changed{
       padding: 0;
       }
-      .product_info_name.ol_rma{
-      width: 40%;
-      }
 
       .ol_products_line_data{
         width: 50%;
@@ -425,19 +415,6 @@
       .ol_products_line_data_item.product_price {
       width: 45%;
       text-align: left;
-      }
-
-      .ol_products_line_data.ol_rma{
-      width: 60%;
-      }
-
-      .ol_products_line_data.ol_rma.ol_components{
-      width: 60%;
-      }
-
-      .ol_products_list_header_item.ol_rma {
-      width: 25%;
-      text-align: center;
       }
 
       .ol_product_name {
@@ -535,11 +512,6 @@
 
       .ol_changed_items_title {
       border-bottom: 1px solid #595A5C;
-      }
-
-      .ol_products_line_data.ol_rma > .ol_products_line_data_item{
-      width: 25%;
-      text-align: center;
       }
 
       .ol_margin_top_20{
