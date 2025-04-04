@@ -125,7 +125,7 @@ class ProductProduct(models.Model):
             product.lst_price = list_price + product.price_extra
 
             # Trigger to set the total cost from bom
-            product._set_total_cost_from_bom()
+            product._set_approved_total_cost_from_bom()
 
         return res
 
@@ -137,7 +137,7 @@ class ProductProduct(models.Model):
         it triggers the recomputation of the BoM sale price.
         """
         self._compute_product_lst_price()
-        self._set_total_cost_from_bom()
+        self._set_approved_total_cost_from_bom()
 
     def action_bom_sale_price(self):
         """
@@ -158,7 +158,7 @@ class ProductProduct(models.Model):
 
         for product in self:
             product._set_sale_price_from_bom(boms_to_recompute)
-            product._set_total_cost_from_bom(boms_to_recompute)
+            product._set_approved_total_cost_from_bom(boms_to_recompute)
 
     def _set_sale_price_from_bom(self, boms_to_recompute=False):
         """
@@ -251,7 +251,7 @@ class ProductProduct(models.Model):
                 sale_total / bom.product_qty, self.uom_id
             )
 
-    def _set_total_cost_from_bom(self, boms_to_recompute=False):
+    def _set_approved_total_cost_from_bom(self, boms_to_recompute=False):
         """
         Set the BoM total cost for the product.
 
@@ -261,7 +261,7 @@ class ProductProduct(models.Model):
         self.ensure_one()
         bom = self.env["mrp.bom"]._bom_find(self)[self]
         if bom:
-            self.total_cost = self._compute_bom_custom_cost(
+            self.approved_total_cost = self._compute_bom_custom_cost(
                 bom, boms_to_recompute=boms_to_recompute
             )
         else:
@@ -275,7 +275,7 @@ class ProductProduct(models.Model):
                     bom, boms_to_recompute=boms_to_recompute, byproduct_bom=True
                 )
                 if cost:
-                    self.total_cost = cost
+                    self.approved_total_cost = cost
 
     def _compute_bom_custom_cost(
         self,
@@ -314,7 +314,7 @@ class ProductProduct(models.Model):
             else:
                 cost_total += (
                     line.product_id.uom_id._compute_price(
-                        line.product_id.total_cost, line.product_uom_id
+                        line.product_id.approved_total_cost, line.product_uom_id
                     )
                     * line.product_qty
                 )

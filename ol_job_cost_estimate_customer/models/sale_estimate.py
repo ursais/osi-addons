@@ -92,16 +92,16 @@ class SaleEstimateJob(models.Model):
             if rec.estimate_ids:
                 rec.show_update_purchase_price = bool(
                     rec.estimate_ids.filtered(
-                        lambda l: l.product_id.total_cost != l.purchase_price
+                        lambda l: l.product_id.approved_total_cost != l.purchase_price
                     )
                 )
 
     def action_update_purchase_price(self):
         for rec in self:
             for line in rec.estimate_ids.filtered(
-                lambda l: l.product_id.total_cost != l.purchase_price
+                lambda l: l.product_id.approved_total_cost != l.purchase_price
             ):
-                line.purchase_price = line.product_id.total_cost
+                line.purchase_price = line.product_id.approved_total_cost
 
     def action_update_prices(self):
         self.ensure_one()

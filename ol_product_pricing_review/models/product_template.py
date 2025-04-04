@@ -12,7 +12,7 @@ class ProductTemplate(models.Model):
         string="Based On",
         company_dependent=True,
     )
-    total_cost = fields.Float(
+    approved_total_cost = fields.Float(
         string="Approved Total Cost",
         company_dependent=True,
         help="""Total cost of product including purchase cost, tariff,

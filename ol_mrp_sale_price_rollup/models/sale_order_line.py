@@ -66,7 +66,7 @@ class SaleOrderLine(models.Model):
 
             # Convert the cost to the line UoM
             product_cost = line.product_id.uom_id._compute_price(
-                line.product_id.total_cost,
+                line.product_id.approved_total_cost,
                 line.product_uom,
             )
 

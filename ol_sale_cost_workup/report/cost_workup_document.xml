@@ -75,7 +75,7 @@
                                                                 <td><span t-out="bom_line.product_id.default_code"></span></td>
                                                                 <td><span t-out="bom_line.product_id.carrier_multiplier_id.carrier"></span></td>
                                                                 <td><span t-field="bom_line.product_id.default_shipping_cost"></span></td>
-                                                                <td><span t-field="bom_line.product_id.total_cost" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span></td>
+                                                                <td><span t-field="bom_line.product_id.approved_total_cost" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span></td>
                                                                 <td><span t-field="bom_line.product_id.lst_price" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span></td>
                                                                 <td><span t-out="bom_line.product_id.lst_price * bom_line.product_qty" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span></td>
                                                             </tr>
@@ -127,7 +127,7 @@
                                                                             <td><span t-out="bom_line.product_id.default_code"></span></td>
                                                                             <td><span t-out="bom_line.product_id.carrier_multiplier_id.carrier"></span></td>
                                                                             <td><span t-field="bom_line.product_id.default_shipping_cost"></span></td>
-                                                                            <td><span t-field="bom_line.product_id.total_cost" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span></td>
+                                                                            <td><span t-field="bom_line.product_id.approved_total_cost" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span></td>
                                                                             <td><span t-field="bom_line.product_id.lst_price" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span></td>
                                                                             <td><span t-out="bom_line.product_id.lst_price * bom_line.product_qty" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span></td>
                                                                         </tr>

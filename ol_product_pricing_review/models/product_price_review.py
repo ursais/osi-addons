@@ -168,9 +168,9 @@ class ProductPriceReview(models.Model):
         string="Default Shipping Cost",
         compute="_compute_default_shipping_cost",
     )
-    total_cost = fields.Float(
+    approved_total_cost = fields.Float(
         string="Total Cost",
-        compute="_compute_total_cost",
+        compute="_compute_approved_total_cost",
         help="Total cost of product including purchase cost, tariff,"
         " tooling, defrayment, and shipping.",
     )
@@ -258,7 +258,7 @@ class ProductPriceReview(models.Model):
                 rec.origin_defrayment_cost = product.defrayment_cost
                 rec.origin_carrier_multiplier_id = product.carrier_multiplier_id
                 rec.origin_default_shipping_cost = product.default_shipping_cost
-                rec.origin_total_cost = product.total_cost
+                rec.origin_total_cost = product.approved_total_cost
                 rec.origin_suggested_margin = product.suggested_margin
                 rec.origin_override_margin = product.override_margin
                 rec.origin_override_price = product.override_price
@@ -382,13 +382,13 @@ class ProductPriceReview(models.Model):
         "defrayment_cost",
         "default_shipping_cost",
     )
-    def _compute_total_cost(self):
+    def _compute_approved_total_cost(self):
         """
         Compute the total cost by summing up the converted last purchase price with
         tariff, tooling cost, defrayment cost, and default shipping cost.
         """
         for rec in self:
-            rec.total_cost = (
+            rec.approved_total_cost = (
                 rec.origin_last_purchase_price_converted * (1 + rec.tariff_percent)
                 + rec.tooling_cost
                 + rec.defrayment_cost
@@ -396,7 +396,7 @@ class ProductPriceReview(models.Model):
             )
 
     @api.depends(
-        "total_cost",
+        "approved_total_cost",
         "origin_total_cost",
     )
     def _compute_cost_delta(self):
@@ -406,13 +406,13 @@ class ProductPriceReview(models.Model):
         """
         for rec in self:
             cost_delta = 0.0
-            if rec.total_cost:
-                cost_delta = rec.origin_total_cost - rec.total_cost
+            if rec.approved_total_cost:
+                cost_delta = rec.origin_total_cost - rec.approved_total_cost
             rec.cost_delta = cost_delta
 
     @api.depends(
         "override_margin",
-        "total_cost",
+        "approved_total_cost",
     )
     def _compute_calculated_price(self):
         """
@@ -428,11 +428,11 @@ class ProductPriceReview(models.Model):
                 raise ValidationError("The override margin cannot be 100%")
 
             if rec.override_margin == 0.0 and rec.suggested_margin < 1.0:
-                rec.calculated_price = rec.total_cost / ((1 - rec.suggested_margin) / 1)
+                rec.calculated_price = rec.approved_total_cost / ((1 - rec.suggested_margin) / 1)
             elif rec.override_margin < 1.0:
-                rec.calculated_price = rec.total_cost / ((1 - rec.override_margin) / 1)
+                rec.calculated_price = rec.approved_total_cost / ((1 - rec.override_margin) / 1)
             else:
-                rec.calculated_price = rec.total_cost
+                rec.calculated_price = rec.approved_total_cost
 
     @api.depends(
         "tariff_percent",
@@ -471,7 +471,7 @@ class ProductPriceReview(models.Model):
             # Assign computed final price to the record
             rec.final_price = final_price
 
-    @api.depends("final_price", "total_cost")
+    @api.depends("final_price", "approved_total_cost")
     def _compute_margins(self):
         """Compute margins based on final price and total cost."""
 
@@ -481,7 +481,7 @@ class ProductPriceReview(models.Model):
 
             # Calculate margin and margin percentage if final price is defined
             if rec.final_price:
-                margin = rec.final_price - rec.total_cost
+                margin = rec.final_price - rec.approved_total_cost
                 margin_percent = margin / rec.final_price
 
             # Assign computed margin and margin percentage to the record
@@ -490,7 +490,7 @@ class ProductPriceReview(models.Model):
 
     @api.depends(
         "final_price",
-        "total_cost",
+        "approved_total_cost",
         "override_margin",
         "special_price",
         "override_price",
@@ -572,7 +572,7 @@ class ProductPriceReview(models.Model):
                         "tooling_cost": rec.tooling_cost,
                         "defrayment_cost": rec.defrayment_cost,
                         "carrier_multiplier_id": rec.carrier_multiplier_id.id,
-                        "total_cost": rec.total_cost,
+                        "approved_total_cost": rec.approved_total_cost,
                         "override_margin": rec.override_margin,
                         "charm_price": rec.charm_price,
                         "override_price": rec.override_price,

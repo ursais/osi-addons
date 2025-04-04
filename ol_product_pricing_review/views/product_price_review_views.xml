@@ -64,7 +64,7 @@
                         <group string="Proposed Pricing Summary">
                             <field name="final_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                             <field name="based_on" />
-                            <field name="total_cost" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                            <field name="approved_total_cost" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                             <field name="cost_delta" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                             <field name="margin" />
                             <field name="margin_percent" widget="percentage" />
@@ -120,7 +120,7 @@
                 <field name="user_id" optional="show" />
                 <field name="origin_last_purchase_price" avg="Average" optional="show" widget="monetary" options="{'currency_field': 'origin_last_purchase_currency_id', 'field_digits': True}" />
                 <field name="origin_total_cost" optional="show" avg="Average" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
-                <field name="total_cost" optional="show" avg="Average" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
+                <field name="approved_total_cost" optional="show" avg="Average" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                 <field name="cost_delta" optional="show" avg="Average" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                 <field name="origin_final_price" optional="show" avg="Average" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
                 <field name="final_price" optional="show" avg="Average" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
