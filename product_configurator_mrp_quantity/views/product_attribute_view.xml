@@ -61,7 +61,7 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <field name="price_extra" position="after">
-                <field name="is_qty_required" invisible="1" />
+                <field name="is_qty_required"  />
                 <field name="default_qty" invisible="not is_qty_required" />
                 <field name="maximum_qty" invisible="not is_qty_required" />
             </field>
