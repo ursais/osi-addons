@@ -194,7 +194,6 @@
                   <br/>
                   <term>3-5 Business Days</term>
                 </t>
-                <!-- TODO: NC : ol_templates.tracking_numbers not found -->
                 <t t-if="tracking_numbers">
                   <br/>
                   <t t-call="ol_templates.tracking_numbers"/>
