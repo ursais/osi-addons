@@ -147,7 +147,7 @@
                         </t>
                         <!-- TODO: NC : picking_ids.tracking_ids field not found -->
                         <!-- <t t-set="tracking_numbers" t-value="sale_order.mapped('picking_ids.tracking_ids')"/> -->
-                        <t t-set="tracking_numbers" t-value="sale_order.mapped('picking_ids.lot_id')"/>
+                        <t t-set="tracking_numbers" t-value="sale_order.mapped('picking_ids.carrier_tracking_ref')"/>
                     </t>
                 </div>
             </div>

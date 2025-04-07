@@ -4,8 +4,8 @@
     <record id="customer_shipment_email_template" model="mail.template">
         <field name="name">OnLogic Customer Shipment Email</field>
         <field name="model_id" ref="stock.model_stock_picking" />
-        <field name="email_from">{{ (object.sale_id.company_id.order_sender_email or object.company_id.email_formatted or user.email_formatted) }}</field>
-        <field name="partner_to">{{ object.get_email_recipients().id or object.partner_id.id }}</field>
+        <field name="email_from" >{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
+        <field name="partner_to">{{ object.sale_id.partner_id and object.sale_id.partner_id.id or object.partner_id.id }}</field>
         <field name="subject">Your Order {{ object.sale_id.name or 'n/a' }} Has Shipped</field>
         <field name="body_html" type="html">
             <!-- Variables -->
@@ -51,7 +51,7 @@
                     <t t-set="days_in_transit" t-value="False" />
                     <!-- TODO: NC : picking_ids.tracking_ids field not found -->
                     <!-- <t t-set="tracking_numbers" t-value="object.tracking_ids" /> -->
-                    <t t-set="tracking_numbers" t-value="object.mapped('lot_id')"/>
+                    <t t-set="tracking_numbers" t-value="object.mapped('carrier_tracking_ref')"/>
                 </t>
 
                 <t t-call="ol_templates.ol_email_spacer" />

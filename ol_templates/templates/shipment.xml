@@ -13,7 +13,8 @@
     <t t-if="tracking_numbers and not hide_tracking">
       <tag>Tracking Numbers</tag>:
       <br/>
-      <div style="color: #4d90fe; margin-bottom: 10px; padding: 0 10px;">
+      <span t-esc="tracking_number"/>
+      <!-- <div style="color: #4d90fe; margin-bottom: 10px; padding: 0 10px;">
         <t t-foreach="tracking_numbers or []" t-as="tracking_number">
 
           <t t-if="tracking_number.custom_title">
@@ -31,7 +32,7 @@
             <span t-esc="tracking_number.number"/>
           </t>,
         </t>
-      </div>
+      </div> -->
     </t>
   </template>
 

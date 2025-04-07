@@ -194,10 +194,11 @@
                   <br/>
                   <term>3-5 Business Days</term>
                 </t>
-                <t t-if="tracking_numbers">
+                <!-- TODO: NC : ol_templates.tracking_numbers not found -->
+                <!-- <t t-if="tracking_numbers">
                   <br/>
                   <t t-call="ol_templates.tracking_numbers"/>
-                </t>
+                </t> -->
                 <t t-if="not tracking_numbers and not shipping_email">
                   <div style="color: #4d90fe; margin-bottom: 10px; padding: 5px 10px;">
                     <tag>You will be emailed with tracking information when your order ships.</tag>
