@@ -64,6 +64,7 @@
         "data/warehouse_data.xml",
         "data/m2x_create_edit_option_data.xml",
         "data/stock.location.csv",
+        "data/product_price_list_data.xml",
         "security/res_groups.xml",
         "views/res_company.xml",
         "views/stock_picking.xml",

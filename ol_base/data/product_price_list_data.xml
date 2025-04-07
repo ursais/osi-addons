@@ -1,0 +1,17 @@
+<odoo>
+
+    <record id="usa_pricelist" model="product.pricelist">
+        <field name="name">Default USA Pricelist</field>
+        <field name="sequence">1</field>
+        <field name="currency_id" ref="base.USD"/>
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <record id="europe_pricelist" model="product.pricelist">
+        <field name="name">Default EUR Pricelist</field>
+        <field name="sequence">2</field>
+        <field name="currency_id" ref="base.EUR"/>
+        <field name="company_id" ref="ol_base.onlogic_eu"/>
+    </record>
+
+</odoo>
