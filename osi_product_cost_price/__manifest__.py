@@ -3,7 +3,7 @@
 
 {
     "name": "OSI Product Cost Price",
-    "version": "14.0.1.0.1",
+    "version": "18.0.1.0.0",
     "license": "AGPL-3",
     "summary": """
     Set product cost price with 6 decimals.
@@ -16,7 +16,5 @@
     "data": [
         "data/product_decimal.xml",
     ],
-    "auto_install": False,
-    "application": False,
     "installable": True,
 }
