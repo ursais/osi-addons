@@ -748,7 +748,7 @@
       }
 
       /***** Additional specific styling *****/
-      <t t-raw="report_custom_page_style"/>
+      <t t-set="report_custom_page_style"/>
     </style>
   </template>
 </odoo>

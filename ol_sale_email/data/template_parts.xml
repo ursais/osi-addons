@@ -1,0 +1,418 @@
+<?xml version="1.0"?>
+<odoo>
+
+  <template id="ol_payment_info">
+    <!--
+        === Expected inputs ===
+        - payment_method: a sale.order.payment.method record
+    -->
+    <!-- START: Payment Info Table -->
+    <tr>
+      <td bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%">
+        <!--[if mso]>
+            <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
+            <tr>
+            <td align="center" valign="top" width="600">
+            <![endif]-->
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="87%"
+               style="max-width:540px; border: 1px solid #f3f3f3;">
+
+          <tr>
+            <td bgcolor="#f3f3f3" style="padding: 8px 10px; font-size:16px;">
+              Payment Information
+            </td>
+          </tr>
+          <t t-if="payment_method">
+            <tr>
+              <td align="left" valign="top"
+                  style="font-size:0; font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; 5px 20px;"
+                  class="stack-column-left">
+                <p style="margin: 0 0 5px 0; padding: 10px;">
+                  <span style="font-weight: 300;" t-esc="payment_method.get_display_name()"/>
+                  <br/>
+                  <!-- TODO: Add info based on method type.  "Credit card ending in 1234", etc -->
+                  <!-- Ending in ####<br /> -->
+                </p>
+              </td>
+            </tr>
+          </t>
+        </table>
+        <!--[if mso]>
+           </td>
+           </tr>
+           </table>
+        <![endif]-->
+      </td>
+    </tr>
+    <!-- END: Payment Info Table -->
+  </template>
+
+  <template id="ol_sale_email.ol_order_total">
+    <!--    Order Totals-->
+    <tr>
+      <td bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%">
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="87%"
+               style="max-width:540px; background: #F3F3F3;">
+          <tr style="vertical-align: top;">
+            <td>
+              <t>
+                <div
+                    style="max-width: 540px; background: #F3F3F3; color: #595A5C; padding: 10px 10px 10px 50%; font-size: 14px;">
+                  <t t-call="ol_sale_email.ol_order_total_data"/>
+                </div>
+              </t>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <!--    Order Notes-->
+    <t t-if="sale_order.note">
+      <t t-call="ol_templates.ol_email_spacer"/>
+      <tr>
+        <td bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%">
+          <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="87%"
+                 style="max-width:540px; background: #F3F3F3;">
+            <tr style="vertical-align: top;">
+              <td t-if="sale_order.note" style="padding: 10px; ">
+                <div style="color: #595A5C; font-size: 14px;">
+                  <span style="font-weight: 500;">
+                    <tag>Order Notes</tag>
+                  </span>
+                </div>
+                <div style="color: #595A5C; font-size: 12px; overflow-wrap: break-word;">
+                  <p t-raw="sale_order.note"/>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </t>
+  </template>
+
+  <template id="ol_order_total_data">
+
+    <table>
+      <tr>
+        <td style="width: 50%; text-align: left;">
+          <div class="subtotal-text">Subtotal</div>
+        </td>
+        <td style="width: 50%; text-align: right;">
+          <div class="subtotal-amount" t-esc="product_subtotal_amount"
+               t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 50%; text-align: left;">
+          <div class="subtotal-text">Shipping &amp; Handling</div>
+        </td>
+        <td style="width: 50%; text-align: right;">
+          <div class="subtotal-amount" t-esc="shipping_subtotal_amount"
+               t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 50%; text-align: left;">
+          <div class="subtotal-text">
+            <tag>Tax</tag>
+          </div>
+        </td>
+        <td style="width: 50%; text-align: right;">
+          <div class="subtotal-amount" t-esc="sale_order.amount_tax"
+               t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 50%; text-align: left;">
+          <div class="subtotal-text">Total</div>
+        </td>
+        <td style="width: 50%; text-align: right;">
+          <div class="subtotal-amount" t-esc="sale_order.amount_total"
+               t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
+        </td>
+      </tr>
+      <t t-if="account_move and account_move.type in ['out_invoice', 'in_invoice']">
+        <tr style="margin-top: 20px;">
+          <td style="width: 50%; text-align: left;">
+            <div class="subtotal-text">Payment Received</div>
+          </td>
+          <td style="width: 50%; text-align: right;">
+            <div class="subtotal-amount" t-esc="account_move.amount_total - account_move.amount_residual"
+                 t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
+          </td>
+        </tr>
+        <tr>
+          <td style="width: 50%; text-align: left;">
+            <div class="subtotal-text">Balance Due</div>
+          </td>
+          <td style="width: 50%; text-align: right;">
+            <div class="subtotal-amount" t-esc="account_move.amount_residual"
+                 t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
+          </td>
+        </tr>
+      </t>
+    </table>
+  </template>
+
+  <template id="ol_delivery_info">
+    <!--
+        === Expected inputs ===
+        - delivery_method: a delivery_carrier record
+        - days_in_transit: a string describing how long it will take for this shipment
+        - tracking_numbers: an array of tracking numbers (optional)
+    -->
+    <!-- START: Delivery Info Table -->
+    <tr>
+      <td bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%">
+        <!--[if mso]>
+            <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
+            <tr>
+            <td align="center" valign="top" width="600">
+            <![endif]-->
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="87%"
+               style="max-width:540px; border: 1px solid #f3f3f3;">
+
+          <tr>
+            <td bgcolor="#f3f3f3" style="padding: 8px 10px; font-size:16px;">
+              <tag>Delivery Information</tag>
+            </td>
+          </tr>
+
+          <tr>
+            <td align="left" valign="top"
+                style="font-size:0; font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C;"
+                class="stack-column-left">
+              <p style="margin: 0 0 5px 0; padding: 5px 10px;">
+                <span style="font-weight: 500;">
+                  <term>Delivery</term>
+                </span>
+                <br/>
+                <t t-esc="delivery_method.display_name and delivery_method.display_name or delivery_method.name"/>
+                <!-- TODO: Get days in transit and store in sale order-->
+                <t t-if="days_in_transit">
+                  <br/>
+                  <term>3-5 Business Days</term>
+                </t>
+                <t t-if="tracking_numbers">
+                  <br/>
+                  <t t-call="ol_templates.tracking_numbers"/>
+                </t>
+                <t t-if="not tracking_numbers and not shipping_email">
+                  <div style="color: #4d90fe; margin-bottom: 10px; padding: 5px 10px;">
+                    <tag>You will be emailed with tracking information when your order ships.</tag>
+                  </div>
+                </t>
+              </p>
+            </td>
+          </tr>
+        </table>
+        <!--[if mso]>
+          </td>
+          </tr>
+          </table>
+          <![endif]-->
+      </td>
+    </tr>
+    <!-- END: Delivery Info Table -->
+  </template>
+
+  <template id="ol_sale_email.ol_ordered_products">
+    <!--
+        === Expected inputs ===
+        - order_lines: a recordset of the sale order lines to display
+    -->
+    <!-- START: Ordered Products -->
+    <tr>
+      <td bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%">
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="87%"
+               style="max-width:540px; border: 1px solid #f3f3f3;">
+
+          <tr>
+            <th bgcolor="#f3f3f3" style="padding: 8px 15px; font-size:16px; text-align:left; font-weight:normal;"
+                width="55%">
+              Ordered Products
+            </th>
+            <th bgcolor="#f3f3f3" style="padding: 8px 15px; font-size:16px; text-align:center; font-weight: normal;"
+                width="15%">
+              QTY
+            </th>
+            <th bgcolor="#f3f3f3" style="padding: 8px 15px; font-size:16px; text-align:right; font-weight: normal;"
+                width="30%">
+              Price
+            </th>
+
+          </tr>
+
+          <!-- PRODUCTS -->
+          <t t-foreach="order_lines" t-as="order_line">
+            <tr t-if="not order_line.is_delivery" style="font-size:0; padding: 0; text-align:top">
+              <td colspan="3" style="padding: 15px 0 5px 10px">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
+                       style="font-size: 14px; text-align: left;">
+
+                  <tr>
+                    <td width="15%" style="padding-left: 5px; padding-right: 10px;">
+                      <t t-if="order_line.product_id.image_128">
+                        <img t-attf-src="{{order_line.product_id.get_public_image_src(field_name='image_128')}}" style="width:100%;"/>
+                      </t>
+                      <t t-else="">
+                        <img
+                            t-attf-src="data:image;base64,{{sale_order.company_id.placeholder_image_product}}" style="width:100%;"/>
+                      </t>
+                    </td>
+                    <td width="40%"
+                        style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; vertical-align: top;">
+                      <div style="font-weight: 500;">
+                        <t t-esc="order_line.product_id.name"/>
+                      </div>
+                      <div style="font-weight: 100; font-size: 12px; margin-bottom: 10px;">
+                        <t t-esc="order_line.product_id.product_tmpl_id.default_code"/>
+                      </div>
+                    </td>
+                    <td width="15%"
+                        style="padding: 0 10px; vertical-align: top; font-size: 14px; text-align: center; font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C;">
+                      <t t-esc="order_line.product_uom_qty" t-options="{'widget': 'integer'}"/>
+                    </td>
+                    <td width="30%"
+                        style="padding: 0 10px; vertical-align: top; font-size: 14px; text-align: center; font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C;">
+                      <!-- TODO: unit price or qty * unit_price? -->
+                      <span class="oe_currency_value">
+                        <t t-esc="order_line.price_unit"
+                           t-options='{"widget": "monetary_currency_dependent", "display_currency": sale_order.currency_id}'/>
+                      </span>
+                    </td>
+                  </tr>
+
+                  <!-- CONFIGURATION -->
+                  <tr t-if="order_line.quote_config_id">
+                    <td width="15%" style="vertical-align: top;"/>
+                    <td width="75%"
+                        style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #888888; vertical-align: top;"
+                        colspan="3">
+                      <t t-foreach="order_line.quote_config_id.quote_config_line_ids.filtered(lambda l: l.description_type != 'hide')"
+                         t-as="quote_line">
+                        <div style="font-weight: 500; font-size: 12px;">
+                          <t t-if="quote_line.attribute_id.classification_id.name != 'Hidden'">
+                            <t t-esc="quote_line.attribute_id.classification_id.name"/>
+                          </t>
+                          <t t-else="">
+                            <t t-esc="quote_line.attribute_id.name"/>
+                          </t>
+                        </div>
+                        <div style="margin-bottom: 5px; font-size: 10px;" t-esc="quote_line.quote_description_text"/>
+                      </t>
+                    </td>
+                  </tr>
+
+
+                  <tr t-if="order_line.quote_config_id and order_line.quote_config_id.notes">
+                    <td colspan="3" style="padding: 10px; vertical-align: top; border-bottom: 1px solid #f3f3f3;">
+                      <table role="presentation" cellspacing="0" cellpadding="0" border="0"
+                             style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; padding: 10px; vertical-align: top; margin: 0 !important;">
+                        <tr>
+                          <td style="font-size: 14px; font-family: 'Heebo', sans-serif !important;">
+                            <tag>Product Notes</tag>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style="font-size: 12px; font-family: 'Heebo', sans-serif !important;">
+                            <t t-esc="order_line.quote_config_id.notes"/>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+
+                </table>
+              </td>
+
+
+            </tr>
+
+          </t>
+        </table>
+      </td>
+    </tr>
+    <!-- END: Ordered Products -->
+  </template>
+
+  <template id="ol_sale_email.ol_backorder_products">
+    <!--
+        === Expected inputs ===
+        - backorder_products: a list of products which would be backordered
+    -->
+    <!-- START: Ordered Products -->
+    <tr>
+      <td bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%">
+        <!--[if mso]>
+            <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
+            <tr>
+            <td align="center" valign="top" width="600">
+            <![endif]-->
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="87%"
+               style="max-width:540px; border: 1px solid #f3f3f3;">
+
+          <tr>
+            <th bgcolor="#f3f3f3" style="padding: 8px 15px; font-size:16px; text-align:left; font-weight: 500;" width="100%">
+              <tag>Impacted Products</tag>
+            </th>
+            <th bgcolor="#f3f3f3" style="padding: 8px 15px; font-size:16px; text-align:center;" width="15%"/>
+            <th bgcolor="#f3f3f3" style="padding: 8px 15px; font-size:16px; text-align:right;" width="30%"/>
+
+          </tr>
+
+          <t t-foreach="backorder_products" t-as="product_id">
+            <t t-set="product" t-value="sale_order.env['product.product'].browse(product_id)"/>
+            <tr style="font-size:0; padding: 0; text-align:top">
+              <!-- [if mso]>
+                   <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
+                   <tr>
+                   <td align="left" valign="top" width="260">
+                   [endif]-->
+              <td style="padding: 10px; vertical-align: top;">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
+                       style="font-size: 14px;text-align: left;">
+                  <tr>
+                    <td width="30%" style="padding-right: 10px;">
+                      <t t-if="product.image_128">
+                        <img t-attf-src="{{product.get_public_image_src(field_name='image_128')}}" style="width:100%;"/>
+                      </t>
+                      <t t-else="">
+                        <img
+                            t-attf-src="data:image;base64,{{sale_order.company_id.placeholder_image_product}}" style="width:100%;"/>
+                      </t>
+                    </td>
+
+                    <td width="100%"
+                        style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; 5px 20px; vertical-align: top;">
+                      <!-- PRODUCT NAME -->
+                      <div style="font-weight: 500;">
+                        <t t-esc="product.name"/>
+                      </div>
+                      <div style="font-weight: 100; font-size: 12px;">
+                        <t t-esc="product.product_tmpl_id.default_code"/>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+
+              <td style="padding: 10px; width: 10%; vertical-align: top; font-size: 14px;text-align: right; font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; 5px 20px;">
+              </td>
+              <td style="padding: 10px; width: 10%; vertical-align: top; font-size: 14px;text-align: right; font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; 5px 20px;">
+              </td>
+            </tr>
+          </t>
+        </table>
+        <!--[if mso]>
+            </td>
+            </tr>
+            </table>
+            <![endif]-->
+      </td>
+    </tr>
+    <!-- END: Ordered Products -->
+  </template>
+
+</odoo>

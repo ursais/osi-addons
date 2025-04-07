@@ -53,7 +53,7 @@
         </div>
         <t t-call="ol_templates.eu_tax_exempt"/>
         <div style="overflow-wrap: break-word;">
-          <p t-raw="sale_order.note"/>
+          <p t-esc="sale_order.note"/>
         </div>
       </div>
     </div>

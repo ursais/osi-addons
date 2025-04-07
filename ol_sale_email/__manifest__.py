@@ -16,6 +16,9 @@
     "data": [
         "data/backorder_email.xml",
         "data/sale_exception.xml",
+        "data/shipping_email.xml",
+        "data/template_parts.xml",
+        "data/ir_cron.xml",
         "views/product_template_views.xml",
         "views/sale_order_views.xml",
         "views/res_config_settings_views.xml",

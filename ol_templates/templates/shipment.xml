@@ -11,27 +11,7 @@
 
   <template id="tracking_numbers">
     <t t-if="tracking_numbers and not hide_tracking">
-      <tag>Tracking Numbers</tag>:
-      <br/>
-      <div style="color: #4d90fe; margin-bottom: 10px; padding: 0 10px;">
-        <t t-foreach="tracking_numbers or []" t-as="tracking_number">
-
-          <t t-if="tracking_number.custom_title">
-            <span t-field="tracking_number.custom_title"/>:
-          </t>
-          <t t-else="">
-            <span t-field="tracking_number.carrier_id.name"/>:
-          </t>
-          <t t-if="tracking_number.url">
-            <a t-attf-href="{{tracking_number.url}}" target="_blank" style="text-decoration: none; color: #4d90fe;">
-              <t t-esc="tracking_number.number"/>
-            </a>
-          </t>
-          <t t-if="not tracking_number.url">
-            <span t-esc="tracking_number.number"/>
-          </t>,
-        </t>
-      </div>
+      <tag>Tracking Numbers</tag>: <span t-esc="tracking_numbers and tracking_numbers[0] or ''"/>
     </t>
   </template>
 

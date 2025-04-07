@@ -218,9 +218,7 @@
             <t t-set="block_title">Shipping Method</t>
             <t t-if="sale_order">
               <t t-set="shipment" t-value="picking.carrier_id"/>
-              <!-- TODO: NC : picking_ids.tracking_ids field not found -->
-              <!-- <t t-set="tracking_numbers" t-value="sale_order.mapped('picking_ids.tracking_ids')"/> -->
-              <t t-set="tracking_numbers" t-value="sale_order.mapped('picking_ids.lot_id')"/>
+              <t t-set="tracking_numbers" t-value="sale_order.mapped('picking_ids.carrier_tracking_ref')"/>
             </t>
             <t t-if="rma">
               <t t-set="shipment" t-value="rma.shipping_method"/>

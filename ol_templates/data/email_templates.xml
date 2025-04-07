@@ -542,7 +542,7 @@
         <td bgcolor="#ffffff" style="padding: 45px 0 45px 40px; text-align: left;">
           <a href="http://www.onlogic.com/?utm_source=newsletter&amp;utm_medium=email&amp;utm_content=homeheader&amp;utm_campaign=2nw117"
              target="_blank">
-            <img t-if="company.template_logo" style="display: block; max-width: 221px;" t-attf-src="{{company.get_public_image_src(field_name='template_logo')}}" width="221" alt="Logo"/>
+            <img t-if="company.template_logo" style="display: block; max-width: 221px;" t-att-src="image_data_uri(company.template_logo)" width="221" alt="Logo"/>
           </a>
         </td>
       </tr>
@@ -567,22 +567,22 @@
             <tr>
               <td style="padding: 15px 0;" align="center">
                 <a href="https://www.linkedin.com/company/onlogic/">
-                  <img width="35px" t-attf-src="{{company.get_public_image_src(field_name='linkedin_image')}}"/>
+                  <img width="35px" t-att-src="image_data_uri(company.linkedin_image)" />
                 </a>
               </td>
               <td style="padding: 15px 0;" align="center">
                 <a href="https://twitter.com/OnLogic">
-                  <img width="35px" t-attf-src="{{company.get_public_image_src(field_name='twitter_image')}}" />
+                  <img width="35px" t-att-src="image_data_uri(company.twitter_image)" />
                 </a>
               </td>
               <td style="padding: 15px 0;" align="center">
                 <a href="https://www.youtube.com/c/onlogic">
-                  <img width="35px" t-attf-src="{{company.get_public_image_src(field_name='youtube_image')}}" />
+                  <img width="35px" t-att-src="image_data_uri(company.youtube_image)" />
                 </a>
               </td>
               <td style="padding: 15px 0;" align="center">
                 <a href="https://www.facebook.com/OnLogic/">
-                  <img width="35px" t-attf-src="{{company.get_public_image_src(field_name='facebook_image')}}" />
+                  <img width="35px" t-att-src="image_data_uri(company.facebook_image)" />
                 </a>
               </td>
             </tr>
@@ -1657,7 +1657,8 @@
     </t>
     <tag>or give us a call at</tag>
     <t t-esc="company.phone" t-options='{"widget": "phone_formatter", "company_id": company.id}'/>,
-    <t t-esc="company.hours_of_operation"/>.
+    <!-- TODO: NC : company.hours_of_operation field not found -->
+    <!-- <t t-esc="company.hours_of_operation"/> -->.
     <t t-if="extra_text and extra_text != ''">
       <br/>
       <br/>
@@ -1677,7 +1678,8 @@
     </a>
     <tag>or give us a call at</tag>
     <t t-esc="company.phone" t-options='{"widget": "phone_formatter", "company_id": company.id}'/>,
-    <t t-esc="company.hours_of_operation"/>.
+    <!-- TODO: NC : company.hours_of_operation field not found -->
+    <!-- <t t-esc="company.hours_of_operation"/> -->.
   </template>
 
   <template id="ol_templates.here_are_your_order_details">
