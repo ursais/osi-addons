@@ -189,14 +189,14 @@
                           <br/>Attention: Accounts Payable<br/>
                           <span t-esc="data['billing_email']"/>
                           <br/>
-                          <span t-raw="data['billing_address']"/>
+                          <span t-esc="data['billing_address']"/>
                       </td>
                       <td>
-                          <span t-raw="data['shipping_address']"/>
+                          <span t-esc="data['shipping_address']"/>
                       </td>
                       <td>
                           <t t-if="data.get('shipping_notes')">
-                              Notes: <span t-raw="data['shipping_notes']"/>
+                              Notes: <span t-esc="data['shipping_notes']"/>
                           </t>
                       </td>
                   </tr>
@@ -205,7 +205,7 @@
                           <td colspan="3"><div class="notes-header-cell">Notes to Supplier</div></td>
                       </tr>
                       <tr>
-                          <td colspan="3"><span t-raw="data['supplier_notes']"/></td>
+                          <td colspan="3"><span t-esc="data['supplier_notes']"/></td>
                       </tr>
                   </t>
               </table>

@@ -12,8 +12,7 @@
     'website': 'https://www.onlogic.com',
     'data': [
         # Data
-        # TODO: Do not migrate yet
-        # 'data/email_templates.xml',
+        'data/email_templates.xml',
         'data/paper_formats.xml',
 
         # Styles
