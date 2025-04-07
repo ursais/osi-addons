@@ -23,6 +23,7 @@
     # always loaded
     "data": [
         "data/crm_tag_data.xml",
+        "data/product_price_list_data.xml",
         "data/product_state_data.xml",
         "views/product_attribute_views.xml",
         "views/product_template_attribute_line_views.xml",
