@@ -46,7 +46,7 @@
                 </t>
 
                 <t t-call="ol_templates.ol_email_spacer" />
-                <t t-call="ol_sale_email.ol_delivery_info">
+                <t t-call="ol_templates.ol_delivery_info">
                     <t t-set="delivery_method" t-value="sale_order.carrier_id" />
                     <t t-set="days_in_transit" t-value="False" />
                     <t t-set="tracking_numbers" t-value="object.mapped('carrier_tracking_ref')"/>

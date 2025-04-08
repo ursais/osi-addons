@@ -25,8 +25,13 @@
         "data/crm_tag_data.xml",
         "data/product_price_list_data.xml",
         "data/product_state_data.xml",
+
+        "data/ir_cron.xml",
+        "data/shipping_email.xml",
+        "data/invoice_created.xml",
+
         "views/product_attribute_views.xml",
-        "views/product_template_attribute_line_views.xml",
+        # "views/product_template_attribute_line_views.xml",
         "views/sale_order_view.xml",
         "views/res_partner_view.xml",
         "views/sale_subscription_views.xml",

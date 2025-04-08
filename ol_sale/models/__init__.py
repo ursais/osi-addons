@@ -5,5 +5,7 @@ from . import sale_order
 from . import res_partner
 from . import stock_picking
 from . import mrp_production
+from . import shipment_email
+from . import invoice_created
 # TODO: NC : "sale.order.payment.method" model not found
 # from . import payment_method

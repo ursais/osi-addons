@@ -61,7 +61,7 @@
                             <tag>that are potentially impacted by component availability.</tag>
                         </t>
                     </p>
-                    <!-- <t t-call="ol_sale_email.ol_backorder_products">
+                    <!-- <t t-call="ol_templates.ol_backorder_products">
                         <t t-set="backorder_products" t-value="object._context['backordered_products']"/>
                     </t> -->
                     <t t-call="ol_templates.ol_email_text_content">

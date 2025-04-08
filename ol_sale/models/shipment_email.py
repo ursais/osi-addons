@@ -42,7 +42,7 @@ class StockPicking(models.Model):
         """Send emails for all shipments flagged to send"""
         domain = self.get_shipment_email_search_domain()
         picking_ids = self.search(domain)
-        shipment_template = self.env.ref('ol_sale_email.customer_shipment_email_template')
+        shipment_template = self.env.ref('ol_sale.customer_shipment_email_template')
 
         failed_picking_ids = self.env['stock.picking']
         for picking_id in picking_ids:

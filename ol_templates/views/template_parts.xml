@@ -47,7 +47,7 @@
     <!-- END: Payment Info Table -->
   </template>
 
-  <template id="ol_sale_email.ol_order_total">
+  <template id="ol_templates.ol_order_total">
     <!--    Order Totals-->
     <tr>
       <td bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%">
@@ -58,7 +58,7 @@
               <t>
                 <div
                     style="max-width: 540px; background: #F3F3F3; color: #595A5C; padding: 10px 10px 10px 50%; font-size: 14px;">
-                  <t t-call="ol_sale_email.ol_order_total_data"/>
+                  <t t-call="ol_templates.ol_order_total_data"/>
                 </div>
               </t>
             </td>
@@ -217,7 +217,7 @@
     <!-- END: Delivery Info Table -->
   </template>
 
-  <template id="ol_sale_email.ol_ordered_products">
+  <template id="ol_templates.ol_ordered_products">
     <!--
         === Expected inputs ===
         - order_lines: a recordset of the sale order lines to display
@@ -337,7 +337,7 @@
     <!-- END: Ordered Products -->
   </template>
 
-  <template id="ol_sale_email.ol_backorder_products">
+  <template id="ol_templates.ol_backorder_products">
     <!--
         === Expected inputs ===
         - backorder_products: a list of products which would be backordered
