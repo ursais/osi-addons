@@ -176,7 +176,7 @@
         id="menu_rma_root"
         name="RMA Supplier"
         groups="group_rma_user"
-        web_icon="rma,static/description/icon.png"
+        web_icon="ol_rma_supplier,static/description/icon.png"
         sequence="100"
     />
 
