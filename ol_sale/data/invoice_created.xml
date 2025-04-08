@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- This email is sent to the Sale Order Account Managers after the related 
+        delivery order is shipped and an auto invoice was created -->
+    <record id="invoice_created_email_template" model="mail.template">
+        <field name="name">OnLogic Sale Order Invoice Created</field>
+        <field name="model_id" ref="sale.model_sale_order" />
+        <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
+        <field name="partner_to">{{ object.account_manager_id.partner_id and object.account_manager_id.partner_id.id or object.partner_id.id }}</field>
+        <field name="subject">Invoice ready for Sale Order {{ object.name }}</field>
+        <field name="body_html" type="html">
+
+            <t t-call="ol_templates.ol_email">
+                <!-- Variables -->
+                <t t-set="sale_order" t-value="object.with_context({'lang':object.partner_id.lang})" />
+                <t t-set="title" t-value="'Invoice ready for Sale Order ' + sale_order.name" />
+                <t t-set="preheader_text" t-value="'Invoice ready for Sale Order ' + sale_order.name" />
+                <t t-set="include_newsletter_disclaimer" t-value="False" />
+                <t t-set="access_action" t-value="sale_order.with_context(force_website=True)._get_access_action()" />
+                <t t-set="invoices" t-value="object._context.get('email_template_data', {}).get('invoices')" />
+
+                <!-- Body -->
+                <t t-call="ol_templates.ol_email_text_content">
+                    <div style="font-weight: 500; font-size: 20px;">
+                        <tag>An Invoice was created for</tag>
+                        <t t-esc="sale_order.name" />
+                        !
+                    </div>
+                    <p style="font-size: 16px; line-height: 28px; margin-top: 30px;">
+                        <tag>You can view the related documents via the links below</tag>
+                        <center style="margin-top: 30px;">
+                            <ul>
+                                <li style="text-align: left;">
+                                    Sale Order:
+                                    <a t-att-href="sale_order._notify_get_action_link('view')"
+                                        style="font-weight: 500; color: #337ab7;"
+                                        class="o_default_snippet_text">
+                                        <t t-esc="sale_order.name" />
+                                    </a>
+                                </li>
+                                <li style="text-align: left;">
+                                    Invoice:
+                                    <t t-foreach="invoices" t-as="invoice">
+                                        <a t-att-href="invoice._notify_get_action_link('view')"
+                                            style="font-weight: 500; color: #337ab7;"
+                                            class="o_default_snippet_text">
+                                            <t t-esc="invoice.name" />
+                                        </a>
+                                    </t>
+                                </li>
+                            </ul>
+                        </center>
+                        <br />
+                        <tag>The OnLogic Team</tag>
+                    </p>
+                </t>
+            </t>
+
+        </field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="auto_delete" eval="False" />
+    </record>
+
+</odoo>

@@ -23,6 +23,7 @@
         'templates/style/page.xml',
         # Views
         'views/res_company.xml',
+        "views/template_parts.xml",
         # Main Layout Sections
         'templates/layout/main.xml',
         'templates/layout/header.xml',
