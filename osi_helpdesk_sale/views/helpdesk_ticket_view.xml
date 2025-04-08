@@ -1,0 +1,39 @@
+<odoo>
+
+    <record id="helpdesk_ticket_view_helpdesk_sale_form" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.helpdesk_sale.form</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='legend_blocked']" position="before">
+                <field name="use_helpdesk_sale_orders" invisible="1" />
+            </xpath>
+            <field name="stage_id" position="before">
+                <button
+                    name="create_sale_order"
+                    string="Create Sale Order"
+                    type="object"
+                    class="btn btn-primary"
+                    invisible="not use_helpdesk_sale_orders"
+                    groups="sales_team.group_sale_salesman"
+                />
+            </field>
+            <xpath
+                expr="//div[@name='button_box']/button[@name='action_open_helpdesk_ticket']"
+                position="after"
+            >
+                <button
+                    name="action_view_sale_order"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-dollar"
+                    invisible="sale_count == 0 and not use_helpdesk_sale_orders"
+                    groups="sales_team.group_sale_salesman"
+                >
+                    <field name="sale_count" widget="statinfo" string="Sales" />
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

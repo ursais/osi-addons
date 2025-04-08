@@ -1,0 +1,16 @@
+<odoo>
+
+    <record id="helpdesk_team_sale_view_form" model="ir.ui.view">
+        <field name="name">helpdesk.team.sale.form</field>
+        <field name="model">helpdesk.team</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_team_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='after-sales']/setting[2]" position="after">
+                <setting help="Create Sales Orders from Tickets">
+                    <field name="use_sale_orders" />
+                </setting>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
