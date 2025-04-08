@@ -7,7 +7,7 @@ class IrActionsReport(models.Model):
 
     # COLUMNS #####
     # FIXME: change to add company in there somewhere
-    paperformat_xmlid_base = fields.Char(string='Base name of paper format XML ID')
+    paperformat_xmlid_base = fields.Char(string="Base name of paper format XML ID")
 
     # END #########
 
@@ -26,12 +26,13 @@ class IrActionsReport(models.Model):
         # Get the company of the user
         user_company = self.env.company
 
-        # Get the company specific paper format we defined in `ol_templates/report/report_definitions.xml`
+        # Get the company specific paper format we defined in
+        # `ol_templates/report/report_definitions.xml`
         paper_format_obj = None
-        if user_company.short_name.lower() == 'eu':
-            paper_format_obj = self.env.ref(format_base + '_eu', False)
-        elif user_company.short_name.lower() == 'us':
-            paper_format_obj = self.env.ref(format_base + '_us', False)
+        if user_company.short_name.lower() == "eu":
+            paper_format_obj = self.env.ref(format_base + "_eu", False)
+        elif user_company.short_name.lower() == "us":
+            paper_format_obj = self.env.ref(format_base + "_us", False)
 
         if not paper_format_obj:
             # Could not find the xml id given, so default to the super method

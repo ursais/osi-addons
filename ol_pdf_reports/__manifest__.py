@@ -9,6 +9,7 @@
     "website": "https://www.onlogic.com",
     "category": "Reporting",
     "version": "17.0.1.0.0",
+    "license": "AGPL-3",
     "depends": [
         "base",
         "purchase",
@@ -20,7 +21,6 @@
         "security/ir_rule.xml",
         "security/res_groups.xml",
         "security/ir.model.access.csv",
-        # 'data/purchase_mail_data.xml',
         "views/report_extra_content.xml",
     ],
     "assets": {

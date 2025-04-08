@@ -45,8 +45,8 @@
                             t-esc="object.company_id.phone"
                             t-options='{"widget": "phone_formatter", "company_id": object.company_id.id}'
                         />
-                        <!-- ,
-                        <t t-esc="object.company_id.hours_of_operation" /> -->
+                        ,
+                        <t t-esc="object.company_id.hours_of_operation" />
                         .
                         <br /><br />
                         <t t-if="object.partner_id.lang == 'de_DE'">

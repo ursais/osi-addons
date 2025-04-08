@@ -7,6 +7,10 @@
         <field name="arch" type="xml">
             <field name="buyer_id" position="before">
                 <field name="approved_vendor" />
+                <field name="supplier_delivery_method_id" />
+                <field name="default_shipping_notes" />
+                <field name="default_incoterms_id" />
+                <field name="default_supplier_contact_ids" domain="[('parent_id', '=', active_id)]" widget="many2many_tags" />
             </field>
         </field>
     </record>
