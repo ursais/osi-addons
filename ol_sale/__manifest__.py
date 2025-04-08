@@ -22,6 +22,8 @@
     ],
     # always loaded
     "data": [
+        "security/ir.model.access.csv",
+
         "data/crm_tag_data.xml",
         "data/product_price_list_data.xml",
         "data/product_state_data.xml",
@@ -29,6 +31,7 @@
         "data/ir_cron.xml",
         "data/shipping_email.xml",
         "data/invoice_created.xml",
+        "data/confirmation_email.xml",
 
         "views/product_attribute_views.xml",
         "views/product_template_attribute_line_views.xml",
@@ -37,7 +40,9 @@
         "views/sale_subscription_views.xml",
         "views/stock_picking_view.xml",
         "views/mrp_production_view.xml",
+        "views/confirmation_email.xml",
         "reports/sale_order_quote.xml",
         "reports/automation_test.xml",
+        "wizard/forward_confirmation_email_wizard.xml"
     ],
 }

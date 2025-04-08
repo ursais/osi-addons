@@ -1,0 +1,119 @@
+<odoo>
+
+    <record id="order_confirmation_email_template" model="mail.template">
+        <field name="name">OnLogic Confirmation Email</field>
+        <field name="model_id" ref="sale.model_sale_order" />
+        <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
+        <field name="partner_to">{{ object.partner_id and object.partner_id.id }} </field>
+        <field name="subject">Thank you for your order!</field>
+        <field name="body_html" type="html">
+            <t t-set="sale_order" t-value="object.with_context({'lang':object.partner_id.lang})" />
+            <t t-call="ol_sale.confirmation_email_template" t-lang="sale_order.partner_id.lang" />
+        </field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="auto_delete" eval="False" />
+    </record>
+    <record id="forward_order_confirmation_email_template" model="mail.template">
+        <field name="name">Forward OnLogic Confirmation Email</field>
+        <field name="model_id" ref="sale.model_sale_order" />
+        <field name="email_from">{{ ctx['email_from'] }}</field>
+        <field name="email_to">{{ ctx['email_to'] }}</field>
+        <field name="subject">Forwarded: Thank you for your order!</field>
+        <field name="body_html" type="html">
+            <t t-set="sale_order" t-value="object.with_context({'lang':object.partner_id.lang})" />
+            <t t-call="ol_sale.confirmation_email_template" t-lang="sale_order.partner_id.lang" />
+        </field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="auto_delete" eval="False" />
+    </record>
+
+    <template id="easy_checkout_text">
+        <t t-if="sale_order.is_guest_checkout">
+            <tag>For easier checkout in the future, we encourage you to</tag>
+            <a href="https://www.onlogic.com/customer/account/login/"
+                style="color:#1E7EC8;">
+                create an account
+            </a>
+            .
+        </t>
+    </template>
+
+    <template id="confirmation_email_template">
+        <t t-call="ol_templates.ol_email">
+            <!-- Variables -->
+            <t t-set="title" t-value="'Confirmation for Order ' + sale_order.name" />
+            <t t-set="preheader_text" t-value="'New Order ' + sale_order.name" />
+            <t t-set="include_newsletter_disclaimer" t-value="False" />
+            <t t-set="product_lines" t-value="sale_order.order_line.filtered(lambda l: not l.is_delivery and l.display_type not in ('line_section', 'line_note') and not l.is_downpayment)" />
+            <t t-set="shipping_line" t-value="sale_order.order_line.filtered(lambda l: l.is_delivery and l.display_type not in ('line_section', 'line_note') and not l.is_downpayment)" />
+            <t t-set="product_subtotal_amount" t-value="sum(product_lines.mapped('price_subtotal'))" />
+            <t t-set="shipping_subtotal_amount" t-value="sum(shipping_line.mapped('price_subtotal'))" />
+            <!-- Body -->
+            <t t-call="ol_templates.ol_email_text_content">
+                <p t-if="object._context.get('text_intro')"
+                    style="font-size: 16px; line-height:28px;">
+                    <t t-esc="object._context['text_intro']" />
+                </p>
+                <div style="font-size:16px; line-height:28px; margin-top:30px">
+                    <t t-esc="sale_order.partner_id.name" />
+                    ,
+                </div>
+                <p style="font-size: 16px; line-height: 28px; margin-top: 30px;">
+                    <tag>
+                        Thank you for choosing OnLogic, we've received your order (#
+                        <span t-esc="sale_order.name" />
+                        ). We will be in touch with an update within 2 business days. You
+                        will also receive tracking information when your order ships.
+                    </tag>
+                    <br />
+                    <t t-call="ol_sale.easy_checkout_text" />
+                    <br />
+                    <br />
+                    <t t-call="ol_templates.here_are_your_order_details">
+                        <t t-set="order" t-value="sale_order" />
+                    </t>
+                </p>
+            </t>
+            <t t-call="ol_templates.ol_billing_shipping_info">
+                <t t-set="billing_address" t-value="sale_order.partner_invoice_id" />
+                <t t-set="shipping_address"
+                    t-value="sale_order.partner_shipping_id" />
+            </t>
+            <t t-call="ol_templates.ol_email_spacer" />
+            <!-- <t t-call="ol_templates.ol_payment_info">
+                <t t-set="payment_method"
+                    t-value="sale_order.payment_method_id.with_context({'lang':sale_order.get_language()})" />
+            </t> -->
+            <t t-call="ol_templates.ol_email_spacer" />
+            <t t-call="ol_templates.ol_delivery_info">
+                <t t-set="delivery_method" t-value="sale_order.carrier_id" />
+                <t t-set="days_in_transit" t-value="False" />
+            </t>
+            <t t-call="ol_templates.ol_email_spacer" />
+            <t t-call="ol_templates.ol_ordered_products">
+                <t t-set="order_lines" t-value="sale_order.order_line.filtered(lambda l: l.display_type not in ('line_section', 'line_note') and not l.is_downpayment)" />
+            </t>
+            <t t-call="ol_templates.ol_order_total" />
+            <t t-call="ol_templates.ol_email_spacer" />
+            <t t-call="ol_templates.ol_email_text_content">
+                <p style="font-size: 16px; line-height: 28px; margin-top: 30px;">
+                    <tag>
+                        Please review our
+                        <a
+                            href="https://static.onlogic.com/resources/Legal/OnLogic_TERMS-CONDITIONS.pdf">Terms and Conditions</a>
+                        for complete details regarding your order.
+                    </tag>
+                </p>
+            </t>
+            <t t-call="ol_templates.ol_email_spacer" />
+            <t t-call="ol_templates.ol_email_text_content">
+                <p style="font-size: 16px; line-height: 28px;">
+                    <t t-call="ol_templates.ol_contact_info">
+                        <t t-set="company" t-value="sale_order.company_id" />
+                    </t>
+                </p>
+            </t>
+        </t>
+    </template>
+
+</odoo>

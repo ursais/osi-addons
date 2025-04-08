@@ -39,7 +39,7 @@
         <!--The "body" of the report layout-->
         <!--This part is more or less untouched by Odoo's formatting-->
         <!--This where other templates can hook into-->
-        <t t-raw="0"/>
+        <t t-out="0"/>
       </div>
 
       <t t-if="not custom_footer">

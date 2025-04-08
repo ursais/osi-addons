@@ -81,7 +81,7 @@
                   </span>
                 </div>
                 <div style="color: #595A5C; font-size: 12px; overflow-wrap: break-word;">
-                  <p t-raw="sale_order.note"/>
+                  <p t-out="sale_order.note"/>
                 </div>
               </td>
             </tr>
@@ -254,7 +254,7 @@
                   <tr>
                     <td width="15%" style="padding-left: 5px; padding-right: 10px;">
                       <t t-if="order_line.product_id.image_128">
-                        <img t-attf-src="{{order_line.product_id.get_public_image_src(field_name='image_128')}}" style="width:100%;"/>
+                        <img t-att-src="image_data_uri(order_line.product_id.image_128)" style="width:100%;"/>
                       </t>
                       <t t-else="">
                         <img
@@ -285,7 +285,7 @@
                   </tr>
 
                   <!-- CONFIGURATION -->
-                  <tr t-if="order_line.quote_config_id">
+                  <!-- <tr t-if="order_line.quote_config_id">
                     <td width="15%" style="vertical-align: top;"/>
                     <td width="75%"
                         style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #888888; vertical-align: top;"
@@ -303,10 +303,10 @@
                         <div style="margin-bottom: 5px; font-size: 10px;" t-esc="quote_line.quote_description_text"/>
                       </t>
                     </td>
-                  </tr>
+                  </tr> -->
 
 
-                  <tr t-if="order_line.quote_config_id and order_line.quote_config_id.notes">
+                  <!-- <tr t-if="order_line.quote_config_id and order_line.quote_config_id.notes">
                     <td colspan="3" style="padding: 10px; vertical-align: top; border-bottom: 1px solid #f3f3f3;">
                       <table role="presentation" cellspacing="0" cellpadding="0" border="0"
                              style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; padding: 10px; vertical-align: top; margin: 0 !important;">
@@ -322,7 +322,7 @@
                         </tr>
                       </table>
                     </td>
-                  </tr>
+                  </tr> -->
 
                 </table>
               </td>
@@ -376,7 +376,7 @@
                   <tr>
                     <td width="30%" style="padding-right: 10px;">
                       <t t-if="product.image_128">
-                        <img t-attf-src="{{product.get_public_image_src(field_name='image_128')}}" style="width:100%;"/>
+                        <img t-att-src="image_data_uri(product.image_128)" style="width:100%;"/>
                       </t>
                       <t t-else="">
                         <img

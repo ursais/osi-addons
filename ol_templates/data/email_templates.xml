@@ -215,7 +215,7 @@
           <![endif]-->
     </head>
     <body width="100%" bgcolor="#f3f3f3" style="margin: 0; mso-line-height-rule: exactly;">
-      <center style="width: 100%; background: #f3f3f3; text-align: left; padding: 20px 0;">
+      <center style="width: 100%; text-align: left; padding: 20px 0;">
 
         <!-- Visually Hidden Preheader Text : BEGIN -->
         <div style="display: none !important; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: sans-serif;">
@@ -228,7 +228,7 @@
             2. MSO tags for Desktop Windows Outlook enforce a 680px width.
             Note: The Fluid and Responsive templates have a different width (600px). The hybrid grid is more "fragile", and I've found that 680px is a good width. Change with caution.
         -->
-        <div style="max-width: 600px; margin: 30px auto; border: 1px solid #e6e6e6;" class="email-container">
+        <div style="max-width: 600px; margin: 30px auto; border: 1px solid #e6e6e6;  background: #f3f3f3;" class="email-container">
           <!--[if mso]>
               <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" align="center">
               <tr>
@@ -239,7 +239,7 @@
           <!-- Email Body : BEGIN -->
           <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%"
                  style="max-width: 600px;" class="email-container">
-            <t t-raw="0"/>
+            <t t-out="0"/>
             <t t-call="ol_templates.ol_email_spacer"/>
           </table>
           <!-- Email Body : END -->
@@ -479,7 +479,7 @@
           <!-- Email Body : BEGIN -->
           <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%"
                  style="max-width: 600px;" class="email-container">
-            <t t-raw="0"/>
+            <t t-out="0"/>
             <t t-call="ol_templates.ol_email_spacer"/>
           </table>
           <!-- Email Body : END -->
@@ -511,7 +511,7 @@
                style="max-width:540px;">
           <tr>
             <td>
-              <t t-raw="0"/>
+              <t t-out="0"/>
             </td>
           </tr>
         </table>
@@ -562,7 +562,7 @@
 
       <!-- START: social icons -->
       <tr>
-        <td bgcolor="#595A5C">
+        <td bgcolor="#595A5C" style="background: #595A5C !important;">
           <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="75%" align="center">
             <tr>
               <td style="padding: 15px 0;" align="center">
