@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_ticket_form" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form.inherit</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form" />
+        <field name="arch" type="xml">
+            <field name="stage_id" position="before">
+                <button
+                    name="create_and_open_rma"
+                    type="object"
+                    string="Create RMA"
+                    groups="rma.rma_group_user_own"
+                />
+            </field>
+            <xpath
+                expr="//div[@name='button_box']/button[@name='action_open_ratings']"
+                position="after"
+            >
+                <button
+                    name="action_view_rma"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-reply"
+                    invisible="rma_count == 0"
+                    groups="rma.rma_group_user_own"
+                >
+                    <field name="rma_count" widget="statinfo" string="RMA" />
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
