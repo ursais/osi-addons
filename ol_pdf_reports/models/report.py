@@ -32,7 +32,7 @@ class IrActionsReport(models.Model):
         """
         model = (
             self.model
-            or data.get("context").get("active_model")
+            or (data and data.get("context").get("active_model"))
             or self._get_report(report_ref).model
         )
         report_objects = self.env[model].browse(res_ids)
