@@ -1,135 +1,108 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <!--The footer of the report-->
-  <template id="report_footer">
-    <div class="ol_report_footer">
-      <div class="ol_report_footer_company_row ol_flex ol_flex_just_cont_space_between">
-        <div class="ol_report_footer_company_info">
-          <t t-out="company.external_display_name"/>
-          <br/>
-          <t t-out="company.street"/>
-          <br/>
-          <t t-out="company.city"/>,
-          <t t-out="company.state_id.code"/>
-          <t t-out="company.zip"/>
-          <br/>
-          <t t-out="company.country_id.code"/>
-        </div>
-        <div class="ol_report_footer_company_contact">
-          <div class="ol_report_footer_info_row ol_flex">
-            <div class="key">
-              <tag>Phone</tag>
-            </div>
-            <div class="value">
-              <t t-out="company.phone" t-options='{"widget": "phone_formatter", "company_id": company}'/>
 
+    <!--The footer of the report-->
+    <template id="report_footer">
+        <div class="ol_report_footer">
+            <div class="ol_report_footer_company_row ol_flex ol_flex_just_cont_space_between">
+                <div class="ol_report_footer_company_info">
+                    <t t-out="company.external_display_name"/>
+                    <br/>
+                    <t t-out="company.street"/>
+                    <br/>
+                    <t t-out="company.city"/>,
+                    <t t-out="company.state_id.code"/>
+                    <t t-out="company.zip"/>
+                    <br/>
+                    <t t-out="company.country_id.code"/>
+                </div>
+                <div class="ol_report_footer_company_contact">
+                    <div class="ol_report_footer_info_row ol_flex">
+                        <div class="key">
+                            <tag>Phone</tag>
+                        </div>
+                        <div class="value">
+                            <t t-out="company.phone" t-options='{"widget": "phone_formatter", "company_id": company}'/>
+                        </div>
+                    </div>
+                    <div class="ol_report_footer_info_row ol_flex">
+                        <div class="key">
+                            <tag>Email</tag>
+                        </div>
+                        <div class="value">
+                            <t t-out="company.email"/>
+                        </div>
+                    </div>
+                    <div class="ol_report_footer_info_row ol_flex">
+                        <div class="key">
+                            <tag>Web</tag>
+                        </div>
+                        <div class="value">
+                            <t t-out="company.website" t-options='{"widget": "url_formatter"}'/>
+                        </div>
+                    </div>
+                </div>
+                <div t-if="company.short_name == 'us' and invoice" class="ol_report_footer_payment_info">
+                    <strong>
+                        Electronic Payment Info
+                    </strong>
+                    <div class="ol_report_footer_info_row ol_flex">
+                        <div class="key">
+                            <tag>Account #</tag>
+                        </div>
+                        <div class="value">
+                            767551010
+                        </div>
+                    </div>
+                    <div class="ol_report_footer_info_row ol_flex">
+                        <div class="key">
+                            <tag>Routing #</tag>
+                        </div>
+                        <div class="value">
+                            021000021
+                        </div>
+                    </div>
+                    <div class="ol_report_footer_info_row ol_flex">
+                        <div class="key">
+                            <tag>Bank SWIFT</tag>
+                        </div>
+                        <div class="value">
+                            CHASUS33
+                        </div>
+                    </div>
+                </div>
+                <div t-if="company.short_name == 'eu'" class="ol_report_footer_payment_info">
+                    <div class="ol_report_footer_info_row ol_flex">
+                        <div class="key">
+                            <tag>VAT</tag>
+                        </div>
+                        <div class="value">
+                            <t t-out="company.vat"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="ol_report_footer_terms">
+                      <div>
+                          <strong>Terms and Conditions</strong>
+                      </div>
+                      <div>
+                          <a t-attf-href="{{company.terms_and_conditions_url}}" target="_blank">
+                              <t t-out="company.terms_and_conditions_url" t-options='{"widget": "url_formatter"}'/>
+                          </a>
+                      </div>
+                </div>
+                <div class="ol_report_footer_page_info">
+                    <ul class="list-inline">
+                        <li>
+                            <span class="page"/>
+                        </li>
+                        <li>of</li>
+                        <li>
+                            <span class="topage"/>
+                        </li>
+                    </ul>
+                </div>
             </div>
-          </div>
-          <div class="ol_report_footer_info_row ol_flex">
-            <div class="key">
-              <tag>Email</tag>
-            </div>
-            <div class="value">
-              <t t-out="company.email"/>
-            </div>
-          </div>
-          <div class="ol_report_footer_info_row ol_flex">
-            <div class="key">
-              <tag>Web</tag>
-            </div>
-            <div class="value">
-              <t t-out="company.website" t-options='{"widget": "url_formatter"}'/>
-            </div>
-          </div>
         </div>
-        <!-- TODO: "short_name" field in ol_base module -->
-        <div t-if="company.short_name == 'us' and invoice" class="ol_report_footer_payment_info">
-          <strong>
-            Electronic Payment Info
-          </strong>
-          <div class="ol_report_footer_info_row ol_flex">
-            <div class="key">
-              <tag>Account #</tag>
-            </div>
-            <div class="value">
-              767551010
-            </div>
-          </div>
-          <div class="ol_report_footer_info_row ol_flex">
-            <div class="key">
-              <tag>Routing #</tag>
-            </div>
-            <div class="value">
-              021000021
-            </div>
-          </div>
-          <div class="ol_report_footer_info_row ol_flex">
-            <div class="key">
-              <tag>Bank SWIFT</tag>
-            </div>
-            <div class="value">
-              CHASUS33
-            </div>
-          </div>
-        </div>
-<!-- TODO - To be reviwed -->
-        <div t-if="company.short_name == 'eu'" class="ol_report_footer_payment_info">
-          <!-- <div class="ol_report_footer_info_row ol_flex">
-            <div class="key">
-              <tag>ID (KvK)</tag>
-            </div>
-            <div class="value">
-              <t t-out="company.eu_kvk"/>
-            </div>
-          </div> -->
-          <!-- <div class="ol_report_footer_info_row ol_flex">
-            <div class="key">
-              <tag>IBAN</tag>
-            </div>
-            <div class="value">
-              <t t-out="company.eu_iban"/>
-            </div>
-          </div> -->
-          <!-- <div class="ol_report_footer_info_row ol_flex">
-            <div class="key">
-              <tag>BIC</tag>
-            </div>
-            <div class="value">
-              <t t-out="company.eu_bic"/>
-            </div>
-          </div>
-          <div class="ol_report_footer_info_row ol_flex">
-            <div class="key">
-              <tag>VAT</tag>
-            </div>
-            <div class="value">
-              <t t-out="company.eu_vat"/>
-            </div>
-          </div>-->
-        </div> 
-        <div class="ol_report_footer_terms">
-          <div>
-            <strong>Terms and Conditions</strong>
-          </div>
-          <!-- TODO: "terms_and_conditions_url" field in ol_terms_and_conditions module -->
-          <!-- <div>
-            <a t-attf-href="{{company.terms_and_conditions_url}}" target="_blank">
-              <t t-out="company.terms_and_conditions_url" t-options='{"widget": "url_formatter"}'/>
-            </a>
-          </div> -->
-        </div>
-        <div class="ol_report_footer_page_info">
-          <ul class="list-inline">
-            <li>
-              <span class="page"/>
-            </li>
-            <li>of</li>
-            <li>
-              <span class="topage"/>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </template>
+    </template>
+
 </odoo>

@@ -125,7 +125,8 @@ class IrActionsReport(models.Model):
 
     def get_allowed_extra_content_ids(self, report_objects):
         """
-        Make sure we only return extra context for the correct companies in all places (Odoo UI, Click To Buy etc.).
+        Make sure we only return extra context for the correct companies
+        in all places (Odoo UI, Click To Buy etc.).
         """
         report_model_companies = []
         if hasattr(self.env[report_objects._name], "company_id"):

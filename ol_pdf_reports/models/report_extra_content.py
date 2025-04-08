@@ -10,16 +10,19 @@ class ReportExtraContent(models.Model):
     # COLUMNS #####
 
     pdf = fields.Binary(
-        string="PDF", required=True, help="The PDF file to be appended to the reports"
+        string="PDF",
+        required=True,
+        help="The PDF file to be appended to the reports",
     )
     pdf_filename = fields.Char(
-        string="PDF filename", help="Name of the uploaded PDF file"
+        string="PDF filename",
+        help="Name of the uploaded PDF file",
     )
     priority = fields.Integer(
         string="Priority",
         help=(
-            "This defines in which order these Extra PDF Contents will be appended to the Reports. Lower"
-            " number is higher priority."
+            "This defines in which order these Extra PDF Contents will be appended"
+            " to the Reports. Lower number is higher priority."
         ),
     )
     name = fields.Char(string="Name")

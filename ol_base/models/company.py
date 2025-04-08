@@ -17,6 +17,17 @@ class ResCompany(models.Model):
         comodel_name="res.users",
     )
     short_name = fields.Char(string="Abbreviated Company Identifier")
+    hours_of_operation = fields.Text(
+        string="Hours of Operation",
+        translate=True,
+        default="Monday - Friday, 8:30am - 6:00pm (ET)",
+    )
+    terms_and_conditions_url = fields.Char(string="Terms and conditions URL")
+
+    # Europe
+    eu_iban = fields.Char(string="IBAN")
+    eu_bic = fields.Char(string="BIC")
+    eu_kvk = fields.Char(string="KVK")
 
     # END #########
 

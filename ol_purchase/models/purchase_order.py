@@ -1,12 +1,12 @@
 # Import Odoo libs
-from odoo import fields, models
+from odoo import api, fields, models
 from odoo.tools.misc import formatLang
 from odoo.addons.ol_pdf_reports.models.tools import newline_to_br
 
 
 class PurchaseOrder(models.Model):
     """
-    Adding fields to Purchase Order.
+    Adding fields, defaults and report data methods to Purchase Order.
     """
 
     _inherit = "purchase.order"
@@ -17,10 +17,75 @@ class PurchaseOrder(models.Model):
         related="partner_id.approved_vendor",
         help="Indicates if the vendor is approved for purchasing.",
     )
+    shipping_notes = fields.Text(
+        string="Shipping Notes",
+        size=50,
+    )
+    contact_ids = fields.Many2many(
+        comodel_name="res.partner",
+        string="Contact",
+    )
+    delivery_method_id = fields.Many2one(
+        comodel_name="delivery.carrier",
+        string="Delivery Method",
+    )
 
     # END ##########
+    # METHODS ######
 
-    """Get reporting information from a purchase order"""
+    @api.model
+    def get_supplier_defaults(self, partner_id):
+        """
+        Get a partner's shipping preferences so we can update PO fields.
+        """
+        if not partner_id:
+            return {}
+
+        # Get default contacts
+        default_contacts = partner_id.default_supplier_contact_ids
+
+        return {
+            "contact_ids": (
+                [contact.id for contact in default_contacts] if default_contacts else []
+            ),
+            "shipping_notes": partner_id.default_shipping_notes or False,
+            "delivery_method_id": (
+                partner_id.supplier_delivery_method_id.id
+                if partner_id.supplier_delivery_method_id
+                else False
+            ),
+            "incoterm_id": (
+                partner_id.default_incoterms_id.id
+                if partner_id.default_incoterms_id.id
+                else False
+            ),
+        }
+
+    @api.onchange(
+        "partner_id",
+        "company_id",
+    )
+    def onchange_partner_id(self):
+        """
+        Get the new partner's default shipping preferences when changed.
+        """
+        res = super().onchange_partner_id()
+        self.update(self.get_supplier_defaults(self.partner_id))
+        return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """
+        When creating a new PO, set the supplier defaults if the supplier is set
+        """
+        for val in vals_list:
+            if val.get("partner_id"):
+                partner = self.env["res.partner"].browse(val["partner_id"])
+                for key, value in self.get_supplier_defaults(partner).items():
+                    if not val.get(key):
+                        val[key] = value
+
+            return super().create(val)
 
     def get_purchase_order_doc_data(self):
         """
@@ -28,13 +93,11 @@ class PurchaseOrder(models.Model):
         """
         self.ensure_one()
         billing_partner = self.company_id.partner_id
-        # TODO: NC : "billing_partner.get_contacts()" method not found
-        # ap_contacts = billing_partner.get_contacts('ap').filtered('email')
         ap_contacts = billing_partner
         res = {
-            # TODO: NC : "self.shipping_notes" field not found
-            # 'shipping_notes': newline_to_br(self.shipping_notes) if self.shipping_notes else '',
-            "shipping_notes": "",
+            "shipping_notes": (
+                newline_to_br(self.shipping_notes) if self.shipping_notes else ""
+            ),
             "supplier_notes": newline_to_br(self.notes) if self.notes else "",
             "amount_untaxed": formatLang(
                 self.env, self.amount_untaxed, currency_obj=self.currency_id
@@ -64,7 +127,8 @@ class PurchaseOrder(models.Model):
         if self.state in ("draft", "sent"):
             # If this is being sent as part of a RFQ email, this context is set to True
             if self.env.context.get("send_rfq", False):
-                # the order is not in a confirmed state, but we're creating the doc as if it were
+                # the order is not in a confirmed state,
+                # but we're creating the doc as if it were
                 res["order_date"] = fields.Date.context_today(self)
                 res["submitted_by"] = self.env.user.name
 
@@ -88,8 +152,7 @@ class PurchaseOrder(models.Model):
                     "line_subtotal": formatLang(
                         self.env, line.price_subtotal, currency_obj=self.currency_id
                     ),
-                    # TODO: NC : "line.note" field not found
-                    # 'line_note': newline_to_br(line.note) if line.note else '',
+                    "line_note": newline_to_br(line.note) if line.note else "",
                     "line_note": (
                         newline_to_br(line.name)
                         if line.display_type == "line_note"
@@ -100,3 +163,5 @@ class PurchaseOrder(models.Model):
             )
 
         return res
+
+    # END ##########

@@ -29,6 +29,11 @@ class SaleOrder(models.Model):
     integrator = fields.Many2one(comodel_name="res.partner")
     delivery_note = fields.Text(string="Delivery Note")
     mrp_note = fields.Text(string="Manufacturing Note")
+    to_send_confirmation_email = fields.Boolean(
+        string="Send confirmation email",
+        default=True,
+        copy=False,
+    )
 
     # This field is populated via Integrations, but also used in emails
     is_guest_checkout = fields.Boolean(
@@ -57,6 +62,12 @@ class SaleOrder(models.Model):
         # Call the parent method once for all records
         res = super().action_confirm()
 
+        # Send confirmation email
+        self.send_confirmation_email()
+
+        # Disable the flag post-confirmation to prevent duplicate emails
+        self.to_send_confirmation_email = False
+
         # Update original_commitment_date for each record after confirmation
         for rec in self:
             rec.original_commitment_date = self.commitment_date or self.expected_date
@@ -65,8 +76,6 @@ class SaleOrder(models.Model):
     @api.onchange("partner_id")
     def _onchange_partner_id_sale_order_tag_ids(self):
         self.tag_ids = self.partner_id.sale_order_tag_ids
-
-
 
     def get_quote_report_data(self):
         """Get the Sale Order related report data"""
@@ -83,7 +92,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
 
         order_data = {
-            'product_lines': [],
+            "product_lines": [],
         }
 
         product_lines = self.order_line.filtered(lambda l: not l.is_delivery)
@@ -104,20 +113,59 @@ class SaleOrder(models.Model):
             #     sorted_quote_lines = False
 
             order_line_data = {
-                'order_line': sale_order_line,
-                'quote_config': quote_config,
-                'quote_lines': sorted_quote_lines,
+                "order_line": sale_order_line,
+                "quote_config": quote_config,
+                "quote_lines": sorted_quote_lines,
             }
 
-            order_data['product_lines'].append(order_line_data)
+            order_data["product_lines"].append(order_line_data)
 
         # Set the shipping lines
         shipping_lines = self.order_line.filtered(lambda l: l.is_delivery)
 
-        order_data['shipping_lines'] = shipping_lines
-        order_data['product_subtotal_amount'] = sum(product_lines.mapped('price_subtotal'))
-        order_data['shipping_subtotal_amount'] = sum(shipping_lines.mapped('price_subtotal'))
+        order_data["shipping_lines"] = shipping_lines
+        order_data["product_subtotal_amount"] = sum(
+            product_lines.mapped("price_subtotal")
+        )
+        order_data["shipping_subtotal_amount"] = sum(
+            shipping_lines.mapped("price_subtotal")
+        )
 
         return order_data
+
+    def _send_order_confirmation_mail(self):
+        """
+        We don't want core to send anything, we handle the order confirmation email ourselves
+        """
+        return
+
+    def toggle_confirmation_email(self):
+        """
+        Toggle whether to send the email or not
+        """
+        for order in self:
+            order.to_send_confirmation_email = not order.to_send_confirmation_email
+
+    def send_confirmation_email(self):
+        """
+        Send a Sale Order confirmation email
+        """
+        self.ensure_one()
+
+        if not self.to_send_confirmation_email:
+            return
+
+        # Create and send the email based on the confirmation template immediately
+        self.env.ref(
+            "ol_sale.order_confirmation_email_template"
+        ).send_email_with_terms_and_conditions(self.company_id, self.id)
+
+    def action_open_forward_confirmation_email_wizard(self):
+        """Open forward confirmation wizard"""
+        self.ensure_one()
+
+        return self.env.ref("ol_sale.action_forward_confirmation_email_wizard").read()[
+            0
+        ]
 
     # END #########

@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-  <template id="payment">
-    <div class="ol_block_title" t-esc="block_title"/>
-    <div class="ol_block_data" t-esc="payment_method.get_display_name()"/>
-  </template>
+    <template id="payment">
+        <div class="ol_block_title" t-esc="block_title"/>
+        <div class="ol_block_data" t-esc="payment_method.get_display_name()"/>
+    </template>
 
 </odoo>

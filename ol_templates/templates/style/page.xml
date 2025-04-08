@@ -1,754 +1,755 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <template id="report_page_style">
-    <!-- We need to define specific styles for each section header/page/footer -->
-    <t t-call="ol_templates.ol_flex_style"/>
-    <style>
-      /****** General settings ******/
-      * {
-        font-family: 'Heebo', sans-serif;
-      }
-
-      strong {
-      font-weight: 600;
-      }
-
-      .article {
-      padding: 5px 0 0 0;
-      font-size: 13px;
-      line-height: 16px;
-      color: #595A5C;
-      }
-
-      .ol-document-section {
-      margin-top: 30px;
-      }
-
-      .ol-document-section .content > div {
-      margin-top: 15px;
-      }
-
-      .ol-section-title {
-      text-align: left;
-      font-size: 18px;
-      border-bottom: solid #595A5C 1px;
-      padding-bottom: 7px;
-      margin-bottom: 1px;
-      }
-
-      .ol-section-title > div {
-      display: inline-block;
-      font-size: 12px;
-      font-weight: 600;
-      }
-
-      .ol-section-title .product-name {
-      width: 390px;
-      }
-
-      /****** Info section settings ******/
-      .ol_doc_info {
-      float: left;
-      width: 50%;
-      }
-
-      .ol_doc_info_row span {
-      width: 150px;
-      display: inline-block;
-      }
-
-      .ol_doc_info_row .key {
-      font-weight: 600;
-      }
-
-      .ol-address {
-      display: inline-block;
-      width: 49%;
-      }
-
-      .ol-address .ol-address-text {
-      font-weight: 600;
-      font-size: 16px;
-      line-height: normal;
-      }
-
-      .ol-phone-icon,
-      .ol-email-icon {
-      width: 20px;
-      display: inline-block;
-      vertical-align: middle;
-      }
-
-      /* PDF rendering is dumb for this one icon, hence the weird dimensions */
-      .ol-phone-icon img {
-      height: 13px;
-      width: 25px;
-      margin-left: -5px;
-      display: inline-block;
-      }
-
-      .ol-address-phone p,
-      .ol-address-email p {
-      display: inline-block;
-      margin: 0px;
-      vertical-align: middle;
-      max-width: calc(100% - 30px);
-      }
-
-      .ol-email-icon img {
-      height: 8px;
-      width: 13px;
-      display: inline-block;
-      }
-
-      .ol-account-manager {
-      float: left;
-      width: 350px;
-      }
-
-      .ol-account-manager-image {
-      float: left;
-      }
-
-      .ol-account-manager-image img {
-      width: 40px;
-      border-radius: 50%;
-      padding: 0;
-      margin: 10px 20px 10px 0px;
-      }
-
-      .ol-shipping-and-payment {
-      display: inline-block;
-      width: 30%;
-      float: right;
-      }
-
-      /****** Sale line blocks ******/
-
-      .ol-sale-line {
-      width: 100%;
-      display: inline-block;
-      }
-
-      .line-info {
-      display: table;
-      width: 80%;
-      }
-
-      .product-image {
-      float: left;
-      margin-right: 45px;
-      }
-
-      .product-image img {
-      width: 75px;
-      }
-
-      .product-info {
-      }
-
-      .product-info > div {
-      display: table-cell;
-      }
-
-      .product-name {
-      width: 375px;
-      }
-
-      .product-price {
-      width: 100px;
-      text-align: right;
-      }
-
-      .product-qty {
-      width: 100px;
-      text-align: right;
-      }
-
-      .product-subtotal {
-      width: 100px;
-      text-align: right;
-      }
-
-      .system-configuration {
-        line-height: 160%;
-        margin-top: 10px;
-        width: 100%;
-      }
-      .system-configuration-line > span {
-      display: inline-block;
-      text-align: left;
-      font-size: 11px;
-      }
-
-      .system-configuration-attribute {
-      width: 25%;
-      }
-
-      .system-configuration-attribute.ol_slip {
-      width: 75%;
-      margin-left: 5%;
-      }
-
-      .system-configuration-product.ol_slip{
-      width: 20%;
-      }
-
-      .system-configuration-product{
-      width: 75%;
-      }
-
-      .product-notes {
-      page-break-inside: avoid;
-      background-color: #F3F3F3;
-      width: 100%;
-      padding: 10px;
-      margin-top: 15px;
-      }
-
-      .product-notes tag {
-        font-size: 16px;
-      }
-
-      .ol-sale-line-spacer {
-      border-bottom: dashed #E6E6E6 1px;
-      margin-top: 10px;
-      margin-bottom: 10px;
-      }
-
-      .product-info table {
-      width: 300px;
-      color: #595A5C;
-      }
-
-      /****** Shipping blocks ******/
-
-      .shipping-info {
-      width: 100%;
-      height: 100px;
-      }
-
-      .shipping-info > div {
-      display: inline-block;
-      width: 235px;
-      float: left;
-      }
-
-      .product-subtotal {
-      text-align: right;
-      }
-
-
-      /****** Totals blocks ******/
-
-      .order-notes {
-      background-color: #F3F3F3;
-      width: 100%;
-      min-height: 100px;
-      padding: 10px;
-      }
-
-      .order-notes tag {
-        font-size: 16px;
-      }
-
-      .balance-due {
-      margin-top: 25px;
-      background-color: #F3F3F3;
-      width: 100%;
-      min-height: 40px;
-      padding: 10px;
-      font-weight: 600;
-      font-size: 16px;
-      line-height: normal;
-      }
-
-      .subtotals {
-      width: 50%;
-      float: right;
-      }
-
-      .ol_report_info_row .ol-address {
-      display: block;
-      float: none;
-      clear: both;
-      width: initial;
-      line-height: 15px;
-      }
-
-      .ol_report_info_row_col.billing,
-      .ol_report_info_row_col.shipping{
-      width: 28%;
-      }
-
-      .ol_report_info_row_col_title .key,
-      .ol_report_info_row_col_line .key {
-        width: 135px;
-      }
-
-      .ol_report_info_row_col_title .value,
-      .ol_report_info_row_col_line .value {
-      width: 120px;
-      }
-
-      .ol_report_info_row_col.info .ol_report_info_row_col_title .key,
-      .ol_report_info_row_col.info .ol_report_info_row_col_title .value {
-      font-weight: 600;
-      font-size: 16px;
-      line-height: normal;
-      }
-
-      .ol_report_info_row_col.info {
-      line-height: 15px;
-      }
-
-      .ol_report_info_row_col.billing,
-      .ol_report_info_row_col.shipping{
-      width: 170px;
-      margin-left: 20px;
-      }
-
-      .ol_block_title {
-      font-weight: 600;
-      line-height: 15px;
-      margin-top: 15px;
-      }
-
-      .ol_block_data,
-      .ol-tracking-numbers {
-      line-height: 15px;
-      }
-
-      .ol_report_products_row {
-      margin-top: 50px;
-      }
-
-      .ol_products_title {
-      width: 56.5%;
-      font-weight: 600;
-      font-size: 16px;
-      line-height: 15px;
-      }
-
-      .ol_products_list_header {
-      width: 43.5%;
-      }
-
-      .ol_products_list_header.ol_slip,
-      .ol_products_list_header.ol_picking {
-      width: 100%;
-      }
-
-      .ol_products_header {
-      border-bottom: 1px solid #595A5C;
-      font-weight: 600;
-      font-size: 16px;
-      line-height: 15px;
-      padding-bottom: 5px;
-      }
-
-      .ol_product_default_code {
-      font-size: 14px;
-      line-height: 15px;
-      }
-
-      .ol_products_line{
-      page-break-inside: avoid;
-      padding: 20px 0 25px 0;
-      border-bottom: 1px #eee dashed;
-      }
-
-      .ol_products_line:last-child {
-      padding: 20px 0 0 0;
-      border-bottom: none;
-      }
-
-      .ol_products_line_info {
-      width: 90%;
-      }
-
-      .ol_product_image{
-      text-align: center;
-      width: 10%;
-      }
-
-      .ol_product_image img{
-      width: 56px;
-      }
-
-      .ol_product_data{
-      width: 90%;
-      padding-left: 25px;
-      }
-
-      .product_info_name {
-      width: 50%;
-      }
-
-      .product_info_name.ol_changed{
-      padding: 0;
-      }
-
-      .ol_products_line_data{
-        width: 50%;
-        font-size: 16px;
-        font-weight: 300;
-      }
-
-      .ol_products_line_data.ol_refund{
-      width: 35%;
-      }
-
-      .ol_products_line_data.tier-pricing{
-      width: 100%;
-      }
-
-      .ol_products_line_data_item.product_subtotal {
-      text-align: right;
-      width: 35%;
-      }
-
-      .ol_products_line_data_item.product_qty {
-      width: 20%;
-      }
-
-      .ol_products_line_data_item.product_price {
-      width: 45%;
-      text-align: left;
-      }
-
-      .ol_product_name {
-      font-weight: 600;
-      font-size: 16px;
-      }
-
-      .ol_product_name.compressed {
-      font-weight: 300;
-      }
-
-      .ol_products_system_configuration.ol_slip {
-      margin-left: 0;
-      padding-left: 0;
-      }
-
-
-      .ol_products_info_cont.ol_picking .ol_products_line_data_item.product_qty,
-      .ol_products_info_cont.ol_slip .ol_products_line_data_item.product_qty{
-      width: 5%;
-      }
-
-      .ol_products_info_cont.ol_slip > .ol_product_name{
-      width: 75%;
-      }
-
-      .ol_products_info_cont.ol_picking > .ol_product_name{
-      width: 35%;
-      font-weight: 100;
-      font-size: 12px;
-      }
-
-      .ol_products_info_cont.ol_slip > .ol_product_default_code{
-      width: 25%;
-      }
-
-      .ol_products_info_cont.ol_picking > .ol_product_location{
-      width: 15%;
-      }
-
-      .ol_products_info_cont.ol_picking > .ol_product_default_code,
-      .ol_products_info_cont.ol_picking > .ol_product_default_code{
-      width: 25%;
-      }
-
-      .ol_products_system_configuration.ol_product_destination {
-      margin-left: 0;
-      padding-left: 0;
-      }
-
-      .order-notes ul{
-      list-style-position: inside;
-      }
-
-      .ol_report_order_notes_full{
-      width: 100%;
-      }
-
-      .ol_report_order_notes_full .order_notes {
-        font-size: 16px;
-      }
-
-      .ol_report_order_notes,
-      .ol_report_totals{
-      width: 50%;
-      }
-
-
-      .ol_products_line_data.tier-pricing:not(:first-child) {
-      color: #999999;
-      }
-
-      .ol_report_totals {
-        font-size: 16px;
-        line-height: 180%;
-        padding: 0 0 0 20px;
-      }
-
-      .ol_report_notes_and_totals {
-      margin: 50px 0 20px 0;
-      }
-
-      .subtotal-text {
-      font-size: inherit;
-      }
-
-      .grand-total {
-      font-weight: 600;
-      font-size: 16px;
-      }
-
-      .ol_residual{
-      margin-top: 20px;
-      }
-
-      .ol_changed_items_title {
-      border-bottom: 1px solid #595A5C;
-      }
-
-      .ol_margin_top_20{
-      margin-top: 20px;
-      }
-
-      .ol_margin_top_10{
-      margin-top: 10px;
-      }
-
-      .ol_margin_top_5{
-      margin-top: 5px;
-      }
-
-      .ol_margin_right_20{
-      margin-right: 20px;
-      }
-
-      .ol_margin_right_10{
-      margin-right: 10px;
-      }
-
-      .ol_margin_right_5{
-      margin-right: 5px;
-      }
-
-      .ol_margin_bottom_20{
-      margin-bottom: 20px;
-      }
-
-      .ol_margin_bottom_10{
-      margin-bottom: 10px;
-      }
-
-      .ol_margin_bottom_5{
-      margin-bottom: 5px;
-      }
-
-
-      .ol_margin_left_20{
-      margin-left: 20px;
-      }
-
-      .ol_margin_left_10{
-      margin-left: 10px;
-      }
-
-      .ol_margin_left_5{
-      margin-left: 5px;
-      }
-
-      .ol_product_name{
-      line-height: 120%;
-      }
-
-      .ol_account_manager_name{
-      margin-bottom: 5px;
-      }
-
-      .ol_product_name.ol_picking,
-      .ol_product_name.ol_slip{
-      line-height: 170%;
-      }
-
-      .ol_account_manager_pic {
-      float: none;
-      }
-
-      .ol_account_manager_pic img {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      padding: 0;
-      margin: 10px 20px 10px 0px;
-      }
-
-      .account_manager_title{
-        font-size: 16px;
-        font-weight: 600;
-      }
-
-      .ol-email-icon img {
-      height: inherit;
-      width: 10px;
-      display: inline-block;
-      }
-
-      .ol-email-icon.email img {
-      width: 14px;
-      }
-
-      .ol_packing_closing_text {
-        font-size: 16px;
-        font-weight: 600;
-        margin-top: 50px;
-      }
-
-      .ol_products_list_header_item.qty{
-      width: 5%;
-      }
-
-      .ol_products_list_header_item.products{
-      width: 75%;
-      }
-
-      .ol_products_list_header_item.model{
-      width: 20%;
-      }
-
-      .ol_products_list_header.ol_picking .ol_products_list_header_item.products{
-      width: 35%;
-      }
-
-      .ol_products_list_header.ol_picking .ol_products_list_header_item.model{
-      width: 25%;
-      }
-
-      .ol_products_list_header.ol_picking .ol_products_list_header_item.location{
-      width: 15%;
-      }
-
-      .ol_products_list_header.ol_picking .ol_products_list_header_item.destination{
-      width: 25%;
-      }
-
-      .ol_picking_comments_header {
-      border-bottom: 1px solid #595A5C;
-      color: #595A5C;
-      font-weight: 600;
-      font-size: 16px;
-      margin-top: 50px;
-      }
-
-      .ol_report_info_row_col.picking_extra {
-      width: 40%;
-      }
-
-      .ol_account_manager_info {
-      padding: 10px 0 0 0;
-      }
-
-      .ol_report_footer_terms a {
-      text-decoration: none;
-      color: #59595b;
-      }
-
-      .ol_account_manager_email {
-      margin-top: 2px;
-      }
-
-      .ol_quote_closing_text {
-      font-size: 11px;
-      }
-
-      .picking_extra > .ol_report_info_row_col_line .key {
-      width: 150px;
-      }
-
-      .ol_product_default_code.ol_picking {
-      font-size: 14px;
-      line-height: 16px;
-      }
-
-      .product_line.ol_picking {
-      padding: 10px 0;
-      }
-
-      .ol_report_products_row.ol_picking{
-      margin-top: 20px;
-      }
-
-      .ol_report_info_row_col.info.picking{
-      width: 350px;
-      }
-
-      .ol_report_info_row_col_title.picking .value,
-      .ol_report_info_row_col_line.picking .value{
-      width: 200px;
-      }
-
-      .ol_products_main_cont,
-      .ol_report_notes_and_totals,
-      .ol-document-section,
-      .ol-serial-numbers-cont{
-      page-break-inside: avoid;
-      }
-
-      .ol-serial-number{
-      width: 24%;
-      display: inline-block;
-      }
-
-      .ol-serial-numbers-title {
-        margin-bottom: 10px;
-      }
-
-      .ol_products_line_data_item.product_qty.packing,
-      .ol_product_default_code.ol_picking.packing,
-      .ol_product_name.ol_slip.packing,
-      .ol_product_location.packing,
-      .ol_product_default_code.packing{
-      font-size: 16px;
-      line-height: 16px;
-      font-weight: 600;
-      }
-
-      .product_info_name.ol_invoice_lines{
-      width: 65%;
-      }
-
-      .ol_product_data.ol_invoice_lines{
-      width: 100%;
-      padding-left: 0;
-      }
-
-      .ol_watermark {
-      position: absolute;
-      opacity: 0.30;
-      z-index: 1000;
-      transform: rotate(320deg);
-      -webkit-transform: rotate(320deg);
-      font-weight: 600;
-      font-size: 55px;
-      }
-
-      .ol_shipment_block{
-      width: 50%;
-      padding: 0 0 0 20px;
-      }
-
-      .order-notes,
-      .order-notes div{
-      overflow-wrap: break-word;
-      }
-
-      /***** Additional specific styling *****/
-      <t t-set="report_custom_page_style"/>
-    </style>
-  </template>
+
+    <template id="report_page_style">
+        <!-- We need to define specific styles for each section header/page/footer -->
+        <t t-call="ol_templates.ol_flex_style"/>
+        <style>
+          /****** General settings ******/
+          * {
+            font-family: 'Heebo', sans-serif;
+          }
+
+          strong {
+          font-weight: 600;
+          }
+
+          .article {
+          padding: 5px 0 0 0;
+          font-size: 13px;
+          line-height: 16px;
+          color: #595A5C;
+          }
+
+          .ol-document-section {
+          margin-top: 30px;
+          }
+
+          .ol-document-section .content > div {
+          margin-top: 15px;
+          }
+
+          .ol-section-title {
+          text-align: left;
+          font-size: 18px;
+          border-bottom: solid #595A5C 1px;
+          padding-bottom: 7px;
+          margin-bottom: 1px;
+          }
+
+          .ol-section-title > div {
+          display: inline-block;
+          font-size: 12px;
+          font-weight: 600;
+          }
+
+          .ol-section-title .product-name {
+          width: 390px;
+          }
+
+          /****** Info section settings ******/
+          .ol_doc_info {
+          float: left;
+          width: 50%;
+          }
+
+          .ol_doc_info_row span {
+          width: 150px;
+          display: inline-block;
+          }
+
+          .ol_doc_info_row .key {
+          font-weight: 600;
+          }
+
+          .ol-address {
+          display: inline-block;
+          width: 49%;
+          }
+
+          .ol-address .ol-address-text {
+          font-weight: 600;
+          font-size: 16px;
+          line-height: normal;
+          }
+
+          .ol-phone-icon,
+          .ol-email-icon {
+          width: 20px;
+          display: inline-block;
+          vertical-align: middle;
+          }
+
+          /* PDF rendering is dumb for this one icon, hence the weird dimensions */
+          .ol-phone-icon img {
+          height: 13px;
+          width: 25px;
+          margin-left: -5px;
+          display: inline-block;
+          }
+
+          .ol-address-phone p,
+          .ol-address-email p {
+          display: inline-block;
+          margin: 0px;
+          vertical-align: middle;
+          max-width: calc(100% - 30px);
+          }
+
+          .ol-email-icon img {
+          height: 8px;
+          width: 13px;
+          display: inline-block;
+          }
+
+          .ol-account-manager {
+          float: left;
+          width: 350px;
+          }
+
+          .ol-account-manager-image {
+          float: left;
+          }
+
+          .ol-account-manager-image img {
+          width: 40px;
+          border-radius: 50%;
+          padding: 0;
+          margin: 10px 20px 10px 0px;
+          }
+
+          .ol-shipping-and-payment {
+          display: inline-block;
+          width: 30%;
+          float: right;
+          }
+
+          /****** Sale line blocks ******/
+
+          .ol-sale-line {
+          width: 100%;
+          display: inline-block;
+          }
+
+          .line-info {
+          display: table;
+          width: 80%;
+          }
+
+          .product-image {
+          float: left;
+          margin-right: 45px;
+          }
+
+          .product-image img {
+          width: 75px;
+          }
+
+          .product-info {
+          }
+
+          .product-info > div {
+          display: table-cell;
+          }
+
+          .product-name {
+          width: 375px;
+          }
+
+          .product-price {
+          width: 100px;
+          text-align: right;
+          }
+
+          .product-qty {
+          width: 100px;
+          text-align: right;
+          }
+
+          .product-subtotal {
+          width: 100px;
+          text-align: right;
+          }
+
+          .system-configuration {
+            line-height: 160%;
+            margin-top: 10px;
+            width: 100%;
+          }
+          .system-configuration-line > span {
+          display: inline-block;
+          text-align: left;
+          font-size: 11px;
+          }
+
+          .system-configuration-attribute {
+          width: 25%;
+          }
+
+          .system-configuration-attribute.ol_slip {
+          width: 75%;
+          margin-left: 5%;
+          }
+
+          .system-configuration-product.ol_slip{
+          width: 20%;
+          }
+
+          .system-configuration-product{
+          width: 75%;
+          }
+
+          .product-notes {
+          page-break-inside: avoid;
+          background-color: #F3F3F3;
+          width: 100%;
+          padding: 10px;
+          margin-top: 15px;
+          }
+
+          .product-notes tag {
+            font-size: 16px;
+          }
+
+          .ol-sale-line-spacer {
+          border-bottom: dashed #E6E6E6 1px;
+          margin-top: 10px;
+          margin-bottom: 10px;
+          }
+
+          .product-info table {
+          width: 300px;
+          color: #595A5C;
+          }
+
+          /****** Shipping blocks ******/
+
+          .shipping-info {
+          width: 100%;
+          height: 100px;
+          }
+
+          .shipping-info > div {
+          display: inline-block;
+          width: 235px;
+          float: left;
+          }
+
+          .product-subtotal {
+          text-align: right;
+          }
+
+
+          /****** Totals blocks ******/
+
+          .order-notes {
+          background-color: #F3F3F3;
+          width: 100%;
+          min-height: 100px;
+          padding: 10px;
+          }
+
+          .order-notes tag {
+            font-size: 16px;
+          }
+
+          .balance-due {
+          margin-top: 25px;
+          background-color: #F3F3F3;
+          width: 100%;
+          min-height: 40px;
+          padding: 10px;
+          font-weight: 600;
+          font-size: 16px;
+          line-height: normal;
+          }
+
+          .subtotals {
+          width: 50%;
+          float: right;
+          }
+
+          .ol_report_info_row .ol-address {
+          display: block;
+          float: none;
+          clear: both;
+          width: initial;
+          line-height: 15px;
+          }
+
+          .ol_report_info_row_col.billing,
+          .ol_report_info_row_col.shipping{
+          width: 28%;
+          }
+
+          .ol_report_info_row_col_title .key,
+          .ol_report_info_row_col_line .key {
+            width: 135px;
+          }
+
+          .ol_report_info_row_col_title .value,
+          .ol_report_info_row_col_line .value {
+          width: 120px;
+          }
+
+          .ol_report_info_row_col.info .ol_report_info_row_col_title .key,
+          .ol_report_info_row_col.info .ol_report_info_row_col_title .value {
+          font-weight: 600;
+          font-size: 16px;
+          line-height: normal;
+          }
+
+          .ol_report_info_row_col.info {
+          line-height: 15px;
+          }
+
+          .ol_report_info_row_col.billing,
+          .ol_report_info_row_col.shipping{
+          width: 170px;
+          margin-left: 20px;
+          }
+
+          .ol_block_title {
+          font-weight: 600;
+          line-height: 15px;
+          margin-top: 15px;
+          }
+
+          .ol_block_data,
+          .ol-tracking-numbers {
+          line-height: 15px;
+          }
+
+          .ol_report_products_row {
+          margin-top: 50px;
+          }
+
+          .ol_products_title {
+          width: 56.5%;
+          font-weight: 600;
+          font-size: 16px;
+          line-height: 15px;
+          }
+
+          .ol_products_list_header {
+          width: 43.5%;
+          }
+
+          .ol_products_list_header.ol_slip,
+          .ol_products_list_header.ol_picking {
+          width: 100%;
+          }
+
+          .ol_products_header {
+          border-bottom: 1px solid #595A5C;
+          font-weight: 600;
+          font-size: 16px;
+          line-height: 15px;
+          padding-bottom: 5px;
+          }
+
+          .ol_product_default_code {
+          font-size: 14px;
+          line-height: 15px;
+          }
+
+          .ol_products_line{
+          page-break-inside: avoid;
+          padding: 20px 0 25px 0;
+          border-bottom: 1px #eee dashed;
+          }
+
+          .ol_products_line:last-child {
+          padding: 20px 0 0 0;
+          border-bottom: none;
+          }
+
+          .ol_products_line_info {
+          width: 90%;
+          }
+
+          .ol_product_image{
+          text-align: center;
+          width: 10%;
+          }
+
+          .ol_product_image img{
+          width: 56px;
+          }
+
+          .ol_product_data{
+          width: 90%;
+          padding-left: 25px;
+          }
+
+          .product_info_name {
+          width: 50%;
+          }
+
+          .product_info_name.ol_changed{
+          padding: 0;
+          }
+
+          .ol_products_line_data{
+            width: 50%;
+            font-size: 16px;
+            font-weight: 300;
+          }
+
+          .ol_products_line_data.ol_refund{
+          width: 35%;
+          }
+
+          .ol_products_line_data.tier-pricing{
+          width: 100%;
+          }
+
+          .ol_products_line_data_item.product_subtotal {
+          text-align: right;
+          width: 35%;
+          }
+
+          .ol_products_line_data_item.product_qty {
+          width: 20%;
+          }
+
+          .ol_products_line_data_item.product_price {
+          width: 45%;
+          text-align: left;
+          }
+
+          .ol_product_name {
+          font-weight: 600;
+          font-size: 16px;
+          }
+
+          .ol_product_name.compressed {
+          font-weight: 300;
+          }
+
+          .ol_products_system_configuration.ol_slip {
+          margin-left: 0;
+          padding-left: 0;
+          }
+
+
+          .ol_products_info_cont.ol_picking .ol_products_line_data_item.product_qty,
+          .ol_products_info_cont.ol_slip .ol_products_line_data_item.product_qty{
+          width: 5%;
+          }
+
+          .ol_products_info_cont.ol_slip > .ol_product_name{
+          width: 75%;
+          }
+
+          .ol_products_info_cont.ol_picking > .ol_product_name{
+          width: 35%;
+          font-weight: 100;
+          font-size: 12px;
+          }
+
+          .ol_products_info_cont.ol_slip > .ol_product_default_code{
+          width: 25%;
+          }
+
+          .ol_products_info_cont.ol_picking > .ol_product_location{
+          width: 15%;
+          }
+
+          .ol_products_info_cont.ol_picking > .ol_product_default_code,
+          .ol_products_info_cont.ol_picking > .ol_product_default_code{
+          width: 25%;
+          }
+
+          .ol_products_system_configuration.ol_product_destination {
+          margin-left: 0;
+          padding-left: 0;
+          }
+
+          .order-notes ul{
+          list-style-position: inside;
+          }
+
+          .ol_report_order_notes_full{
+          width: 100%;
+          }
+
+          .ol_report_order_notes_full .order_notes {
+            font-size: 16px;
+          }
+
+          .ol_report_order_notes,
+          .ol_report_totals{
+          width: 50%;
+          }
+
+
+          .ol_products_line_data.tier-pricing:not(:first-child) {
+          color: #999999;
+          }
+
+          .ol_report_totals {
+            font-size: 16px;
+            line-height: 180%;
+            padding: 0 0 0 20px;
+          }
+
+          .ol_report_notes_and_totals {
+          margin: 50px 0 20px 0;
+          }
+
+          .subtotal-text {
+          font-size: inherit;
+          }
+
+          .grand-total {
+          font-weight: 600;
+          font-size: 16px;
+          }
+
+          .ol_residual{
+          margin-top: 20px;
+          }
+
+          .ol_changed_items_title {
+          border-bottom: 1px solid #595A5C;
+          }
+
+          .ol_margin_top_20{
+          margin-top: 20px;
+          }
+
+          .ol_margin_top_10{
+          margin-top: 10px;
+          }
+
+          .ol_margin_top_5{
+          margin-top: 5px;
+          }
+
+          .ol_margin_right_20{
+          margin-right: 20px;
+          }
+
+          .ol_margin_right_10{
+          margin-right: 10px;
+          }
+
+          .ol_margin_right_5{
+          margin-right: 5px;
+          }
+
+          .ol_margin_bottom_20{
+          margin-bottom: 20px;
+          }
+
+          .ol_margin_bottom_10{
+          margin-bottom: 10px;
+          }
+
+          .ol_margin_bottom_5{
+          margin-bottom: 5px;
+          }
+
+
+          .ol_margin_left_20{
+          margin-left: 20px;
+          }
+
+          .ol_margin_left_10{
+          margin-left: 10px;
+          }
+
+          .ol_margin_left_5{
+          margin-left: 5px;
+          }
+
+          .ol_product_name{
+          line-height: 120%;
+          }
+
+          .ol_account_manager_name{
+          margin-bottom: 5px;
+          }
+
+          .ol_product_name.ol_picking,
+          .ol_product_name.ol_slip{
+          line-height: 170%;
+          }
+
+          .ol_account_manager_pic {
+          float: none;
+          }
+
+          .ol_account_manager_pic img {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          padding: 0;
+          margin: 10px 20px 10px 0px;
+          }
+
+          .account_manager_title{
+            font-size: 16px;
+            font-weight: 600;
+          }
+
+          .ol-email-icon img {
+          height: inherit;
+          width: 10px;
+          display: inline-block;
+          }
+
+          .ol-email-icon.email img {
+          width: 14px;
+          }
+
+          .ol_packing_closing_text {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 50px;
+          }
+
+          .ol_products_list_header_item.qty{
+          width: 5%;
+          }
+
+          .ol_products_list_header_item.products{
+          width: 75%;
+          }
+
+          .ol_products_list_header_item.model{
+          width: 20%;
+          }
+
+          .ol_products_list_header.ol_picking .ol_products_list_header_item.products{
+          width: 35%;
+          }
+
+          .ol_products_list_header.ol_picking .ol_products_list_header_item.model{
+          width: 25%;
+          }
+
+          .ol_products_list_header.ol_picking .ol_products_list_header_item.location{
+          width: 15%;
+          }
+
+          .ol_products_list_header.ol_picking .ol_products_list_header_item.destination{
+          width: 25%;
+          }
+
+          .ol_picking_comments_header {
+          border-bottom: 1px solid #595A5C;
+          color: #595A5C;
+          font-weight: 600;
+          font-size: 16px;
+          margin-top: 50px;
+          }
+
+          .ol_report_info_row_col.picking_extra {
+          width: 40%;
+          }
+
+          .ol_account_manager_info {
+          padding: 10px 0 0 0;
+          }
+
+          .ol_report_footer_terms a {
+          text-decoration: none;
+          color: #59595b;
+          }
+
+          .ol_account_manager_email {
+          margin-top: 2px;
+          }
+
+          .ol_quote_closing_text {
+          font-size: 11px;
+          }
+
+          .picking_extra > .ol_report_info_row_col_line .key {
+          width: 150px;
+          }
+
+          .ol_product_default_code.ol_picking {
+          font-size: 14px;
+          line-height: 16px;
+          }
+
+          .product_line.ol_picking {
+          padding: 10px 0;
+          }
+
+          .ol_report_products_row.ol_picking{
+          margin-top: 20px;
+          }
+
+          .ol_report_info_row_col.info.picking{
+          width: 350px;
+          }
+
+          .ol_report_info_row_col_title.picking .value,
+          .ol_report_info_row_col_line.picking .value{
+          width: 200px;
+          }
+
+          .ol_products_main_cont,
+          .ol_report_notes_and_totals,
+          .ol-document-section,
+          .ol-serial-numbers-cont{
+          page-break-inside: avoid;
+          }
+
+          .ol-serial-number{
+          width: 24%;
+          display: inline-block;
+          }
+
+          .ol-serial-numbers-title {
+            margin-bottom: 10px;
+          }
+
+          .ol_products_line_data_item.product_qty.packing,
+          .ol_product_default_code.ol_picking.packing,
+          .ol_product_name.ol_slip.packing,
+          .ol_product_location.packing,
+          .ol_product_default_code.packing{
+          font-size: 16px;
+          line-height: 16px;
+          font-weight: 600;
+          }
+
+          .product_info_name.ol_invoice_lines{
+          width: 65%;
+          }
+
+          .ol_product_data.ol_invoice_lines{
+          width: 100%;
+          padding-left: 0;
+          }
+
+          .ol_watermark {
+          position: absolute;
+          opacity: 0.30;
+          z-index: 1000;
+          transform: rotate(320deg);
+          -webkit-transform: rotate(320deg);
+          font-weight: 600;
+          font-size: 55px;
+          }
+
+          .ol_shipment_block{
+          width: 50%;
+          padding: 0 0 0 20px;
+          }
+
+          .order-notes,
+          .order-notes div{
+          overflow-wrap: break-word;
+          }
+
+          /***** Additional specific styling *****/
+          <t t-set="report_custom_page_style"/>
+        </style>
+    </template>
+
 </odoo>

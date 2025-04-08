@@ -1,1700 +1,1290 @@
-<?xml version="1.0"?>
 <odoo>
-  <template id="ol_templates.ol_email">
-    <!--
+    <template id="ol_templates.ol_email">
+        <!--
         === Expected inputs ===
         - title: The title of the email
         - preheader_text: inbox preview text
         - body should be inside call of the template
         - include_newsletter_disclaimer: boolean to turn the newsletter text on or off
-    -->
-
-    <t t-if="not company">
-      <!-- Multicompany -->
-      <t t-if="company_id">
-        <t t-set="company" t-value="company_id"/>
-      </t>
-      <t t-elif="o and 'company_id' in o">
-        <t t-set="company" t-value="o.company_id.sudo()"/>
-      </t>
-      <t t-else="else">
-        <t t-set="company" t-value="res_company"/>
-      </t>
-    </t>
-
-    <head>
-      <meta charset="utf-8"/> <!-- utf-8 works for most cases -->
-      <meta name="viewport" content="width=device-width"/> <!-- Forcing initial-scale shouldn't be necessary -->
-      <meta http-equiv="X-UA-Compatible"
-            content="IE=edge"/> <!-- Use the latest (edge) version of IE rendering engine -->
-      <meta name="x-apple-disable-message-reformatting"/>  <!-- Disable auto-scale in iOS 10 Mail entirely -->
-      <title t-esc="title"/> <!-- The title tag shows in email notifications, like Android 4.4. -->
-
-
-      <!-- Web Font / @font-face : BEGIN -->
-      <!-- NOTE: If web fonts are not required, lines 10 - 27 can be safely removed. -->
-
-      <!-- Desktop Outlook chokes on web font references and defaults to Times New Roman, so we force a safe fallback font. -->
-      <!--[if mso]>
-          <style>
-          * {
-          font-family: sans-serif !important;
-          }
-          </style>
-          <![endif]-->
-
-      <!-- All other clients get the webfont reference; some will render the font and others will silently fail to the fallbacks. More on that here: http://stylecampaign.com/blog/2015/02/webfont-support-in-email/ -->
-      <!--[if !mso]><!-->
-      <link href='https://fonts.googleapis.com/css?family=Heebo:400,500' rel='stylesheet' type='text/css'/>
-      <!--<![endif]-->
-
-      <!-- Web Font / @font-face : END -->
-      <!-- CSS Reset : BEGIN -->
-      <style>
-
-        /* What it does: Remove spaces around the email design added by some email clients. */
-        /* Beware: It can remove the padding / margin and add a background color to the compose a reply window. */
-        html,
-        body {
-        margin: 0 auto !important;
-        padding: 0 !important;
-        height: 100% !important;
-        width: 100% !important;
-        }
-
-        /* What it does: Stops email clients resizing small text. */
-        * {
-        -ms-text-size-adjust: 100%;
-        -webkit-text-size-adjust: 100%;
-        }
-
-        * {
-        font-family: 'Heebo', sans-serif !important;
-        }
-
-        /* What it does: Centers email on Android 4.4 */
-        div[style*="margin: 16px 0"] {
-        margin: 0 !important;
-        }
-
-        /* What it does: Stops Outlook from adding extra spacing to tables. */
-        table,
-        td {
-        mso-table-lspace: 0pt !important;
-        mso-table-rspace: 0pt !important;
-        }
-
-        /* What it does: Fixes webkit padding issue. Fix for Yahoo mail table alignment bug. Applies table-layout to the
-        first 2 tables then removes for anything nested deeper. */
-        table {
-        border-spacing: 0 !important;
-        border-collapse: collapse !important;
-        table-layout: fixed !important;
-        margin: 0 auto !important;
-        }
-        table table table {
-        table-layout: auto;
-        }
-
-        /* What it does: Uses a better rendering method when resizing images in IE. */
-        img {
-        -ms-interpolation-mode:bicubic;
-        }
-
-        /* What it does: Prevents Gmail from displaying an download button on large, non-linked images. */
-        .a6S {
-        display: none !important;
-        opacity: 0.01 !important;
-        }
-        /* If the above doesn't work, add a .g-img class to any image in question. */
-        img.g-img + div {
-        display: none !important;
-        }
-
-        /* What it does: Prevents underlining the button text in Windows 10 */
-        .button-link {
-        text-decoration: none !important;
-        }
-
-        /* What it does: Removes right gutter in Gmail iOS app */
-        /* Create one of these media queries for each additional viewport size you'd like to fix */
-        /* Thanks to Eric Lepetit @ericlepetitsf) for help troubleshooting */
-        @media only screen and (min-device-width: 375px) and (max-device-width: 413px) { /* iPhone 6 and 6+ */
-        .email-container {
-        min-width: 375px !important;
-        }
-        }
-
-        /* What it does: Forces Gmail app to display email full width */
-        div > u ~ div .gmail {
-        min-width: 100vw;
-        }
-
-      </style>
-      <!-- CSS Reset : END -->
-
-      <!-- Progressive Enhancements : BEGIN -->
-      <style>
-
-        /* What it does: Hover styles for buttons */
-        .button-td,
-        .button-a {
-        transition: all 100ms ease-in;
-        }
-        .button-td:hover,
-        .button-a:hover {
-        background: #555555 !important;
-        border-color: #555555 !important;
-        }
-
-        /* What it does: Seperates 'Bill To' and 'Ship To'
-        * Remove it when they stack.
-        */
-        .stack-column:first-of-type {
-        border-left: none !important;
-        }
-        @media (max-width: 610px) {
-        .stack-column {
-        border-left: none !important;
-        }
-        }
-
-        /* Media Queries */
-        @media screen and (max-width: 480px) {
-
-        /* What it does: Forces elements to resize to the full width of their container. Useful for resizing images
-        beyond their max-width. */
-        .fluid {
-        width: 100% !important;
-        max-width: 100% !important;
-        height: auto !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-        }
-
-        /* What it does: Forces table cells into full-width rows. */
-        .stack-column,
-        .stack-column-center {
-        display: block !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        direction: ltr !important;
-        }
-        /* And center justify these ones. */
-        .stack-column-center {
-        text-align: center !important;
-        }
-
-        /* What it does: Generic utility class for centering. Useful for images, buttons, and nested tables. */
-        .center-on-narrow {
-        text-align: center !important;
-        display: block !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-        float: none !important;
-        }
-        table.center-on-narrow {
-        display: inline-block !important;
-        }
-        .email-container {
-        margin-bottom: 0!important;
-        }
-        }
-
-      </style>
-      <!-- Progressive Enhancements : END -->
-
-      <!-- What it does: Makes background images in 72ppi Outlook render at correct size. -->
-      <!--[if gte mso 9]>
-          <xml>
-          <o:OfficeDocumentSettings>
-          <o:AllowPNG/>
-          <o:PixelsPerInch>96</o:PixelsPerInch>
-          </o:OfficeDocumentSettings>
-          </xml>
-          <![endif]-->
-    </head>
-    <body width="100%" bgcolor="#f3f3f3" style="margin: 0; mso-line-height-rule: exactly;">
-      <center style="width: 100%; text-align: left; padding: 20px 0;">
-
-        <!-- Visually Hidden Preheader Text : BEGIN -->
-        <div style="display: none !important; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: sans-serif;">
-          <t t-esc="preheader_text or ''"/>
-        </div>
-        <!-- Visually Hidden Preheader Text : END -->
-        <!--
-            Set the email width. Defined in two places:
-            1. max-width for all clients except Desktop Windows Outlook, allowing the email to squish on narrow but never go wider than 680px.
-            2. MSO tags for Desktop Windows Outlook enforce a 680px width.
-            Note: The Fluid and Responsive templates have a different width (600px). The hybrid grid is more "fragile", and I've found that 680px is a good width. Change with caution.
         -->
-        <div style="max-width: 600px; margin: 30px auto; border: 1px solid #e6e6e6;  background: #f3f3f3;" class="email-container">
-          <!--[if mso]>
-              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" align="center">
-              <tr>
-              <td>
-              <![endif]-->
-          <t t-call="ol_templates.ol_standard_email_header"/>
 
-          <!-- Email Body : BEGIN -->
-          <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%"
-                 style="max-width: 600px;" class="email-container">
-            <t t-out="0"/>
-            <t t-call="ol_templates.ol_email_spacer"/>
-          </table>
-          <!-- Email Body : END -->
-          <t t-call="ol_templates.ol_standard_email_footer"/>
+        <t t-if="not company">
+            <!-- Multicompany -->
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
 
-          <!--[if mso]>
-              </td>
-              </tr>
-              </table>
-              <![endif]-->
-        </div>
-      </center>
-    </body>
+        <head>
+            <meta charset="utf-8"/> <!-- utf-8 works for most cases -->
+            <meta name="viewport" content="width=device-width"/> <!-- Forcing initial-scale shouldn't be necessary -->
+            <meta http-equiv="X-UA-Compatible" content="IE=edge"/> <!-- Use the latest (edge) version of IE rendering engine -->
+            <meta name="x-apple-disable-message-reformatting"/>  <!-- Disable auto-scale in iOS 10 Mail entirely -->
+            <title t-esc="title"/> <!-- The title tag shows in email notifications, like Android 4.4. -->
+            <link href='https://fonts.googleapis.com/css?family=Heebo:400,500' rel='stylesheet' type='text/css'/>
+            <!-- CSS Reset : BEGIN -->
+            <style>
 
-  </template>
+              /* What it does: Remove spaces around the email design added by some email clients. */
+              /* Beware: It can remove the padding / margin and add a background color to the compose a reply window. */
+              html,
+              body {
+              margin: 0 auto !important;
+              padding: 0 !important;
+              height: 100% !important;
+              width: 100% !important;
+              }
 
-  <template id="ol_templates.ol_email_internal">
-    <!--
+              /* What it does: Stops email clients resizing small text. */
+              * {
+              -ms-text-size-adjust: 100%;
+              -webkit-text-size-adjust: 100%;
+              }
+
+              * {
+              font-family: 'Heebo', sans-serif !important;
+              }
+
+              /* What it does: Centers email on Android 4.4 */
+              div[style*="margin: 16px 0"] {
+              margin: 0 !important;
+              }
+
+              /* What it does: Stops Outlook from adding extra spacing to tables. */
+              table,
+              td {
+              mso-table-lspace: 0pt !important;
+              mso-table-rspace: 0pt !important;
+              }
+
+              /* What it does: Fixes webkit padding issue. Fix for Yahoo mail table alignment bug. Applies table-layout to the
+              first 2 tables then removes for anything nested deeper. */
+              table {
+              border-spacing: 0 !important;
+              border-collapse: collapse !important;
+              table-layout: fixed !important;
+              margin: 0 auto !important;
+              }
+              table table table {
+              table-layout: auto;
+              }
+
+              /* What it does: Uses a better rendering method when resizing images in IE. */
+              img {
+              -ms-interpolation-mode:bicubic;
+              }
+
+              /* What it does: Prevents Gmail from displaying an download button on large, non-linked images. */
+              .a6S {
+              display: none !important;
+              opacity: 0.01 !important;
+              }
+              /* If the above doesn't work, add a .g-img class to any image in question. */
+              img.g-img + div {
+              display: none !important;
+              }
+
+              /* What it does: Prevents underlining the button text in Windows 10 */
+              .button-link {
+              text-decoration: none !important;
+              }
+
+              /* What it does: Removes right gutter in Gmail iOS app */
+              /* Create one of these media queries for each additional viewport size you'd like to fix */
+              /* Thanks to Eric Lepetit @ericlepetitsf) for help troubleshooting */
+              @media only screen and (min-device-width: 375px) and (max-device-width: 413px) { /* iPhone 6 and 6+ */
+              .email-container {
+              min-width: 375px !important;
+              }
+              }
+
+              /* What it does: Forces Gmail app to display email full width */
+              div > u ~ div .gmail {
+              min-width: 100vw;
+              }
+
+            </style>
+            <!-- CSS Reset : END -->
+
+            <!-- Progressive Enhancements : BEGIN -->
+            <style>
+
+              /* What it does: Hover styles for buttons */
+              .button-td,
+              .button-a {
+              transition: all 100ms ease-in;
+              }
+              .button-td:hover,
+              .button-a:hover {
+              background: #555555 !important;
+              border-color: #555555 !important;
+              }
+
+              /* What it does: Seperates 'Bill To' and 'Ship To'
+              * Remove it when they stack.
+              */
+              .stack-column:first-of-type {
+              border-left: none !important;
+              }
+              @media (max-width: 610px) {
+              .stack-column {
+              border-left: none !important;
+              }
+              }
+
+              /* Media Queries */
+              @media screen and (max-width: 480px) {
+
+              /* What it does: Forces elements to resize to the full width of their container. Useful for resizing images
+              beyond their max-width. */
+              .fluid {
+              width: 100% !important;
+              max-width: 100% !important;
+              height: auto !important;
+              margin-left: auto !important;
+              margin-right: auto !important;
+              }
+
+              /* What it does: Forces table cells into full-width rows. */
+              .stack-column,
+              .stack-column-center {
+              display: block !important;
+              width: 100% !important;
+              max-width: 100% !important;
+              direction: ltr !important;
+              }
+              /* And center justify these ones. */
+              .stack-column-center {
+              text-align: center !important;
+              }
+
+              /* What it does: Generic utility class for centering. Useful for images, buttons, and nested tables. */
+              .center-on-narrow {
+              text-align: center !important;
+              display: block !important;
+              margin-left: auto !important;
+              margin-right: auto !important;
+              float: none !important;
+              }
+              table.center-on-narrow {
+              display: inline-block !important;
+              }
+              .email-container {
+              margin-bottom: 0!important;
+              }
+              }
+
+            </style>
+            <!-- Progressive Enhancements : END -->
+        </head>
+        <body width="100%" bgcolor="#f3f3f3" style="margin: 0; mso-line-height-rule: exactly;">
+            <center style="width: 100%; text-align: left; padding: 20px 0;">
+                <!-- Visually Hidden Preheader Text : BEGIN -->
+                <div style="display: none !important; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: sans-serif;">
+                    <t t-esc="preheader_text or ''"/>
+                </div>
+                <!-- Visually Hidden Preheader Text : END -->
+                <!--
+                    Set the email width. Defined in two places:
+                    1. max-width for all clients except Desktop Windows Outlook, allowing the email to squish on narrow but never go wider than 680px.
+                    2. MSO tags for Desktop Windows Outlook enforce a 680px width.
+                    Note: The Fluid and Responsive templates have a different width (600px). The hybrid grid is more "fragile", and I've found that 680px is a good width. Change with caution.
+                -->
+                <div style="max-width: 600px; margin: 30px auto; border: 1px solid #e6e6e6;  background: #f3f3f3;" class="email-container">
+                    <t t-call="ol_templates.ol_standard_email_header"/>
+
+                    <!-- Email Body : BEGIN -->
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 600px;" class="email-container">
+                        <t t-out="0"/>
+                        <t t-call="ol_templates.ol_email_spacer"/>
+                    </table>
+                    <!-- Email Body : END -->
+
+                    <t t-call="ol_templates.ol_standard_email_footer"/>
+                </div>
+            </center>
+        </body>
+    </template>
+
+    <template id="ol_templates.ol_email_internal">
+        <!--
         === Expected inputs ===
         - title: The title of the email
         - preheader_text: inbox preview text
         - body should be inside call of the template
         - include_newsletter_disclaimer: boolean to turn the newsletter text on or off
-    -->
-    <head>
-      <meta charset="utf-8"/> <!-- utf-8 works for most cases -->
-      <meta name="viewport" content="width=device-width"/> <!-- Forcing initial-scale shouldn't be necessary -->
-      <meta http-equiv="X-UA-Compatible"
-            content="IE=edge"/> <!-- Use the latest (edge) version of IE rendering engine -->
-      <meta name="x-apple-disable-message-reformatting"/>  <!-- Disable auto-scale in iOS 10 Mail entirely -->
-      <title t-esc="title"/> <!-- The title tag shows in email notifications, like Android 4.4. -->
-
-
-      <!-- Web Font / @font-face : BEGIN -->
-      <!-- NOTE: If web fonts are not required, lines 10 - 27 can be safely removed. -->
-
-      <!-- Desktop Outlook chokes on web font references and defaults to Times New Roman, so we force a safe fallback font. -->
-      <!--[if mso]>
-          <style>
-          * {
-          font-family: sans-serif !important;
-          }
-          </style>
-          <![endif]-->
-
-      <!-- All other clients get the webfont reference; some will render the font and others will silently fail to the fallbacks. More on that here: http://stylecampaign.com/blog/2015/02/webfont-support-in-email/ -->
-      <!--[if !mso]><!-->
-      <link href='https://fonts.googleapis.com/css?family=Heebo:400,500' rel='stylesheet' type='text/css'/>
-      <!--<![endif]-->
-
-      <!-- Web Font / @font-face : END -->
-      <!-- CSS Reset : BEGIN -->
-      <style>
-
-        /* What it does: Remove spaces around the email design added by some email clients. */
-        /* Beware: It can remove the padding / margin and add a background color to the compose a reply window. */
-        html,
-        body {
-        margin: 0 auto !important;
-        padding: 0 !important;
-        height: 100% !important;
-        width: 100% !important;
-        }
-
-        /* What it does: Stops email clients resizing small text. */
-        * {
-        -ms-text-size-adjust: 100%;
-        -webkit-text-size-adjust: 100%;
-        }
-
-        * {
-        font-family: 'Heebo', sans-serif !important;
-        }
-
-        /* What it does: Centers email on Android 4.4 */
-        div[style*="margin: 16px 0"] {
-        margin: 0 !important;
-        }
-
-        /* What it does: Stops Outlook from adding extra spacing to tables. */
-        table,
-        td {
-        mso-table-lspace: 0pt !important;
-        mso-table-rspace: 0pt !important;
-        }
-
-        /* What it does: Fixes webkit padding issue. Fix for Yahoo mail table alignment bug. Applies table-layout to the
-        first 2 tables then removes for anything nested deeper. */
-        table {
-        border-spacing: 0 !important;
-        border-collapse: collapse !important;
-        table-layout: fixed !important;
-        margin: 0 auto !important;
-        }
-        table table table {
-        table-layout: auto;
-        }
-
-        /* What it does: Uses a better rendering method when resizing images in IE. */
-        img {
-        -ms-interpolation-mode:bicubic;
-        }
-
-        /* What it does: Prevents Gmail from displaying an download button on large, non-linked images. */
-        .a6S {
-        display: none !important;
-        opacity: 0.01 !important;
-        }
-        /* If the above doesn't work, add a .g-img class to any image in question. */
-        img.g-img + div {
-        display: none !important;
-        }
-
-        /* What it does: Prevents underlining the button text in Windows 10 */
-        .button-link {
-        text-decoration: none !important;
-        }
-
-        /* What it does: Removes right gutter in Gmail iOS app */
-        /* Create one of these media queries for each additional viewport size you'd like to fix */
-        /* Thanks to Eric Lepetit @ericlepetitsf) for help troubleshooting */
-        @media only screen and (min-device-width: 375px) and (max-device-width: 413px) { /* iPhone 6 and 6+ */
-        .email-container {
-        min-width: 375px !important;
-        }
-        }
-
-        /* What it does: Forces Gmail app to display email full width */
-        div > u ~ div .gmail {
-        min-width: 100vw;
-        }
-
-      </style>
-      <!-- CSS Reset : END -->
-
-      <!-- Progressive Enhancements : BEGIN -->
-      <style>
-
-        /* What it does: Hover styles for buttons */
-        .button-td,
-        .button-a {
-        transition: all 100ms ease-in;
-        }
-        .button-td:hover,
-        .button-a:hover {
-        background: #555555 !important;
-        border-color: #555555 !important;
-        }
-
-        /* What it does: Seperates 'Bill To' and 'Ship To'
-        * Remove it when they stack.
-        */
-        .stack-column:first-of-type {
-        border-left: none !important;
-        }
-        @media (max-width: 610px) {
-        .stack-column {
-        border-left: none !important;
-        }
-        }
-
-        /* Media Queries */
-        @media screen and (max-width: 480px) {
-
-        /* What it does: Forces elements to resize to the full width of their container. Useful for resizing images
-        beyond their max-width. */
-        .fluid {
-        width: 100% !important;
-        max-width: 100% !important;
-        height: auto !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-        }
-
-        /* What it does: Forces table cells into full-width rows. */
-        .stack-column,
-        .stack-column-center {
-        display: block !important;
-        width: 100% !important;
-        max-width: 100% !important;
-        direction: ltr !important;
-        }
-        /* And center justify these ones. */
-        .stack-column-center {
-        text-align: center !important;
-        }
-
-        /* What it does: Generic utility class for centering. Useful for images, buttons, and nested tables. */
-        .center-on-narrow {
-        text-align: center !important;
-        display: block !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
-        float: none !important;
-        }
-        table.center-on-narrow {
-        display: inline-block !important;
-        }
-        .email-container {
-        margin-bottom: 0!important;
-        }
-        }
-
-      </style>
-      <!-- Progressive Enhancements : END -->
-
-      <!-- What it does: Makes background images in 72ppi Outlook render at correct size. -->
-      <!--[if gte mso 9]>
-          <xml>
-          <o:OfficeDocumentSettings>
-          <o:AllowPNG/>
-          <o:PixelsPerInch>96</o:PixelsPerInch>
-          </o:OfficeDocumentSettings>
-          </xml>
-          <![endif]-->
-    </head>
-    <body width="100%" style="margin: 0; mso-line-height-rule: exactly;">
-      <center style="width: 100%; text-align: left; padding: 20px 0;">
-
-        <!-- Visually Hidden Preheader Text : BEGIN -->
-        <div style="display: none !important; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: sans-serif;">
-          <t t-esc="preheader_text or ''"/>
-        </div>
-        <!-- Visually Hidden Preheader Text : END -->
-        <!--
-            Set the email width. Defined in two places:
-            1. max-width for all clients except Desktop Windows Outlook, allowing the email to squish on narrow but never go wider than 680px.
-            2. MSO tags for Desktop Windows Outlook enforce a 680px width.
-            Note: The Fluid and Responsive templates have a different width (600px). The hybrid grid is more "fragile", and I've found that 680px is a good width. Change with caution.
         -->
-        <div style="max-width: 600px; margin: 30px auto; border: 1px solid #e6e6e6;" class="email-container">
-          <!--[if mso]>
-              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" align="center">
-              <tr>
-              <td>
-              <![endif]-->
-          <!-- Email Body : BEGIN -->
-          <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%"
-                 style="max-width: 600px;" class="email-container">
-            <t t-out="0"/>
-            <t t-call="ol_templates.ol_email_spacer"/>
-          </table>
-          <!-- Email Body : END -->
-          <!--[if mso]>
-              </td>
-              </tr>
-              </table>
-              <![endif]-->
-        </div>
-      </center>
-    </body>
+        <head>
+            <meta charset="utf-8"/> <!-- utf-8 works for most cases -->
+            <meta name="viewport" content="width=device-width"/> <!-- Forcing initial-scale shouldn't be necessary -->
+            <meta http-equiv="X-UA-Compatible" content="IE=edge"/> <!-- Use the latest (edge) version of IE rendering engine -->
+            <meta name="x-apple-disable-message-reformatting"/>  <!-- Disable auto-scale in iOS 10 Mail entirely -->
+            <title t-esc="title"/> <!-- The title tag shows in email notifications, like Android 4.4. -->
+            <link href='https://fonts.googleapis.com/css?family=Heebo:400,500' rel='stylesheet' type='text/css'/>
+            <!-- CSS Reset : BEGIN -->
+            <style>
 
-  </template>
+              /* What it does: Remove spaces around the email design added by some email clients. */
+              /* Beware: It can remove the padding / margin and add a background color to the compose a reply window. */
+              html,
+              body {
+              margin: 0 auto !important;
+              padding: 0 !important;
+              height: 100% !important;
+              width: 100% !important;
+              }
 
-  <template id="ol_templates.ol_email_text_content">
-    <!--
-        === Expected inputs ===
-        body from calling template
-    -->
+              /* What it does: Stops email clients resizing small text. */
+              * {
+              -ms-text-size-adjust: 100%;
+              -webkit-text-size-adjust: 100%;
+              }
 
-    <tr>
-      <td bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%">
-        <!--[if mso]>
-            <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-            <tr>
-            <td align="center" valign="top" width="600">
-            <![endif]-->
-        <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="87%"
-               style="max-width:540px;">
-          <tr>
-            <td>
-              <t t-out="0"/>
-            </td>
-          </tr>
-        </table>
-        <!--[if mso]>
-            </td>
-            </tr>
-            </table>
-            <![endif]-->
-      </td>
-    </tr>
-  </template>
+              * {
+              font-family: 'Heebo', sans-serif !important;
+              }
 
-  <template id="ol_templates.ol_email_spacer">
-    <!-- Spacer : BEGIN -->
-    <tr>
-      <td aria-hidden="true" height="20" bgcolor="#ffffff" style="font-size: 0; line-height: 0;">
-        &amp;nbsp;
-      </td>
-    </tr>
-    <!-- Spacer : END -->
-  </template>
+              /* What it does: Centers email on Android 4.4 */
+              div[style*="margin: 16px 0"] {
+              margin: 0 !important;
+              }
 
-  <template id="ol_standard_email_header">
-    <!-- START: Standard Header -->
-    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%"
-           style="max-width: 600px;">
-      <tr>
-        <td bgcolor="#ffffff" style="padding: 45px 0 45px 40px; text-align: left;">
-          <a href="http://www.onlogic.com/?utm_source=newsletter&amp;utm_medium=email&amp;utm_content=homeheader&amp;utm_campaign=2nw117"
-             target="_blank">
-            <img t-if="company.template_logo" style="display: block; max-width: 221px;" t-att-src="image_data_uri(company.template_logo)" width="221" alt="Logo"/>
-          </a>
-        </td>
-      </tr>
-    </table>
-    <!-- END: Standard Header -->
-  </template>
+              /* What it does: Stops Outlook from adding extra spacing to tables. */
+              table,
+              td {
+              mso-table-lspace: 0pt !important;
+              mso-table-rspace: 0pt !important;
+              }
 
-  <template id="ol_templates.ol_standard_email_footer">
-    <!--
-        === Expected inputs ===
-        - include_newsletter_disclaimer: boolean to turn the newsletter text on or off
-    -->
+              /* What it does: Fixes webkit padding issue. Fix for Yahoo mail table alignment bug. Applies table-layout to the
+              first 2 tables then removes for anything nested deeper. */
+              table {
+              border-spacing: 0 !important;
+              border-collapse: collapse !important;
+              table-layout: fixed !important;
+              margin: 0 auto !important;
+              }
+              table table table {
+              table-layout: auto;
+              }
 
-    <!-- START: ls footer -->
-    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%"
-           style="max-width: 600px; font-family: sans-serif; color: #888888; font-size: 12px; line-height: 140%;">
+              /* What it does: Uses a better rendering method when resizing images in IE. */
+              img {
+              -ms-interpolation-mode:bicubic;
+              }
 
-      <!-- START: social icons -->
-      <tr>
-        <td bgcolor="#595A5C" style="background: #595A5C !important;">
-          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="75%" align="center">
-            <tr>
-              <td style="padding: 15px 0;" align="center">
-                <a href="https://www.linkedin.com/company/onlogic/">
-                  <img width="35px" t-att-src="image_data_uri(company.linkedin_image)" />
-                </a>
-              </td>
-              <td style="padding: 15px 0;" align="center">
-                <a href="https://twitter.com/OnLogic">
-                  <img width="35px" t-att-src="image_data_uri(company.twitter_image)" />
-                </a>
-              </td>
-              <td style="padding: 15px 0;" align="center">
-                <a href="https://www.youtube.com/c/onlogic">
-                  <img width="35px" t-att-src="image_data_uri(company.youtube_image)" />
-                </a>
-              </td>
-              <td style="padding: 15px 0;" align="center">
-                <a href="https://www.facebook.com/OnLogic/">
-                  <img width="35px" t-att-src="image_data_uri(company.facebook_image)" />
-                </a>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-      <!-- END: social icons -->
+              /* What it does: Prevents Gmail from displaying an download button on large, non-linked images. */
+              .a6S {
+              display: none !important;
+              opacity: 0.01 !important;
+              }
+              /* If the above doesn't work, add a .g-img class to any image in question. */
+              img.g-img + div {
+              display: none !important;
+              }
 
-      <!-- START: contact -->
-      <tr>
-        <td bgcolor="#e6e6e6" align="center" height="100%" valign="top" width="100%">
-          <!--[if mso]>
-              <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-              <tr>
-              <td align="center" valign="top" width="600">
-              <![endif]-->
-          <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="65%"
-                 style="max-width:600px;">
-            <tr style="color: #555555; font-family: sans-serif; font-size: 12px; line-height: 150%;">
-              <td align="center" valign="top" style="padding: 20px 0;">
-                <p style="margin: 0;">
-                  <span style="font-weight: 500;">North America</span>
-                  <br/>
-                  <a href="tel:(802)%20861-2300" value="+18028612300" target="_blank" style="text-decoration: none; color: #555555;">+1 802 861 2300</a>
-                  <br/>
-                  <a href="mailto:info@onlogic.com" target="_blank" style="text-decoration: none; color: #555555;">info@onlogic.com</a>
-                  <br/>
-                  <a href="http://www.onlogic.com?utm_source=newsletter&amp;utm_medium=email&amp;utm_content=NAFooterLink&amp;utm_campaign=nw118"
-                     target="_blank"
-                     style="text-decoration: none; color: #555555;"
-                     data-saferedirecturl="https://www.google.com/url?hl=en&amp;q=http://www.onlogic.com?utm_source%3Dnewsletter%26utm_medium%3Demail%26utm_content%3DNAFooterLink%26utm_campaign%3Dnw118&amp;source=gmail&amp;ust=1516314918407000&amp;usg=AFQjCNFsc6v5R3PLonUruMkyuAx5J6twcQ">
-                    www.onlogic.com
-                  </a>
-                </p>
-              </td>
-              <td align="center" valign="top" style="padding: 20px 0px;">
-                <p style="margin: 0;">
-                  <span style="font-weight: 500;">Europe</span>
-                  <br/>
-                  <a href="tel:+31%88%520%0700" value="+31885200700 " target="_blank" style="text-decoration: none; color: #555555;">+31 88 520 0700</a>
-                  <br/>
-                  <a href="mailto:info.eu@onlogic.com" target="_blank" style="text-decoration: none; color: #555555;">info.eu@onlogic.com</a>
-                  <br/>
-                  <a href="http://www.onlogic.com/eu-en?utm_source=newsletter&amp;utm_medium=email&amp;utm_content=EUFooterLink&amp;utm_campaign=nw118"
-                     target="_blank"
-                     style="text-decoration: none; color: #555555;"
-                     data-saferedirecturl="https://www.google.com/url?hl=en&amp;q=http://www.onlogic.com/eu-en?utm_source%3Dnewsletter%26utm_medium%3Demail%26utm_content%3DEUFooterLink%26utm_campaign%3Dnw118&amp;source=gmail&amp;ust=1516314918407000&amp;usg=AFQjCNESFMxvBVRvFgCfTh6NNbuZHWpGXA">
-                    www.onlogic.com/eu-en
-                  </a>
-                </p>
-              </td>
-            </tr>
-          </table>
-          <!--[if mso]>
-          </td>
-          </tr>
-          </table>
-          <![endif]-->
-        </td>
-      </tr>
-      <!-- END: contact -->
+              /* What it does: Prevents underlining the button text in Windows 10 */
+              .button-link {
+              text-decoration: none !important;
+              }
 
-      <t t-if="include_newsletter_disclaimer">
-        <!-- START: ls inc / unsub -->
+              /* What it does: Removes right gutter in Gmail iOS app */
+              /* Create one of these media queries for each additional viewport size you'd like to fix */
+              /* Thanks to Eric Lepetit @ericlepetitsf) for help troubleshooting */
+              @media only screen and (min-device-width: 375px) and (max-device-width: 413px) { /* iPhone 6 and 6+ */
+              .email-container {
+              min-width: 375px !important;
+              }
+              }
+
+              /* What it does: Forces Gmail app to display email full width */
+              div > u ~ div .gmail {
+              min-width: 100vw;
+              }
+
+            </style>
+            <!-- CSS Reset : END -->
+
+            <!-- Progressive Enhancements : BEGIN -->
+            <style>
+
+              /* What it does: Hover styles for buttons */
+              .button-td,
+              .button-a {
+              transition: all 100ms ease-in;
+              }
+              .button-td:hover,
+              .button-a:hover {
+              background: #555555 !important;
+              border-color: #555555 !important;
+              }
+
+              /* What it does: Seperates 'Bill To' and 'Ship To'
+              * Remove it when they stack.
+              */
+              .stack-column:first-of-type {
+              border-left: none !important;
+              }
+              @media (max-width: 610px) {
+              .stack-column {
+              border-left: none !important;
+              }
+              }
+
+              /* Media Queries */
+              @media screen and (max-width: 480px) {
+
+              /* What it does: Forces elements to resize to the full width of their container. Useful for resizing images
+              beyond their max-width. */
+              .fluid {
+              width: 100% !important;
+              max-width: 100% !important;
+              height: auto !important;
+              margin-left: auto !important;
+              margin-right: auto !important;
+              }
+
+              /* What it does: Forces table cells into full-width rows. */
+              .stack-column,
+              .stack-column-center {
+              display: block !important;
+              width: 100% !important;
+              max-width: 100% !important;
+              direction: ltr !important;
+              }
+              /* And center justify these ones. */
+              .stack-column-center {
+              text-align: center !important;
+              }
+
+              /* What it does: Generic utility class for centering. Useful for images, buttons, and nested tables. */
+              .center-on-narrow {
+              text-align: center !important;
+              display: block !important;
+              margin-left: auto !important;
+              margin-right: auto !important;
+              float: none !important;
+              }
+              table.center-on-narrow {
+              display: inline-block !important;
+              }
+              .email-container {
+              margin-bottom: 0!important;
+              }
+              }
+
+            </style>
+            <!-- Progressive Enhancements : END -->
+        </head>
+        <body width="100%" style="margin: 0; mso-line-height-rule: exactly;">
+            <center style="width: 100%; text-align: left; padding: 20px 0;">
+                <!-- Visually Hidden Preheader Text : BEGIN -->
+                <div style="display: none !important; font-size: 1px; line-height: 1px; max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: sans-serif;">
+                    <t t-esc="preheader_text or ''"/>
+                </div>
+                <!-- Visually Hidden Preheader Text : END -->
+                <!--
+                    Set the email width. Defined in two places:
+                    1. max-width for all clients except Desktop Windows Outlook, allowing the email to squish on narrow but never go wider than 680px.
+                    2. MSO tags for Desktop Windows Outlook enforce a 680px width.
+                    Note: The Fluid and Responsive templates have a different width (600px). The hybrid grid is more "fragile", and I've found that 680px is a good width. Change with caution.
+                -->
+                <div style="max-width: 600px; margin: 30px auto; border: 1px solid #e6e6e6;" class="email-container">
+                    <!-- Email Body : BEGIN -->
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 600px;" class="email-container">
+                        <t t-out="0"/>
+                        <t t-call="ol_templates.ol_email_spacer"/>
+                    </table>
+                    <!-- Email Body : END -->
+                </div>
+            </center>
+        </body>
+    </template>
+
+    <template id="ol_templates.ol_email_text_content">
+        <!--
+          === Expected inputs ===
+          body from calling template
+        -->
         <tr>
-          <td bgcolor="#e6e6e6">
-            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-              <tr>
-                <td style="padding: 0 40px 30px 40px; font-family: sans-serif; font-size: 12px; line-height: 140%; text-align: center; color: #888888;">
-                  <p>
-                    <span style="font-weight: 500;">OnLogic US</span>
-                    <br/>
-                    OnLogic and the OnLogic logo are registered trademarks of OnLogic US. Other names
-                    and brands may be claimed as the property of others.
-                  </p>
-                  <br/>
-                  <br/>
-                  <p>You are receiving this message because you are subscribed to the OnLogic newsletter. To
-                    unsubscribe,
-                    <a href="https://www.onlogic.com/newsletter/subscriber/unsubscribe/" target="_blank"
-                       data-saferedirecturl="https://www.google.com/url?hl=en&amp;q=https://www.onlogic.com/newsletter/subscriber/unsubscribe/&amp;source=gmail&amp;ust=1516314918407000&amp;usg=AFQjCNGa1_ACb5jyzqlR5uvwdnNt_OYCkg">
-                      click here
+            <td bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%">
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="87%" style="max-width:540px;">
+                    <tr>
+                        <td>
+                            <t t-out="0"/>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </template>
+
+    <template id="ol_templates.ol_email_spacer">
+        <!-- Spacer : BEGIN -->
+        <tr>
+            <td aria-hidden="true" height="20" bgcolor="#ffffff" style="font-size: 0; line-height: 0;">
+                &amp;nbsp;
+            </td>
+        </tr>
+        <!-- Spacer : END -->
+    </template>
+
+    <template id="ol_standard_email_header">
+        <!-- START: Standard Header -->
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 600px;">
+            <tr>
+                <td bgcolor="#ffffff" style="padding: 45px 0 45px 40px; text-align: left;">
+                    <a href="http://www.onlogic.com/?utm_source=newsletter&amp;utm_medium=email&amp;utm_content=homeheader&amp;utm_campaign=2nw117" target="_blank">
+                        <img t-if="company.template_logo" style="display: block; max-width: 221px;" t-att-src="image_data_uri(company.template_logo)" width="221" alt="Logo"/>
                     </a>
-                  </p>
                 </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <!-- END: ls inc / unsub -->
-      </t>
+            </tr>
+        </table>
+        <!-- END: Standard Header -->
+    </template>
 
-    </table>
-    <!-- END: ls footer -->
-  </template>
+    <template id="ol_templates.ol_standard_email_footer">
+        <!--
+        === Expected inputs ===
+        - include_newsletter_disclaimer: boolean to turn the newsletter text on or off
+        -->
 
-  <template id="ol_templates.ol_format_address_for_report">
-    <!--
+        <!-- START: ls footer -->
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 600px; font-family: sans-serif; color: #888888; font-size: 12px; line-height: 140%;">
+
+            <!-- START: social icons -->
+            <tr>
+                <td bgcolor="#595A5C" style="background: #595A5C !important;">
+                    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="75%" align="center">
+                        <tr>
+                            <td style="padding: 15px 0;" align="center">
+                                <a href="https://www.linkedin.com/company/onlogic/">
+                                    <img width="35px" t-att-src="image_data_uri(company.linkedin_image)" />
+                                </a>
+                            </td>
+                            <td style="padding: 15px 0;" align="center">
+                                <a href="https://twitter.com/OnLogic">
+                                    <img width="35px" t-att-src="image_data_uri(company.twitter_image)" />
+                                </a>
+                            </td>
+                            <td style="padding: 15px 0;" align="center">
+                                <a href="https://www.youtube.com/c/onlogic">
+                                    <img width="35px" t-att-src="image_data_uri(company.youtube_image)" />
+                                </a>
+                            </td>
+                            <td style="padding: 15px 0;" align="center">
+                                <a href="https://www.facebook.com/OnLogic/">
+                                    <img width="35px" t-att-src="image_data_uri(company.facebook_image)" />
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <!-- END: social icons -->
+
+            <!-- START: contact -->
+            <tr>
+                <td bgcolor="#e6e6e6" align="center" height="100%" valign="top" width="100%">
+                  <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="65%" style="max-width:600px;">
+                      <tr style="color: #555555; font-family: sans-serif; font-size: 12px; line-height: 150%;">
+                          <td align="center" valign="top" style="padding: 20px 0;">
+                              <p style="margin: 0;">
+                                  <span style="font-weight: 500;">North America</span>
+                                  <br/>
+                                  <a href="tel:(802)%20861-2300" value="+18028612300" target="_blank" style="text-decoration: none; color: #555555;">+1 802 861 2300</a>
+                                  <br/>
+                                  <a href="mailto:info@onlogic.com" target="_blank" style="text-decoration: none; color: #555555;">info@onlogic.com</a>
+                                  <br/>
+                                  <a href="http://www.onlogic.com?utm_source=newsletter&amp;utm_medium=email&amp;utm_content=NAFooterLink&amp;utm_campaign=nw118"
+                                    target="_blank"
+                                    style="text-decoration: none; color: #555555;"
+                                    data-saferedirecturl="https://www.google.com/url?hl=en&amp;q=http://www.onlogic.com?utm_source%3Dnewsletter%26utm_medium%3Demail%26utm_content%3DNAFooterLink%26utm_campaign%3Dnw118&amp;source=gmail&amp;ust=1516314918407000&amp;usg=AFQjCNFsc6v5R3PLonUruMkyuAx5J6twcQ">
+                                    www.onlogic.com
+                                  </a>
+                              </p>
+                          </td>
+                          <td align="center" valign="top" style="padding: 20px 0px;">
+                              <p style="margin: 0;">
+                                  <span style="font-weight: 500;">Europe</span>
+                                  <br/>
+                                  <a href="tel:+31%88%520%0700" value="+31885200700 " target="_blank" style="text-decoration: none; color: #555555;">+31 88 520 0700</a>
+                                  <br/>
+                                  <a href="mailto:info.eu@onlogic.com" target="_blank" style="text-decoration: none; color: #555555;">info.eu@onlogic.com</a>
+                                  <br/>
+                                  <a href="http://www.onlogic.com/eu-en?utm_source=newsletter&amp;utm_medium=email&amp;utm_content=EUFooterLink&amp;utm_campaign=nw118"
+                                    target="_blank"
+                                    style="text-decoration: none; color: #555555;"
+                                    data-saferedirecturl="https://www.google.com/url?hl=en&amp;q=http://www.onlogic.com/eu-en?utm_source%3Dnewsletter%26utm_medium%3Demail%26utm_content%3DEUFooterLink%26utm_campaign%3Dnw118&amp;source=gmail&amp;ust=1516314918407000&amp;usg=AFQjCNESFMxvBVRvFgCfTh6NNbuZHWpGXA">
+                                    www.onlogic.com/eu-en
+                                  </a>
+                              </p>
+                          </td>
+                      </tr>
+                  </table>
+                </td>
+            </tr>
+            <!-- END: contact -->
+
+            <t t-if="include_newsletter_disclaimer">
+                <!-- START: ls inc / unsub -->
+                <tr>
+                    <td bgcolor="#e6e6e6">
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                            <tr>
+                                <td style="padding: 0 40px 30px 40px; font-family: sans-serif; font-size: 12px; line-height: 140%; text-align: center; color: #888888;">
+                                    <p>
+                                        <span style="font-weight: 500;">OnLogic US</span>
+                                        <br/>
+                                        OnLogic and the OnLogic logo are registered trademarks of OnLogic US. Other names
+                                        and brands may be claimed as the property of others.
+                                    </p>
+                                    <br/>
+                                    <br/>
+                                    <p>You are receiving this message because you are subscribed to the OnLogic newsletter. To
+                                      unsubscribe,
+                                        <a href="https://www.onlogic.com/newsletter/subscriber/unsubscribe/" target="_blank"
+                                          data-saferedirecturl="https://www.google.com/url?hl=en&amp;q=https://www.onlogic.com/newsletter/subscriber/unsubscribe/&amp;source=gmail&amp;ust=1516314918407000&amp;usg=AFQjCNGa1_ACb5jyzqlR5uvwdnNt_OYCkg">
+                                          click here
+                                        </a>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <!-- END: ls inc / unsub -->
+            </t>
+
+        </table>
+        <!-- END: ls footer -->
+    </template>
+
+    <template id="ol_templates.ol_format_address_for_report">
+        <!--
         === Expected inputs ===
         - text: 'Bill To', 'Ship To', etc
         - address: res.partner object
-    -->
-    <div class="ol-address">
-      <p>
-        <span class="ol-address-text" t-esc="text"/>
-        <br/>
-        <t t-esc="address.name"/>
-        <br/>
-        <t t-esc="address.street"/>
-        <br/>
-        <t t-if="address.street2">
-          <t t-esc="address.street2"/>
-          <br/>
-        </t>
-        <t t-esc="address.city"/>,
-        <t t-if="address.country_id.code == 'US'">
-          <t t-esc="address.state_id.code"/>
-        </t>
-        <t t-else="">
-          <t t-esc="address.state_id.name"/>
-        </t>
-        <t t-esc="address.zip"/>
-        <br/>
-        <t t-esc="address.country_id.name"/>
-        <br/>
-      </p>
-      <br t-if="not address.street2"/>
-      <div class="ol-address-phone">
-        <span class="ol-phone-icon">
-          <img t-attf-src="data:image;base64,{{company.placeholder_image_phone_icon}}"/>
-        </span>
-        <p t-esc="address.phone" t-options='{"widget": "phone_formatter", "country_id": address.country_id}'/>
-      </div>
-      <div class="ol-address-email">
-        <span class="ol-email-icon">
-          <img t-attf-src="data:image;base64,{{company.placeholder_image_email_icon}}"/>
-        </span>
-        <p t-esc="address.email"/>
-      </div>
-    </div>
-  </template>
+        -->
+        <div class="ol-address">
+            <p>
+                <span class="ol-address-text" t-esc="text"/>
+                <br/>
+                <t t-esc="address.name"/>
+                <br/>
+                <t t-esc="address.street"/>
+                <br/>
+                <t t-if="address.street2">
+                    <t t-esc="address.street2"/>
+                    <br/>
+                </t>
+                <t t-esc="address.city"/>,
+                <t t-if="address.country_id.code == 'US'">
+                    <t t-esc="address.state_id.code"/>
+                </t>
+                <t t-else="">
+                    <t t-esc="address.state_id.name"/>
+                </t>
+                <t t-esc="address.zip"/>
+                <br/>
+                <t t-esc="address.country_id.name"/>
+                <br/>
+            </p>
+            <br t-if="not address.street2"/>
+            <div class="ol-address-phone">
+                <span class="ol-phone-icon">
+                    <img t-attf-src="data:image;base64,{{company.placeholder_image_phone_icon}}"/>
+                </span>
+                <p t-esc="address.phone" t-options='{"widget": "phone_formatter", "country_id": address.country_id}'/>
+            </div>
+            <div class="ol-address-email">
+                <span class="ol-email-icon">
+                    <img t-attf-src="data:image;base64,{{company.placeholder_image_email_icon}}"/>
+                </span>
+                <p t-esc="address.email"/>
+            </div>
+        </div>
+    </template>
 
-  <template id="ol_templates.ol_format_address_for_email">
-    <!--
+    <template id="ol_templates.ol_format_address_for_email">
+        <!--
         === Expected inputs ===
         - text: 'Bill To', 'Ship To', etc
         - address: res.partner object
-    -->
-    <div style="display:inline-block; margin: 0 -2px; width:50%; min-width:100px; max-width:260px; vertical-align:top; border-left: 1px solid #e6e6e6;"
-         class="stack-column">
-      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-        <tr>
-          <td style="padding: 10px 10px;">
-            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                   style="font-size: 14px;text-align: left;">
-              <tr>
-                <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;"
-                    class="stack-column-left">
-                  <p style="margin: 0 0 5px 0;">
-                    <span style="font-weight: 500;" t-esc="text"/>
-                    <br/>
-                    <t t-esc="address.company_name or address.commercial_company_name"/>
-                    <br/>
-                    <t t-esc="address.name"/>
-                    <br/>
-                    <t t-esc="address.street"/>
-                    <br/>
-                    <t t-if="address.street2">
-                      <t t-esc="address.street2"/>
-                      <br/>
-                    </t>
-                    <t t-esc="address.city"/>,
-                    <t t-if="address.country_id.code == 'US'">
-                      <t t-esc="address.state_id.code"/>
-                    </t>
-                    <t t-else="">
-                      <t t-esc="address.state_id.name"/>
-                    </t>
-                    <t t-esc="address.zip"/>
-                    <br/>
-                    <t t-esc="address.country_id.name"/>
-                    <br/>
-                  </p>
-                </td>
-              </tr>
+        -->
+        <div style="display:inline-block; margin: 0 -2px; width:50%; min-width:100px; max-width:260px; vertical-align:top; border-left: 1px solid #e6e6e6;" class="stack-column">
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr>
+                    <td style="padding: 10px 10px;">
+                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                            <tr>
+                                <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;" class="stack-column-left">
+                                  <p style="margin: 0 0 5px 0;">
+                                      <span style="font-weight: 500;" t-esc="text"/>
+                                      <br/>
+                                      <t t-esc="address.company_name or address.commercial_company_name"/>
+                                      <br/>
+                                      <t t-esc="address.name"/>
+                                      <br/>
+                                      <t t-esc="address.street"/>
+                                      <br/>
+                                      <t t-if="address.street2">
+                                          <t t-esc="address.street2"/>
+                                          <br/>
+                                      </t>
+                                      <t t-esc="address.city"/>,
+                                      <t t-if="address.country_id.code == 'US'">
+                                          <t t-esc="address.state_id.code"/>
+                                      </t>
+                                      <t t-else="">
+                                          <t t-esc="address.state_id.name"/>
+                                      </t>
+                                      <t t-esc="address.zip"/>
+                                      <br/>
+                                      <t t-esc="address.country_id.name"/>
+                                      <br/>
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
             </table>
-          </td>
-        </tr>
-      </table>
-    </div>
-  </template>
+        </div>
+    </template>
 
-  <template id="ol_templates.ol_billing_shipping_info">
-    <!--
+    <template id="ol_templates.ol_billing_shipping_info">
+        <!--
         === Expected inputs ===
         - billing_address: res.partner object
         - shipping_address: res.partner object
-    -->
+        -->
 
-    <!-- START: Billing & Shipping Info Table -->
-    <!-- TODO: Should this start with a <tr>?  Or should it start at the <table>?? -->
-    <tr>
-      <td bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%">
-        <!--[if mso]>
-            <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-            <tr>
-            <td align="center" valign="top" width="600">
-            <![endif]-->
-        <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="87%"
-               style="max-width:540px; border: 1px solid #f3f3f3;">
-
-          <tr>
-            <td bgcolor="#f3f3f3" style="padding: 8px 10px; font-size:16px;">
-              <tag>Billing &amp; Shipping Addresses</tag>
-            </td>
-          </tr>
-
-          <tr>
-            <td align="center" valign="top" style="font-size:0; padding: 0; display: -webkit-box; display: -webkit-flex; display: flex;">
-              <!--[if mso]>
-                  <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-                  <tr>
-                  <td align="left" valign="top" width="260">
-                  <![endif]-->
-              <t t-call="ol_templates.ol_format_address_for_email">
-                <t t-set="text">Bill To</t>
-                <t t-set="address" t-value="billing_address"/>
-              </t>
-              <!--[if mso]>
-                  </td>
-                  <td align="left" valign="top" width="260">
-                  <![endif]-->
-
-              <t t-call="ol_templates.ol_format_address_for_email">
-                <t t-set="text">Ship To</t>
-                <t t-set="address" t-value="shipping_address"/>
-              </t>
-              <!--[if mso]>
-                  </td>
-                  </tr>
-                  </table>
-                  <![endif]-->
-            </td>
-          </tr>
-        </table>
-        <!--[if mso]>
-            </td>
-            </tr>
-            </table>
-            <![endif]-->
-      </td>
-    </tr>
-  </template>
-
-  <template id="ol_templates.ol_domestic_ach_info_us">
-    <!-- TODO: get the info dynamically (based on company)!! -->
-    <!-- START: Domestic: ACH Payment Instructions -->
-    <tr>
-      <td bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%">
-        <!--[if mso]>
-            <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-            <tr>
-            <td align="center" valign="top" width="600">
-            <![endif]-->
-        <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="87%"
-               style="max-width:540px; border: 1px solid #f3f3f3;">
-
-          <tr>
-            <td bgcolor="#f3f3f3" style="padding: 8px 10px; font-size:16px;">
-              <span style="font-weight: 500;">
-                <tag>Domestic</tag>:
-              </span>
-              <tag>ACH Payment Instructions</tag>
-
-            </td>
-          </tr>
-
-          <tr>
-            <td align="center" valign="top" style="font-size:0; padding: 0;">
-              <!--[if mso]>
-                  <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-                  <tr>
-                  <td align="left" valign="top" width="260">
-                  <![endif]-->
-              <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
-                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                  <tr>
-                    <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3; vertical-align: top;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500; vertical-align: top;">
-                            Beneficiary Info.
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-
-                    <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
-                            OnLogic
-                            <br/>
-                            435 Community Dr
-                            <br/>
-                            South Burlington, VT 05403
-                            <br/>
-                            (802) 861 2300
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
+        <!-- START: Billing & Shipping Info Table -->
+        <tr>
+            <td bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%">
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="87%" style="max-width:540px; border: 1px solid #f3f3f3;">
+                    <tr>
+                        <td bgcolor="#f3f3f3" style="padding: 8px 10px; font-size:16px;">
+                            <tag>Billing &amp; Shipping Addresses</tag>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top" style="font-size:0; padding: 0; display: -webkit-box; display: -webkit-flex; display: flex;">
+                            <t t-call="ol_templates.ol_format_address_for_email">
+                                <t t-set="text">Bill To</t>
+                                <t t-set="address" t-value="billing_address"/>
+                            </t>
+                            <t t-call="ol_templates.ol_format_address_for_email">
+                                <t t-set="text">Ship To</t>
+                                <t t-set="address" t-value="shipping_address"/>
+                            </t>
+                        </td>
+                    </tr>
                 </table>
-              </div>
-              <!--[if mso]>
-                  </td>
-                  </tr>
-                  </table>
-                  <![endif]-->
             </td>
-          </tr>
+        </tr>
+    </template>
 
-          <tr>
-            <td align="center" valign="top" style="font-size:0; padding: 0;">
-              <!--[if mso]>
-                  <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-                  <tr>
-                  <td align="left" valign="top" width="260">
-                  <![endif]-->
-              <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
-                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                  <tr>
-                    <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3; vertical-align: top;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;  font-weight: 500;">
-                            Bank Info.
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
+    <template id="ol_templates.ol_domestic_ach_info_us">
+        <!-- START: Domestic: ACH Payment Instructions -->
+        <tr>
+            <td bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%">
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="87%" style="max-width:540px; border: 1px solid #f3f3f3;">
+                    <tr>
+                        <td bgcolor="#f3f3f3" style="padding: 8px 10px; font-size:16px;">
+                            <span style="font-weight: 500;">
+                                <tag>Domestic</tag>:
+                            </span>
+                            <tag>ACH Payment Instructions</tag>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top" style="font-size:0; padding: 0;">
+                            <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3; vertical-align: top;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500; vertical-align: top;">
+                                                        Beneficiary Info.
+                                                    </td>
+                                                </tr>
+                                              </table>
+                                            </td>
 
-                    <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
-                            JP Morgan Chase
-                            <br/>
-                            New York, NY 10017
-                            <br/>
-                            (241) 965-4351
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
+                                            <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
+                                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                    <tr>
+                                                        <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
+                                                            OnLogic
+                                                            <br/>
+                                                            435 Community Dr
+                                                            <br/>
+                                                            South Burlington, VT 05403
+                                                            <br/>
+                                                            (802) 861 2300
+                                                        </td>
+                                                    </tr>
+                                              </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td align="center" valign="top" style="font-size:0; padding: 0;">
+                            <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3; vertical-align: top;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;  font-weight: 500;">
+                                                        Bank Info.
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
+                                                        JP Morgan Chase
+                                                        <br/>
+                                                        New York, NY 10017
+                                                        <br/>
+                                                        (241) 965-4351
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top" style="font-size:0; padding: 0;">
+                            <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500;">
+                                                        Beneficiary Account #
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+
+                                        <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
+                                                        767551010
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top" style="font-size:0; padding: 0;">
+                            <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500;">
+                                                        ABA/Routing #
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
+                                                        021000021
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                      <td align="center" valign="top" style="font-size:0; padding: 0;">
+                          <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
+                              <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                  <tr>
+                                      <td style="padding: 10px 10px; border-right: 1px solid #f3f3f3;">
+                                          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                              <tr>
+                                                  <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500;">
+                                                      Currency
+                                                  </td>
+                                              </tr>
+                                          </table>
+                                      </td>
+                                      <td style="padding: 10px 10px;">
+                                          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                              <tr>
+                                                  <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
+                                                      US Dollars
+                                                      <span style="font-weight: 500;">ONLY</span>
+                                                  </td>
+                                              </tr>
+                                          </table>
+                                      </td>
+                                  </tr>
+                              </table>
+                          </div>
+                      </td>
+                    </tr>
                 </table>
-              </div>
-              <!--[if mso]>
-                  </td>
-                  </tr>
-                  </table>
-                  <![endif]-->
             </td>
-          </tr>
+        </tr>
+        <!-- END: Domestic: ACH Payment Instructions -->
+    </template>
 
-          <tr>
-            <td align="center" valign="top" style="font-size:0; padding: 0;">
-              <!--[if mso]>
-                  <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-                  <tr>
-                  <td align="left" valign="top" width="260">
-                  <![endif]-->
-              <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
-                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                  <tr>
-                    <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500;">
-                            Beneficiary Account #
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-
-                    <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
-                            767551010
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
+    <template id="ol_templates.ol_international_ach_info_us">
+        <!-- START: International: Wire Payment Instructions -->
+        <tr>
+            <td bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%">
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="87%" style="max-width:540px; border: 1px solid #f3f3f3;">
+                    <tr>
+                        <td bgcolor="#f3f3f3" style="padding: 8px 10px; font-size:16px;">
+                            <span style="font-weight: 500;">International:</span>
+                            ACH Payment Instructions
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top" style="font-size:0; padding: 0;">
+                            <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3; vertical-align: top;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500; vertical-align: top;">
+                                                        Beneficiary Info.
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
+                                                        OnLogic
+                                                        <br/>
+                                                        435 Community Dr
+                                                        <br/>
+                                                        South Burlington, VT 05403
+                                                        <br/>
+                                                        (802) 861 2300
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top" style="font-size:0; padding: 0;">
+                            <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3; vertical-align: top;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;  font-weight: 500;">
+                                                        Bank Info.
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
+                                                        JP Morgan Chase
+                                                        <br/>
+                                                        New York, NY 10017
+                                                        <br/>
+                                                        (241) 965-4351
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top" style="font-size:0; padding: 0;">
+                            <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                  <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500;">
+                                                        Beneficiary Account #
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
+                                                        767551010
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top" style="font-size:0; padding: 0;">
+                            <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500;">
+                                                        ABA/Fedwire
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
+                                                        021000021
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top" style="font-size:0; padding: 0;">
+                            <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500;">
+                                                        Bank SWIFT
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
+                                                        CHASUS33
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top" style="font-size:0; padding: 0;">
+                            <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td style="padding: 10px 10px; border-right: 1px solid #f3f3f3;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500;">
+                                                        Currency
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="padding: 10px 10px;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
+                                                        US Dollars
+                                                        <span style="font-weight: 500;">ONLY</span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
                 </table>
-              </div>
-              <!--[if mso]>
-                  </td>
-                  </tr>
-                  </table>
-                  <![endif]-->
             </td>
-          </tr>
+        </tr>
+        <!-- END: International: Wire Payment Instructions -->
+    </template>
 
-          <tr>
-            <td align="center" valign="top" style="font-size:0; padding: 0;">
-              <!--[if mso]>
-                  <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-                  <tr>
-                  <td align="left" valign="top" width="260">
-                  <![endif]-->
-              <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
-                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                  <tr>
-                    <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500;">
-                            ABA/Routing #
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-
-                    <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
-                            021000021
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
+    <template id="ol_templates.ol_domestic_ach_info_eu">
+        <!-- START: Domestic: ACH Payment Instructions -->
+        <tr>
+            <td bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%">
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="87%" style="max-width:540px; border: 1px solid #f3f3f3;">
+                    <tr>
+                        <td bgcolor="#f3f3f3" style="padding: 8px 10px; font-size:16px;">
+                            <span style="font-weight: 500;">
+                                <tag>Bank transfer</tag>
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top" style="font-size:0; padding: 0;">
+                            <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3; vertical-align: top;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500; vertical-align: top;">
+                                                        Beneficiary Info.
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
+                                                        OnLogic
+                                                        <br/>
+                                                        De Boedingen 39,
+                                                        <br/>
+                                                        4906 BA Oosterhout NB,
+                                                        <br/>
+                                                        The Netherlands
+                                                        <br/>
+                                                        +31 88 5200 700
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top" style="font-size:0; padding: 0;">
+                            <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500;">
+                                                        IBAN Account Number
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
+                                                        NL31RABO0116462450
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top" style="font-size:0; padding: 0;">
+                            <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500;">
+                                                        Swift/BIC
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
+                                                        RABONL2U
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top" style="font-size:0; padding: 0;">
+                            <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3; vertical-align: top;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;  font-weight: 500;">
+                                                        Bank Info.
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
+                                                        Rabobank
+                                                        <br/>
+                                                        Utrecht, The Netherlands
+                                                        <br/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top" style="font-size:0; padding: 0;">
+                            <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                    <tr>
+                                        <td style="padding: 10px 10px; border-right: 1px solid #f3f3f3;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500;">
+                                                        Currency
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                        <td style="padding: 10px 10px;">
+                                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="font-size: 14px;text-align: left;">
+                                                <tr>
+                                                    <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
+                                                        Euro
+                                                        <span style="font-weight: 500;">ONLY</span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
                 </table>
-              </div>
-              <!--[if mso]>
-                  </td>
-                  </tr>
-                  </table>
-                  <![endif]-->
             </td>
-          </tr>
+        </tr>
+        <!-- END: Domestic: ACH Payment Instructions -->
+    </template>
 
-          <tr>
-            <td align="center" valign="top" style="font-size:0; padding: 0;">
-              <!--[if mso]>
-                  <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-                  <tr>
-                  <td align="left" valign="top" width="260">
-                  <![endif]-->
-              <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
-                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                  <tr>
-                    <td style="padding: 10px 10px; border-right: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500;">
-                            Currency
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
+    <template id="ol_templates.ol_contact_info">
+        <t t-if="contact_intro_text" t-esc="contact_intro_text"/>
+        <t t-if="not contact_intro_text">
+            <tag>If you have any questions, please contact us at</tag>
+        </t>
+        <t t-if="support_email">
+            <a t-attf-href="mailto:{{ company.support_email or company.email }}" style="color:#1E7EC8;">
+                <t t-esc="company.support_email or company.email"/>
+            </a>
+        </t>
+        <t t-else="">
+            <a t-attf-href="mailto:{{ company.email }}" style="color:#1E7EC8;">
+                <t t-esc="company.email"/>
+            </a>
+        </t>
+        <tag>or give us a call at</tag>
+        <t t-esc="company.phone" t-options='{"widget": "phone_formatter", "company_id": company.id}'/>,
+        <t t-esc="company.hours_of_operation"/>.
+        <t t-if="extra_text and extra_text != ''">
+            <br/>
+            <br/>
+            <t t-esc="extra_text"/>
+        </t>
+        <br/>
+        <br/>
+        <tag style="font-size: 16px; line-height: 28px;">The OnLogic Team</tag>
+    </template>
 
-                    <td style="padding: 10px 10px;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
-                            US Dollars
-                            <span style="font-weight: 500;">ONLY</span>
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-              <!--[if mso]>
-                  </td>
-                  </tr>
-                  </table>
-                  <![endif]-->
-            </td>
-          </tr>
+    <template id="ol_templates.ol_no_account_info">
+        <t t-if="not contact_intro_text">
+            <tag>If you do not have an account, or have any other questions, please contact us at</tag>
+        </t>
+        <a t-attf-href="mailto:{{ company.email }}" style="color:#1E7EC8;">
+            <t t-esc="company.email"/>
+        </a>
+        <tag>or give us a call at</tag>
+        <t t-esc="company.phone" t-options='{"widget": "phone_formatter", "company_id": company.id}'/>,
+        <t t-esc="company.hours_of_operation"/>.
+    </template>
 
-        </table>
-        <!--[if mso]>
-            </td>
-            </tr>
-            </table>
-            <![endif]-->
-      </td>
-    </tr>
-    <!-- END: Domestic: ACH Payment Instructions -->
-  </template>
+    <template id="ol_templates.here_are_your_order_details">
+        <tag>Here are your order details</tag>:
+        <br/>
+        <tag style="display: inline-block; font-weight: 500;">
+            Your Order Number
+        </tag>
+        <span style="font-weight: 500;" t-esc="order.name"/>
+        <t t-if="order.client_order_ref">
+            <br/>
+            <tag style="padding-bottom: 6px; display: inline-block; font-weight: 500;">
+                Your PO Number
+            </tag>
+            <span style="font-weight: 500;" t-esc="order.client_order_ref"/>
+        </t>
+    </template>
 
-  <template id="ol_templates.ol_international_ach_info_us">
-    <!-- TODO: get the info dynamically!! (based on company) -->
-    <!-- START: International: Wire Payment Instructions -->
-    <tr>
-      <td bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%">
-        <!--[if mso]>
-            <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-            <tr>
-            <td align="center" valign="top" width="600">
-            <![endif]-->
-        <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="87%"
-               style="max-width:540px; border: 1px solid #f3f3f3;">
-
-          <tr>
-            <td bgcolor="#f3f3f3" style="padding: 8px 10px; font-size:16px;">
-              <span style="font-weight: 500;">International:</span>
-              ACH Payment Instructions
-            </td>
-          </tr>
-
-          <tr>
-            <td align="center" valign="top" style="font-size:0; padding: 0;">
-              <!--[if mso]>
-                  <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-                  <tr>
-                  <td align="left" valign="top" width="260">
-                  <![endif]-->
-              <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
-                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                  <tr>
-                    <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3; vertical-align: top;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500; vertical-align: top;">
-                            Beneficiary Info.
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-
-                    <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
-                            OnLogic
-                            <br/>
-                            435 Community Dr
-                            <br/>
-                            South Burlington, VT 05403
-                            <br/>
-                            (802) 861 2300
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-              <!--[if mso]>
-                  </td>
-                  </tr>
-                  </table>
-                  <![endif]-->
-            </td>
-          </tr>
-
-          <tr>
-            <td align="center" valign="top" style="font-size:0; padding: 0;">
-              <!--[if mso]>
-                  <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-                  <tr>
-                  <td align="left" valign="top" width="260">
-                  <![endif]-->
-              <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
-                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                  <tr>
-                    <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3; vertical-align: top;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;  font-weight: 500;">
-                            Bank Info.
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-
-                    <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
-                            JP Morgan Chase
-                            <br/>
-                            New York, NY 10017
-                            <br/>
-                            (241) 965-4351
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-              <!--[if mso]>
-                  </td>
-                  </tr>
-                  </table>
-                  <![endif]-->
-            </td>
-          </tr>
-
-          <tr>
-            <td align="center" valign="top" style="font-size:0; padding: 0;">
-              <!--[if mso]>
-                  <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-                  <tr>
-                  <td align="left" valign="top" width="260">
-                  <![endif]-->
-              <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
-                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                  <tr>
-                    <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500;">
-                            Beneficiary Account #
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-
-                    <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
-                            767551010
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-              <!--[if mso]>
-                  </td>
-                  </tr>
-                  </table>
-                  <![endif]-->
-            </td>
-          </tr>
-
-          <tr>
-            <td align="center" valign="top" style="font-size:0; padding: 0;">
-              <!--[if mso]>
-                  <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-                  <tr>
-                  <td align="left" valign="top" width="260">
-                  <![endif]-->
-              <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
-                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                  <tr>
-                    <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500;">
-                            ABA/Fedwire
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-
-                    <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
-                            021000021
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-              <!--[if mso]>
-                  </td>
-                  </tr>
-                  </table>
-                  <![endif]-->
-            </td>
-          </tr>
-
-          <tr>
-            <td align="center" valign="top" style="font-size:0; padding: 0;">
-              <!--[if mso]>
-                  <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-                  <tr>
-                  <td align="left" valign="top" width="260">
-                  <![endif]-->
-              <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
-                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                  <tr>
-                    <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500;">
-                            Bank SWIFT
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-
-                    <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
-                            CHASUS33
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-              <!--[if mso]>
-                  </td>
-                  </tr>
-                  </table>
-                  <![endif]-->
-            </td>
-          </tr>
-
-          <tr>
-            <td align="center" valign="top" style="font-size:0; padding: 0;">
-              <!--[if mso]>
-                  <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-                  <tr>
-                  <td align="left" valign="top" width="260">
-                  <![endif]-->
-              <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
-                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                  <tr>
-                    <td style="padding: 10px 10px; border-right: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500;">
-                            Currency
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-
-                    <td style="padding: 10px 10px;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
-                            US Dollars
-                            <span style="font-weight: 500;">ONLY</span>
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-              <!--[if mso]>
-                  </td>
-                  </tr>
-                  </table>
-                  <![endif]-->
-            </td>
-          </tr>
-
-        </table>
-        <!--[if mso]>
-            </td>
-            </tr>
-            </table>
-            <![endif]-->
-      </td>
-    </tr>
-    <!-- END: International: Wire Payment Instructions -->
-  </template>
-
-  <template id="ol_templates.ol_domestic_ach_info_eu">
-    <!-- TODO: get the info dynamically (based on company)!! -->
-    <!-- START: Domestic: ACH Payment Instructions -->
-    <tr>
-      <td bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%">
-        <!--[if mso]>
-            <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-            <tr>
-            <td align="center" valign="top" width="600">
-            <![endif]-->
-        <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="87%"
-               style="max-width:540px; border: 1px solid #f3f3f3;">
-
-          <tr>
-            <td bgcolor="#f3f3f3" style="padding: 8px 10px; font-size:16px;">
-              <span style="font-weight: 500;">
-                <tag>Bank transfer</tag>
-              </span>
-            </td>
-          </tr>
-
-          <tr>
-            <td align="center" valign="top" style="font-size:0; padding: 0;">
-              <!--[if mso]>
-                  <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-                  <tr>
-                  <td align="left" valign="top" width="260">
-                  <![endif]-->
-              <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
-                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                  <tr>
-                    <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3; vertical-align: top;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500; vertical-align: top;">
-                            Beneficiary Info.
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-
-                    <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
-                            OnLogic
-                            <br/>
-                            De Boedingen 39,
-                            <br/>
-                            4906 BA Oosterhout NB,
-                            <br/>
-                            The Netherlands
-                            <br/>
-                            +31 88 5200 700
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-              <!--[if mso]>
-                  </td>
-                  </tr>
-                  </table>
-                  <![endif]-->
-            </td>
-          </tr>
-
-          <tr>
-            <td align="center" valign="top" style="font-size:0; padding: 0;">
-              <!--[if mso]>
-                  <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-                  <tr>
-                  <td align="left" valign="top" width="260">
-                  <![endif]-->
-              <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
-                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                  <tr>
-                    <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500;">
-                            IBAN Account Number
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-
-                    <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
-                            NL31RABO0116462450
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-              <!--[if mso]>
-                  </td>
-                  </tr>
-                  </table>
-                  <![endif]-->
-            </td>
-          </tr>
-
-          <tr>
-            <td align="center" valign="top" style="font-size:0; padding: 0;">
-              <!--[if mso]>
-                  <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-                  <tr>
-                  <td align="left" valign="top" width="260">
-                  <![endif]-->
-              <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
-                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                  <tr>
-                    <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500;">
-                            Swift/BIC
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-
-                    <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
-                            RABONL2U
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-              <!--[if mso]>
-                  </td>
-                  </tr>
-                  </table>
-                  <![endif]-->
-            </td>
-          </tr>
-
-          <tr>
-            <td align="center" valign="top" style="font-size:0; padding: 0;">
-              <!--[if mso]>
-                  <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-                  <tr>
-                  <td align="left" valign="top" width="260">
-                  <![endif]-->
-              <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
-                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                  <tr>
-                    <td style="padding: 10px 10px; border-bottom: 1px solid #f3f3f3; border-right: 1px solid #f3f3f3; vertical-align: top;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;  font-weight: 500;">
-                            Bank Info.
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-
-                    <td style="padding: 10px 10px;border-bottom: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
-                            Rabobank
-                            <br/>
-                            Utrecht, The Netherlands
-                            <br/>
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-              <!--[if mso]>
-                  </td>
-                  </tr>
-                  </table>
-                  <![endif]-->
-            </td>
-          </tr>
-
-          <tr>
-            <td align="center" valign="top" style="font-size:0; padding: 0;">
-              <!--[if mso]>
-                  <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" width="600">
-                  <tr>
-                  <td align="left" valign="top" width="260">
-                  <![endif]-->
-              <div style="display:inline-block; margin: 0 -2px; width:100%; vertical-align:top; ">
-                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                  <tr>
-                    <td style="padding: 10px 10px; border-right: 1px solid #f3f3f3;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px; font-weight: 500;">
-                            Currency
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-
-                    <td style="padding: 10px 10px;">
-                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-                             style="font-size: 14px;text-align: left;">
-                        <tr>
-                          <td style="font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; margin: 5px 20px;">
-                            Euro
-                            <span style="font-weight: 500;">ONLY</span>
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-              </div>
-              <!--[if mso]>
-                  </td>
-                  </tr>
-                  </table>
-                  <![endif]-->
-            </td>
-          </tr>
-
-        </table>
-        <!--[if mso]>
-            </td>
-            </tr>
-            </table>
-            <![endif]-->
-      </td>
-    </tr>
-    <!-- END: Domestic: ACH Payment Instructions -->
-  </template>
-
-  <template id="ol_templates.ol_contact_info">
-    <t t-if="contact_intro_text" t-esc="contact_intro_text"/>
-    <t t-if="not contact_intro_text">
-      <tag>If you have any questions, please contact us at</tag>
-    </t>
-    <t t-if="support_email">
-      <a t-attf-href="mailto:{{ company.support_email or company.email }}" style="color:#1E7EC8;">
-        <t t-esc="company.support_email or company.email"/>
-      </a>
-    </t>
-    <t t-else="">
-      <a t-attf-href="mailto:{{ company.email }}" style="color:#1E7EC8;">
-        <t t-esc="company.email"/>
-      </a>
-    </t>
-    <tag>or give us a call at</tag>
-    <t t-esc="company.phone" t-options='{"widget": "phone_formatter", "company_id": company.id}'/>,
-    <!-- TODO: NC : company.hours_of_operation field not found -->
-    <!-- <t t-esc="company.hours_of_operation"/> -->.
-    <t t-if="extra_text and extra_text != ''">
-      <br/>
-      <br/>
-      <t t-esc="extra_text"/>
-    </t>
-    <br/>
-    <br/>
-    <tag style="font-size: 16px; line-height: 28px;">The OnLogic Team</tag>
-  </template>
-
-  <template id="ol_templates.ol_no_account_info">
-    <t t-if="not contact_intro_text">
-      <tag>If you do not have an account, or have any other questions, please contact us at</tag>
-    </t>
-    <a t-attf-href="mailto:{{ company.email }}" style="color:#1E7EC8;">
-      <t t-esc="company.email"/>
-    </a>
-    <tag>or give us a call at</tag>
-    <t t-esc="company.phone" t-options='{"widget": "phone_formatter", "company_id": company.id}'/>,
-    <!-- TODO: NC : company.hours_of_operation field not found -->
-    <!-- <t t-esc="company.hours_of_operation"/> -->.
-  </template>
-
-  <template id="ol_templates.here_are_your_order_details">
-    <tag>Here are your order details</tag>:
-    <br/>
-    <tag style="display: inline-block; font-weight: 500;">
-      Your Order Number
-    </tag>
-    <span style="font-weight: 500;" t-esc="order.name"/>
-    <t t-if="order.client_order_ref">
-      <br/>
-      <tag style="padding-bottom: 6px; display: inline-block; font-weight: 500;">
-        Your PO Number
-      </tag>
-      <span style="font-weight: 500;" t-esc="order.client_order_ref"/>
-    </t>
-  </template>
 </odoo>
