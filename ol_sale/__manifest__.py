@@ -31,7 +31,7 @@
         "data/invoice_created.xml",
 
         "views/product_attribute_views.xml",
-        # "views/product_template_attribute_line_views.xml",
+        "views/product_template_attribute_line_views.xml",
         "views/sale_order_view.xml",
         "views/res_partner_view.xml",
         "views/sale_subscription_views.xml",
