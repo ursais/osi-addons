@@ -9,7 +9,7 @@
     Set product cost price with 6 decimals.
     """,
     "author": "Open Source Integrators",
-    "maintainers": "Open Source Integrators",
+    "maintainers": ["Open Source Integrators"],
     "website": "https://github.com/ursais/osi-addons",
     "category": "Purchase",
     "depends": ["product", "purchase", "stock_account"],
