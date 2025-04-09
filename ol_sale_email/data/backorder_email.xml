@@ -14,7 +14,7 @@
 
             <t t-call="ol_templates.ol_email">
                 <!-- Variables -->
-                <t t-set="sale_order" t-value="object.with_context({'lang': object.partner_id.lang})"/>
+                <t t-set="sale_order" t-value="object.with_context({'lang': object.partner_id.lang or object.env.lang})"/>
                 <t t-set="title" t-value="'Expected arrival date of your order ' + sale_order.name"/>
                 <t t-set="preheader_text" t-value="'Expected arrival date of your order ' + sale_order.name"/>
                 <t t-set="include_newsletter_disclaimer" t-value="False"/>

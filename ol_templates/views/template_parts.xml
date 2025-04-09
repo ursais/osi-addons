@@ -254,10 +254,10 @@
                   <tr>
                     <td width="15%" style="padding-left: 5px; padding-right: 10px;">
                       <t t-if="order_line.product_id.image_128">
-                        <img t-att-src="image_data_uri(order_line.product_id.image_128)" style="width:100%;"/>
+                        <img t-if="order_line.product_id.image_128" t-att-src="image_data_uri(order_line.product_id.image_128)" style="width:100%;"/>
                       </t>
                       <t t-else="">
-                        <img
+                        <img t-if="sale_order.company_id.placeholder_image_product"
                             t-attf-src="data:image;base64,{{sale_order.company_id.placeholder_image_product}}" style="width:100%;"/>
                       </t>
                     </td>

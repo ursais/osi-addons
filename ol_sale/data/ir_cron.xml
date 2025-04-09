@@ -11,8 +11,7 @@
         <field name="interval_type">hours</field>
         <field name="numbercall">-1</field>
         <field name="doall" eval="False"/>
-        <!-- 7pm EST -->
-        <field name="nextcall" eval="'2018-01-02 00:00:00'"/>
+        <field name="nextcall" eval="'2018-01-02 00:00:00'"/> <!-- 7pm EST -->
     </record>
     <record id="ir_cron_send_shipment_bv_action" model="ir.cron">
         <field name="name">[EU] Send Shipment Emails</field>
@@ -24,8 +23,7 @@
         <field name="interval_type">hours</field>
         <field name="numbercall">-1</field>
         <field name="doall" eval="False"/>
-        <!-- 7pm CET -->
-        <field name="nextcall" eval="'2018-01-01 18:00:00'"/>
+        <field name="nextcall" eval="'2018-01-01 18:00:00'"/> <!-- 7pm CET -->
     </record>
 
     <!-- Send invoice emails -->
@@ -39,8 +37,7 @@
         <field name="interval_type">hours</field>
         <field name="numbercall">-1</field>
         <field name="doall" eval="False"/>
-        <!-- 7pm EST -->
-        <field name="nextcall" eval="'2018-01-02 00:00:00'"/>
+        <field name="nextcall" eval="'2018-01-02 00:00:00'"/> <!-- 7pm EST -->
     </record>
     <record id="ir_cron_send_invoice_bv_action" model="ir.cron">
         <field name="name">[EU] Send Invoice Emails</field>
@@ -52,12 +49,11 @@
         <field name="interval_type">hours</field>
         <field name="numbercall">-1</field>
         <field name="doall" eval="False"/>
-        <!-- 7pm CET -->
-        <field name="nextcall" eval="'2018-01-01 18:00:00'"/>
+        <field name="nextcall" eval="'2018-01-01 18:00:00'"/> <!-- 7pm CET -->
     </record>
 
     <!-- Do any necessary quote notifications -->
-    <record id="ir_cron_notify_quote_inc_action" model="ir.cron">
+    <!-- <record id="ir_cron_notify_quote_inc_action" model="ir.cron">
         <field name="name">[US] Send Quote Notifications</field>
         <field name="user_id" search="[('login','=','inc')]"/>
         <field name="model_id" ref="sale.model_sale_order"/>
@@ -67,10 +63,9 @@
         <field name="interval_type">hours</field>
         <field name="numbercall">-1</field>
         <field name="doall" eval="False"/>
-        <!-- 12am EST -->
-        <field name="nextcall" eval="'2018-01-02 05:00:00'"/>
-    </record>
-    <record id="ir_cron_notify_quote_bv_action" model="ir.cron">
+        <field name="nextcall" eval="'2018-01-02 05:00:00'"/> --> <!-- 12am EST -->
+    <!-- </record> -->
+    <!-- <record id="ir_cron_notify_quote_bv_action" model="ir.cron">
         <field name="name">[EU] Send Quote Notifications</field>
         <field name="user_id" search="[('login','=','bv')]"/>
         <field name="model_id" ref="sale.model_sale_order"/>
@@ -80,8 +75,7 @@
         <field name="interval_type">hours</field>
         <field name="numbercall">-1</field>
         <field name="doall" eval="False"/>
-        <!-- 12am CET -->
-        <field name="nextcall" eval="'2018-01-01 23:00:00'"/>
-    </record>
+        <field name="nextcall" eval="'2018-01-01 23:00:00'"/> --> <!-- 12am CET -->
+    <!-- </record> -->
 
 </odoo>

@@ -69,9 +69,13 @@
                             </th>
                         </tr>
                     </thead>
-                    <!-- TODO: NC : "inventory.line_ids" Field not found -->
-                    <!-- <tr t-foreach="inventory.line_ids" t-as="line">
-                        <t t-if="not line.product_id.categ_id.hide_in_inventory">
+                    <tr t-foreach="inventory.stock_quant_ids" t-as="line">
+	                    <!-- TODO: NC : "line.product_id.categ_id.hide_in_inventory" Field not found -->
+                        <!-- <t t-if="not line.product_id.categ_id.hide_in_inventory"> -->
+                        <t>
+                            <td>
+                                <span t-field="line.location_id"/>
+                            </td>
                             <td class="text-left">
                                 <span t-field="line.product_id.code"/>
                             </td>
@@ -79,12 +83,14 @@
                                 <span t-field="line.product_id.name"/>
                             </td>
                             <td class="text-right">
-                                <span t-field="line.theoretical_qty"/>
+                                <!-- TODO: NC : "line.theoretical_qty" Field not found -->
+                                <!-- <span t-field="line.theoretical_qty"/> -->
+                                <span t-field="line.inventory_quantity"/>
                                 <span t-field="line.product_uom_id" groups="product.group_uom"/>
                             </td>
                             <td></td>
                         </t>
-                    </tr> -->
+                    </tr>
                 </table>
             </div>
         </t>

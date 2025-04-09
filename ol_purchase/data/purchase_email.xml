@@ -16,7 +16,7 @@
         <field name="body_html" type="html">
             <div style="margin: 0px; padding: 0px;">
                 <p style="margin: 0px; padding: 0px; font-size: 13px;">
-                    Hi <t t-esc="object.partner_id.name"/>,<br/><br/>
+                    Hi <t t-esc="object.contact_ids and object.contact_ids[0].name or object.partner_id.name"/>,<br/><br/>
                     Attached is a confirmed Purchase Order for <t t-esc="object.company_id.name" />. Please review the PO and confirm Lead Time, Availability and Pricing. If you have any questions, please contact us at <t t-esc="user.email" />.
                     <br/><br/>
                     Thank you for your quick response,<br/><br/>
@@ -57,7 +57,7 @@
         <field name="body_html" type="html">
             <div style="margin: 0px; padding: 0px;">
                 <p style="margin: 0px; padding: 0px; font-size: 13px;">
-                    Hi <t t-esc="object.partner_id.name"/>, <br/><br/>
+                    Hi <t t-esc="object.contact_ids and object.contact_ids[0].name or object.partner_id.name"/>, <br/><br/>
                     Please provide current pricing and lead time for the items below. If you have any questions, please contact us at <t t-esc="user.email"/>.
                     <br/>
                     Thank you for your quick response,
