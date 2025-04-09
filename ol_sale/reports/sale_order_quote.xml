@@ -1,5 +1,6 @@
 <odoo>
 
+    <!-- Remove oob report actions as we will have custom reports -->
     <function model="ir.actions.report"
         name="unlink_action"
         eval="[[ref('sale.action_report_saleorder'), ref('sale.action_report_pro_forma_invoice'), ref('sale_pdf_quote_builder.action_report_saleorder_raw')]]"

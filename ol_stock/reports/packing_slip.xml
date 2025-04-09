@@ -242,26 +242,6 @@
                                 <div class="ol_product_default_code packing" t-esc="product_line['product_default_code']"/>
                             </div>
                         </div>
-                        <!--System configuration-->
-                        <t t-if="not blind_drop_ship and sale_line">
-                            <div class="ol_products_system_configuration ol_slip">
-                            <!-- TODO: NC : "sale_line.quote_config_id" Field not found -->
-                              <!-- <div class="system-configuration" t-if="sale_line.quote_config_id">
-                                <div class="system-configuration-line ol_flex"
-                                    t-foreach="sale_line.quote_config_id.quote_config_line_ids.filtered(lambda l: l.description_type != 'hide')"
-                                    t-as="quote_line">
-                                  <div class="system-configuration-attribute ol_slip">
-                                    <t t-esc="quote_line.qty" t-options="{'widget': 'integer'}"/>
-                                    x
-                                    <t t-esc="quote_line.product_id.name"/>
-                                  </div>
-                                  <div class="system-configuration-product ol_slip">
-                                    <t t-esc="quote_line.product_id.product_tmpl_id.default_code"/>
-                                  </div>
-                                </div>
-                              </div> -->
-                            </div>
-                        </t>
                     </div>
                     <t t-if="not blind_drop_ship and sale_line">
                         <!--System serial numbers and Product notes-->
