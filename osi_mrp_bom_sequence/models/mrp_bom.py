@@ -28,12 +28,12 @@ class MrpBom(models.Model):
             if variant_boms:
                 # Sort Variant BoMs by sequence
                 sorted_variant_boms = variant_boms.sorted(key=lambda x: x.sequence)
-
                 # Update sequences
                 for vbom in sorted_variant_boms:
-                    vbom.sequence = sequence
+                    # Below line takes time, hence updating sequence via SQL.
+                    #vbom.sequence = sequence
+                    self.env.cr.execute("update mrp_bom set sequence=%s where id=%s", (sequence, vbom.id,))
                     sequence += 1
-
         # Get the Master BoM's (AKA have product_id NOT set)
         if product_tmpl_id:
             master_boms = self.search(
