@@ -1,10 +1,10 @@
 <odoo>
 
+    <!-- Remove oob report actions as we will have custom reports -->
     <function model="ir.actions.report"
         name="unlink_action"
         eval="[[ref('purchase.action_report_purchase_order'), ref('purchase.report_purchase_quotation')]]"
     />
-
 
     <!-- Specific paperformat for this document -->
     <!-- A4 -->
