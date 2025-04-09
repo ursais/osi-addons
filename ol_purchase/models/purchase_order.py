@@ -19,7 +19,6 @@ class PurchaseOrder(models.Model):
     )
     shipping_notes = fields.Text(
         string="Shipping Notes",
-        size=50,
     )
     contact_ids = fields.Many2many(
         comodel_name="res.partner",
