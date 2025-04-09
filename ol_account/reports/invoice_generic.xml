@@ -1,5 +1,11 @@
 <odoo>
 
+    <!-- Remove oob report actions as we will have custom reports -->
+    <function model="ir.actions.report"
+        name="unlink_action"
+        eval="[[ref('account.account_invoices'), ref('account.account_invoices_without_payment')]]"
+    />
+
     <!-- Report Action -->
     <record id="action_generic_invoice_report" model="ir.actions.report">
         <field name="name">Invoice</field>
