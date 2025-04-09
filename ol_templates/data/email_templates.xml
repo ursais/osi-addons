@@ -465,22 +465,22 @@
                         <tr>
                             <td style="padding: 15px 0;" align="center">
                                 <a href="https://www.linkedin.com/company/onlogic/">
-                                    <img width="35px" t-att-src="image_data_uri(company.linkedin_image)" />
+                                    <img t-if="company.linkedin_image" width="35px" t-att-src="image_data_uri(company.linkedin_image)" />
                                 </a>
                             </td>
                             <td style="padding: 15px 0;" align="center">
                                 <a href="https://twitter.com/OnLogic">
-                                    <img width="35px" t-att-src="image_data_uri(company.twitter_image)" />
+                                    <img t-if="company.twitter_image" width="35px" t-att-src="image_data_uri(company.twitter_image)" />
                                 </a>
                             </td>
                             <td style="padding: 15px 0;" align="center">
                                 <a href="https://www.youtube.com/c/onlogic">
-                                    <img width="35px" t-att-src="image_data_uri(company.youtube_image)" />
+                                    <img t-if="company.youtube_image" width="35px" t-att-src="image_data_uri(company.youtube_image)" />
                                 </a>
                             </td>
                             <td style="padding: 15px 0;" align="center">
                                 <a href="https://www.facebook.com/OnLogic/">
-                                    <img width="35px" t-att-src="image_data_uri(company.facebook_image)" />
+                                    <img t-if="company.facebook_image" width="35px" t-att-src="image_data_uri(company.facebook_image)" />
                                 </a>
                             </td>
                         </tr>

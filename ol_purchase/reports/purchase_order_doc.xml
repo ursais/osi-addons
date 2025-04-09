@@ -1,4 +1,11 @@
 <odoo>
+
+    <function model="ir.actions.report"
+        name="unlink_action"
+        eval="[[ref('purchase.action_report_purchase_order'), ref('purchase.report_purchase_quotation')]]"
+    />
+
+
     <!-- Specific paperformat for this document -->
     <!-- A4 -->
     <record id="purchase_order_doc_paperformat_a4" model="report.paperformat">
@@ -168,11 +175,11 @@
                       <col width="210"/>
                       <tr>
                           <td>Contact</td>
-                          <td><span t-esc="purchase_order.partner_id.name"/></td>
+                          <td><span t-esc="purchase_order.contact_ids and purchase_order.contact_ids[0].name"/></td>
                       </tr>
                       <tr>
                           <td>Tel</td>
-                          <td ><span t-esc="purchase_order.partner_id.phone"/></td>
+                          <td ><span t-esc="purchase_order.contact_ids and purchase_order.contact_ids[0].phone"/></td>
                       </tr>
                   </table>
               </div>
