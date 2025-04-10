@@ -164,7 +164,7 @@
                       <tr>
                           <td rowspan="2">Vendor</td>
                           <td rowspan="2">
-                              <span t-esc="purchase_order.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;,                                  &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;, &quot;fax&quot;],                                  &quot;no_marker&quot;: True}"/>
+                                <span t-esc="purchase_order.partner_id" t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;, &quot;phone&quot;, &quot;fax&quot;], &quot;no_marker&quot;: True}"/>
                           </td>
                       </tr>
                   </table>

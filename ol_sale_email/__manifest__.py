@@ -10,6 +10,7 @@
     # any module necessary for this one to work correctly
     "depends": [
         "ol_base",
+        "ol_templates",
         "sale_exception",
     ],
     # always loaded

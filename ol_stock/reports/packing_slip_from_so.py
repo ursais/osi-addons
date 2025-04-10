@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import api, models, fields
+from odoo import api, models
 
 
 class ReportPackingSlipFromSo(models.AbstractModel):

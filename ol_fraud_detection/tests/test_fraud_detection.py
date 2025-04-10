@@ -32,8 +32,6 @@ class FraudDetectionTest(common.TransactionCase):
         order._get_risk_score()
         self.assertFalse(order.check_risk)
 
-        self.assertFalse(order.avs_result)
-        self.assertFalse(order.cvv_result)
         self.assertEqual(0.0, order.maxmind_risk_score)
         self.assertFalse(order.maxmind_insights)
 

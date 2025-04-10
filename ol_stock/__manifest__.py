@@ -14,6 +14,7 @@
         "ol_templates",
         "ol_stock_loadcsv",
         "ol_rush_order",
+        "ol_sale",
         "stock",
         "delivery_stock_picking_batch",
         "stock_inventory",
