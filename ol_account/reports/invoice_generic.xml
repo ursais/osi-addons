@@ -38,7 +38,7 @@
                 <t t-set="report_title">Credit</t>
             </t>
             <t t-else="">
-                <t t-set="report_title">Invoice</t>
+                <t t-set="report_title">INVOICE</t>
             </t>
             <!--Set template variables-->
             <t t-set="title" t-value="'Invoice PDF Report'"/>

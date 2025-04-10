@@ -11,7 +11,7 @@
         <field name="name">Purchase Order - Send by Email</field>
         <field name="model_id" ref="purchase.model_purchase_order" />
         <field name="email_from">{{ user.email_formatted or object.company_id.email_formatted  }}</field>
-        <field name="partner_to">{{ object.partner_id and object.partner_id.id object.partner_id.contact_ids and object.partner_id.contact_ids.ids }} </field>
+        <field name="partner_to">{{ object.contact_ids and object.contact_ids[0].id or object.partner_id and object.partner_id.id }} </field>
         <field name="subject">{{ object.company_id.name }} Purchase Order {{ object.name or 'n/a' }}</field>
         <field name="body_html" type="html">
             <div style="margin: 0px; padding: 0px;">
@@ -22,30 +22,31 @@
                     Thank you for your quick response,<br/><br/>
                     <t t-esc="user.partner_id.name" /> <br/>
                     <t t-esc="object.company_id.name" /> <br/>
-                    <t t-esc="user.partner_id.phone or ''" /><br/><br/>
-                    PURCHASE ORDER<br/>=================================== <br/>
-                    NOTE: the information below is listed for convenience only, please see the attached pdf for the official PO.<br/>
-                    Purchase Order from <t t-esc="object.company_id.name" /> <br/>
-                    PO Number: <t t-esc="object.name" /> <br/>
-                    Vendor: <t t-esc="object.partner_id.name" /> <br/>
+                    <t t-esc="user.partner_id.phone or ''" /><br/><br/><br/>
+                    PURCHASE ORDER<br/>=================================== <br/><br/>
+                    NOTE: the information below is listed for convenience only, please see the attached pdf for the official PO.<br/><br/>
+                    Purchase Order from <t t-esc="object.company_id.name" /> <br/><br/>
+                    PO Number: <t t-esc="object.name" /> <br/><br/>
+                    Vendor: <t t-esc="object.partner_id.name" /> <br/><br/>
                     <br/>
-                    ITEMS<br/>=================================== <br/>
+                    ITEMS<br/>=================================== <br/><br/>
                     <t t-foreach="object.order_line" t-as="order_line">
                         <t t-esc="order_line.product_uom_qty" t-options="{'widget': 'integer'}"/>  x <t t-esc="order_line.product_id.name"/><br/>
                     </t>
                     <br/><br/>
-                    NOTES<br/>=================================== <br/>
-                    Please confirm PO to <t t-esc="user.email" /> within 72 hours of receipt of order with commit ship date. <br/>
-                    Reference PO Number and <t t-esc="object.company_id.name" /> internal part number on all packing lists, invoices and shipping cartons. <br/>
-                    <t t-esc="object.company_id.name" /> has full cargo and shipping insurance. When shipping on <t t-esc="object.company_id.name" /> account do NOT apply insurance. <br/>
-                    Reference  <t t-esc="object.company_id.name" /> PO Number  on carrier AWB  and send tracking info to <t t-esc="user.email" /> as soon as it is available. <br/>
-                    All purchase orders are cancellable and returnable unless otherwise agreed to in writing. <br/>
+                    NOTES<br/>=================================== <br/><br/>
+                    Please confirm PO to <t t-esc="user.email" /> within 72 hours of receipt of order with commit ship date. <br/><br/>
+                    Reference PO Number and <t t-esc="object.company_id.name" /> internal part number on all packing lists, invoices and shipping cartons. <br/><br/>
+                    <t t-esc="object.company_id.name" /> has full cargo and shipping insurance. When shipping on <t t-esc="object.company_id.name" /> account do NOT apply insurance. <br/><br/>
+                    Reference  <t t-esc="object.company_id.name" /> PO Number  on carrier AWB  and send tracking info to <t t-esc="user.email" /> as soon as it is available. <br/><br/>
+                    All purchase orders are cancellable and returnable unless otherwise agreed to in writing. <br/><br/>
                     ==================================== <br/>
                 </p>
             </div>
         </field>
         <field name="lang">{{ object.partner_id.lang }}</field>
         <field name="auto_delete" eval="False" />
+        <field name="report_template_ids" eval="[(4, ref('purchase.action_report_purchase_order'))]"/>
     </record>
 
     <record id="purchase.email_template_edi_purchase" model="mail.template">
@@ -65,16 +66,17 @@
                     <t t-esc="user.partner_id.name" /> <br/>
                     <t t-esc="object.company_id.name" /> <br/>
                     <t t-esc="user.partner_id.phone or ''" /><br/>
-                    <br/>
-                    ITEMS<br/>=================================== <br/>
+                    <br/><br/>
+                    ITEMS<br/>=================================== <br/><br/>
                     <t t-foreach="object.order_line" t-as="order_line">
-                        <t t-esc="order_line.product_uom_qty" t-options="{'widget': 'integer'}"/>  x <t t-esc="order_line.product_id.name"/><br/>
+                        <t t-esc="order_line.product_uom_qty" t-options="{'widget': 'integer'}"/>  x <t t-esc="order_line.product_id.name"/><br/><br/>
                     </t>
                 </p>
             </div>
         </field>
         <field name="lang">{{ object.partner_id.lang }}</field>
         <field name="auto_delete" eval="False" />
+        <field name="report_template_ids" eval="[(4, ref('purchase.action_report_purchase_order'))]"/>
     </record>
 
     <function name="write" model="ir.model.data">

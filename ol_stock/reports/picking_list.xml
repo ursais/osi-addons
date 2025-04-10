@@ -241,14 +241,6 @@
           <!--Product: image, name, sku, data-->
           <div class="ol_products_info_cont ol_flex ol_picking">
 
-            <div class="ol_product_location packing">
-              <span t-esc="product_line['product_tmpl'].loc_row"/>
-              <span t-if="product_line['product_tmpl'].loc_row">,</span>
-              <span t-esc="product_line['product_tmpl'].loc_rack"/>
-              <span t-if="product_line['product_tmpl'].loc_rack">,</span>
-              <span t-esc="product_line['product_tmpl'].loc_case"/>
-            </div>
-
             <div class="ol_product_default_code ol_picking packing">
               <div t-esc="product_line['product_default_code']"/>
             </div>
