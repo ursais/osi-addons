@@ -12,6 +12,7 @@
     # any module necessary for this one to work correctly
     "depends": [
         "ol_base",
+        "ol_templates",
         "helpdesk_repair",
     ],
     # always loaded
