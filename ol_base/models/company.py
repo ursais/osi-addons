@@ -22,6 +22,10 @@ class ResCompany(models.Model):
         translate=True,
         default="Monday - Friday, 8:30am - 6:00pm (ET)",
     )
+    support_email = fields.Char(
+        string="Support email address",
+        required=True,
+    )
     terms_and_conditions_url = fields.Char(string="Terms and conditions URL")
 
     # Europe
