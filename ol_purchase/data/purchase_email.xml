@@ -47,7 +47,7 @@
         </field>
         <field name="lang">{{ object.partner_id.lang }}</field>
         <field name="auto_delete" eval="False" />
-        <field name="report_template_ids" eval="[(4, ref('purchase.action_report_purchase_order_doc_label'))]"/>
+        <field name="report_template_ids" eval="[(4, ref('ol_purchase.action_report_purchase_order_doc_label'))]"/>
     </record>
 
     <record id="purchase.email_template_edi_purchase" model="mail.template">
