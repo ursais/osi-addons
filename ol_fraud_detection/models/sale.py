@@ -58,12 +58,6 @@ def _build_request_dict(order):
         "order": {"currency": order.currency_id.name, "amount": order.amount_total},
     }
 
-    if order.avs_result or order.cvv_result:
-        request["credit_card"] = {
-            "avs_result": order.avs_result or "U",
-            "cvv_result": order.cvv_result or "P",
-        }
-
     return request
 
 
@@ -88,8 +82,6 @@ class SaleOrder(models.Model):
     customer_ip = fields.Char("IP Address", readonly=True, copy=False)
     user_agent = fields.Char("User Agent", readonly=True, copy=False)
     accept_language = fields.Char("Accept Language", readonly=True, copy=False)
-    avs_result = fields.Char("AVS Result", compute="_compute_avs_codes")
-    cvv_result = fields.Char("CVV Result", compute="_compute_avs_codes")
     check_risk = fields.Boolean("Calculate Risk Score", readonly=True, copy=False)
     maxmind_risk_score = fields.Float("Risk Score", readonly=True, copy=False)
     maxmind_insights = fields.Text("Risk Factors", copy=False)
@@ -100,20 +92,6 @@ class SaleOrder(models.Model):
 
     # END ########
     # MEHTODS ####
-
-    def _compute_avs_codes(self):
-        """
-        For a stripe order, collect AVS and CVV code from charge
-        """
-        for order in self:
-            # TODO: Waiting on answer for stripe.charge which is what stripe_charge_ids would come from.
-            if order.payment_method_id.name == "stripe" and order.stripe_charge_ids:
-                stripe_charge = order.stripe_charge_ids[0]
-                order.avs_result = stripe_charge.avs_result
-                order.cvv_result = stripe_charge.cvv_result
-            else:
-                order.avs_result = False
-                order.cvv_result = False
 
     def action_confirm(self):
         """

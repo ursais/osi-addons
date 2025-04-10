@@ -2,7 +2,7 @@
 from odoo import fields, models
 
 
-class aymentMethod(models.Model):
+class PaymentMethod(models.Model):
     """Inherit payment method to add fraud check setting field."""
 
     _inherit = "payment.method"

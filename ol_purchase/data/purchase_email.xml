@@ -1,5 +1,6 @@
 <odoo>
 
+    <!-- Override oob noupdate setting so we can change the base reports. -->
     <function name="write" model="ir.model.data">
         <function name="search" model="ir.model.data">
             <value eval="[('module', 'in',['purchase']), ('name', 'in',['email_template_edi_purchase_done', 'email_template_edi_purchase'])]" />
@@ -46,7 +47,7 @@
         </field>
         <field name="lang">{{ object.partner_id.lang }}</field>
         <field name="auto_delete" eval="False" />
-        <field name="report_template_ids" eval="[(4, ref('purchase.action_report_purchase_order'))]"/>
+        <field name="report_template_ids" eval="[(4, ref('purchase.action_report_purchase_order_doc_label'))]"/>
     </record>
 
     <record id="purchase.email_template_edi_purchase" model="mail.template">
@@ -76,9 +77,10 @@
         </field>
         <field name="lang">{{ object.partner_id.lang }}</field>
         <field name="auto_delete" eval="False" />
-        <field name="report_template_ids" eval="[(4, ref('purchase.action_report_purchase_order'))]"/>
+        <field name="report_template_ids" eval="[(4, ref('ol_purchase.action_report_purchase_order_doc_label'))]"/>
     </record>
 
+    <!-- Override oob noupdate setting back to noupdate true so base doesn't update them. -->
     <function name="write" model="ir.model.data">
         <function name="search" model="ir.model.data">
             <value eval="[('module', 'in',['purchase']), ('name', 'in',['email_template_edi_purchase_done','email_template_edi_purchase'])]" />

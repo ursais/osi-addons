@@ -8,7 +8,7 @@
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="ol_base.role_engineering_res_groups" />
         <field name="definition_type">domain</field>
-        <field name="definition_domain" eval="[('stage_id', '=', ref('ol_mrp_plm.onl_new_stage')), ('type_id', 'in', [ref('ol_mrp_plm.new_sku'), ref('ol_mrp_plm.engineering_change_order'), ref('ol_mrp_plm.product_change_notifications'), ref('ol_mrp_plm.end_of_life')])]" />
+        <field name="definition_domain" eval="[('stage_id', '=', ref('ol_mrp_plm.onl_new_pm')), ('type_id', 'in', [ref('ol_mrp_plm.new_sku'), ref('ol_mrp_plm.engineering_change_order'), ref('ol_mrp_plm.product_change_notifications'), ref('ol_mrp_plm.end_of_life')])]" />
         <field name="company_id" eval="False" />
     </record>
 
@@ -20,7 +20,7 @@
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="ol_base.role_project_management_res_groups" />
         <field name="definition_type">domain</field>
-        <field name="definition_domain" eval="[('stage_id', '=', ref('ol_mrp_plm.onl_new_stage')), ('type_id', 'in', [ref('ol_mrp_plm.new_system'), ref('ol_mrp_plm.product_change_notifications')])]" />
+        <field name="definition_domain" eval="[('stage_id', '=', ref('ol_mrp_plm.onl_new_pm')), ('type_id', 'in', [ref('ol_mrp_plm.new_system'), ref('ol_mrp_plm.product_change_notifications')])]" />
         <field name="company_id" eval="False" />
     </record>
 
@@ -32,7 +32,7 @@
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="ol_base.role_operations_res_groups" />
         <field name="definition_type">domain</field>
-        <field name="definition_domain" eval="[('stage_id', '=', ref('ol_mrp_plm.onl_new_stage')), ('type_id', '=', ref('ol_mrp_plm.operations_new_consumable'))]" />
+        <field name="definition_domain" eval="[('stage_id', '=', ref('ol_mrp_plm.onl_new_pm')), ('type_id', '=', ref('ol_mrp_plm.operations_new_consumable'))]" />
         <field name="company_id" eval="False" />
     </record>
 
@@ -44,7 +44,7 @@
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="ol_base.role_sales_res_groups" />
         <field name="definition_type">domain</field>
-        <field name="definition_domain" eval="[('stage_id', '=', ref('ol_mrp_plm.onl_new_stage')), ('type_id', '=', ref('ol_mrp_plm.end_of_sale'))]" />
+        <field name="definition_domain" eval="[('stage_id', '=', ref('ol_mrp_plm.onl_new_pm')), ('type_id', '=', ref('ol_mrp_plm.end_of_sale'))]" />
         <field name="company_id" eval="False" />
     </record>
 
@@ -56,7 +56,7 @@
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="ol_base.role_product_management_res_groups" />
         <field name="definition_type">domain</field>
-        <field name="definition_domain" eval="[('stage_id', '=', ref('ol_mrp_plm.onl_new_stage')), ('type_id', 'in', [ref('ol_mrp_plm.end_of_sale'), ref('ol_mrp_plm.end_of_life')])]" />
+        <field name="definition_domain" eval="[('stage_id', '=', ref('ol_mrp_plm.onl_new_pm')), ('type_id', 'in', [ref('ol_mrp_plm.end_of_sale'), ref('ol_mrp_plm.end_of_life')])]" />
         <field name="company_id" eval="False" />
     </record>
 
@@ -68,7 +68,7 @@
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="ol_base.role_engineering_res_groups" />
         <field name="definition_type">domain</field>
-        <field name="definition_domain" eval="[('stage_id', '=', ref('ol_mrp_plm.product_state_eng_assessment'))]" />
+        <field name="definition_domain" eval="[('stage_id', '=', ref('ol_mrp_plm.product_state_engi_assessment'))]" />
         <field name="company_id" eval="False" />
     </record>
 
@@ -79,18 +79,7 @@
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="ol_base.role_engineering_res_groups" />
         <field name="definition_type">domain</field>
-        <field name="definition_domain" eval="[('stage_id', '=', ref('ol_mrp_plm.product_state_tech_assessment'))]" />
-        <field name="company_id" eval="False" />
-    </record>
-
-    <record id="tier_def_plm_support_work_stg" model="tier.definition">
-        <field name="name">PLM: Support &amp; Work Instructions (Operations)</field>
-        <field name="sequence">8</field>
-        <field name="model_id" ref="mrp_plm.model_mrp_eco"/>
-        <field name="review_type">group</field>
-        <field name="reviewer_group_id" ref="ol_base.role_operations_res_groups" />
-        <field name="definition_type">domain</field>
-        <field name="definition_domain" eval="[('stage_id', '=', ref('ol_mrp_plm.product_state_support_and_work_instructions'))]" />
+        <field name="definition_domain" eval="[('stage_id', '=', ref('ol_mrp_plm.product_state_engi_assessment'))]" />
         <field name="company_id" eval="False" />
     </record>
 
@@ -102,7 +91,7 @@
         <field name="review_type">group</field>
         <field name="reviewer_group_id" ref="ol_base.role_project_management_res_groups" />
         <field name="definition_type">domain</field>
-        <field name="definition_domain" eval="[('stage_id', 'in', [ref('ol_mrp_plm.onl_new_stage'), ref('ol_mrp_plm.product_state_evt'), ref('ol_mrp_plm.product_state_dvt')]), ('type_id', 'in', [ref('ol_mrp_plm.new_system')])]" />
+        <field name="definition_domain" eval="[('stage_id', 'in', [ref('ol_mrp_plm.onl_new_pm'), ref('ol_mrp_plm.product_state_evt'), ref('ol_mrp_plm.product_state_dvt')]), ('type_id', 'in', [ref('ol_mrp_plm.new_system')])]" />
         <field name="company_id" eval="False" />
     </record>
 
