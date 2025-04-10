@@ -1,5 +1,5 @@
 <odoo>
-    <!-- base.view_partner_form -->
+
     <record id="view_partner_form_inherit_ol_crm" model="ir.ui.view">
         <field name="name">res.partner.form</field>
         <field name="model">res.partner</field>
@@ -10,4 +10,5 @@
             </field>
         </field>
     </record>
+
 </odoo>

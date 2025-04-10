@@ -42,6 +42,7 @@
 
     <record id="tech_exception" model="mrp.eco.type">
         <field name="name">Tech Exception</field>
-        <field name="sequence">9</field> 
+        <field name="sequence">9</field>
     </record>
+
 </odoo>
