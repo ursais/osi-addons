@@ -1,4 +1,5 @@
 <odoo>
+
 	<record id="mrp_plm.product_normal_form_view_inherit_version_plm" model="ir.ui.view">
         <field name="name">product.product.view.form.inherit.version.plm</field>
         <field name="model">product.product</field>

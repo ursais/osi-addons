@@ -3,8 +3,12 @@ from odoo import fields, models
 
 
 class ResPartner(models.Model):
-    """Add tag_ids field to CRM Stage."""
+    """Add hotspot url field to partner."""
 
     _inherit = "res.partner"
 
+    # COLUMNS ######
+
     hubspot_url = fields.Char("HubSpot URL")
+
+    # END ##########

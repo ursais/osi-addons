@@ -1,5 +1,4 @@
 <odoo>
-    <!-- crm.crm_stage_form -->
 
     <record id="crm_stage_form_inherit_ol_crm" model="ir.ui.view">
         <field name="name">crm.stage.form</field>
@@ -11,4 +10,5 @@
             </field>
         </field>
     </record>
+
 </odoo>
