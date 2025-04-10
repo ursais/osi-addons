@@ -44,11 +44,6 @@
                         <div class="content stock-inventory-label">
                             <div class="label-header">
                                 <t t-esc="product_id.default_code"/>
-                                <div class="location">
-                                    <t t-esc="product_id.loc_row or '_'"/>
-                                    <t t-esc="product_id.loc_rack or '_'"/>
-                                    <t t-esc="product_id.loc_case or '_'"/>
-                                </div>
                             </div>
                             <table class="inventory-count">
                                 <tr>

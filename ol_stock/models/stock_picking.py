@@ -45,7 +45,7 @@ class StockPicking(models.Model):
 
         # Order the lines by the location row
         moves = self.move_ids.sorted(
-            key=lambda m: m.product_id.product_tmpl_id.loc_row or ""
+            key=lambda m: m.location_id and m.location_id.id
         )
 
         # Keep track of Sale Order Line's for which an existing product_line's qty was already increased
@@ -140,11 +140,7 @@ class StockPicking(models.Model):
         # Order the lines by the location row
         # TODO: Update this to also sort by rack / shelfs
         moves = self.move_ids.sorted(
-            key=lambda m: (
-                int(m.product_id.product_tmpl_id.loc_row.split()[0])
-                if m.product_id.product_tmpl_id.loc_row
-                else 0
-            )
+            key=lambda m: m.location_id and m.location_id.id
         )
 
         for move in moves:

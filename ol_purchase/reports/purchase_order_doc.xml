@@ -175,11 +175,11 @@
                       <col width="210"/>
                       <tr>
                           <td>Contact</td>
-                          <td><span t-esc="purchase_order.contact_ids and purchase_order.contact_ids[0].name"/></td>
+                          <td><span t-esc="purchase_order.contact_ids and purchase_order.contact_ids[0].name or ''"/></td>
                       </tr>
                       <tr>
                           <td>Tel</td>
-                          <td ><span t-esc="purchase_order.contact_ids and purchase_order.contact_ids[0].phone"/></td>
+                          <td ><span t-esc="purchase_order.contact_ids and purchase_order.contact_ids[0].phone or ''"/></td>
                       </tr>
                   </table>
               </div>
