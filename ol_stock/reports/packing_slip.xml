@@ -2,7 +2,7 @@
 
     <!-- Report Action -->
     <record id="action_packing_slip_report" model="ir.actions.report">
-        <field name="name">Packing Slip</field>
+        <field name="name">Packing Slip/Picking List</field>
         <field name="model">stock.picking</field>
         <field name="report_type">qweb-pdf</field>
         <field name="print_report_name">'%s Packing Slip' % (object.name or '')</field>
