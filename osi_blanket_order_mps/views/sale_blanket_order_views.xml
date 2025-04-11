@@ -32,12 +32,13 @@
             >
                 <attribute name="optional">hide</attribute>
             </xpath>
-            <xpath
+            <!-- Disabled as some projects have bom_id added via configurator. Enable if needed. -->
+            <!-- <xpath
                 expr="//field[@name='line_ids']/tree/field[@name='analytic_distribution']"
                 position="before"
             >
                 <field name="bom_id" optional="hide" />
-            </xpath>
+            </xpath> -->
             <field name="line_ids" position="attributes">
                 <attribute name="readonly">state in ['done', 'expired']</attribute>
                 <attribute name="force_save">1</attribute>
