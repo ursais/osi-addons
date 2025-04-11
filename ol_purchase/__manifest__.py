@@ -18,10 +18,10 @@
     ],
     # always loaded
     "data": [
-        "data/purchase_email.xml",
         "views/res_partner_view.xml",
         "views/purchase_order_view.xml",
         "views/product_view.xml",
         "reports/purchase_order_doc.xml",
+        "data/purchase_email.xml",
     ],
 }
