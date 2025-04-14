@@ -45,7 +45,8 @@ class ProductConfigSession(models.Model):
             value_ids=value_ids, custom_vals=custom_vals
         )
         if self.session_value_quantity_ids and result.id != self.product_id.id:
-            result.product_attribute_value_qty_ids.unlink()
+            # result.product_attribute_value_qty_ids.unlink()
+            self.env.cr.execute("delete from product_product_attribute_value_qty where product_id=%s", (result.id,))
             qty_attr_obj = self.env["product.product.attribute.value.qty"]
             qty_list = []
             for qty_value in self.session_value_quantity_ids:
@@ -577,6 +578,7 @@ class ProductConfigSession(models.Model):
                 for operation_line in parent_bom.operation_ids:
                     operation_line.copy(default={"bom_id": mrp_bom_id.id})
             return mrp_bom_id
+
         return False
 
 
