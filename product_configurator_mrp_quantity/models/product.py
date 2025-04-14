@@ -8,11 +8,11 @@ class ProductProductAttributeValueQty(models.Model):
     _description = "A link between variants and attributes and the quantity of that combination Fields"
 
     product_id = fields.Many2one(
-        "product.product", string="Product Variant", ondelete="cascade"
+        "product.product", string="Product Variant", ondelete="cascade", index=True
     )
-    attr_value_id = fields.Many2one("product.attribute.value", required=True)
+    attr_value_id = fields.Many2one("product.attribute.value", required=True, index=True)
     qty = fields.Integer(string="Quantity")
-    attribute_value_qty_id = fields.Many2one("attribute.value.qty", ondelete="cascade")
+    attribute_value_qty_id = fields.Many2one("attribute.value.qty", ondelete="cascade", index=True)
 
     @api.depends("attr_value_id", "qty")
     def _compute_display_name(self):
@@ -45,8 +45,7 @@ class ProductProduct(models.Model):
     qty_combination_indices = fields.Char(
         compute="_compute_qty_combination_indices", store=True, index=True
     )
-
-
+    
     def _get_non_config_set_bom_lines(self):
         self.ensure_one()
         attribute_value = self.env["product.attribute.value"]
