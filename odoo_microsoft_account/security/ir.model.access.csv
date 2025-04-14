@@ -1,5 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_res_users,res.users,base.model_res_users,odoo_microsoft_account.group_office365_user,1,0,0,0
-access_res_partner,res.partner,base.model_res_partner,odoo_microsoft_account.group_office365_user,1,1,1,1
-access_auth_oauth_provider,auth.oauth.provider,auth_oauth.model_auth_oauth_provider,odoo_microsoft_account.group_office365_user,1,1,1,1
-access_ir_cron,ir.cron,base.model_ir_cron,odoo_microsoft_account.group_office365_user,1,1,1,1
