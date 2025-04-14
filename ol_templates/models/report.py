@@ -6,7 +6,7 @@ class IrActionsReport(models.Model):
     _inherit = "ir.actions.report"
 
     # COLUMNS #####
-    # FIXME: change to add company in there somewhere
+
     paperformat_xmlid_base = fields.Char(string="Base name of paper format XML ID")
 
     # END #########

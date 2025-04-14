@@ -7,14 +7,14 @@
             <field name="arch" type="xml">
                 <form string="Job Estimate" class="o_sale_order">
                 <header>
-                    <button name="estimate_confirm" type="object" string="Confirm" states="draft,sent" class="btn-primary" groups=" sales_team.group_sale_salesman"/>
-                    <button name="estimate_approve" type="object" string="Approve" states="confirm" class="btn-primary" groups=" sales_team.group_sale_salesman"/>
-                    <button name="estimate_reject" type="object" string="Reject" states="confirm" groups=" sales_team.group_sale_salesman"/>
-                    <button name="estimate_to_quotation" type="object" string="Create Quotation" states="approve" class="btn-primary"/>
-                    <button name="action_estimate_send" type="object" string="Send by Email" states="draft,sent,confirm,approve,quotesend"  class="btn-primary" groups="sales_team.group_sale_salesman"/>
-                    <!-- <button name="contract_close" type="object" string="Close" states='claim' class="btn-primary" groups="sales_team.group_sale_manager"/> -->
-                    <button name="reset_todraft" type="object" string="Reset to Draft" states='cancel,approve' groups=" sales_team.group_sale_salesman"/>
-                    <button name="estimate_cancel" type="object" string="Cancel" states="draft,sent,reject"/>
+                    <button name="estimate_confirm" type="object" string="Confirm" invisible="state not in ('draft', 'sent')" class="btn-primary" groups=" sales_team.group_sale_salesman"/>
+                    <button name="estimate_approve" type="object" string="Approve" invisible="state not in ('confirm')" class="btn-primary" groups=" sales_team.group_sale_salesman"/>
+                    <button name="estimate_reject" type="object" string="Reject" invisible="state not in ('confirm')" groups=" sales_team.group_sale_salesman"/>
+                    <button name="estimate_to_quotation" type="object" string="Create Quotation" invisible="state not in ('approve')" class="btn-primary"/>
+                    <button name="action_estimate_send" type="object" string="Send by Email" invisible="state not in ('draft', 'sent', 'confirm', 'approve', 'quotesend')" class="btn-primary" groups="sales_team.group_sale_salesman"/>
+                    <!-- <button name="contract_close" type="object" string="Close" invisible="state not in ('claim')" class="btn-primary" groups="sales_team.group_sale_manager"/> -->
+                    <button name="reset_todraft" type="object" string="Reset to Draft" invisible="state not in ('cancel', 'approve')" groups=" sales_team.group_sale_salesman"/>
+                    <button name="estimate_cancel" type="object" string="Cancel" invisible="state not in ('draft', 'sent', 'reject')" />
                     <field name="state" widget="statusbar" string="confirm"  
                                     statusbar_visible="draft,sent,confirm,approve,quotesend"/>
                 </header>

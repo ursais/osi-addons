@@ -2,7 +2,7 @@
 import uuid
 
 # Import Odoo libs
-from odoo import models
+from odoo import fields, models
 
 
 class StockPicking(models.Model):
@@ -10,7 +10,21 @@ class StockPicking(models.Model):
 
     _inherit = "stock.picking"
 
+    # COLUMNS #####
+
+    can_add_stock_moves = fields.Boolean(
+        string="Can Add Stock Moves",
+        compute="_compute_can_add_stock_moves",
+    )
+
+    # END #########
     # METHODS #####
+
+    def _compute_can_add_stock_moves(self):
+        for rec in self:
+            rec.can_add_stock_moves = self.env.user.has_group(
+                "ol_stock.group_allow_incoming_move_addition"
+            )
 
     def action_confirm(self):
         # Call the original button_validate method to confirm the picking
@@ -44,9 +58,7 @@ class StockPicking(models.Model):
         product_lines = []
 
         # Order the lines by the location row
-        moves = self.move_ids.sorted(
-            key=lambda m: m.location_id and m.location_id.id
-        )
+        moves = self.move_ids.sorted(key=lambda m: m.location_id and m.location_id.id)
 
         # Keep track of Sale Order Line's for which an existing product_line's qty was already increased
         qty_adjusted_sale_order_lines = {}
@@ -139,9 +151,7 @@ class StockPicking(models.Model):
 
         # Order the lines by the location row
         # TODO: Update this to also sort by rack / shelfs
-        moves = self.move_ids.sorted(
-            key=lambda m: m.location_id and m.location_id.id
-        )
+        moves = self.move_ids.sorted(key=lambda m: m.location_id and m.location_id.id)
 
         for move in moves:
 
