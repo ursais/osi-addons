@@ -100,7 +100,7 @@
         </td>
         <td style="width: 50%; text-align: right;">
           <div class="subtotal-amount" t-esc="product_subtotal_amount"
-               t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
+               t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}"/>
         </td>
       </tr>
       <tr>
@@ -109,7 +109,7 @@
         </td>
         <td style="width: 50%; text-align: right;">
           <div class="subtotal-amount" t-esc="shipping_subtotal_amount"
-               t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
+               t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}"/>
         </td>
       </tr>
       <tr>
@@ -120,7 +120,7 @@
         </td>
         <td style="width: 50%; text-align: right;">
           <div class="subtotal-amount" t-esc="sale_order.amount_tax"
-               t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
+               t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}"/>
         </td>
       </tr>
       <tr>
@@ -129,7 +129,7 @@
         </td>
         <td style="width: 50%; text-align: right;">
           <div class="subtotal-amount" t-esc="sale_order.amount_total"
-               t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
+               t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}"/>
         </td>
       </tr>
       <t t-if="account_move and account_move.type in ['out_invoice', 'in_invoice']">
@@ -139,7 +139,7 @@
           </td>
           <td style="width: 50%; text-align: right;">
             <div class="subtotal-amount" t-esc="account_move.amount_total - account_move.amount_residual"
-                 t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
+                 t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}"/>
           </td>
         </tr>
         <tr>
@@ -148,7 +148,7 @@
           </td>
           <td style="width: 50%; text-align: right;">
             <div class="subtotal-amount" t-esc="account_move.amount_residual"
-                 t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
+                 t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}"/>
           </td>
         </tr>
       </t>
@@ -279,7 +279,7 @@
                       <!-- TODO: unit price or qty * unit_price? -->
                       <span class="oe_currency_value">
                         <t t-esc="order_line.price_unit"
-                           t-options='{"widget": "monetary_currency_dependent", "display_currency": sale_order.currency_id}'/>
+                           t-options='{"widget": "monetary", "display_currency": sale_order.currency_id or sale_order.env.company.currency_id}'/>
                       </span>
                     </td>
                   </tr>

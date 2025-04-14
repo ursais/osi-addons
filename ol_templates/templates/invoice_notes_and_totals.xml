@@ -16,25 +16,25 @@
                 <t t-if="not budgetary_quote">
                     <div class="subtotal-row ol_flex ol_flex_just_cont_space_between">
                         <div class="subtotal-text">Subtotal</div>
-                        <div class="subtotal-amount" t-esc="invoice.amount_untaxed" t-options="{'widget': 'monetary_currency_dependent', 'display_currency': invoice.currency_id}"/>
+                        <div class="subtotal-amount" t-esc="invoice.amount_untaxed" t-options="{'widget': 'monetary', 'display_currency': invoice.currency_id or invoice.env.company.currency_id}"/>
                     </div>
                     <div class="subtotal-row ol_flex ol_flex_just_cont_space_between">
                         <div class="subtotal-text"><tag>Tax</tag></div>
-                        <div class="subtotal-amount" t-esc="invoice.amount_tax" t-options="{'widget': 'monetary_currency_dependent', 'display_currency': invoice.currency_id}"/>
+                        <div class="subtotal-amount" t-esc="invoice.amount_tax" t-options="{'widget': 'monetary', 'display_currency': invoice.currency_id or invoice.env.company.currency_id}"/>
                     </div>
                     <div class="subtotal-row ol_flex ol_flex_just_cont_space_between grand-total">
                         <div class="subtotal-text">Total</div>
-                        <div class="subtotal-amount" t-esc="invoice.amount_total" t-options="{'widget': 'monetary_currency_dependent', 'display_currency': invoice.currency_id}"/>
+                        <div class="subtotal-amount" t-esc="invoice.amount_total" t-options="{'widget': 'monetary', 'display_currency': invoice.currency_id or invoice.env.company.currency_id}"/>
                     </div>
 
                     <t t-if="invoice and invoice.move_type in ['out_invoice', 'in_invoice']">
                         <div class="subtotal-row ol_flex ol_flex_just_cont_space_between ol_residual">
                             <div class="subtotal-text">Payment Received</div>
-                            <div class="subtotal-amount" t-esc="invoice.amount_total - invoice.amount_residual" t-options="{'widget': 'monetary_currency_dependent', 'display_currency': invoice.currency_id}"/>
+                            <div class="subtotal-amount" t-esc="invoice.amount_total - invoice.amount_residual" t-options="{'widget': 'monetary', 'display_currency': invoice.currency_id or invoice.env.company.currency_id}"/>
                         </div>
                         <div class="subtotal-row ol_flex ol_flex_just_cont_space_between grand-total">
                             <div class="subtotal-text">Balance Due</div>
-                            <div class="subtotal-amount" t-esc="invoice.amount_residual" t-options="{'widget': 'monetary_currency_dependent', 'display_currency': invoice.currency_id}"/>
+                            <div class="subtotal-amount" t-esc="invoice.amount_residual" t-options="{'widget': 'monetary', 'display_currency': invoice.currency_id or invoice.env.company.currency_id}"/>
                         </div>
                     </t>
                 </t>

@@ -2,7 +2,7 @@
 
     <template id="basic_layout_onl" inherit_id="web.basic_layout">
         <xpath expr="//div[hasclass('article')]" position="after">
-            <t t-set="company" t-value="o.company_id"/>
+            <t t-set="company" t-value="o.company_id or o.env.company if o else user.company_id "/>
             <!-- Evaluate the hide_footer variable -->
             <div t-if="not hide_footer" class="footer o_standard_footer">
                 <div style="border-top: 1px solid black;">

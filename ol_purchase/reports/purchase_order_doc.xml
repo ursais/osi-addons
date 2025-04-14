@@ -63,7 +63,7 @@
         <div class="header po_doc_header">
             <h1 class="title"><b>PURCHASE ORDER</b></h1>
             <t t-if="purchase_order.company_id.template_logo">
-                <img t-attf-src="data:image/png;base64,#{purchase_order.company_id.template_logo}" style="float: right; display: inline-block; max-width: 178.75px; max-height: 45px;"/>
+                <img t-if="purchase_order.company_id.template_logo" t-attf-src="data:image/png;base64,{{purchase_order.company_id.template_logo}}" style="float: right; display: inline-block; max-width: 178.75px; max-height: 45px;"/>
             </t>
             <div class="labels">
                 <div class='doc-name'>PO Number</div>

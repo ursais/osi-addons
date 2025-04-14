@@ -599,13 +599,13 @@
             <br t-if="not address.street2"/>
             <div class="ol-address-phone">
                 <span class="ol-phone-icon">
-                    <img t-attf-src="data:image;base64,{{company.placeholder_image_phone_icon}}"/>
+                    <img t-if="company.placeholder_image_phone_icon" t-attf-src="data:image;base64,{{company.placeholder_image_phone_icon}}"/>
                 </span>
                 <p t-esc="address.phone" t-options='{"widget": "phone_formatter", "country_id": address.country_id}'/>
             </div>
             <div class="ol-address-email">
                 <span class="ol-email-icon">
-                    <img t-attf-src="data:image;base64,{{company.placeholder_image_email_icon}}"/>
+                    <img t-if="company.placeholder_image_email_icon" t-attf-src="data:image;base64,{{company.placeholder_image_email_icon}}"/>
                 </span>
                 <p t-esc="address.email"/>
             </div>

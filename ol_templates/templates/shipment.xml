@@ -41,7 +41,7 @@
                                       <t t-esc="sale_order.partner_ups_carrier_account"/>
                                   </t>
                                   <t t-else="">
-                                      <t t-esc="shipping_line.price_subtotal" t-options="{'widget': 'monetary_currency_dependent', 'display_currency': sale_order.currency_id}"/>
+                                      <t t-esc="shipping_line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}"/>
                                   </t>
                               </div>
                             </div>

@@ -95,7 +95,7 @@
                           <tag>Balance Due</tag>
                       </div>
                       <div class="subtotal-amount">
-                          <t t-esc="sale_order.amount_total" t-options="{'widget': 'monetary_currency_dependent', 'display_currency': sale_order.currency_id}"/>
+                          <t t-esc="sale_order.amount_total" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}"/>
                       </div>
                   </div>
 
