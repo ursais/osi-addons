@@ -75,7 +75,7 @@
                                             Order Value
                                         </div>
                                         <div class="col-6">
-                                            <t t-out="doc.sale_id.amount_total" t-options='{"widget": "monetary", "display_currency": doc.sale_id.currency_id}'/>
+                                            <t t-out="doc.sale_id.amount_total" t-options='{"widget": "monetary", "display_currency": doc.sale_id.currency_id or or doc.company_id.currency_id}'/>
                                         </div>
                                     </t>
                                 </div>

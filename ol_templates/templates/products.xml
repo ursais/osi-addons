@@ -62,10 +62,10 @@
 
                                         <div class="ol_products_line_data_item product_price">
                                             <t t-if="invoice_line">
-                                                <span t-field="invoice_line.price_unit" t-options="{'widget': 'monetary_currency_dependent', 'display_currency': sale_order.currency_id}"/>
+                                                <span t-field="invoice_line.price_unit" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}"/>
                                             </t>
                                             <t t-else="">
-                                                <span t-field="sale_order_line.price_unit" t-options="{'widget': 'monetary_currency_dependent', 'display_currency': sale_order.currency_id}"/>
+                                                <span t-field="sale_order_line.price_unit" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}"/>
                                             </t>
                                         </div>
 
@@ -80,10 +80,10 @@
 
                                         <div class="ol_products_line_data_item product_subtotal">
                                             <t t-if="invoice_line">
-                                                <span t-field="invoice_line.price_subtotal" t-options="{'widget': 'monetary_currency_dependent', 'display_currency': sale_order.currency_id}"/>
+                                                <span t-field="invoice_line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}"/>
                                             </t>
                                             <t t-else="">
-                                                <span t-field="sale_order_line.price_subtotal" t-options="{'widget': 'monetary_currency_dependent', 'display_currency': sale_order.currency_id}"/>
+                                                <span t-field="sale_order_line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}"/>
                                             </t>
                                         </div>
 

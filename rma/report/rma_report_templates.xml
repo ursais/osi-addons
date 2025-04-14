@@ -103,7 +103,7 @@
                             <td name="unit_price" class="text-right">
                                 <span
                                     t-field="doc.price_unit"
-                                    t-options='{"widget": "monetary", "display_currency": doc.currency_id}'
+                                    t-options='{"widget": "monetary", "display_currency": doc.currency_id or or doc.env.company.currency_id}'
                                 />
                             </td>
                         </tr>

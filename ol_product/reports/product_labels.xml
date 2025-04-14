@@ -134,7 +134,7 @@
                             </div>
                         </t>
                         <div class="barcode">
-                            <img t-attf-src="data:image/gif;base64,#{product.get_label_barcode()}" width="320"/>
+                            <img t-if="product.get_label_barcode()" t-attf-src="data:image/gif;base64,{{product.get_label_barcode()}}" width="320"/>
                         </div>
                     </div>
                 </div>
@@ -155,7 +155,7 @@
                         <div class="content ol_flex ol_flex_just_cont_space_between padding-top-10">
                             <div class="barcode-box">
                                 <div class="barcode">
-                                    <img t-attf-src="data:image/gif;base64,#{product.get_label_barcode()}" width="300"/>
+                                    <img t-if="product.get_label_barcode()" t-attf-src="data:image/gif;base64,{{product.get_label_barcode()}}" width="300"/>
                                 </div>
                             </div>
                         </div>

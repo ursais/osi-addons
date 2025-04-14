@@ -42,13 +42,13 @@
                                 </div>
                                 <div class="ol_products_line_data ol_flex ol_flex_just_cont_space_between ol_refund">
                                     <div class="ol_products_line_data_item product_price">
-                                        <t t-esc="invoice_line.price_unit" t-options="{'widget': 'monetary_currency_dependent', 'display_currency': invoice.currency_id}"/>
+                                        <t t-esc="invoice_line.price_unit" t-options="{'widget': 'monetary', 'display_currency': invoice.currency_id or invoice.env.company.currency_id}"/>
                                     </div>
                                     <div class="ol_products_line_data_item product_qty">
                                         <t t-esc="invoice_line.quantity" t-options="{'widget': 'integer'}"/>
                                     </div>
                                     <div class="ol_products_line_data_item product_subtotal">
-                                        <t t-esc="invoice_line.price_subtotal" t-options="{'widget': 'monetary_currency_dependent', 'display_currency': invoice.currency_id}"/>
+                                        <t t-esc="invoice_line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': invoice.currency_id or invoice.env.company.currency_id}"/>
                                     </div>
                                 </div>
                             </div>
@@ -102,13 +102,13 @@
                                 </div>
                                 <div class="ol_products_line_data ol_flex ol_flex_just_cont_space_between ol_refund">
                                     <div class="ol_products_line_data_item product_price">
-                                        <t t-esc="invoice_line.price_unit" t-options="{'widget': 'monetary_currency_dependent', 'display_currency': invoice.currency_id}"/>
+                                        <t t-esc="invoice_line.price_unit" t-options="{'widget': 'monetary', 'display_currency': invoice.currency_id or invoice.env.company.currency_id}"/>
                                     </div>
                                     <div class="ol_products_line_data_item product_qty">
                                         <t t-esc="invoice_line.quantity" t-options="{'widget': 'integer'}"/>
                                     </div>
                                     <div class="ol_products_line_data_item product_subtotal">
-                                        <t t-esc="invoice_line.price_subtotal" t-options="{'widget': 'monetary_currency_dependent', 'display_currency': invoice.currency_id}"/>
+                                        <t t-esc="invoice_line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': invoice.currency_id or invoice.env.company.currency_id}"/>
                                     </div>
                                 </div>
                             </div>

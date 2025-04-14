@@ -73,11 +73,11 @@
               font-size: 18px;
               }
               .picking_barcode {
-              padding-top: 15px;
+              padding-top: 15px !important;
               }
               .picking_barcode_image {
-              width:300px;
-              height:50px;
+              width:300px !important;
+              height:50px !important;
               }
             </t>
             <!--The first main information block-->
@@ -132,7 +132,7 @@
                             <tag>Order value</tag>
                         </div>
                         <div class="value">
-                            <t t-esc="sale_order.amount_total" t-options='{"widget": "monetary_currency_dependent", "display_currency": sale_order.currency_id}'/>
+                            <t t-esc="sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": sale_order.currency_id or sale_order.env.company.currency_id}'/>
                         </div>
                     </div>
                     <div class="ol_report_info_row_col_line ol_flex">
@@ -140,14 +140,14 @@
                             <tag>Shipping Value</tag>
                         </div>
                         <div class="value">
-                            <t t-esc="picking.get_shipping_value()" t-options='{"widget": "monetary_currency_dependent", "display_currency": sale_order.currency_id}'/>
+                            <t t-esc="picking.get_shipping_value()" t-options='{"widget": "monetary", "display_currency": sale_order.currency_id or sale_order.env.company.currency_id}'/>
                         </div>
                     </div>
                 </div>
             </div>
             <!--Barcode image-->
-            <div class="picking_barcode">
-                <img class="picking_barcode_image" t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', picking.name, 600, 100)" alt="Barcode" />
+             <div class="picking_barcode" style="padding-top: 15px !important;" >
+                <img class="picking_barcode_image" t-att-src="'/report/barcode/?barcode_type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', picking.name, 600, 100)" alt="Barcode" style="width: 300px !important; height:50px !important;" />
             </div>
             <!--Product list-->
             <t t-call="ol_stock.picking_products">

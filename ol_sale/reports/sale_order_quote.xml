@@ -118,10 +118,10 @@
                         <div class="account_manager_data_cont ol_flex">
                             <div class="ol_account_manager_pic">
                                 <t t-if="account_manager.image_128">
-                                    <img t-attf-src="data:image;base64,{{account_manager.image_128}}"/>
+                                    <img t-if="account_manager.image_128" t-attf-src="data:image;base64,{{account_manager.image_128}}"/>
                                 </t>
                                 <t t-else="">
-                                    <img t-attf-src="data:image;base64,{{company.placeholder_image_profile_picture}}"/>
+                                    <img t-if="company.placeholder_image_profile_picture" t-attf-src="data:image;base64,{{company.placeholder_image_profile_picture}}"/>
                                 </t>
                             </div>
                             <div class="ol_account_manager_info">
@@ -130,13 +130,13 @@
                                 </div>
                                 <div t-if="account_manager.phone" class="ol_account_manager_phone">
                                     <span class="ol-email-icon">
-                                        <img t-attf-src="data:image;base64,{{company.placeholder_image_phone_icon}}"/>
+                                        <img t-if="company.placeholder_image_phone_icon" t-attf-src="data:image;base64,{{company.placeholder_image_phone_icon}}"/>
                                     </span>
                                     <span t-esc="account_manager.phone"/>
                                 </div>
                                 <div t-if="account_manager.email" class="ol_account_manager_email">
                                     <span class="ol-email-icon email">
-                                        <img t-attf-src="data:image;base64,{{company.placeholder_image_email_icon}}"/>
+                                        <img t-if="company.placeholder_image_email_icon" t-attf-src="data:image;base64,{{company.placeholder_image_email_icon}}"/>
                                     </span>
                                     <span t-esc="account_manager.email"/>
                                 </div>
