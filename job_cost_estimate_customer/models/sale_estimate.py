@@ -213,12 +213,12 @@ class SaleEstimateJob(models.Model):
         for rec in self:
             rec.state = "draft"
 
-    @api.model
-    def create(self, vals):
-        number = self.env["ir.sequence"].next_by_code("product.estimate.seq.job")
-        vals.update({"number": number})
-        res = super(SaleEstimateJob, self).create(vals)
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        sequence = self.env["ir.sequence"].next_by_code("product.estimate.seq.job")
+        for vals in vals_list:
+            vals["number"] = sequence
+        return super().create(vals_list)
 
     # @api.multi
     def action_estimate_send(self):

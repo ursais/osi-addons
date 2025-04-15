@@ -23,13 +23,17 @@ class SaleOrder(models.Model):
             previous_tags = previous_opportunity.stage_id.tag_ids.ids
             self.tag_ids = [(3, tag_id) for tag_id in previous_tags]
 
-    @api.model
-    def create(self, vals):
-        # Append CRM Stage Tags into Sale Order during creation
-        sale_order = super().create(vals)
-        if sale_order.opportunity_id:
-            sale_order._update_tags_from_opportunity()
-        return sale_order
+    @api.model_create_multi
+    def create(self, vals_list):
+        # Create records in batch
+        sale_orders = super().create(vals_list)
+
+        # For each record, update tags from opportunity if present
+        for sale_order in sale_orders:
+            if sale_order.opportunity_id:
+                sale_order._update_tags_from_opportunity()
+
+        return sale_orders
 
     @api.onchange("opportunity_id")
     def _onchange_opportunity_id(self):
@@ -38,7 +42,7 @@ class SaleOrder(models.Model):
             previous_opportunity = self._origin.opportunity_id
             self._remove_tags_from_previous_opportunity(previous_opportunity)
             if not previous_opportunity:
-                #It will execute When Sale Order is not saved from opportunity.
+                # It will execute When Sale Order is not saved from opportunity.
                 self.tag_ids = False
             self._update_tags_from_opportunity()
 
