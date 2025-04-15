@@ -22,9 +22,15 @@ class StockPicking(models.Model):
 
     def _compute_can_add_stock_moves(self):
         for rec in self:
-            rec.can_add_stock_moves = self.env.user.has_group(
-                "ol_stock.group_allow_incoming_move_addition"
-            )
+            # For receipts only allow adding a line if the user has the security group
+            is_receipt = rec.picking_type_id and rec.picking_type_id.code == "incoming"
+            if is_receipt:
+                rec.can_add_stock_moves = self.env.user.has_group(
+                    "ol_stock.group_allow_incoming_move_addition"
+                )
+            else:
+                # For all other transfers, let users add a line
+                rec.can_add_stock_moves = True
 
     def action_confirm(self):
         # Call the original button_validate method to confirm the picking

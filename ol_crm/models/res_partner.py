@@ -10,5 +10,7 @@ class ResPartner(models.Model):
     # COLUMNS ######
 
     hubspot_url = fields.Char("HubSpot URL")
+    firstname = fields.Char(string="First name", index=True)
+    lastname = fields.Char(string="Last name", index=True)
 
     # END ##########
