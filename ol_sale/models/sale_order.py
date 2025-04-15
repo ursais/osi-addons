@@ -98,24 +98,30 @@ class SaleOrder(models.Model):
         product_lines = self.order_line.filtered(lambda l: not l.is_delivery)
 
         for sale_order_line in product_lines:
+            quote_config = sale_order_line.config_session_id or False
+            product = sale_order_line.product_id
+            template_attr_values = []
 
-            # TODO: NC : "sale_order_line.quote_config_id" Field not found
-            quote_config = sorted_quote_lines = False
-            # quote_config = sale_order_line.quote_config_id or False
-            #
-            # if quote_config:
-            #     quote_lines = quote_config.quote_config_line_ids.filtered(
-            #         lambda l: l.description_type != 'hide'
-            #     )
-            #     sorted_quote_lines = quote_lines.sorted(key=lambda q: q.sequence)
-            #     # self.print_quote_data_for_debug(quote_config, sorted_quote_lines)
-            # else:
-            #     sorted_quote_lines = False
+            if product and product.product_template_attribute_value_ids:
+                visible_values = product.product_template_attribute_value_ids.filtered(
+                    lambda v: v.visible_to_user
+                ).sorted(key=lambda v: v.attribute_id.sequence)
+
+                # Prepare the configuration lines to match the structure you had before
+                template_attr_values = [
+                    {
+                        "attribute_id": v.attribute_id,
+                        "attribute_name": v.attribute_id.name,
+                        "value_name": v.product_attribute_value_id.name,
+                        "sequence": v.attribute_id.sequence,
+                    }
+                    for v in visible_values
+                ]
 
             order_line_data = {
                 "order_line": sale_order_line,
                 "quote_config": quote_config,
-                "quote_lines": sorted_quote_lines,
+                "quote_lines": template_attr_values,
             }
 
             order_data["product_lines"].append(order_line_data)

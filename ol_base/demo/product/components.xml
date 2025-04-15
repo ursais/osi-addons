@@ -202,7 +202,6 @@
 
     <record id="gst120a24_cin_k_product_template" model="product.template">
         <field name="categ_id" ref="ol_base.product_category_components" />
-        <!-- NOTE: this will become a phantom type in ol_phantom_kits -->
         <field name="type">product</field>
         <field name="list_price">78</field>
     </record>
@@ -465,7 +464,7 @@
         <field name="company_id" eval="" />
     </record>
 
-    <!-- This is actually a phantom kit and will be modified in ol_phantom_kits -->
+    <!-- This is for a phantom kit -->
     <record id="pw-12v5a-l6-k_product_template" model="product.template">
         <field name="type">product</field>
         <field name="categ_id" ref="ol_base.product_category_components" />
