@@ -43,7 +43,7 @@
             </t>
             <!--Set template variables-->
             <t t-set="title" t-value="'Quote'"/>
-            <t t-set="budgetary_quote" t-value="sale_order.quote_type.name == 'budgetary'"/>
+            <t t-set="budgetary_quote" t-value="sale_order.type_id.name == 'budgetary'"/>
             <t t-set="account_manager" t-value="sale_order.account_manager_id and sale_order.account_manager_id or sale_order.user_id"/>
             <t t-set="partner_invoice_id" t-value="sale_order.partner_invoice_id"/>
             <t t-set="customer_company_name" t-value="sale_order.partner_id.company_name or sale_order.partner_id.commercial_company_name"/>

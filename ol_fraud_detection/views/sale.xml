@@ -12,8 +12,6 @@
                     <field name="check_risk" invisible="1" />
                     <group name="fraud" string="Maxmind Results">
                         <field name="customer_ip" />
-                        <field name="avs_result" />
-                        <field name="cvv_result" />
                         <field name="maxmind_risk_score" />
                         <field name="maxmind_insights" />
                     </group>

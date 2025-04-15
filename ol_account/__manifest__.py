@@ -12,8 +12,10 @@
     "depends": [
         "ol_base",
         "ol_templates",
+        "ol_fraud_detection",
         "account",
         "sale",
+        "sale_order_type",
     ],
     # Data Loaded.
     "data": [
@@ -21,7 +23,6 @@
         "views/res_config_settings_views.xml",
         "views/account_invoice.xml",
         "reports/invoice_generic.xml",
-        # "reports/invoice_proforma_from_so.xml",
         "reports/invoice_proforma.xml",
     ],
 }

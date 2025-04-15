@@ -45,9 +45,7 @@
             <t t-set="customer_company_name" t-value="invoice.partner_id.company_name or invoice.partner_id.commercial_company_name"/>
             <t t-set="sale_order" t-value="invoice.line_ids.sale_line_ids.order_id"/>
             <t t-set="partner_invoice_id" t-value="invoice.partner_id or sale_order.partner_invoice_id"/>
-            <!-- TODO: NC : sale_order.quote_type field not found -->
-            <!-- <t t-set="budgetary_quote" t-value="sale_order.quote_type == 'budgetary'"/> -->
-            <t t-set="budgetary_quote" t-value="budgetary"/>
+            <t t-set="budgetary_quote" t-value="sale_order.type_id.name == 'budgetary'"/>
             <t t-set="currency" t-value="invoice.currency_id"/>
             <t t-set="company" t-value="invoice.company_id"/>
             <t t-set="hide_tracking" t-value="True"/>
@@ -132,11 +130,10 @@
                         <t t-set="text">Bill To</t>
                         <t t-set="address" t-value="partner_invoice_id"/>
                     </t>
-                    <!-- TODO: NC : sale_order.payment_method_id field not found -->
-                    <!-- <t t-call="ol_templates.payment" t-if="sale_order.payment_method_id">
+                    <t t-call="ol_templates.payment" t-if="sale_order.payment_method_id">
                         <t t-set="block_title">Payment Method</t>
                         <t t-set="payment_method" t-value="sale_order.payment_method_id"/>
-                    </t> -->
+                    </t>
                 </div>
 
                 <!--Shipping related information-->

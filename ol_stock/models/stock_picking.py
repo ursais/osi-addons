@@ -52,8 +52,6 @@ class StockPicking(models.Model):
         Get the price of all the related sale lines
         """
         self.ensure_one()
-        # TODO: NC : move_ids.origin_sale_line_ids field not found
-        # return sum(self.mapped('move_ids.origin_sale_line_ids.price_subtotal'))
         return sum(self.mapped("move_ids.sale_line_id.price_subtotal"))
 
     def get_packing_product_lines(self):
@@ -90,10 +88,7 @@ class StockPicking(models.Model):
             similar_product_line = next(
                 iter(
                     filter(
-                        lambda l:
-                        # TODO: NC : move.origin_production_id field not found
-                        # l.get('production_id') == move.origin_production_id.id and
-                        l.get("product_id") == product.id
+                        lambda l: l.get("product_id") == product.id
                         and l.get("stock_move").location_dest_id.name
                         == move.location_dest_id.name
                         or l.get("origin_sale_line_id") == sale_order_line.id,
@@ -131,8 +126,7 @@ class StockPicking(models.Model):
             product_line_data = {
                 # Generate a unique identifier for this product line
                 "uuid": str(uuid.uuid4()),
-                # TODO: NC : move.origin_production_id.id field not found
-                # 'production_id': move.origin_production_id.id or False,
+                "production_id": move.production_id.id or False,
                 "production_id": False,
                 "product_id": product.id,
                 "product_default_code": product.product_tmpl_id.default_code,
@@ -155,8 +149,6 @@ class StockPicking(models.Model):
 
         product_lines = []
 
-        # Order the lines by the location row
-        # TODO: Update this to also sort by rack / shelfs
         moves = self.move_ids.sorted(key=lambda m: m.location_id and m.location_id.id)
 
         for move in moves:
@@ -168,10 +160,7 @@ class StockPicking(models.Model):
             similar_product_line = next(
                 iter(
                     filter(
-                        lambda l:
-                        # TODO: NC : move.origin_production_id field not found
-                        # l.get('production_id') == move.origin_production_id.id and
-                        l.get("product_id") == move.product_id.id
+                        lambda l: l.get("product_id") == move.product_id.id
                         and l.get("stock_move").location_dest_id.name
                         == move.location_dest_id.name,
                         product_lines,
@@ -180,8 +169,6 @@ class StockPicking(models.Model):
                 None,
             )
 
-            # TODO: NC : self.get_serials_for_product() method not found
-            # lot_ids = self.get_serials_for_product(product_id=move.product_id)
             lot_ids = []
             serials = lot_ids.mapped("name") if lot_ids else False
 
@@ -192,8 +179,7 @@ class StockPicking(models.Model):
             else:
                 # If there is no similar line we want to create a new one
                 product_line_data = {
-                    # TODO: NC : move.origin_production_id.id field not found
-                    # 'production_id': move.origin_production_id.id or False,
+                    "production_id": move.production_id.id or False,
                     "production_id": False,
                     "product_id": move.product_id.id,
                     "product_default_code": move.product_id.product_tmpl_id.default_code,
