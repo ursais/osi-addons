@@ -77,6 +77,13 @@ class SaleEstimateJob(models.Model):
         compute="_compute_quotation_count",
     )
 
+    company_id = fields.Many2one(
+        "res.company",
+        required=True,
+        default=lambda self: self.env.company,
+        string="Company",
+    )
+
     # END ##########
     # METHODS ##########
 
