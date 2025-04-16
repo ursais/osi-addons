@@ -201,6 +201,7 @@
                 <div class="ol_products_line">
                     <!--Product: image, name, sku, data-->
                     <div class="ol_products_info_cont ol_flex ol_picking">
+                        <div class="ol_product_location packing" />
                         <div class="ol_product_default_code ol_picking packing">
                             <div t-esc="product_line['product_default_code']" />
                         </div>

@@ -128,6 +128,7 @@
                         <t t-if="purchase_order">
                             <div class="supplier"><t t-esc="purchase_order.partner_id.name"/></div>
                         </t>
+                        <div class="location" />
                         <t t-if="not picking or not picking.blind_drop_ship">
                             <div class="logo">
                                 <img src="/ol_product/static/img/onlogic_horizontal_black.png"/>
