@@ -13,12 +13,10 @@
         "sale",
         "portal",
         "payment",
-        "partner_firstname",
     ],
     "data": [
         "data/exception_rule.xml",
         "data/payment_method.xml",
-        "data/sale_config.xml",
         "views/payment_method.xml",
         "views/sale.xml",
     ],

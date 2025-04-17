@@ -16,5 +16,6 @@
     # always loaded
     "data": [
         "reports/product_labels.xml",
+        "views/product_attribute_view.xml",
     ],
 }
