@@ -11,7 +11,7 @@ class ProductTemplate(models.Model):
     @api.depends_context("company")
     def _compute_currency_id(self):
         """
-        The core method first ooks at company_id.currencly_id
+        The core method first looks at company_id.currencly_id
         on product, then looks for the main company either by id base.main_company and
         if that doesn't exist, the first company in the list of companies.
 
