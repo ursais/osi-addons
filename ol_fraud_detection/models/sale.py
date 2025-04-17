@@ -85,7 +85,7 @@ class SaleOrder(models.Model):
     check_risk = fields.Boolean("Calculate Risk Score", readonly=True, copy=False)
     maxmind_risk_score = fields.Float("Risk Score", readonly=True, copy=False)
     maxmind_insights = fields.Text("Risk Factors", copy=False)
-    payment_method_id = fields.Many2one(
+    sale_payment_method_id = fields.Many2one(
         comodel_name="payment.method",
         string="Payment Method",
     )
@@ -113,8 +113,8 @@ class SaleOrder(models.Model):
             # Check risk if payment method is configured and we have an IP
             if (
                 order.customer_ip
-                and order.payment_method_id
-                and order.payment_method_id.check_risk
+                and order.sale_payment_method_id
+                and order.sale_payment_method_id.check_risk
             ):
                 order.check_risk = True
 

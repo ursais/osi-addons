@@ -38,7 +38,7 @@ class AccountMove(models.Model):
                         "For posted moves, cancel them instead."
                     )
                 )
-        return super(AccountMove, self).unlink()
+        return super().unlink()
 
     def _auto_reconcile_deposits(self):
         """
