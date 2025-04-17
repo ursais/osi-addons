@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="drop_index_wizard_view" model="ir.ui.view">
+        <field name="name">Drop Index Wizard</field>
+        <field name="model">drop.index.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <field name="line_id" invisible="1" />
+                    <field name="index_name" />
+                </sheet>
+                <footer>
+                    <button name="drop_index" type="object" string="Drop Index" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

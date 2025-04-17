@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="generate_lines_wizard_view" model="ir.ui.view">
+        <field name="name">Generate Lines Wizard</field>
+        <field name="model">generate.encrypt.lines.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group string="Field Types">
+                            <field name="include_char" />
+                            <field name="include_varchar" />
+                            <field name="include_text" />
+                        </group>
+                        <group string="Common Exclusions">
+                            <field name="exclude_ir" />
+                            <field name="exclude_mail" />
+                            <field name="exclude_report" />
+                        </group>
+                    </group>
+                    <group>
+                        <field name="exclude_tables" widget="many2many_tags" />
+                    </group>
+                    <group>
+                        <field name="query_preview" />
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="generate_lines" type="object" string="Generate Lines" class="btn-primary"/>
+                    <button name="test_query" type="object" string="Test Query" class="btn-secondary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_generate_encryption_lines_wizard" model="ir.actions.act_window">
+        <field name="name">Generate Encryption Lines</field>
+        <field name="res_model">generate.encrypt.lines.wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="generate_lines_wizard_view"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

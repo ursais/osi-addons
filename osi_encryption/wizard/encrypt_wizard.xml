@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="encrypt_lines_wizard_view" model="ir.ui.view">
+        <field name="name">Encrypt/Sanitize Wizard</field>
+        <field name="model">encrypt.lines.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="show_key" invisible="1" />
+                        <field name="show_file_location" invisible="1" />
+                        <field name="key" invisible="not show_key" />
+                        <field name="create_csv" invisible="not show_file_location" />
+                        <field name="file_location" invisible="not show_file_location or not create_csv" />
+                    </group>
+                    <group>
+                        <field name="char_line_ids">
+                            <tree string="Lines to Encrypt" editable="bottom">
+                                <field name="table_id" optional="hide" />
+                                <field name="name" optional="show" />
+                                <field name="model" optional="show" />
+                                <field name="included_char_column_ids" widget="many2many_tags" optional="show" />
+                                <field name="num_records" optional="show" />
+                                <field name="line_action" optional="show" />
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="encrypt_sanitize_char_data" type="object" string="Encrypt" class="btn-primary" invisible="not show_key and show_file_location" />
+                    <button name="encrypt_sanitize_char_data" type="object" string="Sanitize" class="btn-primary" invisible="show_key and not show_file_location" />
+                    <button name="encrypt_sanitize_char_data" type="object" string="Encrypt and Sanitize" class="btn-primary" invisible="not show_key and not show_file_location" />
+                    <button name="test_query" type="object" string="Test Query" class="btn-secondary" invisible="not show_key and show_file_location" />
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>
