@@ -1,14 +1,19 @@
 <odoo>
 
+    <record model="ir.module.category" id="module_ol_rma_supplier">
+        <field name="name">OnLogic Supplier RMA</field>
+        <field name="description">Category for OnLogic Supplier RMA</field>
+    </record>
+
     <!-- Security Groups -->
     <record id="group_rma_user" model="res.groups">
         <field name="name">RMA User</field>
-        <field name="category_id" ref="base.module_category_inventory"/>
+        <field name="category_id" ref="ol_rma_supplier.module_ol_rma_supplier"/>
     </record>
 
     <record id="group_rma_manager" model="res.groups">
         <field name="name">RMA Manager</field>
-        <field name="category_id" ref="base.module_category_inventory"/>
+        <field name="category_id" ref="ol_rma_supplier.module_ol_rma_supplier"/>
         <field name="implied_ids" eval="[(4, ref('group_rma_user'))]"/>
         <field name="users" eval="[(4, ref('base.user_admin'))]" />
     </record>

@@ -1,11 +1,19 @@
 <odoo>
 
+    <record model="ir.module.category" id="module_ol_credit_limit">
+        <field name="name">OnLogic Credit Limit</field>
+        <field name="description">Category for OnLogic Credit Limit</field>
+    </record>
+
    <record id="group_credit_management_user" model="res.groups">
       <field name="name">Credit Management User</field>
+      <field name="category_id" ref="ol_credit_limit.module_ol_credit_limit"/>
+      <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
    </record>
 
    <record id="group_credit_management_manager" model="res.groups">
       <field name="name">Credit Management Manager</field>
+      <field name="category_id" ref="ol_credit_limit.module_ol_credit_limit"/>
       <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
       <field name="implied_ids" eval="[(4, ref('ol_credit_limit.group_credit_management_user'))]" />
    </record>
