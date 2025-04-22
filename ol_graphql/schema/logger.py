@@ -92,7 +92,7 @@ class GraphQLLogger:
         )
 
     def _get_company(self, company):
-        # company = company or self.env.company.short_name.upper()
+        company = company or self.env.company.short_name.upper()
         return f"| Company: {company}" if company else ""
 
     def _get_tid(self, tid):

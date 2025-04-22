@@ -5,11 +5,9 @@ from collections import namedtuple, defaultdict, OrderedDict
 
 # Import Odoo libs
 from odoo import models, fields, api
+from odoo.addons.ol_graphql.tools import get_translated_field_values
 
 _logger = logging.getLogger(__name__)
-ConfigLineTuple = namedtuple(
-    "ConfigLine", ["system_id", "attribute_id", "component_id", "company_id"]
-)
 
 
 class ProductTemplate(models.Model):
@@ -20,66 +18,16 @@ class ProductTemplate(models.Model):
     _name = "product.template"
     _inherit = ["product.template", "graphql.mixin"]
 
-    # COLUMNS #####
-    lifecycle_launch_date = fields.Date(string="Lifecycle Launch Date")
-    lifecycle_status = fields.Selection(
-        string="Lifecycle Status",
-        selection=[
-            ("in_development", "In Development"),
-            ("coming_soon", "Coming Soon"),
-            ("preorder", "Pre-Order"),
-            ("available", "Available"),
-            ("discontinued", "Discontinued"),
-            ("end_of_life", "End of Life"),
-            ("canceled", "Canceled"),
-        ],
-        company_dependent=True,
-    )
-    public_destination = fields.Char(
-        string="Public Destination",
-        selection=[
-            ("not_public", "Not Public"),
-            ("b2b", "B2B"),
-            ("b2c", "B2C"),
-            ("b2b_b2c", "B2B + B2C"),
-        ],
-    )
-    # END #########
-
-    def get_related_res_company(self):
-        """
-        Get the `res.company` value for this product
-        """
-        # As `company_ids` could be an empty record set we need to make sure we return the correct value
-        # `company_ids` could also be an recordset of multiple companies, in this case we just choose the first one
-        companies = self.company_ids.exists().sorted(key=lambda c: c.id)
-        return companies[0] if companies else self.env["res.company"]
-
-    def get_graphql_placeholder_values(
-        self, message_field=False, message_values=False, transaction_id=False
-    ):
-        base_values = super().get_graphql_placeholder_values(
-            message_field=message_field
-        )
-        # Merge the super and customer specific values
-        base_values.update(
-            {
-                "company_id": False,
-                "default_code": f'PENDING-{self.env.context.get("transaction_id", datetime.now())}',
-            }
-        )
-        return base_values
-
     def get_encoded_options(self):
         """
         Encode the configurable systems options
         """
-        # TODO: This needs to be reworked with the new product strucutre
-        return
         options = []
+        onlogic_companies = self.env["res.company"].get_all()
         for line in self.attribute_line_ids:
             # Add all of the options and their selections
             selection_dict = defaultdict(dict)
+            # Within each product template attribute line, iterate over each ptav
             for value in line.product_template_value_ids:
                 component = value.product_attribute_value_id.product_id
                 selection_dict[component.uuid]["uuid"] = component.uuid
@@ -88,69 +36,44 @@ class ProductTemplate(models.Model):
                         {
                             "default_qty": value.default_qty,
                             "max_qty": value.maximum_qty,
-                            "visible_to_user": value.product_attribute_value_id.visible_to_user,
+                            "visible_to_user": value.visible_to_user,
+                            "is_user_defined_qty": value.attribute_line_id.is_qty_required,
+                            "sequence": value.product_attribute_value_id.sequence,
+                            "is_default": False,
                         }
                     )
-                    if selection_dict[component.uuid].get("is_default"):
-                        selection_dict[component.uuid]["is_default"].append(
+                    for company in onlogic_companies:
+                        enabled = company in value.company_ids
+                        selection_dict[component.uuid].setdefault("enabled", []).append(
                             {
-                                "onlogic_company": value.company_id.short_name,
-                                "value": value.is_default,
-                            },
-                        )
-                    else:
-                        selection_dict[component.uuid]["is_default"] = [
-                            {
-                                "onlogic_company": value.company_id.short_name,
-                                "value": value.is_default,
+                                "onlogic_company": company.short_name.lower(),
+                                "value": enabled,
                             }
-                        ]
+                        )
 
-                    if selection_dict[component.uuid].get("enabled"):
-                        selection_dict[component.uuid]["enabled"].append(
-                            {
-                                "onlogic_company": value.company_id.short_name,
-                                "value": value.ptav_active,
-                            },
-                        )
-                    else:
-                        selection_dict[component.uuid]["enabled"] = [
-                            {
-                                "onlogic_company": value.company_id.short_name,
-                                "value": value.ptav_active,
-                            }
-                        ]
-            selections = []
-            onlogic_companies = self.env["res.company"].get_all()
+            if self.env.context.get("encode_full_product_configuration"):
+                if line.default_val and line.default_val.product_id:
+                    default_uuid = line.default_val.product_id.uuid
+                    selection_dict[default_uuid]["is_default"] = True
+
             # Turn the dictionary back into a list
-            # also add any possible missing company dependent data information
-            # This could happen if the PTAV doesn't exist in a given company
-            for selection in selection_dict.values():
-                for field_name in ["is_default", "enabled"]:
-                    field_values = selection.get(field_name, [])
-                    for onlogic_company in onlogic_companies:
-                        company_field_value = [
-                            x
-                            for x in field_values
-                            if x.get("onlogic_company", False)
-                            == onlogic_company.short_name.lower()
-                        ]
-                        if not company_field_value:
-                            field_values.append(
-                                {
-                                    "onlogic_company": onlogic_company.short_name.lower(),
-                                    "value": None,
-                                }
-                            )
-                selections.append(selection)
+            selections = [selection for selection in selection_dict.values()]
+
             options.append(
                 {
                     "uuid": line.attribute_id.uuid,
-                    "classification": line.attribute_id.classification_id.uuid,
-                    "name": line.attribute_id.name,
+                    "classification": line.attribute_id.classification_id.uuid or None,
+                    "name": get_translated_field_values(
+                        odoo_record=line.attribute_id,
+                        field="name",
+                    ),
+                    "classification_name": get_translated_field_values(
+                        odoo_record=line.attribute_id.classification_id,
+                        field="name",
+                    ),
                     "selections": selections,
                     "required": line.required,
-                    "position": line.sequence,
+                    "sequence": line.sequence,
                 }
             )
         return options

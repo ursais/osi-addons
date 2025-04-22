@@ -3,7 +3,8 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
-function pythonDebug({ env }) {
+function pythonDebug({ component, env }) {
+    const { resId, resModel } = component.model.config;
     return {
         type: "item",
         description: _t("Python Debug"),
@@ -11,7 +12,7 @@ function pythonDebug({ env }) {
             await env.services.orm.call(
                 "base",
                 "start_python_debug",
-                [[]],
+                [[], resId, resModel],
             );
         },
         sequence: 310,

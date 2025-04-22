@@ -30,5 +30,6 @@
         "views/graphql_queue.xml",
         "views/queue_job_views.xml",
         "data/ir_config_parameter.xml",
+        "data/res_user.xml",
     ],
 }

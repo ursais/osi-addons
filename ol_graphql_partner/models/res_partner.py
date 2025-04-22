@@ -19,9 +19,9 @@ class ResPartner(models.Model):
             transaction_id=transaction_id,
         )
         partner_base_values = {
-            # Customers are global (i.e. are not associated with a specific company) so we explicitly set company_id to false
+            # Partners are global (i.e. are not associated with a specific company) so we explicitly set company_id to false
             "default": {"company_id": False, "customer_rank": 1},
-            # Customers can only have companies as their parents
+            # Partners can only have companies as their parents
             "parent_id": {"is_company": True},
         }
         # Get the base values, and if we have additional values for the specific message_values,
@@ -30,7 +30,7 @@ class ResPartner(models.Model):
         if message_field:
             partner_values.update(partner_base_values.get(message_field, {}))
 
-        # Merge the super and customer specific values
+        # Merge the super and partner specific values
         base_values.update(partner_values)
 
         return base_values

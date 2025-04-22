@@ -50,12 +50,9 @@ class GraphqlMixin(models.AbstractModel, GraphQLLogger):
         channel_map = {
             "sale.order": "root.graphql_sale",
             "sale.booking": "root.graphql_sale",
-            "res.customer": "root.graphql_customer",
-            "res.partner": "root.graphql_customer",
-            "product.template": "root.graphql_product",
-            "product.pricelist.item": "root.graphql_product",
+            "res.partner": "root.graphql_partner",
         }
-        return channel_map.get(self._name, "root")
+        return channel_map.get(self._name, "root.graphql")
 
     def get_newer_graphql_queue_item(
         self, publish_time, transaction_id, message_source, throw_exception=False
@@ -130,8 +127,7 @@ class GraphqlMixin(models.AbstractModel, GraphQLLogger):
 
         res_company_field_name = "company_id"
         if self._fields.get(res_company_field_name, False):
-            # SUDO is required here because the associated odoo company record might be in a different company than the current user!
-            return getattr(self.sudo(), res_company_field_name)
+            return getattr(self, res_company_field_name)
         # In any other case return false
         return self.env["res.company"]
 
@@ -258,14 +254,11 @@ class GraphqlMixin(models.AbstractModel, GraphQLLogger):
                     # in that case the `odoo_record` would be an empty recordset, so instead of that we need to use
                     # the `main_mutation_record` which was set in the first create action
                     # We make sure we only do this during `write`, the odoo model and uuid are matching
-                    odoo_record = odoo_record or main_mutation_record
+                    odoo_record = main_mutation_record
 
                 # Switch to the right Odoo company.
-                # We are using `with_user` and `with_company` to ensure that we can write the data with the correct company for any follow-up actions
-                odoo_record = (
-                    odoo_record.with_user(company.company_user_id)
-                    .with_company(company.id)
-                    .with_context(transaction_id=transaction_id)
+                odoo_record = odoo_record.with_company(company.id).with_context(
+                    transaction_id=transaction_id
                 )
 
                 # Run the Odoo functionality associated with each function
@@ -419,6 +412,8 @@ class GraphqlMixin(models.AbstractModel, GraphQLLogger):
     def run_queued_callback_functions(self, callback_functions):
         """
         If a callback functions were defined make sure we call them
+
+        (Normally this is _post_graphql_create_actions or _post_graphql_update_actions)
         """
         if not callback_functions:
             return

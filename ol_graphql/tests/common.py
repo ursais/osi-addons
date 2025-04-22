@@ -12,11 +12,11 @@ _logger = logging.getLogger(__name__)
 
 # Import Odoo libs
 from odoo import http
+from odoo.tests.common import TransactionCase
 from odoo.exceptions import ValidationError
 from odoo.addons.ol_graphql.schema import onlogic_schema
 from odoo.addons.ol_graphql.tests.validation import GQLUnitTestValidation
 from odoo.addons.graphql_base import GraphQLControllerMixin
-from odoo.addons.ol_base.tests.common import OnLogicBaseTransactionCase
 
 
 class Operation(Enum):
@@ -25,9 +25,7 @@ class Operation(Enum):
     DELETE = "delete"
 
 
-class OnLogicBaseGraphQLTransactionCase(
-    OnLogicBaseTransactionCase, GQLUnitTestValidation
-):
+class OnLogicBaseGraphQLTransactionCase(TransactionCase, GQLUnitTestValidation):
     """
     GraphQL unit testing framework
     """
@@ -102,7 +100,9 @@ class OnLogicBaseGraphQLTransactionCase(
             context = self.env.context.copy()
             context.update({"graphql_api_client_signature_validated": True})
             self.env.context = context
-            mock_request.env = self.env
+            # TODO: Investigate if this is necessary and if it's the proper place to update the context to this user
+            graphql_user = env.ref("ol_graphql.graphql_user")
+            mock_request.env = self.env.with_user(graphql_user)
             mock_request.httprequest = MockHttpRequest()
             mock_request.make_response.side_effect = make_response_side_effect
 

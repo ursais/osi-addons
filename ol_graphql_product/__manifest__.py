@@ -7,6 +7,9 @@
     "depends": [
         "ol_base",
         "ol_graphql",
+        "ol_pim",
+        "ol_product_classification",
+        "ol_product_pricing_review",
     ],
     "author": "OnLogic",
     "website": "https://www.onlogic.com",
