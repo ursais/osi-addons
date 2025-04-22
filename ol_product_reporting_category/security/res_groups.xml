@@ -2,7 +2,7 @@
 
 	<record id="group_reporting_category_manager" model="res.groups">
 	    <field name="name">Product Reporting Category Manager</field>
-	    <field name="category_id" ref="base.module_category_usability" />
+	    <field name="category_id" ref="ol_base.onlogic_groups"/>
 		<field name="users" eval="[(4, ref('base.user_admin'))]" />
 	</record>
 

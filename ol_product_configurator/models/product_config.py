@@ -19,6 +19,7 @@ class ProductConfigSession(models.Model):
 
     # END ##########
     # METHODS #####
+
     def _compute_currency_id(self):
         super()._compute_currency_id()
         """Super call the method to set the currency base on current company Currency."""

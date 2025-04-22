@@ -1,7 +1,8 @@
-<odoo noupdate="1">
+<odoo>
 
     <record id="group_bypass_bom_restiction" model="res.groups">
         <field name="name">Bypass Product/BoM Edit Restrictions</field>
+        <field name="category_id" ref="ol_base.onlogic_groups"/>
         <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
     </record>
 
