@@ -1,3 +1,4 @@
+# Import Odoo libs
 from odoo import fields, models
 
 
@@ -8,6 +9,12 @@ class ResPartner(models.Model):
 
     _inherit = "res.partner"
 
+    # COLUMNS #####
+
     sale_blanket_order_ids = fields.One2many(
-        "sale.blanket.order", "partner_id", "Sales Blanket Order"
+        comodel_name="sale.blanket.order",
+        inverse_name="partner_id",
+        string="Sales Blanket Order",
     )
+
+    # END #########
