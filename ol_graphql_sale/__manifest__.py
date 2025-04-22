@@ -14,5 +14,8 @@
     "graphql": True,
     "category": "Integrations",
     "description": """Sale specific GraphQL functionality""",
-    "data": [],
+    "data": [
+        "data/sale_exception.xml",
+        "views/sale_order.xml",
+    ],
 }

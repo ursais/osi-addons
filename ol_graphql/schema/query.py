@@ -29,6 +29,8 @@ class BaseQuery(graphene.ObjectType):
             )
             raise AccessDenied()
 
+        graphql_user = env.ref("ol_graphql.graphql_user")
+
         transaction_id = args.get("transaction_id", False)
         # Set up the domain and search limit based on the received `uuid` or `uuids`
         domain = []
@@ -79,6 +81,7 @@ class BaseQuery(graphene.ObjectType):
             # we should make sure we order the data the same by using the indexed `id`
             order = "id"
 
+        # Use sudo to access records across companies while searching
         odoo_records = (
             env[odoo_class]
             .sudo()
@@ -86,9 +89,10 @@ class BaseQuery(graphene.ObjectType):
             .search(domain, limit=limit, offset=offset, order=order)
         )
         # We switch the found records environment to only active access records!
+        # Also do with_user(graphql_user) to remove the sudo access
         odoo_records = odoo_records.with_context(
             active_test=True, transaction_id=transaction_id
-        )
+        ).with_user(graphql_user)
 
         # IMPORTANT:    Instead of an Odoo Record-set we collect the result into a simple array
         #               This necessary as we want to have a different environment owned by the correct company user for each record.
@@ -117,9 +121,9 @@ class BaseQuery(graphene.ObjectType):
                     # make sure we read the record values from that company's "view point"
                     # This is important as certain functions and computed field could return different values based on which company we use
                     company_specific_records.append(
-                        odoo_record.with_user(odoo_record_company.company_user_id)
-                        .with_company(odoo_record_company.id)
-                        .with_context(transaction_id=transaction_id)
+                        odoo_record.with_company(odoo_record_company.id).with_context(
+                            transaction_id=transaction_id
+                        )
                     )
                 else:
                     company_specific_records.append(odoo_record)

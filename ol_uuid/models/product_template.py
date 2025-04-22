@@ -23,7 +23,7 @@ class ProductProduct(models.Model):
     variant_uuid = ol_fields.Uuid(
         string="Variant UUID",
         help="Unique identifier that is used to identify this product variant between different systems.",
-        required=True,
+        require=True,
         copy=False,
         index=True,
     )

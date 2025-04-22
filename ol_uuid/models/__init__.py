@@ -3,7 +3,9 @@ from . import fields
 from . import sale_order
 from . import res_partner
 from . import product_attribute
+from . import product_attribute_classification
 from . import product_category
 from . import product_pricelist
 from . import product_tax_code
 from . import product_template
+from . import delivery_carrier

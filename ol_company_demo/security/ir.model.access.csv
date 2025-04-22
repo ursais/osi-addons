@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_author,access_author,model_author,ol_company_demo.base_group,1,1,1,1
+access_book,access_book,model_book,ol_company_demo.base_group,1,1,1,1
+access_publisher,access_publisher,model_publisher,ol_company_demo.base_group,1,1,1,1

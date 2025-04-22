@@ -4,10 +4,6 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
-            <field name="categ_id" position="after">
-                <field name="lifecycle_launch_date" readonly="1"/>
-                <field name="lifecycle_status" readonly="1"/>
-            </field>
             <field name="tax_code_id" position="attributes">
                 <attribute name="readonly">1</attribute>
             </field>

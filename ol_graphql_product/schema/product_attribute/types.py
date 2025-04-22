@@ -3,6 +3,7 @@ import graphene
 
 # Import Odoo Libs
 from odoo.addons.ol_graphql.schema.type import OnLogicBaseObjectType
+
 from odoo.addons.ol_graphql_product.schema.product_classification.types import (
     ProductClassification,
 )
