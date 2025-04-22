@@ -1,0 +1,14 @@
+<odoo>
+
+    <record id="view_account_position_form_inherit_ol_vat" model="ir.ui.view">
+        <field name="name">view_account_position_form</field>
+        <field name="model">account.fiscal.position</field>
+        <field name="inherit_id" ref="account.view_account_position_form" />
+        <field name="arch" type="xml">
+            <field name="country_id" position="after">
+                <field name="ignore_for_domestic_deliveries"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>
