@@ -120,13 +120,16 @@ class ProductProduct(models.Model):
             else:
                 list_price = product.list_price
 
-            # Trigger to set the bom price
-            product._set_sale_price_from_bom()
             product.lst_price = list_price + product.price_extra
 
-            # Trigger to set the total cost from bom
-            product._set_approved_total_cost_from_bom()
+        return res
 
+    def write(self, vals):
+        res = super().write(vals)
+        if "lst_price" in vals or "price_extra" in vals or "list_price" in vals:
+            for product in self:
+                product._set_sale_price_from_bom()
+                product._set_approved_total_cost_from_bom()
         return res
 
     def button_bom_sale_price(self):
@@ -403,7 +406,14 @@ class ProductProduct(models.Model):
                     attr_val_lst_price += price
 
             # Set attr_val_lst_price as an informative field
-            product.attr_val_lst_price = attr_val_lst_price
+            # product.attr_val_lst_price = attr_val_lst_price
+            self.env.cr.execute(
+                "update product_product set attr_val_lst_price=%s where id=%s",
+                (
+                    attr_val_lst_price,
+                    product.id,
+                ),
+            )
 
             # Final calculation for price_extra
             total_price_extra = product.bom_lst_price + attr_val_lst_price
