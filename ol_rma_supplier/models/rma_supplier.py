@@ -330,6 +330,23 @@ class RmaSupplier(models.Model):
         for rma in self:
             rma.state = "draft"
 
+    def action_complete(self):
+        for rma in self:
+            invalid_out_transfers = rma.out_transfer_ids.filtered(
+                lambda p: p.state not in ("done", "cancel")
+            )
+            invalid_in_transfers = rma.in_transfer_ids.filtered(
+                lambda p: p.state not in ("done", "cancel")
+            )
+
+            if invalid_out_transfers or invalid_in_transfers:
+                raise UserError(
+                    "You can only complete an RMA when all transfers are either "
+                    "done or canceled."
+                )
+
+            rma.state = "complete"
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:

@@ -31,6 +31,7 @@
             <form string="RMA to Supplier">
                 <header>
                     <button name="action_confirm" type="object" string="Confirm" invisible="state not in ('draft')" class="btn-primary" />
+                    <button name="action_complete" type="object" string="Complete" class="btn-primary" invisible="(deliver_status != 'full' or receipt_status != 'full') or state in ('draft', 'complete', 'cancel') or not id" />
                     <button name="action_cancel" type="object" string="Cancel" class="btn-secondary" invisible="state in ('cancel') or not id" />
                     <button name="action_reset_to_draft" type="object" string="Reset to Draft" class="btn-secondary" invisible="state not in ('cancel')" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,complete" />
