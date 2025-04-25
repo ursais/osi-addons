@@ -17,5 +17,6 @@
     "data": [
         "reports/product_labels.xml",
         "views/product_attribute_view.xml",
+        "views/product_template_views.xml",
     ],
 }
