@@ -2,7 +2,7 @@
 import base64
 
 # Import Odoo Libs
-from odoo import models,fields
+from odoo import models
 
 
 class ProductProduct(models.Model):
@@ -44,15 +44,3 @@ class ProductProduct(models.Model):
         return seller_ids[0].product_code
 
     # END #########
-
-
-class ProductTemplate(models.Model):
-    _inherit = "product.template"
-
-    """
-    Add length,width and height to ProductTemplate
-    """
-
-    length = fields.Float(string="Length")
-    width = fields.Float(string="Width")
-    height = fields.Float(string="Height")
