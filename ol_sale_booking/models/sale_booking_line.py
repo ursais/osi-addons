@@ -14,6 +14,11 @@ class SaleBookingLine(models.Model):
         required=True,
         ondelete="cascade",
     )
+    origin = fields.Char(
+        string="Sale/Blanket Order",
+        related="booking_id.origin",
+        store=True,
+    )
     sale_order_id = fields.Many2one(
         comodel_name="sale.order",
         string="Sale Order",
@@ -122,5 +127,33 @@ class SaleBookingLine(models.Model):
     product_qty_onhand = fields.Float(string="Qty On Hand")
     product_qty_incoming = fields.Float(string="Qty Incoming")
     product_qty_draft = fields.Float(string="Draft PO Qty")
+
+    prev_price_total = fields.Monetary(
+        string="Previous Total",
+        currency_field="sale_order_currency_id",
+        readonly=True,
+    )
+    prev_price_subtotal = fields.Monetary(
+        string="Previous Subtotal",
+        currency_field="sale_order_currency_id",
+        readonly=True,
+    )
+    prev_price_tax = fields.Monetary(
+        string="Previous Total Tax",
+        currency_field="sale_order_currency_id",
+        readonly=True,
+    )
+    line_amount = fields.Monetary(
+        string="Booking Line Amount",
+        currency_field="sale_order_currency_id",
+        required=True,
+        readonly=True,
+    )
+    line_amount_untaxed = fields.Monetary(
+        string="Booking Line Amount Untaxed",
+        currency_field="sale_order_currency_id",
+        required=True,
+        readonly=True,
+    )
 
     # END #######
