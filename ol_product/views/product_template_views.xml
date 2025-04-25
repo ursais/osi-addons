@@ -8,20 +8,17 @@
         	<xpath expr="//page[@name='inventory']//div[@name='volume']" position="after">
         		<label for="length" invisible="product_variant_count &gt; 1 and not is_product_variant"/>
                 <div class="o_row" name="length" invisible="product_variant_count &gt; 1 and not is_product_variant">
-                    <field name="length" string="Length" class="oe_inline"/>
-                    <span>cm</span>
+                    <field name="length" string="Length (cm)" class="oe_inline"/>
                 </div>
 
                 <label for="width" invisible="product_variant_count &gt; 1 and not is_product_variant"/>
                 <div class="o_row" name="width" invisible="product_variant_count &gt; 1 and not is_product_variant">
-                    <field name="width" string="Length" class="oe_inline"/>
-                    <span>cm</span>
+                    <field name="width" string="Width (cm)" class="oe_inline"/>
                 </div>
 
                 <label for="height" invisible="product_variant_count &gt; 1 and not is_product_variant"/>
                 <div class="o_row" name="height" invisible="product_variant_count &gt; 1 and not is_product_variant">
-                    <field name="height" string="Length" class="oe_inline"/>
-                    <span>cm</span>
+                    <field name="height" string="Height (cm)" class="oe_inline"/>
                 </div>
         	</xpath>
         </field>
