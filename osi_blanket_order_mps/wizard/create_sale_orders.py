@@ -8,6 +8,7 @@ class BlanketOrderWizard(models.TransientModel):
     _inherit = "sale.blanket.order.wizard"
 
     def create_sale_order(self):
+        """After creating SO, Update MPS"""
         res = super().create_sale_order()
         self.blanket_order_id.sudo().action_mps_replenish(
             self.blanket_order_id.line_ids
