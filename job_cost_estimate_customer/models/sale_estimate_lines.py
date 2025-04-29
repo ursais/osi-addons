@@ -272,7 +272,6 @@ class SaleEstimatelineJob(models.Model):
         vals["product_description"] = name
 
         self._compute_tax_id()
-
         if self.estimate_id.pricelist_id and self.estimate_id.partner_id:
             vals["price_unit"] = product._get_tax_included_unit_price(
                 self.company_id,
@@ -283,6 +282,9 @@ class SaleEstimatelineJob(models.Model):
                 or product.lst_price,
                 product_currency=self.estimate_id.currency_id,
             )
+        else:
+            vals["price_unit"] = product.lst_price
+
 
         # if self.estimate_id.pricelist_id and self.estimate_id.partner_id:
         #     vals['price_unit'] = self.env['account.tax']._fix_tax_included_price(self._get_display_price(product), product.taxes_id, self.tax_id)
