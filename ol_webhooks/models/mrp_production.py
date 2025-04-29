@@ -1,8 +1,7 @@
 # Import Python Libs
-import logging
 
 # Import Odoo Libs
-from odoo import models, api
+from odoo import models
 
 
 class MrpProduction(models.Model):
@@ -12,15 +11,6 @@ class MrpProduction(models.Model):
 
     _name = "mrp.production"
     _inherit = ["mrp.production", "webhook.mixin"]
-
-    def action_consume(self):
-        """
-        Send messages when a manufacturing order is consumed, i.e. enters production
-        """
-        super().action_consume()
-
-        webhook_event = self.env.ref("ol_webhooks.manufacturing_order_update")
-        webhook_event.trigger(records=self, operation_override="update")
 
     def action_cancel(self):
         """
@@ -41,12 +31,13 @@ class MrpProduction(models.Model):
         webhook_event = self.env.ref("ol_webhooks.manufacturing_order_update")
         webhook_event.trigger(records=self, operation_override="update")
 
-    def button_add_or_update_serial_numbers(self):
-        """
-        Send messages if an in progress MO has it's serial numbers edited
-        """
-        super().button_add_or_update_serial_numbers
+    # TODO: This functionality does not exist in odoo 17. Some version likely will in the future but the decision has not been made as of 4/22/25 (re: Jeff)
+    # def button_add_or_update_serial_numbers(self):
+    #     """
+    #     Send messages if an in progress MO has it's serial numbers edited
+    #     """
+    #     super().button_add_or_update_serial_numbers
 
-        if self.state in ["progress", "to_close"]:
-            webhook_event = self.env.ref("ol_webhooks.manufacturing_order_update")
-            webhook_event.trigger(records=self, operation_override="update")
+    #     if self.state in ["progress", "to_close"]:
+    #         webhook_event = self.env.ref("ol_webhooks.manufacturing_order_update")
+    #         webhook_event.trigger(records=self, operation_override="update")

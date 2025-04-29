@@ -90,12 +90,6 @@ class Partner(OnLogicBaseObjectType, PartnerInterface):
         )
 
     @staticmethod
-    def resolve_payment_term(partner, _):
-        return Partner.get_company_dependent_field_value(
-            base_record=partner, field_name="name", relations="property_payment_term_id"
-        )
-
-    @staticmethod
     def resolve_credit_limit(partner, _):
         return Partner.get_company_dependent_field_value(
             base_record=partner, field_name="credit_limit"

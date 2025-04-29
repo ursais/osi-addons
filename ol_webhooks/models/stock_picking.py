@@ -13,6 +13,7 @@ class StockPicking(models.Model):
     _name = "stock.picking"
     _inherit = ["stock.picking", "webhook.mixin"]
 
+    # TODO: (4/23/2025) Waiting for development from the OnLogic team -- tracking numbers have not been built out yet
     def trigger_delivery_order_webhook(self):
         """
         Filter out any stock pickings that aren't deliveries for sale orders,

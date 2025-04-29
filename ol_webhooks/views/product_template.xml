@@ -1,17 +1,19 @@
 <odoo>
-    <data>
-        <record id="product_template_form_view" model="ir.ui.view">
-            <field name="name">ol_webhooks.product.template.common.form.onlogic</field>
-            <field name="model">product.template</field>
-            <field name="inherit_id" ref="ol_base.view_product_template_form"/>
-            <field name="arch" type="xml">
-                <page name="onlogic_info" position="inside">
-                    <!-- Show the `system_stock_state` field for systems -->
-                    <group name="webhooks">
-                        <field name="has_configurable_attributes" readonly="1" invisible="1"/>
-                    </group>
-                </page>
-            </field>
-        </record>
-    </data>
+    <record id="view_product_template_form" model="ir.ui.view">
+        <field name="name">ol_webhooks_test.view_product_template_form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="ol_base.view_product_template_form"/>
+        <field name="arch" type="xml">
+            <page name="onlogic_info" position="inside">
+                <group name="webhook_info">
+                    <field name="webhook_broadcast_date" readonly="1"/>
+                    <button type="object" name="action_stock_webhook_test" class="btn btn-secondary" icon="fa-podcast" string="Test Stock Webhook" invisible="has_configurable_attributes != False"/>
+                    <br/>
+                    <button type="object" name="action_system_stock_webhook_test" class="btn btn-secondary" icon="fa-podcast" string="Test System Stock Webhook" invisible="has_configurable_attributes != False"/>
+                    <br/>
+                    <button type="object" name="action_cost_webhook_test" class="btn btn-secondary" icon="fa-podcast" string="Test Cost Webhook"/>
+                </group>
+            </page>
+        </field>
+    </record>
 </odoo>
