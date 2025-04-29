@@ -19,31 +19,18 @@ class AccountMove(models.Model):
         """
         return ["sale.order", "res.partner"]
 
-    def post(self):
+    def action_post(self):
         """
         Posting an invoice updates a lot of financial data that other system have interest in.
         We need to make sure that all related records are updated.
         """
-        res = super().post()
+        res = super().action_post()
 
         for move in self:
-            if move.type not in ("out_invoice"):
+            if move.move_type not in ("out_invoice"):
                 # Filter out any account_moves that are not out_invoices
                 continue
             move.partner_id.trigger_webhooks_for_related()
-        return res
-
-    def _reconcile_payment_allocation_event(self, payments, total_amount_applied):
-        """
-        This function is called if payments are applied to invoices
-        if any of these events happens we want to trigger webhooks for these invoices
-        """
-        res = super()._reconcile_payment_allocation_event(
-            payments, total_amount_applied
-        )
-        self.trigger_webhook()
-        # Make sure that all related customer record updates are also broadcasted
-        self.mapped("partner_id").trigger_webhooks_for_related()
         return res
 
     def _create_filter(self, values):
@@ -70,4 +57,4 @@ class AccountMove(models.Model):
         """
         Filter out any account_moves that are not out_invoices
         """
-        return self.filtered(lambda move: move.type in ["out_invoice"])
+        return self.filtered(lambda move: move.move_type in ["out_invoice"])

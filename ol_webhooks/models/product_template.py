@@ -1,11 +1,7 @@
 # Import Python libs
-import logging
 
 # Import Odoo libs
-from odoo import models, fields
-from odoo.exceptions import ValidationError
-
-_logger = logging.getLogger(__name__)
+from odoo import models
 
 
 class ProductTemplate(models.Model):
@@ -93,3 +89,31 @@ class ProductTemplate(models.Model):
 
         # Return the values we did not account for in this function
         return remaining_values
+
+    def action_stock_webhook_test(self):
+        # Trigger the Stock Webhook event to test webhooks
+        self.with_context(webhook_no_delay=True).stock_quantity_changed()
+
+    def action_system_stock_webhook_test(self):
+        # Trigger the System Stock Webhook event to test webhooks
+        self.with_context(webhook_no_delay=True).system_stock_quantity_changed()
+
+    def action_cost_webhook_test(self):
+        # Trigger the Cost Webhook event to test webhooks
+        self.with_context(
+            webhook_no_delay=True, force_trigger_purchase_cost_webhook_event=True
+        ).trigger_purchase_cost_webhook_event(values={})
+
+    # TODO: The pricing webhook work will be done separately as we need to understand the pricing engine workflow in Odoo17 and how odoo needs to communicate data to outside systems
+    # def action_price_webhook_test(self):
+    #     # Trigger the Price Webhook event to test webhooks
+    #     self.with_context(
+    #         webhook_no_delay=True, force_trigger_price_webhook_event=True
+    #     ).trigger_price_webhook_event(values={})
+
+    # def action_pricing_configuration_webhook_test(self):
+    #     # Trigger the Stock Webhook event to test webhooks
+    #     self.with_context(
+    #         webhook_no_delay=True,
+    #         force_trigger_pricing_configuration_webhook_event=True,
+    #     ).trigger_pricing_configuration_webhook_event(values={})

@@ -1,6 +1,5 @@
 # Import Python libs
 import os
-import time
 import logging
 import requests
 import uuid as uuid_lib

@@ -1,8 +1,7 @@
 # Import Python libs
 
 # Import Odoo libs
-from odoo import models, fields, api
-from odoo.exceptions import ValidationError, UserError
+from odoo import models, fields
 
 
 class WebhookEvent(models.Model):

@@ -1,8 +1,10 @@
 <odoo>
-	<record id="ol_api.webhook_client_onlogic" model="api.client" noupdate="1">
-		<field name="webhook_secret">change-me-based-on-passbolt</field>
-		<field name="webhook_url_hostname">https://nonprod-api.onlogic.com</field>
-		<field name="webhook_url_path">odoo/webhooks</field>
-		<field name="run_webhooks_delayed">True</field>
-	</record>
+	<data noupdate="1">
+		<record id="ol_api.webhook_client_onlogic" model="api.client" >
+			<field name="webhook_secret">change-me-based-on-passbolt</field>
+			<field name="webhook_url_hostname">https://nonprod-api.onlogic.com</field>
+			<field name="webhook_url_path">odoo/webhooks</field>
+			<field name="run_webhooks_delayed">True</field>
+		</record>
+	</data>
 </odoo>

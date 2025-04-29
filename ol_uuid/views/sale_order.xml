@@ -5,7 +5,7 @@
 		<field name="inherit_id" ref="ol_base.view_order_form"/>
 		<field name="arch" type="xml">
 			<page name="onlogic_info" position="inside">
-				<group>
+				<group name="uuid_info">
 					<field name='uuid' readonly="1"/>
 				</group>
 			</page>

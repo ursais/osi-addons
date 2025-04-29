@@ -32,7 +32,7 @@
             (4, ref('ol_webhooks.res_partner_delete'), 0)
             ]"/>
         </record>
-        <!-- Companies -->
+        <!-- COMPANIES -->
         <!-- The webhook.events -->
         <record id="company_create" model="webhook.event">
             <field name="name">Company: Create</field>
