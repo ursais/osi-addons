@@ -2,10 +2,10 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 
-def pre_init_hook(cr):
+def pre_init_hook(env):
 
     # Update Existing Bank Suspense Accounts
-    cr.execute(
+    env.cr.execute(
         """UPDATE account_account SET reconcile=true WHERE id in
         (SELECT suspense_account_id FROM account_journal WHERE type='bank')"""
     )
