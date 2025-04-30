@@ -247,6 +247,7 @@ class AccountBankStatementLine(models.Model):
                 }
             )
 
+    # WIP:- No need of this method 18.0
     # core odoo method replaced for SOX compliance
     def unlink(self):
         # OVERRIDE to unlink the inherited account.move (move_id field) as well.
