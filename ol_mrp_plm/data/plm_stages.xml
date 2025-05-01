@@ -177,7 +177,7 @@
     <record id="product_state_end_of_life" model="mrp.eco.stage">
         <field name="name">Done</field>
         <field name="final_stage">True</field>
-        <field name="product_state_id" ref="ol_product_state.product_state_end"/>
+        <field name="product_state_id" ref="product_state.product_state_end"/>
         <field name="sequence">22</field>
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.end_of_sale'), ref('ol_mrp_plm.end_of_life')])]" />
     </record>
