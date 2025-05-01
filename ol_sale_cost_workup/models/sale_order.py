@@ -50,7 +50,8 @@ class SaleOrder(models.Model):
     def action_quotation_send(self):
         """Create Cost Workup Report on 'Send Email' button."""
         res = super().action_quotation_send()
-        self.create_cost_workup_report()
+        if self:
+            self.create_cost_workup_report()
         return res
 
     def action_lock(self):
@@ -59,8 +60,8 @@ class SaleOrder(models.Model):
         res = super().action_lock()
 
         # Generate and attach the Cost Workup report after the SO is locked
-        self.create_cost_workup_report()
-
+        if self:
+            self.create_cost_workup_report()
         return res
 
     # END #########
