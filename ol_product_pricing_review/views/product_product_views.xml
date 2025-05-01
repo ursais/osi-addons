@@ -7,11 +7,6 @@
         <field name="priority">100</field>
         <field name="inherit_id" ref="product.product_normal_form_view" />
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='open_pricelist_rules']" position="after">
-                <button class="oe_stat_button" name="action_view_price_reviews" type="object" groups="ol_product_pricing_review.group_pricing_review_user" invisible="type not in ['product', 'consu']" icon="fa-flask">
-                    <field string="Price Reviews" name="price_review_count" widget="statinfo" />
-                </button>
-            </xpath>
             <xpath expr="//header" position="inside">
                 <field name="disable_price_reviews" invisible="1" />
                 <field name="has_configurable_attributes" invisible="1" />
