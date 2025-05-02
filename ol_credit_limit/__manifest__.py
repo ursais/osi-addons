@@ -15,7 +15,6 @@
         "sale_exception",
         "mrp_exception",
         "stock_exception",
-        "ol_sale_mrp_tags",
         "account",
         "ol_exception",
         "mrp_batch",

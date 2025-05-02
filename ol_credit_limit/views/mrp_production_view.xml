@@ -9,9 +9,9 @@
                     <strong> CREDIT HOLD </strong>
                 </div>
             </xpath>
-            <field name="tag_ids" position="after">
+            <xpath expr="//label[@for='lot_producing_id']" position="before">
                 <field  name="credit_hold" groups="ol_credit_limit.group_credit_management_user"/>
-            </field>
+            </xpath>
         </field>
     </record>
 </odoo>
