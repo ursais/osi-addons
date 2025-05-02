@@ -1,0 +1,78 @@
+<odoo noupdate="1">
+	<record id="carrier_multiplier_asia_air_eu" model="delivery.carrier.multiplier">
+    	<field name="carrier">EU - Asia Air</field>
+    	<field name="multiplier">5.2</field>
+    	<field name="company_id" ref="ol_base.onlogic_eu"/>
+  	</record>
+
+  	<record id="carrier_multiplier_asia_ocean_eu" model="delivery.carrier.multiplier">
+    	<field name="carrier">EU - Asia Ocean</field>
+    	<field name="multiplier">2.5</field>
+    	<field name="company_id" ref="ol_base.onlogic_eu"/>
+  	</record>
+  	<record id="carrier_multiplier_asia_pallet_eu" model="delivery.carrier.multiplier">
+    	<field name="carrier">EU - Asia Pallet Air</field>
+    	<field name="multiplier">5.7</field>
+    	<field name="company_id" ref="ol_base.onlogic_eu"/>
+  	</record>
+
+  	<record id="carrier_multiplier_domestic_ground_eu" model="delivery.carrier.multiplier">
+    	<field name="carrier">EU - Domestic Ground</field>
+    	<field name="multiplier">1.3</field>
+    	<field name="company_id" ref="ol_base.onlogic_eu"/>
+  	</record>
+
+  	<record id="carrier_multiplier_usa_air_eu" model="delivery.carrier.multiplier">
+    	<field name="carrier">EU - USA Air</field>
+    	<field name="multiplier">3.5</field>
+    	<field name="company_id" ref="ol_base.onlogic_eu"/>
+  	</record>
+  	<record id="carrier_multiplier_express_eu" model="delivery.carrier.multiplier">
+    	<field name="carrier">EU - Express</field>
+    	<field name="multiplier">7.04</field>
+    	<field name="company_id" ref="ol_base.onlogic_eu"/>
+  	</record>
+
+  	<record id="carrier_multiplier_free_shipping" model="delivery.carrier.multiplier">
+    	<field name="carrier">Free Shipping</field>
+    	<field name="multiplier">0</field>
+  	</record>
+
+  	<record id="carrier_multiplier_none" model="delivery.carrier.multiplier">
+    	<field name="carrier">None</field>
+    	<field name="multiplier">0</field>
+  	</record>
+
+	<record id="carrier_multiplier_day_air_us" model="delivery.carrier.multiplier">
+    	<field name="carrier">USA - 2nd Day Air</field>
+    	<field name="multiplier">25.9</field>
+    	<field name="company_id" ref="base.main_company"/>
+  	</record>
+	<record id="carrier_multiplier_asia_air_us" model="delivery.carrier.multiplier">
+    	<field name="carrier">USA - Asia Air</field>
+    	<field name="multiplier">6</field>
+    	<field name="company_id" ref="base.main_company"/>
+  	</record>
+  	<record id="carrier_multiplier_asia_ocean_us" model="delivery.carrier.multiplier">
+    	<field name="carrier">USA - Asia Ocean</field>
+    	<field name="multiplier">3</field>
+    	<field name="company_id" ref="base.main_company"/>
+  	</record>
+  	<record id="carrier_multiplier_asia_pallet_us" model="delivery.carrier.multiplier">
+    	<field name="carrier">USA - Asia Pallet Air</field>
+    	<field name="multiplier">8.5</field>
+    	<field name="company_id" ref="base.main_company"/>
+  	</record>
+  	<record id="carrier_multiplier_ground_us" model="delivery.carrier.multiplier">
+    	<field name="carrier">USA - Ground</field>
+    	<field name="multiplier">3.45</field>
+    	<field name="company_id" ref="base.main_company"/>
+  	</record>
+  	<record id="carrier_multiplier_pallet_ground_us" model="delivery.carrier.multiplier">
+    	<field name="carrier">USA - Pallet Ground</field>
+    	<field name="multiplier">1.8</field>
+    	<field name="company_id" ref="base.main_company"/>
+  	</record>
+  	
+
+</odoo>
