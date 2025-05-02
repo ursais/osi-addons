@@ -15,4 +15,9 @@ class ProductTemplate(models.Model):
         groups="stock.group_stock_user",
         company_dependent=True,
     )
+
+    def set_is_constrained(self):
+        active_ids = self.browse(self._context.get("active_ids"))
+        if 'is_constrained' in self._context:
+            active_ids.write({"is_constrained":self._context.get("is_constrained")})
     # END #########

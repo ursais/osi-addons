@@ -11,4 +11,26 @@
         </field>
     </record>
 
+    <record id="check_is_constrained" model="ir.actions.server">
+       <field name="name">Check "is Constrained" on Product</field>
+       <field name="model_id" ref="product.model_product_template"/>
+       <field name="binding_model_id" ref="product.model_product_template"/>
+       <field name="binding_view_types">list,form</field>
+       <field name="state">code</field>
+       <field name="code">
+           action = records.with_context(is_constrained=True).set_is_constrained()
+       </field>
+    </record>
+
+    <record id="uncheck_is_constrained" model="ir.actions.server">
+       <field name="name">Uncheck "is Constrained" on Product</field>
+       <field name="model_id" ref="product.model_product_template"/>
+       <field name="binding_model_id" ref="product.model_product_template"/>
+       <field name="binding_view_types">list,form</field>
+       <field name="state">code</field>
+       <field name="code">
+           records.with_context(is_constrained=False).set_is_constrained()
+       </field>
+    </record>
+
 </odoo>
