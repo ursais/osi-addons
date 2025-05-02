@@ -118,47 +118,67 @@ class ResPartner(models.Model):
         "invoice_ids.state",
     )
     def _compute_open_so_balance(self):
-        # self.filtered(lambda l: not l.credit_limit).open_so_balance = 0
+        def compute_balance(partners):
+            open_so = partners._get_open_sale_order()
+            return sum(open_so.mapped("amount_total"))
+
         for partner in self:
-            # Skip computation if the partner is new (i.e., hasn't been saved yet)
             if not partner.id:
                 partner.open_so_balance = 0
                 continue
 
-            # Use raw SQL query to get all child IDs efficiently
-            self.env.cr.execute(
-                """
-                SELECT id FROM res_partner WHERE parent_id in %s
-            """,
-                (tuple(partner.ids),),
-            )
-            all_child_ids = [row[0] for row in self.env.cr.fetchall()]
-            all_child_ids.append(partner.id)
             _logger.info("_compute_open_so_balance %s", partner.id)
-            open_so = partner._get_open_sale_order()
 
-            # Aggregate draft invoices using raw SQL query
-            not_paid_invoices = 0
+            # Collect all relevant partner IDs: self + children
+            self.env.cr.execute(
+                "SELECT id FROM res_partner WHERE parent_id = ANY(%s)", ([partner.id],),
+            )
+            child_ids = [row[0] for row in self.env.cr.fetchall()]
+            all_partner_ids = child_ids + [partner.id]
 
+            # Calculate open SO total and draft invoice amount
+            open_so_total = compute_balance(partner._origin)
             self.env.cr.execute(
                 """
-                SELECT COALESCE(SUM(amount_residual_signed), 0) 
-                FROM account_move 
-                WHERE move_type = 'out_invoice' 
-                AND partner_id IN %s 
-                AND state = 'draft'
-            """,
-                (tuple(all_child_ids),),
+                SELECT COALESCE(SUM(amount_residual_signed), 0)
+                FROM account_move
+                WHERE move_type = 'out_invoice'
+                  AND state = 'draft'
+                  AND partner_id = ANY(%s)
+                """,
+                ([all_partner_ids],),
             )
-            not_paid_invoices = self.env.cr.fetchone()[0] or 0
+            draft_invoice_total = self.env.cr.fetchone()[0] or 0
+            rollup_balance = sum(partner.rollup_partner_ids.mapped("open_so_balance"))
 
-            open_so_balance = (
-                sum(open_so.mapped("amount_total"))
-                + sum(partner.rollup_partner_ids.mapped("open_so_balance"))
-                + not_paid_invoices
-            )
+            base_balance = open_so_total + draft_invoice_total + rollup_balance
 
-            partner.open_so_balance = open_so_balance
+            if partner._origin.is_company:
+                full_group = (
+                    partner.rollup_partner_ids | partner.child_ids | partner._origin
+                )
+                partner.open_so_balance = compute_balance(full_group)
+
+            elif partner.partner_rollup_id and not partner.parent_id:
+                rollup_group = (
+                    partner.partner_rollup_id
+                    | partner.partner_rollup_id.child_ids
+                    | partner._origin
+                )
+                partner.open_so_balance = base_balance
+                partner.partner_rollup_id.open_so_balance = compute_balance(
+                    rollup_group
+                )
+
+            elif partner.parent_id and not partner.partner_rollup_id:
+                parent_group = (
+                    partner.parent_id
+                    | partner.parent_id.child_ids
+                    | partner.parent_id.rollup_partner_ids
+                )
+                parent_balance = compute_balance(parent_group)
+                partner.parent_id.open_so_balance = parent_balance
+                partner.open_so_balance = base_balance
 
     @api.depends(
         "credit_limit",
@@ -291,7 +311,6 @@ class ResPartner(models.Model):
     #             AND so.state NOT IN ('cancel', 'done')
     #             AND sol.product_uom_qty > 0
     #         """
-    #         print("#######partners_to_include#######",partners_to_include)
     #         self.env.cr.execute(query, (partners_to_include,))
     #         result = self.env.cr.fetchone()[0] or 0.0
     #         partner.open_bo_balance = result
@@ -317,19 +336,43 @@ class ResPartner(models.Model):
         "sale_blanket_order_ids.line_ids",
     )
     def _compute_open_bo_balance(self):
+        def compute_balance(partners):
+            lines = partners.sale_blanket_order_ids.filtered(
+                lambda l: l.state == "open"
+            ).mapped("line_ids")
+            return sum(line.remaining_uom_qty * line.price_unit for line in lines)
+
         for partner in self:
             _logger.info("_compute_open_bo_balance %s", partner._origin.id)
-            partners_to_include = partner.rollup_partner_ids + partner._origin
-            sale_blanket_order_lines = (
-                partners_to_include.sale_blanket_order_ids.filtered(
-                    lambda l: l.state == "open"
-                ).mapped("line_ids")
-            )
-            open_bo_balance = 0
-            for blanket_order_line in sale_blanket_order_lines:
-                open_bo_balance += (
-                    blanket_order_line.remaining_uom_qty * blanket_order_line.price_unit
+
+            partners_base = partner._origin
+            base_balance = compute_balance(partners_base)
+
+            if partner._origin.is_company:
+                partners_all = (
+                    partner.rollup_partner_ids | partner.child_ids | partners_base
                 )
-            partner.open_bo_balance = open_bo_balance
+                partner.open_bo_balance = compute_balance(partners_all)
+
+            elif partner.partner_rollup_id and not partner.parent_id:
+                rollup_group = (
+                    partner.partner_rollup_id
+                    | partner.partner_rollup_id.child_ids
+                    | partners_base
+                )
+                partner.open_bo_balance = base_balance
+                partner.partner_rollup_id.open_bo_balance = compute_balance(
+                    rollup_group
+                )
+
+            elif partner.parent_id and not partner.partner_rollup_id:
+                parent_group = (
+                    partner.parent_id
+                    | partner.parent_id.child_ids
+                    | partner.parent_id.rollup_partner_ids
+                )
+                balance = compute_balance(parent_group)
+                partner.parent_id.open_bo_balance = balance
+                partner.open_bo_balance = base_balance
 
     # END #########
