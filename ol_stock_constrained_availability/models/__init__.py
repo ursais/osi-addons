@@ -1,4 +1,6 @@
 from . import product_template
 from . import sale_order
-from . import stock_move
+from . import sale_order_line
+from . import mrp_production
 from . import mrp_production_batch
+from . import stock_picking

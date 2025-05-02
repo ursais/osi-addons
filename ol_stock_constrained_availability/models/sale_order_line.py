@@ -1,5 +1,5 @@
 # Import Odoo Libs
-from odoo import api, fields, models
+from odoo import api, models
 
 
 class SaleOrderLine(models.Model):
@@ -8,6 +8,7 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     # METHODS #####
+
     @api.model_create_multi
     def create(self, vals_list):
         order_lines = super().create(vals_list)
@@ -19,7 +20,6 @@ class SaleOrderLine(models.Model):
                 ]
             )
             if line.product_id.is_constrained and stock_move:
-                print("line.product_id", line.product_id.name)
                 stock_move.date = line.order_id.date_confirm
         return order_lines
 
@@ -32,4 +32,4 @@ class SaleOrderLine(models.Model):
             stock_move.date = self.order_id.date_confirm
         return line
 
-    # END #####
+    # END #########

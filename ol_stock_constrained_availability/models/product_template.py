@@ -7,7 +7,7 @@ class ProductTemplate(models.Model):
 
     _inherit = "product.template"
 
-    # FIELDS #####
+    # COLUMNS #####
 
     is_constrained = fields.Boolean(
         string="Is Constrained?",
@@ -16,8 +16,12 @@ class ProductTemplate(models.Model):
         company_dependent=True,
     )
 
+    # END #########
+    # METHODS #####
+
     def set_is_constrained(self):
         active_ids = self.browse(self._context.get("active_ids"))
-        if 'is_constrained' in self._context:
-            active_ids.write({"is_constrained":self._context.get("is_constrained")})
+        if "is_constrained" in self._context:
+            active_ids.write({"is_constrained": self._context.get("is_constrained")})
+
     # END #########

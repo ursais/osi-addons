@@ -9,7 +9,15 @@
     "version": "17.0.0.1.0",
     "license": "AGPL-3",
     # any module necessary for this one to work correctly
-    "depends": ["ol_base", "mrp_batch", "mrp"],
+    "depends": [
+        "ol_base",
+        "mrp_batch",
+        "mrp",
+    ],
     # always loaded
-    "data": ["views/product_template_views.xml", "views/sale_order_views.xml",],
+    "data": [
+        "views/product_template_views.xml",
+        "views/sale_order_views.xml",
+        "views/mrp_batch_views.xml",
+    ],
 }

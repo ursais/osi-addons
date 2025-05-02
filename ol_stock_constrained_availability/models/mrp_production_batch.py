@@ -1,6 +1,7 @@
 # Import Odoo Libs
-from odoo import models
+from odoo import models, fields
 from odoo.tools import float_compare
+from odoo.tools.misc import format_date
 
 
 class MrpProductionBatch(models.Model):
@@ -8,7 +9,30 @@ class MrpProductionBatch(models.Model):
 
     _inherit = "mrp.production.batch"
 
-    # METHOD #####
+    # COLUMNS #####
+
+    has_constrained_component = fields.Boolean(
+        compute="_compute_has_constrained_component",
+        help="Helper field to inform the user that there is a component in MOs on the batch that are marked constrained",
+    )
+
+    # END #########
+    # METHODS #####
+
+    def _compute_has_constrained_component(self):
+        for batch in self:
+            has_constrained_component = False
+            valid_productions = batch.production_ids.filtered(
+                lambda mo: mo.state not in ("draft", "cancel", "done", "to_close")
+            )
+            all_raw_moves = any(
+                valid_productions.move_raw_ids.filtered(
+                    lambda l: l.product_id.is_constrained
+                )
+            )
+            if all_raw_moves:
+                has_constrained_component = True
+            batch.has_constrained_component = has_constrained_component
 
     def _compute_components_availability_details(self):
         """Override the Method to add * in product display name where is_constrained is set."""
@@ -50,13 +74,13 @@ class MrpProductionBatch(models.Model):
                     product_status_map[product.id] = f"{display_string}: Not Available"
 
                 if move.forecast_expected_date:
-                    product_status_map[
-                        product.id
-                    ] = f"{display_string}: Exp. {format_date(self.env, move.forecast_expected_date)}"
+                    product_status_map[product.id] = (
+                        f"{display_string}: Exp. {format_date(self.env, move.forecast_expected_date)}"
+                    )
 
             # Populate the details field
             batch.components_availability_details = "\n".join(
                 product_status_map.values()
             )
 
-    # END #####
+    # END #########
