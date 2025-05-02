@@ -27,9 +27,19 @@
                     </group>
                 </sheet>
                 <footer>
-                    <button name="generate_lines" type="object" string="Generate Lines" class="btn-primary"/>
-                    <button name="test_query" type="object" string="Test Query" class="btn-secondary"/>
-                    <button string="Cancel" class="btn-default" special="cancel"/>
+                    <button
+                        name="generate_lines"
+                        type="object"
+                        string="Generate Lines"
+                        class="btn-primary"
+                    />
+                    <button
+                        name="test_query"
+                        type="object"
+                        string="Test Query"
+                        class="btn-secondary"
+                    />
+                    <button string="Cancel" class="btn-default" special="cancel" />
                 </footer>
             </form>
         </field>
@@ -40,7 +50,7 @@
         <field name="res_model">generate.encrypt.lines.wizard</field>
         <field name="type">ir.actions.act_window</field>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="generate_lines_wizard_view"/>
+        <field name="view_id" ref="generate_lines_wizard_view" />
         <field name="target">new</field>
     </record>
 

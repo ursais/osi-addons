@@ -1,10 +1,11 @@
 # Copyright (C) 2024 - TODAY, Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models, _
-import os
 import logging
+import os
 import time
+
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -30,25 +31,31 @@ class DecryptWizard(models.TransientModel):
         help="If CSV's were created during sanitization, enter the file location where the CSV files exist from when sanitization was run.",
     )
     show_key = fields.Boolean("Show Key", compute="_show_fields_compute")
-    show_file_location = fields.Boolean("Show File Location", compute="_show_fields_compute")
+    show_file_location = fields.Boolean(
+        "Show File Location", compute="_show_fields_compute"
+    )
     create_csv = fields.Boolean(
         "Use CSV Files to Restore",
         default=True,
         help="If CSV files were created during sanitization, then use them to restore since the temp tables would have been auto dropped.",
     )
 
-    @api.depends('char_line_ids')
+    @api.depends("char_line_ids")
     def _show_fields_compute(self):
         for rec in self:
             rec.show_key = False
             rec.show_file_location = False
             if any(line.line_action == "encrypt_decrypt" for line in rec.char_line_ids):
                 rec.show_key = True
-            if any(line.line_action == "sanitize_unsanitize" for line in rec.char_line_ids):
+            if any(
+                line.line_action == "sanitize_unsanitize" for line in rec.char_line_ids
+            ):
                 rec.show_file_location = True
 
     def unsanitize_char_data(self):
-        sanitized_lines = self.char_line_ids.filtered(lambda x: x.line_action == "sanitize_unsanitize")
+        sanitized_lines = self.char_line_ids.filtered(
+            lambda x: x.line_action == "sanitize_unsanitize"
+        )
         for line in sanitized_lines:
             if line.line_action == "sanitize_unsanitize" and line.state not in (
                 "encrypted",
@@ -62,8 +69,15 @@ class DecryptWizard(models.TransientModel):
                 temp_table = "temp_" + table
 
                 # Check if CSV File exists
-                if self.create_csv and not os.path.isfile(self.file_location + temp_table + ".csv"):
-                    raise UserError("CSV file " + self.file_location + temp_table + ".csv not found.")
+                if self.create_csv and not os.path.isfile(
+                    self.file_location + temp_table + ".csv"
+                ):
+                    raise UserError(
+                        "CSV file "
+                        + self.file_location
+                        + temp_table
+                        + ".csv not found."
+                    )
 
                 # Remove previous table if exists, failed sanitation for example
                 if self.create_csv:
@@ -74,12 +88,18 @@ class DecryptWizard(models.TransientModel):
                     # Create empty temp table to restore CSV into
                     try:
                         temp_table_query = (
-                            "CREATE TABLE " + temp_table + "(LIKE " + table + " INCLUDING ALL);"
+                            "CREATE TABLE "
+                            + temp_table
+                            + "(LIKE "
+                            + table
+                            + " INCLUDING ALL);"
                         )
                         self.env.cr.execute(temp_table_query)
                         self.env.cr.commit()
                     except Exception as e:
-                        raise UserError("Error during creating empty temp table: \n %s" % e)
+                        raise UserError(
+                            "Error during creating empty temp table: \n %s" % e
+                        )
 
                     # Restore from CSV to temp table
                     try:
@@ -94,7 +114,10 @@ class DecryptWizard(models.TransientModel):
                         self.env.cr.execute(restore_query)
                         self.env.cr.commit()
                     except Exception as e:
-                        raise UserError("Error during copying data to temp table from CSV: \n %s" % e)
+                        raise UserError(
+                            "Error during copying data to temp table from CSV: \n %s"
+                            % e
+                        )
 
                 # ============================ DESANITIZE DATA ============================
                 i = len(line.included_char_column_ids)
@@ -118,7 +141,9 @@ class DecryptWizard(models.TransientModel):
                     self.env.cr.execute(desanitize_data_query)
                     self.env.cr.commit()
                 except Exception as e:
-                    _logger.info("\n -----------------  %s  -----------------------" % (e))
+                    _logger.info(
+                        "\n -----------------  %s  -----------------------" % (e)
+                    )
                     raise UserError("Error during restoring data: \n %s" % e)
                 runningLog += "\nCompleted Desanitization"
                 if line.log_notes:
@@ -143,7 +168,9 @@ class DecryptWizard(models.TransientModel):
                     raise UserError("Error during dropping temp table: \n %s" % e)
 
     def decrypt_char_data(self):
-        encrypted_lines = self.char_line_ids.filtered(lambda x: x.line_action == "encrypt_decrypt")
+        encrypted_lines = self.char_line_ids.filtered(
+            lambda x: x.line_action == "encrypt_decrypt"
+        )
         for line in encrypted_lines:
             if line.line_action == "encrypt_decrypt" and line.state not in (
                 "decrypted",
@@ -191,12 +218,17 @@ class DecryptWizard(models.TransientModel):
 
                 table_columns_dict = {}
                 for table, column in table_columns_list_set:
-                    if table in table_columns_dict and column not in table_columns_dict[table]:
+                    if (
+                        table in table_columns_dict
+                        and column not in table_columns_dict[table]
+                    ):
                         table_columns_dict[table].append(column)
                     else:
                         table_columns_dict[table] = [column]
 
-                runningLog += "MASTER TABLE GROUPED DICT: %s" % (str(table_columns_dict))
+                runningLog += "MASTER TABLE GROUPED DICT: %s" % (
+                    str(table_columns_dict)
+                )
 
                 excluded_tables_columns = {
                     "project_task_burndown_chart_report": [
@@ -236,12 +268,18 @@ class DecryptWizard(models.TransientModel):
                     table_exists = self.env.cr.fetchone()
                     if table_exists[0] is False:
                         tables_missing.append(table)
-                        runningLog += "\n Skipping table %s as it doesn't exist in this db" % (table,)
+                        runningLog += (
+                            "\n Skipping table %s as it doesn't exist in this db"
+                            % (table,)
+                        )
                         tables_skipped.append(table)
                         continue
 
                     for each_col in columns:
-                        if table in excluded_tables_columns and each_col in excluded_tables_columns[table]:
+                        if (
+                            table in excluded_tables_columns
+                            and each_col in excluded_tables_columns[table]
+                        ):
                             runningLog += (
                                 "\n Skipping column %s from table %s as it is present in the excluded list %s"
                                 % (each_col, table, excluded_tables_columns)
@@ -260,25 +298,37 @@ class DecryptWizard(models.TransientModel):
                             )
                     if not columns_exists:
                         tables_skipped.append(table)
-                        runningLog += "\n Skipping table as no columns present: table %s  cloumns %s" % (
-                            table,
-                            columns,
+                        runningLog += (
+                            "\n Skipping table as no columns present: table %s  cloumns %s"
+                            % (
+                                table,
+                                columns,
+                            )
                         )
                         continue
 
                     if not check_column(table, "id"):
-                        runningLog += "\n Skipping table  %s  as it doesn't have id column" % (table)
-                        _logger.info("\n Skipping table  %s  as it doesn't have id column" % (table))
+                        runningLog += (
+                            "\n Skipping table  %s  as it doesn't have id column"
+                            % (table)
+                        )
+                        _logger.info(
+                            "\n Skipping table  %s  as it doesn't have id column"
+                            % (table)
+                        )
                         continue
                     query = "SELECT id, {}  FROM {} ORDER BY id".format(
                         ", ".join(['"%s"' % c for c in columns_exists]), table
                     )
                     self.env.cr.execute(query)
                     table_data = self.env.cr.fetchall()
-                    runningLog += "\n Going Through Table: %s  for Columns: %s with %s records" % (
-                        table,
-                        str(columns_exists),
-                        len(table_data),
+                    runningLog += (
+                        "\n Going Through Table: %s  for Columns: %s with %s records"
+                        % (
+                            table,
+                            str(columns_exists),
+                            len(table_data),
+                        )
                     )
 
                     rec_updated_ids = []
@@ -324,8 +374,13 @@ class DecryptWizard(models.TransientModel):
                             continue
                         set_data_str = ", ".join(
                             [
-                                """"%s" = pgp_sym_decrypt('%s', '%s')""" % (col, col_data, self.key) if not translated
-                                else """"%s" = jsonb_build_object('en_US', pgp_sym_decrypt('%s', '%s'))""" % (col, col_data, self.key)
+                                (
+                                    """"%s" = pgp_sym_decrypt('%s', '%s')"""
+                                    % (col, col_data, self.key)
+                                    if not translated
+                                    else """"%s" = jsonb_build_object('en_US', pgp_sym_decrypt('%s', '%s'))"""
+                                    % (col, col_data, self.key)
+                                )
                                 for col, col_data, translated in set_data
                             ]
                         )
@@ -343,10 +398,13 @@ class DecryptWizard(models.TransientModel):
                                 len(table_data),
                                 table,
                             )
-                    runningLog += "\n Decrypted data for %s records from table %s with columns %s" % (
-                        len(rec_updated_ids),
-                        table,
-                        columns_exists,
+                    runningLog += (
+                        "\n Decrypted data for %s records from table %s with columns %s"
+                        % (
+                            len(rec_updated_ids),
+                            table,
+                            columns_exists,
+                        )
                     )
 
                     runningLog += "\n Comitting changes for table: %s" % table
@@ -373,10 +431,13 @@ class DecryptWizard(models.TransientModel):
                             + "';"
                         )
                         self.env.cr.execute(varchar_query)
-                        runningLog += "\n Resized character_maximum_length for %s.%s from 10000 to %s \n" % (
-                            table,
-                            column.name,
-                            column.size,
+                        runningLog += (
+                            "\n Resized character_maximum_length for %s.%s from 10000 to %s \n"
+                            % (
+                                table,
+                                column.name,
+                                column.size,
+                            )
                         )
                         self.env.cr.commit()
 
@@ -392,9 +453,11 @@ class DecryptWizard(models.TransientModel):
     def decrypt_unsanitize_char_data(self):
         if any(x.line_action == "encrypt_decrypt" for x in self.char_line_ids):
             if not self.key:
-                raise UserError("Missing Key! Please enter an encryption key to continue.")
+                raise UserError(
+                    "Missing Key! Please enter an encryption key to continue."
+                )
             self.decrypt_char_data()
         if any(x.line_action == "sanitize_unsanitize" for x in self.char_line_ids):
             if self.create_csv and not os.path.isdir(self.file_location):
-                raise UserError('Folder not found.')
+                raise UserError("Folder not found.")
             self.unsanitize_char_data()

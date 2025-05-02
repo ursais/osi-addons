@@ -1,8 +1,9 @@
 # Copyright (C) 2024 - TODAY, Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, models
 import logging
+
+from odoo import models
 
 _logger = logging.getLogger(__name__)
 
@@ -30,7 +31,7 @@ class IrActionsServer(models.Model):
         self.env.cr.execute("drop index IF EXISTS  account_move_line_ref_index;")
         self.env.cr.commit()
         self.env.cr.execute(
-            """ SELECT 
+            """ SELECT
                     col.table_name,
                     col.column_name
                 FROM information_schema.columns col
@@ -39,9 +40,9 @@ class IrActionsServer(models.Model):
                     AND tab.table_name = col.table_name
                     AND tab.table_type = 'BASE TABLE'
                 JOIN
-                    ir_model_fields imf ON imf.model = REPLACE(col.table_name, '_', '.') 
+                    ir_model_fields imf ON imf.model = REPLACE(col.table_name, '_', '.')
                     AND imf.name = col.column_name
-                WHERE 
+                WHERE
                     col.data_type IN ('character varying', 'character', 'text', '"char"', 'name')
                 AND imf.ttype != 'selection'
                 AND col.table_schema NOT IN ('information_schema', 'pg_catalog')
@@ -158,8 +159,8 @@ class IrActionsServer(models.Model):
         # and tab.table_name = 'res_partner'
 
         self.env.cr.execute(
-            """ 
-                SELECT 
+            """
+                SELECT
                     col.table_name,
                     col.column_name
                 FROM information_schema.columns col
@@ -168,9 +169,9 @@ class IrActionsServer(models.Model):
                     AND tab.table_name = col.table_name
                     AND tab.table_type = 'BASE TABLE'
                 JOIN
-                    ir_model_fields imf ON imf.model = REPLACE(col.table_name, '_', '.') 
+                    ir_model_fields imf ON imf.model = REPLACE(col.table_name, '_', '.')
                     AND imf.name = col.column_name
-                WHERE 
+                WHERE
                     col.data_type IN ('character varying', 'character', 'text', '"char"', 'name')
                 AND imf.ttype != 'selection'
                 AND col.table_schema NOT IN ('information_schema', 'pg_catalog')

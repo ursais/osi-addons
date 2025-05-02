@@ -15,17 +15,35 @@
                 <field name="table_id" invisible="1" />
                 <field name="model" optional="show" />
                 <field name="name" optional="show" />
-                <field name="included_char_column_ids" widget="many2many_tags" optional="hide" />
+                <field
+                    name="included_char_column_ids"
+                    widget="many2many_tags"
+                    optional="hide"
+                />
                 <field name="export_include_column_format" optional="show" />
-                <field name="excluded_char_column_ids" widget="many2many_tags" optional="hide" />
+                <field
+                    name="excluded_char_column_ids"
+                    widget="many2many_tags"
+                    optional="hide"
+                />
                 <field name="exclude_ids" optional="show" />
                 <field name="export_exclude_column_format" optional="show" />
                 <field name="indexes" optional="hide" />
                 <field name="dropped_indexes" optional="hide" />
                 <field name="total_num_records" optional="show" />
                 <field name="num_records" optional="show" />
-                <field name="encrypt_time" widget="float_time" readonly="1" optional="show" />
-                <field name="decrypt_time" widget="float_time" readonly="1" optional="show" />
+                <field
+                    name="encrypt_time"
+                    widget="float_time"
+                    readonly="1"
+                    optional="show"
+                />
+                <field
+                    name="decrypt_time"
+                    widget="float_time"
+                    readonly="1"
+                    optional="show"
+                />
                 <field name="exclude_reason" optional="show" />
                 <field name="state" optional="show" readonly="1" />
              </list>
@@ -86,15 +104,36 @@
                         class="btn-secondary"
                         invisible="not state == 'excluded'"
                     />
-                    <field name="state" widget="statusbar" readonly="1" force_save="1" statusbar_visible=" " />
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        readonly="1"
+                        force_save="1"
+                        statusbar_visible=" "
+                    />
                 </header>
                 <sheet>
-                    <widget name="web_ribbon" title="Sanitized" bg_color="bg-success" invisible="not state == 'sanitized'" />
-                    <widget name="web_ribbon" title="Encrypted" bg_color="bg-success" invisible="not state == 'encrypted'" />
-                    <widget name="web_ribbon" title="Excluded" bg_color="bg-danger" invisible="not state == 'excluded'" />
+                    <widget
+                        name="web_ribbon"
+                        title="Sanitized"
+                        bg_color="bg-success"
+                        invisible="not state == 'sanitized'"
+                    />
+                    <widget
+                        name="web_ribbon"
+                        title="Encrypted"
+                        bg_color="bg-success"
+                        invisible="not state == 'encrypted'"
+                    />
+                    <widget
+                        name="web_ribbon"
+                        title="Excluded"
+                        bg_color="bg-danger"
+                        invisible="not state == 'excluded'"
+                    />
                     <div class="oe_title">
                         <h1>
-                            <field name="table_id" readonly="1"/>
+                            <field name="table_id" readonly="1" />
                         </h1>
                     </div>
                     <group name="information">
@@ -106,14 +145,29 @@
                             <field name="total_num_records" readonly="1" />
                         </group>
                         <group>
-                            <field name="encrypt_time" widget="float_time" readonly="1" />
-                            <field name="decrypt_time" widget="float_time" readonly="1" />
+                            <field
+                                name="encrypt_time"
+                                widget="float_time"
+                                readonly="1"
+                            />
+                            <field
+                                name="decrypt_time"
+                                widget="float_time"
+                                readonly="1"
+                            />
                             <field name="num_records" readonly="1" />
                         </group>
                     </group>
                     <group name="include_exclude">
-                        <field name="exclude_ids" help="Comma seperated list Example: 2,5,33,545" placeholder="2,5,33,545" />
-                        <field name="included_char_column_ids" domain="[('model_id', '=', table_id), ('ttype', 'in', ('char','text','html')), ('store', '!=', False), ('related', '=', False)]" >
+                        <field
+                            name="exclude_ids"
+                            help="Comma seperated list Example: 2,5,33,545"
+                            placeholder="2,5,33,545"
+                        />
+                        <field
+                            name="included_char_column_ids"
+                            domain="[('model_id', '=', table_id), ('ttype', 'in', ('char','text','html')), ('store', '!=', False), ('related', '=', False)]"
+                        >
                             <list string="Included Char Columns" editable="bottom">
                                 <field name="name" optional="show" />
                                 <field name="field_description" optional="show" />
@@ -125,7 +179,10 @@
                                 <field name="related" optional="show" />
                             </list>
                         </field>
-                        <field name="excluded_char_column_ids" domain="[('model_id', '=', table_id), ('ttype', 'in', ('char','text','html'))]" >
+                        <field
+                            name="excluded_char_column_ids"
+                            domain="[('model_id', '=', table_id), ('ttype', 'in', ('char','text','html'))]"
+                        >
                             <list string="Included Char Columns" editable="bottom">
                                 <field name="name" optional="show" />
                                 <field name="field_description" optional="show" />
@@ -184,13 +241,13 @@
                     string="Unsanitized"
                     domain="[('state', '=', 'unsanitized')]"
                 />
-                <separator/>
+                <separator />
                 <filter
                     name="in progress"
                     string="In Progress"
                     domain="[('state', '=', 'in_progress')]"
                 />
-                <separator/>
+                <separator />
                 <filter
                     name="encrypted"
                     string="Encrypted"
@@ -201,7 +258,7 @@
                     string="Sanitized"
                     domain="[('state', '=', 'sanitized')]"
                 />
-                <separator/>
+                <separator />
                 <filter
                     name="error"
                     string="Error"
@@ -212,7 +269,7 @@
                     string="Excluded"
                     domain="[('state', '=', 'excluded')]"
                 />
-                <separator/>
+                <separator />
                 <filter
                     name="has_records"
                     string="Has Records"

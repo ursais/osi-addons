@@ -1,7 +1,7 @@
 # Copyright (C) 2024 - TODAY, Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models, _
+from odoo import fields, models
 
 
 class DropIndexWizard(models.TransientModel):
@@ -9,7 +9,7 @@ class DropIndexWizard(models.TransientModel):
     _description = "decrypt Lines Wizard"
 
     index_name = fields.Char("Index Name")
-    line_id = fields.Many2one('encrypt.line')
+    line_id = fields.Many2one("encrypt.line")
 
     def drop_index(self):
         index_query = "drop index IF EXISTS " + self.index_name + ";"
@@ -17,6 +17,12 @@ class DropIndexWizard(models.TransientModel):
         self.env.cr.commit()
         if self.line_id.dropped_indexes:
             if self.index_name not in self.line_id.dropped_indexes:
-                self.line_id.write({"dropped_indexes": self.line_id.dropped_indexes + "," + self.index_name})
+                self.line_id.write(
+                    {
+                        "dropped_indexes": self.line_id.dropped_indexes
+                        + ","
+                        + self.index_name
+                    }
+                )
         else:
             self.line_id.write({"dropped_indexes": self.index_name})
