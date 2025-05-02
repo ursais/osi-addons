@@ -287,8 +287,15 @@ class DecryptWizard(models.TransientModel):
                         set_data = []
 
                         for col, col_data in zip(columns_exists, col_data[1:]):
+                            translated = False
+
                             if not col_data:
                                 continue
+
+                            # convert translatable fields
+                            if isinstance(col_data, dict):
+                                translated = True
+                                col_data = col_data.get("en_US", "")
 
                             # Remove wrapped p tags if present
                             col_data = col_data.lstrip("<p>").rstrip("</p>")
@@ -310,15 +317,16 @@ class DecryptWizard(models.TransientModel):
                                         % (id, table, col, col_data)
                                     )
                                     continue
-                                set_data.append((col, col_data))
+                                set_data.append((col, col_data, translated))
                                 rec_updated_ids.append(id)
 
                         if not set_data:
                             continue
                         set_data_str = ", ".join(
                             [
-                                """"%s" = pgp_sym_decrypt('%s', '%s')""" % (col, col_data, self.key)
-                                for col, col_data in set_data
+                                """"%s" = pgp_sym_decrypt('%s', '%s')""" % (col, col_data, self.key) if not translated
+                                else """"%s" = jsonb_build_object('en_US', pgp_sym_decrypt('%s', '%s'))""" % (col, col_data, self.key)
+                                for col, col_data, translated in set_data
                             ]
                         )
 

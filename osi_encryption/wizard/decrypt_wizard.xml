@@ -16,14 +16,14 @@
                     </group>
                     <group>
                         <field name="char_line_ids">
-                            <tree string="Lines to Decrypt" editable="bottom">
+                            <list string="Lines to Decrypt" editable="bottom">
                                 <field name="table_id" optional="hide" />
                                 <field name="name" optional="show" />
                                 <field name="model" optional="show" />
                                 <field name="included_char_column_ids" widget="many2many_tags" optional="show" />
                                 <field name="num_records" optional="show" />
                                 <field name="line_action" optional="show" />
-                            </tree>
+                            </list>
                         </field>
                     </group>
                 </sheet>

@@ -30,7 +30,7 @@ class EncryptLine(models.Model):
     )
     table_id = fields.Many2one("ir.model", string="Table")
     model = fields.Char("Model Name", related="table_id.model", store=True)
-    name = fields.Char("Model", related="table_id.name", store=True)
+    name = fields.Char("Model", related="table_id.name", store=True, translate=True)
     included_char_column_ids = fields.Many2many(
         "ir.model.fields",
         "encryp_included_line_field_id_rel",

@@ -5,7 +5,7 @@
         <field name="name">encryption.line.view.tree</field>
         <field name="model">encrypt.line</field>
         <field name="arch" type="xml">
-            <tree
+            <list
                 string="Encryption Lines"
                 decoration-success="state in ('encrypted','sanitized')"
                 decoration-muted="state == 'excluded'"
@@ -28,7 +28,7 @@
                 <field name="decrypt_time" widget="float_time" readonly="1" optional="show" />
                 <field name="exclude_reason" optional="show" />
                 <field name="state" optional="show" readonly="1" />
-             </tree>
+             </list>
         </field>
     </record>
 
@@ -114,7 +114,7 @@
                     <group name="include_exclude">
                         <field name="exclude_ids" help="Comma seperated list Example: 2,5,33,545" placeholder="2,5,33,545" />
                         <field name="included_char_column_ids" domain="[('model_id', '=', table_id), ('ttype', 'in', ('char','text','html')), ('store', '!=', False), ('related', '=', False)]" >
-                            <tree string="Included Char Columns" editable="bottom">
+                            <list string="Included Char Columns" editable="bottom">
                                 <field name="name" optional="show" />
                                 <field name="field_description" optional="show" />
                                 <field name="ttype" optional="show" />
@@ -123,10 +123,10 @@
                                 <field name="store" optional="show" />
                                 <field name="readonly" optional="show" />
                                 <field name="related" optional="show" />
-                            </tree>
+                            </list>
                         </field>
                         <field name="excluded_char_column_ids" domain="[('model_id', '=', table_id), ('ttype', 'in', ('char','text','html'))]" >
-                            <tree string="Included Char Columns" editable="bottom">
+                            <list string="Included Char Columns" editable="bottom">
                                 <field name="name" optional="show" />
                                 <field name="field_description" optional="show" />
                                 <field name="ttype" optional="show" />
@@ -135,7 +135,7 @@
                                 <field name="store" optional="show" />
                                 <field name="readonly" optional="show" />
                                 <field name="related" optional="show" />
-                            </tree>
+                            </list>
                         </field>
                     </group>
                     <notebook>
@@ -242,7 +242,7 @@
     <record id="encrypt_lines_action" model="ir.actions.act_window">
         <field name="name">Encryption Lines</field>
         <field name="res_model">encrypt.line</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
         <field name="context">{}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
