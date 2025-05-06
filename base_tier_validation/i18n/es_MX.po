@@ -363,6 +363,8 @@ msgid "ID"
 msgstr "Identificación"
 
 #. module: base_tier_validation
+#: model:ir.model.fields,help:base_tier_validation.field_tier_definition__has_comment
+#: model:ir.model.fields,help:base_tier_validation.field_tier_review__has_comment
 #: model:ir.model.fields,help:base_tier_validation.field_tier_validation__has_comment
 msgid "If set, Allow the reviewer to leave a comment on the review."
 msgstr ""

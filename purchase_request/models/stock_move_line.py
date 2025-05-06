@@ -1,7 +1,10 @@
 # Copyright 2017 ForgeFlow, S.L.
 # License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl-3.0)
 
+from markupsafe import Markup
+
 from odoo import _, api, models
+from odoo.tools import html_escape
 
 
 class StockMoveLine(models.Model):
@@ -18,7 +21,8 @@ class StockMoveLine(models.Model):
         message = "<h3>%s</h3>" % title
         message += _(
             "The following requested items from Purchase Request %(request_name)s "
-            "have now been received in %(location_name)s using Picking %(picking_name)s:"
+            "have now been received in %(location_name)s using Picking "
+            "%(picking_name)s:"
         ) % {
             "request_name": message_data["request_name"],
             "location_name": message_data["location_name"],
@@ -29,12 +33,12 @@ class StockMoveLine(models.Model):
             "<li><b>%(product_name)s</b>: "
             "Transferred quantity %(product_qty)s %(product_uom)s</li>"
         ) % {
-            "product_name": message_data["product_name"],
+            "product_name": html_escape(message_data["product_name"]),
             "product_qty": message_data["product_qty"],
             "product_uom": message_data["product_uom"],
         }
         message += "</ul>"
-        return message
+        return Markup(message)
 
     @api.model
     def _picking_confirm_done_message_content(self, message_data):
@@ -56,12 +60,12 @@ class StockMoveLine(models.Model):
             "<li><b>%(product_name)s</b>: "
             "Transferred quantity %(product_qty)s %(product_uom)s</li>"
         ) % {
-            "product_name": message_data["product_name"],
+            "product_name": html_escape(message_data["product_name"]),
             "product_qty": message_data["product_qty"],
             "product_uom": message_data["product_uom"],
         }
         message += "</ul>"
-        return message
+        return Markup(message)
 
     def _prepare_message_data(self, ml, request, allocated_qty):
         return {
@@ -106,7 +110,8 @@ class StockMoveLine(models.Model):
                         message_data
                     )
                     request.message_post(
-                        body=message, subtype_id=self.env.ref("mail.mt_comment").id
+                        body=message,
+                        subtype_id=self.env.ref("mail.mt_comment").id,
                     )
 
                     picking_message = self._picking_confirm_done_message_content(
