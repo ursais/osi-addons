@@ -16,6 +16,7 @@
     ],
     # always loaded
     "data": [
+        "data/carrier_multiplier_data.xml",
         "security/ir.model.access.csv",
         "security/security.xml",
         "views/delivery_carrier_multiplier_views.xml",
