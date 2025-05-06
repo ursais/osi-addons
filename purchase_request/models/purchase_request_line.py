@@ -8,8 +8,9 @@ _STATES = [
     ("draft", "Draft"),
     ("to_approve", "To be approved"),
     ("approved", "Approved"),
-    ("rejected", "Rejected"),
+    ("in_progress", "In progress"),
     ("done", "Done"),
+    ("rejected", "Rejected"),
 ]
 
 
@@ -43,6 +44,7 @@ class PurchaseRequestLine(models.Model):
         related="request_id.company_id",
         string="Company",
         store=True,
+        index=True,
     )
     requested_by = fields.Many2one(
         comodel_name="res.users",
@@ -105,7 +107,9 @@ class PurchaseRequestLine(models.Model):
     purchase_state = fields.Selection(
         compute="_compute_purchase_state",
         string="Purchase Status",
-        selection=lambda self: self.env["purchase.order"]._fields["state"].selection,
+        selection=lambda self: self.env["purchase.order"]
+        ._fields["state"]
+        ._description_selection(self.env),
         store=True,
     )
     move_dest_ids = fields.One2many(
@@ -246,7 +250,13 @@ class PurchaseRequestLine(models.Model):
     )
     def _compute_is_editable(self):
         for rec in self:
-            if rec.request_id.state in ("to_approve", "approved", "rejected", "done"):
+            if rec.request_id.state in (
+                "to_approve",
+                "approved",
+                "rejected",
+                "in_progress",
+                "done",
+            ):
                 rec.is_editable = False
             else:
                 rec.is_editable = True

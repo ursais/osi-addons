@@ -2,6 +2,7 @@
 
   > - Harald Panten
   > - Valentin Vinagre
+  > - Juan Alberto Raja Martinez
 
 - [Tecnativa](https://www.tecnativa.com):
 

@@ -11,7 +11,7 @@
                     <button
                         name="button_draft"
                         string="Reset"
-                        invisible="state not in ('to_approve','approved','rejected','done')"
+                        invisible="state not in ('to_approve','approved','rejected','in_progress','done')"
                         type="object"
                         groups="purchase_request.group_purchase_request_manager"
                     />
@@ -31,14 +31,21 @@
                         groups="purchase_request.group_purchase_request_manager"
                     />
                     <button
-                        name="%(action_purchase_request_line_make_purchase_order)d"
+                        name="button_in_progress"
                         invisible="state not in ('approved')"
+                        string="In Progress"
+                        type="object"
+                        groups="purchase_request.group_purchase_request_manager"
+                    />
+                    <button
+                        name="%(action_purchase_request_line_make_purchase_order)d"
+                        invisible="state not in ('approved','in_progress')"
                         string="Create RFQ"
                         type="action"
                     />
                     <button
                         name="button_done"
-                        invisible="state not in ('approved')"
+                        invisible="state not in ('approved','in_progress')"
                         string="Done"
                         type="object"
                         class="oe_highlight"
@@ -46,7 +53,7 @@
                     />
                     <button
                         name="button_rejected"
-                        invisible="state not in ('to_approve', 'approved')"
+                        invisible="state not in ('to_approve', 'approved','in_progress')"
                         string="Reject"
                         type="object"
                         groups="purchase_request.group_purchase_request_manager"
@@ -54,7 +61,7 @@
                     <field
                         name="state"
                         widget="statusbar"
-                        statusbar_visible="draft,to_approve,approved,done,rejected"
+                        statusbar_visible="draft,to_approve,approved,done,in_progress"
                         statusbar_colors='{"approved":"blue"}'
                     />
                 </header>
@@ -126,7 +133,11 @@
                                 readonly="is_editable == False"
                             />
                             <field name="description" readonly="is_editable == False" />
-                            <field name="group_id" readonly="is_editable == False" />
+                            <field
+                                name="group_id"
+                                readonly="is_editable == False"
+                                groups="base.group_no_one"
+                            />
                         </group>
                         <group>
                             <field name="date_start" readonly="is_editable == False" />
@@ -134,6 +145,7 @@
                                 name="picking_type_id"
                                 readonly="is_editable == False"
                             />
+                            <field name="company_id" invisible="1" />
                             <field
                                 name="company_id"
                                 groups="base.group_multi_company"
@@ -144,7 +156,7 @@
                     </group>
                     <notebook>
                         <page string="Products">
-                            <field name="line_ids" readonly="is_editable == False">
+                            <field name="line_ids">
                                 <tree
                                     decoration-muted="cancelled == True"
                                     editable="bottom"
@@ -170,15 +182,11 @@
                                         widget="analytic_distribution"
                                         groups="analytic.group_analytic_accounting"
                                         options="{'product_field': 'product_id', 'business_domain': 'purchase_order'}"
+                                        optional="hide"
                                     />
                                     <field name="date_required" />
                                     <field name="estimated_cost" widget="monetary" />
                                     <field name="currency_id" column_invisible="1" />
-                                    <field
-                                        name="company_id"
-                                        groups="base.group_multi_company"
-                                        widget="selection"
-                                    />
                                     <field name="cancelled" column_invisible="1" />
                                     <field name="is_editable" column_invisible="1" />
                                     <field name="purchased_qty" />
@@ -202,7 +210,7 @@
                                 </tree>
                             </field>
                             <group class="oe_subtotal_footer oe_right">
-                                <field name="currency_id" column_invisible="1" />
+                                <field name="currency_id" invisible="1" />
                                 <div class="oe_subtotal_footer_separator oe_inline">
                                     <label for="estimated_cost" />
                                 </div>
@@ -252,7 +260,7 @@
                 <field
                     name="state"
                     widget="badge"
-                    decoration-success="state in ('done', 'approved')"
+                    decoration-success="state in ('done', 'approved', 'in_progress')"
                     decoration-muted="state == 'draft'"
                     decoration-warning="state == 'to_approve'"
                     decoration-danger="state == 'rejected'"
@@ -293,6 +301,12 @@
                     string="Approved"
                     domain="[('state','=','approved')]"
                     help="Request is approved"
+                />
+                <filter
+                    name="state_in_progress"
+                    string="In Progress"
+                    domain="[('state','=','in_progress')]"
+                    help="Request is in progress"
                 />
                 <filter
                     name="state_rejected"
@@ -358,11 +372,65 @@
             </search>
         </field>
     </record>
+    <record id="view_purchase_request_kanban" model="ir.ui.view">
+        <field name="name">purchase.request.kanban</field>
+        <field name="model">purchase.request</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" quick_create="false">
+                <field name="name" />
+                <field name="requested_by" readonly="1" />
+                <field name="estimated_cost" />
+                <field name="state" />
+                <field name="date_start" />
+                <field name="currency_id" readonly="1" />
+                <field name="activity_state" />
+                <progressbar
+                    field="activity_state"
+                    colors="{&quot;planned&quot;: &quot;success&quot;, &quot;today&quot;: &quot;warning&quot;, &quot;overdue&quot;: &quot;danger&quot;}"
+                />
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top mb16">
+                                <div class="o_kanban_record_headings ms-1">
+                                    <strong class="o_kanban_record_title"><span><t
+                                                t-esc="record.requested_by.value"
+                                            /></span></strong>
+                                </div>
+                                <strong><field
+                                        name="estimated_cost"
+                                        widget="monetary"
+                                    /></strong>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                    <span><t t-esc="record.name.value" /> <t
+                                            t-esc="record.date_start.value"
+                                        /></span>
+                                    <field
+                                        name="activity_ids"
+                                        widget="kanban_activity"
+                                    />
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <field
+                                        name="state"
+                                        widget="label_selection"
+                                        options="{'classes': {'draft': 'default', 'rejected': 'default', 'done': 'success', 'approved': 'warning'}}"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
     <record model="ir.actions.act_window" id="purchase_request_form_action">
         <field name="name">Purchase Requests</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">purchase.request</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="context">{"search_default_requested_by":uid}</field>
         <field name="search_view_id" ref="view_purchase_request_search" />
         <field name="help" type="html">
