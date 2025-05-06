@@ -1,12 +1,24 @@
-from odoo import models
+# Import Odoo libs
+from odoo import fields, models
 
 
 class MrpProduction(models.Model):
     """
-    Add functions for printing MO based reports
+    Add functions for printing MO based reports and add sale tags
     """
 
     _inherit = "mrp.production"
+
+    # COLUMNS #####
+
+    tag_ids = fields.Many2many(
+        related="sale_order_id.tag_ids",
+        string="Tags",
+        store=False,
+    )
+
+    # END #########
+    # METHODS ##########
 
     def get_bin_label_data(self):
         """
@@ -42,3 +54,5 @@ class MrpProduction(models.Model):
                 }
             )
         return res
+
+    # END #########
