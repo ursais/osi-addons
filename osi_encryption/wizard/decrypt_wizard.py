@@ -207,7 +207,7 @@ class DecryptWizard(models.TransientModel):
                         AND tab.table_name = col.table_name
                         AND tab.table_type = 'BASE TABLE'
                     JOIN
-                        ir_model_fields imf ON imf.model = REPLACE(col.table_name, '_', '.')
+                        ir_model_fields imf ON REPLACE(imf.model, '.', '_') = col.table_name
                         AND imf.name = col.column_name
                     WHERE
                         col.table_schema NOT IN ('information_schema', 'pg_catalog')"""
