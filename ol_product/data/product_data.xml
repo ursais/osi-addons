@@ -1,8 +1,0 @@
-<odoo noupdate="1">
-
-        <record forcecreate="True" id="product.decimal_volume" model="decimal.precision">
-            <field name="name">Volume</field>
-            <field name="digits">6</field>
-        </record>
-
-</odoo>
