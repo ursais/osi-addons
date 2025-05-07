@@ -18,4 +18,15 @@
         </field>
     </record>
 
+    <record id="view_account_move_filter_inherit_search_filter" model="ir.ui.view">
+        <field name="name">ol_account.view_account_move_filter</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_account_move_filter" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="attributes">
+                <attribute name="filter_domain">['|', '|', ('name', 'ilike', self), ('ref', 'ilike', self), ('partner_id.name', 'ilike', self)]</attribute>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
