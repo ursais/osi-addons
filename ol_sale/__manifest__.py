@@ -32,6 +32,7 @@
         "data/shipping_email.xml",
         "data/invoice_created.xml",
         "data/confirmation_email.xml",
+        "data/function_data.xml",
         "views/product_attribute_views.xml",
         "views/product_template_attribute_line_views.xml",
         "views/sale_order_view.xml",

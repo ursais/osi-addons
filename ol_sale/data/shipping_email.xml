@@ -4,7 +4,7 @@
         <field name="name">OnLogic Customer Shipment Email</field>
         <field name="model_id" ref="stock.model_stock_picking" />
         <field name="email_from" >{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
-        <field name="partner_to">{{ object.sale_id.partner_id and object.sale_id.partner_id.id or object.partner_id.id }}</field>
+        <field name="partner_to">{{ object.sale_id.contact_ids and object.sale_id.contact_ids.ids or object.partner_id.id }}</field>
         <field name="subject">Your Order {{ object.sale_id.name or 'n/a' }} Has Shipped</field>
         <field name="body_html" type="html">
             <!-- Variables -->

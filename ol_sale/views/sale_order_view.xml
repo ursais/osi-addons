@@ -65,8 +65,15 @@
             <xpath expr="//tree/field[@name='product_id']" position="attributes">
                 <attribute name="domain">[('sale_ok', '=', True), '|', ('company_ids_display', '=', False), ('company_ids_display', 'in', company_id)]</attribute>
             </xpath>
+            <field name="partner_shipping_id" position="after">
+                <field name="contact_ids" domain="[('parent_id','=',partner_id)]" widget="many2many_tags" required="1"/>
+            </field>
+            <field name="partner_id" position="attributes">
+                <attribute name="domain">[('parent_id', '=', False), '|', ('company_id', '=', False), ('company_id', 'parent_of', [company_id])]</attribute>
+            </field>
         </field>
     </record>
+
 
     <record id="view_order_tree_inherit_ol_sale" model="ir.ui.view">
         <field name="name">sale.order.tree</field>
