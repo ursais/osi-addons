@@ -40,6 +40,10 @@ class SaleOrder(models.Model):
         string="Guest checkout",
         copy=False,
     )
+    contact_ids = fields.Many2many(
+        comodel_name="res.partner",
+        string="Contact",
+    )
 
     # END #########
 
