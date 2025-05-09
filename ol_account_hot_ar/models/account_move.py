@@ -51,31 +51,45 @@ class AccountMove(models.Model):
     def _update_hot_ar_invoices_cron(self):
         # Find all open customer invoices that haven't been paid yet
         # Use sudo to get ALL invoices for ALL companies
-        invoices = self.sudo().search(
-            [
-                (
-                    "move_type",
-                    "in",
-                    ("out_invoice", "in_invoice", "out_refund", "in_refund"),
-                ),
-                ("state", "=", "posted"),
-                ("payment_state", "not in", ("in_payment", "paid", "reversed")),
-                ("invoice_date_due", "!=", False),
-                ("hot_ar", "=", False),
-                ("override_hot_ar", "=", False),
-                ("company_id.hot_ar_grace_period", ">", 0),
-            ]
-        )
-
         today = fields.Date.today()
+        companies = self.env["res.company"].sudo().search([])
 
-        for invoice in invoices:
-            # Check if the invoice is past the grace period
-            if (
-                invoice.invoice_date_due
-                + timedelta(days=invoice.company_id.hot_ar_grace_period)
-                < today
-            ):
-                invoice.hot_ar = True
+        for company in companies:
+            grace_days = company.hot_ar_grace_period
+            if grace_days > 0:
+                cutoff_date = today - timedelta(
+                    days=grace_days
+                )  # equivalent to timedelta
+
+                invoices = (
+                    self.env["account.move"]
+                    .sudo()
+                    .search(
+                        [
+                            (
+                                "move_type",
+                                "in",
+                                (
+                                    "out_invoice",
+                                    "in_invoice",
+                                    "out_refund",
+                                    "in_refund",
+                                ),
+                            ),
+                            ("state", "=", "posted"),
+                            (
+                                "payment_state",
+                                "not in",
+                                ("in_payment", "paid", "reversed"),
+                            ),
+                            ("invoice_date_due", "<", cutoff_date),
+                            ("invoice_date_due", "!=", False),
+                            ("hot_ar", "=", False),
+                            ("override_hot_ar", "=", False),
+                            ("company_id", "=", company.id),
+                        ]
+                    )
+                )
+                invoices.sudo().write({"hot_ar": True})
 
     # END #########

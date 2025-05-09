@@ -1,4 +1,4 @@
-<odoo noupdate="1">
+<odoo>
 
     <record id="compute_hot_ar_cron" model="ir.cron">
         <field name="name">Compute Hot AR</field>
@@ -9,7 +9,6 @@
         <field name="interval_type">days</field>
         <field name="numbercall">-1</field>
         <field name="nextcall" eval="(DateTime.now() + relativedelta(hour=00, minute=1, second=0)).strftime('%Y-%m-%d %H:%M:%S')" />
-        <field name="active" eval="True" />
     </record>
 
 </odoo>
