@@ -25,6 +25,7 @@ class BlanketOrderWizard(models.TransientModel):
         order_lines_by_customer,
         partner_invoice_id,
         partner_shipping_id,
+        contact_ids,
     ):
         date_schedule = min(self.line_ids.mapped("date_schedule"))
         return {
@@ -39,6 +40,7 @@ class BlanketOrderWizard(models.TransientModel):
             "partner_invoice_id": partner_invoice_id,
             "partner_shipping_id": partner_shipping_id,
             "original_request_date": date_schedule,
+            "contact_ids": contact_ids,
         }
 
     def create_sale_order(self):
@@ -49,6 +51,7 @@ class BlanketOrderWizard(models.TransientModel):
         payment_term_id = 0
         partner_invoice_id = 0
         partner_shipping_id = 0
+        contact_ids = 0
         for line in self.line_ids.filtered(lambda line: line.qty != 0.0):
             if line.qty > line.remaining_uom_qty:
                 raise UserError(_("You can't order more than the remaining quantities"))
@@ -72,11 +75,13 @@ class BlanketOrderWizard(models.TransientModel):
                 partner_shipping_id = (
                     line.blanket_line_id.order_id.partner_shipping_id.id
                 )
-            elif (
-                partner_shipping_id
-                != line.blanket_line_id.order_id.partner_shipping_id.id
-            ):
+            elif contact_ids != line.blanket_line_id.order_id.partner_shipping_id.id:
                 partner_shipping_id = False
+
+            if contact_ids == 0:
+                contact_ids = line.blanket_line_id.order_id.contact_ids.ids
+            elif contact_ids != line.blanket_line_id.order_id.contact_ids.ids:
+                contact_ids = False
 
             if pricelist_id == 0:
                 pricelist_id = line.blanket_line_id.pricelist_id.id
@@ -115,6 +120,7 @@ class BlanketOrderWizard(models.TransientModel):
                 order_lines_by_customer,
                 partner_invoice_id,
                 partner_shipping_id,
+                contact_ids,
             )
             sale_order = self.env["sale.order"].create(order_vals)
             res.append(sale_order.id)
