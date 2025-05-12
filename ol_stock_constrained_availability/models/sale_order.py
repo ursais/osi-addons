@@ -9,7 +9,7 @@ class SaleOrder(models.Model):
 
     # COLUMNS #####
 
-    date_confirm = fields.Date(string="Confirmation Date", readonly="1", copy=False)
+    date_confirm = fields.Datetime(string="Confirmation Date", readonly="1", copy=False)
 
     # END #########
     # METHODS #####
