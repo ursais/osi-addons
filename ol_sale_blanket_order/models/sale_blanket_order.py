@@ -47,7 +47,7 @@ class SaleBlanketOrder(models.Model):
     )
     contact_ids = fields.Many2many(
         comodel_name="res.partner",
-        string="Contact",
+        string="Contact(s)",
         compute="_compute_contact_ids",
         store=True,
         readonly=False,
