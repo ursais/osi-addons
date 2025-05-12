@@ -147,7 +147,7 @@
                                   <span t-esc="data['date_planned']" t-options="{'widget': 'date'}"/>
                               </t>
                               <t t-else="">
-                                  <span t-esc="purchase_order.date_approve" t-options="{'widget': 'date'}"/>
+                                  <span t-esc="purchase_order.date_planned" t-options="{'widget': 'date'}"/>
                               </t>
                           </td>
                       </tr>
