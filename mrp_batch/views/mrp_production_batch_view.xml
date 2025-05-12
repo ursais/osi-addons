@@ -92,7 +92,7 @@
                     <field name='is_outdated_bom' invisible='1'/>
                     <field name="reservation_state" invisible='1' />
                     <button name="action_confirm" type="object" string='Confirm' invisible="is_confirmed" class="oe_highlight" />
-                    <button name="button_plan" type="object" string='Plan' invisible="is_planned" class="oe_highlight" />
+                    <button name="button_plan" type="object" string='Plan' invisible="is_planned or state == 'done'" class="oe_highlight" />
                     <button name="action_done" type="object" string='Produce All' invisible="not is_move_raw_ids or not is_produce_all" class="oe_highlight" />
                     <button name="action_assign" type="object" invisible="not reserve_visible" string='Check availability'/>
                     <button name="button_unplan" type="object" string='Unplan' invisible="not is_planned" />

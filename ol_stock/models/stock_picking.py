@@ -119,8 +119,7 @@ class StockPicking(models.Model):
                     )
                 continue
 
-            lot_ids = []
-            serials = lot_ids.mapped("name") if lot_ids else False
+            serials = move.lot_ids.mapped("name") if move.lot_ids else False
 
             # Assemble the product dict
             product_line_data = {
@@ -169,8 +168,7 @@ class StockPicking(models.Model):
                 None,
             )
 
-            lot_ids = []
-            serials = lot_ids.mapped("name") if lot_ids else False
+            serials = move.lot_ids.mapped("name") if move.lot_ids else False
 
             if similar_product_line:
                 # If there is a similar line we only want to raise the qty
