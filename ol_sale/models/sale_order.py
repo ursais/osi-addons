@@ -44,6 +44,7 @@ class SaleOrder(models.Model):
         comodel_name="res.partner",
         string="Contact",
     )
+    shipping_ref = fields.Char(string="Shipping Reference")
 
     # END #########
 

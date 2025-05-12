@@ -5,6 +5,7 @@
         <field name="name">sale.order.form</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="priority">100</field>
         <field name="arch" type="xml">
 
             <!-- Add guest checkout field and text -->
@@ -71,6 +72,13 @@
             <field name="partner_id" position="attributes">
                 <attribute name="domain">[('parent_id', '=', False), '|', ('company_id', '=', False), ('company_id', 'parent_of', [company_id])]</attribute>
             </field>
+
+            <field name="client_order_ref" position="replace" />
+            <field name="sale_order_template_id" position="after">
+                <field name="client_order_ref" />
+                <field name="shipping_ref" />
+            </field>
+
         </field>
     </record>
 

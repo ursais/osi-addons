@@ -111,6 +111,16 @@
                           </div>
                       </div>
                   </t>
+                  <t t-if="sale_order.shipping_ref">
+                      <div class="ol_report_info_row_col_line ol_flex">
+                          <div class="key">
+                              <tag>Shipping Reference</tag>
+                          </div>
+                          <div class="value">
+                              <t t-esc="sale_order.shipping_ref"/>
+                          </div>
+                      </div>
+                  </t>
                   <div class="ol_account_manager_cont ol_margin_top_10">
                       <t t-call="ol_templates.address">
                           <t t-set="sender" t-value="True"/>

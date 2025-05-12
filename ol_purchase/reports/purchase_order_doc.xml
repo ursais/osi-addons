@@ -141,6 +141,17 @@
                           </td>
                       </tr>
                       <tr>
+                          <td>Expected Arrival</td>
+                          <td>
+                              <t t-if="data.get('date_planned')">
+                                  <span t-esc="data['date_planned']" t-options="{'widget': 'date'}"/>
+                              </t>
+                              <t t-else="">
+                                  <span t-esc="purchase_order.date_approve" t-options="{'widget': 'date'}"/>
+                              </t>
+                          </td>
+                      </tr>
+                      <tr>
                           <td>Ordered By</td>
                           <td>
                               <t t-if="data.get('submitted_by')">
