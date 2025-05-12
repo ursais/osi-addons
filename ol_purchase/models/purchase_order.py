@@ -132,7 +132,7 @@ class PurchaseOrder(models.Model):
                 res["submitted_by"] = self.env.user.name
 
         res["lines"] = []
-        for line in self.order_line:
+        for line in self.order_line.filtered(lambda x: x.product_id):
             cur_tariff_code = line.product_id.tariff_code_id
             tariff_code_line = ""
             if cur_tariff_code.code:
@@ -152,11 +152,6 @@ class PurchaseOrder(models.Model):
                         self.env, line.price_subtotal, currency_obj=self.currency_id
                     ),
                     "line_note": newline_to_br(line.note) if line.note else "",
-                    "line_note": (
-                        newline_to_br(line.name)
-                        if line.display_type == "line_note"
-                        else ""
-                    ),
                     "product_tariff_code": tariff_code_line,
                 }
             )
