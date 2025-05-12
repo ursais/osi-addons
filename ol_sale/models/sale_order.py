@@ -42,13 +42,26 @@ class SaleOrder(models.Model):
     )
     contact_ids = fields.Many2many(
         comodel_name="res.partner",
-        string="Contact",
+        string="Contact(s)",
+        compute="_compute_contact_ids",
+        store=True,
+        readonly=False,
+        help="These are the contacts that will receive automated email communications.",
     )
     shipping_ref = fields.Char(string="Shipping Reference")
 
     # END #########
 
     # METHODS #########
+
+    @api.depends("partner_id")
+    def _compute_contact_ids(self):
+        """Auto set the contact_ids field with Partner, then user can change if desired."""
+        for order in self:
+            if order.partner_id:
+                order.contact_ids = [(6, 0, [order.partner_id.id])]
+            else:
+                order.contact_ids = [(5, 0, 0)]
 
     def action_confirm(self):
         """

@@ -45,6 +45,14 @@ class SaleBlanketOrder(models.Model):
         check_company=True,
         help="The shipping address to be used on sale orders.",
     )
+    contact_ids = fields.Many2many(
+        comodel_name="res.partner",
+        string="Contact",
+        compute="_compute_contact_ids",
+        store=True,
+        readonly=False,
+        help="These are the contacts that will receive automated email communications.",
+    )
     carrier_id = fields.Many2one(
         comodel_name="delivery.carrier",
         string="Delivery Method",
@@ -118,6 +126,15 @@ class SaleBlanketOrder(models.Model):
                 if order.partner_id
                 else False
             )
+
+    @api.depends("partner_id")
+    def _compute_contact_ids(self):
+        """Auto set the contact_ids field with Partner, then user can change if desired."""
+        for order in self:
+            if order.partner_id:
+                order.contact_ids = [(6, 0, [order.partner_id.id])]
+            else:
+                order.contact_ids = [(5, 0, 0)]  # Clears all
 
     @api.depends("company_id")
     def _compute_has_active_pricelist(self):
@@ -208,6 +225,7 @@ class SaleBlanketOrder(models.Model):
         original_request_date,
         partner_invoice_id,
         partner_shipping_id,
+        contact_ids,
     ):
         # Prepares the values for creating a sale order based on the provided details.
         return {
@@ -222,6 +240,7 @@ class SaleBlanketOrder(models.Model):
             "original_request_date": original_request_date or fields.Date.today(),
             "partner_invoice_id": partner_invoice_id,
             "partner_shipping_id": partner_shipping_id,
+            "contact_ids": contact_ids,
         }
 
     def create_sale_order_cron(self):
@@ -244,6 +263,7 @@ class SaleBlanketOrder(models.Model):
                 partner_invoice_id
             ) = partner_shipping_id = None
             original_request_date = None
+            contact_ids = None
 
             for line in order.line_ids:
                 # Check if the scheduled date plus customer lead time is due and
@@ -296,6 +316,9 @@ class SaleBlanketOrder(models.Model):
                     elif partner_shipping_id != line.order_id.partner_shipping_id.id:
                         partner_shipping_id = False
 
+                    if contact_ids is None:
+                        contact_ids = line.order_id.contact_ids.ids
+
                     if pricelist_id is None:
                         pricelist_id = line.pricelist_id.id
                     elif pricelist_id != line.pricelist_id.id:
@@ -328,6 +351,7 @@ class SaleBlanketOrder(models.Model):
                     original_request_date,
                     partner_invoice_id,
                     partner_shipping_id,
+                    contact_ids,
                 )
                 sale_order = False
                 try:
