@@ -17,8 +17,8 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         # Calls the original `action_confirm` method from the super class to
         # confirm the record.
-        res = super().action_confirm()
         self.date_confirm = fields.Date.context_today(self)
+        res = super().action_confirm()
         stock_moves = self.picking_ids.move_ids_without_package.filtered(
             lambda l: l.state not in ["done", "cancel"]
         )
