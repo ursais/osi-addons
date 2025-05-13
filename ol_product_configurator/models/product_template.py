@@ -75,7 +75,7 @@ class ProductTemplate(models.Model):
                 ]
             )
             if existing_scaffold_bom:
-                existing_scaffold_bom.unlink()
+                existing_scaffold_bom.write({"active": False})
 
             # Find all attribute lines related to the selected product template
             attribute_lines = ProductTemplateAttributeLine.search(
