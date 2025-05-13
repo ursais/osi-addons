@@ -16,6 +16,7 @@
     ],
     # always loaded
     "data": [
+        "data/ir_actions_server.xml",
         "views/product_template_views.xml",
         "views/sale_order_views.xml",
         "views/mrp_batch_views.xml",
