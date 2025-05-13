@@ -42,7 +42,7 @@ for batch in batches:
         <field name='name'>MRP Batch (EU): Update Component Availability</field>
         <field name='interval_number'>1</field>
         <field name='interval_type'>days</field>
-        <field name="nextcall" eval="(DateTime.now() + relativedelta(hour=09, minute=0, second=0)).strftime('%Y-%m-%d %H:%M:%S')" />
+        <field name="nextcall" eval="(DateTime.now() + relativedelta(hour=9, minute=0, second=0)).strftime('%Y-%m-%d %H:%M:%S')" />
         <field name="active">True</field>
         <field name="doall" eval="False" />
         <field name="model_id" ref="mrp_batch.model_mrp_production_batch" />
