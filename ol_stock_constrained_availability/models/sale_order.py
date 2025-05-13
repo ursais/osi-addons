@@ -9,7 +9,11 @@ class SaleOrder(models.Model):
 
     # COLUMNS #####
 
-    date_confirm = fields.Datetime(string="Confirmation Date", readonly="1", copy=False)
+    date_confirm = fields.Datetime(
+        string="Confirmation Date",
+        readonly=True,
+        copy=False,
+    )
 
     # END #########
     # METHODS #####
@@ -17,7 +21,7 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         # Calls the original `action_confirm` method from the super class to
         # confirm the record.
-        self.date_confirm = fields.Date.context_today(self)
+        self.date_confirm = fields.Datetime.now()
         res = super().action_confirm()
         stock_moves = self.picking_ids.move_ids_without_package.filtered(
             lambda l: l.state not in ["done", "cancel"]
