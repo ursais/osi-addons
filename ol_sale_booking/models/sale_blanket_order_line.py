@@ -7,17 +7,14 @@ class SaleBlanketOrderLine(models.Model):
 
     # COLUMNS ###
     remaining_price_subtotal = fields.Monetary(
-        compute="_compute_remaining_amount",
         string="Remaining Subtotal",
         store=True,
     )
     remaining_price_total = fields.Monetary(
-        compute="_compute_remaining_amount",
         string="Remaining Total",
         store=True,
     )
     remaining_price_tax = fields.Float(
-        compute="_compute_remaining_amount",
         string="Remaining Tax",
         store=True,
     )
@@ -25,23 +22,18 @@ class SaleBlanketOrderLine(models.Model):
     # METHODS ###
     # END #######
 
-    @api.depends(
-        "remaining_uom_qty",
-        "price_unit",
-        "taxes_id",
-        "order_id.partner_id",
-        "product_id",
-        "currency_id",
-    )
-    def _compute_remaining_amount(self):
-        for line in self:
-            price = line.price_unit
+    @api.model_create_multi
+    def create(self, vals_list):
+        lines = super().create(vals_list)
+        for line in lines:
+            partner = line.order_id.partner_id if line.order_id else None
+            currency = line.currency_id or line.order_id.currency_id
             taxes = line.taxes_id.compute_all(
-                price,
-                line.currency_id,
+                line.price_unit,
+                currency,
                 line.remaining_uom_qty,
                 product=line.product_id,
-                partner=line.order_id.partner_id,
+                partner=partner,
             )
             line.update(
                 {
@@ -52,5 +44,41 @@ class SaleBlanketOrderLine(models.Model):
                     "remaining_price_subtotal": taxes["total_excluded"],
                 }
             )
+        return lines
+
+    def write(self, vals):
+        res = super().write(vals)
+        if any(
+            key in vals
+            for key in (
+                "price_unit",
+                "remaining_uom_qty",
+                "taxes_id",
+                "product_id",
+                "currency_id",
+                "order_id",
+                "original_uom_qty",
+            )
+        ):
+            for line in self:
+                partner = line.order_id.partner_id if line.order_id else None
+                currency = line.currency_id or line.order_id.currency_id
+                taxes = line.taxes_id.compute_all(
+                    line.price_unit,
+                    currency,
+                    line.remaining_uom_qty,
+                    product=line.product_id,
+                    partner=partner,
+                )
+                line.update(
+                    {
+                        "remaining_price_tax": sum(
+                            t.get("amount", 0.0) for t in taxes.get("taxes", [])
+                        ),
+                        "remaining_price_total": taxes["total_included"],
+                        "remaining_price_subtotal": taxes["total_excluded"],
+                    }
+                )
+        return res
 
     # END #######
