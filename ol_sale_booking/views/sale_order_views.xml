@@ -39,10 +39,32 @@
         <field name="context">{'search_default_last_6_months': True}</field>
     </record>
 
+    <record id="action_sale_booking_line_tree" model="ir.actions.act_window">
+        <field name="name">Sale Booking Lines</field>
+        <field name="res_model">sale.booking.line</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="sale_booking_line_tree" />
+        <field name="search_view_id" ref="sale_booking_line_tree_search" />
+        <field name="context">{'search_default_last_6_months': True}</field>
+    </record>
+
     <menuitem
-        id="menu_sale_booking"
-        action="action_sale_booking_tree"
+        name="Sale Bookings"
+        id="menu_sale_booking_main"
         parent="sale.sale_menu_root"
     />
 
+    <menuitem
+        id="menu_sale_booking"
+        action="action_sale_booking_tree"
+        parent="ol_sale_booking.menu_sale_booking_main"
+        sequence="10"
+    />
+
+    <menuitem
+        id="menu_sale_booking_lines"
+        action="action_sale_booking_line_tree"
+        parent="ol_sale_booking.menu_sale_booking_main"
+        sequence="20"
+    />
 </odoo>

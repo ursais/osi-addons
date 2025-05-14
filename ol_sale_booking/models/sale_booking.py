@@ -371,6 +371,31 @@ class SaleBooking(models.Model):
                 order="id desc",
             )
 
+    def get_last_booking_line_entry(self, booking_line=False):
+        """Try to get the last booking line entry"""
+        if booking_line.sale_order_line_id:
+            return self.env["sale.booking.line"].search(
+                [
+                    ("sale_order_line_id", "=", booking_line.sale_order_line_id),
+                    ("id", "!=", booking_line.id),
+                ],
+                limit=1,
+                order="id desc",
+            )
+        if booking_line.sale_blanket_order_line_id:
+            return self.env["sale.booking.line"].search(
+                [
+                    (
+                        "sale_blanket_order_line_id",
+                        "=",
+                        booking_line.sale_blanket_order_line_id,
+                    ),
+                    ("id", "!=", booking_line.id),
+                ],
+                limit=1,
+                order="id desc",
+            )
+
     def create_booking_lines(self, order=False, blanket_order=False):
         """
         Create the related Sale Booking Line records
@@ -378,16 +403,40 @@ class SaleBooking(models.Model):
         if order:
             for order_line in order.order_line:
                 booking_line_values = self.get_booking_line_values(
-                    sale_order_line=order_line  # Corrected argument name
+                    sale_order_line=order_line
                 )
-                self.env["sale.booking.line"].create(booking_line_values)
+                new_line = self.env["sale.booking.line"].create(booking_line_values)
+                previous_line = self.get_last_booking_line_entry(new_line)
+                if previous_line:
+                    new_line.prev_qty = previous_line.product_qty
+                    new_line.prev_price_total = previous_line.price_total
+                    new_line.prev_price_subtotal = previous_line.price_subtotal
+                    new_line.prev_price_tax = previous_line.price_tax
+                    new_line.line_amount = (
+                        new_line.price_total - previous_line.price_total
+                    )
+                    new_line.line_amount_untaxed = (
+                        new_line.price_subtotal - previous_line.price_subtotal
+                    )
 
         if blanket_order:
             for blanket_order_line in blanket_order.line_ids:
                 booking_line_values = self.get_booking_line_values(
-                    sale_blanket_order_line=blanket_order_line  # Corrected argument name
+                    sale_blanket_order_line=blanket_order_line
                 )
-                self.env["sale.booking.line"].create(booking_line_values)
+                new_line = self.env["sale.booking.line"].create(booking_line_values)
+                previous_line = self.get_last_booking_line_entry(new_line)
+                if previous_line:
+                    new_line.prev_qty = previous_line.product_qty
+                    new_line.prev_price_total = previous_line.price_total
+                    new_line.prev_price_subtotal = previous_line.price_subtotal
+                    new_line.prev_price_tax = previous_line.price_tax
+                    new_line.line_amount = (
+                        new_line.price_total - previous_line.price_total
+                    )
+                    new_line.line_amount_untaxed = (
+                        new_line.price_subtotal - previous_line.price_subtotal
+                    )
 
     def get_booking_line_values(
         self,
@@ -435,6 +484,12 @@ class SaleBooking(models.Model):
                 "product_uom": sale_order_line.product_uom.id,
                 "is_delivery": sale_order_line.is_delivery,
                 "product_qty": sale_order_line.product_qty,
+                "prev_qty": sale_order_line.product_qty,
+                "prev_price_total": sale_order_line.price_total,
+                "prev_price_subtotal": sale_order_line.price_subtotal,
+                "prev_price_tax": sale_order_line.price_tax,
+                "line_amount": sale_order_line.price_total,
+                "line_amount_untaxed": sale_order_line.price_subtotal,
             }
         if sale_blanket_order_line:
             # Get the Sale Blanket Order Line's Product's default price
@@ -470,6 +525,12 @@ class SaleBooking(models.Model):
                 "product_uom_qty": sale_blanket_order_line.remaining_uom_qty,
                 "product_uom": sale_blanket_order_line.product_uom.id,
                 "product_qty": sale_blanket_order_line.ordered_uom_qty,
+                "prev_qty": sale_blanket_order_line.remaining_uom_qty,
+                "prev_price_total": sale_blanket_order_line.price_total,
+                "prev_price_subtotal": sale_blanket_order_line.price_subtotal,
+                "prev_price_tax": sale_blanket_order_line.price_tax,
+                "line_amount": sale_blanket_order_line.price_total,
+                "line_amount_untaxed": sale_blanket_order_line.price_subtotal,
             }
 
     # END #######

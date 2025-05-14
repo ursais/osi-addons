@@ -55,6 +55,8 @@
                             <field name="sale_order_line_id" readonly="1" optional="hide" />
                             <field name="name" readonly="1" optional="hide" />
                             <field name="invoice_lines" readonly="1" optional="hide" />
+                            <field name="line_amount" readonly="1" optional="show" />
+                            <field name="line_amount_untaxed" readonly="1" optional="show" />
                         </tree>
                     </field>
                 </sheet>
@@ -107,6 +109,67 @@
                     <filter string="Sale/Blanket Order" name="group_by_origin" domain="[]" context="{'group_by':'origin'}" />
                     <filter string="Sale Order" name="group_by_sale_order" domain="[]" context="{'group_by':'order_id'}" />
                     <filter string="Blanket Order" name="group_by_sale_blanket_order" domain="[]" context="{'group_by':'blanket_order_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <!-- Sale Booking Line Tree view-->
+    <record id="sale_booking_line_tree" model="ir.ui.view">
+        <field name="name">sale.booking.line.tree</field>
+        <field name="model">sale.booking.line</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+            <tree string="Sale Booking">
+                <field name="product_id" readonly="1" optional="show" />
+                <field name="price_unit" readonly="1" optional="show" />
+                <field name="original_price_unit" readonly="1" optional="hide" />
+                <field name="product_lst_price" readonly="1" optional="hide" />
+                <field name="product_uom_qty" readonly="1" optional="show" />
+                <field name="price_subtotal" readonly="1" optional="show" />
+                <field name="tax_id" widget="many2many_tags" readonly="1" optional="show" />
+                <field name="price_tax" readonly="1" optional="show" />
+                <field name="price_total" readonly="1" optional="show" />
+                <field name="invoice_status" readonly="1" optional="hide" />
+                <field name="product_free_qty" readonly="1" optional="hide" />
+                <field name="product_qty_onhand" readonly="1" optional="hide" />
+                <field name="product_qty_incoming" readonly="1" optional="hide" />
+                <field name="product_qty_draft" readonly="1" optional="hide" />
+                <field name="product_uom" readonly="1" optional="hide" />
+                <field name="is_delivery" readonly="1" optional="hide" />
+                <field name="product_qty" readonly="1" optional="hide" />
+                <field name="sale_order_line_id" readonly="1" optional="hide" />
+                <field name="name" readonly="1" optional="hide" />
+                <field name="invoice_lines" readonly="1" optional="hide" />
+                <field name="prev_qty" readonly="1" optional="show" />
+                <field name="prev_price_total" readonly="1" optional="show" />
+                <field name="prev_price_subtotal" readonly="1" optional="show" />
+                <field name="prev_price_tax" readonly="1" optional="show" />
+                <field name="line_amount" readonly="1" optional="show" />
+                <field name="line_amount_untaxed" readonly="1" optional="show" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="sale_booking_line_tree_search" model="ir.ui.view">
+        <field name="name">sale.booking.line.search</field>
+        <field name="model">sale.booking.line</field>
+        <field name="arch" type="xml">
+            <search string="Search Sale Booking Lines">
+                <field name="origin" />
+                <field name="sale_order_id" />
+                <field name="sale_blanket_order_id" />
+                <field name="product_id" />
+                <group>
+                    <filter string="Last 3 months" name="last_3_months" domain="[('create_date', '&gt;=', ((context_today() - relativedelta(months=3)).strftime('%%Y-%%m-%%d')))]" />
+                    <filter string="Last 6 months" name="last_6_months" domain="[('create_date', '&gt;=', ((context_today() - relativedelta(months=6)).strftime('%%Y-%%m-%%d')))]" />
+                </group>
+                <group expand="0" string="Group By">
+                    <filter string="Product" name="group_by_product" domain="[]" context="{'group_by':'product_id'}" />
+                    <filter string="Sale/Blanket Order" name="group_by_origin" domain="[]" context="{'group_by':'origin'}" />
+                    <filter string="Sale Order" name="group_by_sale_order" domain="[]" context="{'group_by':'sale_order_id'}" />
+                    <filter string="Blanket Order" name="group_by_sale_blanket_order" domain="[]" context="{'group_by':'sale_blanket_order_id'}" />
                 </group>
             </search>
         </field>
