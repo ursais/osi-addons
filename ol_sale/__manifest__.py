@@ -29,6 +29,7 @@
         "data/product_price_list_data.xml",
         "data/product_state_data.xml",
         "data/ir_cron.xml",
+        "data/sale_exception.xml",
         "data/shipping_email.xml",
         "data/invoice_created.xml",
         "data/confirmation_email.xml",
