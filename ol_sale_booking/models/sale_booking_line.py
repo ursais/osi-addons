@@ -128,6 +128,7 @@ class SaleBookingLine(models.Model):
     product_qty_incoming = fields.Float(string="Qty Incoming")
     product_qty_draft = fields.Float(string="Draft PO Qty")
 
+    prev_qty = fields.Float(string="Previous Qty")
     prev_price_total = fields.Monetary(
         string="Previous Total",
         currency_field="sale_order_currency_id",
