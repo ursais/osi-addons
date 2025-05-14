@@ -7,6 +7,46 @@ from odoo import models
 class ProductConfigSession(models.Model):
     _inherit = "product.config.session"
 
+    def _get_parent_bom(self,product_tmpl_id):
+        parent_bom = self.env["mrp.bom"].search(
+            [
+                ("product_tmpl_id", "=", product_tmpl_id.id),
+                ("product_id", "=", False),
+                ("scaffolding_bom", "=", True),
+            ],
+            order="sequence asc",
+            limit=1,
+        )
+        if not parent_bom:
+            parent_bom = self.env["mrp.bom"].search(
+                [
+                    ("product_tmpl_id", "=", product_tmpl_id.id),
+                    ("product_id", "=", False),
+                ],
+                order="sequence asc",
+                limit=1,
+            )
+
+        return parent_bom
+
+
+    def _get_bom_line(self, variant, product_tmpl_id):
+        # Helping method to passing the BOM Line Vals.
+        values = {}
+        parent_bom = self._get_parent_bom(product_tmpl_id)
+        if not parent_bom and self._context.get("product_id"):
+            values = {"product_id": self._context.get("product_id").id, "product_qty": 1}
+
+        elif parent_bom and self._context.get("parent_bom_line"):
+            values = {
+                "product_id": self._context.get("parent_bom_line").product_id.id,
+                "product_qty": self._context.get("parent_bom_line").product_qty,
+            }
+        return values
+
+
+
+
     def create_get_bom(self, variant, product_tmpl_id=None, values=None):
         # default_type is set as 'product' when the user navigates
         # through menu item "Products". This conflicts
@@ -38,31 +78,14 @@ class ProductConfigSession(models.Model):
         if existing_bom:
             return existing_bom[:1]
 
-        parent_bom = self.env["mrp.bom"].search(
-            [
-                ("product_tmpl_id", "=", product_tmpl_id.id),
-                ("product_id", "=", False),
-                ("scaffolding_bom", "=", True),
-            ],
-            order="sequence asc",
-            limit=1,
-        )
-        if not parent_bom:
-            parent_bom = self.env["mrp.bom"].search(
-                [
-                    ("product_tmpl_id", "=", product_tmpl_id.id),
-                    ("product_id", "=", False),
-                ],
-                order="sequence asc",
-                limit=1,
-            )
+        parent_bom = self._get_parent_bom(product_tmpl_id)
         bom_type = parent_bom and parent_bom.type or "normal"
         bom_lines = []
         if not parent_bom:
             # If not Bom, then Cycle through attributes to add their
             # related products to the bom lines.
             for product in attr_products:
-                bom_line_vals = {"product_id": product.id, "product_qty": 1}
+                bom_line_vals = self.with_context(product_id=product)._get_bom_line(variant,product_tmpl_id)
                 specs = self.get_onchange_specifications(model="mrp.bom.line")
                 for key, val in specs.items():
                     if val is None:
@@ -83,10 +106,7 @@ class ProductConfigSession(models.Model):
                         # Add bom lines if config values are part of attr_values
                         if set(config.value_ids.ids).issubset(set(attr_values.ids)):
                             if parent_bom_line.bom_id.id == parent_bom.id:
-                                parent_bom_line_vals = {
-                                    "product_id": parent_bom_line.product_id.id,
-                                    "product_qty": parent_bom_line.product_qty,
-                                }
+                                parent_bom_line_vals = self.with_context(parent_bom_line=parent_bom_line)._get_bom_line(variant,product_tmpl_id)
                                 specs = self.get_onchange_specifications(
                                     model="mrp.bom.line"
                                 )
@@ -105,10 +125,7 @@ class ProductConfigSession(models.Model):
                                 values.update(parent_bom_line_vals)
                                 bom_lines.append((0, 0, parent_bom_line_vals))
                 else:
-                    parent_bom_line_vals = {
-                        "product_id": parent_bom_line.product_id.id,
-                        "product_qty": parent_bom_line.product_qty,
-                    }
+                    parent_bom_line_vals = self.with_context(parent_bom_line=parent_bom_line)._get_bom_line(variant,product_tmpl_id)
                     specs = self.get_onchange_specifications(model="mrp.bom.line")
                     for key, val in specs.items():
                         if val is None:
