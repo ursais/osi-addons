@@ -142,7 +142,8 @@
                 <field name="sale_order_line_id" readonly="1" optional="hide" />
                 <field name="name" readonly="1" optional="hide" />
                 <field name="invoice_lines" readonly="1" optional="hide" />
-                <field name="prev_qty" readonly="1" optional="show" />
+                <field name="prev_qty" readonly="1" optional="hide" />
+                <field name="qty_change" readonly="1" optional="show" />
                 <field name="prev_price_total" readonly="1" optional="show" />
                 <field name="prev_price_subtotal" readonly="1" optional="show" />
                 <field name="prev_price_tax" readonly="1" optional="show" />

@@ -408,7 +408,10 @@ class SaleBooking(models.Model):
                 new_line = self.env["sale.booking.line"].create(booking_line_values)
                 previous_line = self.get_last_booking_line_entry(new_line)
                 if previous_line:
-                    new_line.prev_qty = previous_line.product_qty
+                    new_line.prev_qty = previous_line.product_uom_qty
+                    new_line.qty_change = (
+                        new_line.product_uom_qty - previous_line.product_uom_qty
+                    )
                     new_line.prev_price_total = previous_line.price_total
                     new_line.prev_price_subtotal = previous_line.price_subtotal
                     new_line.prev_price_tax = previous_line.price_tax
@@ -427,7 +430,10 @@ class SaleBooking(models.Model):
                 new_line = self.env["sale.booking.line"].create(booking_line_values)
                 previous_line = self.get_last_booking_line_entry(new_line)
                 if previous_line:
-                    new_line.prev_qty = previous_line.product_qty
+                    new_line.prev_qty = previous_line.product_uom_qty
+                    new_line.qty_change = (
+                        new_line.product_uom_qty - previous_line.product_uom_qty
+                    )
                     new_line.prev_price_total = previous_line.price_total
                     new_line.prev_price_subtotal = previous_line.price_subtotal
                     new_line.prev_price_tax = previous_line.price_tax
@@ -484,7 +490,8 @@ class SaleBooking(models.Model):
                 "product_uom": sale_order_line.product_uom.id,
                 "is_delivery": sale_order_line.is_delivery,
                 "product_qty": sale_order_line.product_qty,
-                "prev_qty": sale_order_line.product_qty,
+                "prev_qty": sale_order_line.product_uom_qty,
+                "qty_change": 0,
                 "prev_price_total": sale_order_line.price_total,
                 "prev_price_subtotal": sale_order_line.price_subtotal,
                 "prev_price_tax": sale_order_line.price_tax,
@@ -526,6 +533,7 @@ class SaleBooking(models.Model):
                 "product_uom": sale_blanket_order_line.product_uom.id,
                 "product_qty": sale_blanket_order_line.ordered_uom_qty,
                 "prev_qty": sale_blanket_order_line.remaining_uom_qty,
+                "qty_change": 0,
                 "prev_price_total": sale_blanket_order_line.price_total,
                 "prev_price_subtotal": sale_blanket_order_line.price_subtotal,
                 "prev_price_tax": sale_blanket_order_line.price_tax,
