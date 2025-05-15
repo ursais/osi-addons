@@ -33,14 +33,16 @@ class MRPEco(models.Model):
                 # Check if final_stage is True
                 if stage.final_stage:
                     product_template = eco.product_tmpl_id
-                    # Validate if product_tmpl_id is not purchase_ok and has no vendor pricelist
+                    # Validate if product_tmpl_id is not purchase_ok and
+                    # has no vendor pricelist
                     if product_template.purchase_ok and not product_template.seller_ids:
                         raise UserError(
                             _(
-                                "The product associated with this ECO does not have a"
+                                "The product associated with this ECO is or is going to"
+                                " be set to 'Can be Purchased' and does not have a"
                                 " vendor pricelist defined. Please add a vendor"
-                                " pricelist to the product before moving this ECO to"
-                                " the final stage."
+                                " pricelist to the product before applying changes to"
+                                " the product or moving this ECO to the final stage."
                             )
                         )
         res = super().write(vals)
