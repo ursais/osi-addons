@@ -16,12 +16,14 @@
         "account",
         "sale",
         "sale_order_type",
+        "account_check_printing"
     ],
     # Data Loaded.
     "data": [
         "security/security.xml",
         "views/res_config_settings_views.xml",
         "views/account_invoice.xml",
+        "views/account_payment_view.xml",
         "reports/invoice_generic.xml",
         "reports/invoice_proforma.xml",
     ],
