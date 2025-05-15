@@ -44,6 +44,7 @@
                         <field name="has_tracking" column_invisible="True"/>
                         <field name="display_assign_serial" column_invisible="True"/>
                         <field name="product_id" context="{'default_detailed_type': 'product'}" required="1" readonly="(state != 'draft' and not additional) or move_lines_count &gt; 0" force_save="1"/>
+                        <field name="note" optional="show" column_invisible="parent.picking_type_code != 'incoming'"/>
                         <field name="description_picking" string="Description" optional="hide"/>
                         <field name="date" optional="hide"/>
                         <field name="date_deadline" optional="hide"/>
@@ -94,6 +95,7 @@
                         <field name="has_tracking" column_invisible="True"/>
                         <field name="display_assign_serial" column_invisible="True"/>
                         <field name="product_id" context="{'default_detailed_type': 'product'}" required="1" readonly="(state != 'draft' and not additional) or move_lines_count &gt; 0" force_save="1"/>
+                        <field name="note" optional="show" column_invisible="parent.picking_type_code != 'incoming'"/>
                         <field name="description_picking" string="Description" optional="hide"/>
                         <field name="date" optional="hide"/>
                         <field name="date_deadline" optional="hide"/>
