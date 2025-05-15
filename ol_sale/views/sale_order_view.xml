@@ -88,6 +88,10 @@
                 <field name="shipping_ref" />
             </field>
 
+            <field name="payment_term_id" position="after">
+                <field name="payment_method_id" />
+            </field>
+
         </field>
     </record>
 
@@ -99,6 +103,7 @@
         <field name="arch" type="xml">
             <field name="partner_id" position="after">
                 <field name="original_request_date" optional="hide"/>
+                <field name="payment_method_id" optional="hide" />
             </field>
         </field>
     </record>

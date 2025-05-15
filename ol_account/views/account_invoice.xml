@@ -15,6 +15,10 @@
                     invisible="state == 'draft' or move_type in ('out_invoice', 'out_refund')"
                 />
             </button>
+            <field name="delivery_date" position="before">
+                <field name="payment_method_id" />
+            </field>
+            
         </field>
     </record>
 

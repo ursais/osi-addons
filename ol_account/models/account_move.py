@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import _, models
+from odoo import _, fields, models
 from odoo.exceptions import UserError
 
 
@@ -8,6 +8,13 @@ class AccountMove(models.Model):
 
     _inherit = "account.move"
 
+    # COLUMNS #####
+
+    payment_method_id = fields.Many2one(
+        comodel_name='payment.method', string="Payment Method", copy=False
+    )
+
+    # END #########
     # METHODS ######
 
     def unlink(self):
