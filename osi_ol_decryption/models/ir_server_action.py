@@ -9,7 +9,7 @@ import os
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
-    def decrypt_char_field(self):
+    def decrypt_char_field(self, all_data=False):
         #        KEY = os.environ.get("KEY_ENCY_DESCY")
         # file = open("/home/odoo/decryption.txt", "r")
         # KEY = file.read()
@@ -41,8 +41,8 @@ class IrActionsServer(models.Model):
                 AND (col.character_maximum_length > 64 OR col.character_maximum_length IS NULL)
                 AND tab.table_name NOT LIKE 'mail%'
                 AND col.table_name NOT LIKE 'report%'
-
-                AND col.table_name in ('mrp_assembly_check', 'mrp_assembly_stage')
+                --and col.column_name in ('vat')
+                -- AND col.table_name in ('res_partner')
                 --AND col.table_name ~* '^[p-zP-Z]'
                 AND col.table_name NOT IN ('res_config_settings', 'res_groups', 'res_lang','account_invoice_extract_words')
                 ORDER BY col.table_name, col.ordinal_position;"""
@@ -55,6 +55,11 @@ class IrActionsServer(models.Model):
                 table_columns_dict[table].append(column)
             else:
                 table_columns_dict[table] = [column]
+        
+        # Line use to find the non decrepated data and use to decrpitions
+        if all_data:
+            table_columns_dict = self.get_non_decrpted_data()
+        
 
         runningLog += "\n MASTER TABLE GROUPED DICT: %s" % (str(table_columns_dict))
         excluded_tables_columns = {
@@ -66,6 +71,7 @@ class IrActionsServer(models.Model):
             ],
             "account_move": [
                 "sequence_prefix",
+                "invoice_partner_display_name"
             ],
         }
         columns_missing = []
@@ -155,6 +161,7 @@ class IrActionsServer(models.Model):
                 "\n\nGoing Through Table: %s  for Columns: %s with %s records"
                 % (table, str(columns_exists), records[0][0])
             )
+            offset_limit = records[0][0] + 1000
             while True:
                 query = "SELECT id, {}  FROM {} ORDER BY id  LIMIT {} OFFSET {}".format(
                     ", ".join(['"%s"' % c for c in columns_exists]),
@@ -168,8 +175,16 @@ class IrActionsServer(models.Model):
                 #     "\n\nGoing Through Table: %s  for Columns: %s with %s records"
                 #     % (table, str(columns_exists), records[0][0])
                 # )
-                if not table_data:
-                    break  # Exit the loop if there are no more records to process
+                # if not table_data:
+                #     break  # Exit the loop if there are no more records to process
+                # print ("\n table_data", table_data)
+                if table == 'stock_move':
+                    if offset > offset_limit:
+                        break
+                else:
+                    if offset > offset_limit:
+                        break
+
                 for index, col_data in enumerate(table_data):
                     id = col_data[0]
                     set_data = []
