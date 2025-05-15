@@ -77,6 +77,12 @@ class ProductTemplate(models.Model):
             if existing_scaffold_bom:
                 existing_scaffold_bom.write({"active": False})
 
+            # Get the next version number
+            # Get the next version number
+            next_version = (
+                existing_scaffold_bom.version if existing_scaffold_bom else 0
+            ) + 1
+
             # Find all attribute lines related to the selected product template
             attribute_lines = ProductTemplateAttributeLine.search(
                 [("product_tmpl_id", "=", product_template.id)]
@@ -88,6 +94,7 @@ class ProductTemplate(models.Model):
                 "product_qty": 1.0,
                 "type": "normal",  # Choose 'normal' or 'phantom' depending on your need
                 "scaffolding_bom": True,
+                "version": next_version,
             }
             new_bom = Bom.create(bom_vals)
 
