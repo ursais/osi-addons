@@ -21,5 +21,15 @@ class ResConfigSettings(models.TransientModel):
         config_parameter="ol_account.auto_post_invoice_delivery_validate",
         help="Post invoice on delivery validation.",
     )
+    auto_create_bill_receipt_validate = fields.Boolean(
+        string="Auto Create Vendor Bill",
+        config_parameter="ol_account.auto_create_bill_receipt_validate",
+        help="Create invoice on receipt validation.",
+    )
+    auto_post_bill_receipt_validate = fields.Boolean(
+        string="Auto Post Vendor Bill",
+        config_parameter="ol_account.auto_post_bill_receipt_validate",
+        help="Post bill on receipt validation.",
+    )
 
     # END ##########

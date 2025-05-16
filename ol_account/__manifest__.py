@@ -16,7 +16,8 @@
         "account",
         "sale",
         "sale_order_type",
-        "account_check_printing"
+        "account_check_printing",
+        "purchase",
     ],
     # Data Loaded.
     "data": [
