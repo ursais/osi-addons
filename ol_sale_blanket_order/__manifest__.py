@@ -21,6 +21,7 @@
     # always loaded
     "data": [
         "data/ir_cron.xml",
+        "views/res_config_setting_view.xml",
         "views/sale_blanket_order_line_views.xml",
         "views/sale_blanket_order_views.xml",
     ],
