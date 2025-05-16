@@ -1,1 +1,0 @@
-- Auto add fields that are used in related domains if apply_domain=True

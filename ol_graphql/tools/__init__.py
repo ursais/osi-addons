@@ -1,1 +1,0 @@
-from .translations import get_translated_field_values

@@ -1,8 +1,0 @@
-<odoo>
-
-    <record id="tag_rush_order" model="mrp.production.batch.tag">
-        <field name="name">Rush Order</field>
-        <field name="color">1</field>
-    </record>
-
-</odoo>

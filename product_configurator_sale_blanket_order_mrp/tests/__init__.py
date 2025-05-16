@@ -1,1 +1,0 @@
-from . import test_product_configurator_sale_blanket_order_mrp

@@ -1,2 +1,0 @@
-- Vandan Pandeji \<\<<vpandeji@opensourceintegrators.com>\>\>
-- Patrick Wilson \<\<<pwilson@opensourceintegrators.com>\>\>

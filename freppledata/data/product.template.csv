@@ -1,7 +1,0 @@
-id,sequence,name,default_code,list_price,standard_price,product_variant_ids/id,type
-__export__.product_template_47_6a3d5615,1,chair,,25,0,__export__.product_product_54_eb19f380,Storable Product
-__export__.product_template_44_67fbc973,1,chair leg,,1,0,__export__.product_product_55_ac47c67d,Storable Product
-__export__.product_template_46_a06bf0d6,1,cushion,,1,0,__export__.product_product_56_ea472d4f,Storable Product
-__export__.product_template_48_019c3042,1,varnish,,1,0,__export__.product_product_57_9ea5498d,Storable Product
-__export__.product_template_43_c7599540,1,varnished chair,,90,45,__export__.product_product_57_5aef267e,Storable Product
-__export__.product_template_45_403ca5bc,1,wooden beam - 木头,,1,0,__export__.product_product_58_8eba4d11,Storable Product

@@ -1,7 +1,0 @@
-<odoo>
-
-    <record id="undefined_classification" model="product.attribute.classification">
-        <field name="name">UNDEFINED</field>
-    </record>
-
-</odoo>
