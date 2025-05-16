@@ -265,12 +265,13 @@ class SaleBlanketOrder(models.Model):
             original_request_date = None
             contact_ids = None
 
+            release_days = order.company_id.blanket_order_release_days
             for line in order.line_ids:
                 # Check if the scheduled date plus customer lead time is due and
                 # there is a remaining quantity to order
                 if (
                     line.date_schedule
-                    and (line.date_schedule - timedelta(days=line.customer_lead or 0.0))
+                    and (line.date_schedule - timedelta(days=release_days or 0.0))
                     <= today
                     and line.remaining_uom_qty > 0
                 ):
