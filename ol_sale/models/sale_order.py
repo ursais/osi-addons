@@ -192,4 +192,20 @@ class SaleOrder(models.Model):
             0
         ]
 
+    def _get_new_rev_data(self, new_rev_number=None):
+        self.ensure_one()
+        # Find the max revision number for this unrevisioned_name + company
+        domain = [
+            ("unrevisioned_name", "=", self.unrevisioned_name),
+            ("company_id", "=", self.company_id.id),
+        ]
+        all_revisions = self.search(domain, order="revision_number desc", limit=1)
+        new_rev_number = (all_revisions.revision_number or 0) + 1
+        return {
+            "revision_number": new_rev_number,
+            "unrevisioned_name": self.unrevisioned_name,
+            "name": "%s-%02d" % (self.unrevisioned_name, new_rev_number),
+            "old_revision_ids": [(4, self.id, False)],
+        }
+
     # END #########
