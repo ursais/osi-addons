@@ -99,6 +99,47 @@ class TestAutoInvoiceOnDelivery(common.TransactionCase):
             invoice.state, "posted", "Invoice should be posted automatically."
         )
 
+    def test_auto_bill_on_receipt(self):
+        """Test auto-bill creation on receipt validation."""
+
+        # Enable configuration parameters
+        self.config_param.set_param(
+            "ol_account.auto_create_bill_receipt_validate", True
+        )
+        self.config_param.set_param("ol_account.auto_post_bill_receipt_validate", True)
+
+        # Create a purchase order with a storable product
+        purchase_order = self.env["purchase.order"].create(
+            {
+                "partner_id": self.partner.id,
+                "order_line": [
+                    (
+                        0,
+                        0,
+                        {
+                            "product_id": self.product_1.id,
+                            "product_qty": 1.0,
+                            "product_uom": self.product_1.uom_id.id,
+                            "price_unit": self.product_1.list_price,
+                            "date_planned": fields.Datetime.today(),
+                        },
+                    )
+                ],
+            }
+        )
+
+        purchase_order.button_confirm()
+        picking = purchase_order.picking_ids
+        picking.action_assign()
+        for move in picking.move_ids:
+            move.quantity_done = 1.0
+        picking.button_validate()
+
+        # Check that the bill is created and posted
+        bill = purchase_order.invoice_ids
+        self.assertTrue(bill, "Bill should be created on receipt validation.")
+        self.assertEqual(bill.state, "posted", "Bill should be posted automatically.")
+
     def test_restrict_account_move_deletion(self):
         """Test restriction on account.move deletion."""
         account_move = self.env["account.move"].create(
