@@ -149,4 +149,13 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
 
         return self.move_ids.move_line_ids.mapped('lot_id.name')
+
+    def _get_display_price(self):
+        """This method helps us to fix the user-entered price and forcefully stop the implementation of Odoo core pricing."""
+        old_price_unit = self.price_unit
+        price_unit = super()._get_display_price()
+        if self._origin.id and old_price_unit != price_unit:
+            price_unit = old_price_unit
+        return price_unit
+
     # END #########
