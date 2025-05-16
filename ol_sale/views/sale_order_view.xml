@@ -73,6 +73,15 @@
                 <attribute name="domain">[('parent_id', '=', False), '|', ('company_id', '=', False), ('company_id', 'parent_of', [company_id])]</attribute>
             </field>
 
+            <!-- Add context to invoice/delivery addresses -->
+            <field name="partner_invoice_id" position="attributes">
+                <attribute name="context">{'default_parent_id': partner_id, 'default_type':'invoice', 'show_address': False, 'show_vat': False}</attribute>
+            </field>
+            <field name="partner_shipping_id" position="attributes">
+                <attribute name="context">{'default_parent_id': partner_id, 'default_type':'delivery', 'show_address': False, 'show_vat': False}</attribute>
+            </field>
+
+            <!-- Move client_order_ref up in header along with shipping_ref -->
             <field name="client_order_ref" position="replace" />
             <field name="sale_order_template_id" position="after">
                 <field name="client_order_ref" />
