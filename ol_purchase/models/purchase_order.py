@@ -158,4 +158,12 @@ class PurchaseOrder(models.Model):
 
         return res
 
+    def _compute_exceptions(self):
+        res = super()._compute_exceptions()
+        for order in self:
+            order.exceptions_purchase_approval = any(
+                not line.approved_purchase for line in order.order_line.filtered(lambda x: x.product_id)
+            )
+        return res
+
     # END ##########
