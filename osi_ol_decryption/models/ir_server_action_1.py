@@ -7,27 +7,43 @@ import psycopg2.extras
 import odoorpc
 import re
 
+
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
+    def run_hot_ar(self):
+        hot_ar_cron = self.env.ref("ol_account_hot_ar.compute_hot_ar_cron")
+        hot_ar_cron.method_direct_trigger()
+
     def unistall_module(self):
-        module_uninstall_list = ['documents_hr_expense','hr_expense_extract','partner_autocomplete', 'osi_csn_decryption']
+        module_uninstall_list = [
+            "documents_hr_expense",
+            "hr_expense_extract",
+            "partner_autocomplete",
+            "osi_ol_decryption",
+        ]
         for module in module_uninstall_list:
-            self.env['ir.module.module'].search([('name', 'in', module),('state', '=', 'installed')]).button_immediate_uninstall()
+            self.env["ir.module.module"].search(
+                [("name", "in", module), ("state", "=", "installed")]
+            ).button_immediate_uninstall()
 
     def update_sync_plan_column(self):
-        self.env['account.analytic.plan'].sudo().search([])._sync_plan_column()
+        self.env["account.analytic.plan"].sudo().search([])._sync_plan_column()
 
     def update_check_amount_in_words(self):
         self = self.sudo()
-        records = self.env['account.payment'].search([('check_amount_in_words', 'ilike', '\\xc3')])
+        records = self.env["account.payment"].search(
+            [("check_amount_in_words", "ilike", "\\xc3")]
+        )
         for rec in records:
             rec._compute_check_amount_in_words()
-    
+
     def update_internal_notes(self):
         self = self.sudo()
-        pattern = r'\\xc30[0-9a-f]+'
-        records = self.env['repair.order'].search([('internal_notes', 'ilike', '\\xc3')])
+        pattern = r"\\xc30[0-9a-f]+"
+        records = self.env["repair.order"].search(
+            [("internal_notes", "ilike", "\\xc3")]
+        )
         for rec in records:
             text = rec.internal_notes
             popped_parts = re.findall(pattern, text)
@@ -35,22 +51,29 @@ class IrActionsServer(models.Model):
                 self._cr.execute("select pgp_sym_decrypt(%s,'SQRtYfq2g6');", (part,))
                 str = self._cr.fetchone()
                 text = text.replace(part, str[0])
-                print ("\n\n texttext",text)
-            self._cr.execute("update repair_order set internal_notes = %s where id = %s", (text,rec.id))
+                # print ("\n\n texttext",text)
+            self._cr.execute(
+                "update repair_order set internal_notes = %s where id = %s",
+                (text, rec.id),
+            )
 
     def update_acount_move_name(self):
         self = self.sudo()
-        records = self.env['account.move.line'].search([('name', 'ilike', '\\xc3')])
-        pattern = r'\\xc30[0-9a-f]+'
+        records = self.env["account.move.line"].search([("name", "ilike", "\\xc3")])
+        pattern = r"\\xc30[0-9a-f]+"
         for rec in records:
-            text = rec.name.replace('\\xc30d0407030232295c1dd558e2f878d2320131219ab000f8a1939e7f06b455412e4f864b8ed926ddf7e8db39feec14b63fb87e5b8f623dfb7d1349dfee3eb0fb1515f8', '$')
+            text = rec.name.replace(
+                "\\xc30d0407030232295c1dd558e2f878d2320131219ab000f8a1939e7f06b455412e4f864b8ed926ddf7e8db39feec14b63fb87e5b8f623dfb7d1349dfee3eb0fb1515f8",
+                "$",
+            )
             popped_parts = re.findall(pattern, text)
             for part in popped_parts:
                 self._cr.execute("select pgp_sym_decrypt(%s,'SQRtYfq2g6');", (part,))
                 str = self._cr.fetchone()
                 text = text.replace(part, str[0])
-            self._cr.execute("update account_move_line set name = %s where id = %s", (text,rec.id))
-
+            self._cr.execute(
+                "update account_move_line set name = %s where id = %s", (text, rec.id)
+            )
 
     def get_non_decrpted_data(self):
         query = """
@@ -61,7 +84,7 @@ class IrActionsServer(models.Model):
             AND table_name NOT LIKE 'mail%'
             AND table_name NOT LIKE 'report%'
         """
-        pattern = '\xc30'
+        pattern = "\xc30"
         cursor = self._cr
         cursor.execute(query)
         columns = cursor.fetchall()
@@ -69,9 +92,30 @@ class IrActionsServer(models.Model):
         results = []
         table_columns_dict = {}
         for table_name, column_name in columns:
-            if table_name in ('jira_refresh_wizard','ir_model','migration_job','_mig_134_invl_aml_cond_ref','queue_job', 'mail_message_common', 'import_tc_pdf_wizard', 'crm_lead2dead_partner', 'hubspot_existing', 'hubspot_migration_conf', 'mail_compose_message', 'hubspot_migration', 'hubspot_urls'):
+            if table_name in (
+                "jira_refresh_wizard",
+                "ir_model",
+                "migration_job",
+                "_mig_134_invl_aml_cond_ref",
+                "queue_job",
+                "mail_message_common",
+                "import_tc_pdf_wizard",
+                "crm_lead2dead_partner",
+                "hubspot_existing",
+                "hubspot_migration_conf",
+                "mail_compose_message",
+                "hubspot_migration",
+                "hubspot_urls",
+            ):
                 continue
-            if column_name in ('wsserver', 'wsServer', 'dhl_SiteID', 'references','companyid', 'companyId'):
+            if column_name in (
+                "wsserver",
+                "wsServer",
+                "dhl_SiteID",
+                "references",
+                "companyid",
+                "companyId",
+            ):
                 continue
             # try:
             search_query = f"""
@@ -79,62 +123,82 @@ class IrActionsServer(models.Model):
             """
             cursor.execute(search_query)
             data = cursor.fetchall()
-            
+
             if data[0][0]:
                 # print ("\n search_query", data)
-                _logger.info("\n \n ============= Tabel %s and Colume %s \n \n  ==========", table_name,column_name)
+                _logger.info(
+                    "\n \n ============= Tabel %s and Colume %s \n \n  ==========",
+                    table_name,
+                    column_name,
+                )
                 results.append((table_name, column_name))
-                if table_name in table_columns_dict and column_name not in table_columns_dict[table_name]:
+                if (
+                    table_name in table_columns_dict
+                    and column_name not in table_columns_dict[table_name]
+                ):
                     table_columns_dict[table_name].append(column_name)
                 else:
                     table_columns_dict[table_name] = [column_name]
         # print ("\n results=========\n", results)
-        _logger.info("\n\n table_columns_dicttable_columns_dict\n %s", table_columns_dict)
+        _logger.info(
+            "\n\n table_columns_dicttable_columns_dict\n %s", table_columns_dict
+        )
         return table_columns_dict
 
     def update_compute_complete_address(self):
-        partner_ids = self.env['res.partner'].search([("contact_address_complete", "!=", ""), '|', ('active', '=', 'f'), ('active', '=', 't')], order="id")
+        partner_ids = self.env["res.partner"].search(
+            [
+                ("contact_address_complete", "!=", ""),
+                "|",
+                ("active", "=", "f"),
+                ("active", "=", "t"),
+            ],
+            order="id",
+        )
         for partner in partner_ids:
             _logger.info("partner %s", partner.id)
             partner._compute_complete_address()
-        
-        self._cr.execute('select id,default_supplier_contact from res_partner where default_supplier_contact is not null;')
+
+        self._cr.execute(
+            "select id,default_supplier_contact from res_partner where default_supplier_contact is not null;"
+        )
         datas = self._cr.fetchall()
-        for data in datas: 
-            self._cr.execute("insert into partner_supplier_contact_rel (partner_id,contact_id) VALUES (%s,%s)", (data[0],data[1]))
+        for data in datas:
+            self._cr.execute(
+                "insert into partner_supplier_contact_rel (partner_id,contact_id) VALUES (%s,%s)",
+                (data[0], data[1]),
+            )
 
     def update_po_contact_ids(self):
-        self._cr.execute('select id,contact_id from purchase_order where contact_id is not null;')
+        self._cr.execute(
+            "select id,contact_id from purchase_order where contact_id is not null;"
+        )
         datas = self._cr.fetchall()
-        po_obj = self['purchase.order']
+
         for data in datas:
-            self._cr.execute("insert into purchase_order_res_partner_rel (purchase_order_id,res_partner_id) VALUES (%s,%s)", (data[0],data[1]))
-
-        # self = self.sudo()
-        # self._cr.execute('select id,contact_id from purchase_order where contact_id is not null;')
-        # datas = self._cr.fetchall()
-        # po_obj = self['purchase.order']
-        # for data in datas:
-        #     po = po_obj.browse(data[0])
-        #     po.write({'contact_ids': [(6,0, [data[1]])] })
-
+            self._cr.execute(
+                "insert into purchase_order_res_partner_rel (purchase_order_id,res_partner_id) VALUES (%s,%s)",
+                (data[0], data[1]),
+            )
 
     def update_supplier_invoice_number(self):
         # Fetch supplier invoice numbers and references for in_invoice types
-        self._cr.execute("""
+        self._cr.execute(
+            """
             SELECT supplier_invoice_number, ref, id 
             FROM temp_account_move 
             WHERE type = 'in_invoice' AND supplier_invoice_number != ''
-        """)
+        """
+        )
         move_ids = self._cr.dictfetchall()
-        
+
         duplicate_supplier_numbers = set()
-        
+
         for move in move_ids:
-            supplier_invoice_number = move.get('supplier_invoice_number')
-            ref = move.get('ref')
-            move_id = move.get('id')
-            
+            supplier_invoice_number = move.get("supplier_invoice_number")
+            ref = move.get("ref")
+            move_id = move.get("id")
+
             # Check for duplicate supplier invoice numbers
             is_duplicate = supplier_invoice_number in duplicate_supplier_numbers
             duplicate_supplier_numbers.add(supplier_invoice_number)
@@ -146,15 +210,19 @@ class IrActionsServer(models.Model):
                 else:
                     new_ref = f"{supplier_invoice_number}-{move_id}"
             else:
-                new_ref = f"{ref}-{supplier_invoice_number}" if ref else supplier_invoice_number
-            
+                new_ref = (
+                    f"{ref}-{supplier_invoice_number}"
+                    if ref
+                    else supplier_invoice_number
+                )
 
-            self._cr.execute("UPDATE account_move SET ref = %s WHERE id = %s", (new_ref, move_id))
-
+            self._cr.execute(
+                "UPDATE account_move SET ref = %s WHERE id = %s", (new_ref, move_id)
+            )
 
     def update_product_tax_code(self):
         conn_13 = psycopg2.connect(
-            database="odoo13_prod_20250128",
+            database="odoo13_prod",
             user="odoo",
             password="odoo",
             host="localhost",
@@ -163,14 +231,17 @@ class IrActionsServer(models.Model):
 
         cur_13 = conn_13.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-        cur_13.execute("select res_id,value_reference from ir_property where name = 'tax_code_id' and company_id = 1")
+        cur_13.execute(
+            "select res_id,value_reference from ir_property where name = 'tax_code_id' and company_id = 1"
+        )
         product_tax_code_ids = cur_13.fetchall()
         for rec in product_tax_code_ids:
-            res_id = rec.get('res_id').split(',')[1]
-            value = rec.get('value_reference').split(',')[1]
-            self._cr.execute("update product_template set tax_code_id = %s where id = %s", (value,res_id ))
-
-
+            res_id = rec.get("res_id").split(",")[1]
+            value = rec.get("value_reference").split(",")[1]
+            self._cr.execute(
+                "update product_template set tax_code_id = %s where id = %s",
+                (value, res_id),
+            )
 
     # def update_tracking_number(self):
     #     """Move to After Migration Script"""
@@ -180,18 +251,23 @@ class IrActionsServer(models.Model):
 
     def odoo_rpc_call_product_weight(self):
         odoo_13 = odoorpc.ODOO("localhost", port=8069, timeout=12000)
-        odoo_13.login("odoo13_prod_20250128", "admin", "pw")
+        odoo_13.login("odoo13_prod", "admin", "pw")
         obj_product = odoo_13.env["product.product"]
-        final_count  = 172723
+        final_count = 172723
         limit = 10000
         offset = 0
         while True:
             product_ids = obj_product.search_read(
-                [('id', 'not in', [112677, 147811,92960,96905,135649, 143682]),'|',("active", "=", True),("active", "=", False)],
+                [
+                    ("id", "not in", [112677, 147811, 92960, 96905, 135649, 143682]),
+                    "|",
+                    ("active", "=", True),
+                    ("active", "=", False),
+                ],
                 fields=["id", "weight", "product_tmpl_id"],
                 order="id",
                 offset=offset,
-                limit=limit
+                limit=limit,
             )
             # print("\n product_ids", product_ids)
             for product in product_ids:
@@ -207,16 +283,16 @@ class IrActionsServer(models.Model):
     def odoo_rpc_call(self):
 
         odoo_13 = odoorpc.ODOO("localhost", port=8069, timeout=12000)
-        odoo_13.login("odoo13_prod_20250128", "admin", "pw")
+        odoo_13.login("odoo13_prod", "admin", "pw")
         self = self.sudo()
         obj_product = odoo_13.env["product.template"]
         obj_att_value = odoo_13.env["product.attribute.value"]
         obj_v17_att_value = odoo_13.env["product.attribute.value"]
-        
+
         obj_product_17 = self.env["product.template"]
 
         """FIX work_location in Employee"""
-        print ("\n FIX work_location in Employee")
+
         employee_obj = self.env["hr.employee"]
         work_location_obj = self.env["hr.work.location"]
         obj_employee = odoo_13.env["hr.employee"]
@@ -228,14 +304,14 @@ class IrActionsServer(models.Model):
                 [("name", "=", emp.get("work_location"))], limit=1
             )
             if work_id:
-                print("\n work_idwork_id", work_id)
+
                 self._cr.execute(
                     "update hr_employee set work_location_id = %s where id = %s"
                     % (work_id.id, emp.get("id"))
                 )
 
         """FIX Payment Team Data missing"""
-        print ("\n FIX Payment Team Data missing")
+
         obj_sale_order = odoo_13.env["sale.order"]
         sale_order_ids = obj_sale_order.search_read(
             [("id", "!=", False)], fields=["id", "payment_term_id"], order="id"
@@ -243,7 +319,6 @@ class IrActionsServer(models.Model):
 
         for sales in sale_order_ids:
             if sales.get("payment_term_id"):
-                print("\n payment", sales.get("payment_term_id"))
                 self._cr.execute(
                     "update sale_order set payment_term_id = %s where id = %s"
                     % (
@@ -252,29 +327,30 @@ class IrActionsServer(models.Model):
                     )
                 )
 
-        atts_val = obj_att_value.search_read([], fields=['id', 'name'], order="id")
+        atts_val = obj_att_value.search_read([], fields=["id", "name"], order="id")
         """Remove record rule from v13 of company before run."""
         print("Update attribute")
         for atts in atts_val:
-            print ("\n atts",atts)
+
             self._cr.execute(
                 "update product_attribute_value set name = json_build_object('en_US', '%s') where id = %s"
-                % (atts.get('name'), atts.get('id'))
+                % (atts.get("name"), atts.get("id"))
             )
         self._cr.execute(
             "update product_template_attribute_value set is_qty_required ='t' where maximum_qty > 1"
         )
 
-        products = obj_product.search_read([("id", "!=", False)], fields=['id', 'backorder_config'], order="id")
-        print ("\n Update Backorder")
+        products = obj_product.search_read(
+            [("id", "!=", False)], fields=["id", "backorder_config"], order="id"
+        )
+
         for product in products:
-            print ("\n product", product)
-            if product.get('backorder_config') != "no-backorder":
-                product_17 = obj_product_17.browse(product.get('id'))
+            if product.get("backorder_config") != "no-backorder":
+                product_17 = obj_product_17.browse(product.get("id"))
                 product_17.write({"allow_backorder": True})
 
         return True
-    
+
     def fix_invalid_check_numbers(ctx):
         """
         Fix invalid check numbers from migrated v13 data.
@@ -284,10 +360,14 @@ class IrActionsServer(models.Model):
         a chatter message to the payment noting the change.
         """
         # Get payments with a check_number
-        payments = ctx.env["account.payment"].sudo().search([("check_number", "!=", False)])
+        payments = (
+            ctx.env["account.payment"].sudo().search([("check_number", "!=", False)])
+        )
 
         # Filter payments where check_number is not purely numeric
-        invalid_payments = payments.filtered(lambda p: not str(p.check_number).isdigit())
+        invalid_payments = payments.filtered(
+            lambda p: not str(p.check_number).isdigit()
+        )
 
         for payment in invalid_payments:
             old_check_number = payment.check_number  # Store old check number
@@ -310,51 +390,92 @@ class IrActionsServer(models.Model):
                 "non-numeric characters."
             )
             payment.message_post(body=message)
-    
+
     def update_product_category(self):
         self = self.sudo()
-        self._cr.execute('select id,pim_category from product_template where pim_category is not null;')
+        self._cr.execute(
+            "select id,pim_category from product_template where pim_category is not null;"
+        )
         product_ids = self._cr.dictfetchall()
-        category_ids = self.env['product.category'].search([('create_date' ,'>=', '2025-01-01')])
+        category_ids = self.env["product.category"].search(
+            ["|", ("create_date", ">=", "2025-01-01"), ("id", "=", 1)]
+        )
+        attribute_ids = self.env["attribute.set"].search([])
         for rec in product_ids:
-            if rec.get('pim_category') in ('Product Management, Expansion','Expansion, Product Management'):
-                categ_id = category_ids.filtered(lambda l:l.name == 'Expansion')
-                self._cr.execute("update product_template set categ_id = %s where id = %s", (categ_id.id, rec.get('id')))
+            if rec.get("pim_category") in (
+                "Product Management, Expansion",
+                "Expansion, Product Management",
+            ):
+                categ_id = category_ids.filtered(lambda l: l.name == "Expansion")
+
+                attribute_id = attribute_ids.filtered(lambda a: a.name == "Expansion")
+                self._cr.execute(
+                    "update product_template set categ_id = %s,attribute_set_id = %s where id = %s",
+                    (categ_id.id, attribute_id.id, rec.get("id")),
+                )
             else:
-                categ_id = category_ids.filtered(lambda l:l.name == rec.get('pim_category'))
-                self._cr.execute("update product_template set categ_id = %s where id = %s", (categ_id.id, rec.get('id')))
-        self._cr.execute('select id,pim_category from product_template where pim_category is null;')
+                categ_id = category_ids.filtered(
+                    lambda l: l.name == rec.get("pim_category")
+                )
+
+                attribute_id = attribute_ids.filtered(
+                    lambda a: a.name == rec.get("pim_category")
+                )
+                self._cr.execute(
+                    "update product_template set categ_id = %s, attribute_set_id = %s where id = %s",
+                    (categ_id.id, attribute_id.id, rec.get("id")),
+                )
+
+        self._cr.execute(
+            "select id,pim_category from product_template where pim_category is null;"
+        )
         product_ids = self._cr.dictfetchall()
-        all_categ_id = category_ids.filtered(lambda l:l.name == 'All products')
+        all_categ_id = category_ids.filtered(lambda l: l.name == "All products")
         for rec in product_ids:
-            self._cr.execute("update product_template set categ_id = %s where id = %s", (all_categ_id.id, rec.get('id')))
-        self._cr.execute("delete from product_category where create_date <= '2025-01-01' and id not in (210,211,1,1232)")
+            self._cr.execute(
+                "update product_template set categ_id = %s where id = %s",
+                (all_categ_id.id, rec.get("id")),
+            )
+
+        self._cr.execute(
+            "delete from product_category where create_date <= '2025-01-01' and id not in (210,211,1,1232)"
+        )
+
         # self.env['product.category'].search([('create_date' ,'<=', '2025-01-01'), ('id', 'not in', (210,211,1,1232))]).unlink()
-        
+
     def update_shipping_methods(self):
         self = self.sudo()
-        self._cr.execute("select * from temp_ir_property_v13_vp where name ='inbound_shipping_method'")
+        self._cr.execute(
+            "select * from temp_ir_property where name ='inbound_shipping_method'"
+        )
         datas = self._cr.dictfetchall()
-        temp_obj = self.env['product.template']
-        carrier_ids = self.env['delivery.carrier.multiplier'].search([])
+        temp_obj = self.env["product.template"]
+        carrier_ids = self.env["delivery.carrier.multiplier"].search([])
         for data in datas:
-            company_id = int(data.get('company_id'))
-            res_id = data.get('res_id').split(',')[1]
-            value = data.get('value_text')
-            carrier_id = carrier_ids.filtered(lambda l: l.carrier == value and l.company_id.id == company_id)
+            company_id = int(data.get("company_id"))
+            res_id = data.get("res_id").split(",")[1]
+            value = data.get("value_text")
+            carrier_id = carrier_ids.filtered(
+                lambda l: l.carrier == value and l.company_id.id == company_id
+            )
             product_id = temp_obj.browse(int(res_id))
-            if not carrier_id and value in ('None', 'Free Shipping'):
+            if not carrier_id and value in ("None", "Free Shipping"):
                 carrier_id = carrier_ids.filtered(lambda l: l.carrier == value)
             if carrier_id:
-                product_id.with_company(company_id).write({"carrier_multiplier_id": carrier_id.id})
+                product_id.with_company(company_id).write(
+                    {"carrier_multiplier_id": carrier_id.id}
+                )
 
     def update_total_cost(self):
-        company_ids = [1,2]
-        product_ids = self.env['product.product'].serach([('tooling_cost', "!=", False)])
+        self = self.sudo()
+        company_ids = [1, 2]
+        product_ids = self.env["product.product"].search(
+            [("tooling_cost", "!=", False)]
+        )
         for company in company_ids:
             self = self.with_company(company)
             for rec in product_ids:
-                open_review = env["product.price.review"].search(
+                open_review = self.env["product.price.review"].search(
                     [
                         ("company_id", "=", self.env.company.id),
                         ("product_id", "=", rec.id),
@@ -363,113 +484,282 @@ class IrActionsServer(models.Model):
                     limit=1,
                 )
                 if not open_review:
-                    open_review = open_review.create({'product_id': rec.id})
+                    open_review = open_review.create({"product_id": rec.id})
                     open_review.onchange_product_id()
-                    
+
                 if open_review:
                     rec.write({"approved_total_cost": open_review.approved_total_cost})
 
-    # No need 
-    # def update_attribute_value_qty_id(self):
-    #     ppavq_ids = self.env["product.product.attribute.value.qty"].search(
-    #         [], order="id"
-    #     )
-    #     avq_obj = self.env["attribute.value.qty"]
-    #     ptav_obj = self.env["product.template.attribute.value"]
-    #     template_attribute_value_id = False
-    #     for rec in ppavq_ids.filtered(lambda r: r.qty):
-    #         if rec.attr_value_id:
-    #             template_attribute_value_id = ptav_obj.search(
-    #                 [
-    #                     ("product_attribute_value_id", "=", rec.attr_value_id.id),
-    #                     ("product_tmpl_id", "=", rec.product_id.product_tmpl_id.id),
-    #                 ]
-    #             )
-    #             print("\n template_attribute_value_id", template_attribute_value_id)
-    #         attribute_value_qty_id = avq_obj.search(
-    #             [
-    #                 ("product_attribute_id", "=", rec.attr_value_id.attribute_id.id),
-    #                 ("product_attribute_value_id", "=", rec.attr_value_id.id),
-    #                 ("product_tmpl_id", "=", rec.product_id.product_tmpl_id.id),
-    #                 ("qty", "=", rec.qty),
-    #                 (
-    #                     "template_attri_value_id",
-    #                     "=",
-    #                     template_attribute_value_id and template_attribute_value_id.id,
-    #                 ),
-    #             ]
-    #         )
-    #         if attribute_value_qty_id:
-    #             rec.attribute_value_qty_id = attribute_value_qty_id
+    def uninstall_old_module(self):
+        env = self.env
+        module_uninstall_list = [
+            "ls_account_bank_statement",
+            "ls_account_cost_center",
+            "ls_auto_reconciliation",
+            "ls_positive_pay",
+            "ls_assembly_stage_lookup",
+            "ls_auth_oauth",
+            "ls_business_intelligence",
+            "ls_delivery_shipping_views",
+            "ls_blind_dropship",
+            "ls_check_printing",
+            "ls_crm_hud",
+            "ls_crm_notes",
+            "ls_customer_bulk_change",
+            "ls_custom_stock_status",
+            "ls_data_migration",
+            "ls_secret_field",
+            "ls_delivery_tnt",
+            "ls_delivery_configurator",
+            "ls_tax_and_shipping_api",
+            "ls_delivery_custom",
+            "ls_delivery_dhl",
+            "ls_delivery_fedex",
+            "ls_delivery_phantom_kit",
+            "ls_split_shipments",
+            "ls_delivery_ups",
+            "ls_graphql_product",
+            "ls_dev_tools",
+            "ls_expedite_opportunity_report",
+            "ls_elastic_apm",
+            "ls_fraud_detection",
+            "ls_gcp_attachment",
+            "ls_graphql_account",
+            "ls_graphql_corrective_action",
+            "ls_graphql_customer",
+            "ls_mrp_api",
+            "ls_graphql_mrp",
+            "ls_graphql_project",
+            "ls_graphql_purchase",
+            "ls_graphql_rma",
+            "ls_graphql_stock",
+            "ls_graphql_user",
+            "ls_helpdesk_jira",
+            "ls_helpdesk_itsupport",
+            "ls_jira_search",
+            "ls_jira_integration",
+            "ls_ma_report",
+            "ls_monitoring",
+            "ls_mrp_plan_multiple",
+            "ls_mrp_reverse",
+            "ls_elastic_apm",
+            "ls_mrp_traveler",
+            "ls_mrp_views",
+            "ls_multicompany",
+            "ls_partner_chart",
+            "ls_picking_transfer_multiple",
+            "ls_production_automation_repair_link",
+            "ls_project",
+            "ls_rma_email",
+            "ls_query_builder",
+            "ls_quote_configuration",
+            "ls_sale_metrics",
+            "ls_sale_stock_status",
+            "ls_scrap_replacement",
+            "ls_stock_account",
+            "ls_stock_constrained_sku",
+            "ls_stock_serial_wizard",
+            "ls_supplier_return",
+            "ls_tier_pricing",
+            "ls_trackjs",
+            "ls_webhooks_graphql",
+            "ls_webhooks_test",
+            "ls_webhooks",
+            "ls_web_report_viewer",
+            "ls_wip_count",
+            "ls_wip_report",
+            "ls_workflow_map",
+            "ls_sale_order_edits",
+            "ls_api",
+            "ls_payment_sources",
+            "ls_uuid",
+            "ls_customer",
+            "ls_payment_netterms",
+            "ls_payment_stripe",
+            "ls_vendor_lead_time_report",
+            "ls_account_avatax",
+            "ls_lead_time",
+            "ls_portal",
+            "ls_mail",
+            "ls_invoice_reminders",
+            "ls_account_reports",
+            "ls_vat_report",
+            "ls_pdf_reports",
+            "ls_translations",
+            "ls_inventory_turnover_report",
+            "ls_terms_and_conditions",
+            "ls_tracking_number",
+            "ls_serial_number_report",
+            "ls_scrap",
+            "ls_sale_booking",
+            "ls_sale_verticals",
+            "ls_sale_operations",
+            "ls_sale_archive_partners",
+            "ls_rma_repair_link",
+            "ls_ddmrp",
+            "ls_sale_hold",
+            "ls_product_expected_date",
+            "ls_inbound_shipping",
+            "ls_account_payment",
+            "ls_mrp_label",
+            "ls_repair",
+            "ls_base_vat",
+            "ls_persistent_notes",
+            "ls_hts",
+            "ls_mrp_transfer_serial",
+            "ls_auto_stock_allocation",
+            "ls_order_status",
+            "ls_product_tooling_cost",
+            "ls_inventory_report",
+            "ls_rma",
+            "ls_queue_job",
+            "ls_delivery_account",
+            "ls_delivery_wizard",
+            "ls_internal_purchase_request",
+            "ls_payment_method",
+            "ls_coupon_code",
+            "ls_delivery",
+            "ls_phantom_kit_enhancements",
+            "ls_stock_inventory",
+            "ls_templates",
+            "ls_product_system_stock",
+            "ls_product_procurement",
+            "ls_public_attachments",
+            "ls_public_content",
+            "ls_product_manufacturer",
+            "ls_product_location",
+            "ls_gcp_base",
+            "ls_corrective_action",
+            "ls_production_automation",
+            "ls_sale_compensation",
+            "ls_sale_workflow",
+            "ls_rush_order",
+            "ls_public_content",
+            "ls_crm",
+            "ls_crm_event_log",
+            "ls_product_classification",
+            "ls_auto_invoice",
+            "ls_account",
+            "ls_check_framework",
+            "ls_phantom_kits",
+            "ls_purchase",
+            "ls_ui",
+            "ls_sale_holidays",
+            "ls_partner",
+            "ls_inventory",
+            "ls_graphql_sale",
+            "ls_graphql",
+            "ls_sale_email",
+            "ls_sale",
+            "ls_base",
+            "ls_product",
+            "ls_stock",
+            "ls_stock_available_date",
+            "ls_link_objects",
+            "ls_mrp",
+            "ls_assembly_stage_lookup" "email_template_qweb",
+            "hr_recruitment_sms",
+            "ls_product_compatibility",
+            "ls_product_configurator",
+            "ls_product_operations_category",
+            "ls_product_tariff",
+            "ls_shipping_data",
+            "ls_stock_loadcsv",
+            "osi_encryption",
+            "partner_email_check",
+            "session_redis",
+            "web_dialog_size",
+            "web_environment_ribbon",
+            "web_ir_actions_act_view_reload",
+            "web_tree_many2one_clickable",
+            "web_widget_bokeh_chart",
+        ]
 
-    #         else:
-    #             rec.attribute_value_qty_id = avq_obj.create(
-    #                 {
-    #                     "product_attribute_id": rec.attr_value_id.attribute_id.id,
-    #                     "product_attribute_value_id": rec.attr_value_id.id,
-    #                     "product_tmpl_id": rec.product_id.product_tmpl_id.id,
-    #                     "qty": rec.qty,
-    #                     "template_attri_value_id": template_attribute_value_id
-    #                     and template_attribute_value_id.id,
-    #                 }
-    #             )
+        data_list = env["ir.model.data"].search(
+            [("module", "in", module_uninstall_list)]
+        )
+        for data in data_list:
+            if data.model in (
+                "ir.ui.view",
+                "ir.ui.menu",
+                "ir.rule",
+                "ir.cron",
+                "ir.model.fields",
+                "ir.model.access",
+                "ir.model.fields.selection",
+                " res.groups",
+                "ir.actions.act_window",
+                "ir.actions.act_window.view",
+                "ir.actions.report",
+                "ir.model",
+            ):
+                table = data.model.replace(".", "_")
+                _logger.info(data.read([]))
+                if table in ("ir_ui_view", "ir_ui_menu"):
 
-    # @api.model
-    # def import_product_data(self):
-    #     conn_13 = psycopg2.connect(
-    #         database="odoo13_20241106",
-    #         user="odoo",
-    #         password="odoo",
-    #         host="localhost",
-    #         port="5432",
-    #     )
+                    self._cr.execute("alter table %s DISABLE TRIGGER ALL" % (table,))
+                    # otable = data.name.split('model_')[1]
+                    # if otable and len(otable.split('_report')) == 1:
 
-        # cur_13 = conn_13.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+                    self._cr.execute(
+                        "delete from %s where id = %s"
+                        % (
+                            table,
+                            data.res_id,
+                        )
+                    )
+                    self._cr.execute("alter table %s enable TRIGGER ALL" % (table,))
 
-        "Move config_ok to After decryption script"
-        # cur_13.execute(
-        #     "select id, has_configurable_attributes from product_template where has_configurable_attributes = 't' ;"
-        # )
-        # product_ids = cur_13.fetchall()
-        # for product in product_ids:
-        #     _logger.info("\n \n data %s" %(product))
-        #     self._cr.execute("update product_template set config_ok = 't' where id = %s" % (product.get('id'),))
+                if table in ("ir_cron"):
 
-        # cur_13.execute("select code,id,root_id from account_account;")
-        # account_ids = cur_13.fetchall()
-        # for account in account_ids:
-        #     print ("\n =========account",account.get('id'), account.get('code'))
-        #     self._cr.execute("update account_account set code = %s where id = %s" % (account.get('code'),account.get('id')))
+                    action_ids = env["ir.actions.server"].search(
+                        [("model_id", "=", data.res_id)]
+                    )
+                    if action_ids:
+                        for action in action_ids:
+                            self._cr.execute(
+                                "delete from %s where ir_actions_server_id = %s"
+                                % (
+                                    "ir_cron",
+                                    action.id,
+                                )
+                            )
+                        action_ids.unlink()
+                if table in (
+                    "ir_actions_act_window",
+                    "ir_actions_act_window_view",
+                    "ir_actions_report",
+                ):
+                    env[data.model].browse(data.res_id).unlink()
+                else:
+                    if table != "ir_model":
+                        self._cr.execute(
+                            "delete from %s where id = %s"
+                            % (
+                                table,
+                                data.res_id,
+                            )
+                        )
 
-        # self.env.cr.commit()
+                self._cr.execute(
+                    "delete from %s where id = %s"
+                    % (
+                        "ir_model_data",
+                        data.id,
+                    )
+                )
 
-        # """FIX Original Customer Request Date? Move to After Decrption Script"""
-        # cur_13.execute(
-        #     "select id, display_commitment_date from sale_order where display_commitment_date is not null"
-        # )
-        # sale_orders = cur_13.fetchall()
-        # for order in sale_orders:
-        #     self._cr.execute(
-        #         "update sale_order set original_request_date = '%s' where id = %s"
-        #         % (
-        #             order.get("display_commitment_date"),
-        #             order.get("id"),
-        #         )
-        #     )
+        data_list = (
+            env["ir.model.data"]
+            .search(
+                [("module", "in", module_uninstall_list), ("model", "not ilike", "ir")]
+            )
+            .unlink()
+        )
+        for module in module_uninstall_list:
+            self._cr.execute(
+                "update ir_module_module set state='to remove' where name='%s'"
+                % (module)
+            )
 
-        """Move to migration script."""
-        # cur_13.execute("""create table temp_ir_property as select * from ir_property where name= 'list_price' and fields_id = 834;""")
-
-        """ Not in user name field non-store in v13
-        # cur_13.execute("select * from product_attribute_value")
-        # product_att_vals = cur_13.fetchall()
-        # att_val_obj = self.env['product.attribute.value']
-        # for atts in product_att_vals:
-        #     rec = att_val_obj.browse(atts.get('id'))
-        #     if not rec.name:
-        #         _logger.info("\n \n rec.name %s and old atteibute name %s" %(rec.name, atts.get('name')))
-        #     #rec.write({'name': atts.get('name')})
-        update product_attribute_value set name = json_build_object('en_US', 'None') where name is null;
-        '''No use'''
-        # update product_template_attribute_line ptal set is_qty_required ='t' where id in (select ptav.attribute_line_id from product_template_attribute_value ptav where ptav.attribute_line_id = ptal.id and ptav.maximum_qty > 0);
-        """
+        # env['ir.module.module'].search([('name', 'in', module_uninstall_list),('state', '=', 'installed')]).button_immediate_uninstall()
