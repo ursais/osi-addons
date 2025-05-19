@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import models
+from odoo import fields, models
 
 
 class StockPicking(models.Model):
@@ -57,7 +57,11 @@ class StockPicking(models.Model):
                     )
 
                     # Post the created invoice
-                    if invoice_created and auto_post_invoice:
+                    if (
+                        invoice_created
+                        and invoice_created.state == "draft"
+                        and auto_post_invoice
+                    ):
                         # If auto posting is enabled then post the invoice.
                         invoice_created.action_post()
 
@@ -69,16 +73,29 @@ class StockPicking(models.Model):
             ):
                 if (
                     any(
-                        rec.product_id.invoice_policy == "delivery"
+                        rec.product_id.purchase_method == "receive"
                         for rec in self.move_ids
                     )
                     or not self.purchase_id.invoice_ids
                 ):
                     # Call the action_create_invoices function on the associated po
-                    bill_created = self.purchase_id.action_create_invoice()
+                    picking.purchase_id.action_create_invoice()
+
+                    # Find the newly created invoice
+                    bill_created = picking.purchase_id.invoice_ids.sorted(
+                        "id", reverse=True
+                    )[0]
 
                     # Post the created bill
-                    if bill_created and auto_post_bill:
+                    if (
+                        bill_created
+                        and bill_created.state == "draft"
+                        and auto_post_bill
+                    ):
+                        # If invoice date isn't set
+                        if not bill_created.invoice_date:
+                            bill_created.invoice_date = fields.Date.today()
+
                         # If auto posting is enabled then post the bill.
                         bill_created.action_post()
 
