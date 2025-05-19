@@ -17,6 +17,7 @@
         "sale_product_approval",
         "product_configurator_sale_blanket_order",
         "product_configurator_sale_blanket_order_mrp",
+        "sale_exception",
     ],
     # always loaded
     "data": [
