@@ -241,6 +241,7 @@ class SaleBlanketOrder(models.Model):
             "partner_invoice_id": partner_invoice_id,
             "partner_shipping_id": partner_shipping_id,
             "contact_ids": contact_ids,
+            "ignore_exception": True,
         }
 
     def create_sale_order_cron(self):
@@ -383,8 +384,13 @@ class SaleBlanketOrder(models.Model):
                             raise ValidationError(
                                 "A Product's state is preventing order confirmation."
                             )
-                        # Confirm the sale order
+                        # Confirm the sale order - ignore_excption is True so
+                        # exceptions won't trigger
                         sale_order.action_confirm()
+
+                        # Remove Ignore Exceptions which will also trigger exception check
+                        sale_order.write({"ignore_exception": False})
+
                     except Exception as e:
                         sale_order.activity_schedule(
                             "mail.mail_activity_data_warning",
