@@ -237,7 +237,6 @@ class CsvLoaderWizard(models.TransientModel):
             }
         )
 
-    @api.model_create_multi
     def create_error_html(self, row_num, raw_line, errors, etype="error"):
         """
         Formats the given error array into a nice html string
@@ -282,7 +281,7 @@ class CsvLoaderWizard(models.TransientModel):
         reader = csv.DictReader(csv_data_file, strict=True)
 
         stock_loc_obj = self.env["stock.location"]
-        picking_out = self.env["stock.picking.type"].search([("code", "=", "outgoing")])
+        picking_out = self.env["stock.picking.type"].search([("code", "=", "outgoing")],limit=1)
 
         delivery_orders = self.env["wizard.stock.picking"]
         self.error_html = ""
@@ -385,7 +384,6 @@ class CsvLoaderWizard(models.TransientModel):
                     "partner_id": cur_partner.id,
                     "partner_shipping_id": partner_shipping_id.id,
                     "additional_notes": row["notes"],
-                    "note": row["notes"],
                     "move_lines": [
                         (0, 0, cur_move_vals)
                     ],  # create current move and append
