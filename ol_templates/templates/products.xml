@@ -106,7 +106,7 @@
                                             </t> -->
                                         </div>
                                         <div class="system-configuration-product">
-                                            <t t-esc="quote_line['value_name']"/>
+                                            <t t-esc="quote_line['product_qty']"/> X <t t-esc="quote_line['value_name']"/>
                                         </div>
                                     </div>
                                 </div>
