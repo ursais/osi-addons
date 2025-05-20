@@ -1,0 +1,32 @@
+<odoo>
+
+    <!-- Action to launch the wizard -->
+    <record id="action_product_create_wizard" model="ir.actions.act_window">
+        <field name="name">Create Product Wizard</field>
+        <field name="res_model">product.create.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{}</field>
+    </record>
+
+    <!-- Menu item under Sales -->
+    <menuitem
+        id="menu_product_create_wizard_sales"
+        name="Create Product Wizard"
+        parent="sale.product_menu_catalog"
+        action="action_product_create_wizard"
+        sequence="100"
+        groups="ol_product_create_wizard.group_product_create_wizard_user"
+    />
+
+    <!-- Menu item under PLM -->
+    <menuitem
+        id="menu_product_create_wizard_plm"
+        name="Create Product Wizard"
+        parent="mrp_plm.menu_mrp_plm_master_data"
+        action="action_product_create_wizard"
+        sequence="100"
+        groups="ol_product_create_wizard.group_product_create_wizard_user"
+    />
+
+</odoo>

@@ -12,12 +12,16 @@
     "depends": [
         "ol_base",
         "ol_product_configurator",
+        "ol_pim",
+        "ol_sale",
         "sale_management",
+        "mrp_plm",
     ],
     # always loaded
     "data": [
+        "security/security_groups.xml",
         "security/ir.model.access.csv",
-        "views/sale_order_view.xml",
+        "views/menu_items.xml",
         "wizard/product_create_wizard.xml",
     ],
 }
