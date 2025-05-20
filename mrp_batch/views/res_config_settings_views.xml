@@ -57,6 +57,9 @@
                     <setting id="enable_delay_component_availability_details" string="Enable Queuing Component Availability Details">
                         <field name="enable_delay_component_availability_details" class="oe_inline"/>
                     </setting>
+                    <setting id="enable_delay_so_action_confirm" string="Enable Queuing on Sale Order Confirmation">
+                        <field name="enable_delay_so_action_confirm" class="oe_inline"/>
+                    </setting>
                 </block>
             </xpath>
         </field>

@@ -38,7 +38,7 @@ class ResConfigSettings(models.TransientModel):
     )
     enable_delay_action_confirm = fields.Boolean(
         string="Enable Queuing Action Confirm",
-        config_parameter="mrp_batch.enable_delay_action_confirm",
+        config_parameter="mrp_batch.enable_delay_action_confirm"
     )
     enable_delay_button_plan = fields.Boolean(
         string="Enable Queuing Button Plan",
@@ -67,6 +67,10 @@ class ResConfigSettings(models.TransientModel):
     enable_delay_component_availability_details = fields.Boolean(
         string="Enable Queuing Component Availability Details",
         config_parameter="mrp_batch.enable_delay_component_availability_details",
+    )
+    enable_delay_so_action_confirm = fields.Boolean(
+        string="Enable Queuing on Sale order confirm",
+        config_parameter="mrp_batch.enable_delay_so_action_confirm",
     )
 
     # END #########

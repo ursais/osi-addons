@@ -41,11 +41,10 @@ class StockPicking(models.Model):
                 enable_component_available_delay = (
                     self.env["ir.config_parameter"]
                     .sudo()
-                    .get_param("mrp_batch.enable_delay_component_availability", "True")
-                    == "True"
+                    .get_param("mrp_batch.enable_delay_component_availability")
                 )
                 for batch in batches_to_recompute:
-                    if enable_component_available_delay:
+                    if enable_component_available_delay == 'True':
                         batch.with_delay()._compute_components_availability()
                     else:
                         batch._compute_components_availability()
