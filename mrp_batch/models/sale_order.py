@@ -41,7 +41,13 @@ class SaleOrder(models.Model):
         res = super().action_confirm()
         # Asynchronously triggers the `split_mo` method to split
         # manufacturing orders (MOs).
-        self.with_delay().split_mo()
+        enable_split = (
+                self.env["ir.config_parameter"]
+                .sudo()
+                .get_param("mrp_batch.enable_delay_so_action_confirm")
+            )
+        if enable_split == "True":
+            self.with_delay().split_mo()
         return res
 
     def split_mo(self):

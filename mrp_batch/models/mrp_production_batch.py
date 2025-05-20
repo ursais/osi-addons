@@ -373,13 +373,12 @@ class MrpProductionBatch(models.Model):
             enable_delay = (
                 self.env["ir.config_parameter"]
                 .sudo()
-                .get_param("mrp_batch.enable_delay_action_assign", "True")
-                == "True"
+                .get_param("mrp_batch.enable_delay_action_assign")
             )
             for mo in rec.production_ids.filtered(
                 lambda x: x.state not in ("draft", "done", "cancel")
             ):
-                if enable_delay:
+                if enable_delay=='True':
                     mo.with_delay().action_assign()
                     queued = True
                 else:
@@ -395,11 +394,10 @@ class MrpProductionBatch(models.Model):
             enable_delay = (
                 self.env["ir.config_parameter"]
                 .sudo()
-                .get_param("mrp_batch.enable_delay_action_confirm", "True")
-                == "True"
+                .get_param("mrp_batch.enable_delay_action_confirm")
             )
             for mo in rec.production_ids.filtered(lambda x: x.state == "draft"):
-                if enable_delay:
+                if enable_delay == 'True':
                     mo.with_delay().action_confirm()
                     queued = True
                 else:
@@ -417,12 +415,10 @@ class MrpProductionBatch(models.Model):
                 enable_delay = (
                     self.env["ir.config_parameter"]
                     .sudo()
-                    .get_param("mrp_batch.enable_delay_button_plan", "True")
-                    == "True"
+                    .get_param("mrp_batch.enable_delay_button_plan")
                 )
-
                 for mo in productions:
-                    if enable_delay:
+                    if enable_delay == 'True':
                         mo.with_delay().button_plan()
                         queued = True
                     else:
@@ -441,8 +437,7 @@ class MrpProductionBatch(models.Model):
             enable_delay = (
                 self.env["ir.config_parameter"]
                 .sudo()
-                .get_param("mrp_batch.enable_delay_button_unplan", "True")
-                == "True"
+                .get_param("mrp_batch.enable_delay_button_unplan")
             )
 
             eligible_productions = rec.production_ids.filtered(
@@ -452,7 +447,7 @@ class MrpProductionBatch(models.Model):
             )
 
             for mrp_production in eligible_productions:
-                if enable_delay:
+                if enable_delay=='True':
                     mrp_production.with_delay().button_unplan()
                     queued = True
                 else:
@@ -466,14 +461,13 @@ class MrpProductionBatch(models.Model):
             enable_delay = (
                 self.env["ir.config_parameter"]
                 .sudo()
-                .get_param("mrp_batch.enable_delay_action_unreserve", "True")
-                == "True"
+                .get_param("mrp_batch.enable_delay_action_unreserve")
             )
 
             for mo in rec.production_ids.filtered(
                 lambda x: x.state not in ("draft", "done", "cancel")
             ):
-                if enable_delay:
+                if enable_delay == 'True':
                     mo.with_delay().do_unreserve()
                     queued = True
                 else:
@@ -484,25 +478,25 @@ class MrpProductionBatch(models.Model):
     def action_done(self):
         for rec in self:
             queued = False
-            rec.state = "done"
+            
             enable_delay = (
                 self.env["ir.config_parameter"]
                 .sudo()
-                .get_param("mrp_batch.enable_delay_action_done", "True")
-                == "True"
+                .get_param("mrp_batch.enable_delay_action_done")
             )
 
             for mo in rec.production_ids.filtered(
                 lambda x: x.state not in ("done", "cancel")
             ):
-                if enable_delay:
+                if enable_delay == 'True':
                     mo.with_delay().button_mark_done()
                     queued = True
                 else:
                     mo.button_mark_done()
             if queued:
                 rec.is_queuing = True
-
+            rec.state = "done"
+            
     def action_cancel(self):
         for rec in self:
             queued = False
@@ -510,15 +504,14 @@ class MrpProductionBatch(models.Model):
             enable_delay = (
                 self.env["ir.config_parameter"]
                 .sudo()
-                .get_param("mrp_batch.enable_delay_action_cancel", "True")
-                == "True"
+                .get_param("mrp_batch.enable_delay_action_cancel")
             )
 
             eligible_productions = rec.production_ids.filtered(
                 lambda mo: not any(wo.state == "done" for wo in mo.workorder_ids)
             )
             for mrp_production in eligible_productions:
-                if enable_delay:
+                if enable_delay == 'True':
                     mrp_production.with_delay().action_cancel()
                     queued = True
                 else:
@@ -1203,11 +1196,10 @@ class MrpProductionBatch(models.Model):
                 self.env["ir.config_parameter"]
                 .sudo()
                 .get_param(
-                    "mrp_batch.enable_delay_component_availability_details", "True"
+                    "mrp_batch.enable_delay_component_availability_details"
                 )
-                == "True"
             )
-            if enable_component_details_delay:
+            if enable_component_details_delay == 'True':
                 batch.with_delay()._compute_components_availability_details()
             else:
                 batch._compute_components_availability_details()

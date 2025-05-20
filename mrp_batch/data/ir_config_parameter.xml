@@ -15,44 +15,5 @@
         <field name="value">single</field>
     </record>
 
-    <record id="enable_delay_action_confirm" model="ir.config_parameter">
-        <field name="key">mrp_batch.enable_delay_action_confirm</field>
-        <field name="value">True</field>
-    </record>
-
-    <record id="default_enable_delay_button_plan" model="ir.config_parameter">
-        <field name="key">mrp_batch.enable_delay_button_plan</field>
-        <field name="value">True</field>
-    </record>
-
-    <record id="default_enable_delay_button_unplan" model="ir.config_parameter">
-        <field name="key">mrp_batch.enable_delay_button_unplan</field>
-        <field name="value">True</field>
-    </record>
-
-    <record id="default_enable_delay_action_unreserve" model="ir.config_parameter">
-        <field name="key">mrp_batch.enable_delay_action_unreserve</field>
-        <field name="value">True</field>
-    </record>
-
-    <record id="default_enable_delay_action_done" model="ir.config_parameter">
-        <field name="key">mrp_batch.enable_delay_action_done</field>
-        <field name="value">True</field>
-    </record>
-
-    <record id="default_enable_delay_action_cancel" model="ir.config_parameter">
-        <field name="key">mrp_batch.enable_delay_action_cancel</field>
-        <field name="value">True</field>
-    </record>
-
-    <record id="default_enable_delay_component_availability" model="ir.config_parameter">
-        <field name="key">mrp_batch.enable_delay_component_availability</field>
-        <field name="value">True</field>
-    </record>
-
-            <record id="default_enable_delay_component_availability_details" model="ir.config_parameter">
-        <field name="key">mrp_batch.enable_delay_component_availability_details</field>
-        <field name="value">True</field>
-    </record>
 
 </odoo>
