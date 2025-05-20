@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class ProductCreateWizardLine(models.TransientModel):
@@ -45,5 +45,16 @@ class ProductCreateWizardLine(models.TransientModel):
         string="Custom",
         help="Allow custom values for this attribute?",
     )
+
+    # END ##########
+    # METHODS ######
+
+    @api.onchange("value_ids")
+    def _onchange_value_ids(self):
+        # If default_val is set and no longer in value_ids, clear it
+        if self.default_val:
+            new_ids = self.value_ids.ids
+            if self.default_val.id not in new_ids:
+                self.default_val = False
 
     # END ##########

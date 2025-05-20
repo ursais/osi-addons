@@ -1,0 +1,9 @@
+<odoo>
+
+    <record id="group_product_create_wizard_user" model="res.groups">
+        <field name="name">Sales: Product Creation Wizard</field>
+        <field name="category_id" ref="ol_base.onlogic_groups"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
+    </record>
+
+</odoo>

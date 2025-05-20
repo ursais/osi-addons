@@ -4,33 +4,41 @@
         <field name="name">product.create.wizard.form</field>
         <field name="model">product.create.wizard</field>
         <field name="arch" type="xml">
-            <form string="Create Product">
-                <group>
-                    <field name="product_tmpl_id"/>
-                    <field name="internal_ref" readonly="1"/>
-                    <field name="version"/>
-                    <field name="eco_type_id"/>
-                </group>
-                <notebook>
-                    <page string="Attributes">
-                        <field name="attribute_line_ids">
-                            <tree editable="bottom">
-                                <field name="attribute_id"/>
-                                <field name="value_ids" widget="many2many_tags" options="{'no_create_edit': True, 'color_field': 'color'}" context="{'default_attribute_id': attribute_id, 'show_attribute': False}" domain="[('attribute_id', '=', attribute_id)]" />
-                                <field name="used_in_sale_description" />
-                                <field name="is_qty_required" />
-                                <field name="default_val" domain="[('id', '=', value_ids)]" />
-                                <field name="required" />
-                                <field name="multi" />
-                                <field name="custom" />
-                            </tree>
-                        </field>
-                    </page>
-                </notebook>
-                <footer>
-                    <button string="Create Product" type="object" name="action_confirm" class="btn-primary"/>
-                    <button string="Cancel" type="object" class="btn-secondary" special="cancel"/>
-                </footer>
+            <form string="Create Product Wizard">
+                <header>
+                    <button string="Create Product" type="object" name="action_confirm" class="btn-primary" />
+                    <button string="Cancel" type="object" class="btn-secondary" special="cancel" />
+                </header>
+                <sheet>
+                    <group>
+                        <field name="product_tmpl_id" domain="[('config_ok', '=', True)]" />
+                        <field name="product_name" />
+                        <label for="prefix" string="Prefix-Internal Reference" />
+                        <div class="o_row">
+                            <span><field name="prefix" style="width: 100px;" />-</span>
+                            <span><field name="internal_ref" style="width: 100px;" readonly="1" /></span>
+                        </div>
+                        <field name="public_destination" />
+                        <field name="company_ids_display" widget="many2many_tags" />
+                        <field name="eco_type_id" />
+                    </group>
+                    <notebook>
+                        <page string="Attributes">
+                            <field name="attribute_line_ids">
+                                <tree editable="bottom">
+                                    <field name="attribute_id" />
+                                    <field name="value_ids" widget="many2many_tags" options="{'no_create_edit': True, 'color_field': 'color'}" context="{'default_attribute_id': attribute_id, 'show_attribute': False}" domain="[('attribute_id', '=', attribute_id)]" />
+                                    <field name="used_in_sale_description" />
+                                    <field name="is_qty_required" />
+                                    <field name="default_val" domain="[('id', '=', value_ids)]" />
+                                    <field name="required" />
+                                    <field name="multi" />
+                                    <field name="custom" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
             </form>
         </field>
     </record>
