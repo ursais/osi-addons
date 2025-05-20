@@ -118,6 +118,7 @@ class SaleOrder(models.Model):
         for sale_order_line in product_lines:
             quote_config = sale_order_line.config_session_id or False
             product = sale_order_line.product_id
+            bom_line_ids = sale_order_line.bom_id.mapped("bom_line_ids")
             template_attr_values = []
 
             if product and product.product_template_attribute_value_ids:
@@ -132,6 +133,7 @@ class SaleOrder(models.Model):
                         "attribute_name": v.attribute_id.name,
                         "value_name": v.product_attribute_value_id.name,
                         "sequence": v.attribute_id.sequence,
+                        "product_qty": sum(bom_line_ids.filtered(lambda bom_line: bom_line.product_id.id == v.product_id.id).mapped("product_qty")) or 1.0,
                     }
                     for v in visible_values
                 ]

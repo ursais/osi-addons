@@ -18,5 +18,6 @@
     "data": [
         'reports/mo_bin_label.xml',
         'views/mrp_production_view.xml',
+        'views/product_template_view.xml',
     ],
 }
