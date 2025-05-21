@@ -75,6 +75,10 @@ class IrActionsServer(models.Model):
                 "update account_move_line set name = %s where id = %s", (text, rec.id)
             )
 
+        records = self.env['account.move'].search([("invoice_partner_display_name", "ilike", "\\xc30")])
+        for rec in records:
+            rec.write({'invoice_partner_display_name': rec.partner_id.display_name})
+
     def get_non_decrpted_data(self):
         query = """
             SELECT table_name, column_name
