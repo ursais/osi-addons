@@ -75,9 +75,11 @@ class IrActionsServer(models.Model):
                 "update account_move_line set name = %s where id = %s", (text, rec.id)
             )
 
-        records = self.env['account.move'].search([("invoice_partner_display_name", "ilike", "\\xc30")])
+        records = self.env["account.move"].search(
+            [("invoice_partner_display_name", "ilike", "\\xc30")]
+        )
         for rec in records:
-            rec.write({'invoice_partner_display_name': rec.partner_id.display_name})
+            rec.write({"invoice_partner_display_name": rec.partner_id.display_name})
 
     def get_non_decrpted_data(self):
         query = """
@@ -285,7 +287,6 @@ class IrActionsServer(models.Model):
 
     @api.model
     def odoo_rpc_call(self):
-
         odoo_13 = odoorpc.ODOO("localhost", port=8069, timeout=12000)
         odoo_13.login("odoo13_prod", "admin", "pw")
         self = self.sudo()
@@ -308,7 +309,6 @@ class IrActionsServer(models.Model):
                 [("name", "=", emp.get("work_location"))], limit=1
             )
             if work_id:
-
                 self._cr.execute(
                     "update hr_employee set work_location_id = %s where id = %s"
                     % (work_id.id, emp.get("id"))
@@ -335,7 +335,6 @@ class IrActionsServer(models.Model):
         """Remove record rule from v13 of company before run."""
         print("Update attribute")
         for atts in atts_val:
-
             self._cr.execute(
                 "update product_attribute_value set name = json_build_object('en_US', '%s') where id = %s"
                 % (atts.get("name"), atts.get("id"))
@@ -493,6 +492,76 @@ class IrActionsServer(models.Model):
 
                 if open_review:
                     rec.write({"approved_total_cost": open_review.approved_total_cost})
+
+    def create_stock_putway_rule(self):
+        # OSI Task: https://osi.mavenlink.com/workspaces/44078089/#tracker/923588804
+        # Putaway Rule Migration Creation Server Action
+
+        cr = self.env.cr
+        v13dataquery = """  
+            SELECT res_id, id, name, value_text
+            FROM temp_ir_property_row_rack_case 
+            WHERE company_id = 1 
+            AND (name = 'loc_row' OR name = 'loc_rack' OR name = 'loc_case') 
+            GROUP BY res_id, id, name, value_text;
+        """
+        _logger.info("\n\n\n\nPutaway Rule Migration Server Action Start")
+        cr.execute(v13dataquery)
+        v13Datas = cr.fetchall()
+        migrationData = [{}]
+        result = {}
+        for data in v13Datas:
+            # product_id = int(data[0].split(',')[1])
+            product_id = data[0]
+            location = data[2]
+            if product_id not in result:
+                result[product_id] = []
+            # Append the location value to the list of locations for the current product_id
+            result[product_id].append(location)
+        final_output = []
+
+        for res_id, locations in result.items():
+            # Sort locations so 'loc_row' comes first, followed by 'loc_rack' and 'loc_case'
+            sorted_locations = self.sorted(
+                locations, key=lambda x: ["loc_row", "loc_rack", "loc_case"].index(x)
+            )
+
+            # Join the locations with underscores
+            final_output.append({res_id: "-".join(sorted_locations)})
+            select_query = """SELECT name,value_text from temp_ir_property_row_rack_case WHERE company_id = 1 and res_id = %s and (name = 'loc_row' OR name = 'loc_rack' OR name = 'loc_case');"""
+            cr.execute(select_query, (res_id,))
+            datas = cr.fetchall()
+            location_str = ""
+            for data in datas:
+                if data[0] == "loc_row":
+                    location_str = data[1]
+                if data[0] == "loc_rack":
+                    location_str = location_str + "_" + data[1]
+                if data[0] == "loc_case":
+                    location_str = location_str + "_" + data[1]
+
+            odoo_location = env["stock.location"].search(
+                [("complete_name", "ilike", location_str)]
+            )
+            if len(odoo_location) == 1:
+                product_tmpl_id = int(res_id.split(",")[1])
+                product_id = env["product.product"].search(
+                    [("product_tmpl_id", "=", product_tmpl_id)]
+                )
+                in_location = env.ref("stock.stock_location_stock")
+                putaway_rule = env["stock.putaway.rule"].create(
+                    {
+                        "location_in_id": in_location.id,
+                        "product_id": product_id.id,
+                        "category_id": product_id.categ_id.id,
+                        "location_out_id": odoo_location.id,
+                        "company_id": env.ref("base.main_company").id,
+                    }
+                )
+                # _logger.info("\n\n\n\nPutaway Rule Migration Server Action=>===%s==%s===%s==%s",product_id,location_str,odoo_location,odoo_location.name)
+                cr.commit()
+        cr.execute("drop table temp_ir_property_row_rack_case;")
+        _logger.info("\n\n\n\nPutaway Rule Migration Server Action Done")
 
     def uninstall_old_module(self):
         env = self.env
@@ -700,7 +769,6 @@ class IrActionsServer(models.Model):
                 table = data.model.replace(".", "_")
                 _logger.info(data.read([]))
                 if table in ("ir_ui_view", "ir_ui_menu"):
-
                     self._cr.execute("alter table %s DISABLE TRIGGER ALL" % (table,))
                     # otable = data.name.split('model_')[1]
                     # if otable and len(otable.split('_report')) == 1:
@@ -715,7 +783,6 @@ class IrActionsServer(models.Model):
                     self._cr.execute("alter table %s enable TRIGGER ALL" % (table,))
 
                 if table in ("ir_cron"):
-
                     action_ids = env["ir.actions.server"].search(
                         [("model_id", "=", data.res_id)]
                     )
@@ -767,159 +834,161 @@ class IrActionsServer(models.Model):
             )
 
         # env['ir.module.module'].search([('name', 'in', module_uninstall_list),('state', '=', 'installed')]).button_immediate_uninstall()
-    
+
     def install_new_module(self):
         modules = [
-        "job_cost_estimate_customer",
-        "mrp_batch",
-        "ol_crm",
-        "ol_crm_estimate",
-        "ol_crm_mrp_plm",
-        "ol_crm_purchase_request",
-        "ol_crm_sale_blanket_order",
-        "ol_exception",
-        "ol_job_cost_estimate_customer",
-        "ol_mrp_plm_cancel",
-        "ol_mrp_plm_purchase",
-        "ol_mrp_plm_substate",
-        "ol_mrp_sale_price_rollup",
-        "ol_partner_stage",
-        "ol_product_configurator",
-        "ol_product_pricing_review",
-        "ol_product_profile",
-        "ol_product_state",
-        "ol_purchase",
-        "ol_purchase_3way_match",
-        "ol_purchase_request_estimate",
-        "ol_rush_order",
-        "ol_sale",
-        "ol_sale_blanket_order",
-        "ol_sale_stock_tags",
-        "ol_scrap_reason_code",
-        "ol_stock",
-        "ol_tier_validation",
-        "osi_ap_addresses",
-        "osi_blanket_order_mps",
-        "product_configurator",
-        "product_configurator_sale",
-        "product_configurator_mrp_quantity",
-        "product_configurator_restriction_policy",
-        "product_manufacturer",
-        "purchase_order_line_menu",
-        "web_m2x_options",
-        "web_m2x_options_manager",
-        "sale_product_approval_purchase",
-        "sale_product_approval_mrp",
-        "base_exception",
-        "server_action_mass_edit",
-        "purchase_deposit",
-        "web_company_color",
-        "product_attribute_set",
-        "osi_check_alignment",
-        "ol_mrp_traveler",
-        "ol_product_classification",
-        "ol_rma_supplier",
-        "ol_product_operations_category",
-        "ol_account",
-        "ol_stock_constrained_sku",
-        "ol_mrp_plm",
-        "hr_attendance",
-        "osi_downpayment_taxes",
-        "stock_inventory",
-        "ol_sale_substate",
-        "ol_account_reports",
-        "ol_base",
-        "ol_account_hot_ar",
-        "ol_job_cost_estimator_tier_validation",
-        "ol_mrp_plm_tier_validation",
-        "ol_product_configurator_stock",
-        "ol_product_configurator_sale_template",
-        "ol_product_tariff",
-        "ol_product_tooling",
-        "ol_sale_mrp_tags",
-        "ol_sale_template",
-        "ol_sale_email",
-        "ol_sale_optional_product",
-        "ol_mrp_bom_rebuild",
-        "ol_sale_cost_workup",
-        "purchase_backorder",
-        "sale_order_line_menu",
-        "base",
-        "web",
-        "account_accountant",
-        "account_consolidation",
-        "approvals",
-        "calendar",
-        "contact",
-        "crm",
-        "delivery_fedex",
-        "delivery_ups",
-        "delivery_usps",
-        "documents",
-        "helpdesk",
-        "hr",
-        "hr_contract",
-        "hr_expense",
-        "hr_skills",
-        "knowledge",
-        "mail",
-        "maintenance",
-        "mrp",
-        "mrp_plm",
-        "planning",
-        "project",
-        "project_todo",
-        "purchase",
-        "quality_control",
-        "repair",
-        "room",
-        "sale_management",
-        "sale_subscription",
-        "stock",
-        "stock_barcode",
-        "timesheet_grid",
-        "account_avatax_oca",
-        "account_move_tier_validation",
-        "auditlog",
-        "base_tier_validation",
-        "base_tier_validation_formula",
-        "base_user_role",
-        "base_user_role_company",
-        "mail_debrand",
-        "partner_identification",
-        "partner_stage",
-        "partner_tier_validation",
-        "product_configurator_mrp",
-        "product_configurator_mrp_component",
-        "sale_blanket_order_tier_validation",
-        "sale_product_approval_stock",
-        "stock_request",
-        "stock_request_mrp",
-        "stock_request_picking_type",
-        "stock_request_stage",
-        "stock_request_submit",
-        "sale_automatic_workflow",
-        "sale_backorder",
-        "sale_blanket_order",
-        "sale_exception",
-        "sale_product_approval",
-        "sale_tier_validation",
-        "scrap_reason_code",
-        "sh_product_customer_code",
-        "oi_login_as",
-        "ol_warranty",
-        "ol_sale_tier_validation",
-        "ol_sale_lead_time",
-        "ol_sale_booking",
-        "ol_sale_blanket_order_lead_time",
-        "ol_product_reporting_category",
-        "ol_mrp",
-        "ol_helpdesk_repair_batch",
-        "ol_pim",
-    ]
+            "job_cost_estimate_customer",
+            "mrp_batch",
+            "ol_crm",
+            "ol_crm_estimate",
+            "ol_crm_mrp_plm",
+            "ol_crm_purchase_request",
+            "ol_crm_sale_blanket_order",
+            "ol_exception",
+            "ol_job_cost_estimate_customer",
+            "ol_mrp_plm_cancel",
+            "ol_mrp_plm_purchase",
+            "ol_mrp_plm_substate",
+            "ol_mrp_sale_price_rollup",
+            "ol_partner_stage",
+            "ol_product_configurator",
+            "ol_product_pricing_review",
+            "ol_product_profile",
+            "ol_product_state",
+            "ol_purchase",
+            "ol_purchase_3way_match",
+            "ol_purchase_request_estimate",
+            "ol_rush_order",
+            "ol_sale",
+            "ol_sale_blanket_order",
+            "ol_sale_stock_tags",
+            "ol_scrap_reason_code",
+            "ol_stock",
+            "ol_tier_validation",
+            "osi_ap_addresses",
+            "osi_blanket_order_mps",
+            "product_configurator",
+            "product_configurator_sale",
+            "product_configurator_mrp_quantity",
+            "product_configurator_restriction_policy",
+            "product_manufacturer",
+            "purchase_order_line_menu",
+            "web_m2x_options",
+            "web_m2x_options_manager",
+            "sale_product_approval_purchase",
+            "sale_product_approval_mrp",
+            "base_exception",
+            "server_action_mass_edit",
+            "purchase_deposit",
+            "web_company_color",
+            "product_attribute_set",
+            "osi_check_alignment",
+            "ol_mrp_traveler",
+            "ol_product_classification",
+            "ol_rma_supplier",
+            "ol_product_operations_category",
+            "ol_account",
+            "ol_stock_constrained_sku",
+            "ol_mrp_plm",
+            "hr_attendance",
+            "osi_downpayment_taxes",
+            "stock_inventory",
+            "ol_sale_substate",
+            "ol_account_reports",
+            "ol_base",
+            "ol_account_hot_ar",
+            "ol_job_cost_estimator_tier_validation",
+            "ol_mrp_plm_tier_validation",
+            "ol_product_configurator_stock",
+            "ol_product_configurator_sale_template",
+            "ol_product_tariff",
+            "ol_product_tooling",
+            "ol_sale_mrp_tags",
+            "ol_sale_template",
+            "ol_sale_email",
+            "ol_sale_optional_product",
+            "ol_mrp_bom_rebuild",
+            "ol_sale_cost_workup",
+            "purchase_backorder",
+            "sale_order_line_menu",
+            "base",
+            "web",
+            "account_accountant",
+            "account_consolidation",
+            "approvals",
+            "calendar",
+            "contact",
+            "crm",
+            "delivery_fedex",
+            "delivery_ups",
+            "delivery_usps",
+            "documents",
+            "helpdesk",
+            "hr",
+            "hr_contract",
+            "hr_expense",
+            "hr_skills",
+            "knowledge",
+            "mail",
+            "maintenance",
+            "mrp",
+            "mrp_plm",
+            "planning",
+            "project",
+            "project_todo",
+            "purchase",
+            "quality_control",
+            "repair",
+            "room",
+            "sale_management",
+            "sale_subscription",
+            "stock",
+            "stock_barcode",
+            "timesheet_grid",
+            "account_avatax_oca",
+            "account_move_tier_validation",
+            "auditlog",
+            "base_tier_validation",
+            "base_tier_validation_formula",
+            "base_user_role",
+            "base_user_role_company",
+            "mail_debrand",
+            "partner_identification",
+            "partner_stage",
+            "partner_tier_validation",
+            "product_configurator_mrp",
+            "product_configurator_mrp_component",
+            "sale_blanket_order_tier_validation",
+            "sale_product_approval_stock",
+            "stock_request",
+            "stock_request_mrp",
+            "stock_request_picking_type",
+            "stock_request_stage",
+            "stock_request_submit",
+            "sale_automatic_workflow",
+            "sale_backorder",
+            "sale_blanket_order",
+            "sale_exception",
+            "sale_product_approval",
+            "sale_tier_validation",
+            "scrap_reason_code",
+            "sh_product_customer_code",
+            "oi_login_as",
+            "ol_warranty",
+            "ol_sale_tier_validation",
+            "ol_sale_lead_time",
+            "ol_sale_booking",
+            "ol_sale_blanket_order_lead_time",
+            "ol_product_reporting_category",
+            "ol_mrp",
+            "ol_helpdesk_repair_batch",
+            "ol_pim",
+        ]
 
     for module in modules:
-        env['ir.module.module'].search([('name', '=', module), ('state', '!=', 'installed')]).button_immediate_install()
+        env["ir.module.module"].search(
+            [("name", "=", module), ("state", "!=", "installed")]
+        ).button_immediate_install()
 
 
-#"ol_purchase_3way_match",
+# "ol_purchase_3way_match",
