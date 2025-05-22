@@ -8,6 +8,7 @@ class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
     def script_1(self):
+        _logger.info("\n\n==Clean Up and Deactivate Duplicate Attributes and Values==Script 1 is start==================")
         cr = self.env.cr
 
         # DROP UNIQUE CONSTRAINT  the product_attribute_value_value_product_uniq  btree (company_id, product_id, attribute_id) V13 Ref: ls_product_configurator.constraint_product_attribute_value_value_product_uniq
@@ -64,7 +65,7 @@ class IrActionsServer(models.Model):
         _logger.info("\n\n==================Inactive Duplicate Attributes Values Done==================")
 
         for attribute_id in distinct_attribute_ids:
-            attribute  = env["product.attribute"].browse(attribute_id)
+            attribute  = self.env["product.attribute"].browse(attribute_id)
             _logger.info("\n\n==================Attribute ID==================%s",attribute_id)
             pav_select_query = """SELECT DISTINCT ON (pav.name) pav.attribute_id, pav.name, pa.name, pav.id, pav.active
                                     FROM product_attribute_value AS pav
@@ -81,14 +82,16 @@ class IrActionsServer(models.Model):
         cr.execute("DELETE FROM product_product_attribute_value_qty WHERE qty IN (0, 1);")
         cr.execute(" UPDATE product_template_attribute_line SET required = 't' WHERE required is null;")
         cr.execute("UPDATE product_template_attribute_value SET is_qty_required = false, default_qty = NULL, maximum_qty = NULL WHERE ptav_active=true and default_qty in (0,1) and maximum_qty in (0,1);")
+        _logger.info("\n\n==================Script 1 is end==================")
 
     def script_2(self):
+        _logger.info("\n\n==Merge Unique Attribute Values into a Single Attribute==Script 2 is start==================")
         cr = self.env.cr
 
         #=========================================ProductTemplateAttributeLine===================================================
-        ProductTemplateAttributeLine = env["product.template.attribute.line"]
+        ProductTemplateAttributeLine = self.env["product.template.attribute.line"]
         templateAttributteLine = ProductTemplateAttributeLine.search([])
-        attribute_dict = {attribute.name: attribute.id for attribute in env["product.attribute"].search([("active", "=", True)])}
+        attribute_dict = {attribute.name: attribute.id for attribute in self.env["product.attribute"].search([("active", "=", True)])}
         lines_to_update = templateAttributteLine.filtered(lambda line: line.product_tmpl_id.active and not line.attribute_id.active)
         update_queries = []
         for line in lines_to_update:
@@ -107,9 +110,9 @@ class IrActionsServer(models.Model):
 
 
         #============================================ProductTemplateAttributeValue================================================
-        ProductTemplateAttributeValue = env["product.template.attribute.value"]
+        ProductTemplateAttributeValue = self.env["product.template.attribute.value"]
         _logger.info("\n\n===ProductTemplateAttributeValue Start===")
-        active_attribute_dict = {attribute.name: attribute.id for attribute in env["product.attribute"].search([("active", "=", True)])}
+        active_attribute_dict = {attribute.name: attribute.id for attribute in self.env["product.attribute"].search([("active", "=", True)])}
         update_queries = []
         attributes_to_recompute = set()
         select_query = """select id from product_template_attribute_value where ptav_active='t';"""
@@ -136,7 +139,7 @@ class IrActionsServer(models.Model):
         _logger.info("\n\n===Recompute for unique attributes===")
 
         for attribute_id in attributes_to_recompute:
-            active_attribute = env["product.attribute"].browse(attribute_id)
+            active_attribute = self.env["product.attribute"].browse(attribute_id)
             active_attribute._compute_products()  # Only recompute for unique attributes
 
         _logger.info("\n\n===ProductTemplateAttributeValue Done===%s",len(templateAttributteValue))
@@ -145,7 +148,7 @@ class IrActionsServer(models.Model):
         template_attribute_line_rel_query = """SELECT product_attribute_value_id FROM product_attribute_value_product_template_attribute_line_rel;"""
         cr.execute(template_attribute_line_rel_query)
         line_rel_ids = cr.fetchall()
-        ProductAttributeValue = env["product.attribute.value"]
+        ProductAttributeValue = self.env["product.attribute.value"]
 
 
         # templateAttributeValue = ProductTemplateAttributeValue.search([("ptav_active", "=", True)])
@@ -162,10 +165,12 @@ class IrActionsServer(models.Model):
             cr.execute(template_attribute_line_rel_query, (tuple(attribute_line_ids),))
             line_rel_ids = cr.fetchall()
         _logger.info("\n\n===product_attribute_value_product_template_attribute_line_rel=%s",len(line_rel_ids))
+        _logger.info("\n\n==================Script 2 is End==================")
 
     def script_3(self):
+        _logger.info("\n\n==Update Product Templates with Unique Attributes and Values==Script 3 is start==================")
         batch_size = 10  # Define batch size
-        ProductTemplates = env['product.template'].search([("has_configurable_attributes","=",True)])
+        ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True)])
         total_products = len(ProductTemplates)  # Total number of products to process
         offset = 0
         counter = 1
@@ -234,7 +239,7 @@ class IrActionsServer(models.Model):
                             active_value_id = for_update.product_attribute_value_id
                             old_product_attribute_value_id = active_value_id
                             if not active_value_id.active:
-                                active_value_id = env["product.attribute.value"].search([
+                                active_value_id = self.env["product.attribute.value"].search([
                                     ("name", "=", name),
                                     ("attribute_id", "=", for_update.attribute_id.id)
                                 ], limit=1)
@@ -258,8 +263,8 @@ class IrActionsServer(models.Model):
                                 # """, (active_value_id.id, for_update.attribute_line_id.id, old_product_attribute_value_id.id))
                                 # cr.commit()
                                 
-                            active_ptav = env["product.template.attribute.value"].search([("attribute_id","=",active_value_id.attribute_id.id),("product_attribute_value_id","=",active_value_id.id),("id","=",duplicates[0].id)])
-                            active_ptav2 = env["product.template.attribute.value"].search([("attribute_id","=",old_product_attribute_value_id.attribute_id.id),("product_attribute_value_id","=",old_product_attribute_value_id.id),("id","=",duplicates[0].id),("ptav_active","=",True)])
+                            active_ptav = self.env["product.template.attribute.value"].search([("attribute_id","=",active_value_id.attribute_id.id),("product_attribute_value_id","=",active_value_id.id),("id","=",duplicates[0].id)])
+                            active_ptav2 = self.env["product.template.attribute.value"].search([("attribute_id","=",old_product_attribute_value_id.attribute_id.id),("product_attribute_value_id","=",old_product_attribute_value_id.id),("id","=",duplicates[0].id),("ptav_active","=",True)])
                             if active_ptav and not active_ptav.ptav_active:
                                 active_ptav.write({"ptav_active":True})
                             elif active_ptav.ptav_active and active_ptav.product_attribute_value_id.id == active_value_id.id :
@@ -290,7 +295,7 @@ class IrActionsServer(models.Model):
                             old_product_attribute_value_id = duplicates[0].product_attribute_value_id
                             active_value_id = old_product_attribute_value_id
                             if not old_product_attribute_value_id.active:
-                                active_value_id = env["product.attribute.value"].search([
+                                active_value_id = self.env["product.attribute.value"].search([
                                     ("name", "=", name),
                                     ("attribute_id", "=", duplicates[0].attribute_id.id)
                                 ], limit=1)
@@ -300,8 +305,8 @@ class IrActionsServer(models.Model):
                                     cr.execute(update_query,( duplicates[0].attribute_id.id,old_product_attribute_value_id.id))
                                     cr.commit()
                                 
-                            active_ptav = env["product.template.attribute.value"].search([("attribute_id","=",active_value_id.attribute_id.id),("product_attribute_value_id","=",active_value_id.id),("id","=",duplicates[0].id)])
-                            active_ptav2 = env["product.template.attribute.value"].search([("attribute_id","=",old_product_attribute_value_id.attribute_id.id),("product_attribute_value_id","=",old_product_attribute_value_id.id),("id","=",duplicates[0].id),("ptav_active","=",True)])
+                            active_ptav = self.env["product.template.attribute.value"].search([("attribute_id","=",active_value_id.attribute_id.id),("product_attribute_value_id","=",active_value_id.id),("id","=",duplicates[0].id)])
+                            active_ptav2 = self.env["product.template.attribute.value"].search([("attribute_id","=",old_product_attribute_value_id.attribute_id.id),("product_attribute_value_id","=",old_product_attribute_value_id.id),("id","=",duplicates[0].id),("ptav_active","=",True)])
                             if active_ptav and not active_ptav.ptav_active:
                                 active_ptav.write({"ptav_active":True})
                             elif active_ptav.ptav_active and active_ptav.product_attribute_value_id.id == active_value_id.id :
@@ -348,11 +353,13 @@ class IrActionsServer(models.Model):
             self.env.cr.commit()  # Commit changes after processing each batch
             _logger.info("Batch processed. Offset moved to %s", offset)
         _logger.info("Processing completed!")
+        _logger.info("\n\n==================Script 3 is Done==================")
 
     def script_4(self):
+        _logger.info("\n\n==Sync Attribute Values in Product Variants===Script 4 is start==================")
         batch_size = 10  # Define batch size
         #PRODUCT-TEMPLATE ID Which id Need to take care [5593,24607,5172,32379,24337,25216,26588,6518,4696,103791,102630,102736,101999]
-        ProductTemplates = env['product.template'].search([("has_configurable_attributes","=",True),("id","not in",[5593,24607,5172,32379,24337,25216,26588,6518,4696,103791,102630,102736,101999])])
+        ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True),("id","not in",[5593,24607,5172,32379,24337,25216,26588,6518,4696,103791,102630,102736,101999])])
         total_products = len(ProductTemplates)  # Total number of products to process
         offset = 0
         counter = 1
@@ -378,7 +385,7 @@ class IrActionsServer(models.Model):
                         values_ids = attrbute_line_id.value_ids.filtered(lambda l:l.active and l.attribute_id.id != attrbute_line_id.attribute_id.id)
                         product_template_value_ids = attrbute_line_id.product_template_value_ids.filtered("ptav_active")
                         for value in values_ids:
-                            active_value_id = env["product.attribute.value"].search([("name","=",value.name),("active","=",True),("attribute_id","=",value.attribute_id.id)])
+                            active_value_id = self.env["product.attribute.value"].search([("name","=",value.name),("active","=",True),("attribute_id","=",value.attribute_id.id)])
                             if not active_value_id.attribute_id.active and value.name not in attrbute_line_id.attribute_id.value_ids.mapped("name"):
                                 _logger.info("\n\n\n\n==============Values IDS:Name:%s:%s:%s:%s:active_value_id::%s",value.name,value,attrbute_line_id.attribute_id,value.attribute_id,active_value_id.attribute_id.active)
                                 update_query = """UPDATE product_attribute_value SET active = TRUE,attribute_id = %s WHERE id =%s;"""
@@ -443,13 +450,15 @@ class IrActionsServer(models.Model):
             self.env.cr.commit()  # Commit changes after processing each batch
             _logger.info("Batch processed. Offset moved to %s", offset)
         _logger.info("Processing completed!")
+        _logger.info("\n\n==================Script 4 is End==================")
 
     def script_5(self):
+        _logger.info("\n\n==Update Quantity-Related Data in Attribute Lines and Product Variants==Script 5 is start==================")
         cr = self.env.cr
 
         # ProductTemplates = env["product.template"].search([("id","=",104183)])
         batch_size = 10  # Define batch size
-        ProductTemplates = env['product.template'].search([("has_configurable_attributes","=",True)])
+        ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True)])
         total_products = len(ProductTemplates)  # Total number of products to process
         offset = 0
         counter = 1
@@ -543,8 +552,8 @@ class IrActionsServer(models.Model):
                                 _logger.info("\n\n\n\n======444444=====%s===%s=%s:%s**%s",value_qty.product_id,value_qty.attr_value_id.attribute_id.name,line.attribute_id.name,value_qty.attr_value_id.name,value_qty.qty)
                                 if value_qty.attr_value_id.attribute_id.name == line.attribute_id.name:
                                     _logger.info("\n\n===product_product==%s==%s===%s",product_product,product_product.product_attribute_value_qty_ids.mapped("attr_value_id.name"),product_product.product_attribute_value_qty_ids.mapped("qty"))
-                                    active_value_id = env["product.attribute.value"].search([("name","=",value_qty.attr_value_id.name),("attribute_id","=",line.attribute_id.id)])
-                                    attribute_value_qty_data = env["attribute.value.qty"].search([('product_attribute_value_id','=',active_value_id.id),("product_tmpl_id","=",product_template.id),("qty","=",int(value_qty.qty))])
+                                    active_value_id = self.env["product.attribute.value"].search([("name","=",value_qty.attr_value_id.name),("attribute_id","=",line.attribute_id.id)])
+                                    attribute_value_qty_data = self.env["attribute.value.qty"].search([('product_attribute_value_id','=',active_value_id.id),("product_tmpl_id","=",product_template.id),("qty","=",int(value_qty.qty))])
                                     value_qty.write({'attribute_value_qty_id':attribute_value_qty_data.id,"attr_value_id":active_value_id.id})
                                     cr.commit()
                 counter += 1
@@ -552,10 +561,12 @@ class IrActionsServer(models.Model):
             self.env.cr.commit()  # Commit changes after processing each batch
             _logger.info("Batch processed. Offset moved to %s", offset)
         _logger.info("Processing completed!")
+        _logger.info("\n\n==================Script 5 is End==================")
 
     def script_6(self):
+        _logger.info("\n\n== Generate Scaffolding BOM==Script 6 is start==================")
         batch_size = 10  # Define batch size
-        ProductTemplates = env['product.template'].search([("has_configurable_attributes","=",True)])
+        ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True)])
         total_products = len(ProductTemplates)  # Total number of products to process
         offset = 0
         counter = 1
@@ -573,7 +584,7 @@ class IrActionsServer(models.Model):
                 existing_scaffold_bom = cr.fetchall() 
                 if not existing_scaffold_bom:
                     # Find all attribute lines related to the product template
-                    attribute_lines = env['product.template.attribute.line'].search([('product_tmpl_id', '=', product_template.id)])
+                    attribute_lines = self.env['product.template.attribute.line'].search([('product_tmpl_id', '=', product_template.id)])
                     # Create a Bill of Materials for the product template
                     bom_vals = {
                         'product_tmpl_id': product_template.id,
@@ -581,7 +592,7 @@ class IrActionsServer(models.Model):
                         'type': 'normal',  # Adjust type if needed
                         'scaffolding_bom': True,
                     }
-                    new_bom = env['mrp.bom'].create(bom_vals)
+                    new_bom = self.env['mrp.bom'].create(bom_vals)
                     _logger.info("\n\n\n\n==3==New BOM Creation Done::%s", new_bom)            
                     # Add BoM lines for each product associated with the attribute values
                     for line in attribute_lines:
@@ -590,18 +601,18 @@ class IrActionsServer(models.Model):
                             product = value.product_id
                             if product:
                                 # Attempt to find or create a configuration set
-                                bom_line_config_set = env['mrp.bom.line.configuration.set'].search(
+                                bom_line_config_set = self.env['mrp.bom.line.configuration.set'].search(
                                     [("name", "=", product.display_name)], limit=1
                                 )
                                 if not bom_line_config_set:
-                                    bom_line_config_set = env['mrp.bom.line.configuration.set'].create({"name": product.display_name})                        
+                                    bom_line_config_set = self.env['mrp.bom.line.configuration.set'].create({"name": product.display_name})                        
                                 # Ensure value_ids is a list of IDs
                                 value_ids = [(6, 0, [value.id])] if value else []
                                 select_query = """select * from mrp_bom_line_configuration_product_attribute_value_rel where product_attribute_value_id = %s"""
                                 cr.execute(select_query, (value.id,))
                                 value_new = cr.fetchall()
                                 if not value_new:
-                                    env['mrp.bom.line.configuration'].create(
+                                    self.env['mrp.bom.line.configuration'].create(
                                         {
                                             "config_set_id": bom_line_config_set.id,
                                             "value_ids": value_ids,
@@ -613,16 +624,18 @@ class IrActionsServer(models.Model):
                                     'product_qty': 1.0,
                                     "config_set_id": bom_line_config_set.id,
                                 }
-                                env['mrp.bom.line'].create(bom_line_vals)            
+                                self.env['mrp.bom.line'].create(bom_line_vals)            
                     _logger.info("\n\n\n\n==4==SCAFFOLD BOM CREATION PROCESS Done::%s for Product Template", product_template.name)
                 counter += 1    
             offset += batch_size
             self.env.cr.commit()  # Commit changes after processing each batch
             _logger.info("Batch processed. Offset moved to %s", offset)
         _logger.info("Processing completed!")
+        _logger.info("\n\n==================Script 6 is End==================")
 
     def script_7(self):
-        ScaffoldingBoMs = env["mrp.bom"].search([("scaffolding_bom","=", True)])
+        _logger.info("\n\n==Adding classification_id in Scaffolding Bill of Martial Lines==Script 7 is start==================")
+        ScaffoldingBoMs = self.env["mrp.bom"].search([("scaffolding_bom","=", True)])
         total_products = len(ScaffoldingBoMs)  # Total number of products to process
         batch_size = 10  # Define batch size
         offset = 0
@@ -646,8 +659,12 @@ class IrActionsServer(models.Model):
             self.env.cr.commit()  # Commit changes after processing each batch
             _logger.info("Batch processed. Offset moved to %s", offset)
         _logger.info("Processing completed!")
+        _logger.info("\n\n==================Script 7 is End==================")
+
 
     def script_8(self):
+        _logger.info("\n\n==================Script 8 is Start==================")
+
         # ::Server Action based Script::
         # Update the phantom_bom_id data in MRP BOM inactivate the relative (Same Product) Kit BOM if the Kit BOM is not associated with a Phantom BOM ID in Product Template.
         # Company ID = 1  USA and 2 is EU
@@ -659,6 +676,8 @@ class IrActionsServer(models.Model):
         # 3. psql -d V17DBNAME -f /home/odoo/temp_phantom_bom_id.sql
         # Created by Vandan Pandeji
 
+
+        _logger.info("\n\n==Script 8: Phantom BOM Migration=")
         cr = self.env.cr
         select_query = """SELECT res_id,value_reference,company_id from temp_ir_property_v13_vp where name = 'phantom_bom_id';
          """
@@ -672,18 +691,18 @@ class IrActionsServer(models.Model):
             company_id = phantom_bom[2]
             counter+=1
             if int(company_id) == 1:
-                phantom_bom_id = env["mrp.bom"].search([("id","=",int(mrp_bom_id)),("product_tmpl_id","=",int(product_template_id)),("type","=","phantom"),("company_id","=",int(company_id))])
-                extra_phantom_bom_ids = env["mrp.bom"].search([("id","!=",phantom_bom_id.id),("product_tmpl_id","=",int(product_template_id)),("type","=","phantom"),("company_id","=",int(company_id))])
+                phantom_bom_id = self.env["mrp.bom"].search([("id","=",int(mrp_bom_id)),("product_tmpl_id","=",int(product_template_id)),("type","=","phantom"),("company_id","=",int(company_id))])
+                extra_phantom_bom_ids = self.env["mrp.bom"].search([("id","!=",phantom_bom_id.id),("product_tmpl_id","=",int(product_template_id)),("type","=","phantom"),("company_id","=",int(company_id))])
                 product_to_exclude.append(int(product_template_id))
                 extra_phantom_bom_ids.write({"active":False})
                 cr.commit()
             elif int(company_id) == 2 and int(product_template_id) not in product_to_exclude:
-                phantom_bom_id = env["mrp.bom"].search([("id","=",int(mrp_bom_id)),("product_tmpl_id","=",int(product_template_id)),("type","=","phantom"),("company_id","=",int(company_id))])
-                extra_phantom_bom_ids = env["mrp.bom"].search([("id","!=",phantom_bom_id.id),("product_tmpl_id","=",int(product_template_id)),("type","=","phantom"),("company_id","=",int(company_id))])
+                phantom_bom_id = self.env["mrp.bom"].search([("id","=",int(mrp_bom_id)),("product_tmpl_id","=",int(product_template_id)),("type","=","phantom"),("company_id","=",int(company_id))])
+                extra_phantom_bom_ids = self.env["mrp.bom"].search([("id","!=",phantom_bom_id.id),("product_tmpl_id","=",int(product_template_id)),("type","=","phantom"),("company_id","=",int(company_id))])
                 extra_phantom_bom_ids.write({"active":False})
                 cr.commit()
                 
-
+        _logger.info("\n\n==Script 8: Lifecycle_status  Migration Data=")
         cr.execute("select res_id,value_text from temp_ir_property_v13_vp where name = 'lifecycle_status';")
         lifecycle_status = cr.fetchall()
         for lifecycle in lifecycle_status:
@@ -703,7 +722,7 @@ class IrActionsServer(models.Model):
             elif code == False:
                 code = "new"
             # product_id = lifecycle.get("res_id") and lifecycle.get("res_id").split(",")[1] or env["product.template"]
-            product_state_id = env["product.state"].search([("code","ilike",code)])
+            product_state_id = self.env["product.state"].search([("code","ilike",code)])
             # print("product_state_id===",code)
             if product_state_id:
                 cr.execute(
@@ -711,7 +730,7 @@ class IrActionsServer(models.Model):
                     % (product_state_id.id, int(product_template_id))
                 )
 
-
+        _logger.info("\n\n==Script 8:Pim_category Migration Data=")
         cr.execute("select id,pim_category from temp_product_temp_v13_vp;")
         pim_category = cr.fetchall()
         for pim in pim_category:
@@ -724,36 +743,42 @@ class IrActionsServer(models.Model):
             elif code == "Assembly & Validation":
                 code = "assembly_validation"
             
-            attribute_set_id = env["attribute.set"].search([("name","ilike",code)])
+            attribute_set_id = self.env["attribute.set"].search([("name","ilike",code)])
             if attribute_set_id and code:
                 cr.execute(
                     "update product_template set attribute_set_id = %s where id = %s"
                     % (attribute_set_id.id, product_template_id)
                 )
 
-
+        _logger.info("\n\n==Script 8:Public_destination Migration=")
         cr.execute("update product_template as pt set public_destination = (select tpt.public_destination from temp_product_temp_v13_vp as tpt where tpt.id=pt.id); ")
-
+        
+        _logger.info("\n\n==Script 8:Company IDS Many2Many Product Template Migration=")
         cr.execute("INSERT INTO product_template_company_display_rel (product_template_id, company_id) SELECT product_template_id, res_company_id FROM temp_product_template_res_company_rel_v13_VP;")
 
-        AttributeValues = env["product.attribute.value"].search([("active","=",True),("product_id","!=",False)])
+        AttributeValues = self.env["product.attribute.value"].search([("active","=",True),("product_id","!=",False)])
         AttributeValues._compute_company_ids()
 
+        _logger.info("\n\n==Script 8:country_of_manufacture in Product Template Migration=")
         select_query = """SELECT value_reference,res_id from temp_ir_property_v13_vp where name='country_of_manufacture';"""
         cr.execute(select_query)
         v13datas = cr.fetchall()
         for data in v13datas:
             product_template_id = data[1].split(',')[1]
-            product_template_id = env["product.template"].browse(int(product_template_id))
+            product_template_id = self.env["product.template"].browse(int(product_template_id))
             country_id = data[0].split(",")[1]
-            country_id = env["res.country"].browse(int(country_id))
+            country_id = self.env["res.country"].browse(int(country_id))
             if product_template_id.exists() and country_id.exists():
                 update_query = """UPDATE product_template set country_of_origin = %s where id = %s; """
                 cr.execute(update_query,(country_id.id,product_template_id.id))
         _logger.info("\n\n\n\n=================DONE=======")
+        _logger.info("\n\n==================Script 8 is Done==================")
+
 
 
     def drop_temp_tables(self):
+        _logger.info("\n\n============Droping Tables Start")
         cr.execute("drop table temp_ir_property_v13_vp;")
         cr.execute("drop table temp_product_temp_v13_vp;")
         cr.execute("drop table temp_product_template_res_company_rel_v13_VP;")
+        _logger.info("\n\n============Tables Droped")
