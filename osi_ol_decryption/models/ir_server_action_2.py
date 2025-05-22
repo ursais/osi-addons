@@ -570,7 +570,7 @@ class IrActionsServer(models.Model):
         total_products = len(ProductTemplates)  # Total number of products to process
         offset = 0
         counter = 1
-        cr = .self.env.cr  # Cursor for direct SQL operations
+        cr = self.env.cr  # Cursor for direct SQL operations
         _logger.info("Total products to process: %s", total_products)
         while offset < total_products:
             batch_products = ProductTemplates[offset:offset + batch_size]  # Slice the records to get the current batch
