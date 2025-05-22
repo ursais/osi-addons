@@ -61,6 +61,28 @@
         <field name="team_id" ref="ol_crm.sales_team_engineer_to_order"/>
     </record>
 
+    <!-- Sales Team Stages -->
+    <record id="sales_team_stage_presale" model="crm.stage">
+        <field name="name">Presale</field>
+        <field name="sequence">1</field>
+    </record>
+    <record id="sales_team_stage_prototype" model="crm.stage">
+        <field name="name">Prototype</field>
+        <field name="sequence">2</field>
+    </record>
+    <record id="sales_team_stage_decision" model="crm.stage">
+        <field name="name">Decision</field>
+        <field name="sequence">3</field>
+    </record>
+    <record id="sales_team_stage_closed_won" model="crm.stage">
+        <field name="name">Closed won</field>
+        <field name="sequence">4</field>
+    </record>
+    <record id="sales_team_stage_closed_lost" model="crm.stage">
+        <field name="name">Closed lost</field>
+        <field name="sequence">5</field>
+    </record>
+
     <!-- Canceled Stages -->
      <record id="crm_stage_canceled" model="crm.stage">
         <field name="name">Canceled</field>
