@@ -78,8 +78,14 @@ class IrActionsServer(models.Model):
         records = self.env["account.move"].search(
             [("invoice_partner_display_name", "ilike", "\\xc30")]
         )
+        count = 0        
         for rec in records:
-            rec.write({"invoice_partner_display_name": rec.partner_id.display_name})
+            self._cr.execute("update account_move set invoice_partner_display_name = %s where id = %s", (rec.partner_id.display_name, rec.id))
+            count += 1
+            if count == 10000:
+                count = 0
+                self._cr.commit()
+            # rec.write({"invoice_partner_display_name": rec.partner_id.display_name})
 
     def get_non_decrpted_data(self):
         query = """
@@ -532,7 +538,7 @@ class IrActionsServer(models.Model):
 
         for res_id, locations in result.items():
             # Sort locations so 'loc_row' comes first, followed by 'loc_rack' and 'loc_case'
-            sorted_locations = self.sorted(
+            sorted_locations = sorted(
                 locations, key=lambda x: ["loc_row", "loc_rack", "loc_case"].index(x)
             )
 
@@ -550,22 +556,22 @@ class IrActionsServer(models.Model):
                 if data[0] == "loc_case":
                     location_str = location_str + "_" + data[1]
 
-            odoo_location = env["stock.location"].search(
+            odoo_location = self.env["stock.location"].search(
                 [("complete_name", "ilike", location_str)]
             )
             if len(odoo_location) == 1:
                 product_tmpl_id = int(res_id.split(",")[1])
-                product_id = env["product.product"].search(
+                product_id = self.env["product.product"].search(
                     [("product_tmpl_id", "=", product_tmpl_id)]
                 )
-                in_location = env.ref("stock.stock_location_stock")
-                putaway_rule = env["stock.putaway.rule"].create(
+                in_location = self.env.ref("stock.stock_location_stock")
+                putaway_rule = self.env["stock.putaway.rule"].create(
                     {
                         "location_in_id": in_location.id,
                         "product_id": product_id.id,
                         "category_id": product_id.categ_id.id,
                         "location_out_id": odoo_location.id,
-                        "company_id": env.ref("base.main_company").id,
+                        "company_id": self.env.ref("base.main_company").id,
                     }
                 )
                 # _logger.info("\n\n\n\nPutaway Rule Migration Server Action=>===%s==%s===%s==%s",product_id,location_str,odoo_location,odoo_location.name)
