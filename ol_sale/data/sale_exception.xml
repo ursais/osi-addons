@@ -18,7 +18,7 @@
             ("order_line.bom_id.bom_line_ids.product_id.allow_backorder", "=", False),
             ("order_line.bom_id.bom_line_ids.product_id.qty_available", "&lt;=", 0),
     ]</field>
-        <field name="active" eval="True" />
+        <field name="active" eval="False" />
     </record>
 
 </odoo>
