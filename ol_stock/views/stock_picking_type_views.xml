@@ -123,6 +123,12 @@
                     </tree>
                 </field>
             </xpath>
+
+            <xpath expr="//group[@name='other_infos']/field[@name='company_id']" position="after">
+                <field name="company_currency_id" invisible="1" />
+                <field name="total_sales_price" widget='monetary' options="{'currency_field': 'company_currency_id'}"/>
+            </xpath>
+
         </field>
     </record>
 

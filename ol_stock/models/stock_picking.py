@@ -2,7 +2,7 @@
 import uuid
 
 # Import Odoo libs
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class StockPicking(models.Model):
@@ -16,9 +16,38 @@ class StockPicking(models.Model):
         string="Can Add Stock Moves",
         compute="_compute_can_add_stock_moves",
     )
+    company_currency_id = fields.Many2one(related='company_id.currency_id')
+    total_sales_price = fields.Monetary(
+        string="Total Sales Price",
+        compute='_compute_total_sales_price',
+        currency_field='company_currency_id',
+        store=True,
+        help="The total of the sales price (from sale order or product sales price) of all done products and the shipping cost"
+    )
 
     # END #########
     # METHODS #####
+
+    @api.depends('state', 'move_ids.sale_line_id.qty_delivered')
+    def _compute_total_sales_price(self):
+        """Compute the total sales price for the picking, including delivery costs."""
+        for picking in self:
+
+            # Calculate the total carrier price from delivery sale lines
+            carrier_price = sum(
+                picking.sale_id.mapped("order_line")
+                .filtered(lambda sol: sol.is_delivery)
+                .mapped("price_unit")
+            )
+
+            # Calculate the total amount from each sale line based on delivered quantity
+            sale_line_amount = sum(
+                sale_line.price_unit * sale_line.qty_delivered
+                for sale_line in picking.mapped("move_ids.sale_line_id")
+            )
+
+            # Update the total sales price with the sum of sale line amounts and carrier price
+            picking.total_sales_price = sale_line_amount + carrier_price
 
     def _compute_can_add_stock_moves(self):
         for rec in self:
