@@ -6,7 +6,7 @@
     'category': 'Base',
     'version': '17.0.1.0.0',
     "data": [
-	    "data/stock.location.csv",
+	    # "data/stock.location.csv",
 	   ],
     'depends': ['base', 'stock'],
     'post_init_hook' : 'post_init_hook_encrypt_decrypt'

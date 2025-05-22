@@ -354,7 +354,8 @@ class IrActionsServer(models.Model):
 
         return True
 
-    def fix_invalid_check_numbers(ctx):
+    
+    def fix_invalid_check_numbers(self):
         """
         Fix invalid check numbers from migrated v13 data.
         In v13, some payments had check numbers with non-numeric characters,
@@ -364,7 +365,7 @@ class IrActionsServer(models.Model):
         """
         # Get payments with a check_number
         payments = (
-            ctx.env["account.payment"].sudo().search([("check_number", "!=", False)])
+            self.env["account.payment"].sudo().search([("check_number", "!=", False)])
         )
 
         # Filter payments where check_number is not purely numeric
@@ -377,7 +378,7 @@ class IrActionsServer(models.Model):
 
             # Use raw SQL to directly set check_number to 0
             # SQL is needed as Odoo complains that the existing data is not a Big Int
-            ctx.env.cr.execute(
+            self.env.cr.execute(
                 """
                 UPDATE account_payment
                 SET check_number = %s
@@ -416,6 +417,15 @@ class IrActionsServer(models.Model):
                     "update product_template set categ_id = %s,attribute_set_id = %s where id = %s",
                     (categ_id.id, attribute_id.id, rec.get("id")),
                 )
+            elif rec.get('pim_category') in ('Computers, Panel PCs'):
+                categ_id = category_ids.filtered(lambda l: l.name == "Computers")
+
+                attribute_id = attribute_ids.filtered(lambda a: a.name == "Computers")
+                self._cr.execute(
+                    "update product_template set categ_id = %s,attribute_set_id = %s where id = %s",
+                    (categ_id.id, attribute_id.id, rec.get("id")),
+                )
+
             else:
                 categ_id = category_ids.filtered(
                     lambda l: l.name == rec.get("pim_category")
@@ -746,6 +756,7 @@ class IrActionsServer(models.Model):
             "web_ir_actions_act_view_reload",
             "web_tree_many2one_clickable",
             "web_widget_bokeh_chart",
+            "ls_delivery_ups_rest",
         ]
 
         data_list = env["ir.model.data"].search(
@@ -985,10 +996,10 @@ class IrActionsServer(models.Model):
             "ol_pim",
         ]
 
-    for module in modules:
-        env["ir.module.module"].search(
-            [("name", "=", module), ("state", "!=", "installed")]
-        ).button_immediate_install()
+        for module in modules:
+            self.env["ir.module.module"].search(
+                [("name", "=", module), ("state", "!=", "installed")]
+            ).button_immediate_install()
 
 
 # "ol_purchase_3way_match",
