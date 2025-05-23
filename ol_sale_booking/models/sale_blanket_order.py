@@ -112,18 +112,6 @@ class SaleBlanketOrder(models.Model):
 
         return res
 
-    @api.depends(
-        "remaining_amount_untaxed",
-        "remaining_amount_total",
-        "remaining_amount_tax",
-    )
-    def _amount_all(self):
-        """
-        Trigger Sale Booking related functionality if the Sale Order's amounts change
-        """
-        super()._amount_all()
-        self.sale_blanket_booking_trigger()
-
     def sale_blanket_booking_trigger(self, force=False):
         """Add a new booking entry if necessary"""
 
