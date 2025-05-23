@@ -182,7 +182,6 @@ class SaleOrder(models.Model):
         if not self.to_send_confirmation_email:
             return
         if self.detect_exceptions():
-            print ("\n=====================", self.detect_exceptions())
             return
 
         # Create and send the email based on the confirmation template immediately
