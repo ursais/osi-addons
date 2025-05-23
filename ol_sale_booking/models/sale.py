@@ -42,18 +42,6 @@ class SaleOrder(models.Model):
 
         return res
 
-    @api.depends(
-        "order_line.price_total",
-        "order_line.product_uom_qty",
-        "tax_amount",
-    )
-    def _amount_all(self):
-        """
-        Trigger Sale Booking related functionality if the Sale Order's amounts change
-        """
-        super()._amount_all()
-        self.sale_booking_trigger()
-
     def sale_booking_trigger(self, force=False):
         """Add a new booking entry if necessary"""
 
