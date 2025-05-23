@@ -88,7 +88,7 @@
         <field name="reviewer_group_id" ref="ol_base.role_sales_EVP_res_groups"/>
         <field name="active" eval="True"/>
         <field name="definition_type">domain</field>
-        <field name="definition_domain">["&amp;", "&amp;", ("order_line.margin_percent", "&lt;=", 0.4), ("source_id", "not in", [11]), ("blanket_order_id", "=", False)]</field>
+        <field name="definition_domain">["&amp;", "&amp;", ("order_line.margin_percent", "&lt;=", 0.4), ("source_id", "not in", [11]), ("blanket_order_id", "=", False), ("order_line.price_unit", "!=", 0)]</field>
         <field name="company_id" ref="base.main_company"/>
     </record>
 
