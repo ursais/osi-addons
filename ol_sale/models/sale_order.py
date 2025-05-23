@@ -84,7 +84,8 @@ class SaleOrder(models.Model):
         self.send_confirmation_email()
 
         # Disable the flag post-confirmation to prevent duplicate emails
-        self.to_send_confirmation_email = False
+        if not self.detect_exceptions():
+            self.to_send_confirmation_email = False
 
         # Update original_commitment_date for each record after confirmation
         for rec in self:
@@ -177,8 +178,11 @@ class SaleOrder(models.Model):
         Send a Sale Order confirmation email
         """
         self.ensure_one()
-
+        
         if not self.to_send_confirmation_email:
+            return
+        if self.detect_exceptions():
+            print ("\n=====================", self.detect_exceptions())
             return
 
         # Create and send the email based on the confirmation template immediately
