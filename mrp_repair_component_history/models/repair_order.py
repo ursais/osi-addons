@@ -55,7 +55,10 @@ class RepairOrder(models.Model):
                     )
         return res
 
-    @api.depends("show_invisible", "component_history_ids")
+    @api.depends(
+        "show_invisible",
+        "component_history_ids",
+    )
     def _compute_visible_component_history_ids(self):
         for lot in self:
             if lot.show_invisible:
@@ -64,5 +67,20 @@ class RepairOrder(models.Model):
                 lot.visible_component_history_ids = lot.component_history_ids.filtered(
                     lambda r: not r.invisible
                 )
+
+    def generate_component_history(self):
+        for repair in self:
+            if repair.lot_id and not repair.lot_id.component_history_ids:
+                repair.lot_id.generate_component_history()
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            lot_id = vals.get("lot_id")
+            if lot_id:
+                lot = self.env["stock.lot"].browse(lot_id)
+                if not lot.component_history_ids:
+                    lot.generate_component_history()
+        return super().create(vals)
 
     # END #######

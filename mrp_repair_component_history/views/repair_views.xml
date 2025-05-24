@@ -8,31 +8,32 @@
         <field name="arch" type="xml">
             <notebook position="inside">
                 <page string="Component History">
-                    <button name="toggle_show_invisible" type="object" string="Show ALL History" invisible="show_invisible" />
-                    <button name="toggle_show_invisible" type="object" string="Show Current Components" invisible="not show_invisible" />
+                    <button name="generate_component_history" type="object" string="Populate History" invisible="component_history_ids" />
+                    <button name="toggle_show_invisible" type="object" string="Show ALL History" invisible="show_invisible or not component_history_ids" />
+                    <button name="toggle_show_invisible" type="object" string="Show Current Components" invisible="not show_invisible or not component_history_ids" />
 
                     <field name="show_invisible" invisible="1"/>
                     <group string="Showing Current Components" invisible="show_invisible">
-                        <field name="visible_component_history_ids" nolabel="1" colspan="2">
+                        <field name="visible_component_history_ids" nolabel="1" colspan="2" readonly="1" default_order="date desc">
                             <tree decoration-danger="change_type in ('remove', 'recycle')" decoration-success="change_type == 'add'">
                                 <field name="change_type" />
                                 <field name="product_id" />
                                 <field name="qty_changed" />
                                 <field name="component_lot_ids" widget="many2many_tags" />
                                 <field name="source_id" />
-                                <field name="create_date" />
+                                <field name="date" />
                             </tree>
                         </field>
                     </group>
                     <group string="Showing ALL History" invisible="not show_invisible">
-                        <field name="component_history_ids" nolabel="1" colspan="2">
+                        <field name="component_history_ids" nolabel="1" colspan="2" readonly="1" default_order="date desc">
                             <tree decoration-danger="change_type in ('remove', 'recycle')" decoration-success="change_type == 'add'">
                                 <field name="change_type" />
                                 <field name="product_id" />
                                 <field name="qty_changed" />
                                 <field name="component_lot_ids" widget="many2many_tags" />
                                 <field name="source_id" />
-                                <field name="create_date" />
+                                <field name="date" />
                             </tree>
                         </field>
                     </group>
