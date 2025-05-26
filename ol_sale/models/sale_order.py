@@ -49,9 +49,6 @@ class SaleOrder(models.Model):
         help="These are the contacts that will receive automated email communications.",
     )
     shipping_ref = fields.Char(string="Shipping Reference")
-    payment_method_id = fields.Many2one(
-        comodel_name='payment.method', string="Payment Method", copy=False
-    )
 
     # END #########
 

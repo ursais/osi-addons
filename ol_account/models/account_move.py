@@ -1,6 +1,7 @@
 # Import Odoo libs
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from collections import defaultdict
 
 
 class AccountMove(models.Model):
@@ -10,12 +11,27 @@ class AccountMove(models.Model):
 
     # COLUMNS #####
 
-    payment_method_id = fields.Many2one(
-        comodel_name='payment.method', string="Payment Method", copy=False
+    payment_preference = fields.Many2one(
+        'res.paypref',
+        string='Payment Preference',
+        compute="_compute_payment_preference",
     )
 
     # END #########
     # METHODS ######
+
+    @api.depends("company_id", "partner_id", "partner_id.payment_preference")
+    def _compute_payment_preference(self):
+        # Group moves by company
+        moves_by_company = defaultdict(lambda: self.env['account.move'])
+        for move in self:
+            moves_by_company[move.company_id] |= move
+
+        # Compute payment preference per company context
+        for company, moves in moves_by_company.items():
+            moves_with_ctx = moves.with_company(company.id)
+            for move in moves_with_ctx:
+                move.payment_preference = move.partner_id.payment_preference
 
     def unlink(self):
         """
