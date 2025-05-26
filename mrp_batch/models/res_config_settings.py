@@ -21,16 +21,17 @@ class ResConfigSettings(models.TransientModel):
     mo_batch_mode = fields.Selection(
         [
             (
-                "single",
-                "Single Batch for ALL Manufacturing Orders on Sale Order Confirmation",
-            ),
-            (
                 "multiple",
                 "Separate Batch for EACH Manufacturing Order on Sale Order Confirmation",
+            ),
+            (
+                "single",
+                "Single Batch for ALL Manufacturing Orders on Sale Order Confirmation",
             ),
         ],
         string="MO Batch Mode",
         config_parameter="mrp_batch.batch_mode",
+        default="multiple"
     )
     enable_delay_action_assign = fields.Boolean(
         string="Enable Queuing Action Assign",
