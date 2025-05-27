@@ -258,16 +258,18 @@ class HelpdeskTicket(models.Model):
         if not product_quantities:
             raise ValueError("No valid products found to create a receipt.")
 
-        picking_type = self.env["stock.picking.type"].search(
-            [
-                ("code", "=", "incoming"),
-                ("warehouse_id.company_id", "=", self.env.company.id),
-            ],
-            limit=1,
+        # Get the RMA Repairs IN Pick Type from the Warehouse
+        warehouse = self.env["stock.warehouse"].search(
+            [("company_id", "=", self.env.company.id)], limit=1
         )
 
-        if not picking_type:
-            raise ValueError("No incoming transfer type found for the company.")
+        if not warehouse or not warehouse.repair_in_type_id:
+            raise ValueError(
+                "RMA Repairs Incoming Picking Type is not configured for the current warehouse. "
+                "Please set 'Repair Incoming Picking Type' on the warehouse."
+            )
+
+        picking_type = warehouse.repair_in_type_id
 
         receipt = stock_picking_obj.create(
             {

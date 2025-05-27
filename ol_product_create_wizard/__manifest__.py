@@ -14,6 +14,7 @@
         "ol_product_configurator",
         "ol_pim",
         "ol_sale",
+        "ol_product",
         "sale_management",
         "mrp_plm",
     ],

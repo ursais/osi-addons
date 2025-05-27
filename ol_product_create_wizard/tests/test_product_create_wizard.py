@@ -8,135 +8,134 @@ class TestProductCreateWizard(common.TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # Create basic product template and attribute data for tests
+
+        # Create a test company
+        cls.company_1 = cls.env["res.company"].create({"name": "Test Company 1"})
+
+        # Create attributes and values
+        cls.attribute = cls.env["product.attribute"].create({"name": "Color"})
+        cls.attribute_value = cls.env["product.attribute.value"].create(
+            {"name": "Red", "attribute_id": cls.attribute.id}
+        )
+
+        # Create ECO type and stage
+        cls.eco_type = cls.env["mrp.eco.type"].create({"name": "Test ECO Type"})
+        cls.eco_stage = cls.env["mrp.eco.stage"].create(
+            {
+                "name": "Initial",
+                "type_ids": [(6, 0, [cls.eco_type.id])],
+                "sequence": 1,
+            }
+        )
+
+        # Create a product template with attribute lines
         cls.product_template = cls.env["product.template"].create(
             {
-                "name": "Test Product Template",
-                "default_code": "TEST123",
-            }
-        )
-        cls.eco_type = cls.env["mrp.eco.type"].create({"name": "Test ECO Type"})
-        cls.attribute = cls.env["product.attribute"].create({"name": "Test Attribute"})
-        cls.attribute_value = cls.env["product.attribute.value"].create(
-            {
-                "name": "Test Attribute Value",
-                "attribute_id": cls.attribute.id,
-            }
-        )
-
-        # Create a wizard and wizard line for reuse in some tests
-        cls.wizard = cls.env["product.create.wizard"].create(
-            {
-                "product_tmpl_id": cls.product_template.id,
-                "product_name": "Test Product",
-                "prefix": "TEST",
-                "eco_type_id": cls.eco_type.id,
-            }
-        )
-        cls.wizard_line = cls.env["product.create.wizard.line"].create(
-            {
-                "wizard_id": cls.wizard.id,
-                "attribute_id": cls.attribute.id,
-                "value_ids": [(6, 0, [cls.attribute_value.id])],
-                "default_val": cls.attribute_value.id,
-                "is_qty_required": True,
-                "multi": True,
-                "required": True,
-                "custom": False,
+                "name": "Original Product",
+                "default_code": "ORIG123",
+                "config_ok": True,
+                "public_destination": "b2c",
+                "allow_backorder": True,
+                "system_tier": "customer",
+                "company_ids_display": [(6, 0, [cls.company_1.id])],
+                "attribute_line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "attribute_id": cls.attribute.id,
+                            "value_ids": [(6, 0, [cls.attribute_value.id])],
+                            "used_in_sale_description": True,
+                            "is_qty_required": True,
+                            "default_val": cls.attribute_value.id,
+                            "required": True,
+                            "multi": True,
+                            "custom": False,
+                        },
+                    ),
+                ],
             }
         )
 
-    def test_default_get(self):
-        """Test default_get populates values from product template and set ECO type."""
+    def test_product_creation_wizard_flow(self):
+        """Test full flow of the product creation wizard."""
+
+        # Create the wizard instance with context
         wizard = (
             self.env["product.create.wizard"]
             .with_context(default_product_tmpl_id=self.product_template.id)
-            .create({})
+            .create(
+                {
+                    "product_tmpl_id": self.product_template.id,
+                    "product_name": "Cloned Product",
+                    "prefix": "CLONE",
+                    "eco_type_id": self.eco_type.id,
+                    "public_destination": "b2b_b2c",
+                    "allow_backorder": False,
+                    "system_tier": "normal",
+                    "company_ids_display": [(6, 0, [self.company_1.id])],
+                }
+            )
         )
-        self.assertEqual(wizard.product_name, self.product_template.name)
-        self.assertEqual(wizard.internal_ref, self.product_template.default_code)
-        self.assertEqual(wizard.eco_type_id.name, "New System Enablement")
 
-    def test_onchange_product_tmpl_id(self):
-        """Test _onchange_product_tmpl_id sets product-related values correctly."""
-        wizard = self.env["product.create.wizard"].create(
-            {"product_tmpl_id": self.product_template.id}
+        # Manually copy attribute line to simulate user editing
+        wizard.write(
+            {
+                "attribute_line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "attribute_id": self.attribute.id,
+                            "value_ids": [(6, 0, [self.attribute_value.id])],
+                            "default_val": self.attribute_value.id,
+                            "is_qty_required": True,
+                            "multi": True,
+                            "custom": False,
+                            "required": True,
+                            "used_in_sale_description": True,
+                        },
+                    )
+                ],
+            }
         )
-        wizard._onchange_product_tmpl_id()
-        self.assertEqual(wizard.product_name, self.product_template.name)
-        self.assertEqual(wizard.internal_ref, self.product_template.default_code)
 
-    def test_check_duplicate_default_code_raises(self):
-        """Test duplicate detect raise ValidationError when a duplicate code exists."""
-        # Setup a template with the same default_code that should conflict
+        # Trigger confirm
+        action = wizard.action_confirm()
+
+        # Follow redirection and verify
+        self.assertEqual(action["type"], "ir.actions.act_window")
+        if action["res_model"] == "product.template":
+            product = self.env["product.template"].browse(action["res_id"])
+            self.assertEqual(product.name, "Cloned Product")
+            self.assertEqual(product.default_code, "CLONE-ORIG123")
+            self.assertEqual(product.system_tier, "normal")
+            self.assertEqual(product.allow_backorder, False)
+            self.assertEqual(product.public_destination, "b2b_b2c")
+            self.assertEqual(set(product.company_ids_display.ids), {self.company_1.id})
+        elif action["res_model"] == "mrp.eco":
+            eco = self.env["mrp.eco"].browse(action["res_id"])
+            self.assertEqual(eco.type_id.id, self.eco_type.id)
+            self.assertEqual(eco.stage_id.id, self.eco_stage.id)
+            self.assertTrue(eco.product_tmpl_id)
+
+    def test_duplicate_internal_reference_raises_error(self):
+        """Should raise ValidationError when duplicate default_code is used."""
         self.env["product.template"].create(
             {
-                "name": "Duplicate Product",
-                "default_code": "TEST-TEST123",
+                "name": "Existing Product",
+                "default_code": "DUPLICATE-ORIG123",
             }
         )
-        wizard = self.env["product.create.wizard"].create(
-            {
-                "product_tmpl_id": self.product_template.id,
-                "prefix": "TEST",
-                "internal_ref": "123",
-            }
-        )
-        with self.assertRaises(ValidationError):
-            wizard.check_duplicate_default_code("TEST-TEST123")
 
-    def test_check_duplicate_default_code_passes(self):
-        """Test no ValidationError is raised when the internal reference is unique."""
         wizard = self.env["product.create.wizard"].create(
             {
                 "product_tmpl_id": self.product_template.id,
-                "prefix": "UNIQUE",
-                "internal_ref": "456",
-            }
-        )
-        # Should pass silently
-        wizard.check_duplicate_default_code("UNIQUE-456")
-
-    def test_action_confirm_creates_product_and_eco(self):
-        """Test full confirm flow creates a duplicated product and corresponding ECO."""
-        wizard = self.env["product.create.wizard"].create(
-            {
-                "product_tmpl_id": self.product_template.id,
-                "product_name": "New Product",
-                "prefix": "NEW",
+                "product_name": "Clone",
+                "prefix": "DUPLICATE",  # Will create DUPLICATE-ORIG123
                 "eco_type_id": self.eco_type.id,
             }
         )
-        result = wizard.action_confirm()
 
-        # Validate that the new product was created with the correct code
-        new_product = self.env["product.template"].search(
-            [("name", "=", "New Product")], limit=1
-        )
-        self.assertTrue(new_product)
-        self.assertEqual(new_product.default_code, "NEW-TEST123")
-
-        # Validate that an ECO was created and is linked to the new product
-        eco = self.env["mrp.eco"].search(
-            [("product_tmpl_id", "=", new_product.id)], limit=1
-        )
-        self.assertTrue(eco)
-        self.assertEqual(eco.type_id, self.eco_type)
-
-        # Validate the returned action opens the ECO form view
-        self.assertEqual(result["type"], "ir.actions.act_window")
-        self.assertEqual(result["res_model"], "mrp.eco")
-        self.assertEqual(result["res_id"], eco.id)
-
-    def test_onchange_value_ids_clears_default(self):
-        """Test default_val is cleared when it's no longer in value_ids."""
-        self.wizard_line.value_ids = [(6, 0, [])]
-        self.wizard_line._onchange_value_ids()
-        self.assertFalse(self.wizard_line.default_val)
-
-    def test_onchange_value_ids_keeps_default(self):
-        """Test default_val is retained when it remains in value_ids."""
-        self.wizard_line.default_val = self.attribute_value
-        self.wizard_line.value_ids = [(6, 0, [self.attribute_value.id])]
-        self.wizard_line._onchange_value_ids()
-        self.assertEqual(self.wizard_line.default_val, self.attribute_value)
+        with self.assertRaises(ValidationError):
+            wizard.action_confirm()

@@ -2,6 +2,12 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
+SYSTEM_TIERS = [
+    ("normal", "Normal System"),
+    ("custom_created", "Custom Created System"),
+    ("customer", "Customer System"),
+]
+
 
 class ProductCreateWizard(models.TransientModel):
     """Create product wizard where user can create new product based on existing one."""
@@ -61,6 +67,11 @@ class ProductCreateWizard(models.TransientModel):
             "only in these regions."
         ),
     )
+    system_tier = fields.Selection(
+        selection=SYSTEM_TIERS,
+        string="System Tier",
+        default="customer",
+    )
 
     # END ##########
     # METHODS ##########
@@ -79,7 +90,9 @@ class ProductCreateWizard(models.TransientModel):
             product = self.env["product.template"].browse(product_tmpl_id)
             res["product_name"] = product.name
             res["internal_ref"] = product.default_code or ""
-            res["public_destination"] = product.public_destination
+            # res["public_destination"] = product.public_destination
+            # res["company_id"] = False
+            # res["system_tier"] = product.name
             res["allow_backorder"] = product.allow_backorder
             res["company_ids_display"] = [(6, 0, product.company_ids_display.ids)]
             res["attribute_line_ids"] = [
@@ -179,6 +192,8 @@ class ProductCreateWizard(models.TransientModel):
                     "name": record.product_name,
                     "default_code": new_default_code,
                     "public_destination": record.public_destination,
+                    "system_tier": record.system_tier,
+                    "company_id": False,
                     "allow_backorder": record.allow_backorder,
                     "company_ids_display": [(5, 0, record.company_ids_display.ids)],
                     "attribute_line_ids": [(5, 0, 0)]
@@ -247,33 +262,81 @@ class ProductCreateWizard(models.TransientModel):
             else:
                 bom = False
 
+            # Determine if an ECO is needed
+            original_lines = {
+                line.attribute_id.id: set(line.value_ids.ids)
+                for line in original_tmpl.attribute_line_ids
+            }
+            new_lines = {
+                line.attribute_id.id: set(line.value_ids.ids)
+                for line in record.attribute_line_ids
+            }
+
+            # Check if any lines were added or removed
+            original_keys = set(original_lines.keys())
+            new_keys = set(new_lines.keys())
+
+            lines_added = new_keys - original_keys
+            lines_removed = original_keys - new_keys
+
+            eco_needed = bool(lines_added or lines_removed)
+
+            # Check for added values in existing lines
+            if not eco_needed:
+                for attr_id in original_keys & new_keys:
+                    original_vals = original_lines[attr_id]
+                    new_vals = new_lines[attr_id]
+                    if new_vals - original_vals:  # values added
+                        eco_needed = True
+                        break
+
             # Step 4: Get first ECO stage for selected ECO type
-            first_stage = record.env["mrp.eco.stage"].search(
-                [("type_ids", "in", record.eco_type_id.id)], order="sequence", limit=1
-            )
+            eco = False
+            if eco_needed:
+                first_stage = record.env["mrp.eco.stage"].search(
+                    [("type_ids", "in", record.eco_type_id.id)],
+                    order="sequence",
+                    limit=1,
+                )
 
-            # Step 5: Create an ECO
-            eco = record.env["mrp.eco"].create(
-                {
-                    "name": f"{new_template.name} ECO",
-                    "type": apply_on,
-                    "type_id": record.eco_type_id.id,
-                    "stage_id": first_stage.id if first_stage else False,
-                    "product_tmpl_id": new_template.id,
-                    "bom_id": bom.id if bom else False,
-                }
-            )
+                # Step 5: Create an ECO
+                eco = record.env["mrp.eco"].create(
+                    {
+                        "name": f"{new_template.name} ECO",
+                        "type": apply_on,
+                        "type_id": record.eco_type_id.id,
+                        "stage_id": first_stage.id if first_stage else False,
+                        "product_tmpl_id": new_template.id,
+                        "bom_id": bom.id if bom else False,
+                    }
+                )
 
-            # Redirect to ECO form view
-            results.append(
-                {
-                    "type": "ir.actions.act_window",
-                    "res_model": "mrp.eco",
-                    "res_id": eco.id,
-                    "view_mode": "form",
-                    "target": "current",
-                }
-            )
+                # Redirect to ECO form view
+                results.append(
+                    {
+                        "type": "ir.actions.act_window",
+                        "res_model": "mrp.eco",
+                        "res_id": eco.id,
+                        "view_mode": "form",
+                        "target": "current",
+                    }
+                )
+            else:
+                # Change product state to original since no ECO was needed.
+                new_template.sudo().write(
+                    {"product_state_id": self.product_tmpl_id.product_state_id.id}
+                )
+
+                # Redirect to Product Template form view
+                results.append(
+                    {
+                        "type": "ir.actions.act_window",
+                        "res_model": "product.template",
+                        "res_id": new_template.id,
+                        "view_mode": "form",
+                        "target": "current",
+                    }
+                )
 
         # Return the first result (assumes one record at a time unless adapted to support multiple)
         return results[0] if results else True
