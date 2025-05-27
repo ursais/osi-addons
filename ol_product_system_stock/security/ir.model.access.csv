@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_product_stock_queue,access_product_stock_queue,model_product_stock_queue,,1,1,1,1
+access_product_stock_queue_wizard,access_product_stock_queue_wizard,model_system_stock_status_result_wizard,,1,1,1,1

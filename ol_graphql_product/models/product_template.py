@@ -6,6 +6,7 @@ from collections import namedtuple, defaultdict, OrderedDict
 # Import Odoo libs
 from odoo import models, fields, api
 from odoo.addons.ol_graphql.tools import get_translated_field_values
+from odoo.addons.ol_base.fields.fields import JsonField
 
 _logger = logging.getLogger(__name__)
 
@@ -17,6 +18,9 @@ class ProductTemplate(models.Model):
 
     _name = "product.template"
     _inherit = ["product.template", "graphql.mixin"]
+
+    pim_latest_message = JsonField(string="Latest PIM Message", readonly=True)
+    pricing_latest_message = JsonField(string="Latest Pricing Message", readonly=True)
 
     def get_encoded_options(self):
         """

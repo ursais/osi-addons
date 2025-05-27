@@ -61,6 +61,8 @@ class ProductTemplate(OnLogicBaseObjectType, ProductTemplateInterface):
     name = GenericScalar()
     options = graphene.List(ProductConfigurationRelation)
     image = GenericScalar()
+    system_stock_state = GenericScalar()
+    website_system_stock_state = GenericScalar()
 
     # Pricing fields
     special_price = GenericScalar()
@@ -224,6 +226,26 @@ class ProductTemplate(OnLogicBaseObjectType, ProductTemplateInterface):
     @staticmethod
     def resolve_pricing_tiers(product, _):
         return product.pricelist_item_ids or None
+
+    @staticmethod
+    def resolve_system_stock_state(product, _):
+        if product.is_stockable():
+            # Return None if the product is not stockable
+            return None
+
+        return ProductTemplate.get_company_dependent_field_value(
+            base_record=product, field_name="system_stock_state"
+        )
+
+    @staticmethod
+    def resolve_website_system_stock_state(product, _):
+        if product.is_stockable():
+            # Return None if the product is not stockable
+            return None
+
+        return ProductTemplate.get_company_dependent_field_value(
+            base_record=product, field_name="website_system_stock_state"
+        )
 
     # === BEGIN PIM ATTRIBUTE FUNCTIONS === #
 
