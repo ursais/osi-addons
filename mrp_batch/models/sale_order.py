@@ -55,7 +55,6 @@ class SaleOrder(models.Model):
         batch_mode = (
             self.env["ir.config_parameter"].sudo().get_param("mrp_batch.batch_mode")
         )
-
         for rec in self:
             existing_batch_id = None
 
@@ -73,10 +72,9 @@ class SaleOrder(models.Model):
                     qty = mo.product_qty
                     if qty > 1:
                         # Perform the split and get new MOs
-                        new_mos = mo.sudo()._split_productions({mo: ([1] * int(qty))})[
+                        new_mos = mo.sudo()._split_productions({mo: ([1])})[
                             :-1
                         ]
-
                         # Assign the batch to newly created MOs
                         for new_mo in new_mos:
                             new_mo.write(

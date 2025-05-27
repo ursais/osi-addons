@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import models
+from odoo import models,api
 
 
 class StockRule(models.Model):
@@ -61,4 +61,23 @@ class StockRule(models.Model):
                 procurement.values["sale_order_line_id"] = sale_line
         return super(StockRule, self)._create_manufacturing_orders(procurements)
 
-    # END #########
+    @api.model
+    def _run_pull(self, procurements):
+        res = super()._run_pull(procurements)
+        enable_split = (
+                self.env["ir.config_parameter"]
+                .sudo()
+                .get_param("mrp_batch.enable_delay_so_action_confirm")
+            )
+        
+        for procurement, rule in procurements:
+            sale_line_id = procurement.values.get("sale_line_id")
+            if sale_line_id:
+                sale_order = self.env["sale.order.line"].browse(sale_line_id).order_id
+                if enable_split == "True":
+                    sale_order.with_delay().split_mo()
+                else:
+                    sale_order.split_mo()
+        return res
+                
+    # # END #########
