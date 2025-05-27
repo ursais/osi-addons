@@ -211,13 +211,13 @@ class RmaSupplier(models.Model):
     def _onchange_in_warehouse_id(self):
         if self.in_warehouse_id:
             self.in_operation_id = self.in_warehouse_id.rma_sup_in_type_id.id
-            self.in_location_id = self.in_warehouse_id.lot_rma_id.id
+            self.in_location_id = self.in_operation_id.default_location_dest_id.id
 
     @api.onchange("out_warehouse_id")
     def _onchange_out_warehouse_id(self):
         if self.out_warehouse_id:
             self.out_operation_id = self.out_warehouse_id.rma_sup_out_type_id.id
-            self.out_location_id = self.out_warehouse_id.lot_rma_id.id
+            self.out_location_id = self.out_operation_id.default_location_dest_id.id
 
     def action_view_out_transfers(self):
         self.ensure_one()
