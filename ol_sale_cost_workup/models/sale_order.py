@@ -62,6 +62,7 @@ class SaleOrder(models.Model):
         # Generate and attach the Cost Workup report after the SO is locked
         if self:
             self.create_cost_workup_report()
+
         return res
 
     # END #########

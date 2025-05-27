@@ -18,6 +18,7 @@
                             <span><field name="prefix" style="width: 100px;" />-</span>
                             <span><field name="internal_ref" style="width: 100px;" readonly="1" /></span>
                         </div>
+                        <field name="system_tier" />
                         <field name="public_destination" />
                         <field name="company_ids_display" widget="many2many_tags" />
                         <field name="eco_type_id" />

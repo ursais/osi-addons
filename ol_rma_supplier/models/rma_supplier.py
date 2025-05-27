@@ -251,8 +251,7 @@ class RmaSupplier(models.Model):
                     "partner_id": rma.partner_id.id,
                     "picking_type_id": rma.out_operation_id.id,
                     "location_id": rma.out_location_id.id,
-                    "location_dest_id": rma.partner_id.property_stock_supplier.id
-                    or rma.in_operation_id.default_location_dest_id.id,
+                    "location_dest_id": rma.in_location_id.id,
                     "carrier_id": rma.carrier_id.id,
                     "move_ids_without_package": [
                         (
@@ -264,8 +263,7 @@ class RmaSupplier(models.Model):
                                 "product_uom": line.product_id.uom_id.id,
                                 "name": line.product_id.name,
                                 "location_id": rma.out_location_id.id,
-                                "location_dest_id": rma.partner_id.property_stock_supplier.id
-                                or rma.in_operation_id.default_location_dest_id.id,
+                                "location_dest_id": rma.in_location_id.id,
                                 "rma_supplier_line_id": line.id,
                                 "origin": rma.name,
                                 "lot_ids": line.lot_ids.ids,
@@ -283,8 +281,7 @@ class RmaSupplier(models.Model):
                 {
                     "partner_id": rma.partner_id.id,
                     "picking_type_id": rma.in_operation_id.id,
-                    "location_id": rma.partner_id.property_stock_supplier.id
-                    or rma.in_operation_id.default_location_src_id.id,
+                    "location_id": rma.out_location_id.id,
                     "location_dest_id": rma.in_location_id.id,
                     "move_ids_without_package": [
                         (
@@ -295,8 +292,7 @@ class RmaSupplier(models.Model):
                                 "product_uom_qty": line.quantity,
                                 "product_uom": line.product_id.uom_id.id,
                                 "name": line.product_id.name,
-                                "location_id": rma.partner_id.property_stock_supplier.id
-                                or rma.in_operation_id.default_location_src_id.id,
+                                "location_id": rma.out_location_id.id,
                                 "location_dest_id": rma.in_location_id.id,
                                 "rma_supplier_line_id": line.id,
                                 "origin": rma.name,
