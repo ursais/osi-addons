@@ -1,0 +1,22 @@
+<odoo>
+    <record id="view_system_stock_status_result_wizard" model="ir.ui.view">
+        <field name="name">view.system.stock.status.result.wizard.form</field>
+        <field name="model">system.stock.status.result.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Constrained SKU Result Wizard" class="o_sale_order">
+                <header>
+                    <div class="alert alert-info" role="alert">
+                        System Stock Status has been recalculated for all companies the System is enabled in.
+                        <br/>If the `System Stock Status` changed Stock message have been sent for this system!
+                    </div>
+                </header>
+                <sheet name="results_grp">
+                    <field name="results" widget="html" nolabel="1" readonly="1"/>
+                </sheet>
+                <footer>
+                    <button string="Close" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
