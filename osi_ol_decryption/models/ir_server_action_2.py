@@ -403,7 +403,7 @@ class IrActionsServer(models.Model):
                                 cr.commit()
                             if not ptav_line.product_attribute_value_id.active:
                                 
-                                active_value_id = attrbute_line_id.value_ids.filtered(lambda v:v.name == ptav_line.product_attribute_value_id.name )
+                                active_value_id = attrbute_line_id.value_ids.filtered(lambda v:v.name == ptav_line.product_attribute_value_id.name)
                                 _logger.info("\n\n\n\n==============PTAV==Values ID:%s==%s:%s::%s",ptav_line.product_attribute_value_id.name,attrbute_line_id.attribute_id.name,ptav_line.product_attribute_value_id,active_value_id)
                                 cr.execute("""
                                         UPDATE product_template_attribute_value
@@ -470,7 +470,7 @@ class IrActionsServer(models.Model):
             for pro_template in batch_products:
                 _logger.info("\n\n\n\n===============product_template##########%s==ID:::%s:::Counter::%s",pro_template.name,pro_template,counter)
                 for attrbute_line_id in pro_template.mapped("attribute_line_ids"):
-                    v13_data_select = "select id,attribute_id ,attribute_line_id,product_attribute_value_id,default_qty,maximum_qty  from product_template_attribute_value_V13_VP where product_tmpl_id = %s and attribute_line_id = %s and ptav_active = 't' and default_qty >=1 and maximum_qty >1;" 
+                    v13_data_select = "select id,attribute_id ,attribute_line_id,product_attribute_value_id,default_qty,maximum_qty  from temp_product_template_attribute_value_V13_VP where product_tmpl_id = %s and attribute_line_id = %s and ptav_active = 't' and default_qty >=1 and maximum_qty >1;" 
                     cr.execute(v13_data_select, (pro_template.id,attrbute_line_id.id),)
                     v13_datas = cr.fetchall()
                     if attrbute_line_id.value_ids and (not attrbute_line_id.default_val or not attrbute_line_id.default_val.active):
@@ -781,4 +781,5 @@ class IrActionsServer(models.Model):
         cr.execute("drop table temp_ir_property_v13_vp;")
         cr.execute("drop table temp_product_temp_v13_vp;")
         cr.execute("drop table temp_product_template_res_company_rel_v13_VP;")
+        cr.execute("drop table temp_product_template_attribute_value_V13_VP;")
         _logger.info("\n\n============Tables Droped")
