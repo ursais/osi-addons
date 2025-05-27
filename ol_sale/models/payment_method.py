@@ -13,5 +13,5 @@ class SaleOrderPaymentMethod(models.Model):
             data[method.id] = {}
             sale_order = method.order_id
             order_data = sale_order.get_report_data()
-            data[method.id]["sale_order"] = order_data
+            data[method.id]['sale_order'] = order_data
         return data
