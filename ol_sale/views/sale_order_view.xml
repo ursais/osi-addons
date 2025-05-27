@@ -87,6 +87,7 @@
                 <field name="client_order_ref" />
                 <field name="shipping_ref" />
             </field>
+
         </field>
     </record>
 

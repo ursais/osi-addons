@@ -12,18 +12,24 @@ class AccountMove(models.Model):
     # COLUMNS #####
 
     payment_preference = fields.Many2one(
-        'res.paypref',
-        string='Payment Preference',
+        comodel_name="res.paypref",
+        string="Payment Preference",
         compute="_compute_payment_preference",
+        tracking=True,
+        store=True,
     )
 
     # END #########
     # METHODS ######
 
-    @api.depends("company_id", "partner_id", "partner_id.payment_preference")
+    @api.depends(
+        "company_id",
+        "partner_id",
+        "partner_id.payment_preference",
+    )
     def _compute_payment_preference(self):
         # Group moves by company
-        moves_by_company = defaultdict(lambda: self.env['account.move'])
+        moves_by_company = defaultdict(lambda: self.env["account.move"])
         for move in self:
             moves_by_company[move.company_id] |= move
 
