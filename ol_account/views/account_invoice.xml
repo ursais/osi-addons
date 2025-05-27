@@ -15,6 +15,9 @@
                     invisible="state == 'draft' or move_type in ('out_invoice', 'out_refund')"
                 />
             </button>
+            <xpath expr="//group[@name='accounting_info_group']" position="inside">
+                <field name="payment_preference" invisible="move_type not in ('in_invoice', 'in_refund')" />
+            </xpath>
         </field>
     </record>
 
@@ -25,6 +28,17 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="attributes">
                 <attribute name="filter_domain">['|', '|', ('name', 'ilike', self), ('ref', 'ilike', self), ('partner_id.name', 'ilike', self)]</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_in_invoice_bill_tree_inherit_payment_pref" model="ir.ui.view">
+        <field name="name">account.move.tree.payment.pref</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_in_invoice_bill_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ref']" position="after">
+                <field name="payment_preference" />
             </xpath>
         </field>
     </record>

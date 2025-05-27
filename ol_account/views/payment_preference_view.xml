@@ -1,0 +1,17 @@
+<odoo>
+
+    <record id="action_payment_preference" model="ir.actions.act_window">
+        <field name="name">Payment Preferences</field>
+        <field name="res_model">res.paypref</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        id="menu_payment_preference_root"
+        name="Payment Preferences"
+        parent="account.account_invoicing_menu"
+        sequence="30"
+        action="action_payment_preference"
+    />
+
+</odoo>

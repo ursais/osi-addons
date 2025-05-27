@@ -1,0 +1,14 @@
+<odoo>
+
+    <record id="view_partner_form_inherit_payment_pref" model="ir.ui.view">
+        <field name="name">res.partner.form.payment.pref</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='purchase']" position="inside">
+                <field name="payment_preference"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
