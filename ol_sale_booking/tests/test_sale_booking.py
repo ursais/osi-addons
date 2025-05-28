@@ -1,4 +1,3 @@
-from odoo.exceptions import ValidationError
 from odoo.tests import common, tagged
 from odoo import fields
 from datetime import date, timedelta
@@ -32,7 +31,6 @@ class TestSaleBooking(common.TransactionCase):
                 "default_code": "PROD_DEL01",
                 "sale_delay": 0,
                 "product_state_id":cls.env.ref("ol_product_state.product_state_active").id
-                # "sale_ok":True,
             }
         )
 
@@ -64,6 +62,31 @@ class TestSaleBooking(common.TransactionCase):
             }
         )
         sale_order.action_confirm()
+        sale_booking_id = self.env["sale.booking"].search([("order_id","=",sale_order.id)])
+        self.assertEqual(sale_order.name, sale_booking_id.origin)
+        self.assertEqual(sale_order.company_id.id, sale_booking_id.company_id.id)
+        self.assertEqual(sale_order.currency_id.id, sale_booking_id.currency_id.id)
+        sale_order2 = self.env["sale.order"].create(
+            {
+                "partner_id": self.customer.id,
+                "pricelist_id": self.customer.property_product_pricelist.id,
+                "original_request_date": "2025-06-12",
+                "order_line": [
+                    (
+                        0,
+                        0,
+                        {
+                            "name": "Test line",
+                            "product_id": self.product.id,
+                            "product_uom_qty": 1,
+                            "product_uom": self.product.uom_id.id,
+                            "price_unit": 500,
+                        },
+                    )
+                ],
+            }
+        )
+        sale_order2.action_cancel()
 
     def test_blanket_order_creation(self):
         blanket_order = self.env["sale.blanket.order"].create(
