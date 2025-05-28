@@ -79,13 +79,5 @@ class StockRule(models.Model):
                 else:
                     sale_order.split_mo()
         return res
-                
-    def _should_auto_confirm_procurement_mo(self, p):        
-        auto_confirm_mo = self.env['ir.config_parameter'].sudo().get_param(
-            'auto_confirm_mo', ''
-        )
-        if auto_confirm_mo == "True":
-           return super()._should_auto_confirm_procurement_mo(p)
-        else: 
-           return False
+
     # # END #########
