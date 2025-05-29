@@ -1,3 +1,4 @@
+from . import account_move
 from . import helpdesk_team
 from . import helpdesk_ticket
 from . import repair_batch_line

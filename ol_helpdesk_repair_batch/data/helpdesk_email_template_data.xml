@@ -1,28 +1,6 @@
 <odoo noupdate="1">
 
     <!-- ==================================== -->
-    <!-- RMA REQUEST RECEIVED EMAIL TEMPLATES -->
-    <!-- ==================================== -->
-    <record id="email_template_rma_request_received" model="mail.template">
-        <field name="name">OnLogic RMA Request Received</field>
-        <field name="model_id" ref="helpdesk.model_helpdesk_ticket" />
-        <field name="subject">Your RMA request has been received</field>
-        <field name="email_from">{{ object.company_id.support_email or user.email_formatted }}</field>
-        <field name="partner_to">{{ object.partner_id.id }}</field>
-        <field name="auto_delete" eval="False"/>
-        <field name="body_html" type="html">
-            <t>
-                <div>
-                    Hello <t t-out="object.partner_id.name or 'customer'">Brandon Freeman</t>,<br/>
-                    Your RMA request (<strong t-out="object.name or ''">RMA#</strong>) has been received and under review.<br/>
-                    Thank you,<br/>
-                    RMA Support Team<br/>
-                </div>
-            </t>
-        </field>
-    </record>
-
-    <!-- ==================================== -->
     <!-- RMA ACCEPTED EMAIL TEMPLATES -->
     <!-- ==================================== -->
     <record id="email_template_rma_accepted" model="mail.template">

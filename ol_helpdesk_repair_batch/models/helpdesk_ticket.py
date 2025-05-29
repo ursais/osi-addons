@@ -1,6 +1,3 @@
-# Import libs
-from collections import Counter
-
 # Import Odoo libs
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -21,7 +18,13 @@ class HelpdeskTicket(models.Model):
     repair_sale_order_ids = fields.One2many(
         comodel_name="sale.order",
         inverse_name="helpdesk_ticket_id",
-        string="Related Sale Orders",
+        string="Repair Sale Orders",
+        help="New Sale Orders generated from this ticket.",
+    )
+    original_sale_order_ids = fields.Many2many(
+        comodel_name="sale.order",
+        string="Original Sale Orders",
+        help="Original Sale Orders where the systems were originally sold, populated by the Import from Sale Order wizard.",
     )
     repair_sale_order_count = fields.Integer(
         string="Sale Order(s)",
@@ -42,10 +45,16 @@ class HelpdeskTicket(models.Model):
         compute="_compute_show_generate_repairs",
         help="Helper field used by the visibility attribute of the button.",
     )
-    show_create_sale = fields.Boolean(
-        string="Show Create Sale Order Button",
-        compute="_compute_show_create_sale",
-        help="Helper field used by the visibility attribute of the button.",
+    refund_ids = fields.One2many(
+        comodel_name="account.move",
+        inverse_name="helpdesk_ticket_id",
+        string="Refunds",
+        help="Refunds Issued from this helpdesk ticket.",
+    )
+    out_refund_count = fields.Integer(
+        string="Refund(s)",
+        compute="_compute_button_counts",
+        help="Counts the number of Refunds",
     )
 
     # END #######
@@ -71,6 +80,14 @@ class HelpdeskTicket(models.Model):
             )
             ticket.in_transfer_count = len(
                 self.env["stock.picking"].search([("ticket_id", "=", self.id)])
+            )
+            ticket.out_refund_count = len(
+                self.env["account.move"].search(
+                    [
+                        ("helpdesk_ticket_id", "=", self.id),
+                        ("move_type", "=", "out_refund"),
+                    ]
+                )
             )
 
     def action_view_repair_sale_orders(self):
@@ -155,6 +172,29 @@ class HelpdeskTicket(models.Model):
 
         return action
 
+    def action_view_refund_ids(self):
+        self.ensure_one()
+        action = {
+            "res_model": "account.move",
+            "type": "ir.actions.act_window",
+        }
+        if len(self.refund_ids) == 1:
+            action.update(
+                {
+                    "view_mode": "form",
+                    "res_id": self.refund_ids[0].id,
+                }
+            )
+        else:
+            action.update(
+                {
+                    "name": _("Refunds %s", self.name),
+                    "domain": [("id", "in", self.refund_ids.ids)],
+                    "view_mode": "tree,form",
+                }
+            )
+        return action
+
     @api.depends(
         "repair_batch_ids.repair_count",
         "repair_batch_ids.qty",
@@ -164,24 +204,6 @@ class HelpdeskTicket(models.Model):
             ticket.show_generate_repairs = any(
                 batch.repair_count < batch.qty for batch in ticket.repair_batch_ids
             )
-
-    @api.depends(
-        "repair_batch_ids.state",
-        "repair_batch_ids.repair_ids.state",
-        "repair_batch_ids.repair_ids.sale_order_id",
-    )
-    def _compute_show_create_sale(self):
-        for ticket in self:
-            if any(batch.state == "done" for batch in ticket.repair_batch_ids):
-                # Check if ALL repair orders have sale_order_id
-                all_repairs_have_sale = all(
-                    repair.sale_order_id
-                    for batch in ticket.repair_batch_ids
-                    for repair in batch.repair_ids
-                )
-                ticket.show_create_sale = not all_repairs_have_sale
-            else:
-                ticket.show_create_sale = False
 
     def action_generate_repairs(self):
         """Runs `action_generate_repairs` on all batches where the button is visible."""
@@ -201,7 +223,7 @@ class HelpdeskTicket(models.Model):
         stock_move_line_obj = self.env["stock.move.line"]
 
         if not self.repair_batch_ids:
-            raise ValueError("No repair batches linked to this ticket.")
+            raise ValidationError("No repair batches linked to this ticket.")
 
         product_quantities = {}  # {product_id: {"qty": total_qty, "lots": []}}
 
@@ -210,7 +232,7 @@ class HelpdeskTicket(models.Model):
             [("usage", "=", "customer")], limit=1
         )
         if not customer_location:
-            raise ValueError("Customer virtual location not found.")
+            raise ValidationError("Customer virtual location not found.")
 
         source_location_id = customer_location.id
 
@@ -221,13 +243,15 @@ class HelpdeskTicket(models.Model):
             for repair in batch.repair_ids
         }
         if len(repair_locations) > 1:
-            raise ValueError(
+            raise ValidationError(
                 "Multiple repair locations found. Ensure all repairs use the same location."
             )
 
         destination_location_id = repair_locations.pop() if repair_locations else False
         if not destination_location_id:
-            raise ValueError("Could not determine the repair destination location.")
+            raise ValidationError(
+                "Could not determine the repair destination location."
+            )
 
         for batch in self.repair_batch_ids:
             for repair in batch.repair_ids.filtered(
@@ -256,20 +280,20 @@ class HelpdeskTicket(models.Model):
                     )
 
         if not product_quantities:
-            raise ValueError("No valid products found to create a receipt.")
+            raise ValidationError("No valid products found to create a receipt.")
 
         # Get the RMA Repairs IN Pick Type from the Warehouse
         warehouse = self.env["stock.warehouse"].search(
             [("company_id", "=", self.env.company.id)], limit=1
         )
 
-        if not warehouse or not warehouse.repair_in_type_id:
-            raise ValueError(
+        if not warehouse or not warehouse.rma_repair_in_type_id:
+            raise ValidationError(
                 "RMA Repairs Incoming Picking Type is not configured for the current warehouse. "
                 "Please set 'Repair Incoming Picking Type' on the warehouse."
             )
 
-        picking_type = warehouse.repair_in_type_id
+        picking_type = warehouse.rma_repair_in_type_id
 
         receipt = stock_picking_obj.create(
             {
@@ -311,11 +335,13 @@ class HelpdeskTicket(models.Model):
 
                 # Ensure lot_record is valid
                 if not lot_record.exists():
-                    raise ValueError(f"Lot ID {lot_data['lot_id']} does not exist.")
+                    raise ValidationError(
+                        f"Lot ID {lot_data['lot_id']} does not exist."
+                    )
 
                 # Ensure product_id is consistent between the lot and the product being moved
                 if lot_record.product_id != stock_move.product_id:
-                    raise ValueError(
+                    raise ValidationError(
                         f"Lot {lot_record.name} is incompatible with product {stock_move.product_id.name}"
                     )
 
@@ -340,75 +366,89 @@ class HelpdeskTicket(models.Model):
         repair_orders = self.repair_batch_ids.mapped("repair_ids").filtered(
             lambda r: not r.sale_order_id
         )
-
-        if not repair_orders:
-            raise ValueError("No repairs qualify for a new sale order.")
-
-        # Aggregate product quantities across all batches (including repair orders' product_id)
         product_quantities = {}
         move_repair_map = {}
         repair_product_map = {}
+        if repair_orders:
+            # Aggregate product quantities across all batches (including repair orders' product_id)
+            for batch in self.repair_batch_ids:
+                for repair in batch.repair_ids.filtered(lambda r: not r.sale_order_id):
+                    # Aggregate based on repair product_id
+                    if repair.product_id:
+                        product_id = repair.product_id.id
+                        repair_product_map[product_id] = (
+                            repair_product_map.get(product_id, 0) + repair.product_qty
+                        )
 
-        for batch in self.repair_batch_ids:
-            for repair in batch.repair_ids.filtered(lambda r: not r.sale_order_id):
-                # Aggregate based on repair product_id
-                if repair.product_id:
-                    product_id = repair.product_id.id
-                    repair_product_map[product_id] = (
-                        repair_product_map.get(product_id, 0) + repair.product_qty
-                    )
+                    # Aggregate based on move_ids (added components)
+                    for move in repair.move_ids.filtered(
+                        lambda m: m.repair_line_type == "add"
+                    ):
+                        product_id = move.product_id.id
+                        product_quantities[product_id] = (
+                            product_quantities.get(product_id, 0) + move.product_uom_qty
+                        )
+                        move_repair_map.setdefault(product_id, []).append(
+                            (move, repair)
+                        )
 
-                # Aggregate based on move_ids (added components)
-                for move in repair.move_ids.filtered(
-                    lambda m: m.repair_line_type == "add"
-                ):
-                    product_id = move.product_id.id
-                    product_quantities[product_id] = (
-                        product_quantities.get(product_id, 0) + move.product_uom_qty
-                    )
-                    move_repair_map.setdefault(product_id, []).append((move, repair))
+            # Merge repair product quantities into product_quantities (set price to zero for these)
+            for product_id, qty in repair_product_map.items():
+                if product_id not in product_quantities:
+                    product_quantities[product_id] = qty
+                else:
+                    product_quantities[
+                        product_id
+                    ] += qty  # Ensure correct total quantity
 
-        # Merge repair product quantities into product_quantities (set price to zero for these)
-        for product_id, qty in repair_product_map.items():
-            if product_id not in product_quantities:
-                product_quantities[product_id] = qty
-            else:
-                product_quantities[product_id] += qty  # Ensure correct total quantity
+        # Check to make sure the RMA Return order type exists
+        so_type = self.env.ref("ol_helpdesk_repair_batch.rma_return_sale_type", False)
+        if not so_type:
+            raise ValidationError(
+                "The 'RMA Return' sale order type is missing. Please see your administrator."
+            )
 
-        if not product_quantities:
-            raise ValueError("No valid products found to create a sale order.")
+        # Try to get current user's sales team
+        team_id = self.env.user.sale_team_id.id if self.env.user.sale_team_id else None
 
         # Create a single sale order
         sale_order = sale_order_obj.create(
             {
                 "partner_id": self.partner_id.id,
                 "origin": self.name,
+                "to_send_confirmation_email": False,
+                "type_id": so_type.id,
+                "team_id": team_id,
+                "user_id": self.env.user.id,
             }
         )
 
         product_sale_lines = {}
 
-        for product_id, qty in product_quantities.items():
-            product = self.env["product.product"].browse(product_id)
+        if product_quantities:
+            for product_id, qty in product_quantities.items():
+                product = self.env["product.product"].browse(product_id)
 
-            # Set price to 0.0 if the product comes from `repair_product_map`
-            price_unit = 0.0 if product_id in repair_product_map else product.list_price
+                # Set price to 0.0 if the product comes from `repair_product_map`
+                price_unit = (
+                    0.0 if product_id in repair_product_map else product.list_price
+                )
 
-            sale_line = sale_order_line_obj.create(
-                {
-                    "order_id": sale_order.id,
-                    "product_id": product_id,
-                    "product_uom_qty": qty,
-                    "product_uom": product.uom_id.id,
-                    "price_unit": price_unit,
-                }
-            )
-            product_sale_lines[product_id] = sale_line.id
+                sale_line = sale_order_line_obj.create(
+                    {
+                        "order_id": sale_order.id,
+                        "product_id": product_id,
+                        "product_uom_qty": qty,
+                        "product_uom": product.uom_id.id,
+                        "price_unit": price_unit,
+                    }
+                )
+                product_sale_lines[product_id] = sale_line.id
 
-        # Link repairs and moves to the sale order & sale lines
-        for product_id, move_repairs in move_repair_map.items():
-            for move, repair in move_repairs:
-                repair.sale_order_id = sale_order.id
+            # Link repairs and moves to the sale order & sale lines
+            for product_id, move_repairs in move_repair_map.items():
+                for move, repair in move_repairs:
+                    repair.sale_order_id = sale_order.id
 
         self.repair_sale_order_ids = [(6, 0, [sale_order.id])]  # Assign single SO
 
@@ -418,6 +458,105 @@ class HelpdeskTicket(models.Model):
             "res_model": "sale.order",
             "view_mode": "form",
             "res_id": sale_order.id,
+        }
+
+    def action_create_credit_note(self):
+        self.ensure_one()
+
+        account_move = self.env["account.move"]
+        account_move_line = self.env["account.move.line"]
+
+        credit_note_lines_map = {}
+
+        # 1. Pull lines from original sale orders and their invoices
+        sale_orders = self.original_sale_order_ids.filtered(lambda so: so.invoice_ids)
+        for sale_order in sale_orders:
+            for invoice in sale_order.invoice_ids.filtered(
+                lambda inv: inv.move_type == "out_invoice" and inv.state == "posted"
+            ):
+                for line in invoice.invoice_line_ids:
+                    product_id = line.product_id.id
+                    if not product_id:
+                        continue
+                    key = (product_id, tuple(line.tax_ids.ids))
+                    if key not in credit_note_lines_map:
+                        credit_note_lines_map[key] = {
+                            "product_id": product_id,
+                            "name": f"Refund (Invoice): {line.name}",
+                            "quantity": 0.0,
+                            "price_unit": -line.price_unit,
+                            "tax_ids": [(6, 0, line.tax_ids.ids)],
+                            "analytic_account_id": line.analytic_account_id.id,
+                            "account_id": line.account_id.id,
+                        }
+                    credit_note_lines_map[key]["quantity"] += line.quantity
+
+        # 2. Include completed repairs (like in action_create_sale_order)
+        repair_orders = self.repair_batch_ids.mapped("repair_ids").filtered(
+            lambda r: r.state == "done"
+        )
+        product_quantities = {}
+        for repair in repair_orders:
+            if repair.product_id:
+                product_id = repair.product_id.id
+                product_quantities[product_id] = (
+                    product_quantities.get(product_id, 0) + repair.product_qty
+                )
+            for move in repair.move_ids.filtered(lambda m: m.repair_line_type == "add"):
+                product_id = move.product_id.id
+                product_quantities[product_id] = (
+                    product_quantities.get(product_id, 0) + move.product_uom_qty
+                )
+
+        for product_id, qty in product_quantities.items():
+            product = self.env["product.product"].browse(product_id)
+            key = (product_id, ())
+            if key not in credit_note_lines_map:
+                credit_note_lines_map[key] = {
+                    "product_id": product_id,
+                    "name": f"Refund (Repair): {product.display_name}",
+                    "quantity": 0.0,
+                    "price_unit": 0.0,
+                    "tax_ids": [],
+                    "account_id": product.property_account_income_id.id
+                    or product.categ_id.property_account_income_categ_id.id,
+                }
+            credit_note_lines_map[key]["quantity"] += qty
+
+        credit_note_lines = [
+            (0, 0, values) for values in credit_note_lines_map.values()
+        ]
+
+        # Check to make sure the RMA Return order type exists
+        so_type = self.env.ref("ol_helpdesk_repair_batch.rma_return_sale_type", False)
+        if not so_type:
+            raise ValidationError(
+                "The 'RMA Return' sale order type is missing. Please see your administrator."
+            )
+
+        # Try to get current user's sales team
+        team_id = self.env.user.sale_team_id.id if self.env.user.sale_team_id else None
+
+        # 3. Always create the credit note — even if no lines
+        credit_note = account_move.create(
+            {
+                "move_type": "out_refund",
+                "partner_id": self.partner_id.id,
+                "invoice_date": fields.Date.context_today(self),
+                "invoice_origin": self.name,
+                "helpdesk_ticket_id": self.id,
+                "invoice_line_ids": credit_note_lines,
+                "team_id": team_id,
+                "user_id": self.env.user.id,
+                "sale_type_id": so_type.id,
+            }
+        )
+
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "account.move",
+            "view_mode": "form",
+            "res_id": credit_note.id,
         }
 
     @api.model_create_multi

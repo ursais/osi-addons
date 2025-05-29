@@ -30,6 +30,7 @@ class RepairBatch(models.Model):
     partner_id = fields.Many2one(
         comodel_name="res.partner",
         string="Partner",
+        required=True,
     )
     tracking = fields.Selection(
         string="Serial/Lot Tracking",

@@ -13,15 +13,23 @@
     "depends": [
         "ol_base",
         "ol_templates",
+        "ol_sale",
+        "ol_warranty",
         "helpdesk_repair",
+        "helpdesk_timesheet",
+        "sale_order_type",
     ],
     # always loaded
     "data": [
         "data/ir_sequence.xml",
+        "data/sale_order_type_data.xml",
         "data/helpdesk_team_data.xml",
+        "data/helpdesk_ticket_tags_data.xml",
+        "data/helpdesk_ticket_type_data.xml",
         "data/helpdesk_email_template_data.xml",
         "data/helpdesk_stage_data.xml",
         "data/stock_picking_type_data.xml",
+        "reports/rma_repair_summary.xml",
         "security/ir.model.access.csv",
         "views/helpdesk_team_views.xml",
         "views/helpdesk_ticket_views.xml",

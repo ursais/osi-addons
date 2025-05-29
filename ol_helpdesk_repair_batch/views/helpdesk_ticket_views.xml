@@ -41,47 +41,67 @@
                     invisible="out_transfer_count == 0">
                     <field name="out_transfer_count" widget="statinfo"/>
                 </button>
+                <button
+                    name="action_view_refund_ids"
+                    string="Refund(s)"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-usd"
+                    invisible="out_refund_count == 0">
+                    <field name="out_refund_count" widget="statinfo"/>
+                </button>
             </button>
             <xpath expr="//page[@name='description']" position="after">
                 <field name="use_product_repairs" invisible="1" groups="stock.group_stock_user" />
                 <page name="repairs" string="Repairs" invisible="not use_product_repairs">
                     <field name="show_generate_repairs" invisible="1" />
-                    <field name="show_create_sale" invisible="1" />
-                    <button
-                        name="%(action_helpdesk_import_sale)d"
-                        string="Import from Sales Order"
-                        type="action"
-                        class="btn-secondary"
-                        context="{'default_ticket_id': active_id, 'default_partner_id': partner_id}"
-                    />
-                    <button
-                        name="action_generate_repairs"
-                        string="Generate Repairs"
-                        type="object"
-                        class="oe_highlight"
-                        invisible="not show_generate_repairs"
-                    />
-                    <button
-                        name="action_create_receipt"
-                        type="object"
-                        string="Create Receipt Transfer"
-                        class="btn-secondary"
-                        groups="stock.group_stock_user"
-                        invisible="not repair_ids"
-                    />
-                    <button
-                        name="action_create_sale_order"
-                        type="object"
-                        string="Create Repair Sale Order"
-                        class="oe_highlight"
-                        groups="stock.group_stock_user"
-                        invisible="not show_create_sale"
-                    />
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="%(action_helpdesk_import_sale)d"
+                            string="Import from Sales Order"
+                            type="action"
+                            class="btn-primary"
+                            context="{'default_ticket_id': active_id, 'default_partner_id': partner_id}"
+                        />
+                        <button
+                            name="action_generate_repairs"
+                            string="Generate Repairs"
+                            type="object"
+                            class="btn-primary"
+                            invisible="not show_generate_repairs or not partner_id"
+                        />
+                        <button
+                            name="action_create_receipt"
+                            type="object"
+                            string="Create Receipt Transfer"
+                            class="btn-secondary"
+                            groups="stock.group_stock_user"
+                            invisible="not repair_ids or not partner_id"
+                        />
+                        <button
+                            name="action_create_sale_order"
+                            type="object"
+                            string="Create Repair Sale Order"
+                            class="btn-secondary"
+                            groups="stock.group_stock_user"
+                            invisible="not partner_id"
+                        />
+                        <button
+                            name="action_create_credit_note"
+                            type="object"
+                            string="Create Refund"
+                            class="btn-secondary"
+                            groups="stock.group_stock_user"
+                            invisible="not partner_id"
+                        />
+                    </div>
                     <group name="repair_batches" string="Repair Batches">
-                        <field nolabel="1" colspan="2" name="repair_batch_ids" >
+                        <field name="original_sale_order_ids" widget="many2many_tags" readonly="0" />
+                        <field name="repair_sale_order_ids" widget="many2many_tags" readonly="1" />
+                        <field nolabel="1" colspan="2" name="repair_batch_ids" context="{'default_partner_id': partner_id, 'default_sale_id': repair_sale_order_ids[0]}" >
                             <tree string="Repair Batch">
                                 <field name="name" optional="show" />
-                                <button name="open_batch_full_form" type="object" icon="fa-external-link" title="Open in Full Form"/>
+                                <button name="open_batch_full_form" type="object" icon="fa-external-link" title="Open in Full Form" />
                                 <field name="repair_count" column_invisible="1" />
                                 <field name="partner_id" optional="hide" />
                                 <field name="ticket_id" optional="hide" />
@@ -104,6 +124,7 @@
                                 <field name="company_id" column_invisible="True" />
                                 <field name="priority" optional="show" widget="priority" nolabel="1" />
                                 <field name="name" />
+                                <button name="open_repair_full_form" type="object" icon="fa-external-link" title="Open in Full Form" />
                                 <field name="schedule_date" optional="show" widget="remaining_days" />
                                 <field name="product_id" readonly="1" optional="show" />
                                 <field name="parts_availability_state" column_invisible="True" />
@@ -116,6 +137,7 @@
                                 <field name="is_returned" optional="hide" />
                                 <field name="sale_order_id" optional="hide" />
                                 <field name="lot_id" optional="show" />
+                                <field name="warranty_expiration_date" optional="show" />
                                 <field name="location_id" optional="hide" />
                                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show" />
                                 <field name="state" optional="show" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')" />
@@ -126,6 +148,9 @@
                 </page>
             </xpath>
             <button name="action_repair_order_form" position="replace" />
+            <field name="email_cc" position="before">
+                <field name="partner_email" widget="email" />
+            </field>
         </field>
     </record>
 
