@@ -1,3 +1,6 @@
+# Import libs
+from datetime import timedelta
+
 # Import Odoo libs
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -317,6 +320,7 @@ class HelpdeskTicket(models.Model):
                     "product_uom_qty": data["qty"],
                     "location_id": source_location_id,
                     "location_dest_id": destination_location_id,
+                    "scheduled_date": fields.Datetime.now() + timedelta(days=7),
                 }
             )
 

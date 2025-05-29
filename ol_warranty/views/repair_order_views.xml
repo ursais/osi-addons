@@ -20,6 +20,9 @@
             <field name="lot_id" position="after" >
                 <field name="warranty_expiration_date" invisible="not lot_id" groups="stock.group_production_lot" />
             </field>
+            <xpath expr="//field[@name='under_warranty']" position="attributes">
+                <attribute name="string">Do not charge customer</attribute>
+            </xpath>
         </field>
     </record>
 
