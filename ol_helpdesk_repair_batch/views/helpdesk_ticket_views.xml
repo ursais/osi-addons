@@ -89,11 +89,18 @@
                         <button
                             name="action_create_credit_note"
                             type="object"
-                            string="Create Refund"
+                            string="Create Refund OLD"
                             class="btn-secondary"
                             groups="stock.group_stock_user"
                             invisible="not partner_id"
                         />
+                        <!-- <button
+                            name="%(action_repair_credit_note_wizard)d"
+                            type="action"
+                            string="Create Credit Note Wizard"
+                            class="btn-primary"
+                            context="{'default_ticket_id': active_id}"
+                        /> -->
                     </div>
                     <group name="repair_batches" string="Repair Batches">
                         <field name="original_sale_order_ids" widget="many2many_tags" readonly="0" />

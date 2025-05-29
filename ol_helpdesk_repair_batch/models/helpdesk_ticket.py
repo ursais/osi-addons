@@ -1,4 +1,4 @@
-# Import libs
+# Import Odoo libs
 from datetime import timedelta
 
 # Import Odoo libs
