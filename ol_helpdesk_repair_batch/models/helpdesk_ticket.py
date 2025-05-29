@@ -464,6 +464,20 @@ class HelpdeskTicket(models.Model):
             "res_id": sale_order.id,
         }
 
+    def action_open_credit_note_wizard(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Create Refund",
+            "res_model": "repair.credit.note.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {
+                "default_ticket_id": self.id,
+                "default_partner_id": self.partner_id.id,
+            },
+        }
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:

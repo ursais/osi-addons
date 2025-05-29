@@ -15,7 +15,7 @@ class RepairCreditNoteWizard(models.TransientModel):
         inverse_name="wizard_id",
         string="Credit Note Lines",
     )
-    origin_sale_order_ids = fields.Many2many(
+    original_sale_order_ids = fields.Many2many(
         comodel_name="sale.order",
         string="Original Sale Orders",
         help="Original Sale Orders where the systems were originally sold, populated by the Import from Sale Order wizard.",
