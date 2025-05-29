@@ -44,7 +44,7 @@ class IrActionsServer(models.Model):
                 --and col.column_name in ('vat')
                 -- AND col.table_name in ()
                 --AND col.table_name ~* '^[p-zP-Z]'
-                AND col.table_name NOT IN ('res_config_settings', 'res_lang','account_invoice_extract_words', 'mrp_bom_line','stock_lot')
+                AND col.table_name NOT IN ('res_config_settings', 'res_lang','account_invoice_extract_words', 'mrp_bom_line','stock_lot', 'stock_move_line')
                 ORDER BY col.table_name, col.ordinal_position;"""
         )
         table_columns_list_set = self.env.cr.fetchall()
@@ -69,6 +69,7 @@ class IrActionsServer(models.Model):
                 "contact_address_complete",
             ],
             "account_move": ["sequence_prefix", "invoice_partner_display_name"],
+            "stock_move": ["reporting_extended_name", "reporting_name", 'next_serial', 'origin_system']
         }
         columns_missing = []
         tables_missing = []

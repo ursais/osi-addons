@@ -512,6 +512,11 @@ class IrActionsServer(models.Model):
     def create_stock_putway_rule(self):
         # OSI Task: https://osi.mavenlink.com/workspaces/44078089/#tracker/923588804
         # Putaway Rule Migration Creation Server Action
+        
+        from odoo.tools import convert_csv_import, file_open
+        pathname = "osi_ol_decryption/data/stock.location.csv"
+        with file_open(pathname, 'rb', env=self.env) as fp:
+            convert_csv_import(self.env, 'osi_ol_decryption', pathname, fp.read(), {}, 'update', False)
 
         cr = self.env.cr
         v13dataquery = """  
