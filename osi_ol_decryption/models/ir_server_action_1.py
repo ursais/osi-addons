@@ -764,6 +764,10 @@ class IrActionsServer(models.Model):
             "web_tree_many2one_clickable",
             "web_widget_bokeh_chart",
             "ls_delivery_ups_rest",
+            "avatax_fiscal_position_us",
+            "account_avatax",
+            "account_avatax_sale"
+
         ]
 
         data_list = env["ir.model.data"].search(
