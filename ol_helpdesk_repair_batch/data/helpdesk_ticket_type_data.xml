@@ -1,0 +1,15 @@
+<odoo>
+
+    <record id="helpdesk.type_question" model="helpdesk.ticket.type">
+        <field name="name">Service</field>
+    </record>
+
+    <record id="helpdesk.type_incident" model="helpdesk.ticket.type">
+        <field name="name">Repair</field>
+    </record>
+
+    <record id="type_refund" model="helpdesk.ticket.type">
+        <field name="name">Refund</field>
+    </record>
+
+</odoo>

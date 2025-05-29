@@ -1,0 +1,19 @@
+<odoo>
+
+    <record id="helpdesk.tag_crm" model="helpdesk.tag">
+        <field name="name">Operating System</field>
+    </record>
+    <record id="helpdesk.tag_website" model="helpdesk.tag">
+        <field name="name">Ethernet Connection</field>
+    </record>
+    <record id="helpdesk.tag_service" model="helpdesk.tag">
+        <field name="name">Firmware</field>
+    </record>
+    <record id="helpdesk.tag_repair" model="helpdesk.tag">
+        <field name="name">Hardware failure</field>
+    </record>
+    <record id="tag_poe" model="helpdesk.tag">
+        <field name="name">PoE</field>
+    </record>
+
+</odoo>

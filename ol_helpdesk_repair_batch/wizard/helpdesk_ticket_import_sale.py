@@ -96,6 +96,10 @@ class HelpdeskTicketImportSale(models.TransientModel):
         if not self.ticket_id.partner_id:
             self.ticket_id.partner_id = self.partner_id
 
+        # Append the original sale orders
+        if self.sale_order_id:
+            self.ticket_id.original_sale_order_ids |= self.sale_order_id
+
         return {"type": "ir.actions.act_window_close"}
 
 

@@ -62,7 +62,7 @@
                             <field name="schedule_date" />
                             <field name="ticket_id" />
                             <field name="sale_id" />
-                            <field name="sale_line_id" />
+                            <field name="sale_line_id" domain="[('order_id', '=', sale_id)]" />
                             <field name="schedule_date" readonly="state in ['done', 'cancel']" />
                             <field name="user_id" domain="[('share', '=', False)]" />
                             <field name="company_id" />

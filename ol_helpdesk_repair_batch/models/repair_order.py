@@ -21,6 +21,16 @@ class RepairOrder(models.Model):
     # END #######
     # METHODS ###
 
+    def open_repair_full_form(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "repair.order",
+            "res_id": self.id,
+            "view_mode": "form",
+            "target": "current",
+        }
+
     def _action_repair_confirm(self):
         """
         This is called with confirm wizard when qty is less than zero.
