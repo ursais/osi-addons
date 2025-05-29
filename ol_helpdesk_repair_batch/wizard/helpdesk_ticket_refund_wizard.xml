@@ -23,7 +23,7 @@
                     <group>
                         <field name="ticket_id" invisible="1" />
                         <field name="partner_id" />
-                        <field name="original_sale_order_ids" widget="many2many_tags" />
+                        <field name="original_sale_order_ids" widget="many2many_tags" domain="[('partner_id', '=', partner_id)]" />
                     </group>
                     <group>
                         <field name="line_ids">
@@ -46,15 +46,6 @@
                 </footer>
             </form>
         </field>
-    </record>
-
-    <!-- Action to open the wizard (can be called from a button on helpdesk.ticket) -->
-    <record id="action_repair_credit_note_wizard" model="ir.actions.act_window">
-        <field name="name">Create Credit Note</field>
-        <field name="res_model">repair.credit.note.wizard</field>
-        <field name="view_mode">form</field>
-        <field name="target">new</field>
-        <field name="context">{'default_ticket_id': active_id, 'default_partner_id': partner_id}</field>
     </record>
 
 </odoo>

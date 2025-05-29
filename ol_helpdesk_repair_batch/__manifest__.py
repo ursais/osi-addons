@@ -16,7 +16,7 @@
         "ol_sale",
         "ol_warranty",
         "helpdesk_repair",
-        "helpdesk_sale_timesheet",
+        "helpdesk_timesheet",
         "sale_order_type",
     ],
     # always loaded
