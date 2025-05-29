@@ -79,5 +79,5 @@ class StockRule(models.Model):
                 else:
                     sale_order.split_mo()
         return res
-                
+
     # # END #########

@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import fields, models, _
+from odoo import fields, models, _, api
 
 
 class SaleOrder(models.Model):
@@ -35,6 +35,19 @@ class SaleOrder(models.Model):
 
             so.is_mrp_warning = is_mrp_warning
 
+    @api.depends('procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids')
+    def _compute_mrp_production_ids(self):
+        res = super ()._compute_mrp_production_ids()
+        data = self.env['procurement.group']._read_group([('sale_id', 'in', self.ids)], ['sale_id'], ['id:recordset'])
+        mrp_productions = {}
+        for sale, procurement_groups in data:
+            mrp_productions[sale.id] = procurement_groups.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids | procurement_groups.mrp_production_ids | procurement_groups.stock_move_ids.created_production_id.linked_mo_ids
+        for sale in self:
+            mrp_production_ids = mrp_productions.get(sale.id, self.env['mrp.production'])
+            sale.mrp_production_count = len(mrp_production_ids)
+            sale.mrp_production_ids = mrp_production_ids
+        return res
+
     def action_confirm(self):
         # Calls the original `action_confirm` method from the super class to
         # confirm the record.
@@ -63,45 +76,43 @@ class SaleOrder(models.Model):
                 existing_batch_id = batch_obj.create(
                     {"responsible_id": rec.env.user.id}
                 )
-
             for mo in rec.mrp_production_ids:
                 if (
                     mo.product_id.tracking == "serial"
                     and mo.product_id.is_allow_split_mo
                 ):
                     qty = mo.product_qty
-                    if qty > 1:
-                        # Perform the split and get new MOs
-                        new_mos = mo.sudo()._split_productions({mo: ([1])})[
-                            :-1
-                        ]
-                        # Assign the batch to newly created MOs
-                        for new_mo in new_mos:
-                            new_mo.write(
-                                {
-                                    "mrp_batch_id": (
-                                        existing_batch_id.id
-                                        if batch_mode == "single"
-                                        else batch_obj.create(
-                                            {"responsible_id": rec.env.user.id}
-                                        ).id
-                                    )
-                                }
-                            )
+                    new_mos = []
+                    mo_to_split = mo
+                    for i in range(int(mo_to_split.product_qty) - 1):  # i.g Split 2 times to end up with 3 MOs
+                        # Always split 1 qty from the current MO
+                        result = mo_to_split.sudo()._split_productions({mo_to_split: [1]})
+                        
+                        # result[-1] is the remaining MO, result[0] is the new one
+                        new_mo = result[0]
+                        mo_to_split = result[-1]  # Continue splitting from the remaining part
+                        new_mos.append(new_mo)
+
+                    # At the end, new_mos has 2 new MOs, and mo_to_split is the last remaining 1-qty MO
+                    new_mos.append(mo_to_split)
+                    for new_mo in new_mos:
+                        mo.write({'linked_mo_ids' : [(4,new_mo.id)]})
 
                     # Assign batch to original MO and its backorders
-                    mo.write(
-                        {
-                            "mrp_batch_id": (
-                                existing_batch_id.id
-                                if batch_mode == "single"
-                                else batch_obj.create(
-                                    {"responsible_id": rec.env.user.id}
-                                ).id
-                            )
-                        }
-                    )
-                    mo.backorder_ids.write({"mrp_batch_id": mo.mrp_batch_id.id})
+                    if not mo.mrp_batch_id:
+                        mo.write(
+                            {
+                                "mrp_batch_id": (
+                                    existing_batch_id.id
+                                    if batch_mode == "single"
+                                    else batch_obj.create(
+                                        {"responsible_id": rec.env.user.id}
+                                    ).id
+                                )
+                            }
+                        )
+                        mo.backorder_ids.write({"mrp_batch_id": mo.mrp_batch_id.id})
+                        mo.linked_mo_ids.filtered(lambda l : not l.mrp_batch_id).write({"mrp_batch_id": mo.mrp_batch_id.id})
 
     # Methods for Batch Smart Button
     def _compute_mrp_production_batch_id_count(self):
