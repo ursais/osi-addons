@@ -26,7 +26,6 @@
         "data/plm_stages.xml",
         "data/tier_definition.xml",
         "views/mrp_eco_stage.xml",
-        "views/mrp_eco_views.xml",
         "views/product_template_view.xml",
         "views/product_product_view.xml",
     ],

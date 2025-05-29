@@ -7,10 +7,10 @@
     <field name="model">helpdesk.rma</field>
     <field name="report_type">qweb-pdf</field>
     <field name="print_report_name">'%s Repair Summary' % (object.name or '')</field>
-    <field name="report_name">ls_pdf_reports.report_rma_repair_summary</field>
-    <field name="report_file">ls_pdf_reports.report_rma_repair_summary</field>
-    <field name="binding_model_id" ref="ls_rma.model_helpdesk_rma" />
-    <field name="paperformat_xmlid_base">ls_templates.ls_report_paper_format</field>
+    <field name="report_name">ol_pdf_reports.report_rma_repair_summary</field>
+    <field name="report_file">ol_pdf_reports.report_rma_repair_summary</field>
+    <field name="binding_model_id" ref="ol_rma.model_helpdesk_rma" />
+    <field name="paperformat_xmlid_base">ol_templates.ol_report_paper_format</field>
   </record>
 
   <!-- Main template -->
@@ -23,14 +23,14 @@
         <!-- Re-browse of the record with the correct language -->
         <t t-set="rma" t-value="doc.with_context(lang=language)"/>
         <!-- Call the template document with the language set -->
-        <t t-call="ls_pdf_reports.report_rma_repair_summary_template" t-lang="language"/>
+        <t t-call="ol_pdf_reports.report_rma_repair_summary_template" t-lang="language"/>
       </t>
     </t>
   </template>
 
   <template id="report_rma_repair_summary_template">
 
-    <t t-call="ls_templates.external_layout">
+    <t t-call="ol_templates.external_layout">
       <!-- Set the name and title of the Report -->
       <t t-set="report_title">Repair Summary</t>
       <!--Set template variables-->
@@ -75,12 +75,12 @@
       </t>
 
       <!--The first main information block-->
-      <div class="ls_report_info_row ls_flex">
+      <div class="ol_report_info_row ol_flex">
 
         <!--Basic Invoice information-->
-        <div class="ls_report_info_row_col info">
+        <div class="ol_report_info_row_col info">
 
-          <div class="ls_report_info_row_col_title ls_flex">
+          <div class="ol_report_info_row_col_title ol_flex">
             <div class="key">
               <tag>RMA</tag>
             </div>
@@ -89,7 +89,7 @@
             </div>
           </div>
 
-          <div class="ls_report_info_row_col_line ls_flex">
+          <div class="ol_report_info_row_col_line ol_flex">
             <div class="key">
               <tag>Order Date</tag>
             </div>
@@ -98,7 +98,7 @@
             </div>
           </div>
 
-          <div class="ls_report_info_row_col_line ls_flex">
+          <div class="ol_report_info_row_col_line ol_flex">
             <div class="key">
               <tag>Order</tag>
             </div>
@@ -110,8 +110,8 @@
         </div>
 
         <!--Shipping related information-->
-        <div class="ls_report_info_row_col shipping">
-          <t t-call="ls_templates.address">
+        <div class="ol_report_info_row_col shipping">
+          <t t-call="ol_templates.address">
             <t t-set="text">Ship To</t>
             <t t-set="show_vat_id" t-value="True"/>
             <t t-set="address" t-value="partner_shipping_id"/>
@@ -121,7 +121,7 @@
       </div>
 
       <!--Product list-->
-      <t t-call="ls_pdf_reports.rma_products">
+      <t t-call="ol_pdf_reports.rma_products">
         <t t-set="products_title">
           Hardware Solution
         </t>
@@ -131,22 +131,22 @@
   </template>
 
   <template id="rma_products">
-    <div class="ls_report_products_row">
-      <div class="ls_products_header ls_flex ls_flex_just_cont_space_between">
-        <div class="ls_products_title ls_rma ls_flex ls_flex_reverse">
+    <div class="ol_report_products_row">
+      <div class="ol_products_header ol_flex ol_flex_just_cont_space_between">
+        <div class="ol_products_title ol_rma ol_flex ol_flex_reverse">
           <!--The title-->
           <t t-esc="products_title"/>
         </div>
       </div>
 
       <!--The list of products-->
-      <div class="ls_product_lines">
+      <div class="ol_product_lines">
         <t t-foreach="product_lines" t-as="product_line">
           <t t-set="product_id" t-value="product_line['product_id']"/>
-          <div class="ls_products_line">
+          <div class="ol_products_line">
             <!--Product: image, name, sku, data-->
-            <div class="ls_products_info_cont ls_flex">
-              <div class="ls_product_image">
+            <div class="ol_products_info_cont ol_flex">
+              <div class="ol_product_image">
 
                 <t t-if="product_id.image_128">
                   <img t-attf-src="data:image;base64,{{product_id.image_128}}"/>
@@ -158,16 +158,16 @@
 
               </div>
 
-              <div class="ls_product_data">
-                <div class="ls_flex">
-                  <div class="product_info_name ls_rma">
-                    <div class="ls_product_name">
+              <div class="ol_product_data">
+                <div class="ol_flex">
+                  <div class="product_info_name ol_rma">
+                    <div class="ol_product_name">
                       <t t-esc="product_id.name"/>
                       <small t-if="product_line['qty'] > 1">
                         (Qty:<t t-esc="product_line['qty']"/>)
                       </small>
                     </div>
-                    <div class="ls_product_default_code" t-esc="product_id.default_code"/>
+                    <div class="ol_product_default_code" t-esc="product_id.default_code"/>
                   </div>
                 </div>
               </div>
@@ -176,7 +176,7 @@
             <!--System serial numbers and Product notes-->
             <t t-set="serial_number" t-value="product_line['serial_number']"/>
             <t t-set="notes" t-value="product_line['notes']"/>
-            <div class="ls_report_order_notes_full" t-if="notes or serial_number"
+            <div class="ol_report_order_notes_full" t-if="notes or serial_number"
                  style="margin-top: 10px;">
               <div class="order-notes">
 

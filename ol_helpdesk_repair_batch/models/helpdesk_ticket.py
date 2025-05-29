@@ -1,4 +1,7 @@
 # Import Odoo libs
+from datetime import timedelta
+
+# Import Odoo libs
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
@@ -317,6 +320,7 @@ class HelpdeskTicket(models.Model):
                     "product_uom_qty": data["qty"],
                     "location_id": source_location_id,
                     "location_dest_id": destination_location_id,
+                    "scheduled_date": fields.Datetime.now() + timedelta(days=7),
                 }
             )
 
@@ -458,105 +462,6 @@ class HelpdeskTicket(models.Model):
             "res_model": "sale.order",
             "view_mode": "form",
             "res_id": sale_order.id,
-        }
-
-    def action_create_credit_note(self):
-        self.ensure_one()
-
-        account_move = self.env["account.move"]
-        account_move_line = self.env["account.move.line"]
-
-        credit_note_lines_map = {}
-
-        # 1. Pull lines from original sale orders and their invoices
-        sale_orders = self.original_sale_order_ids.filtered(lambda so: so.invoice_ids)
-        for sale_order in sale_orders:
-            for invoice in sale_order.invoice_ids.filtered(
-                lambda inv: inv.move_type == "out_invoice" and inv.state == "posted"
-            ):
-                for line in invoice.invoice_line_ids:
-                    product_id = line.product_id.id
-                    if not product_id:
-                        continue
-                    key = (product_id, tuple(line.tax_ids.ids))
-                    if key not in credit_note_lines_map:
-                        credit_note_lines_map[key] = {
-                            "product_id": product_id,
-                            "name": f"Refund (Invoice): {line.name}",
-                            "quantity": 0.0,
-                            "price_unit": -line.price_unit,
-                            "tax_ids": [(6, 0, line.tax_ids.ids)],
-                            "analytic_account_id": line.analytic_account_id.id,
-                            "account_id": line.account_id.id,
-                        }
-                    credit_note_lines_map[key]["quantity"] += line.quantity
-
-        # 2. Include completed repairs (like in action_create_sale_order)
-        repair_orders = self.repair_batch_ids.mapped("repair_ids").filtered(
-            lambda r: r.state == "done"
-        )
-        product_quantities = {}
-        for repair in repair_orders:
-            if repair.product_id:
-                product_id = repair.product_id.id
-                product_quantities[product_id] = (
-                    product_quantities.get(product_id, 0) + repair.product_qty
-                )
-            for move in repair.move_ids.filtered(lambda m: m.repair_line_type == "add"):
-                product_id = move.product_id.id
-                product_quantities[product_id] = (
-                    product_quantities.get(product_id, 0) + move.product_uom_qty
-                )
-
-        for product_id, qty in product_quantities.items():
-            product = self.env["product.product"].browse(product_id)
-            key = (product_id, ())
-            if key not in credit_note_lines_map:
-                credit_note_lines_map[key] = {
-                    "product_id": product_id,
-                    "name": f"Refund (Repair): {product.display_name}",
-                    "quantity": 0.0,
-                    "price_unit": 0.0,
-                    "tax_ids": [],
-                    "account_id": product.property_account_income_id.id
-                    or product.categ_id.property_account_income_categ_id.id,
-                }
-            credit_note_lines_map[key]["quantity"] += qty
-
-        credit_note_lines = [
-            (0, 0, values) for values in credit_note_lines_map.values()
-        ]
-
-        # Check to make sure the RMA Return order type exists
-        so_type = self.env.ref("ol_helpdesk_repair_batch.rma_return_sale_type", False)
-        if not so_type:
-            raise ValidationError(
-                "The 'RMA Return' sale order type is missing. Please see your administrator."
-            )
-
-        # Try to get current user's sales team
-        team_id = self.env.user.sale_team_id.id if self.env.user.sale_team_id else None
-
-        # 3. Always create the credit note — even if no lines
-        credit_note = account_move.create(
-            {
-                "move_type": "out_refund",
-                "partner_id": self.partner_id.id,
-                "invoice_date": fields.Date.context_today(self),
-                "invoice_origin": self.name,
-                "helpdesk_ticket_id": self.id,
-                "invoice_line_ids": credit_note_lines,
-                "team_id": team_id,
-                "user_id": self.env.user.id,
-                "sale_type_id": so_type.id,
-            }
-        )
-
-        return {
-            "type": "ir.actions.act_window",
-            "res_model": "account.move",
-            "view_mode": "form",
-            "res_id": credit_note.id,
         }
 
     @api.model_create_multi

@@ -42,6 +42,7 @@ class StockLot(models.Model):
 
     def generate_component_history(self):
         ComponentHistory = self.env["component.history"]
+        MrpProduction = self.env["mrp.production"]
         history_data = []
 
         for lot in self:
@@ -49,49 +50,84 @@ class StockLot(models.Model):
                 continue
 
             # ==== 1. Manufacturing Order History ====
-            mo = self.env["mrp.production"].search(
-                [("lot_producing_id", "=", lot.id)], limit=1
-            )
+            mo = MrpProduction.search([("lot_producing_id", "=", lot.id)], limit=1)
             if mo:
-                for move in mo.move_raw_ids.filtered(lambda m: m.state == "done"):
-                    history_data.append(
-                        {
-                            "lot_id": lot.id,
-                            "product_id": move.product_id.id,
-                            "qty_changed": move.quantity,
-                            "change_type": "manufactured",
-                            "source_id": f"mrp.production,{mo.id}",
-                            "component_lot_ids": [(6, 0, move.lot_ids.ids)],
-                            "date": mo.date_finished,
-                        }
-                    )
+                # Get all related MOs by origin
+                sibling_mos = MrpProduction.search(
+                    [
+                        ("origin", "=", mo.origin),
+                        ("state", "=", "done"),
+                        ("lot_producing_id", "!=", False),
+                    ]
+                )
+
+                # Find the "parent" MO with components
+                parent_mo = False
+                for m in sibling_mos:
+                    for move in m.move_raw_ids:
+                        if move.state == "done":
+                            parent_mo = m
+                            break
+                    if parent_mo:
+                        break
+
+                if parent_mo:
+                    total_serials = len(sibling_mos) or 1  # avoid div-by-zero
+                    for move in parent_mo.move_raw_ids:
+                        if move.state != "done":
+                            continue
+                        per_unit_qty = move.quantity / total_serials
+                        history_data.append(
+                            {
+                                "lot_id": lot.id,
+                                "product_id": move.product_id.id,
+                                "qty_changed": per_unit_qty,
+                                "change_type": "manufactured",
+                                "source_id": "mrp.production,%d" % parent_mo.id,
+                                "component_lot_ids": [
+                                    (6, 0, [l.id for l in move.lot_ids])
+                                ],
+                                "date": parent_mo.date_finished,
+                            }
+                        )
+                else:
+                    # fallback to MO components if they exist
+                    for move in mo.move_raw_ids:
+                        if move.state != "done":
+                            continue
+                        history_data.append(
+                            {
+                                "lot_id": lot.id,
+                                "product_id": move.product_id.id,
+                                "qty_changed": move.quantity,
+                                "change_type": "manufactured",
+                                "source_id": "mrp.production,%d" % mo.id,
+                                "component_lot_ids": [
+                                    (6, 0, [l.id for l in move.lot_ids])
+                                ],
+                                "date": mo.date_finished,
+                            }
+                        )
 
             # ==== 2. Repair Order History ====
             repair_orders = self.env["repair.order"].search([("lot_id", "=", lot.id)])
             for repair in repair_orders:
                 for line in repair.move_ids:
-                    if line.repair_line_type == "add":
-                        change_type = "add"
-                    elif line.repair_line_type == "remove":
-                        change_type = "remove"
-                    elif line.repair_line_type == "recycle":
-                        change_type = "recycle"
-                    else:
-                        continue  # Skip unknown types
-
+                    if line.repair_line_type not in ("add", "remove", "recycle"):
+                        continue
                     history_data.append(
                         {
                             "lot_id": repair.lot_id.id,
                             "product_id": line.product_id.id,
                             "qty_changed": line.product_uom_qty,
-                            "change_type": change_type,
-                            "source_id": f"repair.order,{repair.id}",
-                            "component_lot_ids": [(6, 0, line.lot_ids.ids)],
+                            "change_type": line.repair_line_type,
+                            "source_id": "repair.order,%d" % repair.id,
+                            "component_lot_ids": [(6, 0, [l.id for l in line.lot_ids])],
                             "date": line.date,
                         }
                     )
 
-        # 🔁 Bulk create at once — ensures they're all visible
+        # Bulk create
         ComponentHistory.create(history_data)
 
     # END #######
