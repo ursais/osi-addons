@@ -86,14 +86,6 @@
                             groups="stock.group_stock_user"
                             invisible="not partner_id"
                         />
-                        <button
-                            name="action_create_credit_note"
-                            type="object"
-                            string="Create Refund OLD"
-                            class="btn-secondary"
-                            groups="stock.group_stock_user"
-                            invisible="not partner_id"
-                        />
                         <!-- <button
                             name="%(action_repair_credit_note_wizard)d"
                             type="action"

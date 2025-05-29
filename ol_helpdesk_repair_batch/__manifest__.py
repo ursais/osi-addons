@@ -30,7 +30,7 @@
         "data/helpdesk_stage_data.xml",
         "data/stock_picking_type_data.xml",
         "wizard/helpdesk_ticket_import_sale_views.xml",
-        # "wizard/helpdesk_ticket_refund_wizard.xml",
+        "wizard/helpdesk_ticket_refund_wizard.xml",
         # "reports/rma_repair_summary.xml",
         "security/ir.model.access.csv",
         "views/helpdesk_team_views.xml",
