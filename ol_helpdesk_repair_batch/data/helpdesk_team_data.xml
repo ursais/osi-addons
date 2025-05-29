@@ -1,12 +1,12 @@
 <odoo>
 
     <!-- Update out of box team -->
-    <record id="helpdesk.helpdesk_team1" model="helpdesk.team">
+    <record id="helpdesk_team_tech_support" model="helpdesk.team">
         <field name="name">Tech Support</field>
         <field name="alias_name">support</field>
         <field name="stage_ids" eval="False"/>
-        <field name="use_sla" eval="True"/>
-        <field name="member_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+        <field name="use_product_repairs">1</field>
+        <field name="use_helpdesk_timesheet">1</field>
     </record>
 
     <!-- Helpdesk Team: Customer RMA -->
@@ -24,7 +24,6 @@
         <field name="stage_ids" eval="False"/>
         <field name="use_product_repairs">1</field>
         <field name="use_helpdesk_timesheet">1</field>
-        <field name="sequence_id" ref="ir_sequence_helpdesk_ticket_rma" />
     </record>
 
 </odoo>
