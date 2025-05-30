@@ -180,7 +180,7 @@ class IrActionsServer(models.Model):
             batch_products = ProductTemplates[offset:offset + batch_size]  # Slice the records to get the current batch
             _logger.info("Processing batch: Offset %s, Batch Size %s", offset, len(batch_products))
             for product_template in batch_products:
-                _logger.info("\n\n\n\n===============product_template##########%s==ID:::%s:::Counter::%s",product_template.name,product_template,counter)
+                _logger.info("\n\n\n\n====Script 3===========product_template##########%s==ID:::%s:::Counter::%s",product_template.name,product_template,counter)
                 if product_template.attribute_line_ids:
                     update_query = """UPDATE product_template_attribute_line SET used_in_sale_description = true WHERE id IN %s;"""
                     cr.execute(update_query, (tuple(product_template.attribute_line_ids.ids),))
@@ -353,13 +353,14 @@ class IrActionsServer(models.Model):
             self.env.cr.commit()  # Commit changes after processing each batch
             _logger.info("Batch processed. Offset moved to %s", offset)
         _logger.info("Processing completed!")
+
         _logger.info("\n\n==================Script 3 is Done==================")
 
     def script_4(self):
         _logger.info("\n\n==Sync Attribute Values in Product Variants===Script 4 is start==================")
         batch_size = 10  # Define batch size
         #PRODUCT-TEMPLATE ID Which id Need to take care [5593,24607,5172,32379,24337,25216,26588,6518,4696,103791,102630,102736,101999]
-        ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True),("id","not in",[5593,24607,5172,32379,24337,25216,26588,6518,4696,103791,102630,102736,101999])])
+        ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True),("active","=",True)])
         total_products = len(ProductTemplates)  # Total number of products to process
         offset = 0
         counter = 1
@@ -369,7 +370,7 @@ class IrActionsServer(models.Model):
             batch_products = ProductTemplates[offset:offset + batch_size]  # Slice the records to get the current batch
             _logger.info("Processing batch: Offset %s, Batch Size %s", offset, len(batch_products))
             for product_template in batch_products:
-                _logger.info("\n\n\n\n===============product_template##########%s==ID:::%s:::Counter::%s",product_template.name,product_template,counter)
+                _logger.info("\n\n\n\n======Script 4=========product_template##########%s==ID:::%s:::Counter::%s",product_template.name,product_template,counter)
                 config_step_id = product_template.config_step_line_ids.filtered(lambda l:l.config_step_id and not l.attribute_line_ids)
                 config_step_id.unlink()
                 cr.commit()
@@ -402,15 +403,20 @@ class IrActionsServer(models.Model):
                                     """, (attrbute_line_id.attribute_id.id,ptav_line.id))
                                 cr.commit()
                             if not ptav_line.product_attribute_value_id.active:
-                                
-                                active_value_id = attrbute_line_id.value_ids.filtered(lambda v:v.name == ptav_line.product_attribute_value_id.name)
-                                _logger.info("\n\n\n\n==============PTAV==Values ID:%s==%s:%s::%s",ptav_line.product_attribute_value_id.name,attrbute_line_id.attribute_id.name,ptav_line.product_attribute_value_id,active_value_id)
-                                cr.execute("""
-                                        UPDATE product_template_attribute_value
-                                        SET product_attribute_value_id = %s
-                                        WHERE id = %s AND ptav_active = true;
-                                    """, (active_value_id.id,ptav_line.id))
-                                cr.commit()
+                                inactive_ptav = attrbute_line_id.product_template_value_ids.filtered(lambda s:s.name == ptav_line.product_attribute_value_id.name and not s.ptav_active and s.product_attribute_value_id.active)
+                                if inactive_ptav:
+                                    _logger.info("\n\n\n\n=========InActive=====PTAV::%s::",inactive_ptav)
+                                    inactive_ptav.ptav_active = True
+                                    ptav_line.ptav_active = False
+                                else:
+                                    active_value_id = attrbute_line_id.value_ids.filtered(lambda v:v.name == ptav_line.product_attribute_value_id.name )
+                                    _logger.info("\n\n\n\n==============PTAV==Values ID:%s==%s:%s::%s",ptav_line.product_attribute_value_id.name,attrbute_line_id.attribute_id.name,ptav_line.product_attribute_value_id,active_value_id)
+                                    cr.execute("""
+                                            UPDATE product_template_attribute_value
+                                            SET product_attribute_value_id = %s
+                                            WHERE id = %s AND ptav_active = true;
+                                        """, (active_value_id.id,ptav_line.id))
+                                    cr.commit()
                             if ptav_line.product_attribute_value_id.active and ptav_line.product_attribute_value_id.id not in attrbute_line_id.value_ids.ids:
                                 _logger.info("\n\n\n\n========2322======PTAV==Values ID%s==%s",ptav_line.product_attribute_value_id.name,attrbute_line_id.attribute_id.name)
                             
@@ -433,18 +439,6 @@ class IrActionsServer(models.Model):
                                             WHERE id = %s;
                                         """, (ptav_line.product_attribute_value_id.id,qty_val.id))
                                         cr.commit()
-                                        
-                        #TODO VANDAN: 24/04/2025
-                        # if len(values_ids.ids) != len(product_template_value_ids.ids):
-                        #     less_lines = len(values_ids.ids) >= len(product_template_value_ids.ids)
-                        #     less_value_ids = len(values_ids.ids) <= len(product_template_value_ids.ids)
-                        #     if less_lines:
-                        #         missing_attributes = set(values_ids.mapped("name")) - set(product_template_value_ids.mapped("product_attribute_value_id.name"))
-                        #         _logger.info("\n\n\n\n===Missing Attribute Found at Less Line %s(%s) at Product Template missing Values names %s and Attribute %s",product_template.name,product_template,list(missing_attributes),attrbute_line_id.attribute_id.name)
-                                
-                        #     if less_value_ids:
-                        #         missing_attributes = set(values_ids.mapped("name")) - set(product_template_value_ids.mapped("product_attribute_value_id.name"))
-                        #         _logger.info("\n\n\n\n===Missing Attribute Found at Less Value IDS %s(%s) at Product Template missing Values names %s and Attribute %s",product_template.name,product_template,list(missing_attributes),attrbute_line_id.attribute_id.name)
                 counter += 1
             offset += batch_size
             self.env.cr.commit()  # Commit changes after processing each batch
@@ -468,7 +462,7 @@ class IrActionsServer(models.Model):
             batch_products = ProductTemplates[offset:offset + batch_size]  # Slice the records to get the current batch
             _logger.info("Processing batch: Offset %s, Batch Size %s", offset, len(batch_products))
             for pro_template in batch_products:
-                _logger.info("\n\n\n\n===============product_template##########%s==ID:::%s:::Counter::%s",pro_template.name,pro_template,counter)
+                _logger.info("\n\n\n\n====Script 5===========product_template##########%s==ID:::%s:::Counter::%s",pro_template.name,pro_template,counter)
                 for attrbute_line_id in pro_template.mapped("attribute_line_ids"):
                     v13_data_select = "select id,attribute_id ,attribute_line_id,product_attribute_value_id,default_qty,maximum_qty  from temp_product_template_attribute_value_V13_VP where product_tmpl_id = %s and attribute_line_id = %s and ptav_active = 't' and default_qty >=1 and maximum_qty >1;" 
                     cr.execute(v13_data_select, (pro_template.id,attrbute_line_id.id),)
@@ -774,7 +768,49 @@ class IrActionsServer(models.Model):
         _logger.info("\n\n\n\n=================DONE=======")
         _logger.info("\n\n==================Script 8 is Done==================")
 
+    def removing_none_values(self):
+        # Made by Vandan Pandeji
+        # Script is Used for Removing None Values from Product template attribute Line, Product Template Attribute Values and Product.Product Varints Bubble.
 
+        cr = env.cr
+        counter = 0
+        for template in records:
+            _logger.info("==Removeing None Attribute Value Script Runing for Product Template %s(%s) at counter %s:", template.name,template.id,counter) 
+            none_value_dict = {}
+            none_list = []
+            for line in template.attribute_line_ids:
+                none_values = line.value_ids.filtered(lambda l: l.name == 'None' and l.active)
+                if none_values:
+                    none_list.append(none_values.id)
+                    none_value_dict.update({line.attribute_id.id:none_values.id})
+                    line.write({
+                        "required": False,
+                        'default_val': False
+                    })
+                    delete_query = "delete from product_attribute_value_product_template_attribute_line_rel where product_attribute_value_id = %s and product_template_attribute_line_id = %s;"
+                    cr.execute(delete_query,(none_values.id,line.id))
+                    cr.commit()
+                    none_value_template_value = line.product_template_value_ids.filtered(
+                        lambda v: v.product_attribute_value_id in none_values
+                    )
+                    if none_value_template_value:
+                        none_value_template_value.write({"ptav_active":False})
+                
+            for variant in template.product_variant_ids:
+                select_query = """
+                    SELECT product_product_id,product_template_attribute_value_id FROM product_variant_combination
+                    WHERE product_product_id = %s
+                """
+                cr.execute(select_query, (variant.id,))
+                variant_combinations = cr.fetchall()
+                for combo in variant_combinations:
+                    if combo:
+                        product_template_attribute_value_id = env["product.template.attribute.value"].browse(combo[1])
+                        if product_template_attribute_value_id.product_attribute_value_id.id in none_list:
+                            delete_query = "delete from product_variant_combination where product_product_id = %s and product_template_attribute_value_id =%s;"
+                            cr.execute(delete_query,(combo[0],combo[1]))
+                            cr.commit()
+            counter += 1
 
     def drop_temp_tables(self):
         _logger.info("\n\n============Droping Tables Start")
