@@ -600,6 +600,51 @@ class IrActionsServer(models.Model):
                 cr.commit()
         cr.execute("drop table temp_ir_property_row_rack_case;")
         _logger.info("\n\n\n\nPutaway Rule Migration Server Action Done")
+    
+    
+    def set_product_candidates(self):
+        """
+        Until the product categories and candidates get hashed out, we are going to enable
+        all the candidate fields on the products and set the 'ok' fields product based on state.
+        """
+        table_name = "product_template"
+        fields_to_update = [
+            "candidate_bom",
+            "candidate_component_manufacture",
+            "candidate_manufacture",
+            "candidate_purchase",
+            "candidate_sale",
+            "candidate_sale_confirm",
+            "candidate_ship",
+        ]
+
+        # Build the SET clause
+        set_clause = ", ".join(f"{field} = TRUE" for field in fields_to_update)
+
+        # Execute raw SQL
+        self.env.cr.execute(
+            f"""
+            UPDATE {table_name}
+            SET {set_clause}
+        """
+        )
+
+        # Set 'ok' fields based on candidate and state
+        self.env.cr.execute(
+            """
+        UPDATE product_template pt
+        SET
+            sale_ok = ps.approved_sale AND pt.candidate_sale,
+            sale_ok_confirm = ps.approved_sale_confirm AND pt.candidate_sale_confirm,
+            mrp_ok = ps.approved_mrp AND pt.candidate_manufacture,
+            mrp_component_ok = ps.approved_component_mrp AND pt.candidate_component_manufacture,
+            bom_ok = ps.approved_bom AND pt.candidate_bom,
+            purchase_ok = ps.approved_purchase AND pt.candidate_purchase,
+            ship_ok = ps.approved_ship AND pt.candidate_ship
+        FROM product_state ps
+        WHERE pt.product_state_id = ps.id
+        """
+        )    
 
     def uninstall_old_module(self):
         _logger.info("===============uninstall_old_module====================")
