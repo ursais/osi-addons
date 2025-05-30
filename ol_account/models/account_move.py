@@ -18,6 +18,7 @@ class AccountMove(models.Model):
         tracking=True,
         store=True,
     )
+    customer_payment_method_id = fields.Many2one(comodel_name="payment.method")
 
     # END #########
     # METHODS ######
