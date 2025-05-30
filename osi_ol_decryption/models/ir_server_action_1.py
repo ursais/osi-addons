@@ -1028,6 +1028,7 @@ class IrActionsServer(models.Model):
             "ol_mrp",
             "ol_helpdesk_repair_batch",
             "ol_pim",
+            "ol_product"
         ]
 
         for module in modules:
