@@ -12,10 +12,12 @@ class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
     def run_hot_ar(self):
+        _logger.info("===============run_hot_ar====================")
         hot_ar_cron = self.env.ref("ol_account_hot_ar.compute_hot_ar_cron")
         hot_ar_cron.method_direct_trigger()
 
     def unistall_module(self):
+        _logger.info("===============rununistall_module_hot_ar====================")
         module_uninstall_list = [
             "documents_hr_expense",
             "hr_expense_extract",
@@ -28,9 +30,11 @@ class IrActionsServer(models.Model):
             ).button_immediate_uninstall()
 
     def update_sync_plan_column(self):
+        _logger.info("===============update_sync_plan_column====================")
         self.env["account.analytic.plan"].sudo().search([])._sync_plan_column()
 
     def update_check_amount_in_words(self):
+        _logger.info("===============update_check_amount_in_words====================")
         self = self.sudo()
         records = self.env["account.payment"].search(
             [("check_amount_in_words", "ilike", "\\xc3")]
@@ -39,6 +43,7 @@ class IrActionsServer(models.Model):
             rec._compute_check_amount_in_words()
 
     def update_internal_notes(self):
+        _logger.info("===============update_internal_notes====================")
         self = self.sudo()
         pattern = r"\\xc30[0-9a-f]+"
         records = self.env["repair.order"].search(
@@ -58,6 +63,7 @@ class IrActionsServer(models.Model):
             )
 
     def update_acount_move_name(self):
+        _logger.info("===============update_acount_move_name====================")
         self = self.sudo()
         records = self.env["account.move.line"].search([("name", "ilike", "\\xc3")])
         pattern = r"\\xc30[0-9a-f]+"
@@ -158,6 +164,7 @@ class IrActionsServer(models.Model):
         return table_columns_dict
 
     def update_compute_complete_address(self):
+        _logger.info("===============update_compute_complete_address====================")
         partner_ids = self.env["res.partner"].search(
             [
                 ("contact_address_complete", "!=", ""),
@@ -182,6 +189,7 @@ class IrActionsServer(models.Model):
             )
 
     def update_po_contact_ids(self):
+        _logger.info("===============update_po_contact_ids====================")
         self._cr.execute(
             "select id,contact_id from purchase_order where contact_id is not null;"
         )
@@ -194,6 +202,7 @@ class IrActionsServer(models.Model):
             )
 
     def update_supplier_invoice_number(self):
+        _logger.info("===============update_supplier_invoice_number====================")
         # Fetch supplier invoice numbers and references for in_invoice types
         self._cr.execute(
             """
@@ -233,6 +242,7 @@ class IrActionsServer(models.Model):
             )
 
     def update_product_tax_code(self):
+        _logger.info("===============update_product_tax_code====================")
         conn_13 = psycopg2.connect(
             database="odoo13_prod",
             user="odoo",
@@ -262,6 +272,7 @@ class IrActionsServer(models.Model):
     #     )
 
     def odoo_rpc_call_product_weight(self):
+        _logger.info("===============odoo_rpc_call_product_weight====================")
         odoo_13 = odoorpc.ODOO("localhost", port=8069, timeout=12000)
         odoo_13.login("odoo13_prod", "admin", "pw")
         obj_product = odoo_13.env["product.product"]
@@ -293,6 +304,7 @@ class IrActionsServer(models.Model):
 
     @api.model
     def odoo_rpc_call(self):
+        _logger.info("===============odoo_rpc_call====================")
         odoo_13 = odoorpc.ODOO("localhost", port=8069, timeout=12000)
         odoo_13.login("odoo13_prod", "admin", "pw")
         self = self.sudo()
@@ -362,6 +374,7 @@ class IrActionsServer(models.Model):
 
     
     def fix_invalid_check_numbers(self):
+        _logger.info("===============fix_invalid_check_numbers====================")
         """
         Fix invalid check numbers from migrated v13 data.
         In v13, some payments had check numbers with non-numeric characters,
@@ -402,6 +415,7 @@ class IrActionsServer(models.Model):
             payment.message_post(body=message)
 
     def update_product_category(self):
+        _logger.info("===============update_product_category====================")
         self = self.sudo()
         self._cr.execute(
             "select id,pim_category from product_template where pim_category is not null;"
@@ -463,6 +477,7 @@ class IrActionsServer(models.Model):
         # self.env['product.category'].search([('create_date' ,'<=', '2025-01-01'), ('id', 'not in', (210,211,1,1232))]).unlink()
 
     def update_shipping_methods(self):
+        _logger.info("===============update_shipping_methods====================")
         self = self.sudo()
         self._cr.execute(
             "select * from temp_ir_property where name ='inbound_shipping_method'"
@@ -486,6 +501,7 @@ class IrActionsServer(models.Model):
                 )
 
     def update_total_cost(self):
+        _logger.info("===============update_total_cost====================")
         self = self.sudo()
         company_ids = [1, 2]
         product_ids = self.env["product.product"].search(
@@ -510,6 +526,7 @@ class IrActionsServer(models.Model):
                     rec.write({"approved_total_cost": open_review.approved_total_cost})
 
     def create_stock_putway_rule(self):
+        _logger.info("===============create_stock_putway_rule====================")
         # OSI Task: https://osi.mavenlink.com/workspaces/44078089/#tracker/923588804
         # Putaway Rule Migration Creation Server Action
         
@@ -585,6 +602,7 @@ class IrActionsServer(models.Model):
         _logger.info("\n\n\n\nPutaway Rule Migration Server Action Done")
 
     def uninstall_old_module(self):
+        _logger.info("===============uninstall_old_module====================")
         env = self.env
         module_uninstall_list = [
             "ls_account_bank_statement",
