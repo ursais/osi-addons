@@ -35,6 +35,7 @@
         "data/invoice_created.xml",
         "data/confirmation_email.xml",
         "data/function_data.xml",
+        "data/sale_order_type_data.xml",
         "views/product_attribute_views.xml",
         "views/product_template_attribute_line_views.xml",
         "views/product_template_views.xml",
