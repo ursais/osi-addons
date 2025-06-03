@@ -17,8 +17,13 @@ class AccountMove(models.Model):
         compute="_compute_payment_preference",
         tracking=True,
         store=True,
+        help="Prefered Vendor payment method.",
     )
-    customer_payment_method_id = fields.Many2one(comodel_name="payment.method")
+    sale_payment_method_id = fields.Many2one(
+        comodel_name="payment.method",
+        string="Customer Payment Method",
+        help="Payment method selected coming from the sale order.",
+    )
 
     # END #########
     # METHODS ######

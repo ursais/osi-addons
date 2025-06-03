@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import  models
+from odoo import models
 
 
 class SaleOrder(models.Model):
@@ -12,7 +12,7 @@ class SaleOrder(models.Model):
     def _prepare_invoice(self):
         values = super()._prepare_invoice()
         if self.sale_payment_method_id:
-            values.update({"customer_payment_method_id":self.sale_payment_method_id.id})
+            values.update({"sale_payment_method_id": self.sale_payment_method_id.id})
         return values
 
     # END ##########
