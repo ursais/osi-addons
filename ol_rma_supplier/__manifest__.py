@@ -25,6 +25,7 @@
         "views/stock_picking.xml",
         "views/stock_warehouse.xml",
     ],
+    "pre_init_hook": "post_init_hook",
     "auto_install": False,
     "application": False,
     "installable": True,

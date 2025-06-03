@@ -52,8 +52,8 @@
                     </div>
                     <group name="rma_header">
                         <group name="partner_info">
-                            <field name="partner_id" />
-                            <field name="partner_shipping_id" context="{'default_type':'delivery', 'show_address': 1, 'show_vat': False}" readonly="state in ('cancel', 'complete')" />
+                            <field name="partner_id" domain="['|',('company_id', '=', False), ('company_id', 'parent_of', [company_id])]"/>
+                            <field name="partner_shipping_id" context="{'default_type':'delivery', 'show_address': 1, 'show_vat': False}" readonly="state in ('cancel', 'complete')" domain="['|',('company_id', '=', False), ('company_id', 'parent_of', [company_id])]"/>
                             <field name="rma_number" />
                         </group>
                         <group name="misc">
