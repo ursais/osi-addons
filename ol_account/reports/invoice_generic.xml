@@ -45,7 +45,7 @@
             <t t-set="customer_company_name" t-value="invoice.partner_id.company_name or invoice.partner_id.commercial_company_name"/>
             <t t-set="sale_order" t-value="invoice.line_ids.sale_line_ids.order_id"/>
             <t t-set="partner_invoice_id" t-value="invoice.partner_id or sale_order.partner_invoice_id"/>
-            <t t-set="budgetary_quote" t-value="sale_order.type_id.name == 'budgetary'"/>
+            <t t-set="budgetary_quote" t-value="sale_order.type_id.name == 'Budgetary'"/>
             <t t-set="currency" t-value="invoice.currency_id"/>
             <t t-set="company" t-value="invoice.company_id"/>
             <t t-set="hide_tracking" t-value="True"/>
