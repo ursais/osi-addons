@@ -1,0 +1,12 @@
+<odoo>
+
+    <!-- Functions removing out of box types/stages that get added via core module -->
+    <function model="mrp.eco.stage" name="unlink">
+        <value model="mrp.eco.stage" eval="obj().search([('id', 'in', (ref('mrp_plm.ecostage_new', raise_if_not_found=False), ref('mrp_plm.ecostage_progress', raise_if_not_found=False), ref('mrp_plm.ecostage_validated', raise_if_not_found=False),ref('mrp_plm.ecostage_effective', raise_if_not_found=False)))]).ids"/>
+    </function>
+
+    <function model="mrp.eco.type" name="unlink">
+        <value model="mrp.eco.type" eval="obj().search([('id', '=', ref('mrp_plm.ecotype0', raise_if_not_found=False))]).id"/>
+    </function>
+
+</odoo>
