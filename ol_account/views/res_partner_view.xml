@@ -5,8 +5,13 @@
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
+            <!-- Sale&Purchase tab -->
             <xpath expr="//group[@name='purchase']" position="inside">
                 <field name="payment_preference"/>
+            </xpath>
+            <xpath expr="//group[@name='sale']//field[@name='user_id']" position="after">
+                <field name="net_terms_allowed" invisible="1"/>
+                <field name="net_terms_active" invisible="not net_terms_allowed"/>
             </xpath>
         </field>
     </record>
