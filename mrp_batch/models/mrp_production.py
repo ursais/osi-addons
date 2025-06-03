@@ -188,7 +188,6 @@ class MrpProduction(models.Model):
                 procurement_group = self.env['procurement.group'].create({
                     'name': f'{mo_name}-{i+1}',
                 })
-                production.procurement_group_id.write({'linked_proc_group_ids' : [(6,0,[procurement_group.id])]})
                 backorder_vals['procurement_group_id'] = procurement_group.id
                 backorder_vals_list.append(dict(
                     backorder_vals,
