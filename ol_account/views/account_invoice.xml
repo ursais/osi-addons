@@ -18,6 +18,9 @@
             <xpath expr="//group[@name='accounting_info_group']" position="inside">
                 <field name="payment_preference" invisible="move_type not in ('in_invoice', 'in_refund')" />
             </xpath>
+            <field name="payment_reference" position="after">
+                <field name="sale_payment_method_id" invisible="move_type != 'out_invoice'"/>
+            </field>
         </field>
     </record>
 
@@ -40,6 +43,17 @@
             <xpath expr="//field[@name='ref']" position="after">
                 <field name="payment_preference" />
             </xpath>
+        </field>
+    </record>
+
+    <record id="view_invoice_tree_inherit_ol_account" model="ir.ui.view">
+        <field name="name">account.invoice.tree</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <field name="payment_state" position="before">
+                <field name="sale_payment_method_id" column_invisible="context.get('default_move_type') not in ('out_invoice')"/>
+            </field>
         </field>
     </record>
 
