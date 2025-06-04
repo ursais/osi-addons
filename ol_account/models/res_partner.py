@@ -19,7 +19,12 @@ class ResPartner(models.Model):
     )
     net_terms_active = fields.Boolean(string="Front End Net Terms Active")
 
+    customer_payment_method_id = fields.Many2one(
+        "payment.method", string="Customer Preferred Payment Method"
+    )
+
     # END #########
+
     # Method #########
 
     @api.depends("commercial_partner_id.property_payment_term_id")
@@ -32,5 +37,10 @@ class ResPartner(models.Model):
             partner.net_terms_allowed = bool(
                 partner.commercial_partner_id.property_payment_term_id
             )
+
+    def _commercial_fields(self):
+        fields = super()._commercial_fields()
+        fields.append("customer_payment_method_id")
+        return fields
 
     # END #########

@@ -13,6 +13,7 @@ class TestAutoInvoiceOnDelivery(common.TransactionCase):
         cls.config_param = cls.env["ir.config_parameter"].sudo()
         cls.sale_order_model = cls.env["sale.order"]
         cls.stock_picking_model = cls.env["stock.picking"]
+        cls.payment_method_id = cls.env["payment.method"].search([], limit=1)
         cls.product = cls.env["product.product"].create(
             {
                 "name": "Test Product",
@@ -20,7 +21,20 @@ class TestAutoInvoiceOnDelivery(common.TransactionCase):
                 "type": "product",
             }
         )
-        cls.partner = cls.env["res.partner"].create({"name": "Test Partner"})
+        cls.partner = cls.env["res.partner"].create(
+            {
+                "name": "Test Partner",
+                "customer_payment_method_id": cls.payment_method_id.id,
+            }
+        )
+        cls.invoice_partner = cls.env["res.partner"].create(
+            {
+                "name": "Test Partner Invoice",
+                "type": "invoice",
+                "parent_id": cls.partner.id,
+            }
+        )
+
         cls.sale_order = cls.sale_order_model.create(
             {
                 "partner_id": cls.partner.id,
@@ -39,6 +53,7 @@ class TestAutoInvoiceOnDelivery(common.TransactionCase):
                 ],
             }
         )
+        cls.sale_order._onchange_partner_invoice_id_payment_method()
 
         # Create a storable product
         cls.product_1 = cls.env["product.product"].create(
@@ -72,6 +87,12 @@ class TestAutoInvoiceOnDelivery(common.TransactionCase):
                     )
                 ],
             }
+        )
+
+    def test_payment_method(self):
+        "Test the partner Payment method on sale order"
+        self.assertEqual(
+            self.sale_order.sale_payment_method_id.id, self.payment_method_id.id
         )
 
     def test_auto_invoice_on_delivery(self):
