@@ -24,17 +24,28 @@ class RepairCreditNoteWizard(models.TransientModel):
         comodel_name="res.partner",
         string="Customer",
     )
+    restock_fee = fields.Float(
+        string="Restock Fee %",
+        default=".15",
+        help="This restock fee will be auto applied to each line, reducing it's price by the fee's percentage.",
+    )
 
     def action_add_from_sale_orders(self):
         sale_orders = self.ticket_id.original_sale_order_ids.filtered(
             lambda so: so.invoice_ids
         )
         self.original_sale_order_ids = [(6, 0, sale_orders.ids)]
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": self._name,
+            "res_id": self.id,
+            "view_mode": "form",
+            "target": "new",
+        }
 
     @api.onchange("original_sale_order_ids")
     def _onchange_original_sale_orders(self):
-        credit_note_lines_map = {}
-
+        lines = []
         for sale_order in self.original_sale_order_ids:
             for invoice in sale_order.invoice_ids.filtered(
                 lambda inv: inv.move_type == "out_invoice" and inv.state == "posted"
@@ -42,22 +53,22 @@ class RepairCreditNoteWizard(models.TransientModel):
                 for line in invoice.invoice_line_ids:
                     if not line.product_id:
                         continue
-                    key = (line.product_id.id, tuple(line.tax_ids.ids))
-                    if key not in credit_note_lines_map:
-                        credit_note_lines_map[key] = {
-                            "product_id": line.product_id.id,
-                            "name": f"Refund (Invoice): {line.name}",
-                            "quantity": 0.0,
-                            "price_unit": -line.price_unit,
-                            "tax_ids": [(6, 0, line.tax_ids.ids)],
-                            "analytic_account_id": line.analytic_account_id.id,
-                            "account_id": line.account_id.id,
-                        }
-                    credit_note_lines_map[key]["quantity"] += line.quantity
+                    lines.append(
+                        (
+                            0,
+                            0,
+                            {
+                                "product_id": line.product_id.id,
+                                "quantity": line.product_uom_qty,
+                                "price_unit": -line.price_unit,
+                                "tax_ids": [(6, 0, line.tax_ids.ids)],
+                                "account_id": line.account_id.id,
+                                "discount": -self.restock_fee,
+                            },
+                        )
+                    )
 
-        self.line_ids = [(5, 0, 0)] + [
-            (0, 0, vals) for vals in credit_note_lines_map.values()
-        ]
+        self.line_ids = lines
 
     def action_add_from_repairs(self):
         self.ensure_one()
@@ -104,7 +115,6 @@ class RepairCreditNoteWizard(models.TransientModel):
                             "price_unit": 0.0,
                             "tax_ids": [],
                             "account_id": account_id,
-                            "source": "repair",
                         },
                     )
                 )
@@ -177,17 +187,12 @@ class RepairCreditNoteWizardLine(models.TransientModel):
     tax_ids = fields.Many2many(
         comodel_name="account.tax",
     )
-    analytic_account_id = fields.Many2one(
-        comodel_name="account.analytic.account",
-    )
     account_id = fields.Many2one(
         comodel_name="account.account",
         required=True,
     )
-    source = fields.Selection(
-        [
-            ("sale_order", "From Sale Order"),
-            ("repair", "From Removed Components"),
-        ],
-        string="Source",
+    discount = fields.Float(
+        string="Discount (%)",
+        digits="Discount",
+        default=0.0,
     )
