@@ -24,4 +24,22 @@
         <field name="active">True</field>
     </record>
 
+    <!-- Sales Team: US -->
+    <record id="sales_team_us" model="crm.team">
+        <field name="name">Sales Team US</field>
+        <field name="use_leads">True</field>
+        <field name="use_opportunities">True</field>
+        <field name="active">True</field>
+        <field name="company_id" ref="base.main_company" />
+    </record>
+
+    <!-- Sales Team: EU -->
+    <record id="sales_team_eu" model="crm.team">
+        <field name="name">Sales Team: EU</field>
+        <field name="use_leads">True</field>
+        <field name="use_opportunities">True</field>
+        <field name="active">True</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+    </record>
+
 </odoo>

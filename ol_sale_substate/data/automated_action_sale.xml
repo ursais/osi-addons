@@ -1,0 +1,158 @@
+<odoo>
+
+    <!-- Automation: Quote has been sent -->
+    <record id="action_server_update_substate_quot_sent" model="ir.actions.server">
+        <field name="name">Update Substate</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="state">object_write</field>
+        <field name="type">ir.actions.server</field>
+        <field name="evaluation_type">value</field>
+        <field name="update_field_id" ref="base_substate.field_base_substate_mixin__substate_id"/>
+        <field name="update_field_type">many2one</field>
+        <field name="update_path">substate_id</field>
+        <field name="resource_ref" ref="ol_sale_substate.base_substate__quot_sent" />
+    </record>
+
+    <record id="automated_action_quote_sent" model="base.automation">
+        <field name="name">Quote has been sent</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="trigger">on_state_set</field>
+        <field name="trigger_field_ids" eval="[(6, 0, [ref('sale.field_sale_order__state')])]"/>
+        <field name="trg_selection_field_id" ref="sale.selection__sale_order__state__sent"/>
+        <field name="action_server_ids" eval="[(6, 0, [ref('ol_sale_substate.action_server_update_substate_quot_sent')])]"/>
+        <field name="active">True</field>
+    </record>
+
+    <!-- Automation: Order to be confirmed when exceptions are cleared -->
+    <record id="action_server_update_substate_order_review" model="ir.actions.server">
+        <field name="name">Update Substate</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="state">object_write</field>
+        <field name="type">ir.actions.server</field>
+        <field name="evaluation_type">value</field>
+        <field name="update_field_id" ref="base_substate.field_base_substate_mixin__substate_id"/>
+        <field name="update_field_type">many2one</field>
+        <field name="update_path">substate_id</field>
+        <field name="resource_ref" ref="ol_sale_substate.base_substate__order_review" />
+    </record>
+    <record id="automated_action_order_review" model="base.automation">
+        <field name="name">Order to be confirmed when exceptions are cleared</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="trigger">on_create_or_write</field>
+        <field name="filter_domain">[("state", "=", "sent"), ("main_exception_id", "!=", False)]</field>
+        <field name="trigger_field_ids" eval="[(6, 0, [ref('sale_exception.field_sale_order__ignore_exception'), ref('sale_exception.field_sale_order__main_exception_id')])]"/>
+        <field name="action_server_ids" eval="[(6, 0, [ref('ol_sale_substate.action_server_update_substate_order_review')])]"/>
+        <field name="active">True</field>
+    </record>
+
+    <!-- Automation: Order confirmed awaiting production -->
+    <record id="action_server_update_substate_order_waiting" model="ir.actions.server">
+        <field name="name">Update Substate</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="state">object_write</field>
+        <field name="type">ir.actions.server</field>
+        <field name="evaluation_type">value</field>
+        <field name="update_field_id" ref="base_substate.field_base_substate_mixin__substate_id"/>
+        <field name="update_field_type">many2one</field>
+        <field name="update_path">substate_id</field>
+        <field name="resource_ref" ref="ol_sale_substate.base_substate__waiting" />
+    </record>
+    <record id="automated_action_order_waiting" model="base.automation">
+        <field name="name">Order confirmed awaiting production</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="trigger">on_create_or_write</field>
+        <field name="filter_domain">[("state", "=", "sale"), "|", "|", "|", ("ignore_exception", "=", True), ("exemption_code_id", "=", False), ("procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids.mrp_batch_id.state", "=", "draft"), ("procurement_group_id.mrp_production_ids.mrp_batch_id.state", "=", "draft")]</field>
+        <field name="trigger_field_ids" eval="[(6, 0, [ref('sale_exception.field_sale_order__ignore_exception'), ref('sale_exception.field_sale_order__main_exception_id'), ref('sale.field_sale_order__state')])]"/>
+        <field name="action_server_ids" eval="[(6, 0, [ref('ol_sale_substate.action_server_update_substate_order_waiting')])]"/>
+        <field name="active">True</field>
+    </record>
+
+    <!-- Automation: Order is partially or fully planned -->
+    <record id="action_server_update_substate_order_production" model="ir.actions.server">
+        <field name="name">Update Substate</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="state">object_write</field>
+        <field name="type">ir.actions.server</field>
+        <field name="evaluation_type">value</field>
+        <field name="update_field_id" ref="base_substate.field_base_substate_mixin__substate_id"/>
+        <field name="update_field_type">many2one</field>
+        <field name="update_path">substate_id</field>
+        <field name="resource_ref" ref="ol_sale_substate.base_substate__sent" />
+    </record>
+    <record id="automated_action_order_production" model="base.automation">
+        <field name="name">Order is partially or fully planned</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="trigger">on_create_or_write</field>
+        <field name="filter_domain">[("state", "=", "sale"), ("procurement_group_id.mrp_production_ids", "!=", False), "|", "|", "|",("ignore_exception", "=", True), ("exemption_code_id", "=", False), ("procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids.state", "=", "progress"), ("procurement_group_id.mrp_production_ids.state", "=", "progress")]</field>
+        <field name="trigger_field_ids" eval="[(6, 0, [ref('sale_exception.field_sale_order__ignore_exception'), ref('sale_exception.field_sale_order__main_exception_id'), ref('sale.field_sale_order__state')])]"/>
+        <field name="action_server_ids" eval="[(6, 0, [ref('ol_sale_substate.action_server_update_substate_order_production')])]"/>
+        <field name="active">True</field>
+    </record>
+
+    <!-- Automation: Order partially invoiced -->
+    <record id="action_server_update_substate_order_partially_invoiced" model="ir.actions.server">
+        <field name="name">Update Substate</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="state">object_write</field>
+        <field name="type">ir.actions.server</field>
+        <field name="evaluation_type">value</field>
+        <field name="update_field_id" ref="base_substate.field_base_substate_mixin__substate_id"/>
+        <field name="update_field_type">many2one</field>
+        <field name="update_path">substate_id</field>
+        <field name="resource_ref" ref="ol_sale_substate.base_substate__partially_invoiced" />
+    </record>
+    <record id="automated_action_order_partially_invoiced" model="base.automation">
+        <field name="name">Order partially invoiced</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="trigger">on_create_or_write</field>
+        <field name="filter_domain">[("state", "=", "sale"), ("invoice_ids", "!=", False), ('order_line.invoice_status', '!=', 'invoiced'), "|", ("ignore_exception", "=", True), ("exemption_code_id", "=", False)]</field>
+        <field name="trigger_field_ids" eval="[(6, 0, [ref('sale_exception.field_sale_order__ignore_exception'), ref('sale_exception.field_sale_order__main_exception_id'), ref('sale.field_sale_order__state'), ref('sale.field_sale_order__invoice_status')])]"/>
+        <field name="action_server_ids" eval="[(6, 0, [ref('ol_sale_substate.action_server_update_substate_order_partially_invoiced')])]"/>
+        <field name="active">True</field>
+    </record>
+
+    <!-- Automation: Order fully invoiced -->
+    <record id="action_server_update_substate_order_fully_invoiced" model="ir.actions.server">
+        <field name="name">Update Substate</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="state">object_write</field>
+        <field name="type">ir.actions.server</field>
+        <field name="evaluation_type">value</field>
+        <field name="update_field_id" ref="base_substate.field_base_substate_mixin__substate_id"/>
+        <field name="update_field_type">many2one</field>
+        <field name="update_path">substate_id</field>
+        <field name="resource_ref" ref="ol_sale_substate.base_substate__full_invoiced" />
+    </record>
+    <record id="automated_action_order_fully_invoiced" model="base.automation">
+        <field name="name">Order fully invoiced</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="trigger">on_create_or_write</field>
+        <field name="filter_domain">[("state", "=", "sale"), ("invoice_ids", "!=", False), ('order_line.invoice_status', '=', 'invoiced'), "|", ("ignore_exception", "=", True), ("exemption_code_id", "=", False)]</field>
+        <field name="trigger_field_ids" eval="[(6, 0, [ref('sale_exception.field_sale_order__ignore_exception'), ref('sale_exception.field_sale_order__main_exception_id'), ref('sale.field_sale_order__state'), ref('sale.field_sale_order__invoice_status')])]"/>
+        <field name="action_server_ids" eval="[(6, 0, [ref('ol_sale_substate.action_server_update_substate_order_fully_invoiced')])]"/>
+        <field name="active">True</field>
+    </record>
+
+    <!-- Automation: Order fully invoiced and paid -->
+    <record id="action_server_update_substate_order_fully_invoiced_paid" model="ir.actions.server">
+        <field name="name">Update Substate</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="state">object_write</field>
+        <field name="type">ir.actions.server</field>
+        <field name="evaluation_type">value</field>
+        <field name="update_field_id" ref="base_substate.field_base_substate_mixin__substate_id"/>
+        <field name="update_field_type">many2one</field>
+        <field name="update_path">substate_id</field>
+        <field name="resource_ref" ref="ol_sale_substate.base_substate__complete" />
+    </record>
+    <record id="automated_action_order_fully_invoiced_paid" model="base.automation">
+        <field name="name">Order fully invoiced and paid</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="trigger">on_create_or_write</field>
+        <field name="filter_domain">[("state", "=", "sale"), ("invoice_ids", "!=", False), ('invoice_status', '=', 'invoiced'), ('invoice_ids.payment_state', '=', 'paid'), "|", ("ignore_exception", "=", True), ("exemption_code_id", "=", False)]</field>
+        <field name="trigger_field_ids" eval="[(6, 0, [ref('sale_exception.field_sale_order__ignore_exception'), ref('sale_exception.field_sale_order__main_exception_id'), ref('sale.field_sale_order__state'), ref('sale.field_sale_order__invoice_status')])]"/>
+        <field name="action_server_ids" eval="[(6, 0, [ref('ol_sale_substate.action_server_update_substate_order_fully_invoiced_paid')])]"/>
+        <field name="active">True</field>
+    </record>
+
+</odoo>
