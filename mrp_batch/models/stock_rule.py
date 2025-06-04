@@ -46,6 +46,7 @@ class StockRule(models.Model):
             res.update(
                 {
                     "sale_order_id": sale_order.id,
+                    "ignore_exception":True
                 }
             )
         return res

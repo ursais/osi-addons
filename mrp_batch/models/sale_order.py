@@ -108,11 +108,12 @@ class SaleOrder(models.Model):
                                     else batch_obj.create(
                                         {"responsible_id": rec.env.user.id}
                                     ).id
-                                )
+                                ),
+                                'ignore_exception':False
                             }
                         )
                         mo.backorder_ids.write({"mrp_batch_id": mo.mrp_batch_id.id})
-                        mo.linked_mo_ids.filtered(lambda l : not l.mrp_batch_id).write({"mrp_batch_id": mo.mrp_batch_id.id})
+                        mo.linked_mo_ids.filtered(lambda l : not l.mrp_batch_id).write({"mrp_batch_id": mo.mrp_batch_id.id, 'ignore_exception':False})
 
     # Methods for Batch Smart Button
     def _compute_mrp_production_batch_id_count(self):
