@@ -13,9 +13,15 @@ class SaleOrder(models.Model):
     # METHODS ##########
 
     def sale_check_exception(self):
-        sale_orders = self.filtered(lambda s: s.state in ["draft", "sent", "sale"])
+        sale_orders = self.filtered(lambda s: s.state in ["sent", "sale"])
         if sale_orders:
             sale_orders.with_context(raise_exception=False)._check_exception()
+
+    def action_quotation_send(self):
+        # Trigger exception check when attempting to send email
+        if self.detect_exceptions():
+            return self._popup_exceptions()
+        return super().action_quotation_send()
 
     def _fields_trigger_check_exception(self):
         # Search for exception configs: sudo is used as non-admins don't
