@@ -11,6 +11,7 @@ class ResPartner(models.Model):
         string="Hot AR",
         compute="_compute_check_hot_ar",
         store=True,
+        recursive=True,
         help="""Customer has one or more invoices that are
          overdue and past the grace period.""",
     )
