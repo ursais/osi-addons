@@ -13,6 +13,9 @@
                 <field name="net_terms_allowed" invisible="1"/>
                 <field name="net_terms_active" invisible="not net_terms_allowed"/>
             </xpath>
+            <xpath expr="//group[@name='sale']" position="inside">
+                <field name="sale_payment_method_id"/>
+            </xpath>
         </field>
     </record>
 
