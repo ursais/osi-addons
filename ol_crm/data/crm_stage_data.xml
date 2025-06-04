@@ -61,26 +61,58 @@
         <field name="team_id" ref="ol_crm.sales_team_engineer_to_order"/>
     </record>
 
-    <!-- Sales Team Stages -->
-    <record id="sales_team_stage_presale" model="crm.stage">
+    <!-- Sales Team Stages: US -->
+    <record id="sales_team_stage_presale_us" model="crm.stage">
         <field name="name">Presale</field>
         <field name="sequence">1</field>
+        <field name="team_id" ref="ol_crm.sales_team_us"/>
     </record>
-    <record id="sales_team_stage_prototype" model="crm.stage">
+    <record id="sales_team_stage_prototype_us" model="crm.stage">
         <field name="name">Prototype</field>
         <field name="sequence">2</field>
+        <field name="team_id" ref="ol_crm.sales_team_us"/>
     </record>
-    <record id="sales_team_stage_decision" model="crm.stage">
+    <record id="sales_team_stage_decision_us" model="crm.stage">
         <field name="name">Decision</field>
         <field name="sequence">3</field>
+        <field name="team_id" ref="ol_crm.sales_team_us"/>
     </record>
-    <record id="sales_team_stage_closed_won" model="crm.stage">
+    <record id="sales_team_stage_closed_won_us" model="crm.stage">
         <field name="name">Closed won</field>
         <field name="sequence">4</field>
+        <field name="team_id" ref="ol_crm.sales_team_us"/>
     </record>
-    <record id="sales_team_stage_closed_lost" model="crm.stage">
+    <record id="sales_team_stage_closed_lost_us" model="crm.stage">
         <field name="name">Closed lost</field>
         <field name="sequence">5</field>
+        <field name="team_id" ref="ol_crm.sales_team_us"/>
+    </record>
+
+    <!-- Sales Team Stages: EU -->
+    <record id="sales_team_stage_presale_eu" model="crm.stage">
+        <field name="name">Presale</field>
+        <field name="sequence">1</field>
+        <field name="team_id" ref="ol_crm.sales_team_eu"/>
+    </record>
+    <record id="sales_team_stage_prototype_eu" model="crm.stage">
+        <field name="name">Prototype</field>
+        <field name="sequence">2</field>
+        <field name="team_id" ref="ol_crm.sales_team_eu"/>
+    </record>
+    <record id="sales_team_stage_decision_eu" model="crm.stage">
+        <field name="name">Decision</field>
+        <field name="sequence">3</field>
+        <field name="team_id" ref="ol_crm.sales_team_eu"/>
+    </record>
+    <record id="sales_team_stage_closed_won_eu" model="crm.stage">
+        <field name="name">Closed won</field>
+        <field name="sequence">4</field>
+        <field name="team_id" ref="ol_crm.sales_team_eu"/>
+    </record>
+    <record id="sales_team_stage_closed_lost_eu" model="crm.stage">
+        <field name="name">Closed lost</field>
+        <field name="sequence">5</field>
+        <field name="team_id" ref="ol_crm.sales_team_eu"/>
     </record>
 
     <!-- Canceled Stages -->
