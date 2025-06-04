@@ -17,10 +17,12 @@ class ResPartner(models.Model):
         compute="_compute_net_terms_allowed",
         store=True,
     )
-    net_terms_active = fields.Boolean(string="Front End Net Terms Active")
-
-    customer_payment_method_id = fields.Many2one(
-        "payment.method", string="Customer Preferred Payment Method"
+    net_terms_active = fields.Boolean(
+        string="Front End Net Terms Active",
+    )
+    sale_payment_method_id = fields.Many2one(
+        "payment.method",
+        string="Customer Preferred Payment Method",
     )
 
     # END #########
@@ -40,7 +42,7 @@ class ResPartner(models.Model):
 
     def _commercial_fields(self):
         fields = super()._commercial_fields()
-        fields.append("customer_payment_method_id")
+        fields.append("sale_payment_method_id")
         return fields
 
     # END #########

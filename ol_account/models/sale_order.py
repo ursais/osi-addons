@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import api,models
+from odoo import api, models
 
 
 class SaleOrder(models.Model):
@@ -19,7 +19,7 @@ class SaleOrder(models.Model):
     def _onchange_partner_invoice_id_payment_method(self):
         if self.partner_invoice_id:
             self.sale_payment_method_id = (
-                self.partner_invoice_id.customer_payment_method_id.id
+                self.partner_invoice_id.sale_payment_method_id.id
             )
 
     # END ##########

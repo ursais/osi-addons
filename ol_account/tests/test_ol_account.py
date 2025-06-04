@@ -24,7 +24,7 @@ class TestAutoInvoiceOnDelivery(common.TransactionCase):
         cls.partner = cls.env["res.partner"].create(
             {
                 "name": "Test Partner",
-                "customer_payment_method_id": cls.payment_method_id.id,
+                "sale_payment_method_id": cls.payment_method_id.id,
             }
         )
         cls.invoice_partner = cls.env["res.partner"].create(
