@@ -12,6 +12,7 @@
     "depends": [
         "ol_base",
         "sale_crm",
+        "crm_project_task",
     ],
     # Data Loaded.
     "data": [
@@ -20,5 +21,6 @@
         "views/crm_lead_views.xml",
         "views/crm_stage_views.xml",
         "views/res_partner_views.xml",
+        "views/project_task.xml"
     ],
 }

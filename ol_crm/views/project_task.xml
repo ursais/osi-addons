@@ -1,0 +1,13 @@
+<odoo>
+    <record id="view_task_form2_inherit_ol_crm" model="ir.ui.view">
+        <field name="name">project.task.form.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="crm_project_task.view_task_form2_inherit_crm_project_task" />
+        <field name="arch" type="xml">
+            <group name="crm" position="replace"/>
+            <label for="repeat_interval" position="before">
+                <field name="lead_id" string="Opportunity"/>
+            </label>
+        </field>
+    </record>
+</odoo>
