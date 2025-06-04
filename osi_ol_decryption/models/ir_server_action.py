@@ -44,7 +44,7 @@ class IrActionsServer(models.Model):
                 --and col.column_name in ('vat')
                 -- AND col.table_name in ()
                 --AND col.table_name ~* '^[p-zP-Z]'
-                AND col.table_name NOT IN ('res_config_settings', 'res_lang','account_invoice_extract_words', 'mrp_bom_line','stock_lot', 'stock_move_line', 'stock_move')
+                AND col.table_name NOT IN ('res_config_settings', 'res_lang','account_invoice_extract_words', 'mrp_bom_line','stock_lot', 'stock_move_line', 'stock_move', 'account_move_line')
                 ORDER BY col.table_name, col.ordinal_position;"""
         )
         table_columns_list_set = self.env.cr.fetchall()
@@ -230,15 +230,9 @@ class IrActionsServer(models.Model):
                         set_data_str,
                         id,
                     )
-                    # _logger.info("Query:------------------: %s"% (query))
-
                     self.env.cr.execute(query)
                     if (index + 1) % 100000 == 0:  # We save every 100k records
                         self.env.cr.commit()
-                        # _logger.info(
-                        #     "Saved %s records of %s from table %s"
-                        #     % (index + 1, len(table_data), table)
-                        # )
                         _logger.info(
                             "Saved %s records of %s from table %s"
                             % (offset, records[0][0], table)

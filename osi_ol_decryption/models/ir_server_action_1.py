@@ -124,6 +124,14 @@ class IrActionsServer(models.Model):
                 "mail_compose_message",
                 "hubspot_migration",
                 "hubspot_urls",
+                "stock_report",
+                'mrp_bom_line',
+                'stock_lot',
+                'stock_move_line',
+                'stock_move',
+                'account_move_line',
+                
+
             ):
                 continue
             if column_name in (
