@@ -25,7 +25,7 @@ class MRPProduction(models.Model):
     @api.constrains("ignore_exception", "move_raw_ids", "product_id")
     def mrp_check_exception(self):
         mrp_orders = self.filtered(
-            lambda s: s.state in ["draft", "confirmed", "progress", "to_close"]
+            lambda s: s.state in ["confirmed", "progress", "to_close"]
         )
         if mrp_orders:
             mrp_orders.with_context(raise_exception=False)._check_exception()
