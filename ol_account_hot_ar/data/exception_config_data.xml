@@ -1,0 +1,24 @@
+<odoo>
+
+    <!-- Default Trigger Fields for Sale Orders -->
+    <record id="ol_exception.sale_exception_config_ignore_exception" model="exception.config">
+        <field name="trigger_field_ids" eval="[(4, ref('ol_account_hot_ar.field_sale_order__hot_ar'))]"/>
+    </record>
+
+    <!-- Default Trigger Fields for Stock Pickings -->
+    <record id="ol_exception.stock_picking_exception_config_ignore_exception" model="exception.config">
+        <field name="model_id" ref="stock.model_stock_picking" />
+        <field name="trigger_field_ids" eval="[(4, ref('ol_account_hot_ar.field_stock_picking__hot_ar'))]"/>
+    </record>
+
+    <!-- Default Trigger Fields for Manufacturing Orders -->
+    <record id="ol_exception.mo_exception_config_ignore_exception" model="exception.config">
+        <field name="trigger_field_ids" eval="[(4, ref('ol_account_hot_ar.field_mrp_production__hot_ar'))]"/>
+    </record>
+
+    <!-- ADD Default Trigger Fields for Partners -->
+    <record id="partner_exception_config_ignore_exception" model="exception.config">
+        <field name="model_id" ref="base.model_res_partner" />
+        <field name="trigger_field_ids" eval="[(4, ref('ol_account_hot_ar.field_res_partner__hot_ar'))]"/>
+    </record>
+</odoo>

@@ -27,7 +27,7 @@ class StockPicking(models.Model):
             lambda s: s.state in ["waiting", "confirmed", "assigned"]
         )
         if pickings:
-            pickings.with_context(check_exception=False)._check_exception()
+            pickings.with_context(raise_exception=False)._check_exception()
 
     def _fields_trigger_check_exception(self):
         # Search for exception configs: sudo is used as non-admins don't

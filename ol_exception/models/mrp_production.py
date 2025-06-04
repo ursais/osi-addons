@@ -28,7 +28,7 @@ class MRPProduction(models.Model):
             lambda s: s.state in ["draft", "confirmed", "progress", "to_close"]
         )
         if mrp_orders:
-            mrp_orders.with_context(check_exception=False)._check_exception()
+            mrp_orders.with_context(raise_exception=False)._check_exception()
 
     def _fields_trigger_check_exception(self):
         # Search for exception configs: sudo is used as non-admins don't

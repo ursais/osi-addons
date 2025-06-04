@@ -11,6 +11,7 @@
     # any module necessary for this one to work correctly
     "depends": [
         "ol_base",
+        "ol_exception",
         "mrp_exception",
         "sale_exception",
         "stock_exception",
@@ -21,6 +22,7 @@
         "views/res_config_settings_views.xml",
         "views/account_move_views.xml",
         "views/res_partner_views.xml",
+        "data/exception_config_data.xml",
         "data/ir_cron.xml",
         "data/exception_rule.xml",
     ],
