@@ -2,20 +2,15 @@
 from odoo import models
 
 
-class SaleOrder(models.Model):
+class ResPartner(models.Model):
     """
     Also adds new triggered field functionality to check exception if a
     triggered field is being updated.
     """
 
-    _inherit = "sale.order"
+    _inherit = "res.partner"
 
     # METHODS ##########
-
-    def sale_check_exception(self):
-        sale_orders = self.filtered(lambda s: s.state in ["draft", "sent", "sale"])
-        if sale_orders:
-            sale_orders.with_context(raise_exception=False)._check_exception()
 
     def _fields_trigger_check_exception(self):
         # Search for exception configs: sudo is used as non-admins don't
@@ -45,7 +40,7 @@ class SaleOrder(models.Model):
         config_records = (
             self.env["exception.config"]
             .sudo()
-            .search([("model_id.model", "=", "sale.order")])
+            .search([("model_id.model", "=", "res.partner")])
         )
         field_mapping = {}
         for config in config_records:
@@ -64,11 +59,22 @@ class SaleOrder(models.Model):
 
         # Handle exception checks for related fields
         if related_changes:
-            pickings = self.env["stock.picking"].search([("sale_id", "in", self.ids)])
+            sales = self.env["sale.order"].search(
+                [
+                    "|",
+                    ("partner_id", "in", self.ids),
+                    ("partner_id.commercial_partner_id", "in", self.ids),
+                ]
+            )
+            sales._check_sale_check_exception(related_changes)
+
+            pickings = self.env["stock.picking"].search(
+                [("sale_id.partner_id", "in", self.ids)]
+            )
             pickings._check_stock_check_exception(related_changes)
 
             mrp_productions = self.env["mrp.production"].search(
-                [("sale_order_id", "in", self.ids)]
+                [("sale_order_id.partner_id", "in", self.ids)]
             )
             mrp_productions._check_mrp_check_exception(related_changes)
 

@@ -22,7 +22,6 @@ class ResPartner(models.Model):
     )
 
     # END #########
-
     # METHODS #####
 
     @api.depends(
@@ -30,9 +29,9 @@ class ResPartner(models.Model):
         "invoice_ids.payment_state",
         "invoice_ids.override_hot_ar",
         "override_hot_ar",
+        "child_ids.hot_ar",
     )
     def _compute_check_hot_ar(self):
-        """Update hot_ar bool if any invoices have it enabled."""
         for partner in self:
             if partner.override_hot_ar:
                 partner.hot_ar = False
@@ -52,6 +51,21 @@ class ResPartner(models.Model):
                         ("company_id.hot_ar_grace_period", ">", 0),
                     ]
                 )
-                partner.hot_ar = bool(invoices)
+                # Write to partner (with sudo since this is done systematically)
+                # Using write to trigger
+                partner.sudo().write({"hot_ar": bool(invoices)})
+
+            # Now update commercial partner based on children
+            if partner != partner.commercial_partner_id:
+                commercial_partner = partner.commercial_partner_id
+                # This will ensure the commercial partner is "hot" if any child is
+                commercial_partner.sudo().write(
+                    {
+                        "hot_ar": any(
+                            child.hot_ar and not child.override_hot_ar
+                            for child in commercial_partner.child_ids
+                        )
+                    }
+                )
 
     # END #########
