@@ -1,5 +1,6 @@
 # Import Odoo libs
 from odoo import _, api, fields, models
+from collections import defaultdict
 
 
 class RepairCreditNoteWizard(models.TransientModel):
@@ -17,8 +18,12 @@ class RepairCreditNoteWizard(models.TransientModel):
     )
     original_sale_order_ids = fields.Many2many(
         comodel_name="sale.order",
-        string="Original Sale Orders",
+        string="Sale Orders to Refund",
         help="Original Sale Orders where the systems were originally sold, populated by the Import from Sale Order wizard.",
+    )
+    original_repair_order_ids = fields.Many2many(
+        comodel_name="repair.order",
+        string="Repair Orders to Refund",
     )
     partner_id = fields.Many2one(
         comodel_name="res.partner",
@@ -26,8 +31,8 @@ class RepairCreditNoteWizard(models.TransientModel):
     )
     restock_fee = fields.Float(
         string="Restock Fee %",
-        default=".15",
-        help="This restock fee will be auto applied to each line, reducing it's price by the fee's percentage.",
+        default=0.15,
+        help="This restock fee will be auto applied to each line, reducing its price by the fee's percentage.",
     )
 
     def action_add_from_sale_orders(self):
@@ -35,6 +40,7 @@ class RepairCreditNoteWizard(models.TransientModel):
             lambda so: so.invoice_ids
         )
         self.original_sale_order_ids = [(6, 0, sale_orders.ids)]
+        self._onchange_original_sale_orders()
         return {
             "type": "ir.actions.act_window",
             "res_model": self._name,
@@ -45,7 +51,17 @@ class RepairCreditNoteWizard(models.TransientModel):
 
     @api.onchange("original_sale_order_ids")
     def _onchange_original_sale_orders(self):
-        lines = []
+        grouped_lines = defaultdict(
+            lambda: {
+                "quantity": 0.0,
+                "tax_ids": set(),
+                "account_id": None,
+                "price_unit": 0.0,
+                "name": "",
+                "discount": 0.0,
+            }
+        )
+
         for sale_order in self.original_sale_order_ids:
             for invoice in sale_order.invoice_ids.filtered(
                 lambda inv: inv.move_type == "out_invoice" and inv.state == "posted"
@@ -53,73 +69,101 @@ class RepairCreditNoteWizard(models.TransientModel):
                 for line in invoice.invoice_line_ids:
                     if not line.product_id:
                         continue
-                    lines.append(
-                        (
-                            0,
-                            0,
-                            {
-                                "product_id": line.product_id.id,
-                                "quantity": line.product_uom_qty,
-                                "price_unit": -line.price_unit,
-                                "tax_ids": [(6, 0, line.tax_ids.ids)],
-                                "account_id": line.account_id.id,
-                                "discount": -self.restock_fee,
-                            },
-                        )
-                    )
+                    key = (line.product_id.id, round(line.price_unit, 2))
+                    entry = grouped_lines[key]
+                    entry["quantity"] += line.quantity
+                    entry["tax_ids"].update(line.tax_ids.ids)
+                    entry["account_id"] = line.account_id.id
+                    entry["price_unit"] = line.price_unit  # keep original price
+                    entry["discount"] = (
+                        -self.restock_fee * 100
+                    )  # negative discount for restock fee
+                    entry["name"] = (
+                        line.name or line.product_id.display_name
+                    ) + f" (Restock Fee: {int(self.restock_fee * 100)}%)"
 
-        self.line_ids = lines
+        self.line_ids = [
+            (
+                0,
+                0,
+                {
+                    "product_id": product_id,
+                    "name": entry["name"],
+                    "quantity": entry["quantity"],
+                    "price_unit": entry["price_unit"],
+                    "tax_ids": [(6, 0, list(entry["tax_ids"]))],
+                    "account_id": entry["account_id"],
+                    "discount": entry["discount"],
+                },
+            )
+            for (product_id, _), entry in grouped_lines.items()
+        ]
 
     def action_add_from_repairs(self):
-        self.ensure_one()
-        product_quantities = {}
+        repair_orders = self.ticket_id.repair_ids.filtered(lambda r: r.state == "done")
+        self.original_repair_order_ids = [(6, 0, repair_orders.ids)]
+        self._onchange_original_repair_orders()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": self._name,
+            "res_id": self.id,
+            "view_mode": "form",
+            "target": "new",
+        }
 
-        repairs = self.ticket_id.repair_batch_ids.mapped("repair_ids").filtered(
-            lambda r: r.state == "done"
+    @api.onchange("original_repair_order_ids")
+    def _onchange_original_repair_orders(self):
+        grouped_lines = defaultdict(
+            lambda: {
+                "quantity": 0.0,
+                "tax_ids": set(),
+                "account_id": None,
+                "price_unit": 0.0,
+                "name": "",
+                "discount": 0.0,
+            }
         )
-        for repair in repairs:
+
+        for repair in self.original_repair_order_ids.filtered(
+            lambda r: r.state == "done"
+        ):
             for move in repair.move_ids.filtered(
                 lambda m: m.repair_line_type == "remove"
             ):
-                product_id = move.product_id.id
-                product_quantities[product_id] = (
-                    product_quantities.get(product_id, 0) + move.product_uom_qty
+                product = move.product_id
+                if not product:
+                    continue
+                key = (product.id, round(product.lst_price, 2))  # or other price logic
+
+                entry = grouped_lines[key]
+                entry["quantity"] += move.product_uom_qty
+                entry["tax_ids"].update(product.taxes_id.ids)
+                entry["account_id"] = (
+                    product.property_account_income_id.id
+                    or product.categ_id.property_account_income_categ_id.id
+                )
+                entry["price_unit"] = product.lst_price
+                entry["discount"] = -self.restock_fee * 100
+                entry["name"] = (
+                    f"Refund (Repair): {product.display_name} (Restock Fee: {int(self.restock_fee * 100)}%)"
                 )
 
-        lines_to_add = []
-        for product_id, qty in product_quantities.items():
-            product = self.env["product.product"].browse(product_id)
-            account_id = (
-                product.property_account_income_id.id
-                or product.categ_id.property_account_income_categ_id.id
+        self.line_ids = [
+            (
+                0,
+                0,
+                {
+                    "product_id": product_id,
+                    "name": entry["name"],
+                    "quantity": entry["quantity"],
+                    "price_unit": entry["price_unit"],
+                    "tax_ids": [(6, 0, list(entry["tax_ids"]))],
+                    "account_id": entry["account_id"],
+                    "discount": entry["discount"],
+                },
             )
-            existing_line = next(
-                (
-                    l
-                    for l in self.line_ids
-                    if l.product_id.id == product_id and l.price_unit == 0.0
-                ),
-                None,
-            )
-            if existing_line:
-                existing_line.quantity += qty
-            else:
-                lines_to_add.append(
-                    (
-                        0,
-                        0,
-                        {
-                            "product_id": product.id,
-                            "name": f"Refund (Repair): {product.display_name}",
-                            "quantity": qty,
-                            "price_unit": 0.0,
-                            "tax_ids": [],
-                            "account_id": account_id,
-                        },
-                    )
-                )
-
-        self.line_ids += lines_to_add
+            for (product_id, _), entry in grouped_lines.items()
+        ]
 
     def action_confirm(self):
         self.ensure_one()
@@ -144,8 +188,13 @@ class RepairCreditNoteWizard(models.TransientModel):
                         "quantity": line.quantity,
                         "price_unit": line.price_unit,
                         "tax_ids": [(6, 0, line.tax_ids.ids)],
-                        "analytic_account_id": line.analytic_account_id.id,
+                        "analytic_account_id": (
+                            line.analytic_account_id.id
+                            if line.analytic_account_id
+                            else False
+                        ),
                         "account_id": line.account_id.id,
+                        "discount": line.discount,
                     },
                 )
                 for line in self.line_ids

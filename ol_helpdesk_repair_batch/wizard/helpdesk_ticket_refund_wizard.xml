@@ -24,6 +24,7 @@
                         <field name="ticket_id" invisible="1" />
                         <field name="partner_id" />
                         <field name="original_sale_order_ids" widget="many2many_tags" domain="[('partner_id', '=', partner_id)]" />
+                        <field name="original_repair_order_ids" widget="many2many_tags" domain="[('ticket_id', '=', ticket_id)]" />
                         <field name="restock_fee" widget="percentage" />
                     </group>
                     <group>

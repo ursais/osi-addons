@@ -9,6 +9,9 @@
                 <field name="sale_order_id" invisible="1"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" />
             </xpath>
+            <xpath expr="//field[@name='move_raw_ids']/tree/field[@name='forecast_availability']" position="before">
+                <field name="date" optional="hide" readonly="1" />
+            </xpath>
         </field>
     </record>
 
