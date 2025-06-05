@@ -1337,7 +1337,18 @@ class MrpProductionBatch(models.Model):
                 vals["mrp_batch_schedule_id"] = self._get_or_create_schedule(
                     vals["date_start"], vals["workcenter_tag_id"]
                 ).id
-        return super().create(vals_list)
+        batches = super().create(vals_list)
+        workcenter_obj = self.env['mrp.workcenter']
+        for batch in batches:
+            if batch.workcenter_tag_id:
+                for mo in batch.production_ids:
+                    for workorder in mo.workorder_ids.filtered(lambda l : l.state not in ('done','cancel','progress')):
+                        if workorder.workcenter_id.type!= workorder.operation_type or workorder.workcenter_id.tag_ids.ids not in batch.workcenter_tag_id.ids:
+                            correct_workcenter = workcenter_obj.search([('type','=',workorder.operation_type), ('tag_ids','in',batch.workcenter_tag_id.ids)], limit=1)
+                            if correct_workcenter:
+                                workorder.workcenter_id = correct_workcenter.id
+
+        return batches
 
     def write(self, vals):
         res = super().write(vals)
@@ -1362,6 +1373,15 @@ class MrpProductionBatch(models.Model):
                     batch.mrp_batch_schedule_id = batch._get_or_create_schedule(
                         date_start, workcenter_tag_id
                     )
+            if "workcenter_tag_id" in vals or "production_ids" in vals:
+                workcenter_obj = self.env['mrp.workcenter']
+                if batch.workcenter_tag_id:
+                    for mo in batch.production_ids:
+                        for workorder in mo.workorder_ids.filtered(lambda l : l.state not in ('done','cancel','progress')):
+                            if workorder.workcenter_id.type!= workorder.operation_type or workorder.workcenter_id.tag_ids.ids not in batch.workcenter_tag_id.ids:
+                                correct_workcenter = workcenter_obj.search([('type','=',workorder.operation_type), ('tag_ids','in',batch.workcenter_tag_id.ids)], limit=1)
+                                if correct_workcenter:
+                                    workorder.workcenter_id = correct_workcenter.id
         return res
 
     def _get_or_create_schedule(self, date_start, workcenter_tag_id):
