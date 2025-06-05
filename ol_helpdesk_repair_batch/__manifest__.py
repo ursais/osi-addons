@@ -18,6 +18,7 @@
         "helpdesk_repair",
         "helpdesk_timesheet",
         "sale_order_type",
+        "mrp_repair_component_history",
     ],
     # always loaded
     "data": [

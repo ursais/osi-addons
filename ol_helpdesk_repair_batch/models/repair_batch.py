@@ -120,9 +120,19 @@ class RepairBatch(models.Model):
         string="Cancel Button Visible",
         compute="_compute_repair_buttons_visible",
     )
+    show_create_removal_button = fields.Boolean(
+        compute="_compute_show_create_removal_button",
+    )
 
     # END #######
     # METHODS ###
+
+    @api.depends("repair_ids.move_ids")
+    def _compute_show_create_removal_button(self):
+        for batch in self:
+            batch.show_create_removal_button = any(
+                not r.move_ids for r in batch.repair_ids
+            )
 
     def open_batch_full_form(self):
         self.ensure_one()
@@ -230,6 +240,52 @@ class RepairBatch(models.Model):
 
             # Ensure moves are created immediately after generating repairs
             batch._propagate_parts_to_repairs()
+
+    # def action_batch_create_removal_lines(self):
+    #     for batch in self:
+    #         repairs_to_process = batch.repair_ids.filtered(lambda r: not r.move_ids)
+    #         for repair in repairs_to_process:
+    #             repair.action_create_removal_lines()
+
+    def action_batch_create_removal_lines(self):
+        for batch in self:
+            repairs = batch.repair_ids
+            repairs_to_process = repairs.filtered(lambda r: not r.move_ids)
+
+            # Step 1: Call existing logic to generate stock.move lines
+            for repair in repairs_to_process:
+                repair.action_create_removal_lines()
+
+            # Step 2: Index move_ids from all repairs in the batch
+            all_moves = repairs.mapped("move_ids").filtered(
+                lambda m: m.repair_line_type == "remove"
+            )
+
+            # Group by (product_id, repair_line_type)
+            move_groups = {}
+            for move in all_moves:
+                key = (move.product_id.id, move.repair_line_type)
+                move_groups.setdefault(key, []).append(move)
+
+            # Step 3: Create batch lines for common components
+            for key, group_moves in move_groups.items():
+                product_id, line_type = key
+                repairs_with_this_move = set(move.repair_id.id for move in group_moves)
+                if set(repairs.ids) == repairs_with_this_move:
+                    total_qty = sum(move.product_uom_qty for move in group_moves)
+
+                    batch_line = self.env["repair.batch.line"].create(
+                        {
+                            "repair_batch_id": batch.id,
+                            "product_id": product_id,
+                            "repair_line_type": line_type,
+                            "quantity": total_qty,
+                        }
+                    )
+
+                    self.env["stock.move"].browse([m.id for m in group_moves]).write(
+                        {"repair_batch_line_id": batch_line.id}
+                    )
 
     @api.model_create_multi
     def create(self, vals_list):

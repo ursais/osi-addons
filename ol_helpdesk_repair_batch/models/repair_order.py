@@ -1,5 +1,6 @@
 # Import Odoo libs
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class RepairOrder(models.Model):
@@ -17,9 +18,17 @@ class RepairOrder(models.Model):
         inverse_name="repair_batch_id",
         string="Parts",
     )
+    show_create_removal_button = fields.Boolean(
+        compute="_compute_show_create_removal_button",
+    )
 
     # END #######
     # METHODS ###
+
+    @api.depends("move_ids")
+    def _compute_show_create_removal_button(self):
+        for rec in self:
+            rec.show_create_removal_button = not rec.move_ids
 
     def open_repair_full_form(self):
         self.ensure_one()
@@ -40,6 +49,48 @@ class RepairOrder(models.Model):
         if self.repair_batch_id:
             self.repair_batch_id._update_batch_state()
         return res
+
+    def action_create_removal_lines(self):
+        self.ensure_one()
+        if not self.lot_id:
+            raise ValidationError(_("Please set a Serial Number on this repair order."))
+
+        if self.move_ids:
+            return True
+
+        ComponentHistory = self.env["component.history"]
+
+        history_lines = ComponentHistory.search(
+            [
+                ("lot_id", "=", self.lot_id.id),
+                ("invisible", "=", False),
+            ]
+        )
+
+        new_moves = []
+        for history in history_lines:
+            new_moves.append(
+                (
+                    0,
+                    0,
+                    {
+                        "repair_line_type": "remove",
+                        "product_id": history.product_id.id,
+                        "lot_ids": (
+                            history.component_lot_ids.ids
+                            if history.component_lot_ids
+                            else False
+                        ),
+                        "product_uom_qty": history.qty_changed,
+                        "repair_id": self.id,
+                        "location_id": self.location_id.id,
+                        "location_dest_id": self.parts_location_id.id,
+                    },
+                )
+            )
+
+        if new_moves:
+            self.write({"move_ids": new_moves})
 
     def write(self, vals):
         """
