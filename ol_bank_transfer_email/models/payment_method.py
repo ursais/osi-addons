@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class PaymentMethod(models.Model):
@@ -14,5 +14,5 @@ class PaymentMethod(models.Model):
         help="""When set, if this payment method is set on the sale quotation,"""
         """it will send the email during confirmation of the sale order.""",
     )
+
     # END #########
-    

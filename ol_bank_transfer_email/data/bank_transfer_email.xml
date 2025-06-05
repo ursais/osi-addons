@@ -1,69 +1,64 @@
-<?xml version="1.0"?>
 <odoo>
 
     <template id="bank_transfer_email_template">
-    <t t-call="ol_templates.ol_email">
-      <!-- Variables -->
-      <t t-set="title" t-value="'Bank transfer info for ' + sale_order.name"/>
-      <t t-set="preheader_text" t-value="'Bank transfer information for  Order ' + sale_order.name"/>
-      <t t-set="include_newsletter_disclaimer" t-value="False"/>
+      <t t-call="ol_templates.ol_email">
+          <!-- Variables -->
+          <t t-set="title" t-value="'Bank transfer info for ' + sale_order.name"/>
+          <t t-set="preheader_text" t-value="'Bank transfer information for  Order ' + sale_order.name"/>
+          <t t-set="include_newsletter_disclaimer" t-value="False"/>
 
-      <!-- Body -->
-
-      <t t-call="ol_templates.ol_email_text_content">
-        <div style="font-weight: 500; font-size: 20px;">
-          <tag>You’re Almost There!</tag>
-        </div>
-        <div style="font-size:16px; line-height:28px; margin-top:30px"><t t-esc="sale_order.partner_id.name"/>,
-        </div>
-        <p style="font-size: 16px; line-height: 28px; margin-top: 30px;">
-          <tag>Your order has been confirmed and is awaiting payment. Use the information below
-            to complete your bank transfer. We will begin processing your order as soon as payment
-            is received.
-          </tag>
-
-          <br/>
-          <br/>
-          <tag style="display: inline-block; font-weight: 500;">
-            Your Order Number
-          </tag>
-          <span style="font-weight: 500;" t-esc="sale_order.name"/>
-          <br/>
-          <tag style="display: inline-block; font-weight: 500;">Total Due</tag>
-          <span class="oe_currency_value" style="font-weight: 500;">
-            <t t-esc="object.amount_total"
-               t-options='{"widget": "monetary", "display_currency": sale_order.currency_id}'/>
-          </span>
-        </p>
-      </t>
-
-      <t t-if="sale_order.company_id.short_name == 'us'">
-        <t t-call="ol_templates.ol_domestic_ach_info_us"/>
-
-        <t t-call="ol_templates.ol_email_spacer"/>
-        <t t-call="ol_templates.ol_international_ach_info_us"/>
-      </t>
-
-      <t t-if="sale_order.company_id.short_name == 'eu'">
-        <t t-call="ol_templates.ol_domestic_ach_info_eu"/>
-      </t>
-
-      <t t-call="ol_templates.ol_email_spacer"/>
-      <t t-call="ol_templates.ol_email_text_content">
-        <p style="font-size: 16px; line-height: 28px;">
-          <span style="font-weight: 500;">
-            <tag>Please keep in mind that you may be charged additional bank or wire transfer fees for which you will be
-              responsible.
-            </tag>
-          </span>
-          <br/>
-          <br/>
-          <t t-call="ol_templates.ol_contact_info">
-            <t t-set="company" t-value="sale_order.company_id"/>
+          <!-- Body -->
+          <t t-call="ol_templates.ol_email_text_content">
+              <div style="font-weight: 500; font-size: 20px;">
+                  <tag>You’re Almost There!</tag>
+              </div>
+              <div style="font-size:16px; line-height:28px; margin-top:30px"><t t-esc="sale_order.partner_id.name"/>,
+              </div>
+              <p style="font-size: 16px; line-height: 28px; margin-top: 30px;">
+                  <tag>Your order has been confirmed and is awaiting payment. Use the information below
+                    to complete your bank transfer. We will begin processing your order as soon as payment
+                    is received.
+                  </tag>
+                  <br/>
+                  <br/>
+                  <tag style="display: inline-block; font-weight: 500;">
+                    Your Order Number
+                  </tag>
+                  <span style="font-weight: 500;" t-esc="sale_order.name"/>
+                  <br/>
+                  <tag style="display: inline-block; font-weight: 500;">Total Due</tag>
+                  <span class="oe_currency_value" style="font-weight: 500;">
+                      <t t-esc="object.amount_total" t-options='{"widget": "monetary", "display_currency": sale_order.currency_id}'/>
+                  </span>
+              </p>
           </t>
-        </p>
+
+          <t t-if="sale_order.company_id.short_name == 'us'">
+              <t t-call="ol_templates.ol_domestic_ach_info_us"/>
+              <t t-call="ol_templates.ol_email_spacer"/>
+              <t t-call="ol_templates.ol_international_ach_info_us"/>
+          </t>
+
+          <t t-if="sale_order.company_id.short_name == 'eu'">
+              <t t-call="ol_templates.ol_domestic_ach_info_eu"/>
+          </t>
+
+          <t t-call="ol_templates.ol_email_spacer"/>
+          <t t-call="ol_templates.ol_email_text_content">
+              <p style="font-size: 16px; line-height: 28px;">
+                  <span style="font-weight: 500;">
+                      <tag>Please keep in mind that you may be charged additional bank or wire transfer fees for which you will be
+                        responsible.
+                      </tag>
+                  </span>
+                  <br/>
+                  <br/>
+                  <t t-call="ol_templates.ol_contact_info">
+                      <t t-set="company" t-value="sale_order.company_id"/>
+                  </t>
+              </p>
+          </t>
       </t>
-    </t>
     </template>
 
     <record id="customer_bank_transfer_email_template" model="mail.template">

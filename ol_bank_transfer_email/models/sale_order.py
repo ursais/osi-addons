@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import api, fields, models
+from odoo import models
 
 
 class SaleOrder(models.Model):
@@ -8,6 +8,7 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     # METHOD #####
+
     def action_confirm(self):
         res = super().action_confirm()
         for order in self:
