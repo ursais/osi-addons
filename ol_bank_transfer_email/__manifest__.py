@@ -12,6 +12,7 @@
     "depends": [
         "ol_base",
         "ol_templates",
+        "ol_fraud_detection",
         "sale",
     ],
     # always loaded
