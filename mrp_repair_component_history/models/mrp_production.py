@@ -23,6 +23,7 @@ class MrpProduction(models.Model):
                                 "change_type": "manufactured",
                                 "source_id": f"mrp.production,{production.id}",
                                 "component_lot_ids": [[6, 0, move.lot_ids.ids]],
+                                "date": production.date_finished,
                             }
                         )
         return res

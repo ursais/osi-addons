@@ -51,6 +51,7 @@ class RepairOrder(models.Model):
                             "change_type": type,
                             "source_id": f"repair.order,{repair.id}",
                             "component_lot_ids": [[6, 0, line.lot_ids.ids]],
+                            "date": line.date,
                         }
                     )
         return res
