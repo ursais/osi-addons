@@ -31,6 +31,10 @@ class ProductCreationWizard(models.TransientModel):
         string="Product Type",
         required=True,
     )
+    opportunity_id = fields.Many2one(
+        comodel_name="crm.lead",
+        string="Opportunity",
+    )
 
     # END #########
 
@@ -125,6 +129,7 @@ class ProductCreationWizard(models.TransientModel):
             "product_tmpl_id": new_product.id,
             "estimate_id": self.estimate_id.id,
             "stage_id": eco_stage.id,
+            "opportunity_id": self.opportunity_id.id,
         }
         if new_bom:
             eco_data["bom_id"] = new_bom.id
