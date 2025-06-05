@@ -176,7 +176,10 @@ class SaleEstimateJob(models.Model):
             "res_model": "product.creation.wizard",
             "view_mode": "form",
             "target": "new",
-            "context": {"default_estimate_id": self.id},
+            "context": {
+                "default_estimate_id": self.id,
+                "default_opportunity_id": self.opportunity_id.id,
+            },
         }
 
     @api.depends("product_tmpl_ids")
