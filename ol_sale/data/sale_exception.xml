@@ -1,4 +1,4 @@
-<odoo noupdate="1">
+<odoo>
 
     <record id="excep_component_outof_stock" model="exception.rule">
         <field name="name">Component Out of Stock</field>
@@ -8,17 +8,19 @@
         <field name="exception_type">by_domain</field>
         <field name="domain">[
         "|",
-        "&amp;","&amp;","&amp;",
+        "&amp;","&amp;","&amp;","&amp;",
             ("order_line.product_id.detailed_type", "=", "product"),
             ("order_line.product_id.qty_available", "&lt;=", 0),
+            ("order_line.product_id.incoming_qty",  "&lt;=", 0),
             ("order_line.product_id.allow_backorder", "=", False),
             ("order_line.bom_id", "=", False),
-        "&amp;","&amp;",
+        "&amp;","&amp;","&amp;",
             ("order_line.bom_id.bom_line_ids.product_id.detailed_type", "=", "product"),
             ("order_line.bom_id.bom_line_ids.product_id.allow_backorder", "=", False),
             ("order_line.bom_id.bom_line_ids.product_id.qty_available", "&lt;=", 0),
+            ("order_line.bom_id.bom_line_ids.product_id.incoming_qty",  "&lt;=", 0),
     ]</field>
-        <field name="active" eval="False" />
+        <field name="active" eval="True" />
     </record>
 
 </odoo>
