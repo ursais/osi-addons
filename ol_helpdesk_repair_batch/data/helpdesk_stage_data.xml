@@ -69,14 +69,12 @@
         <field name="name">Waiting on Internal</field>
         <field name="team_ids" eval="[(4, ref('helpdesk_team_customer_rma'))]"/>
         <field name="sequence">15</field>
-        <field name="template_id" ref="email_template_rma_shipped"/>
     </record>
 
     <record id="helpdesk_stage_rma_wait_cust" model="helpdesk.stage">
         <field name="name">Waiting on Customer</field>
         <field name="team_ids" eval="[(4, ref('helpdesk_team_customer_rma'))]"/>
         <field name="sequence">16</field>
-        <field name="template_id" ref="email_template_rma_shipped"/>
     </record>
 
     <record id="helpdesk_stage_rma_in_progress" model="helpdesk.stage">
@@ -97,7 +95,6 @@
         <field name="team_ids" eval="[(4, ref('helpdesk_team_customer_rma'))]"/>
         <field name="sequence">19</field>
         <field name="fold">True</field>
-        <field name="template_id" ref="email_template_rma_shipped"/>
     </record>
 
     <record id="helpdesk_stage_rma_cancelled" model="helpdesk.stage">
@@ -105,7 +102,6 @@
         <field name="team_ids" eval="[(4, ref('helpdesk_team_customer_rma'))]"/>
         <field name="sequence">20</field>
         <field name="fold">True</field>
-        <field name="template_id" ref="email_template_rma_shipped"/>
     </record>
 
 </odoo>
