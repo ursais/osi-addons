@@ -90,9 +90,6 @@ class ProductCreateWizard(models.TransientModel):
             product = self.env["product.template"].browse(product_tmpl_id)
             res["product_name"] = product.name
             res["internal_ref"] = product.default_code or ""
-            # res["public_destination"] = product.public_destination
-            # res["company_id"] = False
-            # res["system_tier"] = product.name
             res["allow_backorder"] = product.allow_backorder
             res["company_ids_display"] = [(6, 0, product.company_ids_display.ids)]
             res["attribute_line_ids"] = [
@@ -244,9 +241,25 @@ class ProductCreateWizard(models.TransientModel):
                                 }
                             )
 
-            # Step 3: Create BOM if product is configurable
+            # Step 3: Create BoM
             if new_template.config_ok:
+                # Step 3.1: Find the original scaffold BoM
+                original_scaffold_bom = (
+                    record.env["mrp.bom"]
+                    .sudo()
+                    .search(
+                        [
+                            ("product_tmpl_id", "=", original_tmpl.id),
+                            ("scaffolding_bom", "=", True),
+                        ],
+                        limit=1,
+                    )
+                )
+
+                # Step 3.2: Create a new scaffold BoM
                 new_template.action_create_rebuild_scaffolding_bom()
+
+                # Step 3.3: Fetch the newly created BoM
                 bom = (
                     record.env["mrp.bom"]
                     .sudo()
@@ -258,6 +271,33 @@ class ProductCreateWizard(models.TransientModel):
                         limit=1,
                     )
                 )
+
+                # Step 3.4: Copy operations if the original exists
+                if (
+                    bom
+                    and original_scaffold_bom
+                    and original_scaffold_bom.operation_ids
+                ):
+                    for operation in original_scaffold_bom.operation_ids:
+                        bom.operation_ids.create(
+                            {
+                                "bom_id": bom.id,
+                                "name": operation.name,
+                                "type": operation.type,
+                                "workcenter_id": operation.workcenter_id.id,
+                                "skill": operation.skill.id,
+                                "search_mode": operation.search_mode,
+                                "priority": operation.priority,
+                                "bom_product_template_attribute_value_ids": operation.bom_product_template_attribute_value_ids.ids,
+                                "time_mode": operation.time_mode,
+                                "time_cycle_manual": operation.time_cycle_manual,
+                                "employee_ratio": operation.employee_ratio,
+                                "worksheet_type": operation.worksheet_type,
+                                "note": operation.note,
+                                "company_id": operation.company_id.id,
+                            }
+                        )
+
                 apply_on = "bom"
             else:
                 bom = False

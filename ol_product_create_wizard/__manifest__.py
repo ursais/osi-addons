@@ -17,6 +17,7 @@
         "ol_product",
         "sale_management",
         "mrp_plm",
+        "mrp_batch",
     ],
     # always loaded
     "data": [
