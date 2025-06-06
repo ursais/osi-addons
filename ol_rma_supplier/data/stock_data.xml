@@ -25,7 +25,6 @@
         <field name="sequence_id" ref="seq_picking_type_rma_sup_out" />
         <field name="sequence_code">RMA -> Supplier</field>
         <field name="default_location_src_id" ref="ol_rma_supplier.location_rma" />
-        <!-- <field name="default_location_dest_id" ref="stock.stock_location_suppliers" /> -->
         <field name="warehouse_id" eval="False" />
         <field name="code">outgoing</field>
     </record>
@@ -34,12 +33,10 @@
         <field name="name">Supplier -> RMA</field>
         <field name="sequence_id" ref="seq_picking_type_rma_sup_in" />
         <field name="sequence_code">Supplier -> RMA</field>
-        <!-- <field name="default_location_src_id" ref="stock.stock_location_suppliers" /> -->
         <field name="default_location_dest_id" ref="ol_rma_supplier.location_rma" />
         <field name="warehouse_id" eval="False" />
         <field name="code">incoming</field>
     </record>
-
 
     <record id="stock.warehouse0" model="stock.warehouse">
         <field name="lot_rma_id" ref="location_rma" />
@@ -96,8 +93,6 @@
         <field name="name">EU RMA -> Supplier</field>
         <field name="sequence_id" ref="seq_picking_type_rma_sup_out_eu" />
         <field name="sequence_code">EU RMA -> Supplier</field>
-        <!-- <field name="default_location_src_id" ref="ol_rma_supplier.location_rma" /> -->
-        <!-- <field name="default_location_dest_id" ref="stock.stock_location_suppliers" /> -->
         <field name="warehouse_id" eval="False" />
         <field name="code">outgoing</field>
         <field name="company_id" ref="ol_base.onlogic_eu" />
@@ -107,8 +102,6 @@
         <field name="name">Supplier -> RMA</field>
         <field name="sequence_id" ref="seq_picking_type_rma_sup_in_eu" />
         <field name="sequence_code">Supplier -> RMA</field>
-        <!-- <field name="default_location_src_id" ref="stock.stock_location_suppliers" /> -->
-        <!-- <field name="default_location_dest_id" ref="ol_rma_supplier.location_rma" /> -->
         <field name="warehouse_id" eval="False" />
         <field name="code">incoming</field>
         <field name="company_id" ref="ol_base.onlogic_eu" />
