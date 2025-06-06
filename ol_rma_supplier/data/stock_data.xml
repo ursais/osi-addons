@@ -1,23 +1,23 @@
 <odoo noupdate="1">
 
     <record id="location_rma" model="stock.location">
-        <field name="name">WH RMA</field>
+        <field name="name">SRMA Staging</field>
         <field name="usage">internal</field>
         <field name="location_id" ref="stock.stock_location_stock" />
     </record>
 
     <record id="seq_picking_type_rma_sup_out" model="ir.sequence">
-        <field name="name">DOS</field>
-        <field name="prefix">RMA/OUT/</field>
+        <field name="name">WH SRMA</field>
+        <field name="prefix">SRMA/OUT/</field>
         <field name="padding">5</field>
-        <field name="company_id" eval="False" />
+        <field name="company_id" eval="base.main_company" />
     </record>
 
     <record id="seq_picking_type_rma_sup_in" model="ir.sequence">
-        <field name="name">INS</field>
-        <field name="prefix">RMA/IN/</field>
+        <field name="name">WH SRMA IN</field>
+        <field name="prefix">SRMA/IN/</field>
         <field name="padding">5</field>
-        <field name="company_id" eval="False" />
+        <field name="company_id" eval="base.main_company" />
     </record>
 
     <record id="picking_type_rma_sup_out" model="stock.picking.type">
@@ -25,7 +25,6 @@
         <field name="sequence_id" ref="seq_picking_type_rma_sup_out" />
         <field name="sequence_code">RMA -> Supplier</field>
         <field name="default_location_src_id" ref="ol_rma_supplier.location_rma" />
-        <field name="default_location_dest_id" ref="stock.stock_location_suppliers" />
         <field name="warehouse_id" eval="False" />
         <field name="code">outgoing</field>
     </record>
@@ -34,12 +33,10 @@
         <field name="name">Supplier -> RMA</field>
         <field name="sequence_id" ref="seq_picking_type_rma_sup_in" />
         <field name="sequence_code">Supplier -> RMA</field>
-        <field name="default_location_src_id" ref="stock.stock_location_suppliers" />
         <field name="default_location_dest_id" ref="ol_rma_supplier.location_rma" />
         <field name="warehouse_id" eval="False" />
         <field name="code">incoming</field>
     </record>
-
 
     <record id="stock.warehouse0" model="stock.warehouse">
         <field name="lot_rma_id" ref="location_rma" />
@@ -77,5 +74,38 @@
         <field name="route_id" ref="ol_rma_supplier.route_rma_supplier" />
         <field name="picking_type_id" ref="ol_rma_supplier.picking_type_rma_sup_in" />
     </record>
+
+    <record id="seq_picking_type_rma_sup_out_eu" model="ir.sequence">
+        <field name="name">EU SRMA OUT</field>
+        <field name="prefix">EU/SRMA/OUT/</field>
+        <field name="padding">5</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+    </record>
+
+    <record id="seq_picking_type_rma_sup_in_eu" model="ir.sequence">
+        <field name="name">EU SRMA IN</field>
+        <field name="prefix">EU/SRMA/IN/</field>
+        <field name="padding">5</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+    </record>
+
+    <record id="picking_type_rma_sup_out_eu" model="stock.picking.type">
+        <field name="name">EU RMA -> Supplier</field>
+        <field name="sequence_id" ref="seq_picking_type_rma_sup_out_eu" />
+        <field name="sequence_code">EU RMA -> Supplier</field>
+        <field name="warehouse_id" eval="False" />
+        <field name="code">outgoing</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+    </record>
+
+    <record id="picking_type_rma_sup_in_eu" model="stock.picking.type">
+        <field name="name">Supplier -> RMA</field>
+        <field name="sequence_id" ref="seq_picking_type_rma_sup_in_eu" />
+        <field name="sequence_code">Supplier -> RMA</field>
+        <field name="warehouse_id" eval="False" />
+        <field name="code">incoming</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+    </record>
+
 
 </odoo>
