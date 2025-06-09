@@ -1,0 +1,19 @@
+
+<odoo>
+
+    <record id="action_account_report_sales_inhert_ol_l10n_nl" model="ir.actions.client">
+        <field name="name">EC Sales List</field>
+        <field name="tag">account_report</field>
+        <field name="context" eval="{'report_id': ref('account_reports.generic_ec_sales_report'), 'partner_shipping_report': True}"/>
+    </record>
+
+    <menuitem
+        id="menu_action_account_report_sales"
+        name="Onlogic EC Sales Report"
+        action="action_account_report_sales_inhert_ol_l10n_nl"
+        parent="account.account_reports_legal_statements_menu"
+        sequence="60" groups="account.group_account_readonly"
+        active="True"
+    />
+
+</odoo>
