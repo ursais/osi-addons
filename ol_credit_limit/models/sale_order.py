@@ -51,7 +51,7 @@ class SaleOrder(models.Model):
         sale_orders = self.env['sale.order']
         query = """SELECT id FROM account_move_line WHERE move_id IN %s"""
         self.env.cr.execute(query, (tuple(invoices),))  # Note the trailing comma
-        datas = env.cr.fetchall()
+        datas = self.env.cr.fetchall()
         not_paid_amls = [row[0] for row in datas]
         if not_paid_amls:
             query = """SELECT order_line_id from sale_order_line_invoice_rel where invoice_line_id in %s; """
