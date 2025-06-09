@@ -1,5 +1,8 @@
 # Import Odoo libs
 from odoo import _, api, fields, models
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class SaleOrder(models.Model):
@@ -71,6 +74,7 @@ class SaleOrder(models.Model):
     )
     def _compute_credit_hold(self):
         open_saleorders = self._get_open_sale_order(self.mapped("partner_id"))
+        _logger.info("_compute_credit_hold %s", self.mapped("partner_id"))
         open_so_invoices = self.env['sale.order']
         paid_so_invoices = self.env['sale.order']
         cr = self.env.cr

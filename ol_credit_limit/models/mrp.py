@@ -34,7 +34,10 @@ class MRPProduction(models.Model):
     )
     def _compute_credit_hold(self):
         for mo in self:
-            mo.credit_hold = bool(mo.sale_order_id.credit_hold)
+            credit_hold = False
+            if mo.sale_order_id:
+                credit_hold = bool(mo.sale_order_id.credit_hold)
+            mo.credit_hold = credit_hold
             if not mo.credit_hold:
                 mo.update_ignore_exceptions()
 
