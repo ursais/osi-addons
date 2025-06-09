@@ -47,18 +47,18 @@ class SaleOrder(models.Model):
         sols = []
         sale_orders = self.env['sale.order']
         query = """SELECT id FROM account_move_line WHERE move_id IN %s"""
-        env.cr.execute(query, (tuple(invoices),))  # Note the trailing comma
+        self.env.cr.execute(query, (tuple(invoices),))  # Note the trailing comma
         datas = env.cr.fetchall()
         not_paid_amls = [row[0] for row in datas]
         if not_paid_amls:
             query = """SELECT order_line_id from sale_order_line_invoice_rel where invoice_line_id in %s; """
-            env.cr.execute(query, (tuple(not_paid_amls),))  # Note the trailing comma
-            datas = env.cr.fetchall()
+            self.env.cr.execute(query, (tuple(not_paid_amls),))  # Note the trailing comma
+            datas = self.env.cr.fetchall()
             sols = [row[0] for row in datas]
         if sols:
             query = """select DISTINCT order_id from sale_order_line where id in %s;"""
-            env.cr.execute(query, (tuple(sols),))  # Note the trailing comma
-            datas = env.cr.fetchall()
+            self.env.cr.execute(query, (tuple(sols),))  # Note the trailing comma
+            datas = self.env.cr.fetchall()
             order_ids = [row[0] for row in datas]
             sale_orders = self.env['sale.order'].browse(order_ids)
         return sale_orders
