@@ -75,7 +75,7 @@ class SaleOrder(models.Model):
     def _compute_credit_hold(self):
         for sale in self:
             open_saleorders = self._get_open_sale_order(sale.mapped("partner_id"))
-            _logger.info("_compute_credit_hold %s", self.mapped("partner_id"))
+            _logger.info("_compute_credit_hold For Sale : %s, For partner: %s", sale,sale.mapped("partner_id"))
             open_so_invoices = self.env['sale.order']
             paid_so_invoices = self.env['sale.order']
             cr = self.env.cr
@@ -127,6 +127,9 @@ class SaleOrder(models.Model):
                 .sorted("original_request_date")
             )
             counter_total = 0
+            if not sorted_orders_asc:
+                sale.credit_hold = False
+
             for order in sorted_orders_asc:
                 if order.id not in paid_so_invoices.ids:
                     counter_total += order.amount_total
@@ -138,6 +141,8 @@ class SaleOrder(models.Model):
                 if order.id in paid_so_invoices.ids:
                     credit_hold = False
                 order.credit_hold = credit_hold
+            logger.info("Done:::_compute_credit_hold For Sale : %s, For partner: %s", sale,sale.mapped("partner_id"))
+
 
 
             # not_paid_invoices = self.env["account.move"].search(
