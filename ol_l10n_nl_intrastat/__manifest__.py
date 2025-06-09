@@ -1,7 +1,8 @@
 {
     "name": "Dutch EC Sales Report",
     "summary": """
-        Extends the functionality of Dutch EC Sales Report .
+        Extends the functionality of Dutch EC Sales Report.
+        Adds Onlogic EC Sales Report reporting by ship address.
         """,
     "author": "OnLogic, Open Source Integrators",
     "website": "https://www.onlogic.com",

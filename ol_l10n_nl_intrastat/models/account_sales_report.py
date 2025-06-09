@@ -1,8 +1,17 @@
+# Import Odoo libs
 from odoo import models
 
 
 class DutchECSalesReportCustomHandler(models.AbstractModel):
+    """
+    Inherit the ec sales report handler adding context to report action.
+    If partner_shipping_report is passed via context then the report will
+    use the shipping address to report VAT instead of the customer.
+    """
+
     _inherit = "account.ec.sales.report.handler"
+
+    # METHODS #####
 
     def _get_query_sums(self, report, options):
         if not self.env.context.get("partner_shipping_report"):
@@ -85,3 +94,5 @@ class DutchECSalesReportCustomHandler(models.AbstractModel):
             """
             )
         return " UNION ALL ".join(queries), params
+
+    # END #########
