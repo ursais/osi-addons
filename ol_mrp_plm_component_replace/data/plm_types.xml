@@ -1,0 +1,9 @@
+<odoo noupdate="1">
+
+    <record id="component_replacement" model="mrp.eco.type">
+        <field name="name">BoM Component Replacement</field>
+        <field name="component_replacement">True</field>
+        <field name="sequence">1</field>
+    </record>
+
+</odoo>

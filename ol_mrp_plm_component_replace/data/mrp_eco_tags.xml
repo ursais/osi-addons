@@ -1,0 +1,8 @@
+<odoo noupdate="1">
+
+    <record id="mrp_plm_component_replace" model="mrp.eco.tag">
+        <field name="name">Component Replacement</field>
+        <field name="color">11</field>
+    </record>
+
+</odoo>
