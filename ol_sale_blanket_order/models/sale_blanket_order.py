@@ -271,11 +271,9 @@ class SaleBlanketOrder(models.Model):
             # Dictionary to store order lines by customer
             order_lines_by_customer = defaultdict(list)
             # Initialize variables to track order attributes
-            currency_id = (
-                pricelist_id
-            ) = (
-                user_id
-            ) = payment_term_id = partner_invoice_id = partner_shipping_id = None
+            currency_id = pricelist_id = user_id = payment_term_id = (
+                partner_invoice_id
+            ) = partner_shipping_id = None
             original_request_date = None
             contact_ids = None
 
