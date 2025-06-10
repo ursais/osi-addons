@@ -199,6 +199,17 @@ class SaleBlanketOrder(models.Model):
         """Hook to exclude specific lines which should not be updated based on price list recomputation"""
         return self.line_ids.filtered(lambda line: not line.display_type)
 
+    def action_confirm(self):
+        """Check the Scheduled Date in BOL before confirm."""
+        for order in self:
+            if order.line_ids.filtered(lambda l: not l.date_schedule):
+                raise ValidationError(
+                    _(
+                        "Scheduled Date is required on blanket order lines to confirm an order"
+                    )
+                )
+        return super().action_confirm()
+
     def _prepare_so_line_vals(self, line):
         """Prepares the values for a sale order line based on the
         provided blanket order line."""
@@ -260,9 +271,11 @@ class SaleBlanketOrder(models.Model):
             # Dictionary to store order lines by customer
             order_lines_by_customer = defaultdict(list)
             # Initialize variables to track order attributes
-            currency_id = pricelist_id = user_id = payment_term_id = (
-                partner_invoice_id
-            ) = partner_shipping_id = None
+            currency_id = (
+                pricelist_id
+            ) = (
+                user_id
+            ) = payment_term_id = partner_invoice_id = partner_shipping_id = None
             original_request_date = None
             contact_ids = None
 

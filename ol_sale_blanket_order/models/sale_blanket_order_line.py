@@ -1,6 +1,7 @@
 # Import Odoo libs
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.addons.ol_base.tools import get_product_description
+from odoo.exceptions import ValidationError
 
 
 class SaleBlanketOrderLine(models.Model):
@@ -321,6 +322,10 @@ class SaleBlanketOrderLine(models.Model):
             if vals.get("product_id"):
                 # Update the BoM for the order line
                 rec._update_bom(rec)
+            if rec.order_id.state != "draft" and not rec.date_schedule:
+                raise ValidationError(
+                    _("Scheduled Date cannot be unset on confirmed orders")
+                )
 
         return res
 
