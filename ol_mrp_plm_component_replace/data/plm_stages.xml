@@ -1,0 +1,31 @@
+<odoo noupdate="1">
+
+    <record id="component_replace_new" model="mrp.eco.stage">
+        <field name="name">New</field>
+        <field name="sequence">40</field>
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm_component_replace.component_replacement')])]" />
+    </record>
+
+    <record id="component_replace_pm_approval" model="mrp.eco.stage">
+        <field name="name">PM Approval</field>
+        <field name="allow_bom_edits">True</field>
+        <field name="allow_apply_change">True</field>
+        <field name="sequence">41</field>
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm_component_replace.component_replacement')])]" />
+    </record>
+
+    <record id="component_replace_done" model="mrp.eco.stage">
+        <field name="name">Done</field>
+        <field name="final_stage">True</field>
+        <field name="sequence">42</field>
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm_component_replace.component_replacement')])]" />
+    </record>
+
+    <record id="component_replace_cancel" model="mrp.eco.stage">
+        <field name="name">Cancel</field>
+        <field name="cancel_stage">True</field>
+        <field name="sequence">43</field>
+        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm_component_replace.component_replacement')])]" />
+    </record>
+
+</odoo>
