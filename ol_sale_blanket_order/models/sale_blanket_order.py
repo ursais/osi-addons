@@ -199,6 +199,17 @@ class SaleBlanketOrder(models.Model):
         """Hook to exclude specific lines which should not be updated based on price list recomputation"""
         return self.line_ids.filtered(lambda line: not line.display_type)
 
+    def action_confirm(self):
+        """Check the Scheduled Date in BOL before confirm."""
+        for order in self:
+            if order.line_ids.filtered(lambda l: not l.date_schedule):
+                raise ValidationError(
+                    _(
+                        "Scheduled Date is required on blanket order lines to confirm an order"
+                    )
+                )
+        return super().action_confirm()
+
     def _prepare_so_line_vals(self, line):
         """Prepares the values for a sale order line based on the
         provided blanket order line."""
