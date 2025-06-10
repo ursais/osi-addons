@@ -868,6 +868,22 @@ class IrActionsServer(models.Model):
             if product_template_id.exists() and country_id.exists():
                 update_query = """UPDATE product_template set country_of_origin = %s where id = %s; """
                 cr.execute(update_query,(country_id.id,product_template_id.id))
+        
+
+        # _logger.info("\n\n==Script 8: Payment Ref in Contacts=")
+        # select_query = """SELECT value_reference,res_id from temp_ir_property_v13_vp where name='payment_preference';"""
+        # cr.execute(select_query)
+        # v13datas = cr.fetchall()
+        # for data in v13datas:
+        #     partner = data[1].split(',')[1]
+        #     partner_id = self.env["res.partner"].browse(int(partner))
+        #     payment_ref = data[0].split(',')[1]
+        #     payemnt_ref_id = self.env["res.paypref"].browse(int(payment_ref))
+        #     _logger.info("\n\n==%s::%s",partner_id,payemnt_ref_id)
+        #     if partner_id.exists() and payemnt_ref_id.exists():
+        #         update_query = """UPDATE res_partner set payment_preference = %s where id = %s; """
+        #         cr.execute(update_query,(payemnt_ref_id.id,partner_id.id))
+
         _logger.info("\n\n\n\n=================DONE=======")
         _logger.info("\n\n==================Script 8 is Done==================")
 
@@ -875,9 +891,10 @@ class IrActionsServer(models.Model):
         # Made by Vandan Pandeji
         # Script is Used for Removing None Values from Product template attribute Line, Product Template Attribute Values and Product.Product Varints Bubble.
 
-        cr = env.cr
+        cr = self.env.cr
         counter = 0
-        for template in records:
+        ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True)])
+        for template in ProductTemplates:
             _logger.info("==Removeing None Attribute Value Script Runing for Product Template %s(%s) at counter %s:", template.name,template.id,counter) 
             none_value_dict = {}
             none_list = []
