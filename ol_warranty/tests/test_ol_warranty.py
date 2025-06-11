@@ -16,11 +16,11 @@ class TestStockWarranty(common.TransactionCase):
     """
 
     @classmethod
-    def setUpClass(self):
+    def setUpClass(cls):
         super().setUpClass()
 
-        # Creating warranty attribute with values 1, 2, and 3
-        self.size_attribute = self.env["product.attribute"].create(
+        # Create warranty attribute with values: 1 Year, 2 Years, 3 Years
+        cls.warranty_attribute = cls.env["product.attribute"].create(
             {
                 "name": "Warranty",
                 "value_ids": [
@@ -31,13 +31,13 @@ class TestStockWarranty(common.TransactionCase):
             }
         )
         (
-            self.warranty_attribute_1,
-            self.warranty_attribute_2,
-            self.warranty_attribute_3,
-        ) = self.size_attribute.value_ids
+            cls.attr_value_1_year,
+            cls.attr_value_2_years,
+            cls.attr_value_3_years,
+        ) = cls.warranty_attribute.value_ids
 
-        # Create a product with a 2-year warranty and attribute lines
-        self.product_template = self.env["product.template"].create(
+        # Create a product template with a 2-year warranty and attribute line
+        cls.product_template_with_2yr_warranty = cls.env["product.template"].create(
             {
                 "name": "Test Product",
                 "type": "service",
@@ -46,13 +46,13 @@ class TestStockWarranty(common.TransactionCase):
                 "attribute_line_ids": [
                     Command.create(
                         {
-                            "attribute_id": self.size_attribute.id,
+                            "attribute_id": cls.warranty_attribute.id,
                             "value_ids": [
                                 Command.set(
                                     [
-                                        self.warranty_attribute_1.id,
-                                        self.warranty_attribute_2.id,
-                                        self.warranty_attribute_3.id,
+                                        cls.attr_value_1_year.id,
+                                        cls.attr_value_2_years.id,
+                                        cls.attr_value_3_years.id,
                                     ]
                                 )
                             ],
@@ -61,27 +61,31 @@ class TestStockWarranty(common.TransactionCase):
                 ],
             }
         )
-        self.product = self.product_template.product_variant_ids[0]
 
-        # Assign product to warranty attributes (if necessary for logic)
-        self.warranty_attribute_1.write({"product_id": self.product.id})
-        self.warranty_attribute_2.write({"product_id": self.product.id})
-        self.warranty_attribute_3.write({"product_id": self.product.id})
+        # Use the first product variant
+        cls.product_variant = (
+            cls.product_template_with_2yr_warranty.product_variant_ids[0]
+        )
 
-        # Create a lot/serial number for the product
-        self.lot = self.env["stock.lot"].create(
+        # Optionally associate attribute values with the product variant
+        cls.attr_value_1_year.write({"product_id": cls.product_variant.id})
+        cls.attr_value_2_years.write({"product_id": cls.product_variant.id})
+        cls.attr_value_3_years.write({"product_id": cls.product_variant.id})
+
+        # Create a serial/lot for the product
+        cls.serial_lot_sn001 = cls.env["stock.lot"].create(
             {
                 "name": "SN001",
-                "product_id": self.product.id,
+                "product_id": cls.product_variant.id,
             }
         )
 
-        # Create a delivery order with a stock move
-        self.picking = self.env["stock.picking"].create(
+        # Create an outgoing delivery order with one stock move
+        cls.delivery_order = cls.env["stock.picking"].create(
             {
-                "picking_type_id": self.env.ref("stock.picking_type_out").id,
-                "location_id": self.env.ref("stock.stock_location_stock").id,
-                "location_dest_id": self.env.ref("stock.stock_location_customers").id,
+                "picking_type_id": cls.env.ref("stock.picking_type_out").id,
+                "location_id": cls.env.ref("stock.stock_location_stock").id,
+                "location_dest_id": cls.env.ref("stock.stock_location_customers").id,
                 "scheduled_date": date.today(),
                 "move_ids": [
                     (
@@ -89,13 +93,11 @@ class TestStockWarranty(common.TransactionCase):
                         0,
                         {
                             "name": "Test Move",
-                            "product_id": self.product.id,
+                            "product_id": cls.product_variant.id,
                             "product_uom_qty": 1,
-                            "product_uom": self.product.uom_id.id,
-                            "location_id": self.env.ref(
-                                "stock.stock_location_stock"
-                            ).id,
-                            "location_dest_id": self.env.ref(
+                            "product_uom": cls.product_variant.uom_id.id,
+                            "location_id": cls.env.ref("stock.stock_location_stock").id,
+                            "location_dest_id": cls.env.ref(
                                 "stock.stock_location_customers"
                             ).id,
                         },
@@ -104,24 +106,28 @@ class TestStockWarranty(common.TransactionCase):
             }
         )
 
-        # Add move line with the lot and mark it as done
-        self.move_line = self.env["stock.move.line"].create(
+        # Add a move line for the lot and mark it as done
+        cls.serial_move_line = cls.env["stock.move.line"].create(
             {
-                "picking_id": self.picking.id,
-                "move_id": self.picking.move_ids[0].id,
-                "product_id": self.product.id,
+                "picking_id": cls.delivery_order.id,
+                "move_id": cls.delivery_order.move_ids[0].id,
+                "product_id": cls.product_variant.id,
                 "quantity": 1,
                 "qty_done": 1,
-                "product_uom_id": self.product.uom_id.id,
-                "location_id": self.env.ref("stock.stock_location_stock").id,
-                "location_dest_id": self.env.ref("stock.stock_location_customers").id,
-                "lot_id": self.lot.id,
+                "product_uom_id": cls.product_variant.uom_id.id,
+                "location_id": cls.env.ref("stock.stock_location_stock").id,
+                "location_dest_id": cls.env.ref("stock.stock_location_customers").id,
+                "lot_id": cls.serial_lot_sn001.id,
             }
         )
 
     def test_warranty_expiration_date_set_on_validate(self):
-        """Check that warranty expiration is correctly set upon validation."""
-        self.picking.with_context(override_ex=True).button_validate()
+        """Ensure warranty expiration is correctly set on lot after delivery validation."""
+        self.delivery_order.with_context(override_ex=True).button_validate()
 
         expected_expiration = date.today() + timedelta(days=2 * 365)
-        self.assertEqual(self.lot.warranty_expiration_date, expected_expiration)
+        self.assertEqual(
+            self.serial_lot_sn001.warranty_expiration_date,
+            expected_expiration,
+            "Warranty expiration date not correctly set based on 2-year warranty.",
+        )
