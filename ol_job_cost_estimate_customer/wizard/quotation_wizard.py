@@ -43,7 +43,7 @@ class QuotationWizard(models.TransientModel):
             vals = {
                 "partner_id": self.estimate_id.partner_id.id,
                 "origin": self.estimate_id.number,
-                "analytic_account_id": self.estimate_id.id,
+                "analytic_account_id": self.estimate_id.analytic_id.id,
                 "payment_term_id": self.estimate_id.payment_term_id.id,
                 "pricelist_id": self.estimate_id.pricelist_id.id,
                 "opportunity_id": self.estimate_id.opportunity_id.id,
