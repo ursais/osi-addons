@@ -1,5 +1,8 @@
 # Import Odoo Libs
 from odoo import fields, models
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class ProductTemplate(models.Model):
@@ -49,6 +52,10 @@ class ProductTemplate(models.Model):
                     """,
                         [variant_ids],
                     )
+                    _logger.info(
+                        "Updated stock_move.date from sale_order.date_confirm (via sale_line) for %s rows",
+                        self.env.cr.rowcount,
+                    )
 
                     # CASE 2: update from raw_material_production_id.sale_order_id.date_confirm
                     self.env.cr.execute(
@@ -63,6 +70,10 @@ class ProductTemplate(models.Model):
                         AND so.date_confirm IS NOT NULL
                     """,
                         [variant_ids],
+                    )
+                    _logger.info(
+                        "Updated stock_move.date from sale_order.date_confirm (via mrp_production) for %s rows",
+                        self.env.cr.rowcount,
                     )
 
                 else:
@@ -82,6 +93,10 @@ class ProductTemplate(models.Model):
                     """,
                         [variant_ids],
                     )
+                    _logger.info(
+                        "Reverted stock_move.date to mo.date_start for %s rows",
+                        self.env.cr.rowcount,
+                    )
 
                     # 2. Update SO-related moves with picking.scheduled_date
                     self.env.cr.execute(
@@ -97,6 +112,10 @@ class ProductTemplate(models.Model):
                     """,
                         [variant_ids],
                     )
+                    _logger.info(
+                        "Reverted stock_move.date to picking.scheduled_date for %s rows",
+                        self.env.cr.rowcount,
+                    )
 
                     # 3. Fallback to now() for any remaining
                     self.env.cr.execute(
@@ -108,6 +127,10 @@ class ProductTemplate(models.Model):
                         AND date IS NULL
                     """,
                         [now_str, variant_ids],
+                    )
+                    _logger.info(
+                        "Fallback: Updated stock_move.date to now() for %s rows",
+                        self.env.cr.rowcount,
                     )
 
         return res

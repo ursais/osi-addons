@@ -57,9 +57,7 @@ class AccountMove(models.Model):
         for company in companies:
             grace_days = company.hot_ar_grace_period
             if grace_days > 0:
-                cutoff_date = today - timedelta(
-                    days=grace_days
-                )  # equivalent to timedelta
+                cutoff_date = today - timedelta(days=grace_days)
 
                 invoices = (
                     self.env["account.move"]
