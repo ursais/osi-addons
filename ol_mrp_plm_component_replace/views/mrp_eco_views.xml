@@ -6,16 +6,17 @@
         <field name="model">mrp.eco</field>
         <field name="inherit_id" ref="mrp_plm.mrp_eco_view_form" />
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='product_tmpl_id']" position="attributes">
-                <attribute name="invisible">type == 'routing' or type_id.component_replacement</attribute>
-            </xpath>
+            <xpath expr="//field[@name='product_tmpl_id']" position="replace" />
             <xpath expr="//field[@name='bom_id']" position="before">
-                <field name="product_tmpl_id" string="Component to be Replaced" domain="[('type', 'in', ['consu', 'product'])]" readonly="state != 'confirmed'" invisible="type == 'routing' or not type_id.component_replacement" />
-                <field name="product_to_add_id" required="not type == 'product' or not type_id.component_replacement" invisible="not type == 'product' or not type_id.component_replacement" />
+                <field name="component_replacement" invisible="1" />
+                <label for="product_tmpl_id" string="Product" invisible="type == 'routing' or component_replacement" />
+                <label for="product_tmpl_id" string="Component to be Replaced" invisible="type == 'routing' or not component_replacement" />
+                <field name="product_tmpl_id" nolabel="1" domain="[('type', 'in', ['consu', 'product'])]" invisible="type == 'routing'" readonly="state != 'confirmed'" required="type in ('bom', 'both', 'product')" />
+                <field name="product_to_add_id" invisible="not type == 'product' or not component_replacement" required="type in ('bom', 'both', 'product') or component_replacement" />
             </xpath>
             <xpath expr="//page[@name='note']" position="before">
                 <page string="BoM's to Update" >
-                    <field name="bom_ids" widget="many2many_tree" options="{'no_create': True}" context={'active_test':False}>
+                    <field name="bom_ids" widget="many2many_tree" options="{'no_create': True}" context="{'active_test': False}">
                         <tree editable="bottom">
                             <field name="active" readonly="1" optional="show" />
                             <field name="company_id" optional="hide" />
