@@ -30,4 +30,13 @@
         <field name="active" eval="True" />
     </record>
 
+    <record id="exception_so_product_update" model="exception.rule">
+        <field name="name">Sale Order with Obsolete Product</field>
+        <field name="description">Sale Order with Obsolete Product.</field>
+        <field name="sequence">74</field>
+        <field name="model">sale.order</field>
+        <field name="code">failed=any(line.product_id.product_tmpl_id.state == 'obsolete' for line in self.order_line)</field>
+        <field name="active" eval="True" />
+    </record>
+
 </odoo>
