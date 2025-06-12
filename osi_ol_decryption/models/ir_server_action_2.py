@@ -392,7 +392,7 @@ class IrActionsServer(models.Model):
                                 update_query = """UPDATE product_attribute_value SET active = TRUE,attribute_id = %s WHERE id =%s;"""
                                 cr.execute(update_query,(attrbute_line_id.attribute_id.id,value.id))
                                 cr.commit()
-                                
+                        values_ids = attrbute_line_id.value_ids
                         for ptav_line in product_template_value_ids:
                             if ptav_line.attribute_id != attrbute_line_id.attribute_id:
                                 _logger.info("\n\n\n\n==============PTAV==Values IDS::%s::%s::%s",ptav_line.attribute_id,attrbute_line_id.attribute_id, attrbute_line_id.attribute_id.name)
@@ -402,21 +402,40 @@ class IrActionsServer(models.Model):
                                         WHERE id = %s AND ptav_active = true;
                                     """, (attrbute_line_id.attribute_id.id,ptav_line.id))
                                 cr.commit()
+                            inactive_value_active_ptav = ptav_line.attribute_line_id.product_template_value_ids.filtered(lambda l:l.name == ptav_line.product_attribute_value_id.name and not l.product_attribute_value_id.active and l.ptav_active and l.product_tmpl_id.id == ptav_line.product_tmpl_id.id)
+                            active_value_inactive_ptav = ptav_line.attribute_line_id.product_template_value_ids.filtered(lambda l:l.name == ptav_line.product_attribute_value_id.name and l.product_attribute_value_id.active and not l.ptav_active and l.product_tmpl_id.id == ptav_line.product_tmpl_id.id)
+                            if not inactive_value_active_ptav and not active_value_inactive_ptav and not ptav_line.product_attribute_value_id.active:
+                                active_value_id = attrbute_line_id.value_ids.filtered(lambda v:v.name == ptav_line.product_attribute_value_id.name )
+                                _logger.info("\n\n\n\n====BOTH Inactive==========PTAV==Values ID:%s==%s:%s::%s",ptav_line.product_attribute_value_id.name,attrbute_line_id.attribute_id.name,ptav_line.product_attribute_value_id,active_value_id)
+                                cr.execute("""
+                                        UPDATE product_template_attribute_value
+                                        SET product_attribute_value_id = %s
+                                        WHERE id = %s AND ptav_active = true;
+                                    """, (active_value_id.id,ptav_line.id))
+                                cr.commit()
+                            if inactive_value_active_ptav and active_value_inactive_ptav:
+                                _logger.info("\n\n\n\n>>inactive_value_active_ptav")
+                                inactive_value_active_ptav.ptav_active = False
+                                cr.commit()
+                            if not inactive_value_active_ptav and active_value_inactive_ptav:
+                                active_value_inactive_ptav.ptav_active = True
+                                cr.commit()
+                            if inactive_value_active_ptav and not active_value_inactive_ptav and ptav_line.product_attribute_value_id.active:
+                                active_value_id = attrbute_line_id.value_ids.filtered(lambda v:v.name == ptav_line.product_attribute_value_id.name )
+                                _logger.info("\n\n\n\n==============PTAV==Values ID:%s==%s:%s::%s",ptav_line.product_attribute_value_id.name,attrbute_line_id.attribute_id.name,ptav_line.product_attribute_value_id,active_value_id)
+                                inactive_value_active_ptav.ptav_active = False
+                                cr.commit()
                             if not ptav_line.product_attribute_value_id.active:
-                                inactive_ptav = attrbute_line_id.product_template_value_ids.filtered(lambda s:s.name == ptav_line.product_attribute_value_id.name and not s.ptav_active and s.product_attribute_value_id.active)
-                                if inactive_ptav:
-                                    _logger.info("\n\n\n\n=========InActive=====PTAV::%s::",inactive_ptav)
-                                    inactive_ptav.ptav_active = True
-                                    ptav_line.ptav_active = False
-                                else:
-                                    active_value_id = attrbute_line_id.value_ids.filtered(lambda v:v.name == ptav_line.product_attribute_value_id.name )
-                                    _logger.info("\n\n\n\n==============PTAV==Values ID:%s==%s:%s::%s",ptav_line.product_attribute_value_id.name,attrbute_line_id.attribute_id.name,ptav_line.product_attribute_value_id,active_value_id)
-                                    cr.execute("""
-                                            UPDATE product_template_attribute_value
-                                            SET product_attribute_value_id = %s
-                                            WHERE id = %s AND ptav_active = true;
-                                        """, (active_value_id.id,ptav_line.id))
-                                    cr.commit()
+                                active_value_id = attrbute_line_id.value_ids.filtered(lambda v:v.name == ptav_line.product_attribute_value_id.name )
+                                _logger.info("\n\n\n\n==============PTAV==Values ID:%s==%s:%s::%s",ptav_line.product_attribute_value_id.name,attrbute_line_id.attribute_id.name,ptav_line.product_attribute_value_id,active_value_id)
+                                cr.execute("""
+                                        UPDATE product_template_attribute_value
+                                        SET product_attribute_value_id = %s
+                                        WHERE id = %s AND ptav_active = true;
+                                    """, (active_value_id.id,ptav_line.id))
+                                cr.commit()
+
+                                   
                             if ptav_line.product_attribute_value_id.active and ptav_line.product_attribute_value_id.id not in attrbute_line_id.value_ids.ids:
                                 _logger.info("\n\n\n\n========2322======PTAV==Values ID%s==%s",ptav_line.product_attribute_value_id.name,attrbute_line_id.attribute_id.name)
                             
@@ -439,6 +458,18 @@ class IrActionsServer(models.Model):
                                             WHERE id = %s;
                                         """, (ptav_line.product_attribute_value_id.id,qty_val.id))
                                         cr.commit()
+                        not_common = list(set(values_ids.ids).symmetric_difference(set(product_template_value_ids.mapped("product_attribute_value_id").ids)))
+                        if not_common:
+                            line_id = attrbute_line_id.id
+                            value_ids = tuple(not_common)
+                            query = """
+                                DELETE FROM product_attribute_value_product_template_attribute_line_rel
+                                WHERE product_template_attribute_line_id = %s
+                                AND product_attribute_value_id = ANY(%s)
+                            """
+
+                            self.env.cr.execute(query, (line_id, list(value_ids)))
+                            self.env.cr.commit() 
                 counter += 1
             offset += batch_size
             self.env.cr.commit()  # Commit changes after processing each batch
