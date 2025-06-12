@@ -22,10 +22,18 @@ class MRPEco(models.Model):
         column1="eco_id",
         column2="bom_id",
         string="Affected BoMs",
+        context={"active_test": False},
         help=(
             "BoMs that use the product to remove. "
             "You can manually remove any BoMs from the list to skip them."
         ),
+    )
+    component_replacement = fields.Boolean(
+        string="Component Replacement",
+        related="type_id.component_replacement",
+        help="""When enabled, the component replacement functionality is enabled
+          for this ECO Type adding a replace with component field and populates BoM's
+          that will be updated with the component replacement.""",
     )
 
     # END #########
@@ -34,12 +42,12 @@ class MRPEco(models.Model):
     @api.onchange("product_tmpl_id", "type_id")
     def _onchange_product_id_bom_ids(self):
         for eco in self:
-            if (
-                eco.type_id.component_replacement
-                and eco.product_tmpl_id.product_variant_id
-            ):
+            if eco.component_replacement and eco.product_tmpl_id.product_variant_id:
                 bom_lines = self.env["mrp.bom.line"].search(
-                    [("product_id", "=", eco.product_tmpl_id.product_variant_id.id)]
+                    [
+                        ("product_id", "=", eco.product_tmpl_id.product_variant_id.id),
+                        ("bom_id.active", "=", True),
+                    ]
                 )
                 eco.bom_ids = bom_lines.filtered(
                     lambda l: l.bom_id.scaffolding_bom
@@ -49,7 +57,7 @@ class MRPEco(models.Model):
 
     def action_apply(self):
         for eco in self:
-            if eco.type_id.component_replacement:
+            if eco.component_replacement:
                 if not eco.product_tmpl_id or not eco.product_to_add_id:
                     raise ValidationError(
                         _(
@@ -110,6 +118,7 @@ class MRPEco(models.Model):
 
                     # Archive the old BoMs and rebuild with new attribute values
                     bom.product_tmpl_id.action_create_rebuild_scaffolding_bom()
+                return super().action_apply()
             else:
                 return super().action_apply()
 
