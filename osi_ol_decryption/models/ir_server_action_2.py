@@ -169,7 +169,7 @@ class IrActionsServer(models.Model):
 
     def script_3(self):
         _logger.info("\n\n==Update Product Templates with Unique Attributes and Values==Script 3 is start==================")
-        batch_size = 10  # Define batch size
+        batch_size = 100  # Define batch size
         ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True)])
         total_products = len(ProductTemplates)  # Total number of products to process
         offset = 0
@@ -358,7 +358,7 @@ class IrActionsServer(models.Model):
 
     def script_4(self):
         _logger.info("\n\n==Sync Attribute Values in Product Variants===Script 4 is start==================")
-        batch_size = 10  # Define batch size
+        batch_size = 100  # Define batch size
         #PRODUCT-TEMPLATE ID Which id Need to take care [5593,24607,5172,32379,24337,25216,26588,6518,4696,103791,102630,102736,101999]
         ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True),("active","=",True)])
         total_products = len(ProductTemplates)  # Total number of products to process
@@ -956,7 +956,7 @@ class IrActionsServer(models.Model):
                 variant_combinations = cr.fetchall()
                 for combo in variant_combinations:
                     if combo:
-                        product_template_attribute_value_id = env["product.template.attribute.value"].browse(combo[1])
+                        product_template_attribute_value_id = self.env["product.template.attribute.value"].browse(combo[1])
                         if product_template_attribute_value_id.product_attribute_value_id.id in none_list:
                             delete_query = "delete from product_variant_combination where product_product_id = %s and product_template_attribute_value_id =%s;"
                             cr.execute(delete_query,(combo[0],combo[1]))
@@ -964,6 +964,7 @@ class IrActionsServer(models.Model):
             counter += 1
 
     def drop_temp_tables(self):
+        cr = self.env.cr
         _logger.info("\n\n============Droping Tables Start")
         cr.execute("drop table temp_ir_property_v13_vp;")
         cr.execute("drop table temp_product_temp_v13_vp;")
