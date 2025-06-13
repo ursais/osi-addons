@@ -1,23 +1,25 @@
-<odoo noupdate="1">
+<odoo>
 
+    <!-- US Warehouse Locations and Operations -->
     <record id="location_rma" model="stock.location">
         <field name="name">SRMA Staging</field>
         <field name="usage">internal</field>
         <field name="location_id" ref="stock.stock_location_stock" />
+        <field name="company_id" eval="ref('base.main_company')" />
     </record>
 
     <record id="seq_picking_type_rma_sup_out" model="ir.sequence">
-        <field name="name">WH SRMA</field>
+        <field name="name">WH SRMA OUT</field>
         <field name="prefix">SRMA/OUT/</field>
         <field name="padding">5</field>
-        <field name="company_id" eval="base.main_company" />
+        <field name="company_id" eval="ref('base.main_company')" />
     </record>
 
     <record id="seq_picking_type_rma_sup_in" model="ir.sequence">
         <field name="name">WH SRMA IN</field>
         <field name="prefix">SRMA/IN/</field>
         <field name="padding">5</field>
-        <field name="company_id" eval="base.main_company" />
+        <field name="company_id" eval="ref('base.main_company')" />
     </record>
 
     <record id="picking_type_rma_sup_out" model="stock.picking.type">
@@ -27,6 +29,7 @@
         <field name="default_location_src_id" ref="ol_rma_supplier.location_rma" />
         <field name="warehouse_id" eval="False" />
         <field name="code">outgoing</field>
+        <field name="company_id" eval="ref('base.main_company')" />
     </record>
 
     <record id="picking_type_rma_sup_in" model="stock.picking.type">
@@ -36,12 +39,7 @@
         <field name="default_location_dest_id" ref="ol_rma_supplier.location_rma" />
         <field name="warehouse_id" eval="False" />
         <field name="code">incoming</field>
-    </record>
-
-    <record id="stock.warehouse0" model="stock.warehouse">
-        <field name="lot_rma_id" ref="location_rma" />
-        <field name="rma_sup_out_type_id" ref="picking_type_rma_sup_out" />
-        <field name="rma_sup_in_type_id" ref="picking_type_rma_sup_in" />
+        <field name="company_id" eval="ref('base.main_company')" />
     </record>
 
     <record id="route_rma_supplier" model='stock.route'>
@@ -75,37 +73,100 @@
         <field name="picking_type_id" ref="ol_rma_supplier.picking_type_rma_sup_in" />
     </record>
 
+    <record id="stock.warehouse0" model="stock.warehouse">
+        <field name="lot_rma_id" ref="location_rma" />
+        <field name="rma_sup_out_type_id" ref="picking_type_rma_sup_out" />
+        <field name="rma_sup_in_type_id" ref="picking_type_rma_sup_in" />
+    </record>
+
+    <!-- EU Warehouse Locations and Operations -->
+    <!-- Register an external ID for the warehouse with ID 3 -->
+    <function model="ir.model.data" name="create">
+      <value eval="{
+        'name': 'eu_warehouse',
+        'model': 'stock.warehouse',
+        'module': 'ol_base',
+        'res_id': 3
+      }"/>
+    </function>
+
+    <!-- Register an external ID for the main wh location with ID 43 -->
+    <function model="ir.model.data" name="create">
+      <value eval="{
+        'name': 'eu_location',
+        'model': 'stock.location',
+        'module': 'ol_base',
+        'res_id': 43
+      }"/>
+    </function>
+
+    <record id="location_rma_eu" model="stock.location">
+        <field name="name">EU SRMA Staging</field>
+        <field name="usage">internal</field>
+        <field name="location_id" ref="ol_base.eu_location" />
+        <field name="company_id" eval="ref('ol_base.onlogic_eu')" />
+    </record>
+
     <record id="seq_picking_type_rma_sup_out_eu" model="ir.sequence">
         <field name="name">EU SRMA OUT</field>
         <field name="prefix">EU/SRMA/OUT/</field>
         <field name="padding">5</field>
-        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="company_id" eval="ref('ol_base.onlogic_eu')" />
     </record>
 
     <record id="seq_picking_type_rma_sup_in_eu" model="ir.sequence">
         <field name="name">EU SRMA IN</field>
         <field name="prefix">EU/SRMA/IN/</field>
         <field name="padding">5</field>
-        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="company_id" eval="ref('ol_base.onlogic_eu')" />
     </record>
 
     <record id="picking_type_rma_sup_out_eu" model="stock.picking.type">
         <field name="name">EU RMA -> Supplier</field>
         <field name="sequence_id" ref="seq_picking_type_rma_sup_out_eu" />
-        <field name="sequence_code">EU RMA -> Supplier</field>
+        <field name="sequence_code">EU SRMA OUT</field>
         <field name="warehouse_id" eval="False" />
         <field name="code">outgoing</field>
-        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="company_id" eval="ref('ol_base.onlogic_eu')" />
     </record>
 
     <record id="picking_type_rma_sup_in_eu" model="stock.picking.type">
-        <field name="name">Supplier -> RMA</field>
+        <field name="name">EU Supplier -> RMA</field>
         <field name="sequence_id" ref="seq_picking_type_rma_sup_in_eu" />
-        <field name="sequence_code">Supplier -> RMA</field>
+        <field name="sequence_code">EU Supplier -> RMA</field>
         <field name="warehouse_id" eval="False" />
         <field name="code">incoming</field>
-        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="company_id" eval="ref('ol_base.onlogic_eu')" />
     </record>
 
+    <record id="rule_rma_supplier_out_pull_eu" model="stock.rule">
+        <field name="name">EU RMA → Supplier</field>
+        <field name="action">pull</field>
+        <field name="warehouse_id" ref="ol_base.eu_warehouse" />
+        <field name="location_dest_id" ref="stock.stock_location_suppliers" />
+        <field name="location_src_id" ref="ol_rma_supplier.location_rma_eu" />
+        <field name="procure_method">make_to_stock</field>
+        <field name="route_id" ref="ol_rma_supplier.route_rma_supplier" />
+        <field name="picking_type_id" ref="ol_rma_supplier.picking_type_rma_sup_out_eu" />
+        <field name="company_id" eval="ref('ol_base.onlogic_eu')" />
+    </record>
+
+    <record id="rule_rma_supplier_in_pull_eu" model="stock.rule">
+        <field name="name">EU Supplier → RMA</field>
+        <field name="action">pull</field>
+        <field name="warehouse_id" ref="ol_base.eu_warehouse" />
+        <field name="location_dest_id" ref="ol_rma_supplier.location_rma_eu" />
+        <field name="location_src_id" ref="stock.stock_location_suppliers" />
+        <field name="procure_method">make_to_stock</field>
+        <field name="route_id" ref="ol_rma_supplier.route_rma_supplier" />
+        <field name="picking_type_id" ref="ol_rma_supplier.picking_type_rma_sup_in_eu" />
+        <field name="company_id" eval="ref('ol_base.onlogic_eu')" />
+    </record>
+
+    <record id="ol_base.eu_warehouse" model="stock.warehouse">
+        <field name="lot_rma_id" ref="location_rma_eu" />
+        <field name="rma_sup_out_type_id" ref="picking_type_rma_sup_out_eu" />
+        <field name="rma_sup_in_type_id" ref="picking_type_rma_sup_in_eu" />
+    </record>
 
 </odoo>

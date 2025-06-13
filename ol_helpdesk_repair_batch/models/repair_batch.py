@@ -241,12 +241,6 @@ class RepairBatch(models.Model):
             # Ensure moves are created immediately after generating repairs
             batch._propagate_parts_to_repairs()
 
-    # def action_batch_create_removal_lines(self):
-    #     for batch in self:
-    #         repairs_to_process = batch.repair_ids.filtered(lambda r: not r.move_ids)
-    #         for repair in repairs_to_process:
-    #             repair.action_create_removal_lines()
-
     def action_batch_create_removal_lines(self):
         for batch in self:
             repairs = batch.repair_ids

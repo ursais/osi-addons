@@ -35,14 +35,6 @@ class SaleOrder(models.Model):
                         % format_product(finished_product)
                     )
 
-                if not finished_product.bom_ok:
-                    errors.append(
-                        _(
-                            "Product %s is not allowed to be a component on a Bill of Materials."
-                        )
-                        % format_product(finished_product)
-                    )
-
                 for component in line.bom_id.bom_line_ids.mapped("product_id"):
                     if not component.mrp_component_ok:
                         errors.append(

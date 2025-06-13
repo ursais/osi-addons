@@ -80,7 +80,7 @@
                                 type="object"
                                 string="Load Removed Components on Repair Orders"
                                 class="oe_highlight"
-                                invisible = "not show_create_removal_button"
+                                invisible="not show_create_removal_button"
                             />
                             <field name="part_lines" readonly="state == 'cancel' or state == 'done'" context="{'default_repair_batch_id': id, 'default_company_id': company_id}">
                                 <tree string="Operations" editable="bottom">
