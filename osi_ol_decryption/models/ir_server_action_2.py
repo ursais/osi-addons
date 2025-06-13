@@ -923,45 +923,50 @@ class IrActionsServer(models.Model):
         # Script is Used for Removing None Values from Product template attribute Line, Product Template Attribute Values and Product.Product Varints Bubble.
 
         cr = self.env.cr
-        counter = 0
-        ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True)])
-        for template in ProductTemplates:
-            _logger.info("==Removeing None Attribute Value Script Runing for Product Template %s(%s) at counter %s:", template.name,template.id,counter) 
-            none_value_dict = {}
-            none_list = []
-            for line in template.attribute_line_ids:
-                none_values = line.value_ids.filtered(lambda l: l.name == 'None' and l.active)
-                if none_values:
-                    none_list.append(none_values.id)
-                    none_value_dict.update({line.attribute_id.id:none_values.id})
-                    line.write({
-                        "required": False,
-                        'default_val': False
-                    })
-                    delete_query = "delete from product_attribute_value_product_template_attribute_line_rel where product_attribute_value_id = %s and product_template_attribute_line_id = %s;"
-                    cr.execute(delete_query,(none_values.id,line.id))
-                    cr.commit()
-                    none_value_template_value = line.product_template_value_ids.filtered(
-                        lambda v: v.product_attribute_value_id in none_values
-                    )
-                    if none_value_template_value:
-                        none_value_template_value.write({"ptav_active":False})
-                
-            for variant in template.product_variant_ids:
-                select_query = """
-                    SELECT product_product_id,product_template_attribute_value_id FROM product_variant_combination
-                    WHERE product_product_id = %s
-                """
-                cr.execute(select_query, (variant.id,))
-                variant_combinations = cr.fetchall()
-                for combo in variant_combinations:
-                    if combo:
-                        product_template_attribute_value_id = self.env["product.template.attribute.value"].browse(combo[1])
-                        if product_template_attribute_value_id.product_attribute_value_id.id in none_list:
-                            delete_query = "delete from product_variant_combination where product_product_id = %s and product_template_attribute_value_id =%s;"
-                            cr.execute(delete_query,(combo[0],combo[1]))
-                            cr.commit()
-            counter += 1
+        # Step 1: Fetch "None" values
+        cr.execute("""
+            SELECT id 
+            FROM product_attribute_value 
+            WHERE name ->> 'en_US' = 'None' AND active = 't';
+        """)
+        none_values = cr.fetchall()
+        none_values_recs = [row[0] for row in none_values]
+
+        if none_values_recs:
+            placeholders = ', '.join(['%s'] * len(none_values_recs))
+
+            # Step 2: Delete from M2M relation table
+            cr.execute(f"""
+                DELETE FROM product_attribute_value_product_template_attribute_line_rel 
+                WHERE product_attribute_value_id IN ({placeholders});
+            """, tuple(none_values_recs))
+            _logger.info("== Deleted from M2M table")
+
+            # Step 3: Update product_template_attribute_line
+            cr.execute(f"""
+                UPDATE product_template_attribute_line 
+                SET required = 'f', default_val = NULL 
+                WHERE default_val IN ({placeholders});
+            """, tuple(none_values_recs))
+            _logger.info("== Updated product_template_attribute_line")
+
+            # Step 4: Update product_template_attribute_value
+            cr.execute(f"""
+                UPDATE product_template_attribute_value 
+                SET ptav_active = 'f' 
+                WHERE product_attribute_value_id IN ({placeholders}) AND ptav_active = 't';
+            """, tuple(none_values_recs))
+            _logger.info("== Updated product_template_attribute_value")
+
+            # Step 5: Delete from product_variant_combination
+            cr.execute(f"""
+                DELETE FROM product_variant_combination 
+                WHERE product_template_attribute_value_id IN ({placeholders});
+            """, tuple(none_values_recs))
+            _logger.info("== Deleted from product_variant_combination")
+
+            # Commit changes once at the end
+            cr.commit()
 
     def drop_temp_tables(self):
         cr = self.env.cr
