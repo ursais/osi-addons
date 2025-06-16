@@ -63,6 +63,171 @@ class ResPartner(models.Model):
     # END #########
     # METHODS #####
 
+    @api.model
+    def export_partner_data_to_csv(self, file_path='/home/odoo/partner_export.csv'):
+        import time
+        fields_to_export = [
+            'id', 'credit_hold', 'open_so_balance',
+            'remaining_credit', 'customer_deposit_balance', 'open_bo_balance'
+        ]
+
+        cr = self.env.cr
+        COUNTER = 0
+
+        def compute_balance(partners):
+            lines = partners.sale_blanket_order_ids.filtered(
+                lambda l: l.state == "open"
+            ).mapped("line_ids")
+            return sum(line.remaining_uom_qty * line.price_unit for line in lines)
+
+        # Step 1: Precompute sale order totals
+        cr.execute("""
+            SELECT partner_id, SUM(amount_total)
+            FROM sale_order
+            WHERE state = 'sale' AND invoice_status = 'no'
+            GROUP BY partner_id
+        """)
+        so_totals_by_partner = dict(cr.fetchall())
+
+        # Step 2: Precompute draft invoice totals
+        cr.execute("""
+            SELECT partner_id, SUM(amount_residual_signed)
+            FROM account_move
+            WHERE move_type = 'out_invoice' AND state = 'draft'
+            GROUP BY partner_id
+        """)
+        draft_invoice_totals = dict(cr.fetchall())
+
+        # Step 3: Fetch all partners (use chunks if needed)
+        # partners = self.search([], order='id', limit=1000000)
+        cr.execute("SELECT id FROM res_partner ORDER BY id;")
+        partner_ids = [row[0] for row in cr.fetchall()]
+        partners = self.browse(partner_ids)
+        print("////LEN",len(partners))
+        with open(file_path, mode='w', newline='', encoding='utf-8') as csv_file:
+            writer = csv.writer(csv_file)
+            writer.writerow(fields_to_export)
+
+            for partner in partners:
+                st_time = time.time()
+                COUNTER += 1
+                partner_id = partner.id
+                open_so_total = so_totals_by_partner.get(partner_id, 0.0)
+                draft_invoice_total = draft_invoice_totals.get(partner_id, 0.0)
+
+
+                credit_hold = bool(partner.remaining_credit < 0)
+                if partner.partner_rollup_id:
+                    credit_hold = bool(partner.partner_rollup_id.remaining_credit < 0)
+
+                # --- Compute open_so_balance ---
+                rollup_balance = sum([
+                    so_totals_by_partner.get(p.id, 0.0)
+                    for p in partner.rollup_partner_ids
+                ])
+
+                open_so_balance = 0.0
+                if partner.sale_order_ids:
+                    base_balance = open_so_total + draft_invoice_total + rollup_balance
+                    if partner.is_company:
+                        full_group = partner | partner.child_ids | partner.rollup_partner_ids
+                        open_so_balance = sum([
+                            so_totals_by_partner.get(p.id, 0.0)
+                            for p in full_group
+                        ])
+                    elif partner.partner_rollup_id and not partner.parent_id:
+                        rollup_group = (
+                            partner.partner_rollup_id
+                            | partner.partner_rollup_id.child_ids
+                            | partner
+                        )
+                        open_so_balance = sum([
+                            so_totals_by_partner.get(p.id, 0.0)
+                            for p in rollup_group
+                        ])
+                    elif partner.parent_id and not partner.partner_rollup_id:
+                        parent_group = (
+                            partner.parent_id
+                            | partner.parent_id.child_ids
+                            | partner.parent_id.rollup_partner_ids
+                        )
+                        open_so_balance = sum([
+                            so_totals_by_partner.get(p.id, 0.0)
+                            for p in parent_group
+                        ])
+                    else:
+                        open_so_balance = base_balance
+
+                # --- Compute used & remaining credit ---
+                rollup_used_credit = 0
+                if partner.rollup_partner_ids:
+                    rollup_credit_data = partner.rollup_partner_ids.read_group(
+                        [], ["open_so_balance:sum", "credit:sum"], []
+                    )
+                    rollup_used_credit = (
+                        sum(rollup_credit_data[0].values()) if rollup_credit_data else 0
+                    )
+                used_credit = (
+                    open_so_balance
+                    + (partner.credit if partner.credit > 0 else 0)
+                    + rollup_used_credit
+                )
+                remaining_credit = (
+                    partner.credit_limit - used_credit if partner.credit_limit else 0
+                )
+
+                # --- Compute customer deposit balance ---
+                partners_to_include = partner.rollup_partner_ids + partner
+                customer_deposit_balance = 0
+                if partners_to_include.invoice_ids:
+                    invoice_line_ids = partners_to_include.invoice_ids.mapped("invoice_line_ids").filtered(
+                        lambda l: l.product_id.id == l.company_id.sale_down_payment_product_id.id
+                        and not l.full_reconcile_id
+                    )
+                    customer_deposit_balance = -1 * sum(invoice_line_ids.mapped("balance"))
+
+                # --- Compute open BO balance ---
+                open_bo_balance = 0.0
+                if partner.sale_blanket_order_ids:
+                    partners_base = partner
+                    base_bo_balance = compute_balance(partners_base)
+                    if partner.is_company:
+                        bo_group = partner.rollup_partner_ids | partner.child_ids | partner
+                        open_bo_balance = compute_balance(bo_group)
+                    elif partner.partner_rollup_id and not partner.parent_id:
+                        rollup_group = (
+                            partner.partner_rollup_id
+                            | partner.partner_rollup_id.child_ids
+                            | partner
+                        )
+                        open_bo_balance = compute_balance(rollup_group)
+                    elif partner.parent_id and not partner.partner_rollup_id:
+                        parent_group = (
+                            partner.parent_id
+                            | partner.parent_id.child_ids
+                            | partner.parent_id.rollup_partner_ids
+                        )
+                        open_bo_balance = compute_balance(parent_group)
+                    else:
+                        open_bo_balance = base_bo_balance
+
+                # --- Write computed row to CSV ---
+                row = [
+                    partner_id,
+                    credit_hold,
+                    open_so_balance,
+                    remaining_credit,
+                    customer_deposit_balance,
+                    open_bo_balance,
+                ]
+                writer.writerow(row)
+
+                if COUNTER % 1000 == 0:
+                    _logger.info("Exported %s partners...", COUNTER)
+
+        _logger.info("CSV export complete. Total partners processed: %s", COUNTER)
+        return file_path
+
 
     @api.depends(
         "credit_limit",
@@ -144,6 +309,8 @@ class ResPartner(models.Model):
             ])
             base_balance = open_so_total + draft_invoice_total + rollup_balance
 
+            query = "UPDATE res_partner set open_so_balance = %s where id = %s;"
+            cr.execute(query,(0.0,partner_id))
             if partner.sale_order_ids:
                 if partner.is_company:
                     full_group = partner | partner.child_ids | partner.rollup_partner_ids
@@ -181,9 +348,8 @@ class ResPartner(models.Model):
                     # partner.open_so_balance = base_balance
                     cr.execute(query,(parent_balance, partner.parent_id.id))
                 # partner.parent_id.open_so_balance = parent_balance
-            else:
-                query = "UPDATE res_partner set open_so_balance = %s where id = %s;"
-                cr.execute(query,(0.0,partner_id))
+            # else:
+                
             # =============================================================
             _logger.info("_compute_remaining_credit %s Counter: %s", partner_id,COUNTER)
             rollup_used_credit = 0
@@ -221,9 +387,9 @@ class ResPartner(models.Model):
             _logger.info("_compute_open_bo_balance %s Conter : %s", partner._origin.id,COUNTER)
 
             partners_base = partner._origin
-            base_balance = compute_balance(partners_base)
-
+            partner.open_bo_balance = 0.0
             if partners_base.sale_blanket_order_ids:
+                base_balance = compute_balance(partners_base)
                 if partner._origin.is_company:
                     partners_all = (
                         partner.rollup_partner_ids | partner.child_ids | partners_base
@@ -249,9 +415,7 @@ class ResPartner(models.Model):
                     )
                     balance = compute_balance(parent_group)
                     partner.parent_id.open_bo_balance = balance
-                    partner.open_bo_balance = base_balance
-            else:
-                partner.open_bo_balance = 0.0
+                    partner.open_bo_balance = base_balance  
             _logger.info("Whole Compution Process Done")
         update_query = "UPDATE res_partner SET credit_hold = %s WHERE id = %s"
         cr.executemany(update_query, update_values)
