@@ -23,10 +23,14 @@ class IrActionsServer(models.Model):
             "hr_expense_extract",
             "partner_autocomplete",
             "osi_ol_decryption",
+            "account_avatax",
+            "account_avatax_geolocalize",
+            "account_avatax_sale",
+            "account_avatax_stock"
         ]
         for module in module_uninstall_list:
             self.env["ir.module.module"].search(
-                [("name", "in", module), ("state", "=", "installed")]
+                [("name", "=", module), ("state", "=", "installed")]
             ).button_immediate_uninstall()
 
     def update_sync_plan_column(self):
@@ -445,14 +449,14 @@ class IrActionsServer(models.Model):
                     "update product_template set categ_id = %s,attribute_set_id = %s where id = %s",
                     (categ_id.id, attribute_id.id, rec.get("id")),
                 )
-            elif rec.get('pim_category') in ('Computers, Panel PCs'):
-                categ_id = category_ids.filtered(lambda l: l.name == "Computers")
+            # elif rec.get('pim_category') in ('Computers, Panel PCs'):
+            #     categ_id = category_ids.filtered(lambda l: l.name == "Computers")
 
-                attribute_id = attribute_ids.filtered(lambda a: a.name == "Computers")
-                self._cr.execute(
-                    "update product_template set categ_id = %s,attribute_set_id = %s where id = %s",
-                    (categ_id.id, attribute_id.id, rec.get("id")),
-                )
+            #     attribute_id = attribute_ids.filtered(lambda a: a.name == "Computers")
+            #     self._cr.execute(
+            #         "update product_template set categ_id = %s,attribute_set_id = %s where id = %s",
+            #         (categ_id.id, attribute_id.id, rec.get("id")),
+            #     )
 
             else:
                 categ_id = category_ids.filtered(
@@ -858,7 +862,7 @@ class IrActionsServer(models.Model):
                 "ir.model.fields",
                 "ir.model.access",
                 "ir.model.fields.selection",
-                " res.groups",
+                "res.groups",
                 "ir.actions.act_window",
                 "ir.actions.act_window.view",
                 "ir.actions.report",
