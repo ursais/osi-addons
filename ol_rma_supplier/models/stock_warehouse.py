@@ -90,22 +90,41 @@ class StockWarehouse(models.Model):
 
     def _create_rma_picking_types(self):
         picking_type_obj = self.env["stock.picking.type"]
+        sequence_obj = self.env["ir.sequence"]
         customer_loc, supplier_loc = self._get_partner_locations()
+
         for wh in self:
+            company_id = wh.company_id.id
+
+            # Find an existing picking type to reuse color/sequence info
             other_pick_type = picking_type_obj.search(
-                [("warehouse_id", "=", wh.id)], order="sequence desc", limit=1
+                [("warehouse_id", "=", wh.id)],
+                order="sequence desc",
+                limit=1,
             )
             color = other_pick_type.color if other_pick_type else 0
-            max_sequence = other_pick_type and other_pick_type.sequence or 0
-            # create rma_sup_out_type_id:
+            max_sequence = other_pick_type.sequence if other_pick_type else 0
+
+            # Create unique sequence for RMA OUT
+            seq_out = sequence_obj.create(
+                {
+                    "name": f"{wh.name} RMA OUT",
+                    "prefix": f"{wh.code}/SRMA/OUT/",
+                    "padding": 5,
+                    "company_id": company_id,
+                }
+            )
+
+            # Create RMA Supplier Out picking type
             rma_sup_out_type_id = picking_type_obj.create(
                 {
                     "name": _("Supplier RMA Deliveries"),
                     "warehouse_id": wh.id,
+                    "company_id": company_id,
                     "code": "outgoing",
                     "use_create_lots": True,
                     "use_existing_lots": False,
-                    "sequence_id": self.env.ref("rma.seq_picking_type_rma_sup_out").id,
+                    "sequence_id": seq_out.id,
                     "default_location_src_id": wh.lot_rma_id.id,
                     "default_location_dest_id": supplier_loc.id,
                     "sequence": max_sequence,
@@ -113,28 +132,43 @@ class StockWarehouse(models.Model):
                     "sequence_code": "Customer → RMA",
                 }
             )
-            # create rma_sup_in_type_id:
+
+            # Create unique sequence for RMA IN
+            seq_in = sequence_obj.create(
+                {
+                    "name": f"{wh.name} RMA IN",
+                    "prefix": f"{wh.code}/SRMA/IN/",
+                    "padding": 5,
+                    "company_id": company_id,
+                }
+            )
+
+            # Create RMA Supplier In picking type
             rma_sup_in_type_id = picking_type_obj.create(
                 {
                     "name": _("Supplier RMA Receipts"),
                     "warehouse_id": wh.id,
+                    "company_id": company_id,
                     "code": "incoming",
                     "use_create_lots": True,
                     "use_existing_lots": False,
-                    "sequence_id": self.env.ref("rma.seq_picking_type_rma_sup_in").id,
+                    "sequence_id": seq_in.id,
                     "default_location_src_id": supplier_loc.id,
                     "default_location_dest_id": wh.lot_rma_id.id,
                     "sequence": max_sequence,
                     "color": color,
-                    "sequence_code": "Supplier -> RMA",
+                    "sequence_code": "Supplier → RMA",
                 }
             )
+
+            # Link picking types to warehouse
             wh.write(
                 {
                     "rma_sup_out_type_id": rma_sup_out_type_id.id,
                     "rma_sup_in_type_id": rma_sup_in_type_id.id,
                 }
             )
+
         return True
 
     def get_rma_rules_dict(self):
