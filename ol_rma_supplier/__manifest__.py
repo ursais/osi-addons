@@ -14,8 +14,6 @@
         "delivery",
     ],
     "data": [
-        "data/rma_sequence.xml",
-        "data/stock_data.xml",
         "security/security_groups.xml",
         "security/ir.model.access.csv",
         "views/res_partner.xml",
