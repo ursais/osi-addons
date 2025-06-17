@@ -320,7 +320,7 @@ class HelpdeskTicket(models.Model):
                     "product_uom_qty": data["qty"],
                     "location_id": source_location_id,
                     "location_dest_id": destination_location_id,
-                    "scheduled_date": fields.Datetime.now() + timedelta(days=7),
+                    "date": fields.Datetime.now() + timedelta(days=7),
                 }
             )
 
