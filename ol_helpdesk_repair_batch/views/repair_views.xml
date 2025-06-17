@@ -12,7 +12,7 @@
                     type="object"
                     string="Load Removed Components"
                     class="oe_highlight"
-                    invisible = "not show_create_removal_button"
+                    invisible="not show_create_removal_button"
                 />
             </xpath>
             <xpath expr="//field[@name='company_id']" position="after">
