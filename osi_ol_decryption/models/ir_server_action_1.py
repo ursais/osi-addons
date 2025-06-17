@@ -174,21 +174,43 @@ class IrActionsServer(models.Model):
             "\n\n table_columns_dicttable_columns_dict\n %s", table_columns_dict
         )
         return table_columns_dict
-
-    def update_compute_complete_address(self):
+    
+    def update_compute_complete_address(self, batch_size=50000):
         _logger.info("===============update_compute_complete_address====================")
-        partner_ids = self.env["res.partner"].search(
-            [
-                ("contact_address_complete", "!=", ""),
-                "|",
-                ("active", "=", "f"),
-                ("active", "=", "t"),
-            ],
-            order="id",
-        )
-        for partner in partner_ids:
-            _logger.info("partner %s", partner.id)
-            partner._compute_complete_address()
+        offset = 0
+        lang_key = 'en_US'
+        while True:
+            self.env.cr.execute(f"""
+                WITH to_update AS (
+                    SELECT rp.id AS partner_id,
+                        TRIM(BOTH ',' FROM
+                            COALESCE(rp.street || ',', '') ||
+                            COALESCE(rp.zip || ' ','') ||
+                            COALESCE(rp.city || ',', '') ||
+                            COALESCE(st.name || ',', '') ||
+                            COALESCE(ct.name->>'{lang_key}', '')
+                        ) AS new_address
+                    FROM res_partner rp
+                    LEFT JOIN res_country_state st ON rp.state_id = st.id
+                    LEFT JOIN res_country ct ON rp.country_id = ct.id
+                    ORDER BY rp.id
+                    OFFSET {offset}
+                    LIMIT {batch_size}
+                )
+                UPDATE res_partner rp
+                SET contact_address_complete = to_update.new_address
+                FROM to_update
+                WHERE rp.id = to_update.partner_id
+            """)
+            self.env.cr.commit()
+            _logger.info("Committed batch at offset %s", offset)
+
+            # Stop when fewer than batch_size rows were processed
+            if self.env.cr.rowcount < batch_size:
+                break
+            offset += batch_size
+
+        _logger.info("=============== Finished Bulk Update ====================")
 
         self._cr.execute(
             "select id,default_supplier_contact from res_partner where default_supplier_contact is not null;"
@@ -199,7 +221,7 @@ class IrActionsServer(models.Model):
                 "insert into partner_supplier_contact_rel (partner_id,contact_id) VALUES (%s,%s)",
                 (data[0], data[1]),
             )
-
+    
     def update_po_contact_ids(self):
         _logger.info("===============update_po_contact_ids====================")
         self._cr.execute(
@@ -252,38 +274,28 @@ class IrActionsServer(models.Model):
             self._cr.execute(
                 "UPDATE account_move SET ref = %s WHERE id = %s", (new_ref, move_id)
             )
-
+    
     def update_product_tax_code(self):
-        _logger.info("===============update_product_tax_code====================")
-        conn_13 = psycopg2.connect(
-            database="odoo13_prod",
-            user="odoo",
-            password="odoo",
-            host="localhost",
-            port="5432",
-        )
-
-        cur_13 = conn_13.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-
-        cur_13.execute(
-            "select res_id,value_reference from ir_property where name = 'tax_code_id' and company_id = 1"
-        )
-        product_tax_code_ids = cur_13.fetchall()
-        for rec in product_tax_code_ids:
-            res_id = rec.get("res_id").split(",")[1]
-            value = rec.get("value_reference").split(",")[1]
-            self._cr.execute(
-                "update product_template set tax_code_id = %s where id = %s",
-                (value, res_id),
+        _logger.info("========== Starting tax_code_id update ==========")
+        self._cr.execute("""
+            WITH tax_map AS (
+                SELECT
+                    split_part(res_id, ',', 2)::int AS template_id,
+                    split_part(value_reference, ',', 2)::int AS tax_code_id
+                FROM temp_ir_property_v13_vp
+                WHERE name = 'tax_code_id' AND company_id = 1
             )
-
-    # def update_tracking_number(self):
-    #     """Move to After Migration Script"""
-    #     self._cr.execute(
-    #         """UPDATE stock_picking AS sp SET carrier_tracking_ref = tn.number FROM (SELECT picking_id, STRING_AGG(number, ', ') AS number FROM tracking_number GROUP BY picking_id) AS tn WHERE sp.id = tn.picking_id;"""
-    #     )
-
+            UPDATE product_template pt
+            SET tax_code_id = tm.tax_code_id
+            FROM tax_map tm
+            WHERE pt.id = tm.template_id
+        """)
+        self._cr.commit()
+        _logger.info("========== tax_code_id update completed ==========")
+    
+    
     def odoo_rpc_call_product_weight(self):
+        """Created the pre_computed sql file and will update the record from After Decryption File"""
         _logger.info("===============odoo_rpc_call_product_weight====================")
         odoo_13 = odoorpc.ODOO("localhost", port=8069, timeout=12000)
         odoo_13.login("odoo13_prod", "admin", "pw")
@@ -326,23 +338,23 @@ class IrActionsServer(models.Model):
 
         obj_product_17 = self.env["product.template"]
 
-        """FIX work_location in Employee"""
+        """FIX work_location in Employee Move to sh file"""
 
-        employee_obj = self.env["hr.employee"]
-        work_location_obj = self.env["hr.work.location"]
-        obj_employee = odoo_13.env["hr.employee"]
-        employee_ids = obj_employee.search_read(
-            [("work_location", "!=", False)], fields=["id", "work_location"], order="id"
-        )
-        for emp in employee_ids:
-            work_id = work_location_obj.search(
-                [("name", "=", emp.get("work_location"))], limit=1
-            )
-            if work_id:
-                self._cr.execute(
-                    "update hr_employee set work_location_id = %s where id = %s"
-                    % (work_id.id, emp.get("id"))
-                )
+        # employee_obj = self.env["hr.employee"]
+        # work_location_obj = self.env["hr.work.location"]
+        # obj_employee = odoo_13.env["hr.employee"]
+        # employee_ids = obj_employee.search_read(
+        #     [("work_location", "!=", False)], fields=["id", "work_location"], order="id"
+        # )
+        # for emp in employee_ids:
+        #     work_id = work_location_obj.search(
+        #         [("name", "=", emp.get("work_location"))], limit=1
+        #     )
+        #     if work_id:
+        #         self._cr.execute(
+        #             "update hr_employee set work_location_id = %s where id = %s"
+        #             % (work_id.id, emp.get("id"))
+        #         )
 
         """FIX Payment Team Data missing"""
 
