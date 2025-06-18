@@ -134,4 +134,25 @@ class MrpProduction(models.Model):
                     )
                 ]
 
+    def _link_bom(self, bom):
+        """
+        Override to exclude BoM operations not matching the MO's company.
+        This ensures that `action_update_bom` doesn't pull in operations
+        from the wrong company.
+        """
+
+        def _filter_valid_operations(operation):
+            return (
+                not operation.company_id or operation.company_id == self.company_id
+            ) and (
+                not operation.workcenter_id.company_id
+                or operation.workcenter_id.company_id == self.company_id
+            )
+
+        # Rebuild filtered operations in memory and patch on the bom
+        bom = bom.with_prefetch(bom.ids)
+        bom.operation_ids = bom.operation_ids.filtered(_filter_valid_operations)
+
+        return super()._link_bom(bom)
+
     # END #########
