@@ -41,7 +41,7 @@
                     class="fa fa-exclamation-triangle"
                     title="A product on this Manufacturing Order has been marked as not allowed."
                 />
-                <field invisible="1" name="approved_mrp_component_ok" />
+                <field column_invisible="1" name="approved_mrp_component_ok" />
             </xpath>
             <div name="button_box" position="after">
                 <div

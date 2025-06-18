@@ -188,11 +188,6 @@ class RepairCreditNoteWizard(models.TransientModel):
                         "quantity": line.quantity,
                         "price_unit": line.price_unit,
                         "tax_ids": [(6, 0, line.tax_ids.ids)],
-                        "analytic_account_id": (
-                            line.analytic_account_id.id
-                            if line.analytic_account_id
-                            else False
-                        ),
                         "account_id": line.account_id.id,
                         "discount": line.discount,
                     },
