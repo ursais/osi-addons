@@ -1,0 +1,6 @@
+.so_lock_bubble{
+	float: unset !important;
+	margin-bottom: unset !important ;
+	position: absolute;
+	top: 13px;
+}
