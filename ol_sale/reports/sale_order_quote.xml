@@ -54,8 +54,7 @@
             <t t-set="shipping_lines" t-value="onlogic_data[sale_order.id]['shipping_lines']"/>
             <t t-set="product_subtotal_amount" t-value="onlogic_data[sale_order.id]['product_subtotal_amount']"/>
             <t t-set="shipping_subtotal_amount" t-value="onlogic_data[sale_order.id]['shipping_subtotal_amount']"/>
-            <t t-set="has_active_holds" t-value="bool(sale_order.exception_ids)"/>
-            <t t-set="has_active_holds" t-value="true"/>
+            <t t-set="has_active_holds" t-value="sale_order.has_active_holds"/>
 
             <!--The first main information block-->
             <div class="ol_report_info_row ol_flex">
@@ -170,7 +169,7 @@
                 </t>
             </t>
 
-            <t t-if="state == 'draft' or has_active_holds">
+            <t t-if="not has_active_holds">
                 <div class="ol_watermark">
                   <tag>FOR INTERNAL USE ONLY</tag>
                 </div>

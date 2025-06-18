@@ -49,10 +49,27 @@ class SaleOrder(models.Model):
         help="These are the contacts that will receive automated email communications.",
     )
     shipping_ref = fields.Char(string="Shipping Reference")
+    has_active_holds = fields.Boolean(compute="_compute_has_active_holds")
 
     # END #########
 
     # METHODS #########
+
+    def _compute_has_active_holds(self):
+        for sale in self:
+            has_active_hold = True
+            for line in sale.order_line:
+                if not line.product_template_id.sale_ok:
+                    has_active_hold = False
+                    break
+                if line.bom_id:
+                    for bom_l in line.bom_id.bom_line_ids:
+                        if not bom_l.product_id.sale_ok:
+                            has_active_hold = False
+                            break
+                    if not has_active_hold:
+                        break
+            sale.has_active_holds = has_active_hold
 
     @api.depends("partner_id")
     def _compute_contact_ids(self):
@@ -134,7 +151,13 @@ class SaleOrder(models.Model):
                         "attribute_name": v.attribute_id.name,
                         "value_name": v.product_attribute_value_id.name,
                         "sequence": v.attribute_id.sequence,
-                        "product_qty": sum(bom_line_ids.filtered(lambda bom_line: bom_line.product_id.id == v.product_id.id).mapped("product_qty")) or 1.0,
+                        "product_qty": sum(
+                            bom_line_ids.filtered(
+                                lambda bom_line: bom_line.product_id.id
+                                == v.product_id.id
+                            ).mapped("product_qty")
+                        )
+                        or 1.0,
                     }
                     for v in visible_values
                 ]
@@ -178,7 +201,7 @@ class SaleOrder(models.Model):
         Send a Sale Order confirmation email
         """
         self.ensure_one()
-        
+
         if not self.to_send_confirmation_email:
             return
         if self.detect_exceptions():
