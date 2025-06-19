@@ -968,6 +968,54 @@ class IrActionsServer(models.Model):
             # Commit changes once at the end
             cr.commit()
 
+    def update_ptal(self):
+        cr = self.env.cr
+
+        # Fetch all inactive product_template_variant_value records with necessary fields
+        variant_values = self.env["product.product"].search([]).product_template_variant_value_ids.filtered(
+            lambda x: not x.ptav_active and x.attribute_line_id and x.name
+        )
+
+        for variant_value in variant_values:
+            attribute_line_id = variant_value.attribute_line_id.id
+            name = variant_value.name
+
+            # Use JOIN instead of subquery
+            query = """
+                SELECT ptav.id
+                FROM product_template_attribute_value ptav
+                JOIN product_attribute_value pav 
+                ON ptav.product_attribute_value_id = pav.id
+                WHERE ptav.attribute_line_id = %s
+                AND ptav.ptav_active = 't'
+                AND pav.name ->> 'en_US' = %s
+                AND pav.active = TRUE
+                LIMIT 1;
+            """
+            cr.execute(query, (attribute_line_id, name))
+            ptav_data = cr.fetchone()
+
+            if ptav_data:
+                unique_ptav_id = ptav_data[0]
+
+                # Optional: Logging for debug
+                _logger.info(
+                    "Updating Variant [%s] for Template [%s], Attribute [%s] → PTAV ID: %s",
+                    variant_value.name,
+                    variant_value.attribute_line_id.product_tmpl_id.name,
+                    variant_value.attribute_id.name,
+                    unique_ptav_id,
+                )
+
+                # Update product_variant_combination with correct ptav
+                update_query = """
+                    UPDATE product_variant_combination
+                    SET product_template_attribute_value_id = %s
+                    WHERE product_template_attribute_value_id = %s;
+                """
+                cr.execute(update_query, (unique_ptav_id, variant_value.id))
+                cr.commit()
+
     def drop_temp_tables(self):
         cr = self.env.cr
         _logger.info("\n\n============Droping Tables Start")
