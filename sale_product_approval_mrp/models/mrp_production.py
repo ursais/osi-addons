@@ -78,9 +78,10 @@ class MRPProduction(models.Model):
             ) and not mo.override_mo_exception:
                 raise UserError(
                     _(
-                        "You can not mark done because some products are not "
+                        "You can not mark done %s because some products are not "
                         "allowed in this order."
                     )
+                    % mo.name
                 )
         return res
 

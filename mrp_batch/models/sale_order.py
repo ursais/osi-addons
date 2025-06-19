@@ -16,12 +16,6 @@ class SaleOrder(models.Model):
     # END #########
     # METHODS #####
 
-    def write(self, vals):
-        res = super().write(vals)
-        if vals.get("order_line", False):
-            self.with_delay().split_mo()
-        return res
-
     def _compute_is_mrp_warning(self):
         for so in self:
             is_mrp_warning = False
@@ -48,20 +42,6 @@ class SaleOrder(models.Model):
             sale.mrp_production_ids = mrp_production_ids
         return res
 
-    def action_confirm(self):
-        # Calls the original `action_confirm` method from the super class to
-        # confirm the record.
-        res = super().action_confirm()
-        # Asynchronously triggers the `split_mo` method to split
-        # manufacturing orders (MOs).
-        enable_split = (
-                self.env["ir.config_parameter"]
-                .sudo()
-                .get_param("mrp_batch.enable_delay_so_action_confirm")
-            )
-        if enable_split == "True":
-            self.with_delay().split_mo()
-        return res
 
     def split_mo(self):
         batch_obj = self.env["mrp.production.batch"]
