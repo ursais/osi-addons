@@ -12,9 +12,8 @@
     "depends": [
         "ol_base",
         "mrp",
+        "mrp_plm",
     ],
     # always loaded
-    "data": [
-        # "views/mrp_production_view.xml",
-    ],
+    "data": [],
 }
