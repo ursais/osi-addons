@@ -66,7 +66,7 @@ class IrActionsServer(models.Model):
 
         for attribute_id in distinct_attribute_ids:
             attribute  = self.env["product.attribute"].browse(attribute_id)
-            _logger.info("\n\n==================Attribute ID==================%s",attribute_id)
+            # _logger.info("\n\n==================Attribute ID==================%s",attribute_id)
             pav_select_query = """SELECT DISTINCT ON (pav.name) pav.attribute_id, pav.name, pa.name, pav.id, pav.active
                                     FROM product_attribute_value AS pav
                                     LEFT JOIN product_attribute AS pa ON pav.attribute_id = pa.id
@@ -77,7 +77,7 @@ class IrActionsServer(models.Model):
             for pav in pav_results:
                 update_query = """UPDATE product_attribute_value SET active=true,attribute_id=%s where attribute_id = %s AND id = %s;"""
                 cr.execute(update_query, (attribute.id,pav[0],pav[3]))
-                _logger.info("\n\n==================Attribute ID===pav_select_query===============%s",pav)
+                # _logger.info("\n\n==================Attribute ID===pav_select_query===============%s",pav)
                 
         cr.execute("DELETE FROM product_product_attribute_value_qty WHERE qty IN (0, 1);")
         cr.execute(" UPDATE product_template_attribute_line SET required = 't' WHERE required is null;")
@@ -91,8 +91,19 @@ class IrActionsServer(models.Model):
         #=========================================ProductTemplateAttributeLine===================================================
         ProductTemplateAttributeLine = self.env["product.template.attribute.line"]
         templateAttributteLine = ProductTemplateAttributeLine.search([])
-        attribute_dict = {attribute.name: attribute.id for attribute in self.env["product.attribute"].search([("active", "=", True)])}
-        lines_to_update = templateAttributteLine.filtered(lambda line: line.product_tmpl_id.active and not line.attribute_id.active)
+        product_attribute_obj = self.env["product.attribute"]
+        # attribute_dict = {attribute.name: attribute.id for attribute in product_attribute_obj.search([("active", "=", True)])}
+        cr.execute("""
+            SELECT name, id 
+            FROM product_attribute 
+            WHERE active = TRUE;
+        """)
+        attribute_dict = {name.get('en_US'): attr_id for name, attr_id in cr.fetchall()}
+        # lines_to_update = templateAttributteLine.filtered(lambda line: line.product_tmpl_id.active and not line.attribute_id.active)
+        lines_to_update = ProductTemplateAttributeLine.search([
+            ("product_tmpl_id.active", "=", True),
+            ("attribute_id.active", "=", False)
+        ])
         update_queries = []
         for line in lines_to_update:
             # Check if the attribute has an active match
@@ -112,7 +123,8 @@ class IrActionsServer(models.Model):
         #============================================ProductTemplateAttributeValue================================================
         ProductTemplateAttributeValue = self.env["product.template.attribute.value"]
         _logger.info("\n\n===ProductTemplateAttributeValue Start===")
-        active_attribute_dict = {attribute.name: attribute.id for attribute in self.env["product.attribute"].search([("active", "=", True)])}
+        # active_attribute_dict = {attribute.name: attribute.id for attribute in self.env["product.attribute"].search([("active", "=", True)])}
+        active_attribute_dict = attribute_dict
         update_queries = []
         attributes_to_recompute = set()
         select_query = """select id from product_template_attribute_value where ptav_active='t';"""
@@ -136,11 +148,7 @@ class IrActionsServer(models.Model):
             cr.executemany(update_query, update_queries)
             cr.commit()
 
-        _logger.info("\n\n===Recompute for unique attributes===")
-
-        for attribute_id in attributes_to_recompute:
-            active_attribute = self.env["product.attribute"].browse(attribute_id)
-            active_attribute._compute_products()  # Only recompute for unique attributes
+              
 
         _logger.info("\n\n===ProductTemplateAttributeValue Done===%s",len(templateAttributteValue))
 
@@ -148,13 +156,22 @@ class IrActionsServer(models.Model):
         template_attribute_line_rel_query = """SELECT product_attribute_value_id FROM product_attribute_value_product_template_attribute_line_rel;"""
         cr.execute(template_attribute_line_rel_query)
         line_rel_ids = cr.fetchall()
-        ProductAttributeValue = self.env["product.attribute.value"]
 
 
         # templateAttributeValue = ProductTemplateAttributeValue.search([("ptav_active", "=", True)])
-        templateAttributeValue = ProductTemplateAttributeValue.browse(templateAttributteValue)
+        # templateAttributeValue = ProductTemplateAttributeValue.browse(templateAttributteValue)
+        _logger.info("\n\n===Recompute for unique attributes===")  
+        active_attributes = product_attribute_obj.browse(attributes_to_recompute)
+        active_attributes._compute_products()
+        query = """SELECT attribute_line_id from product_template_attribute_value where id in %s;"""
+        cr.execute(query,(tuple(templateAttributteValue),))
+        value_line_ids = [row[0] for row in cr.fetchall()]
 
-        attribute_line_ids = templateAttributeValue.mapped("attribute_line_id").ids
+        # attribute_line_ids = templateAttributeValue.mapped("attribute_line_id").ids
+        query = """SELECT id from product_template_attribute_line where id in %s;"""
+        cr.execute(query,(tuple(value_line_ids),))
+        attribute_line_ids = [row[0] for row in cr.fetchall()]
+        
         line_rel_ids =[]
         if attribute_line_ids:  # Only run the query if we have some ids to search for
             template_attribute_line_rel_query = """
