@@ -913,9 +913,7 @@ class IrActionsServer(models.Model):
                     "ir_actions_act_window_view",
                     "ir_actions_report",
                 ):
-                    print ("\n ------------------------------")
                     env[data.model].browse(data.res_id).unlink()
-                    print ("\n -----------------------------11111111-")
                 
                 elif table in ('res_groups'):
                     self._cr.execute("alter table %s DISABLE TRIGGER ALL" % (table,))
