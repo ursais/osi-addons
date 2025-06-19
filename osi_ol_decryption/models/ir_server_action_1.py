@@ -856,10 +856,7 @@ class IrActionsServer(models.Model):
             "web_tree_many2one_clickable",
             "web_widget_bokeh_chart",
             "ls_delivery_ups_rest",
-            "avatax_fiscal_position_us",
-            "account_avatax",
-            "account_avatax_sale"
-
+            "avatax_fiscal_position_us"
         ]
 
         data_list = env["ir.model.data"].search(
@@ -910,14 +907,25 @@ class IrActionsServer(models.Model):
                                 )
                             )
                         action_ids.unlink()
+                
                 if table in (
                     "ir_actions_act_window",
                     "ir_actions_act_window_view",
                     "ir_actions_report",
                 ):
+                    print ("\n ------------------------------")
                     env[data.model].browse(data.res_id).unlink()
+                    print ("\n -----------------------------11111111-")
+                
+                elif table in ('res_groups'):
+                    self._cr.execute("alter table %s DISABLE TRIGGER ALL" % (table,))
+                    self._cr.execute("update ir_model_access set  group_id = null where group_id = %s" % (data.res_id,))
+                    self._cr.execute("delete from %s where id = %s" % (table, data.res_id))
+                    self._cr.execute("alter table %s enable TRIGGER ALL" % (table,))
+                    
                 else:
                     if table != "ir_model":
+                        
                         self._cr.execute(
                             "delete from %s where id = %s"
                             % (
@@ -941,6 +949,7 @@ class IrActionsServer(models.Model):
             )
             .unlink()
         )
+        module_uninstall_list += ["account_avatax","account_avatax_sale"]
         for module in module_uninstall_list:
             self._cr.execute(
                 "update ir_module_module set state='to remove' where name='%s'"
