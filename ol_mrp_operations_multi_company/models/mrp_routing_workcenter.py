@@ -35,14 +35,16 @@ class MrpRoutingWorkcenter(models.Model):
     # METHODS #####
 
     def write(self, vals):
-        # Only trigger outdated BOM if fields other than time_cycle_manual were changed
-        # Add other fields as needed
-        safe_fields = {
-            "time_cycle_manual",
-        }
-        trigger_bom_flag = not set(vals.keys()).issubset(safe_fields)
+        """
+        Override the operation's write method to be able to exclude certain fields
+        from triggering the 'Update BoM' setting on the manufacturing orders.
+        """
+        # Excluded fields from triggering the 'Update BoM' functionality
+        # add more as needed
+        exclude_fields = {"time_cycle_manual"}
+        trigger_bom_flag = not set(vals.keys()).issubset(exclude_fields)
 
-        # If bom_id is changed, clear operation links before write
+        # Unlink operation links if bom_id changes
         if "bom_id" in vals:
             for op in self:
                 op.bom_id.bom_line_ids.filtered(
@@ -55,12 +57,25 @@ class MrpRoutingWorkcenter(models.Model):
                     lambda operation: operation.blocked_by_operation_ids == op
                 ).blocked_by_operation_ids = False
 
-        # Perform the actual write
+        affected_ops = self.filtered(lambda op: op.id)
+
         res = super().write(vals)
 
-        # Mark MOs outdated *only if necessary*
-        if trigger_bom_flag:
-            self.bom_id._set_outdated_bom_in_productions()
+        if not trigger_bom_flag:
+            for op in affected_ops:
+                open_workorders = self.env["mrp.workorder"].search(
+                    [
+                        ("operation_id", "=", op.id),
+                        ("state", "not in", ["done", "cancel"]),
+                    ]
+                )
+                for wo in open_workorders:
+                    wo.duration_expected = op.time_cycle_manual
+        else:
+            # Run normal 'Update BoM' function if other field is updated.
+            for op in affected_ops:
+                if op.bom_id:
+                    op.bom_id._set_outdated_bom_in_productions()
 
         return res
 
