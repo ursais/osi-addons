@@ -10,11 +10,13 @@ class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
     def decrypt_char_field(self, all_data=False):
-        #        KEY = os.environ.get("KEY_ENCY_DESCY")
-        # file = open("/home/odoo/decryption.txt", "r")
-        # KEY = file.read()
-        # file.close()
-        KEY = "SQRtYfq2g6"
+        KEY = ""
+        with open('/home/odoo/decryption.txt', 'r') as file:
+            KEY = file.read()
+            file.close()
+        if not KEY:
+            _logger.error("Key Missing")
+            return 
         runningLog = "DECRYPTING CHAR FIELDS V2\n\n"
         self.env.cr.execute("CREATE EXTENSION IF NOT EXISTS pgcrypto;")
         self.env.cr.commit()
@@ -408,10 +410,13 @@ class IrActionsServer(models.Model):
         _logger.info(runningLog)
 
     def decrypt_json_field(self):
-        # file = open("/tmp/decryption.txt", "r")
-        # KEY = file.read()
-        # file.close()
-        KEY = "SQRtYfq2g6"
+        KEY = ""
+        with open('/home/odoo/decryption.txt', 'r') as file:
+            KEY = file.read()
+            file.close()
+        if not KEY:
+            _logger.error("Key Missing")
+            return 
         runningLog = "DECRYPTING CHAR FIELDS V2\n\n"
         self.env.cr.execute("CREATE EXTENSION IF NOT EXISTS pgcrypto;")
         self.env.cr.commit()
