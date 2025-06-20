@@ -932,6 +932,34 @@ class IrActionsServer(models.Model):
         #         update_query = """UPDATE res_partner set payment_preference = %s where id = %s; """
         #         cr.execute(update_query,(payemnt_ref_id.id,partner_id.id))
 
+        def update_visibility(cr, used_in_sale_description_value, visible_to_user_value):
+            query = """
+                SELECT id 
+                FROM product_template_attribute_line 
+                WHERE active = 't' AND used_in_sale_description = %s;
+            """
+            cr.execute(query, (used_in_sale_description_value,))
+            ptal_ids = [row[0] for row in cr.fetchall()]
+            
+            if ptal_ids:  # Only execute update if IDs were found
+                update_query = """
+                    UPDATE product_template_attribute_value 
+                    SET visible_to_user = %s 
+                    WHERE attribute_line_id IN %s AND ptav_active = 't';
+                """
+                cr.execute(update_query, (visible_to_user_value, tuple(ptal_ids)))
+            
+            return len(ptal_ids)
+
+        # Update 'visible_to_user' = 't' where 'used_in_sale_description' is true
+        count_true = update_visibility(cr, 't', 't')
+
+        # Update 'visible_to_user' = 'f' where 'used_in_sale_description' is false
+        count_false = update_visibility(cr, 'f', 'f')
+
+        _logger.info("\n\n\n\n===Task: 929566975 and 927975110 Done")
+        cr.commit()
+
         _logger.info("\n\n\n\n=================DONE=======")
         _logger.info("\n\n==================Script 8 is Done==================")
 
