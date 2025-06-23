@@ -56,7 +56,8 @@ class TestSaleOrderInspectionWizard(TransactionCase):
         self.assertEqual(self.sale_order.order_inspection_ids, self.inspection_2)
 
     def test_confirm_blocked_removal(self):
-        """User shouldn't be able to remove inspection with restricted group"""  # Create a restricted group not assigned to the user
+        """User shouldn't be able to remove inspection with restricted group"""
+        # Create a restricted group not assigned to the user
         restricted_group = self.env["res.groups"].create(
             {
                 "name": "Restricted Inspection Group",
