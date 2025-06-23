@@ -1,0 +1,26 @@
+<odoo>
+
+    <record id="sale_order_view_form_inherit_ol_sale_order_inspection" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/div[hasclass('oe_title')]" position="before">
+                <br/>
+                <field name="order_inspection_ids" class="mt-1" widget="many2many_tags" readonly="1" no_label="1" options="{'color_field': 'color'}" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_tree_inherit_ol_sale_order_inspection" model="ir.ui.view">
+        <field name="name">sale.order.tree.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_exception.view_order_tree" />
+        <field name="arch" type="xml">
+            <field name="main_exception_id" position="before">
+                <field name="order_inspection_ids" widget="many2many_tags" optional="show" options="{'color_field': 'color'}" />
+            </field>
+        </field>
+    </record>
+
+</odoo>
