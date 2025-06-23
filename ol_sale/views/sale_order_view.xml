@@ -55,6 +55,7 @@
                 <field name="account_manager_id" />
                 <field name="end_user" />
                 <field name="integrator" />
+                <field name="has_active_holds" invisible="1"/>
             </xpath>
 
             <!-- Filter out configurable and company not allowed products in the product_template_id field -->
