@@ -16,6 +16,6 @@
     # always loaded
     "data": [
         "data/sale_substate_data.xml",
-        "data/automated_action_sale.xml",
+#        "data/automated_action_sale.xml",
     ],
 }
