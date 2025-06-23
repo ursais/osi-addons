@@ -461,15 +461,20 @@ class IrActionsServer(models.Model):
                     "update product_template set categ_id = %s,attribute_set_id = %s where id = %s",
                     (categ_id.id, attribute_id.id, rec.get("id")),
                 )
-            # elif rec.get('pim_category') in ('Computers, Panel PCs'):
-            #     categ_id = category_ids.filtered(lambda l: l.name == "Computers")
-
-            #     attribute_id = attribute_ids.filtered(lambda a: a.name == "Computers")
-            #     self._cr.execute(
-            #         "update product_template set categ_id = %s,attribute_set_id = %s where id = %s",
-            #         (categ_id.id, attribute_id.id, rec.get("id")),
-            #     )
-
+            elif rec.get('pim_category') == 'Computers, Panel PCs':
+                categ_id = category_ids.filtered(lambda l: l.name == "Computers")
+                attribute_id = attribute_ids.filtered(lambda a: a.name == "Computers")
+                self._cr.execute(
+                    "update product_template set categ_id = %s,attribute_set_id = %s where id = %s",
+                    (categ_id.id, attribute_id.id, rec.get("id")),
+                )
+            elif rec.get('pim_category') == 'Cases, Computers':
+                categ_id = category_ids.filtered(lambda l: l.name == "Cases")
+                attribute_id = attribute_ids.filtered(lambda a: a.name == "Cases")
+                self._cr.execute(
+                    "update product_template set categ_id = %s,attribute_set_id = %s where id = %s",
+                    (categ_id.id, attribute_id.id, rec.get("id")),
+                )
             else:
                 categ_id = category_ids.filtered(
                     lambda l: l.name == rec.get("pim_category")

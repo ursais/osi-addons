@@ -16,7 +16,8 @@ class IrActionsServer(models.Model):
             file.close()
         if not KEY:
             _logger.error("Key Missing")
-            return 
+            return
+        KEY = KEY.strip() 
         runningLog = "DECRYPTING CHAR FIELDS V2\n\n"
         self.env.cr.execute("CREATE EXTENSION IF NOT EXISTS pgcrypto;")
         self.env.cr.commit()
@@ -416,7 +417,8 @@ class IrActionsServer(models.Model):
             file.close()
         if not KEY:
             _logger.error("Key Missing")
-            return 
+            return
+        KEY = KEY.strip()
         runningLog = "DECRYPTING CHAR FIELDS V2\n\n"
         self.env.cr.execute("CREATE EXTENSION IF NOT EXISTS pgcrypto;")
         self.env.cr.commit()
