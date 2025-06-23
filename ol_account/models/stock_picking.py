@@ -11,12 +11,12 @@ class StockPicking(models.Model):
 
     # METHODS ######
 
-    def button_validate(self):
+    def _action_done(self):
         """
         Inherit the validate method that runs on delivery orders to
         auto create/post the invoice if related to a sale order.
         """
-        res = super().button_validate()
+        res = super()._action_done()
 
         config = self.env["ir.config_parameter"].sudo()
 
