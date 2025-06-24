@@ -1354,7 +1354,7 @@ class MrpProductionBatch(models.Model):
         res = super().write(vals)
 
         for batch in self:
-            if "date_start" in vals and batch.state in ("draft", "confirm"):
+            if vals.get("date_start") and batch.state in ("draft", "confirm"):
                 for mo in batch.production_ids:
                     # If the job is related to a manufacturing order, check its batch
                     if mo.state in ("draft", "confirmed"):
