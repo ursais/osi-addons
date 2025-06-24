@@ -57,16 +57,21 @@ class ResPartner(models.Model):
                 partner.sudo().write({"hot_ar": bool(invoices)})
 
             # Now update commercial partner based on children
-            if partner != partner.commercial_partner_id:
+            if (
+                partner.commercial_partner_id
+                and partner != partner.commercial_partner_id
+            ):
                 commercial_partner = partner.commercial_partner_id
                 # This will ensure the commercial partner is "hot" if any child is
-                commercial_partner.sudo().write(
-                    {
-                        "hot_ar": any(
-                            child.hot_ar and not child.override_hot_ar
-                            for child in commercial_partner.child_ids
-                        )
-                    }
-                )
+                if not self._context.get("commercial_partner"):
+                    commercial_partner.sudo().write(
+                        {
+                            "hot_ar": any(
+                                child.with_context(commercial_partner=True).hot_ar
+                                and not child.override_hot_ar
+                                for child in commercial_partner.child_ids
+                            )
+                        }
+                    )
 
     # END #########
