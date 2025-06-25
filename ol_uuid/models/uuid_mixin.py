@@ -49,16 +49,16 @@ class Uuid(models.AbstractModel):
 
         return result
 
-    @api.model
-    def create(self, values):
+    @api.model_create_multi
+    def create(self, vals_list):
         """
         Always generate a UUID for newly created records
         """
-        if not values.get("uuid", False):
-            uuid = self.env[self._name].get_uuid(force_new=True)
-            values["uuid"] = uuid
-        res = super().create(values)
-        return res
+        for vals in vals_list:
+            if not vals.get("uuid", False):
+                uuid = self.env[self._name].get_uuid(force_new=True)
+                vals["uuid"] = uuid
+        return super().create(vals_list)
 
     def write(self, values):
         """

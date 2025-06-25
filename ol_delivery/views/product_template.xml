@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <record id="product_template_form_view" model="ir.ui.view">
+    <field name="name">ol_delivery.product_template_form_view</field>
+    <field name="model">product.template</field>
+    <field name="inherit_id" ref="product.product_template_form_view" />
+    <field name="arch" type="xml">
+      <field name="categ_id" position="before">
+        <field name="has_configurable_attributes" invisible="1" />
+        <field name="is_kits" invisible="1" />
+        <field name="lithium_shipping_hazard" />
+      </field>
+      <div name="weight" position="after">
+
+        <label for="shipping_buffer" />
+        <div class="o_row" name="shipping_buffer">
+          <field name="shipping_buffer" class="oe_inline" />
+          <div name="shipping_buffer_days" class="o_field_widget o_readonly_modifier o_field_char">
+            <span>days</span>
+          </div>
+        </div>
+
+        <label for="x_shipping_height"
+          invisible="product_variant_count &gt; 1 and not is_product_variant" />
+        <div class="o_row" name="x_shipping_height"
+          invisible="product_variant_count &gt; 1 and not is_product_variant">
+          <field name="x_shipping_height" class="oe_inline" />
+          <div name="height_cm" class="o_field_widget o_readonly_modifier o_field_char">
+            <span>cm</span>
+          </div>
+        </div>
+
+        <label for="x_shipping_length"
+          invisible="product_variant_count &gt; 1 and not is_product_variant" />
+        <div class="o_row" name="x_shipping_length"
+          invisible="product_variant_count &gt; 1 and not is_product_variant">
+          <field name="x_shipping_length" class="oe_inline" />
+          <div name="length_cm" class="o_field_widget o_readonly_modifier o_field_char">
+            <span>cm</span>
+          </div>
+        </div>
+
+        <label for="x_shipping_width"
+          invisible="product_variant_count &gt; 1 and not is_product_variant" />
+        <div class="o_row" name="x_shipping_width"
+          invisible="product_variant_count &gt; 1 and not is_product_variant">
+          <field name="x_shipping_width" class="oe_inline" />
+          <div name="width_cm" class="o_field_widget o_readonly_modifier o_field_char">
+            <span>cm</span>
+          </div>
+        </div>
+      </div>
+    </field>
+  </record>
+
+</odoo>

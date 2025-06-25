@@ -10,6 +10,8 @@
         "product",
         "ol_base",
         "mrp",
+        "ol_product",
+        "ol_product_classification"
     ],
     "author": "OnLogic",
     "website": "https://www.onlogic.com",

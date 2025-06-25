@@ -16,7 +16,7 @@
     "category": "Tools",
     "description": """Adds the possibility to create webhooks that can be called on predefined events.""",
     "data": [
-        "data/api_clients.xml",
+        # "data/api_clients.xml",
         "data/invoice.xml",
         "data/ir_config_parameter.xml",
         "data/ir_cron.xml",

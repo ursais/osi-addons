@@ -390,7 +390,7 @@ class Webhook(models.Model):
             # TODO: Do we need any versioning?
             "X-Odoo-Webhook-Version": "0.01",
             "X-Odoo-Webhook-Signature": (
-                f"{self.env['api'].generate_hmac_signature(key=self.secret, msg=data)}"
+                f"{self.env['api'].generate_hmac_signature(key=self.secret, data=data)}"
             ),
         }
 
@@ -409,7 +409,7 @@ class Webhook(models.Model):
             "operation": operation,
             "record_ids": sorted(records.ids),
         }
-        return self.env["api"].generate_hmac_signature(key=operation, msg=data)
+        return self.env["api"].generate_hmac_signature(key=operation, data=data)
 
     def get_wait_time(self, operation):
         """
