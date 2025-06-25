@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="stock_package_type_form" model="ir.ui.view">
+        <field name="name">ol_delivery_ups_rest.stock.package.type.form</field>
+        <field name="model">stock.package.type</field>
+        <field name="inherit_id" ref="stock.stock_package_type_form" />
+        <field name="arch" type="xml">
+            <group name="delivery" position="before">
+                <div class="alert alert-warning" role="alert" colspan="2">
+                    The Size values much be <strong>in</strong> inches for US and <strong>cm</strong> for EU!
+                </div>
+                <group invisible="package_carrier_type not in ['ups', 'ups_rest']">
+                    <div class="alert alert-info" role="alert" colspan="2"> UPS maximum size total constraints
+                        is: <ul>
+                            <li>
+                                US: 165 inches (length + girth where girth is 2 x width plus 2 x
+                        height).
+                            </li>
+                            <li>
+                                EU: 400 cm (length + girth where girth is 2 x width plus 2 x
+                        height).
+                            </li>
+                        </ul>
+                    </div>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

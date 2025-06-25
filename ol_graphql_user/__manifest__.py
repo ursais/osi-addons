@@ -2,7 +2,7 @@
 {
     "name": "OnLogic GraphQL - User",
     "summary": "User specific GraphQL functionality",
-    "version": "1.0",
+    "license": "AGPL-3",
     "depends": [
         "base",
         "ol_base",

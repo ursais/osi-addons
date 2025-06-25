@@ -27,16 +27,7 @@ class SaleOrderLine(graphene.ObjectType):
         Build a list of configuration tuples that contain product.template.attribute.value records matched with
         the associated product.product.attribute.value.qty record (if there is one)
         """
-        ptavs = order_line.product_id.product_template_variant_value_ids
-        ppavqs = order_line.product_id.product_attribute_value_qty_ids
-        configurations = []
-        for ptav in ptavs:
-            ppavq = ppavqs.filtered(
-                lambda x: x.attr_value_id == ptav.product_attribute_value_id
-            )
-            configurations.append((ptav, ppavq))
-
-        return [c for c in configurations]
+        return order_line.get_configuration_ptav_ppavq_tuples()
 
     @staticmethod
     def resolve_tax_rate(order_line, _):

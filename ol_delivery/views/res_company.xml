@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_company_form" model="ir.ui.view">
+    <field name="name">ol_delivery.company.for</field>
+    <field name="model">res.company</field>
+    <field name="inherit_id" ref="base.view_company_form" />
+    <field name="arch" type="xml">
+      <xpath expr="//notebook/page[last()]" position="after">
+        <page string="Delivery Settings">
+          <group name="uplift_settings" string="Uplift Settings">
+            <field name="minimum_volume" />
+            <field name="use_delivery_uplift" />
+            <field name="delivery_weight_uplift" invisible="use_delivery_uplift != True" />
+            <field name="delivery_dimension_uplift" invisible="use_delivery_uplift != True" />
+          </group>
+        </page>
+      </xpath>
+    </field>
+  </record>
+</odoo>

@@ -68,9 +68,7 @@ class SaleOrder(models.Model):
 
     def process_order_line(self, order_line):
         # Get the product template record for the system
-        product_template = self.env["product.template"].get_by_uuid(
-            order_line.get("product_id")
-        )
+        product_template = self.env["product.template"].get_by_uuid(order_line.get("product_id"))
         if not product_template:
             # TODO: handle this
             pass
@@ -89,35 +87,7 @@ class SaleOrder(models.Model):
 
         # If we have a configuration, then it's a system
         if configuration := order_line.get("configuration"):
-            # TODO: This functionality will break if the user gives a component qty value that is not in the defined
-            # range. We need to do something about this.
-            # Get the attribute dict for the given configuration
-            attribute_dict = self.build_attribute_dict(configuration)
-            # Setup the product configuration wizard. This is essentially exactly what a user would do to configure
-            # a system through the UI
-            wizard_action = self.action_config_start()
-            wizard_model = self.env[wizard_action["res_model"]]
-            wizard_context = wizard_action.get("context", {})
-            wizard = wizard_model.with_context(**wizard_context).create(
-                {
-                    "product_tmpl_id": product_template.id,
-                }
-            )
-            # When the wizard is created above it auto generates default product.config.session.value.qty (PVSVQ)
-            # objects to represent the attributes that have a required quantity. This is a problem since we will add
-            # all quantities with the attribute_dict that was created above and this will cause duplicate PCSVQ
-            # records to be created. To remedy this problem, we will manually delete all PCSVQ objects from the
-            # config session before we write our values.
-            # See update_session_configuration_value in the product_configurator_mrp_quantity module for more info.
-            wizard.config_session_id.session_value_quantity_ids.unlink()
-            # Write the product configuration to the wizard
-            wizard.write(attribute_dict)
-            # Set the wizard as done which triggeres a whole bunch of logic behind the scenes.
-            # We pass the order line data through the context so that we can make use of it in
-            # _get_order_line_vals to set other values of the order line.
-            wizard.with_context(
-                graphql_order_line_data=order_line_data
-            ).action_config_done()
+            self.process_system_order_line(product_template, order_line_data, configuration)
 
         # If we don't have a configuration, then it's a component
         else:
@@ -125,12 +95,39 @@ class SaleOrder(models.Model):
             product_product = product_template.product_variant_id
             # If it doesn't exist then create one
             if not product_product:
-                product_product = self.env["product.product"].create(
-                    {"product_tmpl_id": product_template.id}
-                )
+                product_product = self.env["product.product"].create({"product_tmpl_id": product_template.id})
             order_line_data["product_id"] = product_product.id
             # Write the order line to the sale order
             self.write({"order_line": [(0, 0, order_line_data)]})
+
+    def process_system_order_line(self, product_template, order_line_data, configuration):
+        # TODO: This functionality will break if the user gives a component qty value that is not in the defined
+        # range. We need to do something about this.
+        # Get the attribute dict for the given configuration
+        attribute_dict = self.build_attribute_dict(configuration)
+        # Setup the product configuration wizard. This is essentially exactly what a user would do to configure
+        # a system through the UI
+        wizard_action = self.action_config_start()
+        wizard_model = self.env[wizard_action["res_model"]]
+        wizard_context = wizard_action.get("context", {})
+        wizard = wizard_model.with_context(**wizard_context).create(
+            {
+                "product_tmpl_id": product_template.id,
+            }
+        )
+        # When the wizard is created above it auto generates default product.config.session.value.qty (PVSVQ)
+        # objects to represent the attributes that have a required quantity. This is a problem since we will add
+        # all quantities with the attribute_dict that was created above and this will cause duplicate PCSVQ
+        # records to be created. To remedy this problem, we will manually delete all PCSVQ objects from the
+        # config session before we write our values.
+        # See update_session_configuration_value in the product_configurator_mrp_quantity module for more info.
+        wizard.config_session_id.session_value_quantity_ids.unlink()
+        # Write the product configuration to the wizard
+        wizard.write(attribute_dict)
+        # Set the wizard as done which triggeres a whole bunch of logic behind the scenes.
+        # We pass the order line data through the context so that we can make use of it in
+        # _get_order_line_vals to set other values of the order line.
+        wizard.with_context(graphql_order_line_data=order_line_data).action_config_done()
 
     def build_attribute_dict(self, configuration):
         """
@@ -147,12 +144,8 @@ class SaleOrder(models.Model):
         """
         attribute_dict = {}
         for selection in configuration:
-            product_attribute = self.env["product.attribute"].get_by_uuid(
-                selection.get("option")
-            )
-            component = self.env["product.template"].get_by_uuid(
-                selection.get("product")
-            )
+            product_attribute = self.env["product.attribute"].get_by_uuid(selection.get("option"))
+            component = self.env["product.template"].get_by_uuid(selection.get("product"))
             pav = self.env["product.attribute.value"].search(
                 [
                     ("attribute_id", "=", product_attribute.id),
@@ -222,11 +215,45 @@ class SaleOrder(models.Model):
                 f"| Company: {self.env.company.short_name.upper()}"
                 f"| Error: {e}"
             )
-            self.env.ref("ls_graphql_sale.order_import_valid_check").create_hold(
-                self, custom_msg=msg
-            )
+            self.env.ref("ls_graphql_sale.order_import_valid_check").create_hold(self, custom_msg=msg)
 
         return super()._post_graphql_create_actions()
+
+
+class SaleOrderLine(models.Model):
+    _inherit = "sale.order.line"
+
+    def get_configuration(self):
+        """
+        Build a list of configuration tuples that contain product.template.attribute.value records matched with
+        the associated product.product.attribute.value.qty record (if there is one)
+        """
+
+        ptav_ppavq_tuples = self.get_configuration_ptav_ppavq_tuples()
+        configuration = []
+        for ptav, ppavq in ptav_ppavq_tuples:
+            configuration.append(
+                {
+                    "sku": ptav.product_attribute_value_id.product_id.default_code or None,
+                    "product": ptav.product_attribute_value_id.product_id.uuid or None,
+                    "option": ptav.attribute_id.uuid or None,
+                    "qty": ppavq.qty or 1,
+                }
+            )
+        return configuration
+
+    def get_configuration_ptav_ppavq_tuples(self):
+        """
+        Get the `product.template.attribute.value` and `product.product.attribute.value.qty` tuples for the configuration
+        """
+        ptavs = self.product_id.product_template_variant_value_ids
+        ppavqs = self.product_id.product_attribute_value_qty_ids
+        configuration = []
+        for ptav in ptavs:
+            ppavq = ppavqs.filtered(lambda x: x.attr_value_id == ptav.product_attribute_value_id)
+            configuration.append((ptav, ppavq))
+
+        return [c for c in configuration]
 
 
 class ProductConfiguratorSale(models.TransientModel):

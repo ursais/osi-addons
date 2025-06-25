@@ -1,0 +1,19 @@
+<odoo>
+    <data noupdate="1">
+        <record model="res.partner" id="user_tax_and_partner">
+            <field name="name">Tax and Shipping User</field>
+        </record>
+        
+        <record id="user_tax_and_shipping" model="res.users">
+            <field name="name">Tax and Shipping User</field>
+            <field name="login">ts_user</field>
+            <field name="password"></field>
+            <field name="image_1920" type="base64" file="base/static/img/public_user-image.png"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="company_ids" eval="[(6,0, [ref('base.main_company'), ref('ol_base.onlogic_eu')])]"/>
+            <field name="signature"><![CDATA[<span>-- <br/>
+Tax and Shipping User</span>]]></field>
+            <field name="partner_id" ref="user_tax_and_partner"/>
+        </record>
+    </data>
+</odoo>

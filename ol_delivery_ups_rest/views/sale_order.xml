@@ -1,0 +1,21 @@
+<odoo>
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">ol_delivery_ups_rest.view_order_form</field>
+        <field name="model">sale.order</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="is_ups_delivery" invisible="1" />
+            </xpath>
+            <notebook position="inside">
+                <page name="ups_page" string="UPS Log" groups="base.group_no_one" invisible="not is_ups_delivery">
+                    <label for="ups_request_log" />
+                    <field name="ups_request_log" widget="ace" />
+                    <label for="ups_response_log" />
+                    <field name="ups_response_log" widget="ace" />
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

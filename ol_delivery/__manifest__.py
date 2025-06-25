@@ -1,0 +1,22 @@
+# pylint: disable=pointless-statement
+{
+    "name": "OnLogic Delivery",
+    "summary": "Shipping and Delivery related functionality",
+    "description": """Shipping and Delivery related functionality""",
+    "version": "17.0.0.1.0",
+    "license": "AGPL-3",
+    "depends": ["delivery", "sale", "stock_delivery", "ol_base", "ol_product"],
+    "author": "OnLogic",
+    "website": "https://www.onlogic.com",
+    "onlogic": True,
+    "application": True,
+    "category": "Inventory/Delivery",
+    "data": [
+        "wizard/choose_delivery_carrier_views.xml",
+        "views/sale_order.xml",
+        "views/delivery_carrier.xml",
+        "views/product_template.xml",
+        "views/res_company.xml",
+        "views/stock_picking.xml",
+    ],
+}

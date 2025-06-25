@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <record id="view_delivery_carrier_form" model="ir.ui.view">
+    <field name="name">ol_delivery.view_delivery_carrier_form</field>
+    <field name="model">delivery.carrier</field>
+    <field name="inherit_id" ref="delivery.view_delivery_carrier_form" />
+    <field name="arch" type="xml">
+
+      <!-- Add Shipping Buffer field -->
+      <field name="product_id" position="after">
+        <field name="account_required" />
+        <field name="shipping_buffer" />
+      </field>
+
+      <!-- Add Multi Zip field -->
+      <field name="zip_prefix_ids" position="after">
+        <field name="zip_list" required="delivery_type == 'multi_zip'" />
+      </field>
+
+      <!-- Add Economy Delivery Carrier page -->
+      <xpath expr="//page[@name='destination']" position='before'>
+        <page string="Economy Configuration" name="economy_configuration"
+          invisible="delivery_type != 'economy'">
+          <group>
+            <group>
+              <field name="economy_weight_unit" />
+              <field name="economy_pound_or_less_price" required="delivery_type == 'economy'"
+                groups="base.group_system" />
+              <field name="economy_more_than_a_pound_price" required="delivery_type == 'economy'"
+                groups="base.group_system" />
+            </group>
+          </group>
+        </page>
+      </xpath>
+
+      <!-- Add OnLogic Information page -->
+      <xpath expr="//page[@name='destination']" position='after'>
+        <page name="onlogic_info" string="OnLogic Information">
+          <group>
+            <field name="message_carrier" string="Integration message carrier" />
+            <field name="message_code" string="Integration message code" />
+          </group>
+        </page>
+      </xpath>
+
+    </field>
+  </record>
+
+</odoo>

@@ -39,7 +39,7 @@
                 (0, 0, {'view_mode': 'form', 'view_id': ref('ol_api.view_api_clients_form')})]"/>
 		</record>
 		<!-- Top level menu item -->
-		<menuitem name="API" id="api_menu_root" action="action_menu_api" web_icon="fa fa-podcast,#ffffff,#1f9cb9" groups="ol_base.dev_team"/>
+		<menuitem name="API" id="api_menu_root" action="action_menu_api" web_icon="fa fa-podcast,#1f9cb9,#ffffff" />
 		<menuitem id="api_clients_menu" parent="ol_api.api_menu_root" name="API Clients" action="action_menu_api" sequence="1" groups="ol_base.dev_team"/>
 	</data>
 </odoo>

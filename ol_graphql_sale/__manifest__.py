@@ -6,7 +6,9 @@
     "license": "AGPL-3",
     "depends": [
         "ol_base",
+        "product_configurator_sale",
         "ol_graphql",
+        "ol_exception",
     ],
     "author": "OnLogic",
     "website": "https://www.onlogic.com",

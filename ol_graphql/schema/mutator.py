@@ -646,7 +646,7 @@ class Mutator(BaseDecoder):
             "odoo_class": odoo_class,
             "uuid": uuid,
         }
-        return f"{self.env['api'].generate_hmac_signature(key=odoo_class, msg=data)}"
+        return f"{self.env['api'].generate_hmac_signature(key=odoo_class, data=data)}"
 
     def get_ongoing_create_mutations(self):
         """
