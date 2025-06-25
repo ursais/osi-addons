@@ -11,11 +11,12 @@
     # any module necessary for this one to work correctly
     "depends": [
         "ol_base",
+        "sale_mrp",
+        "sale_stock",
         "sale_substate",
     ],
     # always loaded
     "data": [
         "data/sale_substate_data.xml",
-        "data/automated_action_sale.xml",
     ],
 }
