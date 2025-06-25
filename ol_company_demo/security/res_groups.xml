@@ -1,0 +1,8 @@
+<odoo>
+
+	<record id="ol_company_demo.base_group" model="res.groups">
+		<field name="name">Demo Base Group</field>
+		<field name="implied_ids" eval="[(4, ref('base.group_no_one'))]"/>
+	</record>
+
+</odoo>

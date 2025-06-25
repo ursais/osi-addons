@@ -23,6 +23,8 @@ class ProductPricelistItem(OnLogicBaseObjectType):
     quantity = graphene.Int()
     onlogic_company = graphene.Field(CompanyEnumType, required=True)
     type = graphene.String()
+    # TODO: outstanding feedback from Jeff on if this field is needed and what it means
+    # status = graphene.String()
 
     @staticmethod
     def resolve_group(price_list_item, _):
@@ -60,3 +62,7 @@ class ProductPricelistItem(OnLogicBaseObjectType):
     @staticmethod
     def resolve_onlogic_company(price_list_item, _):
         return CompanyEnum(price_list_item.company_id.short_name)
+
+    # @staticmethod
+    # def restolve_status(price_list_item, _):
+    #     return price_list_item.status or None

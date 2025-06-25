@@ -1,0 +1,27 @@
+<odoo>
+
+    <!-- Record Rule for MultiCompany -->
+    <record model="ir.rule" id="author_record_rule">
+        <field name="name">Author company rule</field>
+        <field name="model_id" ref="model_author"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="global" eval="True" />
+    </record>
+
+    <!-- Record Rule for MultiCompany -->
+    <record model="ir.rule" id="book_record_rule">
+        <field name="name">Book company rule</field>
+        <field name="model_id" ref="model_book"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', '=', company_id)]</field>
+        <field name="global" eval="True" />
+    </record>
+
+    <!-- Record Rule for MultiCompany -->
+    <record model="ir.rule" id="publisher_record_rule">
+        <field name="name">Publisher company rule</field>
+        <field name="model_id" ref="model_publisher"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id', '=', company_id)]</field>
+        <field name="global" eval="True" />
+    </record>
+
+</odoo>

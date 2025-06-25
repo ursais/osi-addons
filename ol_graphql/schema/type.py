@@ -21,14 +21,6 @@ class CompanyEnum(Enum):
     US = "us"
     EU = "eu"
 
-    def get_odoo_company_user(self, env):
-        return (
-            env["res.company"]
-            .sudo()
-            .search([("short_name", "=", self.value)], limit=1)
-            .company_user_id
-        )
-
 
 CompanyEnumType = graphene.Enum.from_enum(CompanyEnum)
 
@@ -144,9 +136,7 @@ class OnLogicBaseObjectType(OdooObjectType):
             # Get the order to get the company specific info
             try:
                 # Prepare the record to be read with the correct company
-                record = base_record.with_user(company.company_user_id).with_company(
-                    company.id
-                )
+                record = base_record.with_company(company.id)
 
                 # If relations were defined get the correct related record
                 record = record.mapped(relations) if relations else record
@@ -175,6 +165,9 @@ class OnLogicBaseObjectType(OdooObjectType):
                     field_name,
                     record.id,
                     company.short_name,
+                )
+                values.append(
+                    {"onlogic_company": company.short_name.upper(), "value": None}
                 )
             except AttributeError as exc:
                 raise ValidationError(

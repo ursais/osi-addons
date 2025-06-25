@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <record id="vpicktree" model="ir.ui.view">
+        <field name="name">ol_delivery.stock.picking.tree</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.vpicktree" />
+        <field name="arch" type="xml">
+            <field name="scheduled_date" position="after">
+                <field name="carrier_id" optional="hide"/>
+                <field name="delivery_account_number" optional="hide"/>
+                <field name="lithium_shipping_hazard" invisible="1" />
+                <button name="" icon="fa-battery-half" invisible="not lithium_shipping_hazard"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_picking_form" model="ir.ui.view">
+        <field name="name">ol_delivery.stock.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form" />
+        <field name="arch" type="xml">
+            <field name="origin" position="after">
+                <field name="lithium_shipping_hazard" invisible="1"/>
+                <button name="" icon="fa-battery-half" invisible="not lithium_shipping_hazard"></button>
+            </field>
+            <field name="picking_type_id" position="after">
+                <field name="carrier_id" />
+            </field>
+        </field>
+    </record>
+</odoo>

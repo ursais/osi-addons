@@ -15,9 +15,10 @@ class ProductConfigurationOption(graphene.ObjectType):
     """
 
     default_qty = graphene.Int()
-    is_default = GenericScalar()
+    is_default = graphene.Boolean()
     enabled = GenericScalar()
     is_user_defined_qty = graphene.Boolean()
     max_qty = graphene.Int()
     uuid = graphene.ID()
     visible_to_user = graphene.Boolean()
+    sequence = graphene.Int()

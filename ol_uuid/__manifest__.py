@@ -9,6 +9,9 @@
         "account",
         "product",
         "ol_base",
+        "mrp",
+        "ol_product",
+        "ol_product_classification"
     ],
     "author": "OnLogic",
     "website": "https://www.onlogic.com",
@@ -19,9 +22,13 @@
         "views/sale_order.xml",
         "views/res_partner.xml",
         "views/product_attribute.xml",
+        "views/product_attribute_classification.xml",
         "views/product_pricelist.xml",
         "views/product_template.xml",
         "views/product_category.xml",
+        "views/mrp_bom.xml",
+        "views/mrp_production.xml",
+        "views/account_move.xml",
     ],
     "post_init_hook": "_run_install_scripts",
 }

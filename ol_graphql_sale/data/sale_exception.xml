@@ -1,0 +1,24 @@
+<odoo>
+    <record id="order_import_tax_difference" model="exception.rule">
+        <field name="name">Ecommerce/Odoo Tax Mismatch</field>
+        <field name="description">Taxes calculated by the website are different from taxes calculated by Odoo.</field>
+        <field name="sequence">50</field>
+        <field name="model">sale.order</field>
+        <field name="exception_type">by_py_code</field>
+        <field name="code">
+failed = self.check_order_import_tax_difference()
+        </field>
+        <field name="active" eval="True" />
+    </record>
+    <record id="order_import_shipping_error" model="exception.rule">
+        <field name="name">Ecommerce Shipping Import Error</field>
+        <field name="description">There was a problem importing the shipping method from the website order.</field>
+        <field name="sequence">51</field>
+        <field name="model">sale.order</field>
+        <field name="exception_type">by_py_code</field>
+        <field name="code">
+failed = self.check_order_import_shipping_error()
+        </field>
+        <field name="active" eval="True" />
+    </record>
+</odoo>

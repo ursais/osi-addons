@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="choose_delivery_carrier_view_form" model="ir.ui.view">
+    <field name="name">ls_delivery_wizard.choose.delivery.carrier.form</field>
+    <field name="model">choose.delivery.carrier</field>
+    <field name="inherit_id" ref="delivery.choose_delivery_carrier_view_form" />
+    <field name="arch" type="xml">
+
+
+      <field name="delivery_price" position="after">
+        <field name="sale_order_state" invisible="0" />
+        <field name="delivery_account_required" invisible="0" />
+
+        <field name="delivery_price_type"
+          required="1"
+          invisible="not carrier_id or delivery_type == 'custom'" />
+        <field name="delivery_account_number" required="delivery_account_required"
+          readonly="sale_order_state in ['review','sale','done','cancel']"
+          invisible="delivery_type not in ['ups', 'ups_rest', 'fedex', 'tnt', 'dhl']" />
+        <field name='manual_delivery_price'
+          options="{'currency_field': 'currency_id'}"
+          invisible="(delivery_type != 'custom' and delivery_price_type != 'manual') or not carrier_id" />
+        <field name='delivery_override_reason'
+          invisible="delivery_price_type != 'manual'"
+          required="delivery_price_type == 'manual'" />
+        <field name="delivery_notes" />
+
+      </field>
+
+      <xpath expr="//field[@name='invoicing_message']/parent::div" position="before">
+
+        <div role="alert" class="alert alert-warning"
+          invisible="delivery_price_type != 'manual' or not carrier_id">
+          <b>You selected manual Delivery Price Calculation Type.</b>
+          <p>This means that Odoo won't automatically calculate the delivery price, it will use what
+            you set by hand.<br /> And you need to provide an Override Reason! </p>
+        </div>
+
+        <div role="alert" class="alert alert-warning"
+          invisible="not delivery_account_number">
+          <b>With a Delivery Account Number set, the shipping cost will be marked as 0.0.</b>
+        </div>
+
+      </xpath>
+
+      <!-- Hide the core fields if the delivery price type is manual-->
+      <xpath expr="//label[@for='display_price']" position="attributes">
+        <attribute name="invisible">delivery_price_type == 'manual' or not carrier_id</attribute>
+      </xpath>
+      <field name="display_price" position="attributes">
+        <attribute name="invisible">delivery_price_type == 'manual' or not carrier_id</attribute>
+      </field>
+      <button name="update_price" position="attributes">
+        <attribute name="invisible">delivery_price_type == 'manual' or delivery_type in ('fixed',
+          'base_on_rule') or not carrier_id</attribute>
+      </button>
+      <field name="total_weight" position="attributes">
+        <attribute name="readonly">1</attribute>
+      </field>
+
+    </field>
+  </record>
+</odoo>

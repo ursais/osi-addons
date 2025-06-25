@@ -62,10 +62,8 @@ class MutationsAbstract(graphene.ObjectType):
 
 class GQLLoader:
     def __init__(self):
-        # TODO: module layout different from odoo 13, do we want to change this here or in docker structure?
-        # A ticket exists for this work here: https://logicsupply.atlassian.net/browse/DEV-19549
         os.chdir("../")
-        self.onlogic_modules = f"/mnt/extra-addons/private-addons/onlogic-addons"
+        self.onlogic_modules = f"/odoo/addons/private-addons/onlogic-addons"
         self.directories_to_exclude = ["__pycache__", "_base"]
         self.modules = self.get_modules()
         # Set up the base data

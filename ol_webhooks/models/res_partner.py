@@ -47,10 +47,11 @@ class Partner(models.Model):
 
     def webhook_filter(self):
         """
-        Filter anything that is not a Company or does not have a CRM Customer
-        TODO: This should be changed now that we don't have the res.customer solution
+        Filter out addresses. We only care about "contact" type partners or companies
         """
-        return self.filtered(lambda partner_id: partner_id or partner_id.is_company)
+        return self.filtered(
+            lambda partner_id: partner_id.type == "contact" or partner_id.is_company
+        )
 
     def trigger_custom_events(self, partner_ids, values, operation):
         """
@@ -58,7 +59,7 @@ class Partner(models.Model):
         """
         # Trigger company webhooks and return all partners that are not companies
         partner_ids = self.trigger_company_webhook_event(partner_ids, values, operation)
-        # Trigger sale order webooks. We do not modify partners, so no need to redefine them
+        # Trigger sale order webhooks if the invoice address is edited using the internal link button
         self.trigger_sale_order_webhook_event(partner_ids, values, operation)
         return partner_ids, values
 
@@ -100,3 +101,85 @@ class Partner(models.Model):
         # as it's parent child records could be
         related_partners = self.get_direct_family_tree()
         related_partners.trigger_webhook()
+
+    def get_direct_family_tree(self):
+        """
+        Return all parent and child records for the given partner ids
+        """
+        return self.get_children() | self.get_parents()
+
+    def get_parents(self):
+        """
+        Get all parent records for the given partner ids
+        """
+
+        if not self:
+            return self.env["res.partner"]
+
+        query = """
+                WITH RECURSIVE parents AS (
+                SELECT
+                    orp.id AS partner_id,
+                    orp.parent_id
+                FROM
+                    res_partner orp
+                WHERE
+                    orp.id IN %(partner_ids)s
+                UNION
+                SELECT
+                    rp.id AS partner_id,
+                    rp.parent_id
+                FROM
+                    res_partner rp
+                INNER JOIN parents p ON
+                    p.parent_id = rp.id
+                WHERE
+                    rp.active = TRUE
+                )
+                SELECT
+                    partner_id
+                FROM
+                    parents
+                """
+        query_args = {"partner_ids": tuple(self.ids)}
+        self.env.cr.execute(query, query_args)
+        parent_ids = [x[0] for x in self.env.cr.fetchall()]
+        return self.env["res.partner"].browse(parent_ids)
+
+    def get_children(self):
+        """
+        Get all child records for the given partner ids
+        """
+
+        if not self:
+            return self.env["res.partner"]
+
+        query = """
+                WITH RECURSIVE children AS (
+                SELECT
+                    orp.id AS partner_id,
+                    orp.parent_id
+                FROM
+                    res_partner orp
+                WHERE
+                    orp.id IN %(partner_ids)s
+                UNION
+                SELECT
+                    rp.id AS partner_id,
+                    rp.parent_id
+                FROM
+                    res_partner rp
+                INNER JOIN children p ON
+                    p.partner_id = rp.parent_id
+                WHERE
+                    rp.active = TRUE
+                )
+                SELECT
+                    partner_id
+                FROM
+                    children
+                """
+        query_args = {"partner_ids": tuple(self.ids)}
+        self.env.cr.execute(query, query_args)
+        child_ids = [x[0] for x in self.env.cr.fetchall()]
+        return self.env["res.partner"].browse(child_ids)

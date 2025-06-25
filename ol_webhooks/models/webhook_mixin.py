@@ -1,5 +1,4 @@
 # Import Python libs
-import copy
 
 # Import Odoo libs
 from odoo.osv import expression
@@ -77,7 +76,7 @@ class WebhookMixin(models.AbstractModel):
     def create(self, values):
         """Add webhooks into the `create` method"""
         res = super().create(values)
-        res.sudo()._event_create(values)
+        res._event_create(values)
         return res
 
     def _event_create(self, values):
@@ -106,10 +105,10 @@ class WebhookMixin(models.AbstractModel):
             records=eligible_records, values=create_values, operation="create"
         )
 
-    def _create_filter(self, _):
+    def _create_filter(self, values):
         """
         This function is intended to be overridden in later modules
-        :param list vaol_list:
+        :param list val_list:
             list of dictionaries: [{'field_name': field_value, ...}, ...]
             OR just a dictionary
             IMPORTANT: If you override this function you will need to handle both cases!
@@ -122,7 +121,7 @@ class WebhookMixin(models.AbstractModel):
         res = super().write(vals=vals)
         # Prep the values first
         write_values = self.copy_and_clean_values(vals)
-        self.sudo()._event_update(write_values)
+        self._event_update(write_values)
         return res
 
     # TODO: We keep this commented out section here,
@@ -140,7 +139,7 @@ class WebhookMixin(models.AbstractModel):
 
         # Prep the values first
         write_values = self.copy_and_clean_values(vals)
-        self.sudo()._event_update(write_values)
+        self._event_update(write_values)
         return res
 
     def _event_update(self, values):
@@ -168,7 +167,7 @@ class WebhookMixin(models.AbstractModel):
 
     def unlink(self):
         """Add webhooks into the `unlink` method"""
-        self.sudo()._event_delete()
+        self._event_delete()
         res = super().unlink()
         return res
 
@@ -179,12 +178,12 @@ class WebhookMixin(models.AbstractModel):
         for record in self:
             if record.active:
                 # If the record is changed to be archived send a delete message
-                record.sudo()._event_delete()
+                record._event_delete()
             else:
                 # If the record is changed to be active send an update message
                 # other systems should have upsert meaning if the given record was missing
                 # they will trigger a create instead of an update
-                record.sudo().trigger_webhook()
+                record.trigger_webhook()
         super().toggle_active()
 
     def _event_delete(self):
@@ -318,7 +317,6 @@ class WebhookMixin(models.AbstractModel):
 
     def trigger_event(self, records, values, operation):
         # Trigger any custom events
-
         records, values = self.trigger_custom_events(records, values, operation)
 
         if records.skip_trigger(values, operation):
@@ -401,3 +399,8 @@ class WebhookMixin(models.AbstractModel):
             return self.with_context(force_webhook_trigger=True)._event_delete({})
 
         return self.with_context(force_webhook_trigger=True)._event_update({})
+
+    def action_webhook_test(self):
+        # Trigger Webhook Update event to test webhooks
+        # Important! This call is made with `webhook_no_delay` so we can skip the `queue`
+        self.with_context(webhook_no_delay=True).trigger_webhook()

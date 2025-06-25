@@ -6,7 +6,9 @@
     "license": "AGPL-3",
     "depends": [
         "ol_base",
+        "product_configurator_sale",
         "ol_graphql",
+        "ol_exception",
     ],
     "author": "OnLogic",
     "website": "https://www.onlogic.com",
@@ -14,5 +16,8 @@
     "graphql": True,
     "category": "Integrations",
     "description": """Sale specific GraphQL functionality""",
-    "data": [],
+    "data": [
+        "data/sale_exception.xml",
+        "views/sale_order.xml",
+    ],
 }

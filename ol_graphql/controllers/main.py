@@ -56,6 +56,9 @@ class GraphQLController(http.Controller, GraphQLControllerMixin):
     # (such as origin restrictions) to this route.
     @http.route("/graphql/onlogic/main", auth="user", csrf=False)
     def graphql(self, **kwargs):
+        # We switch to the graphql user here because incoming requests use the "Public User" by default which does not have enough permissions to execute graphql actions
+        graphql_user = http.request.env.ref("ol_graphql.graphql_user")
+        http.request.env = http.request.env(user=graphql_user)
         if not http.request.env["ir.config_parameter"].get_as_boolean(
             "ol_graphql.graphql_enabled", False
         ) or config.get("odoo_upgrade_instance", False):
@@ -108,7 +111,7 @@ class GraphQLController(http.Controller, GraphQLControllerMixin):
             return response
         except HttpQueryError as e:
             result = json_encode({"errors": [{"message": str(e)}]})
-            headers = dict(e.headers)
+            headers = dict(e.headers or {})
             headers["Content-Type"] = "application/json"
             response = http.request.make_response(result, headers=headers)
             response.status_code = e.status_code

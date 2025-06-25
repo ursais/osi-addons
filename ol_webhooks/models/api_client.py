@@ -1,9 +1,7 @@
 # Import Python libs
-import uuid
 
 # Import Odoo libs
 from odoo import models, fields, api
-from odoo.exceptions import ValidationError, UserError
 
 
 class WebhookClient(models.Model):

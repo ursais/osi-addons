@@ -103,11 +103,8 @@ class GraphQLQueue(models.Model):
         query_args = {"graphql_queue_ids": tuple(graphql_queue_ids)}
         self.env.cr.execute(query, query_args)
         results = self.env.cr.dictfetchall()
-        # SUDO is required here since the queue.job record values are accessed in subsequent methods and, since some may exist in other companies, this will throw a multi company error without sudo
         return {
-            x["graphql_queue_id"]: self.env["queue.job"]
-            .sudo()
-            .browse(x["queue_job_id"])
+            x["graphql_queue_id"]: self.env["queue.job"].browse(x["queue_job_id"])
             for x in results
         }
 

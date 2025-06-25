@@ -1,0 +1,108 @@
+<odoo>
+
+    <data noupdate="0">
+
+        <record id="product_product_free_delivery_carrier_eu" model="product.product">
+            <field name="name">[EU] Free Shipping (5-8 Business Days)</field>
+            <field name="default_code">EU_Free_Shipping</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="delivery.product_category_deliveries"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">0.0</field>
+            <field name="company_ids" eval="[(6, 0, [ref('ls_base.onlogic_eu')])]"/>
+        </record>
+
+        <record id="free_delivery_carrier_eu" model="delivery.carrier">
+            <field name="name">[EU] Free Shipping (5-8 Business Days)</field>
+            <field name="fixed_price">0.0</field>
+            <field name="free_over" eval="True"/>
+            <field name="amount">200</field>
+            <field name="sequence">1</field>
+            <field name="delivery_type">fixed</field>
+            <field name="message_carrier">freeshipping_eu</field>
+            <field name="message_code">freeshipping_eu</field>
+            <field name="product_id" ref="product_product_free_delivery_carrier_eu"/>
+            <field name="country_ids" eval="[(6,0,[
+                                      ref('base.nl'),ref('base.be'),ref('base.de'),ref('base.uk')])]"/>
+            <field name="ts_api_enabled">True</field>
+            <field name="ts_api_country_ids" eval="[(6,0,[ref('base.nl'),ref('base.be'),ref('base.de'),ref('base.uk')])]"/>
+        </record>
+
+        <record id="product_product_free_delivery_carrier_us" model="product.product">
+            <field name="name">[US] Free Shipping (5-8 Business Days)</field>
+            <field name="default_code">EU_Free_Shipping</field>
+            <field name="type">service</field>
+            <field name="categ_id" ref="delivery.product_category_deliveries"/>
+            <field name="sale_ok" eval="False"/>
+            <field name="purchase_ok" eval="False"/>
+            <field name="list_price">0.0</field>
+            <field name="company_ids" eval="[(6, 0, [ref('base.main_company')])]"/>
+        </record>
+
+        <record id="free_delivery_carrier_us" model="delivery.carrier">
+            <field name="name">[US] Free Shipping (5-8 Business Days)</field>
+            <field name="fixed_price">0.0</field>
+            <field name="free_over" eval="True"/>
+            <field name="amount">200</field>
+            <field name="sequence">1</field>
+            <field name="delivery_type">fixed</field>
+            <field name="message_carrier">freeshipping_us</field>
+            <field name="message_code">freeshipping_us</field>
+            <field name="product_id" ref="product_product_free_delivery_carrier_us"/>
+            <field name="country_ids" eval="[(6,0,[ref('base.us')])]"/>
+            <field name="zip_list">00900-96199,97000-99499</field>
+            <field name="ts_api_country_ids" eval="[(6,0,[ref('base.us')])]"/>
+            <field name="ts_api_enabled">True</field>
+            <field name="ts_api_zip_list">00900-96199,97000-99499</field>
+        </record>
+
+    </data>
+
+    <data noupdate="0">
+
+        <record id="delivery.free_delivery_carrier" model="delivery.carrier">
+            <field name="name">[DEPRECATED] Free Shipping (5-8 Business Days)</field>
+            <field name="active">False</field>
+        </record>
+
+        <record id="ls_delivery_custom.delivery_carrier_warehouse_pickup_us" model="delivery.carrier">
+            <field name="ts_api_enabled">True</field>
+            <field name="ts_api_zip_list">05001-05495,05601-05907</field>
+        </record>
+
+        <record id="ls_delivery_ups.ups_next_day_air" model="delivery.carrier">
+            <field name="ts_api_enabled">True</field>
+        </record>
+
+        <record id="delivery_ups.delivery_carrier_ups_us" model="delivery.carrier">
+            <field name="ts_api_enabled">True</field>
+            <field name="ts_api_country_ids" eval="[(6,0,[ref('base.us')])]"/>
+        </record>
+
+        <record id="ls_delivery_ups.ups_second_day_air" model="delivery.carrier">
+            <field name="ts_api_enabled">True</field>
+        </record>
+
+        <record id="delivery_ups.delivery_carrier_ups_be" model="delivery.carrier">
+            <field name="ts_api_enabled">True</field>
+        </record>
+
+        <record id="ls_delivery_ups.ups_ww_expedited" model="delivery.carrier">
+            <field name="ts_api_enabled">True</field>
+        </record>
+
+        <record id="ls_delivery_ups.ups_standard_eu" model="delivery.carrier">
+            <field name="ts_api_enabled">True</field>
+        </record>
+
+        <record id="ls_delivery_ups.ups_saver_eu" model="delivery.carrier">
+            <field name="ts_api_enabled">True</field>
+        </record>
+
+        <record id="ls_delivery_ups.ups_ww_expedited" model="delivery.carrier">
+            <field name="ts_api_enabled">True</field>
+        </record>
+
+    </data>
+</odoo>

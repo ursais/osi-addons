@@ -1,0 +1,16 @@
+<odoo>
+    <data>
+        <record id="support_repair_order_form_view" model="ir.ui.view">
+            <field name="name">ol_webhooks_test.view.support.repair.order.form</field>
+            <field name="model">support.repair.order</field>
+            <field name="inherit_id" ref="ol_uuid.support_repair_order_form_view"/>
+            <field name="arch" type="xml">
+                <page name="onlogic_info" position="inside">
+                    <group name="webhook_info">
+                        <button type="object" name="action_webhook_test" class="btn btn-secondary" icon="fa-podcast" string="Test Webhook"/>
+                    </group>
+                </page>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,5 +1,6 @@
 # Import Python Libs
 import graphene
+from graphene.types.generic import GenericScalar
 
 # Import Odoo Libs
 from odoo.addons.ol_graphql_product.schema.product_configuration_option.types import (
@@ -18,8 +19,9 @@ class ProductConfigurationRelation(graphene.ObjectType):
     """
 
     classification = graphene.ID()
-    name = graphene.String()
-    position = graphene.Int()
+    classification_name = GenericScalar()
+    name = GenericScalar()
+    sequence = graphene.Int()
     required = graphene.Boolean()
     selections = graphene.List(ProductConfigurationOption)
     uuid = graphene.ID()

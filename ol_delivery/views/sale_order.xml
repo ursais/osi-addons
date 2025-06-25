@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_order_form_with_carrier" model="ir.ui.view">
+        <field name="name">ol_delivery.sale.order.form.view.with_carrier</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="delivery.view_order_form_with_carrier" />
+        <field name="arch" type="xml">
+            <field name="payment_term_id" position="after">
+                <field name="delivery_account_number" />
+                <field name="delivery_notes" />
+                <field name="delivery_price_type"
+                    invisible="1" />
+                <field name="delivery_override_reason"
+                    string="Manual Delivery Price Reason"
+                    invisible="delivery_price_type != 'manual'" />
+            </field>
+        </field>
+    </record>
+
+    <record id="view_order_form" model="ir.ui.view">
+        <field name="name">ol_delivery.sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+
+            <!-- Make Price ReadOnly for Delivery Lines -->
+            <xpath expr="//field[@name='order_line']/form//field[@name='price_unit']"
+                position="attributes">
+                <attribute name="readonly">is_delivery</attribute>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

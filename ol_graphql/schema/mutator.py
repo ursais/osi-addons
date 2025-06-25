@@ -18,7 +18,7 @@ class Mutator(BaseDecoder):
         self.info = info
 
         # Set the Odoo environment of the mutation
-        # we change the user from Public to the given company user
+        # we change the user from Public to the GraphQL user
         # IMPORTANT:    This could be a security risk if we would open Odoo GraphQL to an open network.
         #               Right now only validated services that are in our own secured shielded network can make calls to Odoo GraphQL
         env = info.context["env"]
@@ -32,7 +32,8 @@ class Mutator(BaseDecoder):
             )
             raise AccessDenied()
 
-        self.env = env(user=env.company.company_user_id)
+        graphql_user = env.ref("ol_graphql.graphql_user")
+        self.env = env(user=graphql_user)
 
         # Update the Mutator context
         context = self.env.context.copy()
@@ -147,8 +148,7 @@ class Mutator(BaseDecoder):
         @param odoo_record: Inherited models.Model - Ex. res.partner() or res.partner(666)
                             The main odoo record the incoming message is for identified by a UUID
         @param company:     res.company() Ex.: res.company(1)
-                            The `company` and related user `company.company_user_id`
-                            that will be used to run the given action on the odoo_record
+                            The `company` that the environment will have set while running the given action on the odoo_record
                             when we persist the decoded data
         """
         if not self.persist_decoded_data:
@@ -278,13 +278,10 @@ class Mutator(BaseDecoder):
 
             # Try to find the record based on the UUID
             # we want to include archived records in to the results
-            # we use sudo() to bypass access rights checks so we can find records in all companies
-            # SUDO is required here since we might find records in all companies and we need to read fields
-            self.odoo_record = (
-                self.odoo_record.sudo()
-                .with_context(active_test=False)
-                .get_by_uuid(self.uuid)
-            )
+            # we don't need to use sudo() to bypass access rights checks since get_by_uuid runs a SQL query against the database
+            self.odoo_record = self.odoo_record.with_context(
+                active_test=False
+            ).get_by_uuid(self.uuid)
             # We switch the found records environment to only active access records!
             self.odoo_record = self.odoo_record.with_context(active_test=True)
 
@@ -482,88 +479,32 @@ class Mutator(BaseDecoder):
 
     def set_correct_environment(self):
         """
-        Before decoding we need to make sure we use the correct user (res.users) and company (res.company)
+        Before decoding we need to make sure we use the correct company (res.company)
         both on the odoo record the mutation is for, and also the mutator environment it self.
 
-        This is important as this user/company is going to be used
+        This is important as this company is going to be used
         when we create the odoo_data actions.
-
-        It also makes sure `company_dependent` decoding works correctly. See: `decode_company_dependent_field_value()`
         """
 
-        current_user = self.env.company.company_user_id
-        mutator_user = self.get_mutator_user()
+        message_companies = self.get_message_companies()
+        message_company = (
+            message_companies[0] if message_companies else self.env["res.company"]
+        )
 
         try:
-            # Switch the odoo record environment to the correct user
-            # this also remove the record's environment's `superuser` mode if it was set previously
-            self.odoo_record = self.odoo_record.with_user(mutator_user)
+            # Switch the odoo record environment to the correct company
+            self.odoo_record = self.odoo_record.with_company(message_company)
 
-            # Switch the Mutators Environment to match the correct user
-            # We can't use `self = self.with_user(company.company_user_id)`
-            # so we swap the environment
-            self.env = self.env(user=mutator_user)
             self.odoo_data.env = self.env
 
             self.log_mutation_message(
-                "S:2 | Switched to the correct environment by switching user "
-                f"from '{current_user}' to {mutator_user} | Odoo "
-                f"record: {self.odoo_record} | Operation: {self.operation} | UUID: {self.uuid}"
+                f"S:2 | Set environment to the correct company. Company: {self.env.company} "
+                f"| Odoo record: {self.odoo_record} | Operation: {self.operation} | UUID: {self.uuid}"
             )
         except Exception as error:
             self.log_exception_message(
-                "S:2 | Could not switch to the correct environment. Switching user "
-                f"from '{current_user}' to {mutator_user} | Error: `{error}` | Odoo "
-                f"record: {self.odoo_record} | Operation: {self.operation} | UUID: {self.uuid}"
-            )
-            # Re-raise the exception
-            raise error
-
-    def get_mutator_user(self):
-        """
-        Get the odoo `res.users` we should use to process the incoming message.
-        This user is used in the Mutator's Environment `self.env` and `self.odoo_data.env`
-        and also the odoo records Environment `self.odoo_record.env`.
-        The user is always returned from the related `res.company` record.
-
-        The logic needs to differ based on the operation of the mutation (self.operation):
-
-         :returns: - `res.users` record
-        """
-        try:
-            # Get the company(s) from the message or fall back to the default admin company
-            # As `message_companies` could be an empty record set we need to make sure we return the correct value
-            # `message_companies` could also be an recordset of multiple companies, in this case we just choose the first one
-            message_companies = self.get_message_companies()
-            # `message_companies` could be a recordset of multiple companies, in this case we just choose the first one
-            message_company = (
-                message_companies[0] if message_companies else self.env["res.company"]
-            )
-
-            # Get the company from the odoo record
-            odoo_record_company = self.odoo_record.get_related_res_company()
-            match self.operation:
-                case "create":
-                    # As the odoo record does not exist we only care about the company that is set in the incoming message.
-                    company = message_company
-                case "update":
-                    # We should use the company(s) that is set in the incoming message, This company is set on record in `persist_mutation_data()` before the rest of the values are written to the record.
-                    # This solves the case when the incoming message will change the company that is currently set on the record.
-                    # If the message does not contain company information fall back to the Odoo record's current company
-                    company = message_company or odoo_record_company
-                case _:
-                    # We should use the company that is currently set on the odoo record. We need need to do that because Odoo's record rules would prevent us from CRUD command if we used a different company/user.
-                    company = odoo_record_company
-            # The fallback should be the admin company
-            company = company or self.env.company
-
-            # Return the related user
-            return company.company_user_id
-
-        except Exception as error:
-            self.log_exception_message(
-                f"S:2 | Error getting mutation user: {error} | Odoo "
-                f"record: {self.odoo_record} | Operation: {self.operation} | UUID: {self.uuid}"
+                f"S:2 | Could not switch to the correct company. Company: {self.env.company} | Error: `{error}` "
+                f"| Odoo record: {self.odoo_record} | Operation: {self.operation} | UUID: {self.uuid}"
             )
             # Re-raise the exception
             raise error
@@ -589,11 +530,9 @@ class Mutator(BaseDecoder):
                 )
 
         # If we got a company ID get the related Odoo company record
-        # we use sudo() to bypass access rights checks so we can find records in all companies
         # Sort the companies by their ID's to get consistent results
         return (
             self.env["res.company"]
-            .sudo()
             .browse(company_id)
             .exists()
             .sorted(key=lambda c: c.id)
@@ -644,12 +583,9 @@ class Mutator(BaseDecoder):
 
         # Try to find the record based on the UUID
         # we want to include archived records in to the results
-        # we use sudo() to bypass access rights checks so we can find records in all companies
-        # SUDO is required here since we might find records in all companies and we need to read fields
-        self.odoo_record = (
-            self.odoo_record.sudo()
-            .with_context(active_test=False)
-            .get_by_uuid(self.uuid)
+        # We don't need to use sudo since get_by_uuid runs a SQL query against the database
+        self.odoo_record = self.odoo_record.with_context(active_test=False).get_by_uuid(
+            self.uuid
         )
         # We switch the found records environment to only active access records!
         self.odoo_record = self.odoo_record.with_context(active_test=True)
@@ -710,7 +646,7 @@ class Mutator(BaseDecoder):
             "odoo_class": odoo_class,
             "uuid": uuid,
         }
-        return f"{self.env['api'].generate_hmac_signature(key=odoo_class, msg=data)}"
+        return f"{self.env['api'].generate_hmac_signature(key=odoo_class, data=data)}"
 
     def get_ongoing_create_mutations(self):
         """

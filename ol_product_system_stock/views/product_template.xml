@@ -1,0 +1,17 @@
+<odoo>
+	<record id="view_template_system_stock_state_form" model="ir.ui.view">
+		<field name="name">ol_product_system_stock.view_template_system_stock_state_form</field>
+		<field name="model">product.template</field>
+		<field name="inherit_id" ref="ol_base.view_product_template_form"/>
+		<field name="arch" type="xml">
+			<page name="onlogic_info" position="inside">
+				<group name="system_stock_state">
+					<field name="has_configurable_attributes" readonly="1" invisible="1"/>
+					<field name="system_stock_state" readonly="1" invisible="has_configurable_attributes == False"/>
+					<field name="website_system_stock_state" readonly="1" invisible="has_configurable_attributes == False"/>
+					<button name="manual_update_system_stock_state" type="object" string="Update System Stock State" invisible="has_configurable_attributes == False"/>
+				</group>
+			</page>
+		</field>
+	</record>
+</odoo>

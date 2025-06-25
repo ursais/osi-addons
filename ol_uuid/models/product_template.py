@@ -23,20 +23,19 @@ class ProductProduct(models.Model):
     variant_uuid = ol_fields.Uuid(
         string="Variant UUID",
         help="Unique identifier that is used to identify this product variant between different systems.",
-        require=True,
+        required=True,
         copy=False,
         index=True,
     )
     # END #########
 
-    @api.model
-    def create(self, values):
+    @api.model_create_multi
+    def create(self, vals_list):
         """
         Make sure system variant's have their own unique UUID.
         """
-
-        if not values.get("variant_uuid", False):
-            uuid = self.env[self._name].get_uuid(force_new=True)
-            values["variant_uuid"] = uuid
-        res = super().create(values)
-        return res
+        for vals in vals_list:
+            if not vals.get("variant_uuid", False):
+                uuid = self.env[self._name].get_uuid(force_new=True)
+                vals["variant_uuid"] = uuid
+        return super().create(vals_list)

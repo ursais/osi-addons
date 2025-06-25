@@ -1,0 +1,18 @@
+<odoo>
+	<data>
+		<record id="product_attribute_classification_form_view" model="ir.ui.view">
+			<field name="name">ol_uuid.product.attribute.classification.form</field>
+			<field name="model">product.attribute.classification</field>
+			<field name="inherit_id" ref="ol_product_classification.product_attribute_classification_form_view"/>
+			<field name="arch" type="xml">
+				<notebook name="main_tabs" position="inside">
+					<page name="onlogic_info" string="OnLogic Information" groups="ol_base.dev_team">
+						<group name="uuid_info">
+							<field name='uuid' readonly="1"/>
+						</group>
+					</page>
+				</notebook>
+			</field>
+		</record>
+	</data>
+</odoo>
