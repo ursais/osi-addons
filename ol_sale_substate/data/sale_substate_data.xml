@@ -32,27 +32,11 @@
     </record>
 
     <!-- Order is partially or fully planned -->
-    <record id="base_substate__sent" model="base.substate">
+    <record id="base_substate__production" model="base.substate">
         <field name="name">In Production</field>
         <field name="sequence">4</field>
         <field name="target_state_value_id" ref="sale_substate.target_state_value_sale" />
         <field name="description">Order is partially or fully planned</field>
-    </record>
-
-    <!-- Order partially invoiced -->
-    <record id="base_substate__partially_invoiced" model="base.substate">
-        <field name="name">Partially Invoiced</field>
-        <field name="sequence">5</field>
-        <field name="target_state_value_id" ref="sale_substate.target_state_value_sale" />
-        <field name="description">Order partially invoiced</field>
-    </record>
-
-    <!-- Order fully invoiced -->
-    <record id="base_substate__full_invoiced" model="base.substate">
-        <field name="name">Invoiced</field>
-        <field name="sequence">6</field>
-        <field name="target_state_value_id" ref="sale_substate.target_state_value_sale" />
-        <field name="description">Order fully invoiced</field>
     </record>
 
     <!-- Order fully invoiced and paid -->

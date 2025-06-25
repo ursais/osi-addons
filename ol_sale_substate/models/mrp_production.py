@@ -1,20 +1,40 @@
 # Import Odoo libs
-from odoo import fields, models, api
+from odoo import models
 
 
 class MrpProduction(models.Model):
+    """Add method to compute the sale substate change for production."""
+
     _inherit = "mrp.production"
 
+    # METHODS #####
 
-    @api.depends(
-        'move_raw_ids.state', 'move_raw_ids.quantity', 'move_finished_ids.state',
-        'workorder_ids.state', 'product_qty', 'qty_producing', 'move_raw_ids.picked')
-    def _compute_state(self):
-        res = super()._compute_state()
-        for production in self:
-            if production.state in ('progress','to_close'):
-                sale_order_ids = self.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id
-                if sale_order_ids:
-                    order_state = self.env.ref('ol_sale_substate.base_substate__sent').id
-                    sale_order_ids.write({"substate_id":order_state})
+    def _update_related_sale_substates(self):
+        """Trigger sale orders substate update method to update their substates."""
+        sale_order = self.sale_order_id
+        if sale_order:
+            sale_order.update_substate()
+
+    def button_plan(self):
+        """Trigger a substate check if planned button is pressed"""
+        res = super().button_plan()
+        self._update_related_sale_substates()
         return res
+
+    def button_unplan(self):
+        """Trigger a substate check if unplan button is pressed"""
+        res = super().button_unplan()
+        self._update_related_sale_substates()
+        return res
+
+    def write(self, vals):
+        """
+        Trigger a substate check if the MO state changes.
+        Structured so other fields could be added later is needed.
+        """
+        res = super().write(vals)
+        if any(field in vals for field in ("state")):
+            self._update_related_sale_substates()
+        return res
+
+    # END #####
