@@ -35,6 +35,11 @@ class RepairCreditNoteWizard(models.TransientModel):
         help="This restock fee will be auto applied to each line, reducing its price by the fee's percentage.",
     )
 
+    @api.onchange("restock_fee")
+    def _onchange_restock_fee(self):
+        if self.restock_fee:
+            self.line_ids.write({"discount": self.restock_fee * 100})
+
     def action_add_from_sale_orders(self):
         sale_orders = self.ticket_id.original_sale_order_ids.filtered(
             lambda so: so.invoice_ids
@@ -76,7 +81,7 @@ class RepairCreditNoteWizard(models.TransientModel):
                     entry["account_id"] = line.account_id.id
                     entry["price_unit"] = line.price_unit  # keep original price
                     entry["discount"] = (
-                        -self.restock_fee * 100
+                        self.restock_fee * 100
                     )  # negative discount for restock fee
                     entry["name"] = (
                         line.name or line.product_id.display_name
@@ -143,7 +148,7 @@ class RepairCreditNoteWizard(models.TransientModel):
                     or product.categ_id.property_account_income_categ_id.id
                 )
                 entry["price_unit"] = product.lst_price
-                entry["discount"] = -self.restock_fee * 100
+                entry["discount"] = self.restock_fee * 100
                 entry["name"] = (
                     f"Refund (Repair): {product.display_name} (Restock Fee: {int(self.restock_fee * 100)}%)"
                 )
