@@ -237,8 +237,6 @@ class IrActionsServer(models.Model):
             
         pav_obj = self.env["product.attribute.value"]
         line_ids = template.attribute_line_ids.ids
-        if not line_ids:
-            continue
 
         for line in template.attribute_line_ids:
             all_inactive = all(not ptav.ptav_active for ptav in line.product_template_value_ids)
