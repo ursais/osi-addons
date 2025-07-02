@@ -40,7 +40,8 @@ class ProductTemplateAttributeLine(models.Model):
         results = super().write(values)
         # Apply changes only if 'used_in_sale_description' has been modified
         if "used_in_sale_description" in values:
-            self._set_visibility_based_on_sale_description()
+            for line in self:
+                line._set_visibility_based_on_sale_description()
         return results
 
     # END #########
