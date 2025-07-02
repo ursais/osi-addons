@@ -30,9 +30,10 @@ class StockPicking(models.Model):
             if longest_warranty_period > 0:
                 for move_line in move.move_line_ids:
                     if move_line.lot_id:
-                        expiration_date = fields.Date.from_string(
-                            self.date_done
-                        ) + timedelta(days=longest_warranty_period * 365)
+                        done_date = self.date_done or fields.Date.context_today(self)
+                        expiration_date = done_date + timedelta(
+                            days=longest_warranty_period * 365
+                        )
                         move_line.lot_id.warranty_expiration_date = expiration_date
         return res
 
