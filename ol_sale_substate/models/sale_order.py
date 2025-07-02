@@ -46,6 +46,8 @@ class SaleOrder(models.Model):
                     order.write({"substate_id": quot_sent_substate.id})
 
             elif order.state == "sale":
+                new_substate = None
+
                 if order.mrp_production_ids:
                     # Determine if any MOs are planned or started
                     has_active_mo = any(

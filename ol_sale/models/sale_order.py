@@ -55,21 +55,67 @@ class SaleOrder(models.Model):
 
     # METHODS #########
 
+    def _check_component_out_of_stock(self):
+        """Method used in the component out of stock exception"""
+        for order in self:
+            for line in order.order_line:
+                if (
+                    not line.product_id.allow_backorder
+                    and line.product_id.type == "product"
+                    and not line.bom_id
+                ):
+                    if (
+                        line.product_id.qty_available < line.product_uom_qty
+                        and line.product_id.incoming_qty < line.product_uom_qty
+                    ):
+                        return True
+                if line.bom_id:
+                    for component in line.bom_id.bom_line_ids:
+                        product = component.product_id
+                        required_qty = line.product_uom_qty * component.product_qty
+                        if not product.allow_backorder and product.type == "product":
+                            if (
+                                product.qty_available < component.product_qty
+                                and product.incoming_qty < required_qty
+                            ):
+                                return True
+        return False
+
     def _compute_has_active_holds(self):
+        def has_hold_in_bom(product, company):
+            """Recursively check for sale_ok on all components and subcomponents."""
+            bom_by_product = self.env["mrp.bom"]._bom_find(
+                products=product, company_id=company.id
+            )
+            bom = bom_by_product.get(product)
+            if not bom:
+                return False
+
+            for bom_line in bom.bom_line_ids:
+                component = bom_line.product_id
+                if not component.sale_ok:
+                    return True
+                if has_hold_in_bom(component, company):
+                    return True
+            return False
+
         for sale in self:
-            has_active_hold = True
+            has_hold = False
             for line in sale.order_line:
-                if not line.product_template_id.sale_ok:
-                    has_active_hold = False
+                if not line.product_id.sale_ok:
+                    has_hold = True
                     break
                 if line.bom_id:
-                    for bom_l in line.bom_id.bom_line_ids:
-                        if not bom_l.product_id.sale_ok:
-                            has_active_hold = False
+                    for bom_line in line.bom_id.bom_line_ids:
+                        component = bom_line.product_id
+                        if not component.sale_ok or has_hold_in_bom(
+                            component, sale.company_id
+                        ):
+                            has_hold = True
                             break
-                    if not has_active_hold:
+                    if has_hold:
                         break
-            sale.has_active_holds = has_active_hold
+            sale.has_active_holds = has_hold
 
     @api.depends("partner_id")
     def _compute_contact_ids(self):
