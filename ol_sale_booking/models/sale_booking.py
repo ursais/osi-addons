@@ -227,7 +227,7 @@ class SaleBooking(models.Model):
             "order_prev_amount_total_untaxed"
         )
         is_cancel = (order and order.state == "cancel") or (
-            blanket_order and blanket_order.state == "cancel"
+            blanket_order and blanket_order.state == "expired"
         )
 
         if last_booking_entry:
@@ -407,20 +407,43 @@ class SaleBooking(models.Model):
                 )
                 new_line = self.env["sale.booking.line"].create(booking_line_values)
                 previous_line = self.get_last_booking_line_entry(new_line)
+                new_line_dict = {}
                 if previous_line:
-                    new_line.prev_qty = previous_line.product_uom_qty
-                    new_line.qty_change = (
-                        new_line.product_uom_qty - previous_line.product_uom_qty
-                    )
-                    new_line.prev_price_total = previous_line.price_total
-                    new_line.prev_price_subtotal = previous_line.price_subtotal
-                    new_line.prev_price_tax = previous_line.price_tax
-                    new_line.line_amount = (
-                        new_line.price_total - previous_line.price_total
-                    )
-                    new_line.line_amount_untaxed = (
-                        new_line.price_subtotal - previous_line.price_subtotal
-                    )
+                    prev_qty = previous_line.product_uom_qty
+                    qty_change = new_line.product_uom_qty - prev_qty
+                    prev_price_total = previous_line.price_total
+                    prev_price_subtotal = previous_line.price_subtotal
+                    line_amount = new_line.price_total - previous_line.price_total
+                    line_amount_untaxed = new_line.price_subtotal - previous_line.price_subtotal
+                    if previous_line.booking_id.order_detailed_state == "cancel":
+                        prev_qty = 0
+                        qty_change = new_line.product_uom_qty
+                        prev_price_subtotal = 0
+                        prev_price_total = 0
+                        line_amount = new_line.price_total
+                        line_amount_untaxed = new_line.price_subtotal
+                    
+                    new_line_dict.update({
+                        "prev_qty": prev_qty,
+                        "qty_change": qty_change,
+                        "prev_price_total": prev_price_total,
+                        "prev_price_subtotal": prev_price_subtotal,
+                        "prev_price_tax": previous_line.price_tax,
+                        "line_amount": line_amount,
+                        "line_amount_untaxed": line_amount_untaxed,
+                    })
+                    new_line.write(new_line_dict)
+                    if previous_line.sale_order_id.state == 'cancel':
+                        qty_change = -new_line.product_uom_qty
+                        line_amount = new_line.price_total * -1
+                        line_amount_untaxed = new_line.price_subtotal * -1
+                        new_line.write({
+                            "qty_change": qty_change,
+                            "line_amount": line_amount,
+                            "line_amount_untaxed": line_amount_untaxed,
+                        })
+                if new_line and not previous_line:
+                    new_line.write({"prev_qty":0,"qty_change":new_line.product_uom_qty,"prev_price_total":0.0,"prev_price_subtotal":0})
 
         if blanket_order:
             for blanket_order_line in blanket_order.line_ids:
@@ -429,20 +452,31 @@ class SaleBooking(models.Model):
                 )
                 new_line = self.env["sale.booking.line"].create(booking_line_values)
                 previous_line = self.get_last_booking_line_entry(new_line)
+                new_line_dict = {}
                 if previous_line:
-                    new_line.prev_qty = previous_line.product_uom_qty
-                    new_line.qty_change = (
-                        new_line.product_uom_qty - previous_line.product_uom_qty
-                    )
-                    new_line.prev_price_total = previous_line.price_total
-                    new_line.prev_price_subtotal = previous_line.price_subtotal
-                    new_line.prev_price_tax = previous_line.price_tax
-                    new_line.line_amount = (
-                        new_line.price_total - previous_line.price_total
-                    )
-                    new_line.line_amount_untaxed = (
-                        new_line.price_subtotal - previous_line.price_subtotal
-                    )
+                    prev_qty = previous_line.product_uom_qty
+                    qty_change = new_line.product_uom_qty - prev_qty
+                    new_line_dict.update({
+                        "prev_qty": prev_qty,
+                        "qty_change": qty_change,
+                        "prev_price_total": previous_line.price_total,
+                        "prev_price_subtotal": previous_line.price_subtotal,
+                        "prev_price_tax": previous_line.price_tax,
+                        "line_amount": new_line.price_total - previous_line.price_total,
+                        "line_amount_untaxed": new_line.price_subtotal - previous_line.price_subtotal,
+                    })
+                    new_line.write(new_line_dict)
+                    if previous_line.sale_blanket_order_id.state == 'expired':
+                        qty_change = -new_line.product_uom_qty
+                        line_amount = -(new_line.price_total - previous_line.price_total)
+                        line_amount_untaxed = -(new_line.price_subtotal - previous_line.price_subtotal)
+                        new_line.write({
+                            "qty_change": qty_change,
+                            "line_amount": line_amount,
+                            "line_amount_untaxed": line_amount_untaxed,
+                        })
+                if new_line and not previous_line:
+                    new_line.write({"prev_qty":0,"qty_change":new_line.product_uom_qty,"prev_price_total":0.0,"prev_price_subtotal":0})
 
     def get_booking_line_values(
         self,
