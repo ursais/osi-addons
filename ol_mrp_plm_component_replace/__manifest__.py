@@ -14,6 +14,7 @@
     "depends": [
         "ol_base",
         "ol_product_configurator",
+        "ol_mrp_plm",
         "mrp_plm",
     ],
     # always loaded
