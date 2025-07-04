@@ -127,7 +127,10 @@ class ProductProduct(models.Model):
 
                     # Confirm and finalize the session, which generates the new BoM
                     session.action_confirm()
-                    session.unlink()
+                    # Delete the session (SQL to speed things up)
+                    self.env.cr.execute(
+                        "delete from product_config_session where id=%s", (session.id,)
+                    )
 
                     # Retrieve the newly created BoM
                     new_variant_bom = bom_obj.search(
@@ -144,8 +147,11 @@ class ProductProduct(models.Model):
                         new_variant_bom.version = variant_bom.version + 1
                     else:
                         # If there are no differences, delete the new BoM and
-                        # reactivate the original one
-                        new_variant_bom.unlink()
+                        # reactivate the original one (SQL to speed things up)
+                        if new_variant_bom:
+                            self.env.cr.execute(
+                                "delete from mrp_bom where id=%s", (new_variant_bom.id,)
+                            )
                         variant_bom.write({"active": True})
 
     def _compare_boms(self, bom1, bom2):
