@@ -398,6 +398,7 @@ class IrActionsServer(models.Model):
             _logger.info("Processing batch: Offset=%s, Size=%s", offset, len(batch))
             for template in batch:
                 _logger.info("→ Processing Product Template: %s (ID: %s)", template.name, template.id)
+                self.extend_script_3(template)
                 counter += 1
                 _logger.info("\n✅ Script 3 completed,Processed count: %s", counter)
 
