@@ -39,6 +39,8 @@ class SaleOrder(models.Model):
             # If any of the fields appears in the Order vals
             # we need to check if a new booking entry is necessary
             self.sale_booking_trigger()
+            # Also compute remaining amounts on blanket order lines
+            self.order_line.blanket_order_line._compute_remaining_prices()
 
         return res
 

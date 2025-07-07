@@ -124,6 +124,10 @@ class BlanketOrderWizard(models.TransientModel):
             )
             sale_order = self.env["sale.order"].create(order_vals)
             res.append(sale_order.id)
+
+        # Compute remaining amounts on bo lines so bookings trigger
+        sale_order.order_line.blanket_order_line._compute_remaining_prices()
+
         return {
             "domain": [("id", "in", res)],
             "name": _("Sales Orders"),
