@@ -253,15 +253,11 @@
                             </div>
                         </div>
                     </div>
-                    <t t-if="not blind_drop_ship and sale_line">
-                        <!--System serial numbers and Product notes-->
-                        <t t-set="system_serial_numbers" t-value="product_line['system_serial_numbers']"/>
+                    <t t-if="not blind_drop_ship and sale_line and product_line['system_serial_numbers']">
                         <div class="product-notes">
-                            <t t-if="system_serial_numbers">
-                                <t t-call="ol_templates.serial_numbers">
-                                    <t t-set="serial_title">System Serial Numbers</t>
-                                    <t t-set="system_serial_numbers" t-value="system_serial_numbers"/>
-                                </t>
+                            <t t-call="ol_templates.serial_numbers">
+                                <t t-set="serial_title">System Serial Numbers</t>
+                                <t t-set="system_serial_numbers" t-value="product_line['system_serial_numbers']"/>
                             </t>
                             <br/>
                         </div>
