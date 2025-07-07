@@ -32,7 +32,7 @@ class SaleOrderLine(models.Model):
         related="product_id.config_ok", string="Configurable", readonly=True
     )
     config_session_id = fields.Many2one(
-        comodel_name="product.config.session", string="Config Session"
+        comodel_name="product.config.session", string="Config Session", index=True
     )
 
     def reconfigure_product(self):

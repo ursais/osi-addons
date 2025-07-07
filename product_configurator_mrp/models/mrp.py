@@ -14,7 +14,7 @@ class MrpProduction(models.Model):
         readonly=True,
     )
     config_session_id = fields.Many2one(
-        comodel_name="product.config.session", string="Config Session"
+        comodel_name="product.config.session", string="Config Session", index=True
     )
     custom_value_ids = fields.One2many(
         comodel_name="product.config.session.custom.value",

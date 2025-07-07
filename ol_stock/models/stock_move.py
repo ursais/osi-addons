@@ -24,4 +24,13 @@ class StockMove(models.Model):
 
     note = fields.Text(string="Line Note")
 
+    # Add index to bom_line_id to improve speed, particularly when
+    # stock moves are deleted.
+    bom_line_id = fields.Many2one(
+        comodel_name="mrp.bom.line",
+        string="BoM Line",
+        check_company=True,
+        index=True,
+    )
+
     # END #########
