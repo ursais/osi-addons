@@ -410,5 +410,7 @@ class SaleBlanketOrder(models.Model):
                             ),
                             user_id=sale_order.user_id.id or self.env.uid,
                         )
+            # Trigger computes for remaining amount fields so bookings trigger
+            order.line_ids._compute_remaining_prices()
 
     # END #########
