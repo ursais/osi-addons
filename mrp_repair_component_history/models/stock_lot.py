@@ -52,65 +52,36 @@ class StockLot(models.Model):
             # ==== 1. Manufacturing Order History ====
             mo = MrpProduction.search([("lot_producing_id", "=", lot.id)], limit=1)
             if mo:
-                # Get all related MOs by origin
-                sibling_mos = MrpProduction.search(
-                    [
-                        ("origin", "=", mo.origin),
-                        ("state", "=", "done"),
-                        ("lot_producing_id", "!=", False),
-                    ]
-                )
+                for move in mo.move_raw_ids:
+                    # If the move isn't done then we don't include in history
+                    if move.state != "done":
+                        continue
 
-                # Find the "parent" MO with components
-                parent_mo = False
-                for m in sibling_mos:
-                    for move in m.move_raw_ids:
-                        if move.state == "done":
-                            parent_mo = m
-                            break
-                    if parent_mo:
-                        break
+                    # Migrated MO stock moves aren't consistant so for historical MO's,
+                    # we rely on the related bom line qty which should be more accurate
+                    move_qty = 0.0
+                    if move.bom_line_id:
+                        move_qty = move.bom_line_id.product_qty
 
-                if parent_mo:
-                    total_serials = len(sibling_mos) or 1  # avoid div-by-zero
-                    for move in parent_mo.move_raw_ids:
-                        if move.state != "done":
-                            continue
-                        per_unit_qty = move.quantity / total_serials
-                        history_data.append(
-                            {
-                                "lot_id": lot.id,
-                                "product_id": move.product_id.id,
-                                "qty_changed": per_unit_qty,
-                                "change_type": "manufactured",
-                                "source_id": "mrp.production,%d" % parent_mo.id,
-                                "component_lot_ids": [
-                                    (6, 0, [l.id for l in move.lot_ids])
-                                ],
-                                "date": parent_mo.date_finished,
-                            }
-                        )
-                else:
-                    # fallback to MO components if they exist
-                    for move in mo.move_raw_ids:
-                        if move.state != "done":
-                            continue
-                        history_data.append(
-                            {
-                                "lot_id": lot.id,
-                                "product_id": move.product_id.id,
-                                "qty_changed": move.quantity,
-                                "change_type": "manufactured",
-                                "source_id": "mrp.production,%d" % mo.id,
-                                "component_lot_ids": [
-                                    (6, 0, [l.id for l in move.lot_ids])
-                                ],
-                                "date": mo.date_finished,
-                            }
-                        )
+                    history_data.append(
+                        {
+                            "lot_id": lot.id,
+                            "product_id": move.product_id.id,
+                            "qty_changed": move_qty,
+                            "change_type": "manufactured",
+                            "source_id": "mrp.production,%d" % mo.id,
+                            "component_lot_ids": [(6, 0, [l.id for l in move.lot_ids])],
+                            "date": mo.date_finished,
+                        }
+                    )
 
             # ==== 2. Repair Order History ====
-            repair_orders = self.env["repair.order"].search([("lot_id", "=", lot.id)])
+            repair_orders = self.env["repair.order"].search(
+                [
+                    ("lot_id", "=", lot.id),
+                    ("state", "=", "done"),
+                ]
+            )
             for repair in repair_orders:
                 for line in repair.move_ids:
                     if line.repair_line_type not in ("add", "remove", "recycle"):
