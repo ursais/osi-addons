@@ -92,7 +92,7 @@ class ComponentHistory(models.Model):
                                 "qty_changed": existing.qty_changed
                                 - new_record.qty_changed,
                                 "change_type": existing.change_type,
-                                "source_id": existing.source_id.id,
+                                "source_id": existing.source_id.id or False,
                                 "invisible": False,
                             }
                         )
