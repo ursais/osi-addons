@@ -383,8 +383,7 @@ class IrActionsServer(models.Model):
                         WHERE id = %s;
                     """, (default_val, line.id))
                     cr.commit()  # Commit the transaction after the update
-
-    
+  
     def script_3(self):
         cr = self.env.cr
         batch_size = 100
@@ -801,16 +800,15 @@ class IrActionsServer(models.Model):
         # 3. psql -d V17DBNAME -f /home/odoo/temp_phantom_bom_id.sql
         # Created by Vandan Pandeji
 
-
-        _logger.info("\n\n==Script 7: Phantom BOM Migration=")
         cr = self.env.cr
+        _logger.info("\n\n==Script 7: Phantom BOM Migration=")
         select_query = """SELECT res_id,value_reference,company_id from temp_ir_property_v13_vp where name = 'phantom_bom_id';
          """
         cr.execute(select_query)
         phantom_bom_ids = cr.fetchall()
         product_to_exclude = []
         counter = 0
-        def get_bom():
+        def get_bom(product_template_id,company_id):
             bom = self.env["mrp.bom"].search([("product_tmpl_id","=",int(product_template_id)),("type","=","phantom"),("company_id","=",int(company_id))])
             return bom
         for phantom_bom in phantom_bom_ids:
@@ -899,19 +897,26 @@ class IrActionsServer(models.Model):
                 update_query = """UPDATE product_template set country_of_origin = %s where id = %s; """
                 cr.execute(update_query,(country_id.id,product_template_id.id))
         
-        # _logger.info("\n\n==Script 7: Payment Ref in Contacts=")
-        # select_query = """SELECT value_reference,res_id from temp_ir_property_v13_vp where name='payment_preference';"""
-        # cr.execute(select_query)
-        # v13datas = cr.fetchall()
-        # for data in v13datas:
-        #     partner = data[1].split(',')[1]
-        #     partner_id = self.env["res.partner"].browse(int(partner))
-        #     payment_ref = data[0].split(',')[1]
-        #     payemnt_ref_id = self.env["res.paypref"].browse(int(payment_ref))
-        #     _logger.info("\n\n==%s::%s",partner_id,payemnt_ref_id)
-        #     if partner_id.exists() and payemnt_ref_id.exists():
-        #         update_query = """UPDATE res_partner set payment_preference = %s where id = %s; """
-        #         cr.execute(update_query,(payemnt_ref_id.id,partner_id.id))
+        _logger.info("\n\n==Script 7: Payment Ref in Contacts=")
+        select_query = """SELECT value_reference,res_id,company_id from temp_ir_property_v13_vp where name='payment_preference';"""
+        cr.execute(select_query)
+        v13datas = cr.fetchall()
+        field = self.env['ir.model.fields'].search([
+            ('model_id.model', '=', 'res.partner'),
+            ('name', '=', 'payment_preference')
+        ])
+        PartnerObj = self.env["res.partner"]
+        PayPrefObj = self.env["res.paypref"]
+        payment_property_vals =[]
+        for data in v13datas:
+            partner = data[1].split(',')[1]
+            partner_id = PartnerObj.browse(int(partner))
+            payment_ref = data[0].split(',')[1]
+            payemnt_ref_id = PayPrefObj.browse(int(payment_ref))
+            if field and partner_id.exists() and payemnt_ref_id.exists():
+                payment_property_vals.append({"name":"payment_preference","company_id":int(data[2]),"fields_id":field.id,"res_id":data[1],"value_reference":data[0]})
+
+        self.env["ir.property"].sudo().create(payment_property_vals)
 
         def update_visibility(cr, used_in_sale_description_value, visible_to_user_value):
             query = """
@@ -1040,4 +1045,12 @@ class IrActionsServer(models.Model):
                 cr.execute(update_query, (unique_ptav_id, variant_value.id))
                 cr.commit()
 
+    def drop_temp_tables(self):
+        cr = self.env.cr
+        _logger.info("\n\n============Droping Tables Start")
+        cr.execute("drop table temp_ir_property_v13_vp;")
+        cr.execute("drop table temp_product_temp_v13_vp;")
+        cr.execute("drop table temp_product_template_res_company_rel_v13_VP;")
+        cr.execute("drop table temp_product_template_attribute_value_V13_VP;")
+        _logger.info("\n\n============Tables Droped")
     
