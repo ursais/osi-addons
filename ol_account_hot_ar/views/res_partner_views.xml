@@ -19,7 +19,7 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='supplier']" position="after">
                 <separator/>
-                <filter string="Hot AR" name="customer" domain="[('hot_ar','=', True)]"/>
+                <filter string="Hot AR" name="customer_hot_ar" domain="[('hot_ar','=', True)]"/>
             </xpath>
         </field>
     </record>
