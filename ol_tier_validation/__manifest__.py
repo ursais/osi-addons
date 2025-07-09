@@ -26,6 +26,7 @@
         "security/tier_validation_group.xml",
         "views/tier_definition_view.xml",
         "data/tier_definition.xml",
+        "data/tier_validation_exceptions.xml",
     ],
     # only loaded in demo mode
     "demo": [
