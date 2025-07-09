@@ -16,6 +16,7 @@
         "product_configurator",
         "product_configurator_mrp",
         "product_configurator_sale",
+        "sale_product_configurator",
     ],
     # always loaded
     "data": [
@@ -29,4 +30,9 @@
         "views/product_product_views.xml",
         "views/sale_order_views.xml",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "ol_product_configurator/static/src/js/sale_configurator_patch.js",
+        ],
+    },
 }
