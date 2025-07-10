@@ -4,8 +4,12 @@ from collections import defaultdict
 
 
 class RepairCreditNoteWizard(models.TransientModel):
+    """This wizard allows a user to pre-build a credit note based on repairs."""
+
     _name = "repair.credit.note.wizard"
     _description = "Repair Credit Note Wizard"
+
+    # COLUMNS ###
 
     ticket_id = fields.Many2one(
         comodel_name="helpdesk.ticket",
@@ -19,7 +23,8 @@ class RepairCreditNoteWizard(models.TransientModel):
     original_sale_order_ids = fields.Many2many(
         comodel_name="sale.order",
         string="Sale Orders to Refund",
-        help="Original Sale Orders where the systems were originally sold, populated by the Import from Sale Order wizard.",
+        help="Original Sale Orders where the systems were originally sold, "
+        "populated by the Import from Sale Order wizard.",
     )
     original_repair_order_ids = fields.Many2many(
         comodel_name="repair.order",
@@ -32,8 +37,36 @@ class RepairCreditNoteWizard(models.TransientModel):
     restock_fee = fields.Float(
         string="Restock Fee %",
         default=0.15,
-        help="This restock fee will be auto applied to each line, reducing its price by the fee's percentage.",
+        help="This restock fee will be auto applied to each line, reducing its "
+        "price by the fee's percentage.",
     )
+    currency_id = fields.Many2one(
+        comodel_name="res.currency",
+        string="Currency",
+        required=True,
+        default=lambda self: self.env.company.currency_id.id,
+    )
+    amount_untaxed = fields.Monetary(
+        compute="_compute_amounts",
+        currency_field="currency_id",
+        string="Subtotal",
+        store=True,
+    )
+    amount_tax = fields.Monetary(
+        compute="_compute_amounts",
+        currency_field="currency_id",
+        string="Taxes",
+        store=True,
+    )
+    amount_total = fields.Monetary(
+        compute="_compute_amounts",
+        currency_field="currency_id",
+        string="Total",
+        store=True,
+    )
+
+    # END #######
+    # METHODS ###
 
     @api.onchange("restock_fee")
     def _onchange_restock_fee(self):
@@ -210,10 +243,25 @@ class RepairCreditNoteWizard(models.TransientModel):
             "res_id": credit_note.id,
         }
 
+    @api.depends(
+        "line_ids.price_subtotal",
+        "line_ids.price_tax",
+        "line_ids.price_total",
+    )
+    def _compute_amounts(self):
+        for wizard in self:
+            wizard.amount_untaxed = sum(wizard.line_ids.mapped("price_subtotal"))
+            wizard.amount_tax = sum(wizard.line_ids.mapped("price_tax"))
+            wizard.amount_total = sum(wizard.line_ids.mapped("price_total"))
+
+    # END #######
+
 
 class RepairCreditNoteWizardLine(models.TransientModel):
     _name = "repair.credit.note.wizard.line"
     _description = "Credit Note Line"
+
+    # COLUMNS ###
 
     wizard_id = fields.Many2one(
         comodel_name="repair.credit.note.wizard",
@@ -245,3 +293,51 @@ class RepairCreditNoteWizardLine(models.TransientModel):
         digits="Discount",
         default=0.0,
     )
+    price_subtotal = fields.Monetary(
+        string="Subtotal (excl.)",
+        currency_field="currency_id",
+        compute="_compute_totals",
+        store=True,
+    )
+    price_tax = fields.Monetary(
+        string="Taxes",
+        currency_field="currency_id",
+        compute="_compute_totals",
+        store=True,
+    )
+    price_total = fields.Monetary(
+        string="Total (incl.)",
+        currency_field="currency_id",
+        compute="_compute_totals",
+        store=True,
+    )
+    currency_id = fields.Many2one(
+        "res.currency",
+        related="wizard_id.currency_id",
+        readonly=True,
+    )
+
+    # END #######
+    # METHODS ###
+
+    @api.depends(
+        "quantity",
+        "price_unit",
+        "discount",
+        "tax_ids",
+    )
+    def _compute_totals(self):
+        for line in self:
+            price_unit = line.price_unit * (1 - (line.discount / 100.0))
+            taxes = line.tax_ids.compute_all(
+                price_unit,
+                currency=line.currency_id,
+                quantity=line.quantity,
+                product=line.product_id,
+                partner=line.wizard_id.partner_id,
+            )
+            line.price_subtotal = taxes["total_excluded"]
+            line.price_tax = taxes["total_included"] - taxes["total_excluded"]
+            line.price_total = taxes["total_included"]
+
+    # END #######

@@ -87,6 +87,8 @@
                                     <field name="repair_line_type" required="1" />
                                     <field name="product_id" required="1" />
                                     <field name="quantity" string="Quantity" required="1" />
+                                    <field name="reason_code_id" optional="show" />
+                                    <field name="note" optional="show"/>
                                 </tree>
                             </field>
                             <div class="clearfix" />

@@ -1,10 +1,18 @@
+# Import Odoo libs
+from datetime import timedelta
+
+# Import Odoo libs
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
 class HelpdeskTicketImportSale(models.TransientModel):
+    """Wizard to import products from sale orders to repair batch."""
+
     _name = "helpdesk.ticket.import.sale"
     _description = "Import Sale Order for Repairs"
+
+    # COLUMNS ###
 
     ticket_id = fields.Many2one(
         comodel_name="helpdesk.ticket",
@@ -25,6 +33,9 @@ class HelpdeskTicketImportSale(models.TransientModel):
         comodel_name="res.partner",
         string="Customer",
     )
+
+    # END #######
+    # METHODS ###
 
     @api.onchange("sale_order_id")
     def _onchange_sale_order(self):
@@ -88,7 +99,8 @@ class HelpdeskTicketImportSale(models.TransientModel):
                     "partner_id": self.partner_id.id,
                     "product_id": product_id,
                     "qty": data["qty"],
-                    "lot_ids": [(6, 0, list(data["lot_ids"]))],  # Convert set to list
+                    "lot_ids": [(6, 0, list(data["lot_ids"]))],
+                    "schedule_date": fields.Datetime.now() + timedelta(days=7),
                 }
             )
 
@@ -133,3 +145,5 @@ class HelpdeskTicketImportSaleLine(models.TransientModel):
         comodel_name="stock.lot",
         string="Serial Numbers",
     )
+
+    # END #######

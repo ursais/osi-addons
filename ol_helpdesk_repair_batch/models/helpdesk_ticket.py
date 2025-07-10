@@ -306,6 +306,7 @@ class HelpdeskTicket(models.Model):
                 "location_id": source_location_id,
                 "location_dest_id": destination_location_id,
                 "ticket_id": self.id,
+                "owner_id": self.partner_id.id or False,
             }
         )
 
