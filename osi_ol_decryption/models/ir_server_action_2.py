@@ -564,10 +564,10 @@ class IrActionsServer(models.Model):
                                     WHERE id = %s;
                                 """
                                 product_attribute_value_id = ptav.product_attribute_value_id.id
-                                attribute_id = ptav.attribute_id.id
+                                ptav_attribute_id = ptav.attribute_id.id
                                 for qty_val in ptav.attribute_value_qty_ids:
                                     if qty_val.product_attribute_id.id != ptav.attribute_id.id:
-                                        cr.execute(query,(attribute_id,qty_val.id))
+                                        cr.execute(query,(ptav_attribute_id,qty_val.id))
                                         cr.commit()
                                     if qty_val.product_attribute_value_id.id !=  ptav.product_attribute_value_id.id:
                                         cr.execute("""
@@ -808,25 +808,28 @@ class IrActionsServer(models.Model):
         phantom_bom_ids = cr.fetchall()
         product_to_exclude = []
         counter = 0
-        def get_bom(product_template_id,company_id):
-            bom = self.env["mrp.bom"].search([("product_tmpl_id","=",int(product_template_id)),("type","=","phantom"),("company_id","=",int(company_id))])
-            return bom
+        phantom_bom_property_vals =[]
+        field = self.env['ir.model.fields'].search([
+            ('model_id.model', '=', 'product.template'),
+            ('name', '=', 'phantom_bom_id')
+        ])
+        BOMObject = self.env["mrp.bom"]
         for phantom_bom in phantom_bom_ids:
             product_template_id = phantom_bom[0].split(',')[1]
             mrp_bom_id = phantom_bom[1].split(',')[1]
             company_id = phantom_bom[2]
-            counter+=1
-            bom = get_bom(product_template_id,company_id)
-            if int(company_id) == 1:
-                phantom_bom_id = bom.filtered(lambda l:l.id == int(mrp_bom_id))
-                extra_phantom_bom_ids = bom.filtered(lambda l:l.id != int(phantom_bom_id))
-                extra_phantom_bom_ids.write({"active":False})
-                cr.commit()
-            elif int(company_id) == 2 and int(product_template_id) not in product_to_exclude:
-                phantom_bom_id = bom.filtered(lambda l:l.id == int(mrp_bom_id))
-                extra_phantom_bom_ids = bom.filtered(lambda l:l.id != int(phantom_bom_id))
-                extra_phantom_bom_ids.write({"active":False})
-                cr.commit()
+            bom_id = BOMObject.browse(int(mrp_bom_id))
+            if bom_id.exists() and field:
+                phantom_bom_property_vals.append( {"name":"phantom_bom_id","company_id":int(phantom_bom[2]),"fields_id":field.id,"res_id":phantom_bom[0],"value_reference":phantom_bom[1]})
+                bom_id.company_id =int(phantom_bom[2])
+        phantom_boms = self.env["ir.property"].sudo().create(phantom_bom_property_vals)
+        phantom_bom_product_templates = self.env["product.template"].search([]).filtered("phantom_bom_id")
+        companies = self.env["res.company"].search([])
+        for template in phantom_bom_product_templates:
+            boms = BOMObject.search([("product_tmpl_id","=",template.id),("company_id","in",companies.ids),("type","=","phantom")])
+            none_compnay_boms = BOMObject.search([("product_tmpl_id","=",template.id),("company_id","=",False),("type","=","phantom"),("id","not in",boms.ids)])
+            none_compnay_boms.write({"active":False})
+            cr.commit()
                 
         _logger.info("\n\n==Script 7: Lifecycle_status  Migration Data=")
         cr.execute("select res_id,value_text from temp_ir_property_v13_vp where name = 'lifecycle_status';")
