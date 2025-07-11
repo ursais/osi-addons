@@ -15,6 +15,7 @@
         "ol_base",
         "product_configurator",
         "product_configurator_mrp",
+        "product_configurator_mrp_quantity",
         "product_configurator_sale",
         "sale_product_configurator",
     ],
