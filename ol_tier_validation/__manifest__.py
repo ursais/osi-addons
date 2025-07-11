@@ -20,6 +20,11 @@
         "purchase_request_tier_validation",
         "partner_tier_validation",
         "sale_tier_validation",
+        # Modules that contain tier validation exception fields
+        "account",
+        "account_avatax_sale_oca",
+        "ol_stock_constrained_availability",
+        "sale_stock",
     ],
     # always loaded
     "data": [
