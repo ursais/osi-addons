@@ -37,4 +37,41 @@
         </field>
     </record>
 
+    <record id="ol_product_configurator_product_configurator_product_template_only_form_view_inherited" model="ir.ui.view">
+        <field name="name">product.configurator.product.template.form</field>
+        <field name="model">product.template</field>
+        <field name="priority">100</field>
+        <field name="inherit_id" ref="product_configurator.product_template_only_form_view_inherited" />
+        <field name="arch" type="xml">
+            <!-- Show fields even on normal inventory product views when configurable -->
+            <field name="default_val" position="attributes">
+                <attribute name="column_invisible">not parent.config_ok</attribute>
+            </field>
+            <field name="required" position="attributes">
+                <attribute name="column_invisible">not parent.config_ok</attribute>
+            </field>
+            <field name="multi" position="attributes">
+                <attribute name="column_invisible">not parent.config_ok</attribute>
+            </field>
+            <field name="custom" position="attributes">
+                <attribute name="column_invisible">not parent.config_ok</attribute>
+            </field>
+            <!-- Remove duplicate sequence field -->
+            <xpath expr="//field[@name='attribute_line_ids']/tree/field[@name='sequence'][2]" position="replace"/>
+        </field>
+    </record>
+
+    <record id="ol_product_configurator_product_configurator_mrp_quantity_product_template_only_form_view_inherited" model="ir.ui.view">
+        <field name="name">product.configurator.product.template.form</field>
+        <field name="model">product.template</field>
+        <field name="priority">100</field>
+        <field name="inherit_id" ref="product_configurator_mrp_quantity.product_template_only_form_view_inherited_mrp_qty" />
+        <field name="arch" type="xml">
+            <!-- Show fields even on normal inventory product views when configurable -->
+            <field name="is_qty_required" position="attributes">
+                <attribute name="column_invisible">not parent.config_ok</attribute>
+            </field>
+        </field>
+    </record>
+
 </odoo>
