@@ -21,6 +21,9 @@
                     <field name="height" string="Height (cm)" class="oe_inline"/>
                 </div>
         	</xpath>
+        	<field name="uom_id" position="after">
+                <field name="system_tier" />
+            </field>
         </field>
     </record>
 
@@ -31,7 +34,7 @@
             <filter name="consumable" position="after">
                 <separator/>
                 <filter name="system_tier_normal" string="Normal System" domain="[('system_tier', '=', 'normal')]" />
-                <filter name="system_tier_custom" string="Custom Created System" domain="[('system_tier', '=', 'custom')]" />
+                <filter name="system_tier_custom" string="Custom Created System" domain="[('system_tier', '=', 'custom_created')]" />
                 <filter name="system_tier_customer" string="Customer System" domain="[('system_tier', '=', 'customer')]" />
             </filter>
         </field>
