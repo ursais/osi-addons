@@ -15,6 +15,12 @@ class MrpProduction(models.Model):
         if sale_order:
             sale_order.update_substate()
 
+    def action_confirm(self):
+        """Trigger a substate check if confirm is pressed"""
+        res = super().action_confirm()
+        self._update_related_sale_substates()
+        return res
+
     def button_plan(self):
         """Trigger a substate check if planned button is pressed"""
         res = super().button_plan()

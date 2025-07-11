@@ -1,6 +1,5 @@
 # Import Odoo libs
 from odoo import api, models
-from odoo.exceptions import UserError
 
 
 class SaleOrder(models.Model):
@@ -51,7 +50,12 @@ class SaleOrder(models.Model):
                 if order.mrp_production_ids:
                     # Determine if any MOs are planned or started
                     has_active_mo = any(
-                        mo.is_planned or mo.state in ("progress", "to_close")
+                        mo.is_planned
+                        or mo.state in ("progress", "to_close")
+                        or (
+                            not mo.workorder_ids
+                            and mo.state not in ("done", "draft", "cancel")
+                        )
                         for mo in order.mrp_production_ids
                     )
                     # Set to in production if any mo is planned or started
@@ -75,6 +79,12 @@ class SaleOrder(models.Model):
 
                 if new_substate and order.substate_id != new_substate:
                     order.write({"substate_id": new_substate.id})
+
+    def action_lock(self):
+        """Trigger a substate check if Lock is pressed"""
+        res = super().action_lock()
+        self.update_substate()
+        return res
 
     def write(self, vals):
         res = super().write(vals)
