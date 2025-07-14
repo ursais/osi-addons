@@ -34,11 +34,16 @@ class ResPartner(models.Model):
     )
     def _compute_check_hot_ar(self):
         for partner in self:
+            # Skip if partner isn't created yet.
+            if not partner.id or isinstance(partner.id, models.NewId):
+                continue
+
             if partner.override_hot_ar:
                 partner.hot_ar = False
             else:
                 # Modified compute logic to update hot_ar field via PSQL query instead of ORM to reduce the execution time.
-                self.env.cr.execute("""
+                self.env.cr.execute(
+                    """
                     UPDATE res_partner p
                     SET hot_ar = EXISTS (
                         SELECT 1
@@ -53,8 +58,10 @@ class ResPartner(models.Model):
                         AND rc.hot_ar_grace_period > 0
                     )
                     WHERE p.id = %s
-                """, [partner.id])
-#            Now update commercial partner based on children
+                """,
+                    [partner.id],
+                )
+            #            Now update commercial partner based on children
             if (
                 partner.commercial_partner_id
                 and partner != partner.commercial_partner_id
@@ -64,7 +71,8 @@ class ResPartner(models.Model):
                 # This will ensure the commercial partner is "hot" if any child is
                 if not self._context.get("commercial_partner"):
                     commercial_partner_id = commercial_partner.id
-                    self.env.cr.execute("""
+                    self.env.cr.execute(
+                        """
                         UPDATE res_partner cp
                         SET hot_ar = EXISTS (
                             SELECT 1 FROM res_partner child
@@ -73,6 +81,8 @@ class ResPartner(models.Model):
                             AND child.override_hot_ar is null
                         )
                         WHERE cp.id = %s
-                    """, [commercial_partner_id])
+                    """,
+                        [commercial_partner_id],
+                    )
 
     # END #########
