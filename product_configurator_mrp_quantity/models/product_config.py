@@ -442,15 +442,18 @@ class ProductConfigSession(models.Model):
                         parent_bom_product = parent_bom_line.product_id
                         local_session_attr_qty_value = session_attr_qty_values.filtered(
                             lambda local_session: local_session.attr_value_id.product_id.id
-                            == parent_bom_product.id
+                            == parent_bom_product.id and local_session.attr_value_id.attribute_id.id
+                            in config.value_ids.mapped("attribute_id").ids
                         )
-                        bom_line_vals = {
-                            "product_id": parent_bom_product.id,
-                            "product_qty": local_session_attr_qty_value.qty > 0
-                            and local_session_attr_qty_value.qty
-                            * parent_bom_line.product_qty
-                            or parent_bom_line.product_qty,
-                        }
+                        if local_session_attr_qty_value:
+                            bom_line_vals = {
+                                "product_id": parent_bom_product.id,
+                                "product_qty": local_session_attr_qty_value.qty > 0
+                                and local_session_attr_qty_value.qty
+                                * parent_bom_line.product_qty
+                                or parent_bom_line.product_qty,
+                            }
+                        
         return bom_line_vals
 
 
