@@ -38,6 +38,7 @@ class ProductConfigSession(models.Model):
             values = {"product_id": self._context.get("product_id").id, "product_qty": 1}
 
         elif parent_bom and self._context.get("parent_bom_line"):
+
             values = {
                 "product_id": self._context.get("parent_bom_line").product_id.id,
                 "product_qty": self._context.get("parent_bom_line").product_qty,
@@ -99,31 +100,37 @@ class ProductConfigSession(models.Model):
                 bom_lines.append((0, 0, values))
         else:
             # If parent BOM is used, then look through Config Sets
-            # on parent product's bom to add the products to the bom lines.
+            # on parent product's bom to add the products to the bom lines..
+            session_value_ids = self.value_ids
+            common_values_li = []
             for parent_bom_line in parent_bom.bom_line_ids:
+                bom_line_value_ids = parent_bom_line.config_set_id.configuration_ids.value_ids
+                common_values = next((value for value in bom_line_value_ids.ids if value in session_value_ids.ids), None)
                 if parent_bom_line.config_set_id:
                     for config in parent_bom_line.config_set_id.configuration_ids:
                         # Add bom lines if config values are part of attr_values
                         if set(config.value_ids.ids).issubset(set(attr_values.ids)):
                             if parent_bom_line.bom_id.id == parent_bom.id:
-                                parent_bom_line_vals = self.with_context(parent_bom_line=parent_bom_line)._get_bom_line(variant,product_tmpl_id)
-                                specs = self.get_onchange_specifications(
-                                    model="mrp.bom.line"
-                                )
-                                for key, val in specs.items():
-                                    if val is None:
-                                        specs[key] = {}
-                                updates = mrpBomLine.onchange(
-                                    parent_bom_line_vals,
-                                    ["product_id", "product_qty"],
-                                    specs,
-                                )
-                                values = updates.get("value", {})
-                                values = self.get_vals_to_write(
-                                    values=values, model="mrp.bom.line"
-                                )
-                                values.update(parent_bom_line_vals)
-                                bom_lines.append((0, 0, parent_bom_line_vals))
+                                if common_values not in common_values_li:
+                                    parent_bom_line_vals = self.with_context(parent_bom_line=parent_bom_line)._get_bom_line(variant,product_tmpl_id)
+                                    specs = self.get_onchange_specifications(
+                                        model="mrp.bom.line"
+                                    )
+                                    for key, val in specs.items():
+                                        if val is None:
+                                            specs[key] = {}
+                                    updates = mrpBomLine.onchange(
+                                        parent_bom_line_vals,
+                                        ["product_id", "product_qty"],
+                                        specs,
+                                    )
+                                    values = updates.get("value", {})
+                                    values = self.get_vals_to_write(
+                                        values=values, model="mrp.bom.line"
+                                    )
+                                    values.update(parent_bom_line_vals)
+                                    bom_lines.append((0, 0, parent_bom_line_vals))
+                    common_values_li.append(common_values)
                 else:
                     parent_bom_line_vals = self.with_context(parent_bom_line=parent_bom_line)._get_bom_line(variant,product_tmpl_id)
                     specs = self.get_onchange_specifications(model="mrp.bom.line")
