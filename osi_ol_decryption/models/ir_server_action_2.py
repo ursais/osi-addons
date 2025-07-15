@@ -513,6 +513,24 @@ class IrActionsServer(models.Model):
                                 )
                                 inactive_value_active_ptav.ptav_active = False
 
+                            if not ptav.product_attribute_value_id.active:
+                                active_value_id = fallback_value
+                                active_ptav = ptavobj.search([("product_attribute_value_id","=",active_value_id.id),("product_tmpl_id","=",template.id),("attribute_id.name","=",active_value_id.attribute_id.name),("attribute_line_id","=",ptav.attribute_line_id.id)])
+                                if active_ptav:
+                                    if active_ptav.ptav_active and active_ptav.id != ptav.id:
+                                        ptav.write({"ptav_active":False})
+                                        cr.commit
+                                    elif active_ptav and not active_ptav.ptav_active and active_ptav.id != ptav.id:
+                                        active_ptav.write({"ptav_active":True})
+                                        ptav.write({"ptav_active":False})
+                                        cr.commit
+                                else:
+                                    cr.execute("""
+                                            UPDATE product_template_attribute_value
+                                            SET product_attribute_value_id = %s
+                                            WHERE id = %s AND ptav_active = true;
+                                        """, (active_value_id.id,ptav.id))
+                                    cr.commit()
                             
                             # if not ptav.product_attribute_value_id.active:
                             #     active_value_id = fallback_value
