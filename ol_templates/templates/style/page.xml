@@ -638,10 +638,10 @@
           }
 
           .ol_products_header .ol_products_list_header .ol_products_list_header_item.serials1{
-          width: 14%;
+          width: 13%;
           }
           .ol_products_header .ol_products_list_header .ol_products_list_header_item.destination1{
-            width: 10%;
+            width: 11%;
             text-align: right !important;
             align-items : right !important;
           }
