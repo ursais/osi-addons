@@ -172,22 +172,22 @@
             <div class="ol_products_header ol_flex ol_flex_just_cont_space_between">
                 <div class="ol_products_list_header ol_picking ol_flex">
                     <!--The info table header-->
-                    <div class="ol_products_list_header_item location">
+                    <div class="ol_products_list_header_item location1">
                         <tag>Location</tag>
                     </div>
-                    <div class="ol_products_list_header_item model">
+                    <div class="ol_products_list_header_item model1">
                         <tag>Model</tag>
                     </div>
-                    <div class="ol_products_list_header_item qty">
+                    <div class="ol_products_list_header_item qty1">
                         <tag>QTY</tag>
                     </div>
-                    <div class="ol_products_list_header_item products">
+                    <div class="ol_products_list_header_item products1">
                         <tag>Products</tag>
                     </div>
-                    <div class="ol_products_list_header_item products">
+                    <div class="ol_products_list_header_item serials1">
                         <tag>Serials</tag>
                     </div>
-                    <div class="ol_products_list_header_item destination">
+                    <div class="ol_products_list_header_item destination1">
                         <tag>Destination</tag>
                     </div>
                 </div>
@@ -199,27 +199,27 @@
 
     <!--move lines-->
     <template id="picking_move_lines">
-        <div class="ol_product_lines ol_picking">
+        <div class="ol_picking">
             <t t-foreach="picking_move_lines" t-as="product_line">
                 <div class="ol_products_line">
                     <!--Product: image, name, sku, data-->
                     <div class="ol_products_info_cont ol_flex ol_picking">
-                        <div class="ol_product_location packing">
+                        <div class="ol_product_location packing location1">
                             <div t-esc="product_line['location_id']"/>
                         </div>
-                        <div class="ol_product_default_code ol_picking packing">
+                        <div class="ol_product_default_code ol_picking packing model1">
                             <div t-esc="product_line['product_default_code']" />
                         </div>
-                        <div class="ol_products_line_data_item product_qty packing">
+                        <div class="ol_picking product_qty qty1">
                             <div t-esc="product_line['qty']" t-options="{'widget': 'integer'}" />
                         </div>
-                        <div class="ol_product_name ol_picking">
+                        <div class="ol_product_name ol_picking products1">
                             <t t-esc="product_line['product_name']" />
                         </div>
-                        <div class="ol_product_name ol_picking">
+                        <div class="ol_picking system_serial_numbers serials1">
                             <div t-esc="product_line['system_serial_numbers']" />
                         </div>
-                        <div class="ol_product_destination">
+                        <div class="ol_picking location_destination destination1">
                             <div t-esc="product_line['location_dest_id']" />
                         </div>
                     </div>
