@@ -222,4 +222,29 @@ class StockPicking(models.Model):
 
         return product_lines
 
+    def get_picking_move_lines(self):
+        """Collect the data for the Packing/Picking product lines"""
+
+        self.ensure_one()
+
+        product_lines = []
+
+        moves = self.move_ids.sorted(key=lambda m: m.location_id and m.location_id.id)
+
+        for move in moves:
+            for line in move.move_line_ids:
+                serial = line.lot_id.name if line.lot_id else False
+                product_line_data = {
+                    "location_id" : line.location_id.name,
+                    "product_default_code": line.product_id.product_tmpl_id.default_code,
+                    "qty": line.quantity,
+                    "product_name": line.product_id.name,
+                    "system_serial_numbers": serial,
+                    "location_dest_id": line.location_dest_id.name,
+                }
+
+                product_lines.append(product_line_data)
+
+        return product_lines
+
     # END #########

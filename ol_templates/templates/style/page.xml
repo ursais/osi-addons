@@ -409,7 +409,7 @@
           }
 
           .ol_products_line_data_item.product_qty {
-          width: 20%;
+          width: 15%;
           }
 
           .ol_products_line_data_item.product_price {
@@ -618,23 +618,98 @@
           }
 
           .ol_products_list_header_item.model{
-          width: 20%;
+          width: 10%;
           }
 
-          .ol_products_list_header.ol_picking .ol_products_list_header_item.products{
-          width: 35%;
+          .ol_products_header .ol_products_list_header .ol_products_list_header_item.location1{
+          width: 12% ;
+          text-wrap:wrap;
+          }
+          .ol_products_header .ol_products_list_header .ol_products_list_header_item.model1{
+          width: 12% ;
+          }
+          .ol_products_header .ol_products_list_header .ol_products_list_header_item.qty1{
+            text-align: center !important;
+            align-items : center !important;
+            width: 10% ;
+          }
+          .ol_products_header .ol_products_list_header .ol_products_list_header_item.products1{
+          width: 42% ;
           }
 
-          .ol_products_list_header.ol_picking .ol_products_list_header_item.model{
-          width: 25%;
+          .ol_products_header .ol_products_list_header .ol_products_list_header_item.serials1{
+          width: 14%;
+          }
+          .ol_products_header .ol_products_list_header .ol_products_list_header_item.destination1{
+            width: 10%;
+            text-align: right !important;
+            align-items : right !important;
+          }
+          .ol_products_info_cont .ol_product_location.location1{
+            width:12% !important;
+          }
+          .ol_products_info_cont .ol_product_location.location1 p{
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+          }
+          .ol_products_info_cont .ol_product_default_code.model1{
+            width: 12% !important;
+          }
+          .ol_products_info_cont .ol_product_default_code.model1 p{
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+          }
+          .ol_products_info_cont .product_qty.qty1{
+            text-align: center !important;
+            align-items : center !important;
+            width: 10% !important;
+          }
+          .ol_products_info_cont .ol_product_name.products1{
+            width: 42% !important;
+          }
+          .ol_products_info_cont .ol_product_name.products1 p{
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+          }
+          .ol_products_info_cont .system_serial_numbers.serials1{
+            width: 14% !important;
+          }
+          .ol_products_info_cont .system_serial_numbers.serials1 p{
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+          }
+          .ol_products_info_cont .location_destination.destination1{
+            width: 12% !important;
+            text-align: right !important;
+            align-items : right !important;
+          }
+          .ol_products_info_cont .location_destination.destination1 p{
+              word-wrap: break-word;
+              overflow-wrap: break-word;
+              white-space: normal;
           }
 
-          .ol_products_list_header.ol_picking .ol_products_list_header_item.location{
+          .ol_picking.system_serial_numbers {
+          font-size: 14px;
+          line-height: 16px;
+          width: 10%;
+          }
+
+          .ol_picking.location_destination {
+          font-size: 14px;
+          line-height: 16px;
           width: 15%;
           }
 
-          .ol_products_list_header.ol_picking .ol_products_list_header_item.destination{
-          width: 25%;
+          .ol_picking.product_qty {
+          font-size: 14px;
+          line-height: 16px;
+          width: 5% !important;
+          text-align: left !important;
           }
 
           .ol_picking_comments_header {
@@ -674,6 +749,7 @@
           font-size: 14px;
           line-height: 16px;
           }
+          
 
           .product_line.ol_picking {
           padding: 10px 0;
