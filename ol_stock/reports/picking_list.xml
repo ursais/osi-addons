@@ -205,22 +205,22 @@
                     <!--Product: image, name, sku, data-->
                     <div class="ol_products_info_cont ol_flex ol_picking">
                         <div class="ol_product_location packing location1">
-                            <div t-esc="product_line['location_id']"/>
+                            <p t-esc="product_line['location_id']"/>
                         </div>
                         <div class="ol_product_default_code ol_picking packing model1">
-                            <div t-esc="product_line['product_default_code']" />
+                            <p t-esc="product_line['product_default_code']" />
                         </div>
                         <div class="ol_picking product_qty qty1">
-                            <div t-esc="product_line['qty']" t-options="{'widget': 'integer'}" />
+                            <p t-esc="product_line['qty']" t-options="{'widget': 'integer'}" />
                         </div>
                         <div class="ol_product_name ol_picking products1">
-                            <t t-esc="product_line['product_name']" />
+                            <p t-esc="product_line['product_name']" />
                         </div>
                         <div class="ol_picking system_serial_numbers serials1">
-                            <div t-esc="product_line['system_serial_numbers']" />
+                            <p t-esc="product_line['system_serial_numbers']" />
                         </div>
                         <div class="ol_picking location_destination destination1">
-                            <div t-esc="product_line['location_dest_id']" />
+                            <p t-esc="product_line['location_dest_id']" />
                         </div>
                     </div>
                 </div>

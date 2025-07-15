@@ -623,6 +623,7 @@
 
           .ol_products_header .ol_products_list_header .ol_products_list_header_item.location1{
           width: 12% ;
+          text-wrap:wrap;
           }
           .ol_products_header .ol_products_list_header .ol_products_list_header_item.model1{
           width: 12% ;
@@ -637,16 +638,28 @@
           }
 
           .ol_products_header .ol_products_list_header .ol_products_list_header_item.serials1{
-          width: 12%;
+          width: 14%;
           }
           .ol_products_header .ol_products_list_header .ol_products_list_header_item.destination1{
-          width: 12%;
+            width: 10%;
+            text-align: right !important;
+            align-items : right !important;
           }
           .ol_products_info_cont .ol_product_location.location1{
             width:12% !important;
           }
+          .ol_products_info_cont .ol_product_location.location1 p{
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+          }
           .ol_products_info_cont .ol_product_default_code.model1{
             width: 12% !important;
+          }
+          .ol_products_info_cont .ol_product_default_code.model1 p{
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
           }
           .ol_products_info_cont .product_qty.qty1{
             text-align: center !important;
@@ -656,11 +669,28 @@
           .ol_products_info_cont .ol_product_name.products1{
             width: 42% !important;
           }
+          .ol_products_info_cont .ol_product_name.products1 p{
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+          }
           .ol_products_info_cont .system_serial_numbers.serials1{
-            width: 12% !important;
+            width: 14% !important;
+          }
+          .ol_products_info_cont .system_serial_numbers.serials1 p{
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
           }
           .ol_products_info_cont .location_destination.destination1{
             width: 12% !important;
+            text-align: right !important;
+            align-items : right !important;
+          }
+          .ol_products_info_cont .location_destination.destination1 p{
+              word-wrap: break-word;
+              overflow-wrap: break-word;
+              white-space: normal;
           }
 
           .ol_picking.system_serial_numbers {
