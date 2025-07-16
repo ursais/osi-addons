@@ -52,8 +52,8 @@
                     <thead>
                         <tr>
                             <th><span>Invoice Date</span></th>
-                            <th><span>Invoice Number</span></th>
-                            <th><span>Reference</span></th>
+                            <th><span>Bill Reference</span></th>
+                            <!-- <th><span>Reference</span></th> -->
                             <th><span>Refund Applied</span></th>
                             <th><span>Refund Reference</span></th>
                             <th><span>Refund Applied Amount</span></th>
@@ -71,7 +71,7 @@
                                     <t t-set="refund" t-value="inv.get_refund_detail()"/>
                                     <td><span t-field="inv.invoice_date">2023-01-01</span></td>
                                     <td><span t-field="inv.name">INV001</span></td>
-                                    <td><span t-field="inv.ref" data-oe-demo="Sample Ref"/></td>
+                                    <!-- <td><span t-field="inv.ref" data-oe-demo="Sample Ref"/></td> -->
                                     <td/>
                                     <td>
                                         <t t-if="inv.move_type != 'in_refund' and refund">
@@ -152,6 +152,7 @@
         <field name="report_file">osi_l10n_us_payment_nacha_email.report_details_payment_receipt</field>
         <field name="binding_model_id" ref="account.model_account_payment"/>
         <field name="binding_type">report</field>
+        <field name="print_report_name">'Payment Receipt - %s' % (object.name)</field>
     </record>
 
 </odoo>

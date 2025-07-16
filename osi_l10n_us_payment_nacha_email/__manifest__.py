@@ -14,6 +14,8 @@
     ],
     "data": [
         "data/mail_template_data.xml",
+        "data/function.xml",
+        "data/server_action_data.xml",
         "report/report_payment_receipt_templates.xml",
         "views/account_batch_payment_views.xml",
     ],
