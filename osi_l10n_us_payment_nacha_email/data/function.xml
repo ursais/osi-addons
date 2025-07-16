@@ -1,0 +1,10 @@
+<odoo>
+	<function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value
+                eval="[('module', '=', 'account'),
+                ('name', 'in', ('account_send_payment_receipt_by_email_action_multi', 'account_send_payment_receipt_by_email_action'))]" />
+        </function>
+        <value eval="{'noupdate': False}" />
+    </function>
+</odoo>
