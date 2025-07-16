@@ -1,4 +1,5 @@
 <odoo>
+
 	<function name="write" model="ir.model.data">
         <function name="search" model="ir.model.data">
             <value
@@ -7,4 +8,5 @@
         </function>
         <value eval="{'noupdate': False}" />
     </function>
+
 </odoo>

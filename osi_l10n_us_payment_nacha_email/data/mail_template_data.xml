@@ -27,7 +27,7 @@
   	</record>
 
   	<record id="osi_ap_addresses.custom_mail_template_data_payment_receipt" model="mail.template">
-  		<field name="report_template_ids" eval="[(6, 0, [ref('osi_l10n_us_payment_nacha_email.action_report_detailed_payment_receipt')])]"
-  		 />
+  		<field name="report_template_ids" eval="[(6, 0, [ref('osi_l10n_us_payment_nacha_email.action_report_detailed_payment_receipt')])]" />
   	</record>
+
 </odoo>
