@@ -30,4 +30,31 @@
         <field name="active" eval="True" />
     </record>
 
+    <record id="exception_so_product_state_update" model="exception.rule">
+        <field name="name">Sale Order with Tech Exception Product</field>
+        <field name="description">The sale order has either a line with a product in 'Tech Exception' state or a line has a bom component in 'Tech Exception' state.</field>
+        <field name="sequence">74</field>
+        <field name="model">sale.order</field>
+        <field name="code">failed = any(line.product_state_id.code == 'TE' or (line.bom_id and any(component.product_id.product_state_id.code == 'TE' for component in line.bom_id.bom_line_ids)) for line in self.order_line)</field>
+        <field name="active" eval="True" />
+    </record>
+
+    <record id="exception_mrp_product_state_update" model="exception.rule">
+        <field name="name">Manufacturing Order with Tech Exception Product</field>
+        <field name="description">The manufacturing order's finished product or its components are in 'Tech Exception' state.</field>
+        <field name="sequence">76</field>
+        <field name="model">mrp.production</field>
+        <field name="code">failed = (self.product_id.product_tmpl_id.product_state_id.code == 'TE' or any(move.product_id.product_tmpl_id.product_state_id.code == 'TE' for move in self.move_raw_ids))</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="exception_picking_product_state_update" model="exception.rule">
+        <field name="name">Delivery Order with Tech Exception Product</field>
+        <field name="description">The delivery order contains at least one move line with a product in 'Tech Exception' state.</field>
+        <field name="sequence">75</field>
+        <field name="model">stock.picking</field>
+        <field name="code">failed = any((move.product_tmpl_id.product_state_id.code == 'TE') or (move.sale_line_id.bom_id and any(component.product_id.product_tmpl_id.product_state_id.code == 'TE' for component in move.sale_line_id.bom_id.bom_line_ids)) and move.picking_id.picking_type_code == "outgoing" for move in self.move_ids)</field>
+        <field name="active" eval="True"/>
+    </record>
+
 </odoo>
