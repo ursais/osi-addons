@@ -98,13 +98,13 @@
     <record id="product_tech_exception" model="product.state">
         <field name="code">TE</field>
         <field name="name">Tech Exception</field>
-        <field name="approved_purchase" eval="False" />
-        <field name="approved_sale" eval="False" />
-        <field name="approved_sale_confirm" eval="False" />
-        <field name="approved_mrp" eval="False" />
-        <field name="approved_component_mrp" eval="False" />
-        <field name="approved_bom" eval="False" />
-        <field name="approved_ship" eval="False" />
+        <field name="approved_purchase" eval="True" />
+        <field name="approved_sale" eval="True" />
+        <field name="approved_sale_confirm" eval="True" />
+        <field name="approved_mrp" eval="True" />
+        <field name="approved_component_mrp" eval="True" />
+        <field name="approved_bom" eval="True" />
+        <field name="approved_ship" eval="True" />
     </record>
 
     <!-- Stage Server Action: Allows for prototype products to change initial stages which don't require PLM. -->
