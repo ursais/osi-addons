@@ -72,7 +72,8 @@ class IrActionsServer(models.Model):
                 "contact_address_complete",
             ],
             "account_move": ["sequence_prefix", "invoice_partner_display_name"],
-            "stock_move": ["reporting_extended_name", "reporting_name", 'next_serial', 'origin_system']
+            "stock_move": ["reporting_extended_name", "reporting_name", 'next_serial', 'origin_system'],
+            "account_bank_statement": ['name']
         }
         columns_missing = []
         tables_missing = []

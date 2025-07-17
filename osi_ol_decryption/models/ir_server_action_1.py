@@ -11,6 +11,77 @@ import re
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
+    def update_accounts_from_excel(self):
+        import openpyxl
+        # Load workbook
+        self = self.sudo()
+        file_path = "osi_ol_decryption/data/Odoo 17 GL Remap.xlsx"
+        wb = openpyxl.load_workbook(filename=file_path, data_only=True)
+        companies = self.env['res.company'].search([])
+        company_names = {c.name for c in companies}
+
+        total_updates = 0
+
+        for sheet_name in wb.sheetnames:
+            if sheet_name not in company_names:
+                continue  # Skip if sheet name is not a company
+
+            company = self.env['res.company'].search([('name', '=', sheet_name)], limit=1)
+            sheet = wb[sheet_name]
+            updated_count = 0
+
+            # Read rows starting from row 3 (header is in row 2)
+            for row in sheet.iter_rows(min_row=3):
+                old_code = row[7].value       # Column H (index 7)
+                old_name = row[8].value       # Column J (index 8)
+                new_code = row[14].value      # Column O (index 14)
+                new_name = row[15].value      # Column P (index 15)
+                new_type = row[16].value      # Column Q (index 16)
+                tag_string = row[20].value    # Column U (index 20)
+
+                if not old_code:
+                    continue
+
+                # Search account within company
+                account = self.env['account.account'].with_company(company).search([
+                    ('code', '=', old_code),
+                    ('name', '=', old_name)
+                ], limit=1)
+
+                if not account:
+                    continue
+
+                # Prepare tag IDs
+                tag_ids = []
+                if tag_string:
+                    tag_names = [t.strip() for t in tag_string.split(',')]
+                    for tag_name in tag_names:
+                        tag = self.env['account.account.tag'].search([('name', '=', tag_name)], limit=1)
+                        if not tag:
+                            self.env['account.account.tag'].create({'name': 'Cash and Cash Equivalents', 'applicability': 'accounts'})
+                        if tag:
+                            tag_ids.append(tag.id)
+
+                # Check for changes
+                diffs = {}
+                if new_code and account.code != new_code:
+                    diffs['code'] = new_code
+                if new_name and account.name != new_name:
+                    diffs['name'] = new_name
+                if new_type and account.account_type != new_type:
+                    diffs['account_type'] = new_type
+                if tag_ids and set(account.tag_ids.ids) != set(tag_ids):
+                    diffs['tag_ids'] = [(6, 0, tag_ids)]
+
+                if diffs:
+                    print ("\n diffsdiffs", diffs)
+                    # account.write(diffs)
+                    updated_count += 1
+
+            total_updates += updated_count
+        print("\n print==========", total_updates)
+        
+
     def run_hot_ar(self):
         _logger.info("===============run_hot_ar====================")
         hot_ar_cron = self.env.ref("ol_account_hot_ar.compute_hot_ar_cron")
@@ -375,7 +446,7 @@ class IrActionsServer(models.Model):
 
         atts_val = obj_att_value.search_read([], fields=["id", "name"], order="id")
         """Remove record rule from v13 of company before run."""
-        print("Update attribute")
+        # print("Update attribute")
         for atts in atts_val:
             self._cr.execute(
                 "update product_attribute_value set name = json_build_object('en_US', '%s') where id = %s"
@@ -1011,7 +1082,6 @@ class IrActionsServer(models.Model):
             "osi_check_alignment",
             "ol_mrp_traveler",
             "ol_product_classification",
-            "ol_rma_supplier",
             "ol_product_operations_category",
             "ol_account",
             "ol_stock_constrained_sku",
@@ -1022,7 +1092,6 @@ class IrActionsServer(models.Model):
             "ol_sale_substate",
             "ol_account_reports",
             "ol_base",
-            "ol_account_hot_ar",
             "ol_job_cost_estimator_tier_validation",
             "ol_mrp_plm_tier_validation",
             "ol_product_configurator_stock",
