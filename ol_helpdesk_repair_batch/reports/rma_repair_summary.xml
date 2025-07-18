@@ -1,212 +1,198 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<!-- Report Action -->
-  <record id="action_report_rma_repair_summary" model="ir.actions.report">
-    <field name="name">Repair Summary</field>
-    <field name="model">helpdesk.rma</field>
-    <field name="report_type">qweb-pdf</field>
-    <field name="print_report_name">'%s Repair Summary' % (object.name or '')</field>
-    <field name="report_name">ol_pdf_reports.report_rma_repair_summary</field>
-    <field name="report_file">ol_pdf_reports.report_rma_repair_summary</field>
-    <field name="binding_model_id" ref="ol_rma.model_helpdesk_rma" />
-    <field name="paperformat_xmlid_base">ol_templates.ol_report_paper_format</field>
-  </record>
+    <!-- Report Action -->
+    <record id="action_report_rma_repair_summary" model="ir.actions.report">
+        <field name="name">Repair Summary</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="print_report_name">'%s Repair Summary' % (object.name or '')</field>
+        <field name="report_name">ol_helpdesk_repair_batch.report_rma_repair_summary</field>
+        <field name="report_file">ol_helpdesk_repair_batch.report_rma_repair_summary</field>
+        <field name="binding_model_id" ref="helpdesk.model_helpdesk_ticket" />
+        <field name="paperformat_xmlid_base">ol_templates.ol_report_paper_format</field>
+    </record>
 
-  <!-- Main template -->
-  <template id="report_rma_repair_summary">
-    <t t-call="web.html_container">
-      <t t-foreach="docs" t-as="doc">
-        <!-- Find the correct language-->
-        <t t-set="language"
-           t-value="doc.sale_order_id.get_language()"/>
-        <!-- Re-browse of the record with the correct language -->
-        <t t-set="rma" t-value="doc.with_context(lang=language)"/>
-        <!-- Call the template document with the language set -->
-        <t t-call="ol_pdf_reports.report_rma_repair_summary_template" t-lang="language"/>
-      </t>
-    </t>
-  </template>
-
-  <template id="report_rma_repair_summary_template">
-
-    <t t-call="ol_templates.external_layout">
-      <!-- Set the name and title of the Report -->
-      <t t-set="report_title">Repair Summary</t>
-      <!--Set template variables-->
-      <t t-set="title" t-value="report_title"/>
-      <t t-set="sale_order" t-value="rma.sale_order_id"/>
-      <t t-set="product_lines" t-value="product_lines[rma.id]"/>
-      <t t-set="customer_company_name" t-value="sale_order.partner_id.get_company_name()"/>
-      <t t-set="currency" t-value="sale_order.currency_id"/>
-      <t t-set="company" t-value="sale_order.company_id"/>
-      <t t-set="partner" t-value="sale_order.partner_id"/>
-      <t t-set="partner_shipping_id" t-value="rma.partner_shipping_id or sale_order.partner_shipping_id"/>
-
-      <!-- Report specific styling -->
-      <t t-set="report_custom_page_style">
-        .ls-sale-line{
-        margin-bottom: 30px;
-        }
-        .subtotal-text.taxes{
-        text-align: right;
-        font-size: 10px;
-        }
-        .ls-spacer {
-        width: 50%;
-        height: 100px;
-        display: inline-block;
-        }
-        .ls-spacer-half {
-        width: 50%;
-        height: 50px;
-        display: inline-block;
-        }
-        .ls-address {
-        width: 30%;
-        float: left;
-        }
-        .ls-sale-line-name {
-        font-size: 18px;
-        }
-        .rma-notes {
-        white-space: pre-line;
-        }
-      </t>
-
-      <!--The first main information block-->
-      <div class="ol_report_info_row ol_flex">
-
-        <!--Basic Invoice information-->
-        <div class="ol_report_info_row_col info">
-
-          <div class="ol_report_info_row_col_title ol_flex">
-            <div class="key">
-              <tag>RMA</tag>
-            </div>
-            <div class="value">
-              <t t-esc="rma.name"/>
-            </div>
-          </div>
-
-          <div class="ol_report_info_row_col_line ol_flex">
-            <div class="key">
-              <tag>Order Date</tag>
-            </div>
-            <div class="value">
-              <t t-esc="sale_order.date_order" t-options='{"widget": "date_formatter"}'/>
-            </div>
-          </div>
-
-          <div class="ol_report_info_row_col_line ol_flex">
-            <div class="key">
-              <tag>Order</tag>
-            </div>
-            <div class="value">
-              <t t-esc="sale_order.detailed_name"/>
-            </div>
-          </div>
-
-        </div>
-
-        <!--Shipping related information-->
-        <div class="ol_report_info_row_col shipping">
-          <t t-call="ol_templates.address">
-            <t t-set="text">Ship To</t>
-            <t t-set="show_vat_id" t-value="True"/>
-            <t t-set="address" t-value="partner_shipping_id"/>
-          </t>
-        </div>
-
-      </div>
-
-      <!--Product list-->
-      <t t-call="ol_pdf_reports.rma_products">
-        <t t-set="products_title">
-          Hardware Solution
+    <!-- Main template -->
+    <template id="report_rma_repair_summary">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <!-- Find the correct language-->
+                <t t-set="language" t-value="doc.partner_id.lang"/>
+                <!-- Call the template document with the language set -->
+                <t t-call="ol_helpdesk_repair_batch.report_rma_repair_summary_template">
+                    <t t-set="rma" t-value="doc.with_context(lang=language)"/>
+                </t>
+            </t>
         </t>
-      </t>
+    </template>
 
-    </t>
-  </template>
+    <template id="report_rma_repair_summary_template">
+        <t t-call="ol_templates.external_layout">
+            <!-- Set the name and title of the Report -->
+            <t t-set="report_title">Repair Summary</t>
+            <!--Set template variables-->
+            <t t-set="title" t-value="report_title"/>
+            <!-- multiple sale orders can be on a rma so display all (although most of the time only one will be added.)-->
+            <t t-set="sale_orders" t-value="', '.join(so.name for so in rma.original_sale_order_ids)"/>
+            <!-- for general fields on the report use the first order -->
+            <t t-set="sale_order" t-value="rma.original_sale_order_ids[0] or False"/>
+            <t t-set="product_lines" t-value="product_lines[rma.id]"/>
+            <t t-set="customer_company_name" t-value="(rma.partner_id and (rma.partner_id.commercial_partner_id or rma.partner_id)) or False"/>
+            <t t-set="currency" t-value="(sale_order and sale_order.currency_id) or rma.company_id.currency_id"/>
+            <t t-set="company" t-value="(sale_order and sale_order.company_id) or rma.company_id"/>
+            <t t-set="partner" t-value="(sale_order and sale_order.partner_id) or rma.partner_id"/>
+            <t t-set="partner_shipping_id" t-value="(sale_order and sale_order.partner_shipping_id) or partner_id"/>
 
-  <template id="rma_products">
-    <div class="ol_report_products_row">
-      <div class="ol_products_header ol_flex ol_flex_just_cont_space_between">
-        <div class="ol_products_title ol_rma ol_flex ol_flex_reverse">
-          <!--The title-->
-          <t t-esc="products_title"/>
-        </div>
-      </div>
+            <!-- Report specific styling -->
+            <t t-set="report_custom_page_style">
+              .ol-sale-line{
+              margin-bottom: 30px;
+              }
+              .subtotal-text.taxes{
+              text-align: right;
+              font-size: 10px;
+              }
+              .ol-spacer {
+              width: 50%;
+              height: 100px;
+              display: inline-block;
+              }
+              .ol-spacer-half {
+              width: 50%;
+              height: 50px;
+              display: inline-block;
+              }
+              .ol-address {
+              width: 30%;
+              float: left;
+              }
+              .ol-sale-line-name {
+              font-size: 18px;
+              }
+              .rma-notes {
+              white-space: pre-line;
+              }
+            </t>
 
-      <!--The list of products-->
-      <div class="ol_product_lines">
-        <t t-foreach="product_lines" t-as="product_line">
-          <t t-set="product_id" t-value="product_line['product_id']"/>
-          <div class="ol_products_line">
-            <!--Product: image, name, sku, data-->
-            <div class="ol_products_info_cont ol_flex">
-              <div class="ol_product_image">
-
-                <t t-if="product_id.image_128">
-                  <img t-attf-src="data:image;base64,{{product_id.image_128}}"/>
-                </t>
-                <t t-else="">
-                  <img
-                      t-attf-src="data:image;base64,{{sale_order.company_id.placeholder_image_product}}"/>
-                </t>
-
-              </div>
-
-              <div class="ol_product_data">
-                <div class="ol_flex">
-                  <div class="product_info_name ol_rma">
-                    <div class="ol_product_name">
-                      <t t-esc="product_id.name"/>
-                      <small t-if="product_line['qty'] > 1">
-                        (Qty:<t t-esc="product_line['qty']"/>)
-                      </small>
+            <!--The first main information block-->
+            <div class="ol_report_info_row ol_flex">
+                <!--Basic Invoice information-->
+                <div class="ol_report_info_row_col info">
+                    <div class="ol_report_info_row_col_title ol_flex">
+                        <div class="key">
+                            <tag>RMA</tag>
+                        </div>
+                        <div class="value">
+                            <t t-esc="rma.name"/>
+                        </div>
                     </div>
-                    <div class="ol_product_default_code" t-esc="product_id.default_code"/>
-                  </div>
+
+                    <div class="ol_report_info_row_col_line ol_flex">
+                        <div class="key">
+                            <tag>Order Date</tag>
+                        </div>
+                        <div class="value">
+                            <t t-esc="sale_order.date_order" t-options='{"widget": "date_formatter"}'/>
+                        </div>
+                    </div>
+
+                    <div class="ol_report_info_row_col_line ol_flex">
+                        <div class="key">
+                          <tag>Order(s)</tag>
+                        </div>
+                        <div class="value">
+                            <t t-esc="sale_orders"/>
+                        </div>
+                    </div>
                 </div>
-              </div>
+
+                <!--Shipping related information-->
+                <div class="ol_report_info_row_col shipping">
+                    <t t-call="ol_templates.address">
+                        <t t-set="text">Ship To</t>
+                        <t t-set="show_vat_id" t-value="True"/>
+                        <t t-set="address" t-value="partner_shipping_id"/>
+                    </t>
+                </div>
             </div>
 
-            <!--System serial numbers and Product notes-->
-            <t t-set="serial_number" t-value="product_line['serial_number']"/>
-            <t t-set="notes" t-value="product_line['notes']"/>
-            <div class="ol_report_order_notes_full" t-if="notes or serial_number"
-                 style="margin-top: 10px;">
-              <div class="order-notes">
-
-                <t t-if="serial_number">
-                  <div>
-                    <strong>
-                      <tag>System Serial Number:</tag>
-                      <t t-esc="serial_number"/>
-                    </strong>
-                  </div>
+            <!--Product list-->
+            <t t-call="ol_helpdesk_repair_batch.rma_products">
+                <t t-set="products_title">
+                    Hardware Solution
                 </t>
-
-                <t t-if="notes">
-                  <div style="margin-top: 10px;">
-                    <strong>
-                      <tag>RMA Notes</tag>
-                    </strong>
-                  </div>
-                  <div style="overflow-wrap: break-word;">
-                    <p t-raw="notes"/>
-                  </div>
-                </t>
-
-              </div>
-            </div>
-          </div>
+            </t>
         </t>
-      </div>
+    </template>
 
-    </div>
-  </template>
+    <template id="rma_products">
+        <div class="ol_report_products_row">
+            <div class="ol_products_header ol_flex ol_flex_just_cont_space_between">
+                <div class="ol_products_title ol_rma ol_flex ol_flex_reverse">
+                    <!--The title-->
+                    <t t-esc="products_title"/>
+                </div>
+            </div>
+
+            <!--The list of products-->
+            <div class="ol_product_lines">
+                <t t-foreach="product_lines" t-as="product_line">
+                    <t t-set="product_id" t-value="product_line['product_id']"/>
+                    <div class="ol_products_line">
+                        <!--Product: image, name, sku, data-->
+                        <div class="ol_products_info_cont ol_flex">
+                            <div class="ol_product_image">
+                                <t t-if="product_id.image_128">
+                                    <img t-attf-src="data:image;base64,{{product_id.image_128}}"/>
+                                </t>
+                                <t t-else="">
+                                    <img t-attf-src="data:image;base64,{{sale_order.company_id.placeholder_image_product}}"/>
+                                </t>
+                            </div>
+                            <div class="ol_product_data">
+                                <div class="ol_flex">
+                                    <div class="product_info_name ol_rma">
+                                        <div class="ol_product_name">
+                                            <t t-esc="product_id.name"/>
+                                            <small t-if="product_line['qty'] > 1">
+                                              (Qty:<t t-esc="product_line['qty']"/>)
+                                            </small>
+                                        </div>
+                                        <div class="ol_product_default_code" t-esc="product_id.default_code"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--System serial numbers and Product notes-->
+                        <t t-set="serial_number" t-value="product_line['serial_number']"/>
+                        <t t-set="notes" t-value="product_line['notes']"/>
+                        <div class="ol_report_order_notes_full" t-if="notes or serial_number" style="margin-top: 10px;">
+                            <div class="order-notes">
+                                <t t-if="serial_number">
+                                    <div>
+                                        <strong>
+                                            <tag>System Serial Number:</tag>
+                                            <t t-esc="serial_number"/>
+                                        </strong>
+                                    </div>
+                                </t>
+                                <t t-if="notes">
+                                    <div style="margin-top: 10px;">
+                                        <strong>
+                                            <tag>RMA Notes</tag>
+                                        </strong>
+                                    </div>
+                                    <div style="overflow-wrap: break-word;">
+                                        <p t-raw="notes"/>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </template>
 
 </odoo>
