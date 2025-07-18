@@ -21,9 +21,20 @@ class RepairOrder(models.Model):
     show_create_removal_button = fields.Boolean(
         compute="_compute_show_create_removal_button",
     )
+    scrap_ids = fields.One2many(
+        comodel_name="stock.scrap",
+        inverse_name="repair_id",
+        string="Scrap Records",
+    )
+    scrap_count = fields.Integer(compute="_compute_scrap_count", string="Scrap Orders")
 
     # END #######
     # METHODS ###
+
+    @api.depends("scrap_ids")
+    def _compute_scrap_count(self):
+        for rec in self:
+            rec.scrap_count = len(rec.scrap_ids)
 
     @api.depends("move_ids")
     def _compute_show_create_removal_button(self):
@@ -48,6 +59,45 @@ class RepairOrder(models.Model):
         res = super()._action_repair_confirm()
         if self.repair_batch_id:
             self.repair_batch_id._update_batch_state()
+        return res
+
+    def action_repair_done(self):
+        # Raise validation error if there are remove lines missing reason and note
+        for repair in self:
+            for line in repair.move_ids:
+                if line.repair_line_type == "remove" and line.quantity > 0:
+                    if not line.reason_code_id or not line.note:
+                        raise ValidationError(
+                            _(
+                                f"""Repair Order {repair.name}: Scrap Reason Code and
+                                 Note are required for remove lines."""
+                            )
+                        )
+
+        # Now run original repair done
+        res = super().action_repair_done()
+
+        # Create scrap records for all remove lines
+        for repair in self:
+            for line in repair.move_ids:
+                if line.repair_line_type == "remove" and line.quantity > 0:
+                    scrap_vals = {
+                        "product_id": line.product_id.id,
+                        "product_uom_id": line.product_uom.id,
+                        "origin": repair.name,
+                        "reason_code_id": line.reason_code_id.id,
+                        "note": line.note,
+                        "company_id": repair.company_id.id,
+                        "scrap_qty": line.quantity,
+                        "repair_id": repair.id,
+                        "move_ids": [(6, 0, [line.id])],
+                        "location_id": line.location_id.id,
+                        "scrap_location_id": line.location_dest_id.id,
+                    }
+                    if line.lot_ids:
+                        scrap_vals["lot_ids"] = line.lot_ids.ids
+                    scrap = self.env["stock.scrap"].create(scrap_vals)
+                    scrap.action_validate()
         return res
 
     def action_create_removal_lines(self):

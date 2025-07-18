@@ -33,6 +33,11 @@ class RepairBatchLine(models.Model):
         string="Type",
         required=True,
     )
+    reason_code_id = fields.Many2one(
+        comodel_name="scrap.reason.code",
+        string="Reason Code",
+    )
+    note = fields.Char(string="note")
 
     # END #######
     # METHODS ###

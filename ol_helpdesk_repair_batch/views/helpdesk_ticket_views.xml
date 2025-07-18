@@ -138,7 +138,7 @@
                                 <field name="lot_id" optional="show" />
                                 <field name="warranty_expiration_date" optional="show" />
                                 <field name="location_id" optional="hide" />
-                                <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show" />
+                                <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide" />
                                 <field name="state" optional="show" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')" />
                                 <field name="activity_exception_decoration" widget="activity_exception" />
                             </tree>

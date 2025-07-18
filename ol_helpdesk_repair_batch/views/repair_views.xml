@@ -5,6 +5,17 @@
         <field name="model">repair.order</field>
         <field name="inherit_id" ref="repair.view_repair_order_form" />
         <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="%(stock.action_stock_scrap)d"
+                        type="action"
+                        context="{'search_default_repair_id': active_id}"
+                        string="Scrap Orders"
+                        class="btn-secondary"
+                        icon="fa-trash"
+                        invisible="scrap_count == 0"
+                />
+                <field name="scrap_count" widget="statinfo" string="Scrap Orders" />
+            </xpath>
             <xpath expr="//field[@name='move_ids']" position="before">
                 <field name="show_create_removal_button" invisible="1" />
                 <button
@@ -18,6 +29,10 @@
             <xpath expr="//field[@name='company_id']" position="after">
                 <field name="ticket_id" />
                 <field name="repair_batch_id" />
+            </xpath>
+            <xpath expr="//field[@name='picked']" position="after">
+                <field name="reason_code_id" optional="show" />
+                <field name="note" optional="show"/>
             </xpath>
         </field>
     </record>

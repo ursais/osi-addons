@@ -206,6 +206,7 @@ class RepairBatch(models.Model):
                                 "ticket_id": batch.ticket_id.id,
                                 "repair_batch_id": batch.id,
                                 "partner_id": batch.partner_id.id,
+                                "schedule_date": batch.schedule_date,
                             }
                         )
                     else:
@@ -332,6 +333,8 @@ class RepairBatch(models.Model):
                                 "product_id": part.product_id.id,
                                 "product_uom_qty": part.quantity,
                                 "repair_line_type": part.repair_line_type,
+                                "reason_code_id": part.reason_code_id,
+                                "note": part.note,
                             }
                         )
                     else:
@@ -343,6 +346,8 @@ class RepairBatch(models.Model):
                                 "product_id": part.product_id.id,
                                 "product_uom_qty": part.quantity,
                                 "repair_line_type": part.repair_line_type,
+                                "reason_code_id": part.reason_code_id,
+                                "note": part.note,
                             }
                         )
 

@@ -14,11 +14,13 @@
         "ol_base",
         "ol_templates",
         "ol_sale",
+        "ol_stock",
         "ol_warranty",
         "helpdesk_repair",
         "helpdesk_timesheet",
         "sale_order_type",
         "mrp_repair_component_history",
+        "scrap_reason_code",
     ],
     # always loaded
     "data": [
@@ -38,6 +40,7 @@
         "views/helpdesk_ticket_views.xml",
         "views/repair_batch.xml",
         "views/repair_views.xml",
+        "views/stock_scrap_views.xml",
         "views/stock_warehouse_views.xml",
     ],
     "installable": True,
