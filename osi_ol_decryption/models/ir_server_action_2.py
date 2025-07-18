@@ -408,6 +408,8 @@ class IrActionsServer(models.Model):
         total = len(templates)
         _logger.info("Total products to process: %s", total)
         counter = 0
+        pav_obj = self.env["product.attribute.value"]
+        ptav_obj = self.env["product.template.attribute.value"]
         for offset in range(0, total, batch_size):
             batch = templates[offset:offset + batch_size]
             _logger.info("Processing batch: Offset=%s, Size=%s", offset, len(batch))
@@ -415,7 +417,6 @@ class IrActionsServer(models.Model):
                 _logger.info("→ Processing Product Template: %s (ID: %s)", template.name, template.id)
                 counter += 1
                 active_attribute_line_ids = self.get_attribute_line_ids(template)
-                pav_obj = self.env["product.attribute.value"]
                 for attribute_line_id in active_attribute_line_ids:
                     attribute_id = attribute_line_id.attribute_id
                     if attribute_line_id.value_ids and (not attribute_line_id.default_val or not attribute_line_id.default_val.active):
@@ -515,7 +516,7 @@ class IrActionsServer(models.Model):
 
                             if not ptav.product_attribute_value_id.active:
                                 active_value_id = fallback_value
-                                active_ptav = ptavobj.search([("product_attribute_value_id","=",active_value_id.id),("product_tmpl_id","=",template.id),("attribute_id.name","=",active_value_id.attribute_id.name),("attribute_line_id","=",ptav.attribute_line_id.id)])
+                                active_ptav = ptav_obj.search([("product_attribute_value_id","=",active_value_id.id),("product_tmpl_id","=",template.id),("attribute_id.name","=",active_value_id.attribute_id.name),("attribute_line_id","=",ptav.attribute_line_id.id)])
                                 if active_ptav:
                                     if active_ptav.ptav_active and active_ptav.id != ptav.id:
                                         ptav.write({"ptav_active":False})
@@ -532,49 +533,6 @@ class IrActionsServer(models.Model):
                                         """, (active_value_id.id,ptav.id))
                                     cr.commit()
                             
-                            # if not ptav.product_attribute_value_id.active:
-                            #     active_value_id = fallback_value
-                            #     alterntive_ptav = self.env["product.template.attribute.value"].search([("product_attribute_value_id","=",active_value_id.id), ("product_tmpl_id","=",template.id),("ptav_active","=",False),("attribute_line_id","=",attribute_line_id.id)])
-                            #     alterntive_ptav2 = self.env["product.template.attribute.value"].search([("name","=",ptav.name), ("product_tmpl_id","=",template.id),("ptav_active","=",True),("attribute_line_id","=",attribute_line_id.id)])
-                            #     if alterntive_ptav:
-                            #         alterntive_ptav.write({"ptav_active":True})
-                            #         ptav.write({"ptav_active":False})
-                            #         cr.commit()
-                            #     elif alterntive_ptav2 and len(alterntive_ptav2)>1:
-                            #         active_ones = alterntive_ptav2.filtered(lambda l :l.product_attribute_value_id.id == active_value_id.id)
-                            #         if not active_ones:
-                            #             min_id = min(alterntive_ptav2.ids)
-                            #             max_id = max(alterntive_ptav2.ids)
-                            #             cr.execute("""
-                            #                     UPDATE product_template_attribute_value
-                            #                     SET product_attribute_value_id = %s
-                            #                     WHERE id = %s AND ptav_active = true;
-                            #                 """, (active_value_id.id,min_id))
-                            #             cr.commit()
-
-                            #             cr.execute("""
-                            #                     UPDATE product_template_attribute_value
-                            #                     SET ptav_active = 'f'
-                            #                     WHERE id in %s AND ptav_active = true;
-                            #                 """, (tuple(max_id)))
-                            #             cr.commit()
-                            #         else:
-                            #             new_ids = alterntive_ptav2 - active_ones
-                            #             if new_ids:
-                            #                 cr.execute("""
-                            #                     UPDATE product_template_attribute_value
-                            #                     SET ptav_active = FALSE
-                            #                     WHERE id = ANY(%s) AND ptav_active = TRUE;
-                            #                 """, (list(new_ids.ids),)) 
-                            #                 cr.commit()
-                            #     else:
-                            #         cr.execute("""
-                            #                 UPDATE product_template_attribute_value
-                            #                 SET product_attribute_value_id = %s
-                            #                 WHERE id = %s AND ptav_active = true;
-                            #             """, (active_value_id.id,ptav.id))
-                            #         cr.commit()
-
                             if ptav.attribute_line_id.is_qty_required:
                                 query = """
                                     UPDATE attribute_value_qty
