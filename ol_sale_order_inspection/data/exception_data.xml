@@ -1,4 +1,5 @@
 <odoo>
+
 	<record id="exception_finance_manual_exeception_mrp" model="exception.rule">
         <field name="name">Finance Manual Exception</field>
         <field name="description">Manual Finance Hold</field>
@@ -20,7 +21,7 @@
     </record>
 
     <record id="exception_do_not_ship" model="exception.rule">
-        <field name="name">Delivery Order Do Not Ship Exeception</field>
+        <field name="name">Delivery Order Do Not Ship Exception</field>
         <field name="description">Do Not Ship</field>
         <field name="sequence">78</field>
         <field name="model">stock.picking</field>
@@ -30,7 +31,7 @@
     </record>
 
     <record id="exception_do_not_build_ship" model="exception.rule">
-        <field name="name">Delivery Order Do Not Build Exeception</field>
+        <field name="name">Delivery Order Do Not Build Exception</field>
         <field name="description">Do Not Build</field>
         <field name="sequence">79</field>
         <field name="model">stock.picking</field>
@@ -40,7 +41,7 @@
     </record>
 
     <record id="exception_do_not_build_mrp" model="exception.rule">
-        <field name="name">Do Not Build Exeception</field>
+        <field name="name">Do Not Build Exception</field>
         <field name="description">Do Not Build</field>
         <field name="sequence">80</field>
         <field name="model">mrp.production</field>
