@@ -1,0 +1,15 @@
+<odoo noupdate="1">
+
+	<record id="inspection_do_not_build" model="sale.order.inspection">
+		<field name="name">Do Not Build</field>
+	</record>
+
+	<record id="inspection_do_not_ship" model="sale.order.inspection">
+		<field name="name">Do Not Ship</field>
+	</record>
+
+	<record id="inspection_finance_manual_exception" model="sale.order.inspection">
+		<field name="name">Finance Manual Exception</field>
+	</record>
+
+</odoo>
