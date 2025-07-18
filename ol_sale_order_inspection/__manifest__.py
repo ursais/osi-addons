@@ -18,6 +18,8 @@
     ],
     # always loaded
     "data": [
+        "data/inspection_data.xml",
+        "data/exception_data.xml",
         "security/ir.model.access.csv",
         "views/sale_order_inspection_view.xml",
         "views/sale_order_view.xml",

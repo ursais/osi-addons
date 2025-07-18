@@ -1,0 +1,52 @@
+<odoo>
+	<record id="exception_finance_manual_exeception_mrp" model="exception.rule">
+        <field name="name">Finance Manual Exception</field>
+        <field name="description">Manual Finance Hold</field>
+        <field name="sequence">76</field>
+        <field name="model">mrp.production</field>
+        <field name="exception_type">by_domain</field>
+        <field name="domain">[("sale_order_id.order_inspection_ids.name", "=", 'Finance Manual Exception')]</field>
+        <field name="active" eval="True" />
+    </record>
+
+    <record id="exception_finance_manual_exeception_picking" model="exception.rule">
+        <field name="name">Delivery Order Finance Manual Exception</field>
+        <field name="description">Manual Finance Hold</field>
+        <field name="sequence">77</field>
+        <field name="model">stock.picking</field>
+        <field name="exception_type">by_domain</field>
+        <field name="domain">[("sale_id.order_inspection_ids.name", "=", 'Finance Manual Exception'), ('picking_type_code', '=', 'outgoing')]</field>
+        <field name="active" eval="True" />
+    </record>
+
+    <record id="exception_do_not_ship" model="exception.rule">
+        <field name="name">Delivery Order Do Not Ship Exeception</field>
+        <field name="description">Do Not Ship</field>
+        <field name="sequence">78</field>
+        <field name="model">stock.picking</field>
+        <field name="exception_type">by_domain</field>
+        <field name="domain">[("sale_id.order_inspection_ids.name", "=", 'Do Not Ship'), ('picking_type_code', '=', 'outgoing')]</field>
+        <field name="active" eval="True" />
+    </record>
+
+    <record id="exception_do_not_build_ship" model="exception.rule">
+        <field name="name">Delivery Order Do Not Build Exeception</field>
+        <field name="description">Do Not Build</field>
+        <field name="sequence">79</field>
+        <field name="model">stock.picking</field>
+        <field name="exception_type">by_domain</field>
+        <field name="domain">[("sale_id.order_inspection_ids.name", "=", 'Do Not Build'), ('picking_type_code', '=', 'outgoing')]</field>
+        <field name="active" eval="True" />
+    </record>
+
+    <record id="exception_do_not_build_mrp" model="exception.rule">
+        <field name="name">Do Not Build Exeception</field>
+        <field name="description">Do Not Build</field>
+        <field name="sequence">80</field>
+        <field name="model">mrp.production</field>
+        <field name="exception_type">by_domain</field>
+        <field name="domain">[("sale_order_id.order_inspection_ids.name", "=", 'Do Not Build')]</field>
+        <field name="active" eval="True" />
+    </record>
+
+</odoo>
