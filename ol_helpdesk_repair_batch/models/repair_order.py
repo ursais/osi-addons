@@ -26,7 +26,11 @@ class RepairOrder(models.Model):
         inverse_name="repair_id",
         string="Scrap Records",
     )
-    scrap_count = fields.Integer(compute="_compute_scrap_count", string="Scrap Orders")
+    scrap_count = fields.Integer(
+        compute="_compute_scrap_count",
+        string="Scrap Orders",
+    )
+    external_notes = fields.Text(string="Customer Notes")
 
     # END #######
     # METHODS ###

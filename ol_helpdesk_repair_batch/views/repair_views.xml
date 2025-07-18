@@ -34,6 +34,14 @@
                 <field name="reason_code_id" optional="show" />
                 <field name="note" optional="show"/>
             </xpath>
+            <xpath expr="//field[@name='internal_notes']" position="replace">
+                <group name="internal_notes_grp" string="Internal Notes">
+                    <field name="internal_notes" colspan="2" nolabel="1" widget="html" readonly="state in 'done'" />
+                </group>
+                <group name="external_notes_grp" string="Customer Notes">
+                    <field name="external_notes" colspan="2" nolabel="1" widget="html" readonly="state in 'done'" />
+                </group>
+            </xpath>
         </field>
     </record>
 
