@@ -1,7 +1,8 @@
 <odoo noupdate="1">
+
 	<record id="sale_order_type_budgetary" model="sale.order.type">
         <field name="name">Budgetary</field>
         <field name="company_id" eval="False" />
-        <field name="sequence_id" ref="sale.seq_sale_order" />
     </record>
+
 </odoo>
