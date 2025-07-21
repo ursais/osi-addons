@@ -28,9 +28,11 @@ class ProductTemplate(models.Model):
             "only in these regions."
         ),
     )
-    has_advanced_configuration = fields.Boolean(
+    has_advanced_configuration = fields.Text(
+        string="Has Advanced Configurations",
         compute="_compute_has_advanced_configuration",
         store=True,
+        readonly=True,
     )
 
     # END ##########
@@ -39,25 +41,50 @@ class ProductTemplate(models.Model):
     @api.depends(
         "config_line_ids",
         "bom_ids.scaffolding_bom",
+        "bom_ids.type",
         "bom_ids.bom_line_ids.config_set_id",
+        "attribute_line_ids.multi",
+        "attribute_line_ids.custom",
     )
     def _compute_has_advanced_configuration(self):
         """
-        Compute the `has_advanced_configuration` field:
-        - True if there are any `config_line_ids`
-        - True if the product has a scaffolding BoM with at least one component
-          missing `config_set_id`
-        - False otherwise
+        Compute reasons for advanced configuration:
+        - True if Multi or Custom attribute lines are set
+        - True if there are any config_line_ids
+        - True if scaffolding BoM and not kit, has lines missing config_set_id
         """
         for product in self:
-            product.has_advanced_configuration = bool(
-                product.config_line_ids
-                or any(
-                    bom.scaffolding_bom
-                    and any(not line.config_set_id for line in bom.bom_line_ids)
-                    for bom in product.bom_ids
+            # Skip non-configurable products
+            if not product.attribute_line_ids:
+                product.has_advanced_configuration = ""
+                continue
+
+            reasons = []
+
+            # Reason 1: Config Lines Exist
+            if product.config_line_ids:
+                reasons.append("- Has Configuration Restrictions defined.")
+
+            # Reason 2: If scaffold bom contains lines without config set and isn't kit
+            if any(
+                bom.scaffolding_bom
+                and bom.type != "phantom"
+                and any(not line.config_set_id for line in bom.bom_line_ids)
+                for bom in product.bom_ids
+            ):
+                reasons.append(
+                    "- Scaffolding BoM has one or more lines missing the Configuration Set."
                 )
-            )
+
+            # Reason 3: Multi Attributes Exist
+            if any(line.multi for line in product.attribute_line_ids):
+                reasons.append("- One or more attributes marked as Multi.")
+
+            # Reason 4: Custom Attributes Exist
+            if any(line.custom for line in product.attribute_line_ids):
+                reasons.append("- One or more attributes marked as Custom.")
+
+            product.has_advanced_configuration = "\n".join(reasons) if reasons else ""
 
     def action_create_rebuild_scaffolding_bom(self):
         # Models
