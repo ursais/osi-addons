@@ -17,10 +17,11 @@ class Document(models.Model):
         product_asset_folder = self.env["documents.folder"].search(
             [("name", "=", "Products"), ("parent_folder_id", "=", False)], limit=1
         )
-        if self.folder_id.parent_path.startswith(str(product_asset_folder.id)):
-            self.public_eligible = True
-        else:
-            self.public_eligible = False
+        for rec in self:
+            if rec.folder_id.parent_path.startswith(str(product_asset_folder.id)):
+                rec.public_eligible = True
+            else:
+                rec.public_eligible = False
 
     def toggle_public(self):
         """

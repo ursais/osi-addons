@@ -11,7 +11,14 @@ class ProviderCustom(models.Model):
     ### COLUMNS #######
     delivery_type = fields.Selection(
         selection_add=[("custom", "Custom"), ("none", "None")],
-        ondelete={"custom": lambda recs: recs.write({"delivery_type": "fixed", "fixed_price": 0})},
+        ondelete={
+            "custom": lambda recs: recs.write(
+                {"delivery_type": "fixed", "fixed_price": 0}
+            ),
+            "none": lambda recs: recs.write(
+                {"delivery_type": "fixed", "fixed_price": 0}
+            ),
+        },
     )
 
     ### END COLUMNS ###
