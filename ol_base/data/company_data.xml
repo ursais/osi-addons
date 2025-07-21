@@ -20,10 +20,10 @@
         <field name="name">OnLogic US</field>
         <field name="short_name">US</field>
         <field name="currency_id" ref="base.USD" />
-        <field name="street">35 Thompson St</field>
+        <field name="street">435 Community Drive</field>
         <field name="city">South Burlington</field>
         <field name="zip">05403</field>
-        <field name="phone">8028612300</field>
+        <field name="phone">+1 802-861-2300</field>
         <field name="email">info@onlogic.com</field>
         <field name="website">https://www.onlogic.com</field>
         <field name="company_user_id" ref="ol_base.us_company_user" />
