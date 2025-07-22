@@ -54,6 +54,10 @@
             <field name="payment_state" position="before">
                 <field name="sale_payment_method_id" column_invisible="context.get('default_move_type') not in ('out_invoice')"/>
             </field>
+            <!-- Remove Widget from Due Date -->
+            <xpath expr="//field[@name='invoice_date_due']" position="attributes">
+                <attribute name="widget"></attribute>
+            </xpath>
         </field>
     </record>
 
