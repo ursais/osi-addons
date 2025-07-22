@@ -5,7 +5,7 @@
         <field name="name">OnLogic Sale Order Invoice Created</field>
         <field name="model_id" ref="sale.model_sale_order" />
         <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
-        <field name="partner_to">{{ object.account_manager_id.partner_id and object.account_manager_id.partner_id.id or object.partner_id.id }}</field>
+        <field name="partner_to">{{object.account_manager_id.partner_id.id}}</field>
         <field name="subject">Invoice ready for Sale Order {{ object.name }}</field>
         <field name="body_html" type="html">
             <t t-call="ol_templates.ol_email">
