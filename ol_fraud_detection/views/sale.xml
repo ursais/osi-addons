@@ -23,4 +23,17 @@
         </field>
     </record>
 
+    <record id="view_order_tree_inherit_ol_fraud_detection" model="ir.ui.view">
+        <field name="name">sale.order.tree</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <field name="invoice_status" position="before">
+                <field name="sale_payment_method_id" optional="show"/>
+            </field>
+        </field>
+    </record>    
+    
+
+
 </odoo>
