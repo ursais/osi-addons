@@ -2,7 +2,7 @@
 from collections import defaultdict
 
 from odoo import _, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class BlanketOrderWizard(models.TransientModel):
@@ -41,6 +41,7 @@ class BlanketOrderWizard(models.TransientModel):
             "partner_shipping_id": partner_shipping_id,
             "original_request_date": date_schedule,
             "contact_ids": contact_ids,
+            "ignore_exception": True,
         }
 
     def create_sale_order(self):
@@ -123,6 +124,33 @@ class BlanketOrderWizard(models.TransientModel):
                 contact_ids,
             )
             sale_order = self.env["sale.order"].create(order_vals)
+            if sale_order:
+                try:
+                    # Check to make sure all products are able to be sold
+                    # raise confirmation error if not which will create an activity.
+                    if any(
+                        not line.product_id.sale_ok_confirm
+                        or not line.product_id.ship_ok
+                        for line in sale_order.order_line
+                    ):
+                        raise ValidationError(
+                            "A Product's state is preventing order confirmation."
+                        )
+
+                    # Confirm the sale order - ignore_exception is True so
+                    # exceptions won't trigger
+                    sale_order.action_confirm()
+
+                    # Remove Ignore Exceptions which will also trigger exception check
+                    sale_order.write({"ignore_exception": False})
+                except Exception as e:
+                    sale_order.activity_schedule(
+                        "mail.mail_activity_data_warning",
+                        note=_(
+                            f"The sale order {sale_order.name} created from Blanket Order {sale_order.name} couldn't be confirmed. \nReason: '{e}'"
+                        ),
+                        user_id=sale_order.user_id.id or self.env.uid,
+                    )
             res.append(sale_order.id)
 
         # Compute remaining amounts on bo lines so bookings trigger
