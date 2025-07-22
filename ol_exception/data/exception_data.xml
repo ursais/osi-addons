@@ -57,4 +57,13 @@
         <field name="active" eval="True"/>
     </record>
 
+    <record id="exception_picking_product_state_prototype_update" model="exception.rule">
+        <field name="name">Delivery Order with Prototype Product</field>
+        <field name="description">The delivery order contains at least one move line with a product in 'Prototype' state.</field>
+        <field name="sequence">75</field>
+        <field name="model">stock.picking</field>
+        <field name="code">failed = any((move.product_tmpl_id.product_state_id.code == 'prototype') or (move.sale_line_id.bom_id and any(component.product_id.product_tmpl_id.product_state_id.code == 'prototype' for component in move.sale_line_id.bom_id.bom_line_ids)) and move.picking_id.picking_type_code == "outgoing" for move in self.move_ids)</field>
+        <field name="active" eval="True"/>
+    </record>
+
 </odoo>
