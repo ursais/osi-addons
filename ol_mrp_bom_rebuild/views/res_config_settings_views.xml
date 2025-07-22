@@ -1,0 +1,18 @@
+<odoo>
+
+    <record id="ol_mrp_bom_rebuild_res_config_settings_view_form_inherit" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="mrp.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='mrp']" position="inside">
+                <block title="Manufacturing BoM Rebuild General Settings" id="mrp_batch_Settings">
+                     <setting id="enable_delay_variant_bom_rebuild" string="Enable Queuing Variant BoM Rebuilding">
+                        <field name="enable_delay_variant_bom_rebuild" class="oe_inline"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

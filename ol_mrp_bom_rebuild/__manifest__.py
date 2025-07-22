@@ -16,5 +16,6 @@
     # always loaded
     "data": [
         "data/ir_actions_server.xml",
+        "views/res_config_settings_views.xml",
     ],
 }
