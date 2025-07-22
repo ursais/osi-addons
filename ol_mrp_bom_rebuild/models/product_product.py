@@ -57,9 +57,12 @@ class ProductProduct(models.Model):
                 # If a scaffold BoM is found
                 if scaffold_bom:
                     # Search for the existing variant-specific BoM
-                    variant_bom = bom_obj.search(
-                        [("product_id", "=", product.id)], limit=1
-                    )
+                    variant_bom = bom_obj.search([("product_id", "=", product.id)])
+
+                    # If there are more than 1 variant bom then archive all and rebuild
+                    if len(variant_bom) > 1:
+                        variant_bom.write({"active": False})
+                        variant_bom = False
 
                     # Prepare to handle custom quantities for product attribute values
                     product_attribute_value_qty_ids = (
