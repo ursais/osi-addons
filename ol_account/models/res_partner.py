@@ -21,8 +21,12 @@ class ResPartner(models.Model):
         string="Front End Net Terms Active",
     )
     sale_payment_method_id = fields.Many2one(
-        "payment.method",
+        comodel_name="payment.method",
         string="Customer Preferred Payment Method",
+    )
+    debit_limit = fields.Float(
+        string="Vendor Credit Limit",
+        company_dependent=True,
     )
 
     # END #########

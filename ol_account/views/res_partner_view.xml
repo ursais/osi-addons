@@ -19,4 +19,15 @@
         </field>
     </record>
 
+    <record id="view_partner_property_form_inherit_supplier_limit" model="ir.ui.view">
+        <field name="name">res.partner.property.form.inherit.debit_limit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='credit_limits']/div[1]" position="after">
+                <field name="debit_limit" />
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
