@@ -13,6 +13,7 @@
         "ol_base",
         "ol_templates",
         "ol_product_configurator",
+        "ol_exception",
         "sale_management",
         "product_state",
         "sale_subscription",
