@@ -1,10 +1,10 @@
 # Import Odoo libs
 import html
+from datetime import timedelta
 
 from odoo import _, api, fields, models
-from odoo.tools import float_compare
+from odoo.tools import float_compare, format_datetime
 from odoo.tools.misc import format_date
-from datetime import timedelta
 
 
 class MrpProductionBatch(models.Model):
@@ -378,7 +378,7 @@ class MrpProductionBatch(models.Model):
             for mo in rec.production_ids.filtered(
                 lambda x: x.state not in ("draft", "done", "cancel")
             ):
-                if enable_delay=='True':
+                if enable_delay == "True":
                     mo.with_delay().action_assign()
                     queued = True
                 else:
@@ -397,7 +397,7 @@ class MrpProductionBatch(models.Model):
                 .get_param("mrp_batch.enable_delay_action_confirm")
             )
             for mo in rec.production_ids.filtered(lambda x: x.state == "draft"):
-                if enable_delay == 'True':
+                if enable_delay == "True":
                     mo.with_delay().action_confirm()
                     queued = True
                 else:
@@ -418,7 +418,7 @@ class MrpProductionBatch(models.Model):
                     .get_param("mrp_batch.enable_delay_button_plan")
                 )
                 for mo in productions:
-                    if enable_delay == 'True':
+                    if enable_delay == "True":
                         mo.with_delay().button_plan()
                         queued = True
                     else:
@@ -447,7 +447,7 @@ class MrpProductionBatch(models.Model):
             )
 
             for mrp_production in eligible_productions:
-                if enable_delay=='True':
+                if enable_delay == "True":
                     mrp_production.with_delay().button_unplan()
                     queued = True
                 else:
@@ -467,7 +467,7 @@ class MrpProductionBatch(models.Model):
             for mo in rec.production_ids.filtered(
                 lambda x: x.state not in ("draft", "done", "cancel")
             ):
-                if enable_delay == 'True':
+                if enable_delay == "True":
                     mo.with_delay().do_unreserve()
                     queued = True
                 else:
@@ -478,7 +478,7 @@ class MrpProductionBatch(models.Model):
     def action_done(self):
         for rec in self:
             queued = False
-            
+
             enable_delay = (
                 self.env["ir.config_parameter"]
                 .sudo()
@@ -488,7 +488,7 @@ class MrpProductionBatch(models.Model):
             for mo in rec.production_ids.filtered(
                 lambda x: x.state not in ("done", "cancel")
             ):
-                if enable_delay == 'True':
+                if enable_delay == "True":
                     mo.with_delay().button_mark_done()
                     queued = True
                 else:
@@ -496,7 +496,7 @@ class MrpProductionBatch(models.Model):
             if queued:
                 rec.is_queuing = True
             rec.state = "done"
-            
+
     def action_cancel(self):
         for rec in self:
             queued = False
@@ -511,7 +511,7 @@ class MrpProductionBatch(models.Model):
                 lambda mo: not any(wo.state == "done" for wo in mo.workorder_ids)
             )
             for mrp_production in eligible_productions:
-                if enable_delay == 'True':
+                if enable_delay == "True":
                     mrp_production.with_delay().action_cancel()
                     queued = True
                 else:
@@ -1195,11 +1195,9 @@ class MrpProductionBatch(models.Model):
             enable_component_details_delay = (
                 self.env["ir.config_parameter"]
                 .sudo()
-                .get_param(
-                    "mrp_batch.enable_delay_component_availability_details"
-                )
+                .get_param("mrp_batch.enable_delay_component_availability_details")
             )
-            if enable_component_details_delay == 'True':
+            if enable_component_details_delay == "True":
                 batch.with_delay()._compute_components_availability_details()
             else:
                 batch._compute_components_availability_details()
@@ -1338,19 +1336,59 @@ class MrpProductionBatch(models.Model):
                     vals["date_start"], vals["workcenter_tag_id"]
                 ).id
         batches = super().create(vals_list)
-        workcenter_obj = self.env['mrp.workcenter']
+        workcenter_obj = self.env["mrp.workcenter"]
         for batch in batches:
             if batch.workcenter_tag_id:
                 for mo in batch.production_ids:
-                    for workorder in mo.workorder_ids.filtered(lambda l : l.state not in ('done','cancel','progress')):
-                        if workorder.workcenter_id.type!= workorder.operation_type or workorder.workcenter_id.tag_ids.ids not in batch.workcenter_tag_id.ids:
-                            correct_workcenter = workcenter_obj.search([('type','=',workorder.operation_type), ('tag_ids','in',batch.workcenter_tag_id.ids)], limit=1)
+                    for workorder in mo.workorder_ids.filtered(
+                        lambda l: l.state not in ("done", "cancel", "progress")
+                    ):
+                        if (
+                            workorder.workcenter_id.type != workorder.operation_type
+                            or workorder.workcenter_id.tag_ids.ids
+                            not in batch.workcenter_tag_id.ids
+                        ):
+                            correct_workcenter = workcenter_obj.search(
+                                [
+                                    ("type", "=", workorder.operation_type),
+                                    ("tag_ids", "in", batch.workcenter_tag_id.ids),
+                                ],
+                                limit=1,
+                            )
                             if correct_workcenter:
                                 workorder.workcenter_id = correct_workcenter.id
 
         return batches
 
     def write(self, vals):
+        # If scheduled date changes, then log chatter message on sale orders.
+        if "date_start" in vals:
+            for batch in self:
+                old_date = batch.date_start
+                new_date = vals.get("date_start")
+                user_tz = self.env.context.get("tz") or self.env.user.tz or "UTC"
+
+                old_date_str = (
+                    old_date
+                    and format_datetime(
+                        self.env, old_date, tz=user_tz, dt_format="short"
+                    )
+                    or _("None")
+                )
+                new_date_str = (
+                    new_date
+                    and format_datetime(
+                        self.env, new_date, tz=user_tz, dt_format="short"
+                    )
+                    or _("None")
+                )
+                if old_date != new_date:
+                    for sale_order in batch.sale_order_ids:
+                        message = _(
+                            "Manufacturing Batch <b>%s</b> Scheduled Date Changed:<br/>"
+                            "<b> %s</b> → <b>%s</b>"
+                        ) % (batch.name, old_date_str, new_date_str)
+                        sale_order.message_post(body=message, body_is_html=True)
         res = super().write(vals)
 
         for batch in self:
@@ -1374,12 +1412,24 @@ class MrpProductionBatch(models.Model):
                         date_start, workcenter_tag_id
                     )
             if "workcenter_tag_id" in vals or "production_ids" in vals:
-                workcenter_obj = self.env['mrp.workcenter']
+                workcenter_obj = self.env["mrp.workcenter"]
                 if batch.workcenter_tag_id:
                     for mo in batch.production_ids:
-                        for workorder in mo.workorder_ids.filtered(lambda l : l.state not in ('done','cancel','progress')):
-                            if workorder.workcenter_id.type!= workorder.operation_type or workorder.workcenter_id.tag_ids.ids not in batch.workcenter_tag_id.ids:
-                                correct_workcenter = workcenter_obj.search([('type','=',workorder.operation_type), ('tag_ids','in',batch.workcenter_tag_id.ids)], limit=1)
+                        for workorder in mo.workorder_ids.filtered(
+                            lambda l: l.state not in ("done", "cancel", "progress")
+                        ):
+                            if (
+                                workorder.workcenter_id.type != workorder.operation_type
+                                or workorder.workcenter_id.tag_ids.ids
+                                not in batch.workcenter_tag_id.ids
+                            ):
+                                correct_workcenter = workcenter_obj.search(
+                                    [
+                                        ("type", "=", workorder.operation_type),
+                                        ("tag_ids", "in", batch.workcenter_tag_id.ids),
+                                    ],
+                                    limit=1,
+                                )
                                 if correct_workcenter:
                                     workorder.workcenter_id = correct_workcenter.id
         return res
