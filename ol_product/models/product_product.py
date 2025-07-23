@@ -3,7 +3,7 @@ import base64
 from collections import defaultdict
 
 # Import Odoo Libs
-from odoo import models
+from odoo import api, models
 
 
 class ProductProduct(models.Model):
@@ -120,5 +120,11 @@ class ProductProduct(models.Model):
         # Get the `mrp.bom` from the `mrp.bom.line`
         phantom_boms = mrp_bom_lines.mapped("bom_id")
         return phantom_boms
+
+    @api.depends(lambda self: (self._rec_name,) if self._rec_name else ())
+    def _compute_display_name(self):
+        """Change display name to just show internal reference and name."""
+        for product in self:
+            product.display_name = f"[{product.default_code}] {product.name}"
 
     # END #########
