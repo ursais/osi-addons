@@ -1351,6 +1351,27 @@ class MrpProductionBatch(models.Model):
         return batches
 
     def write(self, vals):
+        if 'date_start' in vals:
+            for batch in self:
+                old_date = batch.date_start
+                new_date = vals.get("date_start")
+                user_tz = self.env.context.get('tz') or self.env.user.tz or 'UTC'
+
+                old_date_str = old_date and format_datetime(
+                    self.env, old_date, tz=user_tz, dt_format='short') or _("None")
+                new_date_str = new_date and format_datetime(
+                    self.env, new_date, tz=user_tz, dt_format='short') or _("None")
+                if old_date != new_date:
+                    for sale_order in batch.sale_order_ids:
+                        message = _(
+                            "Manufacturing Batch <b>%s</b> Scheduled Date Changed:<br/>"
+                            "<b> %s</b> → <b>%s</b>"
+                        ) % (
+                            batch.name,
+                            old_date_str,
+                            new_date_str
+                        )
+                        sale_order.message_post(body=message, body_is_html=True)
         res = super().write(vals)
 
         for batch in self:
