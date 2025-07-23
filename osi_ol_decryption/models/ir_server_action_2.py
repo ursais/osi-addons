@@ -988,7 +988,7 @@ class IrActionsServer(models.Model):
         total = len(templates)
         _logger.info("Total products to process: %s", total)
         MrpBomLineConfigSet = self.env["mrp.bom.line.configuration.set"].sudo()
-        MrpBom = self.env["mrp.bom"].sudo()
+        MrpBom = self.env["mrp.bom"].with_context(is_data_migration=True).sudo()
         MrpBomLineConfig = self.env["mrp.bom.line.configuration"].sudo()
         existing_config_sets = MrpBomLineConfigSet.search([])
         config_set_map = {rec.name: rec for rec in existing_config_sets}
