@@ -18,10 +18,4 @@
         <field name="trigger_field_ids" eval="[(6, 0, [ref('mrp_exception.field_mrp_production__ignore_exception'), ref('mrp.field_mrp_production__move_raw_ids'), ref('mrp.field_mrp_production__product_id'), ref('mrp.field_mrp_production__workorder_ids'), ref('ol_exception.field_mrp_production__sale_locked'), ref('mrp.field_mrp_production__is_outdated_bom'),])]"/>
     </record>
 
-    <!-- Default Trigger Fields for Product Template -->
-    <record id="product_exception_config_ignore_exception" model="exception.config">
-        <field name="model_id" ref="product.model_product_template" />
-        <field name="trigger_field_ids" eval="[(6, 0, [ref('product_state.field_product_template__state'), ref('product_state.field_product_template__product_state_id')])]"/>
-    </record>
-
 </odoo>
