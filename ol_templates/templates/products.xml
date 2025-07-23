@@ -98,12 +98,6 @@
                                     <div class="system-configuration-line ol_flex ol_flex_just_cont_space_between" t-foreach="quote_lines" t-as="quote_line">
                                         <div class="system-configuration-attribute">
                                             <t t-esc="quote_line['attribute_name']"/>
-                                            <!-- <t t-if="quote_line['attribute_id'].classification_id.name != 'Hidden'">
-                                                <t t-esc="quote_line['attribute_id'].classification_id.name"/>
-                                            </t>
-                                            <t t-else="">
-                                                <t t-esc="quote_line['attribute_name']"/>
-                                            </t> -->
                                         </div>
                                         <div class="system-configuration-product">
                                             <t t-esc="quote_line['product_qty']"/> X <t t-esc="quote_line['value_name']"/>
