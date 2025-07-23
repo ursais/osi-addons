@@ -1,10 +1,10 @@
-<odoo noupdate="1">
+<odoo>
 
     <!-- Add Journal Entry Tier Validation Field Exceptions -->
     <record id="journal_entry_tier_validation_exception_1" model="tier.validation.exception">
         <field name="name">Journal Entry Field Exceptions</field>
         <field name="model_id" ref="account.model_account_move" />
-        <field name="field_ids" eval="[(4, ref('account.field_account_move__needed_terms_dirty'))]" />
+        <field name="field_ids" eval="[(4, ref('account.field_account_move__needed_terms_dirty')), (4, ref('ol_account_hot_ar.field_account_move__hot_ar'))]" />
         <field name="allowed_to_write_after_validation" eval="True" />
         <field name="allowed_to_write_under_validation" eval="True" />
         <field name="company_id" eval="False" />
