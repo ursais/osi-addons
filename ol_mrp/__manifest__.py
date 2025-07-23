@@ -13,6 +13,7 @@
         "ol_base",
         "mrp",
         "mrp_batch",
+        "product_configurator_mrp_component"
     ],
     # always loaded
     "data": [
