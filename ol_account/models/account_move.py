@@ -24,6 +24,13 @@ class AccountMove(models.Model):
         string="Customer Payment Method",
         help="Payment method selected coming from the sale order.",
     )
+    invoice_due_date = fields.Date(
+        compute="_compute_invoice_date_due",
+        store=True,
+        readonly=False,
+        help="Field with same date as due date, but to show just the date "
+        "without the Remaining Days widget.",
+    )
 
     # END #########
     # METHODS ######
@@ -144,7 +151,6 @@ class AccountMove(models.Model):
         return data
 
     def get_invoice_report_data_by_sale_order_lines(self):
-
         order_data = {
             "product_lines": [],
         }
@@ -152,9 +158,7 @@ class AccountMove(models.Model):
         product_lines = self.env["sale.order.line"]
 
         for invoice_line in self.invoice_line_ids:
-
             for sale_order_line in invoice_line.sale_line_ids:
-
                 if sale_order_line.is_delivery:
                     continue
 
@@ -206,9 +210,7 @@ class AccountMove(models.Model):
         return order_data
 
     def get_invoice_report_data(self):
-
         for invoice in self:
-
             filtered_invoice = invoice
             filtered_invoice_data = {
                 "sum_amount": invoice.amount_total,
@@ -232,5 +234,12 @@ class AccountMove(models.Model):
             return "Refund"
 
         return "Invoice"
+
+    @api.depends("needed_terms")
+    def _compute_invoice_date_due(self):
+        """When computing invoice_date_due also set invoice_due_date"""
+        super()._compute_invoice_date_due()
+        for move in self:
+            move.invoice_due_date = move.invoice_date_due
 
     # END ##########
