@@ -76,10 +76,10 @@
 
             <!-- Add context to invoice/delivery addresses -->
             <field name="partner_invoice_id" position="attributes">
-                <attribute name="context">{'default_parent_id': partner_id, 'default_type':'invoice', 'show_address': 1, 'show_vat': 1}</attribute>
+                <attribute name="context">{'default_parent_id': partner_id, 'default_type':'invoice', 'show_address': 1, 'show_vat': 1, 'partner_address_details': 1}</attribute>
             </field>
             <field name="partner_shipping_id" position="attributes">
-                <attribute name="context">{'default_parent_id': partner_id, 'default_type':'delivery', 'show_address': 1, 'show_vat': 1}</attribute>
+                <attribute name="context">{'default_parent_id': partner_id, 'default_type':'delivery', 'show_address': 1, 'show_vat': 1, 'partner_address_details': 1}</attribute>
             </field>
 
             <!-- Move client_order_ref up in header along with shipping_ref -->
