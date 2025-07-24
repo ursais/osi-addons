@@ -331,4 +331,18 @@ class SaleBlanketOrderLine(models.Model):
 
         return res
 
+    def action_duplicate_line(self):
+        """Method that allows a user to duplicate the blanket order line."""
+        for line in self:
+            values = line.copy_data(
+                {
+                    "order_id": line.order_id.id,
+                    "config_session_id": (
+                        line.config_session_id.id if line.config_session_id else False
+                    ),
+                    "bom_id": line.bom_id.id if line.bom_id else False,
+                }
+            )
+            self.create(values)
+
     # END ######
