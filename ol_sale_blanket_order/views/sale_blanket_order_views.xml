@@ -45,6 +45,16 @@
                     <button name="action_update_prices" type="object" string=" Update Prices" help="Recompute all prices based on this pricelist" class="btn-link mb-1 px-0" icon="fa-refresh" confirm="This will update the unit price of all products based on the new pricelist." invisible="not show_update_pricelist or state in ['done', 'expired']"/>
                 </div>
             </xpath>
+            <xpath expr="//field[@name='line_ids']//tree//field[@name='company_id']" position="after">
+                <button
+                    name="action_duplicate_line"
+                    type="object"
+                    class="oe_link"
+                    icon="fa-copy"
+                    title="Copy"
+                    invisible="not product_id or state in ('done', 'expired')"
+                />
+            </xpath>
         </field>
     </record>
 

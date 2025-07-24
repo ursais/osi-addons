@@ -88,6 +88,16 @@
                 <field name="client_order_ref" />
                 <field name="shipping_ref" />
             </field>
+            <xpath expr="//page[@name='order_lines']//field[@name='order_line']//tree//field[@name='company_id']" position="after">
+                <button
+                    name="action_duplicate_line"
+                    type="object"
+                    class="oe_link"
+                    icon="fa-copy"
+                    title="Copy"
+                    invisible="not product_id or locked"
+                />
+            </xpath>
 
         </field>
     </record>
