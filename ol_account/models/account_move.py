@@ -25,9 +25,7 @@ class AccountMove(models.Model):
         help="Payment method selected coming from the sale order.",
     )
     invoice_due_date = fields.Date(
-        compute="_compute_invoice_date_due",
-        store=True,
-        readonly=False,
+        compute="_compute_non_stored_invoice_date_due",
         help="Field with same date as due date, but to show just the date "
         "without the Remaining Days widget.",
     )
@@ -235,10 +233,8 @@ class AccountMove(models.Model):
 
         return "Invoice"
 
-    @api.depends("needed_terms")
-    def _compute_invoice_date_due(self):
-        """When computing invoice_date_due also set invoice_due_date"""
-        super()._compute_invoice_date_due()
+    @api.depends("invoice_date_due")
+    def _compute_non_stored_invoice_date_due(self):
         for move in self:
             move.invoice_due_date = move.invoice_date_due
 
