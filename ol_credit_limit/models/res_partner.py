@@ -15,7 +15,7 @@ class ResPartner(models.Model):
 
     # COLUMNS #####
 
-    credit_limit = fields.Monetary(string="Credit Limit")
+    credit_limit = fields.Float(string="Credit Limit")
     partner_rollup_id = fields.Many2one(
         "res.partner",
         "Credit Rollup Partner",
@@ -119,18 +119,20 @@ class ResPartner(models.Model):
     )
     def _compute_open_so_balance(self):
         def compute_balance(partners):
-            self.env.cr.execute("""
+            self.env.cr.execute(
+                """
                 SELECT SUM(amount_total)
                 FROM sale_order
                 WHERE state = 'sale'
                 AND invoice_status = 'no'
                 AND partner_id in %s
-            """, (tuple(self.ids),))
+            """,
+                (tuple(self.ids),),
+            )
 
             so_sum = self.env.cr.fetchone()[0] or 0.0
-            
-            return so_sum
 
+            return so_sum
 
         for partner in self:
 
@@ -142,7 +144,8 @@ class ResPartner(models.Model):
 
             # Collect all relevant partner IDs: self + children
             self.env.cr.execute(
-                "SELECT id FROM res_partner WHERE parent_id = ANY(%s)", ([partner.id],),
+                "SELECT id FROM res_partner WHERE parent_id = ANY(%s)",
+                ([partner.id],),
             )
             child_ids = [row[0] for row in self.env.cr.fetchall()]
             all_partner_ids = child_ids + [partner.id]
@@ -225,9 +228,7 @@ class ResPartner(models.Model):
                     + (partner.credit if partner.credit > 0 else 0)
                     + rollup_used_credit
                 )
-                partner.remaining_credit = (
-                    partner.credit_limit - used_credit or 0
-                )
+                partner.remaining_credit = partner.credit_limit - used_credit or 0
 
     # @api.depends(
     #     "credit_limit", "total_due", "rollup_partner_ids.total_due", "partner_rollup_id", "invoice_ids","open_so_balance",
@@ -359,16 +360,19 @@ class ResPartner(models.Model):
     def _compute_open_bo_balance(self):
         def compute_balance(partners):
             partner_ids = tuple(partners.ids) or (0,)
-            self.env.cr.execute("""
+            self.env.cr.execute(
+                """
                 SELECT COALESCE(SUM(l.remaining_uom_qty * l.price_unit), 0)
                 FROM sale_blanket_order_line l
                 JOIN sale_blanket_order o ON l.order_id = o.id
                 WHERE o.partner_id IN %s
                 AND o.state = 'open'
-            """, (partner_ids,))
+            """,
+                (partner_ids,),
+            )
             return self.env.cr.fetchone()[0]
+
         for partner in self:
-            
 
             partners_base = partner._origin
             base_balance = compute_balance(partners_base)
@@ -399,6 +403,5 @@ class ResPartner(models.Model):
                 balance = compute_balance(parent_group)
                 partner.parent_id.open_bo_balance = balance
                 partner.open_bo_balance = base_balance
-
 
     # END #########
