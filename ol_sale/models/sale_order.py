@@ -195,7 +195,8 @@ class SaleOrder(models.Model):
                     {
                         "attribute_id": v.attribute_id,
                         "attribute_name": v.attribute_id.name,
-                        "value_name": v.product_attribute_value_id.product_id.name,
+                        "value_name": v.product_attribute_value_id.product_id.name
+                        or v.product_attribute_value_id.name,
                         "sequence": v.attribute_id.sequence,
                         "product_qty": sum(
                             bom_line_ids.filtered(
