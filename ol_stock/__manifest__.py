@@ -23,6 +23,7 @@
     "data": [
         "data/stock_location_data.xml",
         "security/security_group.xml",
+        "security/ir.model.access.csv",
         "views/stock_picking_type_views.xml",
         "reports/inventory_label.xml",
         "reports/inventory_sheets.xml",
@@ -30,5 +31,6 @@
         "reports/packing_slip.xml",
         "reports/picking_list_from_so.xml",
         "reports/picking_list.xml",
+        "wizard/stock_scrap_confirm_wizard_view.xml",
     ],
 }

@@ -1,0 +1,19 @@
+<odoo>
+
+    <record id="view_scrap_confirm_wizard" model="ir.ui.view">
+        <field name="name">stock.scrap.confirm.wizard.form</field>
+        <field name="model">stock.scrap.confirm.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Confirm Scrap?">
+                <div>
+                    <p>All items are already allocated to existing orders and your scrap will unallocate stock based on the Order Management solution. Are you sure you want to continue?</p>
+                </div>
+                <footer>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    <button name="action_confirm" type="object" string="Confirm" class="btn-primary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>
