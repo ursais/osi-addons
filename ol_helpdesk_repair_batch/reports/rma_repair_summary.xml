@@ -92,7 +92,7 @@
                             <tag>Order Date</tag>
                         </div>
                         <div class="value">
-                            <t t-esc="sale_order.date_order" t-options='{"widget": "date_formatter"}'/>
+                            <t t-esc="sale_order.date_order" t-options='{"widget": "date"}'/>
                         </div>
                     </div>
 
