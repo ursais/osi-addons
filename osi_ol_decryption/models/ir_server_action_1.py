@@ -744,7 +744,11 @@ class IrActionsServer(models.Model):
         FROM product_state ps
         WHERE pt.product_state_id = ps.id
         """
-        )    
+        )
+        product_ids = self.env['product.template'].sudo().search([('phantom_bom_id', '!=', False), ("purchase_ok", "=", True)])
+        product_ids.write({'purchase_ok': False})
+        product_ids = self.env['product.template'].sudo().search([("categ_id.name", "in", ["Systems", "Computers", "Panel PCs"]), ("purchase_ok", "=", True)])
+        product_ids.write({'purchase_ok': False})    
 
     def uninstall_old_module(self):
         _logger.info("===============uninstall_old_module====================")
