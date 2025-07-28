@@ -15,7 +15,7 @@ class ResPartner(models.Model):
 
     # COLUMNS #####
 
-    # credit_limit = fields.Monetary(string="Credit Limit")
+    credit_limit = fields.Float(string="Credit Limit")
     partner_rollup_id = fields.Many2one(
         "res.partner",
         "Credit Rollup Partner",
@@ -119,10 +119,23 @@ class ResPartner(models.Model):
     )
     def _compute_open_so_balance(self):
         def compute_balance(partners):
-            open_so = partners._get_open_sale_order()
-            return sum(open_so.mapped("amount_total"))
+            self.env.cr.execute(
+                """
+                SELECT SUM(amount_total)
+                FROM sale_order
+                WHERE state = 'sale'
+                AND invoice_status = 'no'
+                AND partner_id in %s
+            """,
+                (tuple(self.ids),),
+            )
+
+            so_sum = self.env.cr.fetchone()[0] or 0.0
+
+            return so_sum
 
         for partner in self:
+
             if not partner.id:
                 partner.open_so_balance = 0
                 continue
@@ -131,7 +144,8 @@ class ResPartner(models.Model):
 
             # Collect all relevant partner IDs: self + children
             self.env.cr.execute(
-                "SELECT id FROM res_partner WHERE parent_id = ANY(%s)", ([partner.id],),
+                "SELECT id FROM res_partner WHERE parent_id = ANY(%s)",
+                ([partner.id],),
             )
             child_ids = [row[0] for row in self.env.cr.fetchall()]
             all_partner_ids = child_ids + [partner.id]
@@ -196,26 +210,25 @@ class ResPartner(models.Model):
         "sale_order_ids.state",
     )
     def _compute_remaining_credit(self):
-        self.filtered(lambda l: not l.credit_limit).remaining_credit = 0
-        for partner in self.filtered(lambda l: l.credit_limit):
-            _logger.info("_compute_remaining_credit %s", partner.id)
-            rollup_used_credit = 0
-            if partner.rollup_partner_ids:
-                rollup_credit_data = partner.rollup_partner_ids.read_group(
-                    [], ["open_so_balance:sum", "credit:sum"], []
-                )
-                rollup_used_credit = (
-                    sum(rollup_credit_data[0].values()) if rollup_credit_data else 0
-                )
+        for partner in self:
+            if not partner.credit_limit:
+                partner.remaining_credit = 0
+            else:
+                rollup_used_credit = 0
+                if partner.rollup_partner_ids:
+                    rollup_credit_data = partner.rollup_partner_ids.read_group(
+                        [], ["open_so_balance:sum", "credit:sum"], []
+                    )
+                    rollup_used_credit = (
+                        sum(rollup_credit_data[0].values()) if rollup_credit_data else 0
+                    )
 
-            used_credit = (
-                partner.open_so_balance
-                + (partner.credit if partner.credit > 0 else 0)
-                + rollup_used_credit
-            )
-            partner.remaining_credit = (
-                partner.credit_limit - used_credit if partner.credit_limit else 0
-            )
+                used_credit = (
+                    partner.open_so_balance
+                    + (partner.credit if partner.credit > 0 else 0)
+                    + rollup_used_credit
+                )
+                partner.remaining_credit = partner.credit_limit - used_credit or 0
 
     # @api.depends(
     #     "credit_limit", "total_due", "rollup_partner_ids.total_due", "partner_rollup_id", "invoice_ids","open_so_balance",
@@ -280,12 +293,21 @@ class ResPartner(models.Model):
             partners_to_include = partner.rollup_partner_ids + partner._origin
             invoice_line_ids = partners_to_include.invoice_ids.mapped(
                 "invoice_line_ids"
-            ).filtered(
-                lambda l: l.product_id.id
-                == l.company_id.sale_down_payment_product_id.id
-                and not l.full_reconcile_id
             )
-            customer_deposit_balance = sum(invoice_line_ids.mapped("balance"))
+            if invoice_line_ids:
+                ids_tuple = tuple(invoice_line_ids.ids)
+            else:
+                ids_tuple = (0,)
+            query = """
+                SELECT COALESCE(SUM(aml.balance), 0)
+                FROM account_move_line aml
+                JOIN res_company rc ON aml.company_id = rc.id
+                WHERE aml.id IN %s
+                AND aml.product_id = rc.sale_down_payment_product_id
+                AND aml.full_reconcile_id IS NULL
+            """
+            self.env.cr.execute(query, (ids_tuple,))
+            customer_deposit_balance = self.env.cr.fetchone()[0] or 0
             customer_deposit_balance = customer_deposit_balance * -1
             partner.customer_deposit_balance = customer_deposit_balance
 
@@ -337,13 +359,20 @@ class ResPartner(models.Model):
     )
     def _compute_open_bo_balance(self):
         def compute_balance(partners):
-            lines = partners.sale_blanket_order_ids.filtered(
-                lambda l: l.state == "open"
-            ).mapped("line_ids")
-            return sum(line.remaining_uom_qty * line.price_unit for line in lines)
+            partner_ids = tuple(partners.ids) or (0,)
+            self.env.cr.execute(
+                """
+                SELECT COALESCE(SUM(l.remaining_uom_qty * l.price_unit), 0)
+                FROM sale_blanket_order_line l
+                JOIN sale_blanket_order o ON l.order_id = o.id
+                WHERE o.partner_id IN %s
+                AND o.state = 'open'
+            """,
+                (partner_ids,),
+            )
+            return self.env.cr.fetchone()[0]
 
         for partner in self:
-            _logger.info("_compute_open_bo_balance %s", partner._origin.id)
 
             partners_base = partner._origin
             base_balance = compute_balance(partners_base)
