@@ -9,8 +9,18 @@
                 <field name="account_manager_id" />
             </xpath>
             <field name="property_payment_term_id" position='before'>
-                <field name="sale_order_tag_ids" widget="many2many_tags"/>
+                <field name="sale_order_tag_ids" widget="many2many_tags" />
             </field>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button
+                    name="action_view_delivery_orders"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-truck"
+                >
+                    <field name="delivery_order_count" widget="statinfo" string="Delivery Orders" />
+                </button>
+            </xpath>
         </field>
     </record>
 
