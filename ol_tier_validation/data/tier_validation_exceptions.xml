@@ -4,7 +4,8 @@
     <record id="journal_entry_tier_validation_exception_1" model="tier.validation.exception">
         <field name="name">Journal Entry Field Exceptions</field>
         <field name="model_id" ref="account.model_account_move" />
-        <field name="field_ids" eval="[(4, ref('account.field_account_move__needed_terms_dirty')), (4, ref('ol_account_hot_ar.field_account_move__hot_ar'))]" />
+        <field name="field_ids" eval="[(4, ref('account.field_account_move__needed_terms_dirty')),
+            (4, ref('ol_account_hot_ar.field_account_move__hot_ar'))]" />
         <field name="allowed_to_write_after_validation" eval="True" />
         <field name="allowed_to_write_under_validation" eval="True" />
         <field name="company_id" eval="False" />
@@ -15,9 +16,33 @@
     <record id="sale_order_tier_validation_exception_1" model="tier.validation.exception">
         <field name="name">Sale Order Field Exceptions</field>
         <field name="model_id" ref="sale.model_sale_order" />
-        <field name="field_ids" eval="[(4, ref('ol_stock_constrained_availability.field_sale_order__date_confirm')), (4, ref('account_avatax_sale_oca.field_sale_order__avatax_request_log')), (4, ref('account_avatax_sale_oca.field_sale_order__avatax_response_log')), (4, ref('account_avatax_sale_oca.field_sale_order__tax_amount')), (4, ref('sale_stock.field_sale_order__procurement_group_id')), (4, ref('sale.field_sale_order__locked')), (4, ref('ol_sale.field_sale_order__to_send_confirmation_email')), (4, ref('ol_sale.field_sale_order__original_commitment_date'))]" />
+        <field name="field_ids" eval="[(4, ref('ol_stock_constrained_availability.field_sale_order__date_confirm')),
+            (4, ref('account_avatax_sale_oca.field_sale_order__avatax_request_log')),
+            (4, ref('account_avatax_sale_oca.field_sale_order__avatax_response_log')),
+            (4, ref('account_avatax_sale_oca.field_sale_order__tax_amount')),
+            (4, ref('sale_stock.field_sale_order__procurement_group_id')),
+            (4, ref('sale.field_sale_order__locked')),
+            (4, ref('ol_sale.field_sale_order__to_send_confirmation_email')),
+            (4, ref('ol_sale.field_sale_order__original_commitment_date'))]" />
         <field name="allowed_to_write_after_validation" eval="True" />
         <field name="allowed_to_write_under_validation" eval="True" />
+        <field name="company_id" eval="False" />
+        <field name="group_ids" eval="False" />
+    </record>
+
+    <record id="purchase_order_tier_validation_exception_1" model="tier.validation.exception">
+        <field name="name">Purchase Field Exceptions</field>
+        <field name="model_id" ref="purchase.model_purchase_order" />
+        <field name="field_ids" eval="[(4, ref('ol_purchase.field_purchase_order__contact_ids')),
+            (4, ref('purchase.field_purchase_order__date_order')),
+            (4, ref('purchase.field_purchase_order__date_planned')),
+            (4, ref('ol_purchase.field_purchase_order__delivery_method_id')),
+            (4, ref('purchase.field_purchase_order__incoterm_id')),
+            (4, ref('purchase.field_purchase_order__partner_ref')),
+            (4, ref('purchase_stock.field_purchase_order__picking_type_id')),
+            (4, ref('ol_purchase.field_purchase_order__shipping_notes'))]" />
+        <field name="allowed_to_write_after_validation" eval="True" />
+        <field name="allowed_to_write_under_validation" eval="False" />
         <field name="company_id" eval="False" />
         <field name="group_ids" eval="False" />
     </record>
