@@ -25,6 +25,7 @@
     "data": [
         "security/base_exception_security.xml",
         "security/ir.model.access.csv",
+        "views/base_exception_view.xml",
         "views/exception_config.xml",
         "views/exception_rule_view.xml",
         "views/product_state_views.xml",
