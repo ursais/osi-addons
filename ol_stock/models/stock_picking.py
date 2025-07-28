@@ -16,23 +16,30 @@ class StockPicking(models.Model):
         string="Can Add Stock Moves",
         compute="_compute_can_add_stock_moves",
     )
-    company_currency_id = fields.Many2one(related='company_id.currency_id')
+    company_currency_id = fields.Many2one(related="company_id.currency_id")
     total_sales_price = fields.Monetary(
         string="Total Sales Price",
-        compute='_compute_total_sales_price',
-        currency_field='company_currency_id',
+        compute="_compute_total_sales_price",
+        currency_field="company_currency_id",
         store=True,
-        help="The total of the sales price (from sale order or product sales price) of all done products and the shipping cost"
+        help="The total of the sales price (from sale order or product sales price) of all done products and the shipping cost",
+    )
+    is_po_picking = fields.Boolean(
+        string="Is PO Picking",
+        compute="_compute_is_po_picking",
+        help="Helper field if pick is from a PO, if cancelling, show confirmation.",
     )
 
     # END #########
     # METHODS #####
 
-    @api.depends('state', 'move_ids.sale_line_id.qty_delivered')
+    @api.depends(
+        "state",
+        "move_ids.sale_line_id.qty_delivered",
+    )
     def _compute_total_sales_price(self):
         """Compute the total sales price for the picking, including delivery costs."""
         for picking in self:
-
             # Calculate the total carrier price from delivery sale lines
             carrier_price = sum(
                 picking.sale_id.mapped("order_line")
@@ -97,7 +104,6 @@ class StockPicking(models.Model):
         qty_adjusted_sale_order_lines = {}
 
         for move in moves:
-
             # Product on the related sale order line
             sale_order_line = move.sale_line_id
             sale_order_line_product = sale_order_line.product_id
@@ -180,7 +186,6 @@ class StockPicking(models.Model):
         moves = self.move_ids.sorted(key=lambda m: m.location_id and m.location_id.id)
 
         for move in moves:
-
             # Get the product line where these attribute match with the current move:
             #   - manufacturing order
             #   - product
@@ -235,7 +240,7 @@ class StockPicking(models.Model):
             for line in move.move_line_ids:
                 serial = line.lot_id.name if line.lot_id else False
                 product_line_data = {
-                    "location_id" : line.location_id.name,
+                    "location_id": line.location_id.name,
                     "product_default_code": line.product_id.product_tmpl_id.default_code,
                     "qty": line.quantity,
                     "product_name": line.product_id.name,
@@ -246,5 +251,20 @@ class StockPicking(models.Model):
                 product_lines.append(product_line_data)
 
         return product_lines
+
+    def _compute_is_po_picking(self):
+        for picking in self:
+            picking.is_po_picking = False
+            if (
+                picking.picking_type_code == "internal"
+                and picking.move_ids.mapped("move_orig_ids")
+                and (
+                    any(
+                        move.purchase_line_id
+                        for move in picking.move_ids.mapped("move_orig_ids")
+                    )
+                )
+            ):
+                picking.is_po_picking = True
 
     # END #########
