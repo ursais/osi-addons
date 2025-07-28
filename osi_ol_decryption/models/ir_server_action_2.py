@@ -1110,7 +1110,7 @@ class IrActionsServer(models.Model):
                     }
                 )
                 bom_id.company_id = int(phantom_bom[2])
-        phantom_boms = self.env["ir.property"].sudo().create(phantom_bom_property_vals)
+        # phantom_boms = self.env["ir.property"].sudo().create(phantom_bom_property_vals)
         phantom_bom_product_templates = (
             self.env["product.template"].search([]).filtered("phantom_bom_id")
         )

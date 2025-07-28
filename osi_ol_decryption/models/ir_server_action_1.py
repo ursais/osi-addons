@@ -1056,6 +1056,7 @@ class IrActionsServer(models.Model):
             "ol_purchase_3way_match",
             "ol_purchase_request_estimate",
             "ol_rush_order",
+            "ol_account",
             "ol_sale",
             "ol_sale_blanket_order",
             "ol_sale_stock_tags",
@@ -1083,7 +1084,6 @@ class IrActionsServer(models.Model):
             "ol_mrp_traveler",
             "ol_product_classification",
             "ol_product_operations_category",
-            "ol_account",
             "ol_stock_constrained_sku",
             "ol_mrp_plm",
             "hr_attendance",
@@ -1178,7 +1178,8 @@ class IrActionsServer(models.Model):
             "ol_mrp",
             "ol_helpdesk_repair_batch",
             "ol_pim",
-            "ol_product"
+            "ol_product",
+            "ol_account_hot_ar"
         ]
 
         for module in modules:
