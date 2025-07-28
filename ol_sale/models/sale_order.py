@@ -283,4 +283,14 @@ class SaleOrder(models.Model):
             "old_revision_ids": [(4, self.id, False)],
         }
 
+    def _find_mail_template(self):
+        template = super()._find_mail_template()
+        self.ensure_one()
+        if self.env.context.get("proforma"):
+            return self.env.ref(
+                "ol_sale.email_template_sale_proforma", raise_if_not_found=False
+            )
+
+        return template
+
     # END #########
