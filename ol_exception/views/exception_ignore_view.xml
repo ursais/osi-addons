@@ -1,0 +1,31 @@
+<odoo>
+
+    <record id="view_exception_ignore_tree" model="ir.ui.view">
+        <field name="name">exception.ignore.tree</field>
+        <field name="model">exception.ignore</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="exception_rule_id" />
+                <field name="res_model" />
+                <field name="res_id" />
+                <field name="user_id" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_exception_ignore_tree" model="ir.actions.act_window">
+        <field name="name">Ignored Exceptions</field>
+        <field name="res_model">exception.ignore</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_exception_ignore_tree" />
+    </record>
+
+    <menuitem
+        action="action_exception_ignore_tree"
+        id="menu_action_exception_ignore"
+        parent="base.menu_custom"
+        sequence="91"
+        groups="base_exception.group_exception_rule_manager"
+    />
+
+</odoo>

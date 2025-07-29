@@ -30,6 +30,13 @@ class ExceptionRule(models.Model):
         tracking=True,
     )
     is_blocking = fields.Boolean(tracking=True)
+    allowed_group_ids = fields.Many2many(
+        "res.groups",
+        "exception_rule_group_rel",
+        "rule_id",
+        "group_id",
+        string="Allowed Groups to Ignore the Exceptions.",
+    )
 
     # END #########
     # METHODS #####
