@@ -38,6 +38,8 @@ class ProductAttributeValue(models.Model):
                 # "Original Display Name (A:<qty_available>/OH:<outgoing_qty>)
                 # (<product_state_string>)"
                 new_name = f"{rec.display_name} (A:{outgoing_qty}/OH:{qty_available}) ({product_state_string})"
+                if rec.product_id:
+                    new_name = f"{new_name} {rec.product_id.default_code}"
 
                 # Update the record's display name only if a product is associated
                 # with it.
