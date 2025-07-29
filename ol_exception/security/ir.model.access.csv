@@ -1,3 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_exception_config_user,exception.config.user,model_exception_config,base.group_user,1,0,0,0
 access_exception_config_manager,exception.config.manager,model_exception_config,base_exception.group_exception_rule_manager,1,1,1,1
+access_exception_ignore_user,access.exception.ignore.user,model_exception_ignore,base.group_user,1,0,1,0
+access_exception_ignore_manager,access.exception.ignore.manager,model_exception_ignore,base.group_system,1,1,1,1

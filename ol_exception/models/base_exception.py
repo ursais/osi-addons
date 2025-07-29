@@ -1,5 +1,8 @@
+# Import Python libs
+import html
+
 # Import Odoo libs
-from odoo import _, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -24,6 +27,33 @@ class BaseException(models.AbstractModel):
     # END ##########
     # METHODS ######
 
+    @api.depends("exception_ids", "ignore_exception")
+    def _compute_exceptions_summary(self):
+        for rec in self:
+            if rec.exception_ids and not rec.ignore_exception:
+                items = []
+                for e in rec.exception_ids:
+                    # Basic description
+                    item = f"<li>{html.escape(e.name)}: <i>{html.escape(e.description or '')}</i>"
+
+                    # Blocking tag
+                    if e.is_blocking:
+                        item += f" <b>{_('(Blocking exception)')}</b>"
+
+                    # Security groups
+                    if e.allowed_group_ids:
+                        group_names = ", ".join(
+                            html.escape(g.display_name) for g in e.allowed_group_ids
+                        )
+                        item += f" <br/><small>{_('Can be ignored by users with security group')}: {group_names}</small>"
+
+                    item += "</li>"
+                    items.append(item)
+
+                rec.exceptions_summary = "<ul>%s</ul>" % "".join(items)
+            else:
+                rec.exceptions_summary = False
+
     def action_ignore_exceptions(self):
         # Preload ignored map for performance
         all_ignored = self.env["exception.ignore"].search(
@@ -36,6 +66,8 @@ class BaseException(models.AbstractModel):
                 raise ValidationError(
                     _("Some exceptions are blocking and cannot be ignored.")
                 )
+
+            newly_ignored = []
 
             for exception in rec.exception_ids:
                 key = (rec.id, exception.id)
@@ -64,6 +96,21 @@ class BaseException(models.AbstractModel):
 
                 # Remove from exception_ids
                 rec.write({"exception_ids": [(3, exception.id)]})
+
+                # Track for chatter
+                newly_ignored.append(exception.name)
+
+            # Post message in chatter
+            if newly_ignored and hasattr(rec, "message_post"):
+                rec.message_post(
+                    body=_("The following exceptions were ignored by %s:<ul>%s</ul>")
+                    % (
+                        self.env.user.name,
+                        "".join(f"<li>{name}</li>" for name in newly_ignored),
+                    ),
+                    subtype_xmlid="mail.mt_note",
+                    body_is_html=True,
+                )
 
         return True
 

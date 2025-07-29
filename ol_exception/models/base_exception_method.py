@@ -77,7 +77,7 @@ class BaseExceptionMethod(models.AbstractModel):
             stale_ignores = record.ignored_exception_ids.filtered(
                 lambda ign: (ign.res_id, ign.exception_rule_id.id) not in detected_keys
             )
-            stale_ignores.sudo().unlink()
+            stale_ignores.sudo().with_context(skip_detect_exceptions=True).unlink()
 
         return all_exception_ids
 
