@@ -6,13 +6,42 @@ import psycopg2
 import psycopg2.extras
 import odoorpc
 import re
-
+import openpyxl
 
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
+    def delete_account(self):
+        self = self.sudo()
+        file_path = "/home/odoo/odoo17/odoo/addons/osi_ol_decryption/osi_ol_decryption/data/account_delete.xlsx"
+        wb = openpyxl.load_workbook(filename=file_path, data_only=True)
+        for sheet_name in wb.sheetnames:
+            sheet = wb[sheet_name]
+            count = 1  
+            self._cr.execute("alter table account_account disable trigger all;")
+            self._cr.commit()
+            for row in sheet.iter_rows(min_row=2):
+                code = row[0].value
+                name = row[1].value
+                company = row[4].value
+                # if name in ('Cash', 'Bank'):
+                #     continue
+                account = self.env['account.account'].search([
+                    ('code', '=', code),
+                    ('name', '=', name),
+                    ('company_id.name', '=', company)
+                ], limit=1)
+                if account:
+                    self._cr.execute('delete from account_account where id = %s', (account.id,))
+                    
+
+            self._cr.execute("alter table account_account enable trigger all;")
+            self._cr.commit()
+
+
+
     def update_accounts_from_excel(self):
-        import openpyxl
+        
         # Load workbook
         self = self.sudo()
         file_path = "osi_ol_decryption/data/Odoo 17 GL Remap.xlsx"
