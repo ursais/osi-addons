@@ -111,6 +111,7 @@ class ProductConfigSession(models.Model):
                         # Add bom lines if config values are part of attr_values
                         if set(config.value_ids.ids).issubset(set(attr_values.ids)):
                             if parent_bom_line.bom_id.id == parent_bom.id:
+                                print("?/////~~``~~~~~~~~~~~~~",parent_bom_line,common_values)
                                 if common_values not in common_values_li:
                                     parent_bom_line_vals = self.with_context(parent_bom_line=parent_bom_line)._get_bom_line(variant,product_tmpl_id)
                                     specs = self.get_onchange_specifications(

@@ -158,9 +158,9 @@ class ProductConfigSession(models.Model):
         qty_val_list = []
         for attr_line in product_tmpl_id.attribute_line_ids:
             attr_id = attr_line.attribute_id.id
-            field_name = field_prefix + str(attr_id)
+            field_name = field_prefix + str(attr_line.id)+"_"+str(attr_id)
             custom_field_name = custom_field_prefix + str(attr_id)
-            qty_field_name = qty_field_prefix + str(attr_id)
+            qty_field_name = qty_field_prefix + str(attr_line.id)+"_"+ str(attr_id)
 
             if (
                 field_name not in vals
@@ -212,7 +212,14 @@ class ProductConfigSession(models.Model):
                         _("An error occurred while parsing value for attribute %s")
                         % attr_line.attribute_id.name
                     )
-                attr_val_dict.update({attr_id: field_val})
+                # attr_val_dict.update({attr_id: field_val})
+                if attr_id in attr_val_dict:
+                    if isinstance(attr_val_dict[attr_id], list):
+                        attr_val_dict[attr_id].append(field_val)
+                    else:
+                        attr_val_dict[attr_id] = [attr_val_dict[attr_id], field_val]
+                else:
+                    attr_val_dict[attr_id] = field_val
                 if attr_line.is_qty_required and vals.get(qty_field_name):
                     attribute_value_qty_rec = attribute_value_qty_obj.browse(
                         qty_field_val
@@ -254,6 +261,8 @@ class ProductConfigSession(models.Model):
                         "attribute_value_qty_id": attribute_value_qty_rec.id,
                     }
                 )
+        # print("//////qty_val_list////",qty_val_list)
+
         self.update_config(attr_val_dict, custom_val_dict, qty_val_list)
 
     def update_config(
@@ -385,6 +394,9 @@ class ProductConfigSession(models.Model):
             # specs.update(ch_specs)
         return specs
 
+    # def _get_session_attr_qty_values(self,session_attr_qty_values):
+
+
     def _get_bom_line(self, variant, product_tmpl_id):
         bom_line_vals = super()._get_bom_line(variant, product_tmpl_id)
         session_attr_qty_values = self.session_value_quantity_ids
@@ -392,12 +404,14 @@ class ProductConfigSession(models.Model):
         attr_values = variant.product_template_attribute_value_ids.mapped(
             "product_attribute_value_id"
         )
+        print("ZZZZZZZZZZ",session_attr_qty_values)
         if not parent_bom and self._context.get("product_id"):
             product = self._context.get("product_id")
             local_session_attr_qty_value = session_attr_qty_values.filtered(
                 lambda local_session: local_session.attr_value_id.product_id.id
                 == product.id
             )
+            print("SSSSSSSSSSSSSSS>>",local_session_attr_qty_value)
             bom_line_vals = {
                     "product_id": product.id,
                     "product_qty": local_session_attr_qty_value.qty > 0
@@ -409,16 +423,22 @@ class ProductConfigSession(models.Model):
             if parent_bom_line.config_set_id:
                 for config in parent_bom_line.config_set_id.configuration_ids:
                     if set(config.value_ids.ids).issubset(set(attr_values.ids)):
+                        attribute_ids = config.value_ids.mapped("attribute_id").ids
+                        realtive_ptal_value_ids = product_tmpl_id.mapped("attribute_line_ids").mapped("value_ids").ids
+
+                        # session_value = self._get_session_attr_qty_values(session_attr_qty_values)
+
                         local_session_attr_qty_values = session_attr_qty_values.filtered(
                             lambda local_session: local_session.attr_value_id.product_id
                             and local_session.attr_value_id.attribute_id.id
-                            in config.value_ids.mapped("attribute_id").ids
+                            in attribute_ids 
                         )
                         non_local_session_attr_qty_values = session_attr_qty_values.filtered(
                             lambda local_session: not local_session.attr_value_id.product_id
                             and local_session.attr_value_id.attribute_id.id
-                            in config.value_ids.mapped("attribute_id").ids
+                            in attribute_ids
                         )
+                        # print(parent_bom_line,parent_bom_line.product_qty,"///////@@@@@@@@@@session_attr_qty_values",session_attr_qty_values,local_session_attr_qty_values,non_local_session_attr_qty_values)
                         session_attr_qty_values = (
                             session_attr_qty_values - local_session_attr_qty_values
                         )
@@ -430,6 +450,7 @@ class ProductConfigSession(models.Model):
                                     * local_session_attr_qty_values.qty
                                 ),
                             }
+                            # print("####bom_line_vals######",bom_line_vals)
                         elif non_local_session_attr_qty_values:
                             bom_line_vals = {
                                 "product_id": parent_bom_line.product_id.id,
@@ -453,7 +474,7 @@ class ProductConfigSession(models.Model):
                                 * parent_bom_line.product_qty
                                 or parent_bom_line.product_qty,
                             }
-                        
+        # print("/////////#######",bom_line_vals)
         return bom_line_vals
 
 

@@ -539,14 +539,14 @@ class ProductConfigSession(models.Model):
         custom_field_prefix = product_configurator_obj._prefixes.get(
             "custom_field_prefix"
         )
+        print("1111111111111vals11",vals,self.value_ids)
 
         custom_val = self.get_custom_value_id()
         attr_val_dict = {}
         custom_val_dict = {}
-
         for attr_line in product_tmpl_id.attribute_line_ids:
             attr_id = attr_line.attribute_id.id
-            field_name = field_prefix + str(attr_id)
+            field_name = field_prefix + str(attr_line.id)+"_"+str(attr_id)
             custom_field_name = custom_field_prefix + str(attr_id)
 
             if field_name not in vals and custom_field_name not in vals:
@@ -567,7 +567,16 @@ class ProductConfigSession(models.Model):
                             attr_line.attribute_id.name,
                         )
                     )
-                attr_val_dict.update({attr_id: field_val})
+                print("#########>>>",field_val)
+                if attr_id in attr_val_dict:
+                    if isinstance(attr_val_dict[attr_id], list):
+                        attr_val_dict[attr_id].append(field_val)
+                    elif isinstance(field_val, list):
+                        attr_val_dict[attr_id] = field_val
+                    else:
+                        attr_val_dict[attr_id] = [attr_val_dict[attr_id], field_val]
+                else:
+                    attr_val_dict[attr_id] = field_val
                 # Ensure there is no custom value stored if we have switched
                 # from custom value to selected attribute value.
                 if attr_line.custom:
@@ -581,11 +590,13 @@ class ProductConfigSession(models.Model):
                 # Ensure there is no standard value stored if we have switched
                 # from selected value to custom value.
                 attr_val_dict.update({attr_id: custom_val.id})
+        print("ZZZZZZZZZZ",attr_val_dict)
 
         self.update_config(attr_val_dict, custom_val_dict)
 
     def _update_field_values(self, vals, field_name, attr_line):
         """New method for update field values for a given attribute."""
+        print("QQQQQQQQQQQQQ>>>",vals)
         final_val = None
         if not vals[field_name]:
             return final_val
@@ -607,7 +618,7 @@ class ProductConfigSession(models.Model):
             elif field_vals and field_vals[0] in (Command.UNLINK, Command.DELETE):
                 if field_vals[1] in final_val:
                     final_val.remove(field_vals[1])
-
+        print("@@!final_val>>>",)
         return final_val
 
     def update_config(self, attr_val_dict=None, custom_val_dict=None):
@@ -641,11 +652,13 @@ class ProductConfigSession(models.Model):
         update_vals = {}
 
         value_ids = self.value_ids.ids
+        print("$$$$$$$$$$$$$$$$$$>>>",attr_val_dict)
         for attr_id, vals in attr_val_dict.items():
             attr_val_ids = self.value_ids.filtered(
                 lambda x, attr_id=attr_id: x.attribute_id.id == int(attr_id)
             ).ids
             # Remove all values for this attribute and add vals from dict
+            print("//////~~~~~~~~~~~~",set(value_ids),set(attr_val_ids))
             value_ids = list(set(value_ids) - set(attr_val_ids))
             if not vals:
                 continue
@@ -699,6 +712,7 @@ class ProductConfigSession(models.Model):
                 custom_vals.update({"value": vals})
 
             update_vals["custom_value_ids"].append((0, 0, custom_vals))
+        print("ZZZZZZZZZZZZZupdate_valsZZZZZZZZZZZZ",update_vals)
         self.write(update_vals)
 
     def write(self, vals):
