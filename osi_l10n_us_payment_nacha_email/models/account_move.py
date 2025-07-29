@@ -15,7 +15,7 @@ class AccountMove(models.Model):
         bill_move = []
         for line in self.invoice_line_ids.filtered(lambda l: l.discount):
             subtotal = line.quantity * line.price_unit
-            discount += subtotal - line.price_subtotal
+            # discount += subtotal - line.price_subtotal
         if self.invoice_payments_widget:
             for data in self.invoice_payments_widget.get("content"):
                 move_id = self.browse(data.get("move_id"))
