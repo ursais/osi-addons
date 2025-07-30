@@ -64,18 +64,21 @@ class ProductAttributeValue(models.Model):
                     stock_info = ""
                     if rec.product_id.type == "product":
                         qty_available = rec.product_id.qty_available or 0
-                        outgoing_qty = (
-                            qty_available - rec.product_id.outgoing_qty or 0.0
-                        )
+                        outgoing_qty = qty_available - rec.product_id.outgoing_qty or 0
                         stock_info = f"(A:{outgoing_qty}/OH:{qty_available}) "
 
                     # Product state
                     product_state_string = rec.product_id.product_state_id.name or ""
 
-                    # Final display name
-                    rec.display_name = (
-                        f"[{rec.product_id.default_code}] {name} "
-                        f"{stock_info}({product_state_string})"
-                    )
+                    # Build display name with or without default_code
+                    if rec.product_id.default_code:
+                        rec.display_name = (
+                            f"[{rec.product_id.default_code}] {name} "
+                            f"{stock_info}({product_state_string})"
+                        )
+                    else:
+                        rec.display_name = (
+                            f"{name} {stock_info}({product_state_string})"
+                        )
 
     # END ##########
