@@ -18,7 +18,7 @@
                 </page>
             </notebook>
             <field name="payment_term_id" position="after">
-                <field name="sale_payment_method_id" />
+                <field name="sale_payment_method_id"  required="1"/>
             </field>
         </field>
     </record>
