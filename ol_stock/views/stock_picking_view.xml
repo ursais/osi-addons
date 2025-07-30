@@ -6,14 +6,23 @@
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
         	<field name="picking_type_code" position="after">
-        		<field name="is_po_picking" invisible="1"/>
+				<field name="purchase_id" invisible="1"/>
         	</field>
-        	<button name="action_cancel" position="attributes">
-        		<attribute name="invisible">state not in ('assigned', 'confirmed', 'draft', 'waiting') or is_po_picking</attribute>
-        	</button>
-        	<header position="inside">
-        		<button name="action_cancel" invisible="state not in ('assigned', 'confirmed', 'draft', 'waiting') or not is_po_picking" string="Cancel" confirm="The transfer you are trying to cancel is linked to a Purchase Order. Make sure the Purchase Order is updated accordingly. Are you sure you want to cancel?" type="object" data-hotkey="x"/>
-        	</header>
+
+            <!-- Hide original button only for PO-linked receipts -->
+            <button name="action_cancel" position="attributes">
+                <attribute name="invisible">state not in ('assigned', 'confirmed', 'draft', 'waiting') or (picking_type_code == 'incoming' and purchase_id)</attribute>
+            </button>
+
+            <!-- Add special cancel button for PO-linked receipts -->
+            <header position="inside">
+                <button name="action_cancel"
+                        type="object"
+                        string="Cancel"
+                        confirm="The transfer you are trying to cancel is linked to a Purchase Order. Make sure the Purchase Order is updated accordingly. Are you sure you want to cancel?"
+                        data-hotkey="x"
+                        invisible="state not in ('assigned', 'confirmed', 'draft', 'waiting') or picking_type_code != 'incoming' or not purchase_id" />
+            </header>
         </field>
     </record>
 
