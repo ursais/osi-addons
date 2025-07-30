@@ -267,4 +267,32 @@ class StockPicking(models.Model):
             ):
                 picking.is_po_picking = True
 
+    def write(self, vals):
+        res = super().write(vals)
+        for picking in self:
+            # If the picking is an incoming (receipt) and scheduled_date is updated
+            if picking.picking_type_code == "incoming" and vals.get("scheduled_date"):
+                # Update date on all stock moves to match the new scheduled_date
+                picking.move_ids.write({"date": vals.get("scheduled_date")})
+        return res
+
+    def _set_scheduled_date(self):
+        # Exclude incoming pickings from the default scheduled date setting logic
+        records = self.filtered(lambda l: l.picking_type_code != "incoming")
+
+        # Call the parent method only for non-incoming pickings
+        return super(StockPicking, records)._set_scheduled_date()
+
+    @api.depends(
+        "move_ids.state",
+        "move_ids.date",
+        "move_type",
+    )
+    def _compute_scheduled_date(self):
+        # Exclude incoming pickings from the default computation of scheduled_date
+        records = self.filtered(lambda l: l.picking_type_code != "incoming")
+
+        # Call the parent method only for non-incoming pickings
+        return super(StockPicking, records)._compute_scheduled_date()
+
     # END #########
