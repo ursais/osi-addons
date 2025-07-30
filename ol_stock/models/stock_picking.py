@@ -24,11 +24,6 @@ class StockPicking(models.Model):
         store=True,
         help="The total of the sales price (from sale order or product sales price) of all done products and the shipping cost",
     )
-    is_po_picking = fields.Boolean(
-        string="Is PO Picking",
-        compute="_compute_is_po_picking",
-        help="Helper field if pick is from a PO, if cancelling, show confirmation.",
-    )
 
     # END #########
     # METHODS #####
@@ -251,21 +246,6 @@ class StockPicking(models.Model):
                 product_lines.append(product_line_data)
 
         return product_lines
-
-    def _compute_is_po_picking(self):
-        for picking in self:
-            picking.is_po_picking = False
-            if (
-                picking.picking_type_code == "internal"
-                and picking.move_ids.mapped("move_orig_ids")
-                and (
-                    any(
-                        move.purchase_line_id
-                        for move in picking.move_ids.mapped("move_orig_ids")
-                    )
-                )
-            ):
-                picking.is_po_picking = True
 
     def write(self, vals):
         res = super().write(vals)

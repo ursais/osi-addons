@@ -17,6 +17,7 @@
         "ol_sale",
         "stock",
         "delivery_stock_picking_batch",
+        "purchase_stock",
         "stock_inventory",
     ],
     # always loaded
