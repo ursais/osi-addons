@@ -278,6 +278,12 @@
         <span t-field="move.product_id" position="after">
             <p><span t-field="move.note">Description on transfer</span></p>
         </span>
+        <xpath expr="//div[@name='div_sched_date']/p[1]" position="attributes">
+            <attribute name="t-options">{"widget": "date"}</attribute>
+        </xpath>
+        <xpath expr="//div[@name='div_sched_date']/p[2]" position="attributes">
+            <attribute name="t-options">{"widget": "date"}</attribute>
+        </xpath>
     </template>
 
 </odoo>
