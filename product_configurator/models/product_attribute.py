@@ -183,7 +183,8 @@ class ProductAttributeLine(models.Model):
     multi = fields.Boolean(
         help="Allow selection of multiple values for this attribute?",
     )
-    default_val = fields.Many2one(comodel_name="product.attribute.value")
+    default_val = fields.Many2one(comodel_name="product.attribute.value",company_dependent=True,)
+
 
     sequence = fields.Integer(default=10)
 
@@ -328,6 +329,7 @@ class ProductAttributeValue(models.Model):
         """
         product_tmpl_id = self.env.context.get("_cfg_product_tmpl_id")
         if product_tmpl_id:
+
             # TODO: Avoiding browse here could be a good performance enhancer
             product_tmpl = self.env["product.template"].browse(product_tmpl_id)
             tmpl_vals = product_tmpl.attribute_line_ids.mapped("value_ids")
@@ -358,6 +360,10 @@ class ProductAttributeValue(models.Model):
             if attr_restrict_ids:
                 new_args.append(("attribute_id", "not in", attr_restrict_ids))
             args = new_args
+        
+        if self._context.get("show_company_dependent",False):
+            ptal_id = self.env["product.template.attribute.line"].browse(self._context.get("show_company_dependent"))
+            args = ['|',("company_ids","in",self.env.company.id),("company_ids","=",False),("attribute_id","=",ptal_id.attribute_id.id)]
         res = super().name_search(name=name, args=args, operator=operator, limit=limit)
         return res
 

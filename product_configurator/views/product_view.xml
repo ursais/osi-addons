@@ -70,7 +70,7 @@
                 <field
                     name="default_val"
                     domain="[('id', 'in', value_ids)]"
-                    context="{'show_attribute': False}"
+                    context="{'show_attribute': False,'show_company_dependent':id}"
                     options="{'no_create': True, 'no_create_edit': True}"
                     column_invisible="not context.get('default_config_ok', False)"
                 />
