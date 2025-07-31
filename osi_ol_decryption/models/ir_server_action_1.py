@@ -11,6 +11,33 @@ import openpyxl
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
+    def update_product_category_account(self):
+        self = self.sudo()
+        category_ids = self.env["product.category"].search([])
+        acc_product = self.env.ref("lgx_account.41100-02")
+        acc_materials = self.env.ref("lgx_account.51105-02")
+        us_compnay = self.env.ref("base.main_company")
+        for catg in category_ids:
+            catg.with_company(us_compnay).write(
+                {
+                    "property_stock_account_input_categ_id": acc_product.id,
+                    "property_stock_account_output_categ_id": acc_materials.id,
+                }
+            )
+
+        acc_product = self.env.ref("lgx_account.41100-03")
+        acc_materials = self.env.ref("lgx_account.51105-03")
+        eu_compnay = self.env.ref("ol_base.onlogic_eu")
+        for catg in category_ids:
+            catg.with_company(eu_compnay).write(
+                {
+                    "property_stock_account_input_categ_id": acc_product.id,
+                    "property_stock_account_output_categ_id": acc_materials.id,
+                }
+            )
+        
+
+
     def delete_account(self):
         self = self.sudo()
         file_path = "/home/odoo/odoo17/odoo/addons/osi_ol_decryption/osi_ol_decryption/data/account_delete.xlsx"
@@ -24,8 +51,8 @@ class IrActionsServer(models.Model):
                 code = row[0].value
                 name = row[1].value
                 company = row[4].value
-                # if name in ('Cash', 'Bank'):
-                #     continue
+                if name in ('Cash', 'Bank'):
+                    continue
                 account = self.env['account.account'].search([
                     ('code', '=', code),
                     ('name', '=', name),
@@ -44,7 +71,7 @@ class IrActionsServer(models.Model):
         
         # Load workbook
         self = self.sudo()
-        file_path = "osi_ol_decryption/data/Odoo 17 GL Remap.xlsx"
+        file_path = "/home/odoo/odoo17/odoo/addons/osi_ol_decryption/data/Odoo 17 GL Remap.xlsx"
         wb = openpyxl.load_workbook(filename=file_path, data_only=True)
         companies = self.env['res.company'].search([])
         company_names = {c.name for c in companies}
