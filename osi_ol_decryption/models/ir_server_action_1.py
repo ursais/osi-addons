@@ -40,7 +40,7 @@ class IrActionsServer(models.Model):
 
     def delete_account(self):
         self = self.sudo()
-        file_path = "/home/odoo/odoo17/odoo/addons/osi_ol_decryption/osi_ol_decryption/data/account_delete.xlsx"
+        file_path = "/home/odoo/odoo17/odoo/addons/osi_ol_decryption/data/account_delete.xlsx"
         wb = openpyxl.load_workbook(filename=file_path, data_only=True)
         for sheet_name in wb.sheetnames:
             sheet = wb[sheet_name]
