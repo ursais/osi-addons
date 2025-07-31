@@ -93,7 +93,7 @@
 
                             <!--System configuration-->
                             <div class="ol_products_system_configuration">
-                                <div class="system-configuration" t-if="product_line['quote_config']">
+                                <div class="system-configuration" t-if="product_line['quote_config'] and budgetary_quote">
                                     <t t-set="quote_lines" t-value="product_line['quote_lines']"/>
                                     <div class="system-configuration-line ol_flex ol_flex_just_cont_space_between" t-foreach="quote_lines" t-as="quote_line">
                                         <div class="system-configuration-attribute">
