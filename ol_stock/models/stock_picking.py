@@ -109,7 +109,7 @@ class StockPicking(models.Model):
             # which we would like to use as a default
             product = sale_order_line_product or move_product
             qty = sale_order_line and sale_order_line.product_qty or move.product_qty
-
+            lot_ids = move.lot_ids
             # Get the product line where these attribute match with the current move:
             #   - sale_order_line
             #   - manufacturing order
@@ -127,7 +127,6 @@ class StockPicking(models.Model):
                 ),
                 None,
             )
-
             if similar_product_line:
                 # If a similar product_line already exists
                 # don't create a new product_line for it
@@ -147,8 +146,11 @@ class StockPicking(models.Model):
                     qty_adjusted_sale_order_lines[sale_order_line.id] = (
                         similar_product_line.get("uuid")
                     )
+                if move.product_id.tracking == 'serial':
+                    system_serial_numbers = similar_product_line["system_serial_numbers"]
+                    system_serial_numbers.extend(lot_ids.mapped("name"))
+                    similar_product_line["system_serial_numbers"] = system_serial_numbers
                 continue
-
             serials = move.lot_ids.mapped("name") if move.lot_ids else False
 
             # Assemble the product dict
@@ -244,7 +246,6 @@ class StockPicking(models.Model):
                 }
 
                 product_lines.append(product_line_data)
-
         return product_lines
 
     def write(self, vals):
