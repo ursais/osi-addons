@@ -307,6 +307,7 @@ class HelpdeskTicket(models.Model):
                 "location_dest_id": destination_location_id,
                 "ticket_id": self.id,
                 "owner_id": self.partner_id.id or False,
+                "scheduled_date": fields.Datetime.now() + timedelta(days=7),
             }
         )
 
