@@ -42,6 +42,7 @@
         "views/repair_views.xml",
         "views/stock_scrap_views.xml",
         "views/stock_warehouse_views.xml",
+        "views/account_move_view.xml",
     ],
     "installable": True,
 }
