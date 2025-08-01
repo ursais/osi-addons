@@ -107,6 +107,9 @@
                         <button name="action_view_sale" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="sale_order_count == 0">
                             <field name="sale_order_count" widget="statinfo" string="Sales" />
                         </button>
+                        <button name="action_view_mo_delivery" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="picking_count == 0">
+                            <field name="picking_count" widget="statinfo" string="Internal Tranfer" />
+                        </button>
                     </div>
                     <div class="alert alert-danger mb8" role="alert" invisible="not exception_ids">
                         IMPORTANT: There are manufacturing orders with exceptions.
