@@ -71,7 +71,7 @@
         <field name="description">The sale order has a downpayment but also has a balance due.</field>
         <field name="sequence">76</field>
         <field name="model">sale.order</field>
-        <field name="code">failed = any(line.is_downpayment for line in self.order_line) and sum(line.price_subtotal or line.price_unit for line in self.order_line if line.is_downpayment) &lt; self.amount_total</field>
+        <field name="code">failed = any(line.is_downpayment for line in self.order_line) and sum(inv.amount_total for inv in self.invoice_ids if inv.state == 'posted' and inv.payment_state in ('paid', 'in_payment')) &lt; self.amount_total</field>
         <field name="active" eval="True"/>
         <field name="allowed_group_ids" eval="[(6,0,[ref('ol_base.role_fin_manager_res_groups')])]"/>
     </record>
