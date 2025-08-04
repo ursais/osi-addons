@@ -1,4 +1,5 @@
 <odoo>
+
     <record id="view_partner_form" model="ir.ui.view">
         <field name="name">ol_base.view_partner_form</field>
         <field name="model">res.partner</field>
@@ -8,6 +9,10 @@
             <xpath expr="//notebook/page[last()]" position="after">
                 <page name="onlogic_info" string="OnLogic Information" groups="ol_base.dev_team"/>
             </xpath>
+            <xpath expr="//field[@name='child_ids']/form/sheet/group/group" position="inside">
+                <field name="override_address"/>
+            </xpath>
         </field>
     </record>
+
 </odoo>
