@@ -74,7 +74,7 @@
             </field>
             <!-- Remove Widget from Due Date -->
             <xpath expr="//field[@name='invoice_date_due']" position="after">
-                <field name="invoice_due_date" optional="show" />
+                <field name="invoice_date_due_display" optional="show" />
             </xpath>
         </field>
     </record>
