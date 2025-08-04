@@ -293,4 +293,14 @@ class SaleOrder(models.Model):
 
         return template
 
+    def write(self, vals):
+        res = super(SaleOrder, self).write(vals)
+        if "partner_shipping_id" in vals:
+            for order in self.filtered(lambda a: a.state == "sale"):
+                for picking in order.picking_ids.filtered(
+                    lambda p: p.state not in ["done", "cancel"]
+                ):
+                    picking.partner_id = order.partner_shipping_id
+        return res
+
     # END #########
