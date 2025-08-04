@@ -1,0 +1,16 @@
+<odoo>
+	<record id="ol_stock_view_scrap_reason_code_form" model="ir.ui.view">
+        <field name="name">scrap.reason.code.form</field>
+        <field name="model">scrap.reason.code</field>
+        <field name="inherit_id" ref="scrap_reason_code.view_scrap_reason_code_form" />
+        <field name="priority" eval="3"/>
+        <field name="arch" type="xml">
+            <field name="location_id" position="before">
+                <field name="company_id"/>
+            </field>
+            <field name="location_id" position="attributes">
+            	<attribute name="domain">[('scrap_location', '=', True),('company_id', '=', company_id)]</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>
