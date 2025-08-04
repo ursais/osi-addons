@@ -37,7 +37,6 @@ class IrActionsServer(models.Model):
             )
         
 
-
     def delete_account(self):
         self = self.sudo()
         file_path = "/home/odoo/odoo17/odoo/addons/osi_ol_decryption/data/account_delete.xlsx"
@@ -66,12 +65,30 @@ class IrActionsServer(models.Model):
             self._cr.commit()
 
 
-
     def update_accounts_from_excel(self):
-        
+        import openpyxl
+        def format_decimal(value):
+            # Ensure it's a float or decimal
+            try:
+                value = float(value)
+            except ValueError:
+                return value  # or raise an error
+
+            # Split integer and decimal part
+            integer_part = int(value)
+            decimal_part = round(value - integer_part, 2)
+
+            if decimal_part > 0:
+                # Remove leading "0." from decimal and replace "." with "-"
+                decimal_str = str(value).split(".")[1]
+                return f"{integer_part}-{decimal_str}"
+            else:
+                return str(integer_part) 
         # Load workbook
         self = self.sudo()
-        file_path = "/home/odoo/odoo17/odoo/addons/osi_ol_decryption/data/Odoo 17 GL Remap.xlsx"
+
+        file_path = "/home/odoo/odoo17/odoo/addons/osi_ol_decryption/osi_ol_decryption/data/Odoo 17 GL Remap.xlsx"
+
         wb = openpyxl.load_workbook(filename=file_path, data_only=True)
         companies = self.env['res.company'].search([])
         company_names = {c.name for c in companies}
@@ -79,34 +96,50 @@ class IrActionsServer(models.Model):
         total_updates = 0
 
         for sheet_name in wb.sheetnames:
-            if sheet_name not in company_names:
-                continue  # Skip if sheet name is not a company
-
-            company = self.env['res.company'].search([('name', '=', sheet_name)], limit=1)
+            sheet_company = sheet_name
+            if sheet_company not in company_names:
+                print ("\n ==============sheet_name=====", sheet_name)
+                if sheet_company == 'Greenfield Real Estate':
+                    sheet_company = 'Greenfield Real Estate LLC'
+                elif sheet_company == 'Interlogic':
+                    sheet_company = 'Interlogic, Inc.'
+                else:
+                    continue  # Skip if sheet name is not a company
+            company = self.env['res.company'].search([('name', '=', sheet_company)], limit=1)
+            print ("\n company==========",company)
             sheet = wb[sheet_name]
             updated_count = 0
 
             # Read rows starting from row 3 (header is in row 2)
             for row in sheet.iter_rows(min_row=3):
-                old_code = row[7].value       # Column H (index 7)
-                old_name = row[8].value       # Column J (index 8)
-                new_code = row[14].value      # Column O (index 14)
+                old_code = str(row[7].value)       # Column H (index 7)
+                old_name = row[8].value       # Column I (index 8)
+                old_type = row[9].value       # Column J (index 9)
+                new_code = str(row[14].value)      # Column O (index 14)
                 new_name = row[15].value      # Column P (index 15)
                 new_type = row[16].value      # Column Q (index 16)
+                reconcil = row[19].value
                 tag_string = row[20].value    # Column U (index 20)
 
+                # if old_code.endswith(".0"):
+                #     old_code = old_code.rstrip("0").rstrip(".") 
+                
+                # if new_code.endswith(".0"):
+                #     new_code = new_code.rstrip("0").rstrip(".")
+                old_code = format_decimal(old_code)
+                # new_code = format_decimal(new_code) 
                 if not old_code:
                     continue
-
+                print ("\n old_code:-", old_code, "old_name:-", old_name, "old_type:-", old_type, "new_code:-", new_code, "new_name:-", new_name, "new_type:-", new_type)
                 # Search account within company
-                account = self.env['account.account'].with_company(company).search([
+                account = self.env['account.account'].search([
                     ('code', '=', old_code),
-                    ('name', '=', old_name)
+                    ('name', '=', old_name),
+                    ('company_id', '=', company.id)
                 ], limit=1)
 
-                if not account:
+                if not account and new_code == 'None':
                     continue
-
                 # Prepare tag IDs
                 tag_ids = []
                 if tag_string:
@@ -114,28 +147,183 @@ class IrActionsServer(models.Model):
                     for tag_name in tag_names:
                         tag = self.env['account.account.tag'].search([('name', '=', tag_name)], limit=1)
                         if not tag:
-                            self.env['account.account.tag'].create({'name': 'Cash and Cash Equivalents', 'applicability': 'accounts'})
+                            self.env['account.account.tag'].create({'name': tag_name, 'applicability': 'accounts'})
                         if tag:
                             tag_ids.append(tag.id)
 
                 # Check for changes
                 diffs = {}
-                if new_code and account.code != new_code:
-                    diffs['code'] = new_code
-                if new_name and account.name != new_name:
-                    diffs['name'] = new_name
-                if new_type and account.account_type != new_type:
-                    diffs['account_type'] = new_type
-                if tag_ids and set(account.tag_ids.ids) != set(tag_ids):
-                    diffs['tag_ids'] = [(6, 0, tag_ids)]
+                selection = dict(account._fields['account_type'].selection)
+                if account:
+                    if new_code and account.code != str(new_code):
+                        diffs['code'] = new_code
+                    if new_name and account.name != new_name:
+                        diffs['name'] = new_name
+                    if new_type and old_type and old_type != new_type:
+                        if new_type == 'Non-current liabilities':
+                            new_type = 'Non-current Liabilities'
+                        if new_type == '#N/A':
+                            continue
 
-                if diffs:
-                    print ("\n diffsdiffs", diffs)
-                    # account.write(diffs)
-                    updated_count += 1
+                        keys_found = [key for key, value in selection.items() if value == new_type]
+                        diffs['account_type'] = keys_found[0]
+                    if tag_ids and set(account.tag_ids.ids) != set(tag_ids):
+                        diffs['tag_ids'] = [(6, 0, tag_ids)]
 
-            total_updates += updated_count
-        print("\n print==========", total_updates)
+                    # if diffs:
+                    #     print ("\n --------------write----------", diffs)
+                    #     if diffs.get('code') == '11019A.02':
+                    #         continue
+                    #     account.with_company(company).write(diffs)
+                    #     updated_count += 1
+                    if diffs:
+                        print("\n --------------write----------", diffs)
+                        vals = []
+                        params = []
+                        vals.append("reconcile = %s")
+                        params.append(reconcil)
+                        if 'code' in diffs:
+                            vals.append("code = %s")
+                            params.append(diffs['code'])
+                        if 'name' in diffs:
+                            vals.append("name = json_build_object(%s, %s)")
+                            params.append('en_US')
+                            params.append(diffs['name'])
+                        if 'account_type' in diffs:
+                            vals.append("account_type = %s")
+                            params.append(diffs['account_type'])
+                        if vals:
+                            params.append(account.id)
+
+                            query = f"""
+                                UPDATE account_account
+                                SET {', '.join(vals)}
+                                WHERE id = %s
+                            """
+                            self.env.cr.execute(query, tuple(params))
+
+                        if 'tag_ids' in diffs:
+                            # Update tags in many2many manually
+                            self.env.cr.execute(
+                                "DELETE FROM account_account_account_tag WHERE account_account_id = %s",
+                                (account.id,))
+                            for tag_id in tag_ids:
+                                self.env.cr.execute(
+                                    "INSERT INTO account_account_account_tag (account_account_id, account_account_tag_id) VALUES (%s, %s)",
+                                    (account.id, tag_id)
+                                )
+
+                        updated_count += 1
+
+                else:
+                    account = self.env['account.account'].with_company(company).search([
+                    ('code', '=', new_code),
+                    ('name', '=', new_name)], limit=1)
+                    if not account:
+                        print ("\n new_typenew_type==========", new_type)
+                        if new_type == 'Non-current liabilities':
+                            new_type = 'Non-current Liabilities'
+                        keys_found = [key for key, value in selection.items() if value == new_type]
+                        
+                        diffs = {'name': new_name, 'code': new_code, 'account_type': keys_found[0], 'company_id': company.id, 'tag_ids': [(6, 0, tag_ids)]}
+                        print ("\n --------------create----------", diffs)
+                        if (diffs.get('code') == '21440.09' and diffs.get('company_id') == 9) or (diffs.get('code') == '99999.1' and diffs.get('company_id') == 3):
+                            continue
+                        self.env['account.account'].with_company(company).create(diffs)
+        
+        self.env['account.account'].with_user(1).search([])._compute_account_root()
+
+    # def update_accounts_from_excel(self):
+        # def format_decimal(value):
+        #     # Ensure it's a float or decimal
+        #     try:
+        #         value = float(value)
+        #     except ValueError:
+        #         return value  # or raise an error
+
+        #     # Split integer and decimal part
+        #     integer_part = int(value)
+        #     decimal_part = round(value - integer_part, 2)
+
+        #     if decimal_part > 0:
+        #         # Remove leading "0." from decimal and replace "." with "-"
+        #         decimal_str = str(value).split(".")[1]
+        #         return f"{integer_part}-{decimal_str}"
+        #     else:
+        #         return str(integer_part)        
+        
+    #     # Load workbook
+    #     self = self.sudo()
+    #     file_path = "/home/odoo/odoo17/odoo/addons/osi_ol_decryption/osi_ol_decryption/data/Odoo 17 GL Remap.xlsx"
+    #     wb = openpyxl.load_workbook(filename=file_path, data_only=True)
+    #     companies = self.env['res.company'].search([])
+    #     company_names = {c.name for c in companies}
+    #     print ("\n company_names", company_names)
+
+    #     total_updates = 0
+
+    #     for sheet_name in wb.sheetnames:
+    #         if sheet_name not in company_names:
+    #             continue  # Skip if sheet name is not a company
+
+    #         company = self.env['res.company'].search([('name', '=', sheet_name)], limit=1)
+    #         sheet = wb[sheet_name]
+    #         updated_count = 0
+
+    #         # Read rows starting from row 3 (header is in row 2)
+    #         for row in sheet.iter_rows(min_row=3):
+    #             # print ("\n rowrow", row)
+    #             old_code = row[7].value       # Column H (index 7)
+    #             old_name = row[8].value       # Column J (index 8)
+    #             new_code = row[14].value      # Column O (index 14)
+    #             new_name = row[15].value      # Column P (index 15)
+    #             new_type = row[16].value      # Column Q (index 16)
+    #             reconcil = row[19].value
+    #             tag_string = row[20].value    # Column U (index 20)
+
+    #             if not old_code:
+    #                 continue
+    #             old_code = format_decimal(old_code)
+    #             # Search account within company
+    #             account = self.env['account.account'].with_company(company).search([
+    #                 ('code', '=', old_code),
+    #                 ('name', '=', old_name)
+    #             ], limit=1)
+                
+    #             if not account:
+    #                 continue
+
+    #             # Prepare tag IDs
+    #             tag_ids = []
+    #             if tag_string:
+    #                 tag_names = [t.strip() for t in tag_string.split(',')]
+    #                 for tag_name in tag_names:
+    #                     tag = self.env['account.account.tag'].search([('name', '=', tag_name)], limit=1)
+    #                     if not tag:
+    #                         self.env['account.account.tag'].create({'name': 'Cash and Cash Equivalents', 'applicability': 'accounts'})
+    #                     if tag:
+    #                         tag_ids.append(tag.id)
+
+    #             # Check for changes
+    #             diffs = {}
+    #             if new_code and account.code != new_code:
+    #                 diffs['code'] = new_code
+    #             if new_name and account.name != new_name:
+    #                 diffs['name'] = new_name
+    #             if new_type and account.account_type != new_type:
+    #                 diffs['account_type'] = new_type
+    #             if tag_ids and set(account.tag_ids.ids) != set(tag_ids):
+    #                 diffs['tag_ids'] = [(6, 0, tag_ids)]
+                 
+
+    #             if diffs:
+    #                 print ("\n diffsdiffs", diffs)
+    #                 diffs['reconcile'] = reconcil
+    #                 account.write(diffs)
+    #                 updated_count += 1
+
+    #         total_updates += updated_count
+    #     print("\n print==========", total_updates)
         
 
     def run_hot_ar(self):
@@ -1239,7 +1427,12 @@ class IrActionsServer(models.Model):
             "ol_helpdesk_repair_batch",
             "ol_pim",
             "ol_product",
-            "ol_account_hot_ar"
+            "ol_account_hot_ar",
+            "ol_credit_limit",
+            "ol_rma_supplier",
+            "ol_fraud_detection",
+            "ol_sale_order_inspection",
+
         ]
 
         for module in modules:
@@ -1248,4 +1441,3 @@ class IrActionsServer(models.Model):
             ).button_immediate_install()
 
 
-# "ol_purchase_3way_match",
