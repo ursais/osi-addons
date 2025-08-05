@@ -169,6 +169,7 @@ class StockPicking(models.Model):
             }
 
             product_lines.append(product_line_data)
+
         return product_lines
 
     def get_picking_product_lines(self):
@@ -219,7 +220,6 @@ class StockPicking(models.Model):
                 }
 
                 product_lines.append(product_line_data)
-
         return product_lines
 
     def get_picking_move_lines(self):

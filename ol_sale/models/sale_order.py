@@ -177,7 +177,9 @@ class SaleOrder(models.Model):
             "product_lines": [],
         }
 
-        product_lines = self.order_line.filtered(lambda l: not l.is_delivery)
+        product_lines = self.with_context(
+            lang=self.contact_ids and self.contact_ids[0].lang or self.partner_id.lang
+        ).order_line.filtered(lambda l: not l.is_delivery)
 
         for sale_order_line in product_lines:
             quote_config = sale_order_line.config_session_id or False
@@ -227,7 +229,6 @@ class SaleOrder(models.Model):
         order_data["shipping_subtotal_amount"] = sum(
             shipping_lines.mapped("price_subtotal")
         )
-
         return order_data
 
     def _send_order_confirmation_mail(self):
