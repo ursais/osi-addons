@@ -23,5 +23,6 @@
         "views/product_view.xml",
         "reports/purchase_order_doc.xml",
         "data/purchase_email.xml",
+        "views/stock_picking_views.xml",
     ],
 }
