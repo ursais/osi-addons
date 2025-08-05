@@ -39,6 +39,7 @@ class IrActionsServer(models.Model):
         # update the journal Data
         self._cr.execute("update account_journal set active = 'f' where id = 162;") #Purchase Journal USD
         self._cr.execute("update account_journal set active = 'f' where id = 158;") #Purchase Refund Journal USD
+        self._cr.execute("update account_journal set active = 'f' where id = 270;") #Vendor Bills
         self._cr.execute("update account_journal set name = json_build_object('en_US', 'Purchase Refund Journal') where id = 215;") # Purchase Refund Journal USD
         self._cr.execute("update account_journal set name = json_build_object('en_US', 'Purchase Journal') where id = 214;") # Purchase Journal EUR
 
