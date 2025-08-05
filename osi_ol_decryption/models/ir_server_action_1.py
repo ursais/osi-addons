@@ -11,6 +11,33 @@ import openpyxl
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
+
+    def mig_scrap_reasons(self):
+        self = self.sudo()
+        self._cr.execute("select name from failure_reason group by name;")
+        failure_reason_ids = self._cr.fetchall()
+        compnay_ids = self.env['res.company'].search([('id', 'in', (1,2))])
+        for company in compnay_ids:
+            for resaon in failure_reason_ids:
+                if company.id == 2:
+                    location = 117  # EU/SRMA Staging
+                else:
+                    location = 116  # WH/SRMA Staging
+                
+                scrap_reason = self.env['scrap.reason.code'].create({
+                    'name': resaon[0],
+                    'company_id': company.id,
+                    'location_id': location
+                })
+        for company in compnay_ids:
+            reason_ids = self.env['scrap.reason.code'].search([('company_id', '=', company.id)])
+            for reason in reason_ids:
+                self._cr.execute("""UPDATE stock_scrap AS ss SET reason_code_id = %s 
+                                    FROM failure_reason AS fr 
+                                    WHERE fr.id = ss.failure_reason 
+                                    AND fr.name = %s 
+                                    AND ss.company_id = %s;""", (reason.id,reason.name, company.id))
+
     def update_product_category_account(self):
         self = self.sudo()
         category_ids = self.env["product.category"].search([])
