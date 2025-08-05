@@ -36,6 +36,15 @@ class IrActionsServer(models.Model):
                 }
             )
         
+        # update the journal Data
+        self._cr.execute("update account_journal set active = 'f' where id = 162;") #Purchase Journal USD
+        self._cr.execute("update account_journal set active = 'f' where id = 158;") #Purchase Refund Journal USD
+        self._cr.execute("update account_journal set name = json_build_object('en_US', 'Purchase Refund Journal') where id = 215;") # Purchase Refund Journal USD
+        self._cr.execute("update account_journal set name = json_build_object('en_US', 'Purchase Journal') where id = 214;") # Purchase Journal EUR
+
+
+
+        
 
     def delete_account(self):
         self = self.sudo()
@@ -98,7 +107,7 @@ class IrActionsServer(models.Model):
         for sheet_name in wb.sheetnames:
             sheet_company = sheet_name
             if sheet_company not in company_names:
-                print ("\n ==============sheet_name=====", sheet_name)
+                # print ("\n ==============sheet_name=====", sheet_name)
                 if sheet_company == 'Greenfield Real Estate':
                     sheet_company = 'Greenfield Real Estate LLC'
                 elif sheet_company == 'Interlogic':
@@ -232,98 +241,6 @@ class IrActionsServer(models.Model):
                         self.env['account.account'].with_company(company).create(diffs)
         
         self.env['account.account'].with_user(1).search([])._compute_account_root()
-
-    # def update_accounts_from_excel(self):
-        # def format_decimal(value):
-        #     # Ensure it's a float or decimal
-        #     try:
-        #         value = float(value)
-        #     except ValueError:
-        #         return value  # or raise an error
-
-        #     # Split integer and decimal part
-        #     integer_part = int(value)
-        #     decimal_part = round(value - integer_part, 2)
-
-        #     if decimal_part > 0:
-        #         # Remove leading "0." from decimal and replace "." with "-"
-        #         decimal_str = str(value).split(".")[1]
-        #         return f"{integer_part}-{decimal_str}"
-        #     else:
-        #         return str(integer_part)        
-        
-    #     # Load workbook
-    #     self = self.sudo()
-    #     file_path = "/home/odoo/odoo17/odoo/addons/osi_ol_decryption/osi_ol_decryption/data/Odoo 17 GL Remap.xlsx"
-    #     wb = openpyxl.load_workbook(filename=file_path, data_only=True)
-    #     companies = self.env['res.company'].search([])
-    #     company_names = {c.name for c in companies}
-    #     print ("\n company_names", company_names)
-
-    #     total_updates = 0
-
-    #     for sheet_name in wb.sheetnames:
-    #         if sheet_name not in company_names:
-    #             continue  # Skip if sheet name is not a company
-
-    #         company = self.env['res.company'].search([('name', '=', sheet_name)], limit=1)
-    #         sheet = wb[sheet_name]
-    #         updated_count = 0
-
-    #         # Read rows starting from row 3 (header is in row 2)
-    #         for row in sheet.iter_rows(min_row=3):
-    #             # print ("\n rowrow", row)
-    #             old_code = row[7].value       # Column H (index 7)
-    #             old_name = row[8].value       # Column J (index 8)
-    #             new_code = row[14].value      # Column O (index 14)
-    #             new_name = row[15].value      # Column P (index 15)
-    #             new_type = row[16].value      # Column Q (index 16)
-    #             reconcil = row[19].value
-    #             tag_string = row[20].value    # Column U (index 20)
-
-    #             if not old_code:
-    #                 continue
-    #             old_code = format_decimal(old_code)
-    #             # Search account within company
-    #             account = self.env['account.account'].with_company(company).search([
-    #                 ('code', '=', old_code),
-    #                 ('name', '=', old_name)
-    #             ], limit=1)
-                
-    #             if not account:
-    #                 continue
-
-    #             # Prepare tag IDs
-    #             tag_ids = []
-    #             if tag_string:
-    #                 tag_names = [t.strip() for t in tag_string.split(',')]
-    #                 for tag_name in tag_names:
-    #                     tag = self.env['account.account.tag'].search([('name', '=', tag_name)], limit=1)
-    #                     if not tag:
-    #                         self.env['account.account.tag'].create({'name': 'Cash and Cash Equivalents', 'applicability': 'accounts'})
-    #                     if tag:
-    #                         tag_ids.append(tag.id)
-
-    #             # Check for changes
-    #             diffs = {}
-    #             if new_code and account.code != new_code:
-    #                 diffs['code'] = new_code
-    #             if new_name and account.name != new_name:
-    #                 diffs['name'] = new_name
-    #             if new_type and account.account_type != new_type:
-    #                 diffs['account_type'] = new_type
-    #             if tag_ids and set(account.tag_ids.ids) != set(tag_ids):
-    #                 diffs['tag_ids'] = [(6, 0, tag_ids)]
-                 
-
-    #             if diffs:
-    #                 print ("\n diffsdiffs", diffs)
-    #                 diffs['reconcile'] = reconcil
-    #                 account.write(diffs)
-    #                 updated_count += 1
-
-    #         total_updates += updated_count
-    #     print("\n print==========", total_updates)
         
 
     def run_hot_ar(self):
