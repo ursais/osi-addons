@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="advanced_web_domain_widget.DateSelectionBits" owl="1">
+        <div class="o_ds_value_cell">
+            <select t-att-value="props.value" class="o_domain_leaf_operator_select o_input text-truncate pe-1" t-on-change="onchange">
+                <option value="today">Today</option>
+                <option value="this_week">This Week</option>
+                <option value="this_month">This Month</option>
+                <option value="this_quarter">This Quarter</option>
+                <option value="this_year">This Year</option>
+                <option value="last_day">Last Day</option>
+                <option value="last_week">Last Week</option>
+                <option value="last_month">Last Month</option>
+                <option value="last_quarter">Last Quarter</option>
+                <option value="last_year">Last Year</option>
+                <option value="last_7_days">Last 7 Days</option>
+                <option value="last_30_days">Last 30 Days</option>
+                <option value="last_90_days">Last 90 Days</option>
+                <option value="last_365_days">Last 365 Days</option>
+                <option value="next_day">Next Day</option>
+                <option value="next_week">Next Week</option>
+                <option value="next_month">Next Month</option>
+                <option value="next_quarter">Next Quarter</option>
+                <option value="next_year">Next Year</option>
+            </select>
+        </div>
+    </t>
+
+</templates>

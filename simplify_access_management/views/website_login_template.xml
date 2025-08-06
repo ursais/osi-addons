@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="login_layout_test" inherit_id="web.login" name="Website Login test" priority="50">
+        <xpath expr="//form/div[4]" position="inside">
+            <a t-attf-href="/web/request_otp" t-if="error == 'Not allowed to login from this IP'" name="add_ip" value="/web/add/ip" class="btn btn-link btn-sm btn-block">Add this IP</a>
+        </xpath>
+    </template>
+
+    <!-- <template id="request_otp" name="OTP Sign up login">
+        <t t-call="web.login_layout">
+            <form class="oe_signup_form loginbox" role="form" method="post" t-if="not message">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <div class="form-group field-name">
+                    <label>Email</label>
+                    <input type="text" name="email" t-att-value="email" id="email" class="form-control form-control-sm" required="required"/>
+                </div>
+                <p class="alert alert-danger" t-if="error" role="alert">
+                    <t t-esc="error"/>
+                </p>
+                <button type="submit" class="btn btn-primary btn-block" >submit</button>
+                <span class="btn btn-sm btn-block">or</span>
+                <a class="btn btn-link btn-sm btn-block" t-attf-href="/web/login">Login</a>
+            </form>
+        </t>
+    </template>
+
+    <template id="verify_otp" name="OTP Sign up login">
+        <t t-call="web.login_layout">
+            <form class="oe_signup_form loginbox" t-attf-action="/web/verify_otp" role="form" method="post" t-if="not message">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <div class="form-group field-name">
+                    <label>OTP</label>
+                    <input type="hidden" name="email" t-att-value="email" id="email" class="form-control form-control-sm" />
+                    <input type="text" name="otp" t-att-value="otp" id="otp" class="form-control form-control-sm" required="required"/>
+                </div>
+                <p class="alert alert-danger" t-if="error" role="alert">
+                    <t t-esc="error"/>
+                </p>
+                <button type="submit" class="btn btn-primary btn-block" >submit</button>
+                <span class="btn btn-sm btn-block">or</span>
+                <a class="btn btn-link btn-sm btn-block" t-attf-href="/web/login">Login</a>
+            </form>
+        </t>
+    </template> -->
+</odoo>
