@@ -68,7 +68,6 @@ class SaleOrderLine(models.Model):
                     ("product_id", "=", product.id),
                     ("state", "in", ("confirmed", "assigned", "partially_available")),
                     ("location_dest_id", "child_of", location.id),
-                    ("date", "<=", cutoff_date),
                 ],
                 order="date asc",
             )
@@ -80,13 +79,43 @@ class SaleOrderLine(models.Model):
 
         lines = []
         for (product, label), move_data in incoming_by_key.items():
-            total = sum(q for q, _ in move_data)
-            earliest = min(d for _, d in move_data)
-            sku = product.default_code or product.display_name
-            lines.append(
-                _("%s %s has %s units incoming on %s.")
-                % (label, sku, int(total), earliest.strftime("%Y-%m-%d"))
-            )
+            if not move_data:
+                lines.append(
+                    _("%s %s has no available stock and no incoming purchase orders.")
+                    % (label, product.default_code or product.display_name)
+                )
+            else:
+                # Group incoming quantities by whether they are before or after the cutoff
+                before = [(q, d) for q, d in move_data if d <= cutoff_date]
+                after = [(q, d) for q, d in move_data if d > cutoff_date]
+
+                if before:
+                    total = sum(q for q, _ in before)
+                    earliest = min(d for _, d in before)
+                    lines.append(
+                        _("%s %s has %s units incoming on %s.")
+                        % (
+                            label,
+                            product.default_code or product.display_name,
+                            int(total),
+                            earliest.strftime("%Y-%m-%d"),
+                        )
+                    )
+
+                if after:
+                    total = sum(q for q, _ in after)
+                    earliest = min(d for _, d in after)
+                    lines.append(
+                        _(
+                            "%s %s has %s additional units expected after the commitment date, earliest on %s."
+                        )
+                        % (
+                            label,
+                            product.default_code or product.display_name,
+                            int(total),
+                            earliest.strftime("%Y-%m-%d"),
+                        )
+                    )
 
         return "\n".join(lines)
 
