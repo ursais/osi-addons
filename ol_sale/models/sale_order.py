@@ -300,6 +300,13 @@ class SaleOrder(models.Model):
         "partner_id",
     )
     def onchange_avatax_calculation(self):
+        """
+        Super avatax calculate taxes method, so instead of raising error if no lines
+        are on the sale order and the 'compute tax on so save' option is enabled, then
+        we just don't compute taxes. Raising an error causes a problem when clicking
+        the product configurator button because it saves the SO before opening the
+        wizard.
+        """
         avatax_config = self.env.company.get_avatax_config_company()
         if avatax_config and avatax_config.sale_calculate_tax and not self.order_line:
             return
