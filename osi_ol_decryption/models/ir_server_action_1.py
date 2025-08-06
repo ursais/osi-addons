@@ -71,9 +71,6 @@ class IrActionsServer(models.Model):
         self._cr.execute("update account_journal set name = json_build_object('en_US', 'Purchase Journal') where id = 214;") # Purchase Journal EUR
 
 
-
-        
-
     def delete_account(self):
         self = self.sudo()
         file_path = "/home/odoo/odoo17/odoo/addons/osi_ol_decryption/data/account_delete.xlsx"
@@ -124,7 +121,7 @@ class IrActionsServer(models.Model):
         # Load workbook
         self = self.sudo()
 
-        file_path = "/home/odoo/odoo17/odoo/addons/osi_ol_decryption/osi_ol_decryption/data/Odoo 17 GL Remap.xlsx"
+        file_path = "/home/odoo/odoo17/odoo/addons/osi_ol_decryption/osi_ol_decryption/data/Odoo_17_GL_Remap.xlsx"
 
         wb = openpyxl.load_workbook(filename=file_path, data_only=True)
         companies = self.env['res.company'].search([])
@@ -155,8 +152,9 @@ class IrActionsServer(models.Model):
                 new_code = str(row[14].value)      # Column O (index 14)
                 new_name = row[15].value      # Column P (index 15)
                 new_type = row[16].value      # Column Q (index 16)
-                reconcil = row[19].value
+                reconcil = row[19].value       # Column T (index 19)
                 tag_string = row[20].value    # Column U (index 20)
+                not_deprecated = row[24].value  #Column x (Index 24)
 
                 # if old_code.endswith(".0"):
                 #     old_code = old_code.rstrip("0").rstrip(".") 
@@ -206,6 +204,8 @@ class IrActionsServer(models.Model):
                         diffs['account_type'] = keys_found[0]
                     if tag_ids and set(account.tag_ids.ids) != set(tag_ids):
                         diffs['tag_ids'] = [(6, 0, tag_ids)]
+                    if not_deprecated:
+                        diffs['deprecated'] = False
 
                     # if diffs:
                     #     print ("\n --------------write----------", diffs)
@@ -229,6 +229,8 @@ class IrActionsServer(models.Model):
                         if 'account_type' in diffs:
                             vals.append("account_type = %s")
                             params.append(diffs['account_type'])
+                        if 'deprecated' in diffs:
+                            params.append("deprecated = 'f'")
                         if vals:
                             params.append(account.id)
 
