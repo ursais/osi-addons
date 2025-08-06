@@ -23,6 +23,7 @@
         "sale_order_type",
         "sale_exception",
         "sale_order_revision",
+        "account_avatax_sale_oca",
     ],
     # always loaded
     "data": [

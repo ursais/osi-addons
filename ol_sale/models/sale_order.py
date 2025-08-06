@@ -293,4 +293,16 @@ class SaleOrder(models.Model):
 
         return template
 
+    @api.onchange(
+        "order_line",
+        "tax_on_shipping_address",
+        "tax_address_id",
+        "partner_id",
+    )
+    def onchange_avatax_calculation(self):
+        avatax_config = self.env.company.get_avatax_config_company()
+        if avatax_config and avatax_config.sale_calculate_tax and not self.order_line:
+            return
+        super().onchange_avatax_calculation()
+
     # END #########
