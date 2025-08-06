@@ -7,6 +7,8 @@
     "depends": [
         "base",
         "account",
+        "sale",
+        "delivery",
         "product",
         "ol_base",
         "mrp",
