@@ -3,9 +3,6 @@ from math import floor, inf
 from collections import defaultdict
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-import logging
-
-_logger = logging.getLogger(__name__)
 
 
 class SaleOrderLine(models.Model):
@@ -78,44 +75,39 @@ class SaleOrderLine(models.Model):
                 incoming_by_key[(product, label)].append((qty, m.date))
 
         lines = []
-        for (product, label), move_data in incoming_by_key.items():
+        for product, location, label in product_entries:
+            move_data = incoming_by_key.get((product, label), [])
+            sku = product.default_code or product.display_name
+
             if not move_data:
+                # No incoming stock at all
                 lines.append(
                     _("%s %s has no available stock and no incoming purchase orders.")
-                    % (label, product.default_code or product.display_name)
+                    % (label, sku)
                 )
-            else:
-                # Group incoming quantities by whether they are before or after the cutoff
-                before = [(q, d) for q, d in move_data if d <= cutoff_date]
-                after = [(q, d) for q, d in move_data if d > cutoff_date]
+                continue
 
-                if before:
-                    total = sum(q for q, _ in before)
-                    earliest = min(d for _, d in before)
-                    lines.append(
-                        _("%s %s has %s units incoming on %s.")
-                        % (
-                            label,
-                            product.default_code or product.display_name,
-                            int(total),
-                            earliest.strftime("%Y-%m-%d"),
-                        )
-                    )
+            # There is some incoming stock, split by before/after commitment
+            before = [(q, d) for q, d in move_data if d <= cutoff_date]
+            after = [(q, d) for q, d in move_data if d > cutoff_date]
 
-                if after:
-                    total = sum(q for q, _ in after)
-                    earliest = min(d for _, d in after)
-                    lines.append(
-                        _(
-                            "%s %s has %s additional units expected after the commitment date, earliest on %s."
-                        )
-                        % (
-                            label,
-                            product.default_code or product.display_name,
-                            int(total),
-                            earliest.strftime("%Y-%m-%d"),
-                        )
+            if before:
+                total = sum(q for q, _ in before)
+                earliest = min(d for _, d in before)
+                lines.append(
+                    _("%s %s has %s units incoming on %s.")
+                    % (label, sku, int(total), earliest.strftime("%Y-%m-%d"))
+                )
+
+            if after:
+                total = sum(q for q, _ in after)
+                earliest = min(d for _, d in after)
+                lines.append(
+                    _(
+                        "%s %s has %s additional units expected after the commitment date, earliest on %s."
                     )
+                    % (label, sku, int(total), earliest.strftime("%Y-%m-%d"))
+                )
 
         return "\n".join(lines)
 
@@ -132,12 +124,6 @@ class SaleOrderLine(models.Model):
 
         for bom_line in components:
             comp = bom_line.product_id
-            _logger.warning(
-                "Checking component %s - allow_backorder=%s, type=%s",
-                comp.display_name,
-                getattr(comp, "allow_backorder", True),
-                comp.detailed_type,
-            )
             if not comp or not self._is_stockable(comp):
                 continue
             if getattr(comp, "allow_backorder", True):
@@ -156,16 +142,6 @@ class SaleOrderLine(models.Model):
             total_available = comp_free + incoming
 
             units_by_comp = floor(total_available / qty_per_unit)
-
-            _logger.warning(
-                "Component: %s — Needed per unit: %s, Free: %s, Incoming: %s, Total: %s, UnitsByComp: %s",
-                comp.display_name,
-                qty_per_unit,
-                comp_free,
-                incoming,
-                total_available,
-                units_by_comp,
-            )
 
             if units_by_comp < max_units:
                 max_units = units_by_comp
@@ -202,9 +178,6 @@ class SaleOrderLine(models.Model):
 
     def _max_sellable_qty_now(self):
         self.ensure_one()
-        _logger.warning(
-            "Calling _max_sellable_qty_now for %s", self.product_id.display_name
-        )
 
         if not self.product_id or not self.order_id or self.display_type:
             return inf, []
@@ -231,14 +204,6 @@ class SaleOrderLine(models.Model):
         peer = self._get_peer_committed_qty()
         remaining = max(cap_total - peer, 0.0)
 
-        _logger.warning(
-            "Final cap for product %s: %s after peer qty %s — Sources: %s",
-            self.product_id.display_name,
-            remaining,
-            peer,
-            [(p.display_name, l.complete_name, t) for (p, l, t) in src_self + src_bom],
-        )
-
         sources = []
         if cap_self != inf:
             sources += src_self
@@ -246,10 +211,14 @@ class SaleOrderLine(models.Model):
             sources += src_bom
         return remaining, sources
 
-    @api.onchange("product_id", "product_uom_qty", "bom_id", "order_id.commitment_date")
+    @api.onchange(
+        "product_id",
+        "product_uom_qty",
+        "bom_id",
+        "order_id.commitment_date",
+    )
     def _onchange_cap_qty_no_backorders(self):
         for line in self:
-            _logger.warning("ONCHANGE TRIGGERED for %s", line.product_id.display_name)
             if line.product_id and not line.product_id.allow_backorder:
                 max_qty, _ = line._max_sellable_qty_now()
                 if line.product_uom_qty > max_qty:
