@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="security_ninja_res_users_inherit_form_view_ah" model="ir.ui.view">
+            <field name="name">security.ninja.res.users.inherit.form.view.ah</field>
+            <field name="model">res.users</field>
+            <!-- <field name="groups_id" eval="[(4, ref('group_access_management_spt'))]"/> -->
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string='Access Management' groups="simplify_access_management.group_access_management_bits">
+                        <field name='access_management_ids'>
+                            <tree>
+                                <field name="name" />
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+
+            </field>
+        </record>
+    </data>
+</odoo>

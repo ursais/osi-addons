@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="view_data_graph_ah" model="view.data">
+            <field name="name">Graph</field>
+            <field name="techname">graph</field>
+        </record>
+
+        <record id="view_data_pivot_ah" model="view.data">
+            <field name="name">Pivot</field>
+            <field name="techname">pivot</field>
+        </record>
+
+        <record id="view_data_calender_ah" model="view.data">
+            <field name="name">Calendar</field>
+            <field name="techname">calendar</field>
+        </record>
+
+        <record id="view_data_diagram_ah" model="view.data">
+            <field name="name">Diagram</field>
+            <field name="techname">diagram</field>
+        </record>
+
+        <record id="view_data_gantt_ah" model="view.data">
+            <field name="name">Gantt</field>
+            <field name="techname">gantt</field>
+        </record>
+
+        <record id="view_data_activity_ah" model="view.data">
+            <field name="name">Activity</field>
+            <field name="techname">activity</field>
+        </record>
+
+        <record id="view_data_cohort_ah" model="view.data">
+            <field name="name">Cohort</field>
+            <field name="techname">cohort</field>
+        </record>
+
+        <record id="view_data_grid_ah" model="view.data">
+            <field name="name">Grid</field>
+            <field name="techname">grid</field>
+        </record>
+
+        <record id="view_data_dashboard_ah" model="view.data">
+            <field name="name">Dashboard</field>
+            <field name="techname">dashboard</field>
+        </record>
+
+        <record id="view_data_map_ah" model="view.data">
+            <field name="name">Map</field>
+            <field name="techname">map</field>
+        </record>
+
+        <record id="view_data_kanban_ah" model="view.data">
+            <field name="name">Kanban</field>
+            <field name="techname">kanban</field>
+        </record>
+        <record id="view_data_list_ah" model="view.data">
+            <field name="name">List</field>
+            <field name="techname">tree</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.SearchBarMenu" t-inherit="web.SearchBarMenu" t-inherit-mode="extension">
+        <xpath expr="//DropdownItem[@onSelected.bind='onAddCustomFilterClick']" position="replace">
+            <t t-if="!access.removeCustomFilter">
+                <DropdownItem class="'o_menu_item o_add_custom_filter'" onSelected.bind="onAddCustomFilterClick">Add Custom Filter</DropdownItem>
+            </t>
+        </xpath>
+    </t>
+</templates>
