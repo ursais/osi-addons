@@ -15,4 +15,17 @@
         </field>
     </record>
 
+    <record id="mrp_production_search_view_inherit_lot_serach" model="ir.ui.view">
+        <field name="name">mrp.production.search.view.inherit.lot.serach</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.view_mrp_production_filter"/>
+        <field name="arch" type="xml">
+            <field name="workcenter_id" position="after">
+                <field name="lot_producing_id"/>
+                <separator/>
+                <filter name="lot_producing_id" context="{'group_by': 'lot_producing_id'}"/>
+            </field>
+        </field>
+    </record>
+
 </odoo>
