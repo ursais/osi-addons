@@ -198,17 +198,16 @@ class SaleOrder(models.Model):
                         "value_name": v.product_attribute_value_id.product_id.name
                         or v.product_attribute_value_id.name,
                         "sequence": v.attribute_id.sequence,
-                        "product_qty": sum(
+                        "product_qty": int(sum(
                             bom_line_ids.filtered(
                                 lambda bom_line: bom_line.product_id.id
                                 == v.product_id.id
                             ).mapped("product_qty")
-                        )
-                        or 1.0,
+                        ))
+                        or 1,
                     }
                     for v in visible_values
                 ]
-
             order_line_data = {
                 "order_line": sale_order_line,
                 "quote_config": quote_config,
