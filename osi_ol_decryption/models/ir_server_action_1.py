@@ -920,6 +920,23 @@ class IrActionsServer(models.Model):
         """
         )
 
+        self.env.cr.execute("""
+            UPDATE
+                product_template pt
+            SET 
+                candidate_bom = pc.candidate_bom,
+                candidate_component_manufacture = pc.candidate_component_manufacture,
+                candidate_manufacture = pc.candidate_manufacture,
+                candidate_purchase = pc.candidate_purchase,
+                candidate_sale = pc.candidate_sale,
+                candidate_sale_confirm = pc.candidate_sale_confirm,
+                candidate_ship = pc.candidate_ship
+            FROM
+                product_category pc
+            WHERE
+                pt.categ_id = pc.id;
+            """)
+
         # Set 'ok' fields based on candidate and state
         self.env.cr.execute(
             """
@@ -937,9 +954,9 @@ class IrActionsServer(models.Model):
         """
         )
         product_ids = self.env['product.template'].sudo().search([('phantom_bom_id', '!=', False), ("purchase_ok", "=", True)])
-        product_ids.write({'purchase_ok': False})
+        product_ids.write({'purchase_ok': False, 'candidate_purchase': False})
         product_ids = self.env['product.template'].sudo().search([("categ_id.name", "in", ["Systems", "Computers", "Panel PCs"]), ("purchase_ok", "=", True)])
-        product_ids.write({'purchase_ok': False})    
+        product_ids.write({'purchase_ok': False, "candidate_purchase": False})    
 
     def uninstall_old_module(self):
         _logger.info("===============uninstall_old_module====================")
@@ -1378,8 +1395,8 @@ class IrActionsServer(models.Model):
             "ol_credit_limit",
             "ol_rma_supplier",
             "ol_fraud_detection",
+	    "account_sepa",
             "ol_sale_order_inspection",
-
         ]
 
         for module in modules:
