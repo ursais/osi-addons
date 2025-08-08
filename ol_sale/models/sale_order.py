@@ -21,9 +21,7 @@ class SaleOrder(models.Model):
     )
     account_manager_id = fields.Many2one(
         comodel_name="res.users",
-        related="partner_id.account_manager_id",
         string="Account Manager",
-        store=True,
     )
     end_user = fields.Many2one(comodel_name="res.partner")
     integrator = fields.Many2one(comodel_name="res.partner")
@@ -158,6 +156,10 @@ class SaleOrder(models.Model):
     @api.onchange("partner_id")
     def _onchange_partner_id_sale_order_tag_ids(self):
         self.tag_ids = self.partner_id.sale_order_tag_ids
+
+    @api.onchange("partner_id")
+    def _onchange_partner_id_account_manager(self):
+        self.account_manager_id = self.partner_id.account_manager_id
 
     def get_quote_report_data(self):
         """Get the Sale Order related report data"""
