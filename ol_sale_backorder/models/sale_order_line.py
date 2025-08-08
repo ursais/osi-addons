@@ -1,4 +1,4 @@
-# © 2025 Your Company - License OEEL-1
+# Import Odoo libs
 from math import floor, inf
 from collections import defaultdict
 from odoo import api, fields, models, _
@@ -6,9 +6,29 @@ from odoo.exceptions import ValidationError
 
 
 class SaleOrderLine(models.Model):
+    """Inherit SO Line to add backorder qty functionality."""
+
     _inherit = "sale.order.line"
 
+    # METHODS #####
+
+    # ------------------------------
+    # HELPER METHODS
+    # ------------------------------
+
     def _get_free_available_in_uom(self, product, location, uom):
+        """
+        Get the quantity of a product available at a given location,
+        excluding reserved quantities, converted into the target UoM.
+
+        Args:
+            product (product.product): Product to check.
+            location (stock.location): Location to check.
+            uom (uom.uom): Unit of measure to convert to.
+
+        Returns:
+            float: Available quantity in the requested UoM.
+        """
         Quant = self.env["stock.quant"].sudo()
         free = Quant._get_available_quantity(
             product,
@@ -16,14 +36,30 @@ class SaleOrderLine(models.Model):
             lot_id=False,
             package_id=False,
             owner_id=False,
-            strict=True,
+            strict=True,  # Strict means only exact location, no hierarchy search.
         )
         return product.uom_id._compute_quantity(free, uom, rounding_method="DOWN")
 
     def _is_stockable(self, product):
+        """
+        Check if a product is stockable (type 'product').
+
+        Args:
+            product (product.product): Product to check.
+
+        Returns:
+            bool: True if stockable, False otherwise.
+        """
         return product.detailed_type == "product"
 
     def _get_peer_committed_qty(self):
+        """
+        Get the total quantity of the same product from other lines
+        in the same sale order, expressed in the current line's UoM.
+
+        Returns:
+            float: Quantity committed by peers.
+        """
         self.ensure_one()
         if not self.product_id or not self.order_id:
             return 0.0
@@ -38,6 +74,18 @@ class SaleOrderLine(models.Model):
         return total
 
     def _get_incoming_qty(self, product, location, before_date):
+        """
+        Get total incoming quantity for a product to a given location,
+        with moves scheduled before or on a given date.
+
+        Args:
+            product (product.product): Product to check.
+            location (stock.location): Destination location.
+            before_date (date): Cutoff date for moves.
+
+        Returns:
+            float: Incoming quantity in the product's default UoM.
+        """
         Move = self.env["stock.move"].sudo()
         incoming_moves = Move.search(
             [
@@ -56,9 +104,20 @@ class SaleOrderLine(models.Model):
         return qty
 
     def _get_incoming_summary(self, product_entries, cutoff_date):
+        """
+        Build a human-readable summary of incoming stock for given products.
+
+        Args:
+            product_entries (list): Tuples of (product, location, label).
+            cutoff_date (date): Date to separate 'before' and 'after' incoming stock.
+
+        Returns:
+            str: Summary text for user-facing messages.
+        """
         Move = self.env["stock.move"].sudo()
         incoming_by_key = defaultdict(list)
 
+        # Fetch and group incoming moves
         for product, location, label in product_entries:
             moves = Move.search(
                 [
@@ -87,7 +146,7 @@ class SaleOrderLine(models.Model):
                 )
                 continue
 
-            # There is some incoming stock, split by before/after commitment
+            # Split incoming moves into before and after commitment date
             before = [(q, d) for q, d in move_data if d <= cutoff_date]
             after = [(q, d) for q, d in move_data if d > cutoff_date]
 
@@ -112,6 +171,19 @@ class SaleOrderLine(models.Model):
         return "\n".join(lines)
 
     def _compute_bom_limited_qty(self, product, bom, location, line_uom):
+        """
+        Compute the maximum sellable quantity for a BOM-based product,
+        considering available stock + incoming for each component.
+
+        Args:
+            product (product.product): Finished product.
+            bom (mrp.bom): Bill of Materials record.
+            location (stock.location): Stock location.
+            line_uom (uom.uom): UoM of the sale order line.
+
+        Returns:
+            tuple: (max_qty, limiting_components)
+        """
         if not bom:
             return inf, []
 
@@ -136,7 +208,7 @@ class SaleOrderLine(models.Model):
             if qty_per_unit <= 0:
                 continue
 
-            # 🔄 NEW: Include incoming qty before commitment date
+            # Available now + incoming before commitment date
             comp_free = self._get_free_available_in_uom(comp, location, comp.uom_id)
             incoming = self._get_incoming_qty(comp, location, commitment_date)
             total_available = comp_free + incoming
@@ -159,6 +231,13 @@ class SaleOrderLine(models.Model):
         )
 
     def _compute_product_self_limited_qty(self, product, location, line_uom):
+        """
+        Compute max sellable qty for a single product (non-BOM),
+        considering stock + incoming before commitment date.
+
+        Returns:
+            tuple: (max_qty, [(product, location, label)])
+        """
         if not self._is_stockable(product):
             return inf, []
         if getattr(product, "allow_backorder", True):
@@ -166,7 +245,6 @@ class SaleOrderLine(models.Model):
 
         commitment_date = self.order_id.commitment_date or fields.Date.today()
 
-        # Current free + incoming
         current_free = self._get_free_available_in_uom(
             product, location, product.uom_id
         )
@@ -177,6 +255,16 @@ class SaleOrderLine(models.Model):
         return qty, [(product, location, "Product")]
 
     def _max_sellable_qty_now(self):
+        """
+        Calculate the effective sellable quantity for this order line,
+        combining:
+          - product-level restriction
+          - BOM component restriction
+          - already committed quantities in other lines
+
+        Returns:
+            tuple: (remaining_qty, sources)
+        """
         self.ensure_one()
 
         if not self.product_id or not self.order_id or self.display_type:
@@ -211,6 +299,10 @@ class SaleOrderLine(models.Model):
             sources += src_bom
         return remaining, sources
 
+    # ------------------------------
+    # ONCHANGE & CONSTRAINTS
+    # ------------------------------
+
     @api.onchange(
         "product_id",
         "product_uom_qty",
@@ -218,6 +310,10 @@ class SaleOrderLine(models.Model):
         "order_id.commitment_date",
     )
     def _onchange_cap_qty_no_backorders(self):
+        """
+        Prevent user from setting a quantity higher than max sellable
+        at order line creation/edit time (UI onchange check).
+        """
         for line in self:
             if line.product_id and not line.product_id.allow_backorder:
                 max_qty, _ = line._max_sellable_qty_now()
@@ -235,6 +331,11 @@ class SaleOrderLine(models.Model):
         "bom_id",
     )
     def _check_no_backorders_caps(self):
+        """
+        Final validation at record save.
+        Raises an error if ordered qty exceeds max sellable qty.
+        Also appends incoming stock info to help the user understand availability.
+        """
         for line in self:
             if not line.product_id or not line.order_id or line.display_type:
                 continue
@@ -259,3 +360,5 @@ class SaleOrderLine(models.Model):
                 if incoming_note:
                     msg += "\n\n" + incoming_note
                 raise ValidationError(msg)
+
+    # END #####
