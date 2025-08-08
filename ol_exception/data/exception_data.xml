@@ -76,4 +76,13 @@
         <field name="allowed_group_ids" eval="[(6,0,[ref('ol_base.role_fin_manager_res_groups')])]"/>
     </record>
 
+    <record id="exception_sale_order_product_not_sellable" model="exception.rule">
+        <field name="name">Product or Component not sellable</field>
+        <field name="description">Product or Component not sellable</field>
+        <field name="sequence">77</field>
+        <field name="model">sale.order</field>
+        <field name="code">failed = any(not line.product_id.sale_ok or any(not bom_line.product_id.sale_ok for bom_line in line.bom_id.bom_line_ids) for line in self.order_line)</field>
+        <field name="active" eval="True"/>
+    </record>
+
 </odoo>
