@@ -36,4 +36,24 @@
         </field>
     </record>
 
+    <record id="helpdesk_ticket_view_form_inherit_stock_user_def" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.helpdesk.stock.form.def</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk_stock.helpdesk_ticket_view_form_inherit_stock_user" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//button[@name='%(stock.act_stock_return_picking)d']"
+                position="before"
+            >
+                <field name="return_sale_id" invisible="1" />
+            </xpath>
+            <xpath
+                expr="//button[@name='%(stock.act_stock_return_picking)d']"
+                position="attributes"
+            >
+                <attribute name="context">{'default_ticket_id': id, 'default_company_id': company_id, 'default_sale_order_id': return_sale_id}</attribute>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>

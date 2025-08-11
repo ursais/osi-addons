@@ -32,6 +32,7 @@ class SaleOrder(models.Model):
                 "user_id": self.user_id.id,
                 "partner_email": self.partner_id.email,
                 "description": self.note,
+                "return_sale_id": self.id,
             }
         )
         ticket_id.sale_ids = [(6, 0, self.ids)]

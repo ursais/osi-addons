@@ -23,6 +23,7 @@ class HelpdeskTicket(models.Model):
     sale_count = fields.Integer(
         string="Sales Order Count", compute="_compute_sale_order_count"
     )
+    return_sale_id = fields.Many2one("sale.order")
 
     def _compute_sale_order_count(self):
         for ticket in self:

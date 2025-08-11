@@ -12,6 +12,7 @@
     "website": "https://github.com/ursais/osi-addons",
     "depends": [
         "helpdesk_sale",
+        "helpdesk_stock",
     ],
     "data": [
         "security/ir.model.access.csv",
