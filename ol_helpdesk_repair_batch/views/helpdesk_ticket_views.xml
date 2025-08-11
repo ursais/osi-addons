@@ -54,6 +54,11 @@
             <xpath expr="//page[@name='description']" position="after">
                 <field name="use_product_repairs" invisible="1" groups="stock.group_stock_user" />
                 <page name="repairs" string="Repairs" invisible="not use_product_repairs">
+                    <field name="show_repair_history_alert" invisible="1" />
+                    <div class="alert alert-info" invisible="not show_repair_history_alert">
+                        <strong>Some linked serial numbers have other repairs:</strong>
+                        <field name="repair_history_html" widget="html" readonly="1"/>
+                    </div>
                     <field name="show_generate_repairs" invisible="1" />
                     <div class="oe_button_box" name="button_box">
                         <button

@@ -31,6 +31,21 @@ class RepairOrder(models.Model):
         string="Scrap Orders",
     )
     external_notes = fields.Text(string="Customer Notes")
+    history_repair_ids = fields.Many2many(
+        comodel_name="repair.order",
+        compute="_compute_history_fields",
+        string="Historical Repairs",
+        help="Computed field to show other repairs for the same serial.",
+    )
+    history_repair_html = fields.Html(
+        compute="_compute_history_fields",
+        sanitize=True,
+        help="Field used within the alert message where other repairs are found.",
+    )
+    show_repair_history_alert = fields.Boolean(
+        compute="_compute_history_fields",
+        help="Helper field used for the alert invisible attribute.",
+    )
 
     # END #######
     # METHODS ###
@@ -44,6 +59,37 @@ class RepairOrder(models.Model):
     def _compute_show_create_removal_button(self):
         for rec in self:
             rec.show_create_removal_button = not rec.move_ids
+
+    @api.depends("lot_id")
+    def _compute_history_fields(self):
+        state_labels = dict(self._fields["state"]._description_selection(self.env))
+        for repair in self:
+            if repair.lot_id and repair.id and isinstance(repair.id, int):
+                history = self.search(
+                    [
+                        ("lot_id", "=", repair.lot_id.id),
+                        ("id", "!=", repair.id),
+                    ]
+                )
+                repair.history_repair_ids = history
+                repair.show_repair_history_alert = bool(history)
+
+                if history:
+                    links = "".join(
+                        f"<li>"
+                        f'<a href="/web#id={h.id}&model=repair.order&view_type=form">{h.name}</a>'
+                        f" — {state_labels.get(h.state, h.state)}"
+                        f' ({h.schedule_date.date() if h.schedule_date else ""})'
+                        f"</li>"
+                        for h in history
+                    )
+                    repair.history_repair_html = f"<ul>{links}</ul>"
+                else:
+                    repair.history_repair_html = ""
+            else:
+                repair.history_repair_ids = False
+                repair.show_repair_history_alert = False
+                repair.history_repair_html = ""
 
     def open_repair_full_form(self):
         self.ensure_one()

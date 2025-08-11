@@ -5,6 +5,13 @@
         <field name="model">repair.order</field>
         <field name="inherit_id" ref="repair.view_repair_order_form" />
         <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="before">
+                <field name="show_repair_history_alert" invisible="1" />
+                <div class="alert alert-info" invisible="not show_repair_history_alert">
+                    <strong>Other Repairs Found:</strong>
+                    <field name="history_repair_html" widget="html" readonly="1"/>
+                </div>
+            </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button name="%(stock.action_stock_scrap)d"
                         type="action"
