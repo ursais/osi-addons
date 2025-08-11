@@ -79,7 +79,7 @@
                         </div>
                         <div class="value">
                             <strong>
-                                <t t-esc="sale_order.date_order" t-options='{"widget": "date"}'/>
+                                <t t-esc="sale_order.get_format_date(sale_order.date_order)"/>
                             </strong>
                         </div>
                     </div>
@@ -92,7 +92,7 @@
                         </div>
                         <div class="value">
                             <strong>
-                                <t t-esc="sale_order.validity_date" t-options='{"widget": "date"}'/>
+                                <t t-esc="sale_order.get_format_date(sale_order.validity_date)"/>
                             </strong>
                         </div>
                     </div>

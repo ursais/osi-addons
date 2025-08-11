@@ -133,10 +133,10 @@
                           <td>Submitted</td>
                           <td>
                               <t t-if="data.get('order_date')">
-                                  <span t-esc="data['order_date']" t-options="{'widget': 'date'}"/>
+                                  <span t-esc="purchase_order.get_format_date(data['order_date'])" t-options="{'widget': 'date'}"/>
                               </t>
                               <t t-else="">
-                                  <span t-esc="purchase_order.date_approve" t-options="{'widget': 'date'}"/>
+                                  <span t-esc="purchase_order.get_format_date(purchase_order.date_approve)"/>
                               </t>
                           </td>
                       </tr>
@@ -144,10 +144,10 @@
                           <td>Expected Arrival</td>
                           <td>
                               <t t-if="data.get('date_planned')">
-                                  <span t-esc="data['date_planned']" t-options="{'widget': 'date'}"/>
+                                  <span t-esc="purchase_order.get_format_date(data['date_planned'])"/>
                               </t>
                               <t t-else="">
-                                  <span t-esc="purchase_order.date_planned" t-options="{'widget': 'date'}"/>
+                                  <span t-esc="purchase_order.get_format_date(purchase_order.date_planned)"/>
                               </t>
                           </td>
                       </tr>

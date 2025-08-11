@@ -37,7 +37,7 @@
                                         t-field="line.uigd_value"
                                     /></td>
                                 <td><span t-field="line.last_date_delivered" /></td>
-                                <td><span t-field="line.last_bill_date" /></td>
+                                <td><span t-esc="line.get_format_date(line.last_bill_date)" /></td>
                                 <td />
                             </tr>
                         </tbody>
