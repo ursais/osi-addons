@@ -11,6 +11,12 @@ import openpyxl
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
+    def configure_account_sepa_direct_debit(self):
+        self.env["ir.module.module"].search(
+                [("name", "=", 'configure_account_sepa_direct_debit'), ("state", "!=", "installed")]
+            ).button_immediate_install()
+
+
 
     def mig_scrap_reasons(self):
         self = self.sudo()
@@ -73,7 +79,7 @@ class IrActionsServer(models.Model):
 
     def delete_account(self):
         self = self.sudo()
-        file_path = "/home/odoo/odoo17/odoo/addons/osi_ol_decryption/data/account_delete.xlsx"
+        file_path = "/home/odoo/odoo17/odoo/addons/osi_ol_decryption/osi_ol_decryption/data/account_delete.xlsx"
         wb = openpyxl.load_workbook(filename=file_path, data_only=True)
         for sheet_name in wb.sheetnames:
             sheet = wb[sheet_name]
@@ -771,7 +777,7 @@ class IrActionsServer(models.Model):
         _logger.info("===============update_shipping_methods====================")
         self = self.sudo()
         self._cr.execute(
-            "select * from temp_ir_property where name ='inbound_shipping_method'"
+            "select * from temp_ir_property_inbound_shipping_method where name ='inbound_shipping_method'"
         )
         datas = self._cr.dictfetchall()
         temp_obj = self.env["product.template"]
