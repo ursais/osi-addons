@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import _, models
+from odoo import _, fields, models
 
 
 class BaseExceptionMethod(models.AbstractModel):
@@ -10,6 +10,16 @@ class BaseExceptionMethod(models.AbstractModel):
 
     _inherit = "base.exception.method"
 
+    # COLUMNS #####
+
+    # This field is use for avoid send multip email of exception's
+    to_send_exception_email = fields.Boolean(
+        string="Send exception email",
+        default=True,
+        copy=False,
+    )
+
+    # END #########
     # METHODS ######
 
     def detect_exceptions(self):
@@ -66,11 +76,22 @@ class BaseExceptionMethod(models.AbstractModel):
         # Apply changes to exception_ids
         for rule_id, records in rules_to_remove.items():
             records.write({"exception_ids": [(3, rule_id)]})
+
         for rule_id, records in rules_to_add.items():
             records.write({"exception_ids": [(4, rule_id)]})
 
         # Cleanup: Remove ignore records for exceptions no longer triggered
         for record in self:
+            if not record.exception_ids and not record.to_send_exception_email:
+                record.write({"to_send_exception_email": True})
+            # Trigger the Email for execptions.
+            if record.to_send_exception_email and all_exception_ids:
+                exception_ids = records.exception_ids.filtered(lambda l: l.template_id)
+                for exception in exception_ids:
+                    exception.template_id.send_mail(record.id, force_send=True)
+                if exception_ids:
+                    record.write({"to_send_exception_email": False})
+
             if "ignored_exception_ids" not in record._fields:
                 continue
 
