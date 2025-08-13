@@ -813,6 +813,7 @@ class IrActionsServer(models.Model):
                         v13_data_select, (template.id, attribute_line_id.id),
                     )
                     v13_datas = cr.fetchall()
+                    #Update Defult Value at PTAL
                     if attribute_line_id.value_ids and (
                         not attribute_line_id.default_val
                         or not attribute_line_id.default_val.active
@@ -826,6 +827,7 @@ class IrActionsServer(models.Model):
                             (attribute_line_id.value_ids[0].id, attribute_line_id.id),
                         )
                         cr.commit()
+                    #Checking V13 Data for 
                     if v13_datas:
                         for v13_data in v13_datas:
                             v13_value_id = v13_data[3]
@@ -836,55 +838,28 @@ class IrActionsServer(models.Model):
                             )
                             if not attribute_line_id.is_qty_required:
                                 cr.execute(update_query, (attribute_line_id.id,))
-                            if v13_value_id in attribute_line_id.value_ids.ids:
-                                default_qty = v17_ptav.default_qty
-                                maximum_qty = v17_ptav.maximum_qty
-                                existing_qty = set(
-                                    v17_ptav.attribute_value_qty_ids.mapped("qty")
-                                )
-                                expected_qty = set(range(default_qty, maximum_qty + 1))
-
-                                missing_qty = expected_qty - existing_qty
-                                for qty in missing_qty:
-                                    qty_vals_to_create.append(
-                                        {
-                                            "name": f"{v17_ptav.product_attribute_value_id.display_name} - Qty {qty}",
-                                            "product_tmpl_id": v17_ptav.product_tmpl_id.id,
-                                            "product_attribute_id": v17_ptav.attribute_id.id,
-                                            "product_attribute_value_id": v17_ptav.product_attribute_value_id.id,
-                                            "qty": qty,
-                                            "template_attri_value_id": v17_ptav.id,
-                                        }
-                                    )
-                    if (
-                        attribute_line_id.is_qty_required
-                        and "None" in attribute_line_id.mapped("value_ids.name")
-                    ):
-                        ptav_none = attribute_line_id.product_template_value_ids.filtered(
-                            lambda l: l.product_attribute_value_id.name == "None"
-                            and l.ptav_active
-                            and not l.attribute_value_qty_ids
-                        )
-                        if ptav_none:
-                            ptav = ptav_none[0]
+                                cr.commit()
+                    product_template_value_ids = (
+                        attribute_line_id.filtered("is_qty_required")
+                        .mapped("product_template_value_ids")
+                        .filtered("ptav_active")
+                    )
+                    for ptav in product_template_value_ids:
+                        if ptav.name != "None":
                             if not ptav.is_qty_required:
                                 cr.execute(
                                     """
-                                    UPDATE product_template_attribute_value
-                                    SET is_qty_required = TRUE
-                                    WHERE id = %s
-                                """,
+                                        UPDATE product_template_attribute_value
+                                        SET is_qty_required = TRUE
+                                        WHERE id = %s
+                                    """,
                                     (ptav.id,),
                                 )
                                 cr.commit()
-                            qty_range = set(
-                                range(ptav_none.default_qty, ptav_none.maximum_qty + 1)
-                            )
-                            existing_qty = set(
-                                ptav_none.attribute_value_qty_ids.mapped("qty")
-                            )
+                            
+                            qty_range = set(range(ptav.default_qty, ptav.maximum_qty + 1))
+                            existing_qty = set(ptav.attribute_value_qty_ids.mapped("qty"))
                             missing_qty = qty_range - existing_qty
-                            # qty_vals_to_create = []
                             for qty in missing_qty:
                                 qty_vals_to_create.append(
                                     {
@@ -895,30 +870,9 @@ class IrActionsServer(models.Model):
                                         "qty": qty,
                                         "template_attri_value_id": ptav.id,
                                     }
-                                )
-
-                    product_template_value_ids = (
-                        attribute_line_id.filtered("is_qty_required")
-                        .mapped("product_template_value_ids")
-                        .filtered("ptav_active")
-                    )
-                    # qty_vals_to_create = []
-                    for ptav in product_template_value_ids:
-                        qty_range = set(range(ptav.default_qty, ptav.maximum_qty + 1))
-                        existing_qty = set(ptav.attribute_value_qty_ids.mapped("qty"))
-                        missing_qty = qty_range - existing_qty
-                        for qty in missing_qty:
-                            qty_vals_to_create.append(
-                                {
-                                    "name": f"{ptav.product_attribute_value_id.display_name} - Qty {qty}",
-                                    "product_tmpl_id": ptav.product_tmpl_id.id,
-                                    "product_attribute_id": ptav.attribute_id.id,
-                                    "product_attribute_value_id": ptav.product_attribute_value_id.id,
-                                    "qty": qty,
-                                    "template_attri_value_id": ptav.id,
-                                }
-                            )
+                                ) 
                 if qty_vals_to_create:
+                    _logger.info("\n\nline 876 : qty_vals_to_create:")
                     avq_obj.create(qty_vals_to_create)
                     cr.commit()
                 qty_attributes_lines = attribute_line_ids.filtered("is_qty_required")
@@ -980,6 +934,7 @@ class IrActionsServer(models.Model):
                                             )
                                             cr.commit()
                 _logger.info("\n✅ Script 5 completed,Processed count: %s", counter)
+
 
     def script_6(self):
         cr = self.env.cr
@@ -1158,7 +1113,6 @@ class IrActionsServer(models.Model):
             product_state_id = self.env["product.state"].search(
                 [("code", "ilike", code)]
             )
-            # print("product_state_id===",code)
             if product_state_id:
                 cr.execute(
                     "update product_template set product_state_id = %s where id = %s"
