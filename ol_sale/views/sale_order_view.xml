@@ -71,7 +71,11 @@
                 <field name="contact_ids" domain="[('parent_id','=',partner_id)]" widget="many2many_tags" required="1"/>
             </field>
             <field name="partner_id" position="attributes">
-                <attribute name="domain">[('type', 'in', ['contact', 'other']), ('parent_id', '=', False), '|', ('company_id', '=', False), ('company_id', 'parent_of', [company_id])]</attribute>
+                <attribute name="domain">
+                    [ ('type', 'in', ['contact', 'other']), '&amp;',
+                    '|', ('is_company', '=', True), ('parent_id', '=', False),
+                    '|', ('company_id', '=', False), ('company_id', 'parent_of', [company_id])]
+                </attribute>
             </field>
 
             <!-- Add context to invoice/delivery addresses -->
