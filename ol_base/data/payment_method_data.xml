@@ -1,0 +1,11 @@
+<odoo>
+	<record id="payment_method_stripe" model="payment.method">
+        <field name="name">Stripe</field>
+        <field name="code">stripe</field>
+        <field name="sequence">20</field>
+        <field name="active">True</field>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_refund">partial</field>
+    </record>
+</odoo>
