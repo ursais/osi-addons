@@ -16,7 +16,62 @@ class IrActionsServer(models.Model):
                 [("name", "=", 'configure_account_sepa_direct_debit'), ("state", "!=", "installed")]
             ).button_immediate_install()
 
-
+    
+    def payment_method_update(self):
+        "Update the Payment Method's"
+        self = self.sudo()
+        payment_ids = []
+        cr = self._cr
+        payment_methods = {
+            1: "Paypal",
+            8: "Stripe",
+            2: "Bank Transfer",
+            3: "Zero Payment",
+            4: "Manual",
+            5: "Check",
+            6: "Paypal",
+            7: "Custom",
+            10: "Net Terms",
+            9: "Credit Card",
+            11: "iDEAL",
+            12: "Bancontact",
+            13: "GiroPay",
+            14: "Sofort",
+            15: "Maestro",
+            16: "Credit Card Prepayment"
+        }
+        bank_transfer = self.env.ref("payment.payment_method_bank_transfer")
+        payment_ids.append(bank_transfer.id)
+        paypal = self.env.ref("payment.payment_method_paypal")
+        payment_ids.append(paypal.id)
+        sofort = self.env.ref("payment.payment_method_sofort")
+        payment_ids.append(sofort.id)
+        self._cr.execute("update payment_method set active = 't' where id in %s", (tuple(payment_ids),))
+        self._cr.commit()
+        new_payment_data = self.env['payment.method'].search([])
+        
+        self._cr.execute("select id,payment_method_id from sale_order where payment_method_id is not null")
+        sale_order_data = self._cr.fetchall()
+        for sale in sale_order_data:
+            payment = False
+            name = ''
+            cr.execute("select id,sub_method_id,method_id from sale_order_payment_method where id = %s", (sale[1],))
+            data = cr.dictfetchone()
+            
+            if data.get('sub_method_id') != None:
+                name = payment_methods.get(data.get('sub_method_id'))
+            else:
+                name = payment_methods.get(data.get('method_id'))
+            
+            if name in ('Net Terms', 'Custom'):
+                continue
+            if name in ('Credit Card Prepayment', 'Credit Card'):
+                payment = new_payment_data.filtered(lambda l: l.name == 'Card')
+            else:
+                payment = new_payment_data.filtered(lambda l: l.name == name)
+            
+            if payment:
+                cr.execute("update sale_order set sale_payment_method_id = %s where id = %s", (payment.id, sale[0] ))
 
     def mig_scrap_reasons(self):
         self = self.sudo()
