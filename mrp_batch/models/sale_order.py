@@ -15,6 +15,16 @@ class SaleOrder(models.Model):
 
     # END #########
     # METHODS #####
+    def action_confirm(self):
+        res = super().action_confirm()
+        if self.mrp_production_ids:
+            # This is a patch for workaround of split MO with split transfers
+            # Due to execptions MO's are not getting confirmed
+            self.mrp_production_ids.write({"ignore_exception":True})
+            self.mrp_production_ids.action_confirm()
+            self.mrp_production_ids.write({"ignore_exception":False})
+        return res
+
 
     def _compute_is_mrp_warning(self):
         for so in self:
@@ -94,6 +104,7 @@ class SaleOrder(models.Model):
                         )
                         mo.backorder_ids.write({"mrp_batch_id": mo.mrp_batch_id.id})
                         mo.linked_mo_ids.filtered(lambda l : not l.mrp_batch_id).write({"mrp_batch_id": mo.mrp_batch_id.id, 'ignore_exception':False})
+                        
 
     # Methods for Batch Smart Button
     def _compute_mrp_production_batch_id_count(self):
