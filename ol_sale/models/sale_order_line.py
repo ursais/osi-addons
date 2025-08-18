@@ -1,6 +1,76 @@
 # Import Odoo libs
 from odoo import api, fields, models
 from odoo.addons.ol_base.tools import get_product_description
+from odoo.tools import float_compare
+from odoo.addons.sale.models.sale_order_line import SaleOrderLine
+
+
+@api.depends(
+    "state",
+    "product_uom_qty",
+    "qty_delivered",
+    "qty_to_invoice",
+    "qty_invoiced",
+)
+def _compute_invoice_status(self):
+    precision = self.env["decimal.precision"].precision_get("Product Unit of Measure")
+    for line in self:
+        if line.state != "sale":
+            line.invoice_status = "no"
+
+        elif (
+            line.qty_to_invoice
+            and float_compare(
+                line.qty_invoiced, line.product_uom_qty, precision_digits=precision
+            )
+            == 1
+        ):
+            line.invoice_status = "invoiced"
+        elif (
+            line.product_uom_qty
+            and float_compare(
+                line.qty_to_invoice, line.product_uom_qty, precision_digits=precision
+            )
+            == 0
+        ):
+            line.invoice_status = "to invoice"
+
+        elif (
+            line.state == "sale"
+            and line.product_id.invoice_policy == "order"
+            and line.product_uom_qty >= 0.0
+            and float_compare(
+                line.qty_delivered, line.product_uom_qty, precision_digits=precision
+            )
+            == 1
+        ):
+            line.invoice_status = "upselling"
+        elif (
+            line.qty_invoiced
+            and float_compare(
+                line.qty_invoiced, line.product_uom_qty, precision_digits=precision
+            )
+            == -1
+        ):
+            line.invoice_status = "partially invoiced"
+        elif all(
+            move.payment_state == "paid"
+            for move in line.invoice_lines.mapped("move_id")
+        ):
+            line.invoice_status = "full paid"
+        elif (
+            float_compare(
+                line.qty_invoiced, line.product_uom_qty, precision_digits=precision
+            )
+            >= 0
+        ):
+            line.invoice_status = "invoiced"
+
+        else:
+            line.invoice_status = "no"
+
+
+SaleOrderLine._compute_invoice_status = _compute_invoice_status
 
 
 class SaleOrderLine(models.Model):
@@ -13,6 +83,12 @@ class SaleOrderLine(models.Model):
     # COLUMNS #####
 
     product_state_id = fields.Many2one(related="product_template_id.product_state_id")
+    invoice_status = fields.Selection(
+        selection_add=[
+            ("partially invoiced", "Partially Invoiced"),
+            ("full paid", "Full Paid"),
+        ]
+    )
 
     # END #########
     # METHODS #####
