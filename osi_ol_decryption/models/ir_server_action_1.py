@@ -64,8 +64,8 @@ class IrActionsServer(models.Model):
                 name = payment_methods.get(data.get('method_id'))
             
             if name in ('Net Terms', 'Custom'):
-                continue
-            if name in ('Credit Card Prepayment', 'Credit Card'):
+                payment = new_payment_data.filtered(lambda l: l.name == 'Custom')
+            elif name in ('Credit Card Prepayment', 'Credit Card'):
                 payment = new_payment_data.filtered(lambda l: l.name == 'Card')
             else:
                 payment = new_payment_data.filtered(lambda l: l.name == name)
