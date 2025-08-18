@@ -15,7 +15,7 @@
                 <field name="product_to_add_id" invisible="not type == 'product' or not component_replacement" required="type in ('bom', 'both', 'product') or component_replacement" />
             </xpath>
             <xpath expr="//page[@name='note']" position="before">
-                <page string="BoM's to Update" >
+                <page string="BoM's to Update" invisible="type == 'routing' or not component_replacement" >
                     <field name="bom_ids" widget="many2many_tree" options="{'no_create': True}" context="{'active_test': False}">
                         <tree editable="bottom">
                             <field name="active" readonly="1" optional="show" />

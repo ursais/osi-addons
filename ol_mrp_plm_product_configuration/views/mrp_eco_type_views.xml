@@ -1,0 +1,29 @@
+<odoo>
+
+    <!-- ECO Type Form View -->
+    <record id="view_mrp_eco_type_form_inherit_staged_cfg" model="ir.ui.view">
+        <field name="name">mrp.eco.type.form.staged.cfg</field>
+        <field name="model">mrp.eco.type</field>
+        <field name="inherit_id" ref="mrp_plm.mrp_eco_type_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='group_alias']" position="after">
+                <group name="configurable_product">
+                    <field name="enable_staged_configuration"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ECO Type Tree View -->
+    <record id="view_mrp_eco_type_tree_inherit_staged_cfg" model="ir.ui.view">
+        <field name="name">mrp.eco.type.view.tree</field>
+        <field name="model">mrp.eco.type</field>
+        <field name="inherit_id" ref="mrp_plm.mrp_eco_type_view_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="enable_staged_configuration" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
