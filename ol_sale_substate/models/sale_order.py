@@ -22,6 +22,9 @@ class SaleOrder(models.Model):
         waiting_substate = self.env.ref(
             "ol_sale_substate.base_substate__waiting", raise_if_not_found=False
         )
+        shipped_substate = self.env.ref(
+            "ol_sale_substate.base_substate__shipped", raise_if_not_found=False
+        )
         complete_substate = self.env.ref(
             "ol_sale_substate.base_substate__complete", raise_if_not_found=False
         )
@@ -74,7 +77,14 @@ class SaleOrder(models.Model):
                         and line.product_id.type in ("product", "consu")
                     )
                     # Set to complete if fully delivered
-                    if all_delivered and order.substate_id != complete_substate:
+                    if all_delivered and order.substate_id != shipped_substate:
+                        new_substate = shipped_substate
+
+                if order.invoice_ids:
+                    all_invoice = all(
+                        invoice.payment_state == "paid" for invoice in order.invoice_ids
+                    )
+                    if all_invoice and order.substate_id != complete_substate:
                         new_substate = complete_substate
 
                 if new_substate and order.substate_id != new_substate:

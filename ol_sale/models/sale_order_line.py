@@ -5,6 +5,7 @@ from odoo.tools import float_compare
 from odoo.addons.sale.models.sale_order_line import SaleOrderLine
 
 
+# Monkey patch the Invoice Status compute on sale order line to add the two new statuses
 @api.depends(
     "state",
     "product_uom_qty",
@@ -53,7 +54,7 @@ def _compute_invoice_status(self):
             == -1
         ):
             line.invoice_status = "partially invoiced"
-        elif all(
+        elif line.invoice_lines and all(
             move.payment_state == "paid"
             for move in line.invoice_lines.mapped("move_id")
         ):
