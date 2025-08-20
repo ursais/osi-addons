@@ -65,7 +65,13 @@
                                                 <span t-field="invoice_line.price_unit" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}"/>
                                             </t>
                                             <t t-else="">
-                                                <span t-field="sale_order_line.price_unit" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}"/>
+                                                <t t-if="sale_order_line.discount">
+                                                    <t t-set="price" t-value="sale_order_line.price_subtotal and sale_order_line.product_uom_qty and sale_order_line.price_subtotal / sale_order_line.product_uom_qty"/>
+                                                    <span t-esc="price" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <span t-field="sale_order_line.price_unit" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}"/>
+                                                </t>
                                             </t>
                                         </div>
 
