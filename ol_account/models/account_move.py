@@ -240,4 +240,22 @@ class AccountMove(models.Model):
         for move in self:
             move.invoice_date_due_display = move.invoice_date_due
 
+    @api.depends("invoice_date", "company_id")
+    def _compute_date(self):
+        """
+        Computes the accounting date (`date`) for account moves.
+        This override filters out vendor bills and vendor refunds (i.e., move_type
+        in "in_invoice" or "in_refund") that already have a `date` set, and skips
+        computing the `date` for them by removing them from `self`.
+
+        The remaining records (not vendor bills or refunds with an existing date)
+        will have their `date` field computed using the parent class logic.
+        """
+        moves = self.filtered(
+            lambda l: l.move_type in ("in_invoice", "in_refund") and l.date
+        )
+        self = self - moves
+
+        return super(AccountMove, self)._compute_date()
+
     # END ##########
