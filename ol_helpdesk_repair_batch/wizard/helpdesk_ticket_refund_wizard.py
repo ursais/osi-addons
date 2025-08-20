@@ -236,6 +236,18 @@ class RepairCreditNoteWizard(models.TransientModel):
 
         credit_note = self.env["account.move"].create(move_vals)
 
+        # Determine repair orders to log
+        repair_orders = self.original_repair_order_ids or self.ticket_id.repair_ids
+        repair_names = repair_orders.mapped("name")
+
+        # Compose chatter message
+        body = _("Created from RMA Ticket: <b>%s</b><br/>" "Related Repairs: %s") % (
+            self.ticket_id.name,
+            ", ".join(repair_names) if repair_names else "None",
+        )
+
+        credit_note.message_post(body=body, body_is_html=True)
+
         return {
             "type": "ir.actions.act_window",
             "res_model": "account.move",
