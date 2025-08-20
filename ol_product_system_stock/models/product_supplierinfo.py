@@ -75,7 +75,7 @@ class ProductSupplierinfo(models.Model):
             "product": self.product_tmpl_id.id,
             "company": self.company_id.id,
         }
-        return self.env["api"].generate_hmac_signature(key=str(self.id), msg=data)
+        return self.env["api"].generate_hmac_signature(key=str(self.id), data=data)
 
     def delayed_call_change_response_functions(self, company):
         """

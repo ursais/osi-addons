@@ -421,6 +421,9 @@
           font-weight: 600;
           font-size: 16px;
           }
+          .budgetary_quote_product_lines_cont{
+             width: 100%;
+          }
 
           .ol_product_name.compressed {
           font-weight: 300;

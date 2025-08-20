@@ -65,15 +65,4 @@ class ExceptionIgnore(models.Model):
             grouped[model].append(res_id)
         return grouped.items()
 
-    # def unlink(self):
-    #     """Check if user can delete ignored exceptions. Sudo can always delete."""
-    #     if not self.env.su and not self.env.user._is_superuser():
-    #         for record in self:
-    #             for group in record.exception_rule_id.allowed_group_ids:
-    #                 if group.id not in self.env.user.groups_id.ids:
-    #                     raise ValidationError(
-    #                         "You do not have the rights to clear this exception."
-    #                     )
-    #     return super().unlink()
-
     # END ##########

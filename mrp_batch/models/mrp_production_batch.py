@@ -361,6 +361,11 @@ class MrpProductionBatch(models.Model):
         "Total Sale Order Count",
         compute="_compute_sale_order_count",
     )
+    # Count of associated internal Tranfer
+    picking_count = fields.Integer(
+        "Total Sale Order Count",
+        compute="_compute_picking_count",
+    )
 
     # END #########
     # METHODS #####
@@ -1233,14 +1238,14 @@ class MrpProductionBatch(models.Model):
                     )
                     == -1
                 ):
-                    product_status_map[product.id] = (
-                        f"{product.default_code}: Not Available"
-                    )
+                    product_status_map[
+                        product.id
+                    ] = f"{product.default_code}: Not Available"
 
                 if move.forecast_expected_date:
-                    product_status_map[product.id] = (
-                        f"{product.default_code}: Exp. {format_date(self.env, move.forecast_expected_date)}"
-                    )
+                    product_status_map[
+                        product.id
+                    ] = f"{product.default_code}: Exp. {format_date(self.env, move.forecast_expected_date)}"
 
             # Populate the details field
             batch.components_availability_details = "\n".join(
@@ -1475,5 +1480,33 @@ class MrpProductionBatch(models.Model):
             # or 'cancelled' states, mark the batch as no longer in a queuing state
             if all(job.state in ["done", "failed", "cancelled"] for job in jobs):
                 batch.is_queuing = False
+
+        
+    def _compute_picking_count(self):
+        # Compute the total count of internal tranfer associated with productions
+        for rec in self:
+            rec.picking_count = len(rec.production_ids.mapped("picking_ids"))
+
+    # Smart Button Methods
+    def action_view_mo_delivery(self):
+        """Returns an action that display picking related to manufacturing order.
+        It can either be a list view or in a form view (if there is only one picking to show).
+        """
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "stock.action_picking_tree_all"
+        )
+        picking_ids = self.production_ids.mapped("picking_ids")
+        if len(picking_ids) > 1:
+            action["domain"] = [("id", "in", picking_ids.ids)]
+        elif picking_ids:
+            action["res_id"] = picking_ids.id
+            action["views"] = [(self.env.ref("stock.view_picking_form").id, "form")]
+            if "views" in action:
+                action["views"] += [
+                    (state, view) for state, view in action["views"] if view != "form"
+                ]
+        action["context"] = dict(self._context)
+        return action
 
     # END #########

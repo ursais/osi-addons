@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="store_model_nodes_tree_view" model="ir.ui.view">
+            <field name="name">store.model.nodes.tree.view</field>
+            <field name="model">store.model.nodes</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="node_option" />
+                    <field name="attribute_string" />
+                    <field name="attribute_name" />
+                    <field name="is_smart_button" />
+                </tree>
+            </field>
+        </record> 
+    </data>
+</odoo>

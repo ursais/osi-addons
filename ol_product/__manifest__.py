@@ -19,4 +19,5 @@
         "views/product_attribute_view.xml",
         "views/product_template_views.xml",
     ],
+    # 'post_init_hook': '_post_init_hook_compute_is_phantom_kit',
 }
