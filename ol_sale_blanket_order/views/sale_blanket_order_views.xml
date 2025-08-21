@@ -31,6 +31,7 @@
                 <field name="partner_invoice_id" groups="account.group_delivery_invoice_address" context="{'default_type':'invoice', 'show_address': False, 'show_vat': False}" readonly="state == 'expired'"/>
                 <field name="partner_shipping_id" groups="account.group_delivery_invoice_address" context="{'default_type':'delivery', 'show_address': False, 'show_vat': False}" readonly="state == 'expired'"/>
                 <field name="contact_ids" domain="[('parent_id','=',partner_id)]" widget="many2many_tags" required="1"/>
+                <field name="account_manager_id" readonly="state == 'expired'"/>
             </xpath>
             <xpath expr="//field[@name='payment_term_id']" position="after">
                 <field name="carrier_id" />
