@@ -150,15 +150,76 @@ class RepairBatch(models.Model):
         if not self.product_id and self.lot_ids:
             self.product_id = self.lot_ids[0].product_id
 
-    @api.depends("product_id")
+    @api.onchange("sale_id")
+    def _onchange_sale_id(self):
+        if self.sale_id:
+            order = self.sale_id
+
+            # sale_line_id
+            if self.sale_line_id and self.sale_line_id.order_id != order:
+                self.sale_line_id = False
+
+            # product_id
+            valid_product_ids = order.order_line.mapped("product_id")
+            if self.product_id and self.product_id not in valid_product_ids:
+                self.product_id = False
+
+            # lot_ids
+            move_lines = order.picking_ids.move_ids.move_line_ids
+            valid_lot_ids = move_lines.mapped("lot_id").filtered(lambda l: l)
+            if self.lot_ids - valid_lot_ids:
+                self.lot_ids = False
+        else:
+            self.sale_line_id = False
+
+    @api.onchange("sale_line_id")
+    def _onchange_sale_line_id(self):
+        if self.sale_line_id:
+            self.product_id = self.sale_line_id.product_id
+
+    @api.onchange("product_id")
+    def _onchange_product_id(self):
+        if self.sale_id and self.product_id:
+            sale_products = self.sale_id.order_line.mapped("product_id")
+            if self.product_id not in sale_products:
+                self.sale_line_id = False  # Or maybe also clear product_id?
+                self.lot_ids = False
+
+    @api.depends(
+        "product_id",
+        "sale_id",
+        "sale_line_id",
+    )
     def _compute_lot_ids_domain(self):
         """
-        Sets the domain of the lot_ids field based on the selected product.
+        Sets the domain of the lot_ids field based on the selected product or sale order.
         This allows a user to initially choose a serial instead of going in on the product side.
         """
         for rec in self:
             domain = []
-            if rec.product_id:
+            if rec.sale_line_id:
+                product = rec.sale_line_id.product_id
+                pickings = rec.sale_line_id.order_id.picking_ids
+                move_lines = pickings.move_ids.move_line_ids.filtered(
+                    lambda m: m.product_id == product
+                )
+                lot_ids = move_lines.mapped("lot_id").filtered(lambda l: l)
+                rec.product_id = product.id
+
+                domain = [("id", "in", lot_ids.ids), ("product_id", "=", product.id)]
+            elif rec.sale_id:
+                # Get all stock.lot IDs linked to stock.move lines of the sale order
+                move_lines = rec.sale_id.picking_ids.move_ids.move_line_ids
+                lot_ids = move_lines.mapped("lot_id").filtered(lambda l: l)
+                # raise ValidationError(move_lines)
+                if rec.product_id:
+                    domain = [
+                        ("id", "in", lot_ids.ids),
+                        ("product_id", "=", rec.product_id.id),
+                    ]
+                else:
+                    domain = [("id", "in", lot_ids.ids)]
+            elif rec.product_id:
                 domain = [("product_id", "=", rec.product_id.id)]
             rec.lot_ids_domain = domain
 
@@ -476,5 +537,44 @@ class RepairBatch(models.Model):
             # Default to draft if no specific state is met
             else:
                 batch.state = "draft"
+
+    @api.constrains("sale_id", "product_id", "sale_line_id", "lot_ids")
+    def _check_sale_and_product_consistency(self):
+        for rec in self:
+            if rec.sale_id:
+                sale_products = rec.sale_id.order_line.mapped("product_id")
+                if rec.product_id and rec.product_id not in sale_products:
+                    raise ValidationError(
+                        _("Product %s is not part of the selected sale order.")
+                        % rec.product_id.display_name
+                    )
+
+                if rec.lot_ids:
+                    # Get valid lots from the picking linked to this sale
+                    valid_lots = rec.sale_id.picking_ids.move_ids.move_line_ids.mapped(
+                        "lot_id"
+                    )
+                    invalid_lots = rec.lot_ids - valid_lots
+                    if invalid_lots:
+                        raise ValidationError(
+                            _(
+                                "Some selected serial numbers are not part of the sale order: %s"
+                            )
+                            % ", ".join(invalid_lots.mapped("name"))
+                        )
+
+            if (
+                rec.sale_line_id
+                and rec.product_id
+                and rec.sale_line_id.product_id != rec.product_id
+            ):
+                raise ValidationError(
+                    _("Sale Order Line product does not match selected product.")
+                )
+
+            if rec.sale_line_id and rec.sale_line_id.order_id != rec.sale_id:
+                raise ValidationError(
+                    _("Sale line is not part of the selected Sale Order.")
+                )
 
     # END #######

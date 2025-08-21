@@ -1,0 +1,10 @@
+<odoo>
+
+    <record id="payment_method_zero_payment" model="payment.method">
+        <field name="name">Zero Payment</field>
+        <field name="code">zero_payment</field>
+        <field name="sequence">1000</field>
+        <field name="active">True</field>
+    </record>
+
+</odoo>

@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import _, models
+from odoo import _, fields, models
 
 
 class StockScrap(models.Model):
@@ -7,6 +7,12 @@ class StockScrap(models.Model):
 
     _inherit = "stock.scrap"
 
+    # COLUMNS #####
+    supplier_serial_number = fields.Char(
+        string="Supplier Serial Number",
+    )
+
+    # END #########
     # METHODS #####
 
     def action_validate(self):

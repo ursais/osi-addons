@@ -421,6 +421,9 @@
           font-weight: 600;
           font-size: 16px;
           }
+          .budgetary_quote_product_lines_cont{
+             width: 100%;
+          }
 
           .ol_product_name.compressed {
           font-weight: 300;
@@ -728,9 +731,9 @@
           padding: 10px 0 0 0;
           }
 
-          .ol_report_footer_terms a {
+          .ol_report_footer_terms div a {
           text-decoration: none;
-          color: #59595b;
+          color: #6BCACE !important;
           }
 
           .ol_account_manager_email {

@@ -85,7 +85,7 @@
                           <strong>Terms and Conditions</strong>
                       </div>
                       <div>
-                          <a t-attf-href="{{company.terms_and_conditions_url}}" target="_blank">
+                          <a t-attf-href="{{company.terms_and_conditions_url}}" target="_blank" style="color: #6BCACE !important;">
                               <t t-out="company.terms_and_conditions_url" t-options='{"widget": "url_formatter"}'/>
                           </a>
                       </div>

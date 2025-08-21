@@ -19,7 +19,7 @@
                 <!-- Set some useful variables -->
                 <t t-set="sale_order" t-value="doc.sale_id" />
                 <!-- Find the correct language-->
-                <t t-set="language" t-value="sale_order.partner_id.lang or doc.create_uid.lang" />
+                <t t-set="language" t-value="sale_order.contact_ids and sale_order.contact_ids[0].lang or sale_order.partner_id.lang or doc.create_uid.lang" />
                 <!-- Re-browse of the record with the correct language -->
                 <t t-set="picking" t-value="doc.with_context(lang=language)" />
                 <!-- Call the template document with the language set -->

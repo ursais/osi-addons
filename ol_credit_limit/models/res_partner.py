@@ -54,6 +54,28 @@ class ResPartner(models.Model):
         compute="_compute_open_bo_balance",
         help="Computed sum of remaining blanket order quantities multiplied by price, for the partner and its rollup partners.",
     )
+    outstanding_receivable = fields.Monetary(
+        string="Outstanding Receivable",
+        store=True,
+        compute="_compute_outstanding_receivable",
+        help="Computed sum of outstanding receivable(anything invoiced and not paid) for the partner and its rollup partners.",
+    )
+
+    @api.depends(
+        'total_due',
+        'rollup_partner_ids.total_due',
+        'rollup_partner_ids.invoice_ids.state',
+        'rollup_partner_ids.invoice_ids.amount_residual',
+    )
+    def _compute_outstanding_receivable(self):
+        for partner in self:
+            if partner.rollup_partner_ids:
+                # Sum own total_due and all linked partners' total_due
+                partner.outstanding_receivable = partner.total_due + sum(
+                    partner.rollup_partner_ids.mapped('total_due')
+                )
+            else:
+                partner.outstanding_receivable = 0.0
 
     # END #########
     # METHODS #####
@@ -216,12 +238,12 @@ class ResPartner(models.Model):
             else:
                 rollup_used_credit = 0
                 if partner.rollup_partner_ids:
-                    rollup_credit_data = partner.rollup_partner_ids.read_group(
-                        [], ["open_so_balance:sum", "credit:sum"], []
-                    )
-                    rollup_used_credit = (
-                        sum(rollup_credit_data[0].values()) if rollup_credit_data else 0
-                    )
+                    partners_data = partner.rollup_partner_ids.read(["open_so_balance", "credit"])
+
+                    rollup_open_so = sum(p.get("open_so_balance", 0.0) or 0.0 for p in partners_data)
+                    rollup_credit_total = sum(p.get("credit", 0.0) or 0.0 for p in partners_data)
+
+                    rollup_used_credit = rollup_open_so + rollup_credit_total
 
                 used_credit = (
                     partner.open_so_balance

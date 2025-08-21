@@ -10,7 +10,7 @@
                 <div class="mb-4 mt-3">
                     <div name="date" class="row">
                         <div class="col-6" t-if="o.date">
-                            Payment Date: <span t-field="o.date">2023-01-01</span>
+                            Payment Date: <span t-esc="o.get_format_date(o.date)">2023-01-01</span>
                         </div>
                     </div>
                     <div class="oe_structure"></div>
@@ -69,7 +69,7 @@
                             <t t-if="inv.move_type != 'entry'">
                                 <tr>
                                     <t t-set="refund" t-value="inv.get_refund_detail()"/>
-                                    <td><span t-field="inv.invoice_date">2023-01-01</span></td>
+                                    <td><span t-field="inv.get_format_date(inv.invoice_date)">2023-01-01</span></td>
                                     <td><span t-field="inv.name">INV001</span></td>
                                     <!-- <td><span t-field="inv.ref" data-oe-demo="Sample Ref"/></td> -->
                                     <td/>

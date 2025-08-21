@@ -40,4 +40,22 @@
     	<value eval="{'noupdate': True}" />
 	</function>
 
+	<function name="write" model="ir.model.data">
+	    <function name="search" model="ir.model.data">
+	        <value eval="[('module', '=', 'sale'), ('name', '=', 'mail_template_sale_cancellation')]" />
+	    </function>
+    	<value eval="{'noupdate': False}" />
+	</function>
+
+	<record id="sale.mail_template_sale_cancellation" model="mail.template">
+		<field name="lang">{{ object.contact_ids and object.contact_ids[0].lang or object.partner_id.lang }}</field>
+	</record>
+
+	<function name="write" model="ir.model.data">
+	    <function name="search" model="ir.model.data">
+	        <value eval="[('module', '=', 'sale'), ('name', '=', 'mail_template_sale_cancellation')]" />
+	    </function>
+    	<value eval="{'noupdate': True}" />
+	</function>
+
 </odoo>

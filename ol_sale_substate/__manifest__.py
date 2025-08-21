@@ -11,6 +11,7 @@
     # any module necessary for this one to work correctly
     "depends": [
         "ol_base",
+        "ol_sale",
         "sale_mrp",
         "sale_stock",
         "sale_substate",

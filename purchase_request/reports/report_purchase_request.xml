@@ -21,7 +21,7 @@
                             <div class="col-2">
                                 <strong>Creation Date:</strong>
                                 <br />
-                                <span t-field="o.date_start" />
+                                <span t-esc="o.get_format_date(o.date_start)" />
                             </div>
                             <div class="col-2">
                                 <strong>Source:</strong>

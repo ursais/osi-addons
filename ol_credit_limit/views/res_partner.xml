@@ -16,6 +16,7 @@
                     <field  name="credit_hold" />
                     <field  name="open_so_balance"/>
                     <field  name="open_bo_balance"/>
+                    <field  name="outstanding_receivable"/>
                     <field  name="remaining_credit"/>
                     <field  name="customer_deposit_balance"/>
                 </group>
