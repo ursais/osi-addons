@@ -14,16 +14,21 @@ class SaleOrder(models.Model):
     # END #########
     # METHOD #####
 
-    def action_confirm(self):
-        res = super().action_confirm()
-        for order in self:
-            if not order.detect_exceptions() and not order.payment_method_mail_send:
+    def write(self, vals):
+        res = super().write(vals)
+        order_review = self.env.ref(
+            "ol_sale_substate.base_substate__order_review", raise_if_not_found=True
+        )
+        for order in self.filtered(
+            lambda l: not l.payment_method_mail_send
+            and l.substate_id.id == order_review.id
+            and l.sale_payment_method_id.sale_email_template_id
+        ):
+            if not order.detect_exceptions():
                 template = order.sale_payment_method_id.sale_email_template_id
-                if template:
-                    template.send_mail(order.id, force_send=True)
-                    # Updated boolean to avoid sending multiple emails in
-                    # case of multiple time of calling 'action_confirm'
-                    order.payment_method_mail_send = True
+                template.send_mail(order.id, force_send=True)
+
+                order.write({"payment_method_mail_send": True})
         return res
 
     # END #########
