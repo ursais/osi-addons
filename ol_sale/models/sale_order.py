@@ -51,6 +51,11 @@ class SaleOrder(models.Model):
     shipping_ref = fields.Char(string="Shipping Reference")
     has_active_holds = fields.Boolean(compute="_compute_has_active_holds")
 
+    mo_tranfer_count = fields.Integer(
+        string="MO Intenral Tranfer",
+        compute="_compute_mo_tranfer_count",
+    )
+
     # END #########
 
     # METHODS #########
@@ -293,6 +298,25 @@ class SaleOrder(models.Model):
             )
 
         return template
+
+    def _compute_mo_tranfer_count(self):
+        for rec in self:
+            rec.mo_tranfer_count = len(self.mrp_production_ids.mapped('picking_ids'))
+
+
+    def action_view_mo_internal_picking(self): 
+        self.ensure_one()
+        picking_ids = self.mrp_production_ids.mapped('picking_ids')
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")
+        if len(picking_ids) > 1:
+            action['domain'] = [('id', 'in', picking_ids.ids)]
+        elif picking_ids:
+            action['res_id'] = picking_ids.id
+            action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            if 'views' in action:
+                action['views'] += [(state, view) for state, view in action['views'] if view != 'form']
+        action['context'] = dict(self._context)
+        return action
 
     def write(self, vals):
         res = super(SaleOrder, self).write(vals)
