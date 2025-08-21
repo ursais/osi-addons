@@ -3,7 +3,6 @@
     <!-- Update out of box team -->
     <record id="helpdesk_team_tech_support" model="helpdesk.team">
         <field name="name">Tech Support</field>
-        <field name="stage_ids" eval="False"/>
         <field name="use_product_repairs">1</field>
         <field name="use_helpdesk_timesheet">1</field>
     </record>
@@ -11,7 +10,6 @@
     <!-- Helpdesk Team: Customer RMA -->
     <record id="helpdesk_team_customer_rma" model="helpdesk.team">
         <field name="name">Customer RMA</field>
-        <field name="stage_ids" eval="False"/>
         <field name="use_product_repairs">1</field>
         <field name="use_helpdesk_timesheet">1</field>
         <field name="sequence_id" ref="ir_sequence_helpdesk_ticket_rma" />
@@ -20,7 +18,6 @@
     <!-- Helpdesk Team: Engineering -->
     <record id="helpdesk_team_engineering" model="helpdesk.team">
         <field name="name">Applications Engineering</field>
-        <field name="stage_ids" eval="False"/>
         <field name="use_product_repairs">1</field>
         <field name="use_helpdesk_timesheet">1</field>
     </record>
