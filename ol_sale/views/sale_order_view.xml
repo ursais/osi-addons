@@ -71,15 +71,19 @@
                 <field name="contact_ids" domain="[('parent_id','=',partner_id)]" widget="many2many_tags" required="1"/>
             </field>
             <field name="partner_id" position="attributes">
-                <attribute name="domain">[('type', 'in', ['contact', 'other']), ('parent_id', '=', False), '|', ('company_id', '=', False), ('company_id', 'parent_of', [company_id])]</attribute>
+                <attribute name="domain">
+                    [ ('type', 'in', ['contact', 'other']), '&amp;',
+                    '|', ('is_company', '=', True), ('parent_id', '=', False),
+                    '|', ('company_id', '=', False), ('company_id', 'parent_of', [company_id])]
+                </attribute>
             </field>
 
             <!-- Add context to invoice/delivery addresses -->
             <field name="partner_invoice_id" position="attributes">
-                <attribute name="context">{'default_parent_id': partner_id, 'default_type':'invoice', 'show_address': 1, 'show_vat': 1}</attribute>
+                <attribute name="context">{'default_parent_id': partner_id, 'default_type':'invoice', 'show_address': 1, 'show_vat': 1, 'partner_address_details': 1}</attribute>
             </field>
             <field name="partner_shipping_id" position="attributes">
-                <attribute name="context">{'default_parent_id': partner_id, 'default_type':'delivery', 'show_address': 1, 'show_vat': 1}</attribute>
+                <attribute name="context">{'default_parent_id': partner_id, 'default_type':'delivery', 'show_address': 1, 'show_vat': 1, 'partner_address_details': 1}</attribute>
             </field>
 
             <!-- Move client_order_ref up in header along with shipping_ref -->
@@ -88,6 +92,25 @@
                 <field name="client_order_ref" />
                 <field name="shipping_ref" />
             </field>
+            <xpath expr="//page[@name='order_lines']//field[@name='order_line']//tree//field[@name='company_id']" position="after">
+                <button
+                    name="action_duplicate_line"
+                    type="object"
+                    class="oe_link"
+                    icon="fa-copy"
+                    title="Copy"
+                    invisible="not product_id or locked"
+                />
+            </xpath>
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" name="action_view_mo_internal_picking" invisible="mo_tranfer_count == 0" type="object" icon="fa-bars">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="mo_tranfer_count" /></span>
+                        <span class="o_stat_text">MO Tranfer</span>
+                    </div>
+                </button>
+            </xpath>
 
         </field>
     </record>

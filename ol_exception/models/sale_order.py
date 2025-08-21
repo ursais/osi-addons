@@ -23,6 +23,12 @@ class SaleOrder(models.Model):
             return self._popup_exceptions()
         return super().action_quotation_send()
 
+    def action_lock(self):
+        # Trigger exception check when attempting to lock the order.
+        if self.detect_exceptions():
+            return self._popup_exceptions()
+        return super().action_lock()
+
     def _fields_trigger_check_exception(self):
         # Search for exception configs: sudo is used as non-admins don't
         # have direct access to ir.model

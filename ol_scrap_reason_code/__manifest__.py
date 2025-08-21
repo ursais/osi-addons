@@ -15,5 +15,6 @@
     # always loaded
     "data": [
         "views/stock_scrap_views.xml",
+        "views/scrap_reason_code_view.xml",
     ],
 }

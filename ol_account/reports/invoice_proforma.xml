@@ -17,7 +17,7 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="doc">
               <!-- Find the correct language-->
-              <t t-set="language" t-value="doc.partner_id.lang"/>
+              <t t-set="language" t-value="doc.contact_ids and doc.contact_ids[0].lang or doc.partner_id.lang"/>
               <t t-set="sale_order" t-value="doc.with_context(lang=language)"/>
               <!-- Call the template document with the language set -->
               <t t-call="ol_account.report_sale_order_proforma_invoice_document" t-lang="language"/>
@@ -64,7 +64,7 @@
                           <tag>Order Date</tag>
                       </div>
                       <div class="value">
-                          <t t-esc="sale_order.date_order" t-options='{"widget": "date_formatter"}'/>
+                          <t t-esc="sale_order.get_format_date(sale_order.date_order)"/>
                       </div>
                   </div>
 
@@ -73,7 +73,7 @@
                           <tag>Proforma Expiration</tag>
                       </div>
                       <div class="value">
-                          <t t-esc="sale_order.validity_date" t-options='{"widget": "date_formatter"}'/>
+                          <t t-esc="sale_order.get_format_date(sale_order.validity_date)"/>
                       </div>
                   </div>
 

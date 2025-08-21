@@ -28,27 +28,6 @@ class Uuid(models.AbstractModel):
 
     _sql_constraints = [("uuid", "unique(uuid)", "The UUID field must be unique!")]
 
-    @api.model
-    def check_field_access_rights(self, operation, field_names):
-        """
-        Odoo classes that inherit the UUID mixin we always want to include the UUID in the read results
-        """
-        result = super().check_field_access_rights(
-            operation=operation, field_names=field_names
-        )
-
-        if operation != "read":
-            # We only want to change reads
-            return result
-
-        if "uuid" not in result and "uuid" in self._fields:
-            if isinstance(result, list):
-                result.append("uuid")
-            elif isinstance(result, OrderedSet):
-                result.add("uuid")
-
-        return result
-
     @api.model_create_multi
     def create(self, vals_list):
         """

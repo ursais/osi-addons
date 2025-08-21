@@ -22,7 +22,7 @@
 
 	<!-- Update report template on sale template to include PRO-Invoice -->
 	<record id="sale.email_template_edi_sale" model="mail.template">
-		<field name="report_template_ids" eval="[(6, 0, [ref('sale.action_report_pro_forma_invoice')])]" />
+		<field name="report_template_ids" eval="[(6, 0, [ref('ol_sale.action_sale_order_quote_report')])]" />
 	</record>
 
 	<!-- Set no update on stock email template back -->
@@ -36,6 +36,24 @@
 	<function name="write" model="ir.model.data">
 	    <function name="search" model="ir.model.data">
 	        <value eval="[('module', '=', 'sale'), ('name', '=', 'email_template_edi_sale')]" />
+	    </function>
+    	<value eval="{'noupdate': True}" />
+	</function>
+
+	<function name="write" model="ir.model.data">
+	    <function name="search" model="ir.model.data">
+	        <value eval="[('module', '=', 'sale'), ('name', '=', 'mail_template_sale_cancellation')]" />
+	    </function>
+    	<value eval="{'noupdate': False}" />
+	</function>
+
+	<record id="sale.mail_template_sale_cancellation" model="mail.template">
+		<field name="lang">{{ object.contact_ids and object.contact_ids[0].lang or object.partner_id.lang }}</field>
+	</record>
+
+	<function name="write" model="ir.model.data">
+	    <function name="search" model="ir.model.data">
+	        <value eval="[('module', '=', 'sale'), ('name', '=', 'mail_template_sale_cancellation')]" />
 	    </function>
     	<value eval="{'noupdate': True}" />
 	</function>

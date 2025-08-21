@@ -23,9 +23,11 @@
     ],
     # always loaded
     "data": [
+        "data/mail_template_data.xml",
         "security/base_exception_security.xml",
         "security/ir.model.access.csv",
         "views/exception_config.xml",
+        "views/exception_ignore_view.xml",
         "views/exception_rule_view.xml",
         "views/product_state_views.xml",
         "views/purchase_order_view.xml",

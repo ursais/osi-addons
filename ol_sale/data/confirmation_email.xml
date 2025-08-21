@@ -7,10 +7,10 @@
         <field name="partner_to">{{ object.contact_ids and object.contact_ids.ids or object.partner_id and object.partner_id.id }}</field>
         <field name="subject">Thank you for your order!</field>
         <field name="body_html" type="html">
-            <t t-set="sale_order" t-value="object.with_context({'lang':object.partner_id.lang or object.env.lang})" />
-            <t t-call="ol_sale.confirmation_email_template" t-lang="sale_order.partner_id.lang or object.env.lang" />
+            <t t-set="sale_order" t-value="object.with_context({'lang':object.contact_ids and object.contact_ids[0].lang or object.partner_id.lang or object.env.lang})" />
+            <t t-call="ol_sale.confirmation_email_template" t-lang="sale_order.contact_ids and sale_order.contact_ids[0].lang or sale_order.partner_id.lang or object.env.lang" />
         </field>
-        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="lang">{{ object.contact_ids and object.contact_ids[0].lang or object.partner_id.lang }}</field>
         <field name="auto_delete" eval="False" />
     </record>
 
@@ -21,10 +21,10 @@
         <field name="email_to">{{ ctx['email_to'] }}</field>
         <field name="subject">Forwarded: Thank you for your order!</field>
         <field name="body_html" type="html">
-            <t t-set="sale_order" t-value="object.with_context({'lang':object.partner_id.lang or object.env.lang})" />
-            <t t-call="ol_sale.confirmation_email_template" t-lang="sale_order.partner_id.lang or object.env.lang" />
+            <t t-set="sale_order" t-value="object.with_context({'lang': object.contact_ids and object.contact_ids[0].lang or object.partner_id.lang or object.env.lang})" />
+            <t t-call="ol_sale.confirmation_email_template" t-lang="sale_order.contact_ids and sale_order.contact_ids[0].lang or sale_order.partner_id.lang or object.env.lang" />
         </field>
-        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="lang">{{ object.contact_ids and object.contact_ids[0].lang or object.partner_id.lang }}</field>
         <field name="auto_delete" eval="False" />
     </record>
 
@@ -110,5 +110,48 @@
             </t>
         </t>
     </template>
+
+    <record id="email_template_sale_proforma" model="mail.template">
+        <field name="name">Sales: Send Quotation</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="subject">{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and (ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ object.name or 'n/a' }})</field>
+        <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
+        <field name="partner_to">{{ object.partner_id.id }}</field>
+        <field name="description">Used by salespeople when they send quotations or proforma to prospects</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    <t t-set="doc_name" t-value="'quotation' if object.state in ('draft', 'sent') else 'order'"/>
+                    Hello,
+                    <br/><br/>
+                    Your
+                    <t t-if="ctx.get('proforma')">
+                        Pro forma invoice for <t t-out="doc_name or ''">quotation</t> <span style="font-weight: bold;"  t-out="object.name or ''">S00052</span>
+                        <t t-if="object.origin">
+                            (with reference: <t t-out="object.origin or ''"></t> )
+                        </t>
+                        amounting in <span style="font-weight: bold;"  t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span> is available.
+                    </t>
+                    <t t-else="">
+                        <t t-out="doc_name or ''">quotation</t> <span style="font-weight: bold;" t-out="object.name or ''"></span>
+                        <t t-if="object.origin">
+                            (with reference: <t t-out="object.origin or ''">S00052</t> )
+                        </t>
+                        amounting in <span style="font-weight: bold;" t-out="format_amount(object.amount_total, object.currency_id) or ''">$ 10.00</span> is ready for review.
+                    </t>
+                    <br/><br/>
+                    Do not hesitate to contact us if you have any questions.
+                    <t t-if="not is_html_empty(object.user_id.signature)">
+                        <br/><br/>
+                        <t t-out="object.user_id.signature or ''">--<br/>Mitchell Admin</t>
+                    </t>
+                    <br/><br/>
+                </p>
+            </div>
+        </field>
+        <field name="report_template_ids" eval="[(4, ref('ol_account.action_proforma_invoice_report'))]"/>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
 
 </odoo>

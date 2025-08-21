@@ -10,7 +10,7 @@
                 <div class="mb-4 mt-3">
                     <div name="date" class="row">
                         <div class="col-6" t-if="o.date">
-                            Payment Date: <span t-field="o.date">2023-01-01</span>
+                            Payment Date: <span t-esc="o.get_format_date(o.date)">2023-01-01</span>
                         </div>
                     </div>
                     <div class="oe_structure"></div>
@@ -69,7 +69,7 @@
                             <t t-if="inv.move_type != 'entry'">
                                 <tr>
                                     <t t-set="refund" t-value="inv.get_refund_detail()"/>
-                                    <td><span t-field="inv.invoice_date">2023-01-01</span></td>
+                                    <td><span t-field="inv.get_format_date(inv.invoice_date)">2023-01-01</span></td>
                                     <td><span t-field="inv.name">INV001</span></td>
                                     <!-- <td><span t-field="inv.ref" data-oe-demo="Sample Ref"/></td> -->
                                     <td/>
@@ -94,11 +94,12 @@
                                 <!-- PAYMENTS/REVERSALS -->
                                 <tr t-foreach="inv._get_reconciled_invoices_partials()[0]" t-as="par">
                                     <t t-set="payment" t-value="par[2].move_id"/>
+                                    <t t-set="discount" t-value="sum(par[2].move_id.line_ids.filtered(lambda l: l.display_type == 'epd').mapped('credit'))"/>
                                     <td><span t-field="payment.date">2023-01-05</span></td>
                                     <td><span t-field="payment.name">PAY001</span></td>
-                                    <td><span t-field="payment.ref" data-oe-demo="Payment Ref"/></td>
+                                    <!-- <td><span t-field="payment.ref" data-oe-demo="Payment Ref"/></td> -->
                                     <t t-set="amountPayment" t-value="-par[0].amount"/>
-                                    <t t-set="amountInvoice" t-value="-par[1]"/>
+                                    <t t-set="amountInvoice" t-value="par[1]"/>
                                     <t t-set="currencyPayment" t-value="payment.currency_id"/>
                                     <t t-set="currencyInvoice" t-value="inv.currency_id"/>
                                     <!-- Fill the column "Amount In Currency" only if necessary -->
@@ -110,15 +111,15 @@
                                     </td>
                                     <td></td>
                                     <td></td>
-                                    <td></td>
-                                    <td t-if="otherCurrency" class="text-end"><span t-if="currencyPayment != currencyInvoice" t-out="amountPayment" t-options="{'widget': 'monetary', 'display_currency': currencyPayment}">50.00 EUR</span></td>
-                                    <td class="text-end"><span t-out="amountInvoice" t-options="{'widget': 'monetary', 'display_currency': currencyInvoice}">25.00 USD</span></td>
+                                    <td class="text-end"><span t-if="discount" t-out="discount" t-options="{'widget': 'monetary', 'display_currency': currencyPayment}">50.00 EUR</span></td>
+                                    <td t-if="otherCurrency" class="text-end"><span t-if="currencyPayment != currencyInvoice" t-out="discount" t-options="{'widget': 'monetary', 'display_currency': currencyPayment}">50.00 EUR</span></td>
+                                    <td class="text-end"><span t-out="-(amountInvoice - discount)" t-options="{'widget': 'monetary', 'display_currency': currencyInvoice}">25.00 USD</span></td>
                                 </tr>
                                 <!-- BALANCE -->
                                 <tr>
                                     <td/>
                                     <td/>
-                                    <td/>
+                                    <!-- <td/> -->
                                     <td/>
                                     <td/>
                                     <td><strong>Due Amount for <span t-field="inv.name">INV001</span></strong></td>

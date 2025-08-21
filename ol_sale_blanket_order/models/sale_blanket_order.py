@@ -72,6 +72,10 @@ class SaleBlanketOrder(models.Model):
         store=True,
         group_operator="avg",
     )
+    account_manager_id = fields.Many2one(
+        comodel_name="res.users",
+        string="Account Manager",
+    )
 
     # END #########
     # METHODS #####
@@ -153,6 +157,7 @@ class SaleBlanketOrder(models.Model):
     def onchange_partner_id(self):
         res = super().onchange_partner_id()
         self.carrier_id = self.partner_id.property_delivery_carrier_id
+        self.account_manager_id = self.partner_id.account_manager_id
         return res
 
     @api.onchange("company_id")
@@ -253,6 +258,7 @@ class SaleBlanketOrder(models.Model):
             "partner_shipping_id": partner_shipping_id,
             "contact_ids": contact_ids,
             "ignore_exception": True,
+            "account_manager_id": self.partner_id.account_manager_id.id,
         }
 
     def create_sale_order_cron(self):
@@ -271,9 +277,11 @@ class SaleBlanketOrder(models.Model):
             # Dictionary to store order lines by customer
             order_lines_by_customer = defaultdict(list)
             # Initialize variables to track order attributes
-            currency_id = pricelist_id = user_id = payment_term_id = (
-                partner_invoice_id
-            ) = partner_shipping_id = None
+            currency_id = (
+                pricelist_id
+            ) = (
+                user_id
+            ) = payment_term_id = partner_invoice_id = partner_shipping_id = None
             original_request_date = None
             contact_ids = None
 
@@ -412,5 +420,17 @@ class SaleBlanketOrder(models.Model):
                         )
             # Trigger computes for remaining amount fields so bookings trigger
             order.line_ids._compute_remaining_prices()
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        """Override the create method to:
+        Update the Account Manager from Partner.
+        """
+        records = super().create(vals_list)
+        for rec in self.filtered(
+            lambda p: not p.account_manager_id and p.partner_id.account_manager_id
+        ):
+            rec.account_manager_id = rec.partner_id.account_manager_id.id
+        return records
 
     # END #########

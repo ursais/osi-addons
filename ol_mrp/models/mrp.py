@@ -55,4 +55,11 @@ class MrpProduction(models.Model):
             )
         return res
 
+    def button_scrap(self):
+        action = super().button_scrap()
+        ctx = action.get("context")
+        ctx.update({"default_should_replenish": True})
+        action["context"] = ctx
+        return action
+
     # END #########

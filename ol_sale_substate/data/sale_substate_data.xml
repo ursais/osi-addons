@@ -39,6 +39,14 @@
         <field name="description">Order is partially or fully planned</field>
     </record>
 
+    <!-- Order is Shipped -->
+    <record id="base_substate__shipped" model="base.substate">
+        <field name="name">Shipped</field>
+        <field name="sequence">4</field>
+        <field name="target_state_value_id" ref="sale_substate.target_state_value_sale" />
+        <field name="description">Order is Shipped</field>
+    </record>
+
     <!-- Order fully invoiced and paid -->
     <record id="base_substate__complete" model="base.substate">
         <field name="name">Complete</field>

@@ -13,6 +13,7 @@
         "ol_base",
         "ol_templates",
         "ol_product_configurator",
+        "ol_exception",
         "sale_management",
         "product_state",
         "sale_subscription",
@@ -22,6 +23,7 @@
         "sale_order_type",
         "sale_exception",
         "sale_order_revision",
+        "account_avatax_sale_oca",
     ],
     # always loaded
     "data": [
@@ -36,6 +38,7 @@
         "data/confirmation_email.xml",
         "data/function_data.xml",
         "data/sale_order_type_data.xml",
+        "data/click_to_buy_email.xml",
         "views/product_attribute_views.xml",
         "views/product_template_attribute_line_views.xml",
         "views/product_template_views.xml",

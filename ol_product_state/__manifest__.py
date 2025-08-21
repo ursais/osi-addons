@@ -12,6 +12,7 @@
     # any module necessary for this one to work correctly
     "depends": [
         "ol_base",
+        "ol_exception",
         "product_state",
         "sale_product_approval",
         "sale_product_approval_purchase",

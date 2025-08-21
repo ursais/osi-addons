@@ -1,7 +1,7 @@
 <odoo>
 
     <record id="account_move_form" model="ir.ui.view">
-        <field name="name">ol_account.account_move_form</field>
+        <field name="name">ol_account_account_move_form</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form" />
         <field name="arch" type="xml">
@@ -20,6 +20,27 @@
             </xpath>
             <field name="payment_reference" position="after">
                 <field name="sale_payment_method_id" invisible="move_type != 'out_invoice'"/>
+            </field>
+            <field name="invoice_date_due" position="attributes">
+                <attribute name="invisible">invoice_payment_term_id or move_type in ('in_invoice')</attribute>
+            </field>
+            <label for="invoice_date_due" position="attributes">
+                <attribute name="invisible">invoice_payment_term_id or move_type in ('in_invoice')</attribute>
+            </label>
+            <label for="invoice_payment_term_id" position="attributes">
+                <attribute name="invisible">not invoice_payment_term_id and move_type not in ('in_invoice')</attribute>
+            </label>
+            <xpath expr="//div[@name='due_date']/span" position="attributes">
+                <attribute name="invisible">state != 'draft' or invoice_payment_term_id or move_type in ('in_invoice')</attribute>
+            </xpath>
+            <xpath expr="//div[@name='due_date']" position="after">
+                <label for="invoice_date_due" string="Bill Date" style="font-weight:bold;" invisible="move_type not in ('in_invoice')"/>
+                <div class="d-flex" invisible="move_type not in ('in_invoice')" name="due_date_in_invoice">
+                    <field name="invoice_date_due" force_save="1" placeholder="Date"/>
+                </div>
+            </xpath>
+            <field name="name" position="attributes">
+                <attribute name="readonly">1</attribute>
             </field>
         </field>
     </record>
@@ -55,8 +76,8 @@
                 <field name="sale_payment_method_id" column_invisible="context.get('default_move_type') not in ('out_invoice')"/>
             </field>
             <!-- Remove Widget from Due Date -->
-            <xpath expr="//field[@name='invoice_date_due']" position="attributes">
-                <attribute name="widget"></attribute>
+            <xpath expr="//field[@name='invoice_date_due']" position="after">
+                <field name="invoice_date_due_display" optional="show" />
             </xpath>
         </field>
     </record>

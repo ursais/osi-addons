@@ -1,0 +1,15 @@
+<odoo>
+
+    <record id="ol_product_configurator_stock_product_attribute_value_list" model="ir.ui.view">
+        <field name="name">product.attribute.value.list</field>
+        <field name="model">product.attribute.value</field>
+        <field name="inherit_id" ref="product.product_attribute_value_list" />
+        <field name="arch" type="xml">
+            <field name="default_extra_price" position="before">
+                <field name="outgoing_qty" />
+                <field name="qty_available" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

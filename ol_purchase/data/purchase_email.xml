@@ -70,7 +70,7 @@
                     <br/><br/>
                     ITEMS<br/>=================================== <br/><br/>
                     <t t-foreach="object.order_line" t-as="order_line">
-                        <t t-esc="order_line.product_uom_qty" t-options="{'widget': 'integer'}" />  x <t t-esc="order_line.product_id.name" /><br/><br/>
+                        <t t-esc="order_line.product_uom_qty" t-options="{'widget': 'integer'}" />  x [<t t-esc="order_line.product_id.default_code" />] <t t-esc="order_line.product_id.name" /><br/><br/>
                     </t>
                 </p>
             </div>

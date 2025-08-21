@@ -10,7 +10,7 @@ class CRMLead(models.Model):
     # COLUMNS ######
 
     eco_ids = fields.One2many("mrp.eco", "opportunity_id", string="ECO")
-    eco_count = fields.Integer(string="ECO Count", compute="_compute_eco_count")
+    eco_count = fields.Integer(string="ECOs", compute="_compute_eco_count")
 
     # END ##########
     # METHODS ##########

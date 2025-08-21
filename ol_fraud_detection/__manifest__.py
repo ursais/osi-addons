@@ -1,5 +1,5 @@
 {
-    "name": "Fraud Detection",
+    "name": "OnLogic Fraud Detection",
     "category": "Hidden",
     "author": "OnLogic",
     "website": "https://www.onlogic.com",

@@ -12,6 +12,7 @@
     # any module necessary for this one to work correctly
     "depends": [
         "ol_base",
+        "ol_account_hot_ar",
         "sale_margin",
         "sale_blanket_order",
         "base_tier_validation",
@@ -32,6 +33,7 @@
         "views/tier_definition_view.xml",
         "data/tier_definition.xml",
         "data/tier_validation_exceptions.xml",
+        "data/payment_method_data.xml",
     ],
     # only loaded in demo mode
     "demo": [

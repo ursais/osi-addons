@@ -18,6 +18,7 @@
         "product_configurator",
     ],
     "data": [
+        "views/product_attribute_value.xml",
         "views/product_template_views.xml",
     ],
 }

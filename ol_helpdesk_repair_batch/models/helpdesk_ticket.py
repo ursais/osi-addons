@@ -59,6 +59,15 @@ class HelpdeskTicket(models.Model):
         compute="_compute_button_counts",
         help="Counts the number of Refunds",
     )
+    repair_history_html = fields.Html(
+        compute="_compute_repair_history_html",
+        sanitize=True,
+        help="Field used within the alert message where other repairs are found.",
+    )
+    show_repair_history_alert = fields.Boolean(
+        compute="_compute_repair_history_html",
+        help="Helper field used for the alert invisible attribute.",
+    )
 
     # END #######
     # METHODS ###
@@ -74,6 +83,43 @@ class HelpdeskTicket(models.Model):
                     "Auto-generated"  # Placeholder before actual sequence is assigned
                 )
         return vals
+
+    @api.depends(
+        "repair_ids",
+        "repair_ids.lot_id",
+        "repair_ids.schedule_date",
+    )
+    def _compute_repair_history_html(self):
+        state_labels = dict(
+            self.env["repair.order"]._fields["state"]._description_selection(self.env)
+        )
+        for ticket in self:
+            messages = []
+            # Collect all lot_ids and repair ids on the ticket
+            ticket_lot_ids = ticket.repair_ids.mapped("lot_id")
+            ticket_repair_ids = ticket.repair_ids.ids
+
+            for lot in ticket_lot_ids:
+                # Find historical repairs for this lot excluding ticket repairs
+                history = self.env["repair.order"].search(
+                    [
+                        ("lot_id", "=", lot.id),
+                        ("id", "not in", ticket_repair_ids),
+                    ]
+                )
+                if history:
+                    hist_links = "".join(
+                        f'<li><a href="/web#id={h.id}&model=repair.order&view_type=form">{h.name}</a>'
+                        f" — {state_labels.get(h.state, h.state)}"
+                        f' ({h.schedule_date.date() if h.schedule_date else ""})'
+                        f"</li>"
+                        for h in history
+                    )
+                    messages.append(
+                        f"<strong>Serial: {lot.name}</strong><ul>{hist_links}</ul>"
+                    )
+            ticket.show_repair_history_alert = bool(messages)
+            ticket.repair_history_html = "<br/>".join(messages) if messages else ""
 
     def _compute_button_counts(self):
         for ticket in self:
@@ -307,6 +353,7 @@ class HelpdeskTicket(models.Model):
                 "location_dest_id": destination_location_id,
                 "ticket_id": self.id,
                 "owner_id": self.partner_id.id or False,
+                "scheduled_date": fields.Datetime.now() + timedelta(days=7),
             }
         )
 

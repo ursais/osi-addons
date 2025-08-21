@@ -21,9 +21,7 @@ class SaleOrder(models.Model):
     )
     account_manager_id = fields.Many2one(
         comodel_name="res.users",
-        related="partner_id.account_manager_id",
         string="Account Manager",
-        store=True,
     )
     end_user = fields.Many2one(comodel_name="res.partner")
     integrator = fields.Many2one(comodel_name="res.partner")
@@ -50,6 +48,16 @@ class SaleOrder(models.Model):
     )
     shipping_ref = fields.Char(string="Shipping Reference")
     has_active_holds = fields.Boolean(compute="_compute_has_active_holds")
+    invoice_status = fields.Selection(
+        selection_add=[
+            ("partially invoiced", "Partially Invoiced"),
+            ("full paid", "Full Paid"),
+        ]
+    )
+    mo_tranfer_count = fields.Integer(
+        string="MO Intenral Tranfer",
+        compute="_compute_mo_tranfer_count",
+    )
 
     # END #########
 
@@ -159,6 +167,10 @@ class SaleOrder(models.Model):
     def _onchange_partner_id_sale_order_tag_ids(self):
         self.tag_ids = self.partner_id.sale_order_tag_ids
 
+    @api.onchange("partner_id")
+    def _onchange_partner_id_account_manager(self):
+        self.account_manager_id = self.partner_id.account_manager_id
+
     def get_quote_report_data(self):
         """Get the Sale Order related report data"""
 
@@ -177,7 +189,9 @@ class SaleOrder(models.Model):
             "product_lines": [],
         }
 
-        product_lines = self.order_line.filtered(lambda l: not l.is_delivery)
+        product_lines = self.with_context(
+            lang=self.contact_ids and self.contact_ids[0].lang or self.partner_id.lang
+        ).order_line.filtered(lambda l: not l.is_delivery)
 
         for sale_order_line in product_lines:
             quote_config = sale_order_line.config_session_id or False
@@ -195,19 +209,21 @@ class SaleOrder(models.Model):
                     {
                         "attribute_id": v.attribute_id,
                         "attribute_name": v.attribute_id.name,
-                        "value_name": v.product_attribute_value_id.name,
+                        "value_name": v.product_attribute_value_id.product_id.name
+                        or v.product_attribute_value_id.name,
                         "sequence": v.attribute_id.sequence,
-                        "product_qty": sum(
-                            bom_line_ids.filtered(
-                                lambda bom_line: bom_line.product_id.id
-                                == v.product_id.id
-                            ).mapped("product_qty")
+                        "product_qty": int(
+                            sum(
+                                bom_line_ids.filtered(
+                                    lambda bom_line: bom_line.product_id.id
+                                    == v.product_id.id
+                                ).mapped("product_qty")
+                            )
                         )
-                        or 1.0,
+                        or 1,
                     }
                     for v in visible_values
                 ]
-
             order_line_data = {
                 "order_line": sale_order_line,
                 "quote_config": quote_config,
@@ -226,7 +242,6 @@ class SaleOrder(models.Model):
         order_data["shipping_subtotal_amount"] = sum(
             shipping_lines.mapped("price_subtotal")
         )
-
         return order_data
 
     def _send_order_confirmation_mail(self):
@@ -281,5 +296,138 @@ class SaleOrder(models.Model):
             "name": "%s-%02d" % (self.unrevisioned_name, new_rev_number),
             "old_revision_ids": [(4, self.id, False)],
         }
+
+    def _find_mail_template(self):
+        template = super()._find_mail_template()
+        self.ensure_one()
+        if self.env.context.get("proforma"):
+            return self.env.ref(
+                "ol_sale.email_template_sale_proforma", raise_if_not_found=False
+            )
+
+        return template
+
+    def _compute_mo_tranfer_count(self):
+        for rec in self:
+            rec.mo_tranfer_count = len(self.mrp_production_ids.mapped("picking_ids"))
+
+    def action_view_mo_internal_picking(self):
+        self.ensure_one()
+        picking_ids = self.mrp_production_ids.mapped("picking_ids")
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "stock.action_picking_tree_all"
+        )
+        if len(picking_ids) > 1:
+            action["domain"] = [("id", "in", picking_ids.ids)]
+        elif picking_ids:
+            action["res_id"] = picking_ids.id
+            action["views"] = [(self.env.ref("stock.view_picking_form").id, "form")]
+            if "views" in action:
+                action["views"] += [
+                    (state, view) for state, view in action["views"] if view != "form"
+                ]
+        action["context"] = dict(self._context)
+        return action
+
+    def write(self, vals):
+        res = super(SaleOrder, self).write(vals)
+        if "partner_shipping_id" in vals:
+            for order in self.filtered(lambda a: a.state == "sale"):
+                for picking in order.picking_ids.filtered(
+                    lambda p: p.state not in ["done", "cancel"]
+                ):
+                    picking.partner_id = order.partner_shipping_id
+        return res
+
+    @api.onchange(
+        "order_line",
+        "tax_on_shipping_address",
+        "tax_address_id",
+        "partner_id",
+    )
+    def onchange_avatax_calculation(self):
+        """
+        Super avatax calculate taxes method, so instead of raising error if no lines
+        are on the sale order and the 'compute tax on so save' option is enabled, then
+        we just don't compute taxes. Raising an error causes a problem when clicking
+        the product configurator button because it saves the SO before opening the
+        wizard.
+        """
+        avatax_config = self.env.company.get_avatax_config_company()
+        if avatax_config and avatax_config.sale_calculate_tax and not self.order_line:
+            return
+        super().onchange_avatax_calculation()
+
+    @api.depends("state", "order_line.invoice_status")
+    def _compute_invoice_status(self):
+        """
+        Compute the invoice status of a SO. Possible statuses:
+        - no: if the SO is not in status 'sale' or 'done', we consider that there is nothing to
+          invoice. This is also the default value if the conditions of no other status is met.
+        - to invoice: if any SO line is 'to invoice', the whole SO is 'to invoice'
+        - invoiced: if all SO lines are invoiced, the SO is invoiced.
+        - upselling: if all SO lines are invoiced or upselling, the status is upselling.
+        """
+        confirmed_orders = self.filtered(lambda so: so.state == "sale")
+        (self - confirmed_orders).invoice_status = "no"
+        if not confirmed_orders:
+            return
+        lines_domain = [("is_downpayment", "=", False), ("display_type", "=", False)]
+        line_invoice_status_all = [
+            (order.id, invoice_status)
+            for order, invoice_status in self.env["sale.order.line"]._read_group(
+                lines_domain + [("order_id", "in", confirmed_orders.ids)],
+                ["order_id", "invoice_status"],
+            )
+        ]
+        for order in confirmed_orders:
+            line_invoice_status = [
+                d[1] for d in line_invoice_status_all if d[0] == order.id
+            ]
+            if order.state != "sale":
+                order.invoice_status = "no"
+            elif any(
+                invoice_status == "to invoice" for invoice_status in line_invoice_status
+            ):
+                if any(
+                    invoice_status == "no" for invoice_status in line_invoice_status
+                ):
+                    # If only discount/delivery/promotion lines can be invoiced, the SO should not
+                    # be invoiceable.
+                    invoiceable_domain = lines_domain + [
+                        ("invoice_status", "=", "to invoice")
+                    ]
+                    invoiceable_lines = order.order_line.filtered_domain(
+                        invoiceable_domain
+                    )
+                    special_lines = invoiceable_lines.filtered(
+                        lambda sol: not sol._can_be_invoiced_alone()
+                    )
+                    if invoiceable_lines == special_lines:
+                        order.invoice_status = "no"
+                    else:
+                        order.invoice_status = "to invoice"
+                else:
+                    order.invoice_status = "to invoice"
+            elif line_invoice_status and all(
+                invoice_status == "invoiced" for invoice_status in line_invoice_status
+            ):
+                order.invoice_status = "invoiced"
+            elif line_invoice_status and all(
+                invoice_status in ("invoiced", "upselling")
+                for invoice_status in line_invoice_status
+            ):
+                order.invoice_status = "upselling"
+            elif line_invoice_status and any(
+                invoice_status == "partially invoiced"
+                for invoice_status in line_invoice_status
+            ):
+                order.invoice_status = "partially invoiced"
+            elif line_invoice_status and all(
+                invoice_status == "full paid" for invoice_status in line_invoice_status
+            ):
+                order.invoice_status = "full paid"
+            else:
+                order.invoice_status = "no"
 
     # END #########

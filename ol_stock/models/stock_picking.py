@@ -16,23 +16,25 @@ class StockPicking(models.Model):
         string="Can Add Stock Moves",
         compute="_compute_can_add_stock_moves",
     )
-    company_currency_id = fields.Many2one(related='company_id.currency_id')
+    company_currency_id = fields.Many2one(related="company_id.currency_id")
     total_sales_price = fields.Monetary(
         string="Total Sales Price",
-        compute='_compute_total_sales_price',
-        currency_field='company_currency_id',
+        compute="_compute_total_sales_price",
+        currency_field="company_currency_id",
         store=True,
-        help="The total of the sales price (from sale order or product sales price) of all done products and the shipping cost"
+        help="The total of the sales price (from sale order or product sales price) of all done products and the shipping cost",
     )
 
     # END #########
     # METHODS #####
 
-    @api.depends('state', 'move_ids.sale_line_id.qty_delivered')
+    @api.depends(
+        "state",
+        "move_ids.sale_line_id.qty_delivered",
+    )
     def _compute_total_sales_price(self):
         """Compute the total sales price for the picking, including delivery costs."""
         for picking in self:
-
             # Calculate the total carrier price from delivery sale lines
             carrier_price = sum(
                 picking.sale_id.mapped("order_line")
@@ -97,7 +99,6 @@ class StockPicking(models.Model):
         qty_adjusted_sale_order_lines = {}
 
         for move in moves:
-
             # Product on the related sale order line
             sale_order_line = move.sale_line_id
             sale_order_line_product = sale_order_line.product_id
@@ -108,7 +109,7 @@ class StockPicking(models.Model):
             # which we would like to use as a default
             product = sale_order_line_product or move_product
             qty = sale_order_line and sale_order_line.product_qty or move.product_qty
-
+            lot_ids = move.lot_ids
             # Get the product line where these attribute match with the current move:
             #   - sale_order_line
             #   - manufacturing order
@@ -126,7 +127,6 @@ class StockPicking(models.Model):
                 ),
                 None,
             )
-
             if similar_product_line:
                 # If a similar product_line already exists
                 # don't create a new product_line for it
@@ -146,8 +146,11 @@ class StockPicking(models.Model):
                     qty_adjusted_sale_order_lines[sale_order_line.id] = (
                         similar_product_line.get("uuid")
                     )
+                if move.product_id.tracking == 'serial':
+                    system_serial_numbers = similar_product_line["system_serial_numbers"]
+                    system_serial_numbers.extend(lot_ids.mapped("name"))
+                    similar_product_line["system_serial_numbers"] = system_serial_numbers
                 continue
-
             serials = move.lot_ids.mapped("name") if move.lot_ids else False
 
             # Assemble the product dict
@@ -168,6 +171,7 @@ class StockPicking(models.Model):
             }
 
             product_lines.append(product_line_data)
+
         return product_lines
 
     def get_picking_product_lines(self):
@@ -180,7 +184,6 @@ class StockPicking(models.Model):
         moves = self.move_ids.sorted(key=lambda m: m.location_id and m.location_id.id)
 
         for move in moves:
-
             # Get the product line where these attribute match with the current move:
             #   - manufacturing order
             #   - product
@@ -219,7 +222,6 @@ class StockPicking(models.Model):
                 }
 
                 product_lines.append(product_line_data)
-
         return product_lines
 
     def get_picking_move_lines(self):
@@ -235,7 +237,7 @@ class StockPicking(models.Model):
             for line in move.move_line_ids:
                 serial = line.lot_id.name if line.lot_id else False
                 product_line_data = {
-                    "location_id" : line.location_id.name,
+                    "location_id": line.location_id.name,
                     "product_default_code": line.product_id.product_tmpl_id.default_code,
                     "qty": line.quantity,
                     "product_name": line.product_id.name,
@@ -244,7 +246,34 @@ class StockPicking(models.Model):
                 }
 
                 product_lines.append(product_line_data)
-
         return product_lines
+
+    def write(self, vals):
+        res = super().write(vals)
+        for picking in self:
+            # If the picking is an incoming (receipt) and scheduled_date is updated
+            if picking.picking_type_code == "incoming" and vals.get("scheduled_date"):
+                # Update date on all stock moves to match the new scheduled_date
+                picking.move_ids.write({"date": vals.get("scheduled_date")})
+        return res
+
+    def _set_scheduled_date(self):
+        # Exclude incoming pickings from the default scheduled date setting logic
+        records = self.filtered(lambda l: l.picking_type_code != "incoming")
+
+        # Call the parent method only for non-incoming pickings
+        return super(StockPicking, records)._set_scheduled_date()
+
+    @api.depends(
+        "move_ids.state",
+        "move_ids.date",
+        "move_type",
+    )
+    def _compute_scheduled_date(self):
+        # Exclude incoming pickings from the default computation of scheduled_date
+        records = self.filtered(lambda l: l.picking_type_code != "incoming")
+
+        # Call the parent method only for non-incoming pickings
+        return super(StockPicking, records)._compute_scheduled_date()
 
     # END #########

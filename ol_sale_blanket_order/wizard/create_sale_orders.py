@@ -42,6 +42,7 @@ class BlanketOrderWizard(models.TransientModel):
             "original_request_date": date_schedule,
             "contact_ids": contact_ids,
             "ignore_exception": True,
+            "account_manager_id": self.blanket_order_id.account_manager_id.id,
         }
 
     def create_sale_order(self):

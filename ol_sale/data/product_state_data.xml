@@ -12,6 +12,7 @@
         <field name="approved_component_mrp" eval="True" />
         <field name="approved_bom" eval="True" />
         <field name="approved_ship" eval="True" />
+        <field name="trigger_exception" eval="True" />
     </record>
 
 </odoo>

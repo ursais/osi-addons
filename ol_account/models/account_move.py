@@ -24,6 +24,12 @@ class AccountMove(models.Model):
         string="Customer Payment Method",
         help="Payment method selected coming from the sale order.",
     )
+    invoice_date_due_display = fields.Date(
+        string="Due Date (Date Only)",
+        compute="_compute_invoice_date_due_display",
+        help="Field with same date as due date, but to show just the date "
+        "without the Remaining Days widget.",
+    )
 
     # END #########
     # METHODS ######
@@ -144,7 +150,6 @@ class AccountMove(models.Model):
         return data
 
     def get_invoice_report_data_by_sale_order_lines(self):
-
         order_data = {
             "product_lines": [],
         }
@@ -152,9 +157,7 @@ class AccountMove(models.Model):
         product_lines = self.env["sale.order.line"]
 
         for invoice_line in self.invoice_line_ids:
-
             for sale_order_line in invoice_line.sale_line_ids:
-
                 if sale_order_line.is_delivery:
                     continue
 
@@ -175,7 +178,8 @@ class AccountMove(models.Model):
                         {
                             "attribute_id": v.attribute_id,
                             "attribute_name": v.attribute_id.name,
-                            "value_name": v.product_attribute_value_id.name,
+                            "value_name": v.product_attribute_value_id.product_id.name
+                            or v.product_attribute_value_id.name,
                             "sequence": v.attribute_id.sequence,
                         }
                         for v in visible_values
@@ -206,9 +210,7 @@ class AccountMove(models.Model):
         return order_data
 
     def get_invoice_report_data(self):
-
         for invoice in self:
-
             filtered_invoice = invoice
             filtered_invoice_data = {
                 "sum_amount": invoice.amount_total,
@@ -232,5 +234,28 @@ class AccountMove(models.Model):
             return "Refund"
 
         return "Invoice"
+
+    @api.depends("invoice_date_due")
+    def _compute_invoice_date_due_display(self):
+        for move in self:
+            move.invoice_date_due_display = move.invoice_date_due
+
+    @api.depends("invoice_date", "company_id")
+    def _compute_date(self):
+        """
+        Computes the accounting date (`date`) for account moves.
+        This override filters out vendor bills and vendor refunds (i.e., move_type
+        in "in_invoice" or "in_refund") that already have a `date` set, and skips
+        computing the `date` for them by removing them from `self`.
+
+        The remaining records (not vendor bills or refunds with an existing date)
+        will have their `date` field computed using the parent class logic.
+        """
+        moves = self.filtered(
+            lambda l: l.move_type in ("in_invoice", "in_refund") and l.date
+        )
+        self = self - moves
+
+        return super(AccountMove, self)._compute_date()
 
     # END ##########

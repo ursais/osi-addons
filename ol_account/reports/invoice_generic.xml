@@ -23,7 +23,8 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="doc">
                 <!-- Find the correct language-->
-                <t t-set="language" t-value="doc.partner_id.lang"/>
+                <t t-set="sale_order" t-value="doc.line_ids.sale_line_ids.order_id"/>
+                <t t-set="language" t-value="sale_order.contact_ids and sale_order.contact_ids[0].lang or doc.partner_id.lang"/>
                 <t t-set="invoice" t-value="doc.with_context(lang=language)"/>
                 <!-- Call the template document with the language set -->
                 <t t-call="ol_account.report_generic_invoice_document" t-lang="language"/>
@@ -85,7 +86,7 @@
                             <tag>Invoice Date</tag>
                         </div>
                         <div class="value">
-                            <t t-esc="invoice.invoice_date" t-options='{"widget": "date_formatter"}'/>
+                            <t t-out="invoice.get_format_date(invoice.invoice_date)"/>
                         </div>
                     </div>
                     <div class="ol_report_info_row_col_line ol_flex">
@@ -93,7 +94,7 @@
                             <tag>Payment Due Date</tag>
                         </div>
                         <div class="value">
-                            <t t-esc="invoice.invoice_date_due" t-options='{"widget": "date_formatter"}'/>
+                            <t t-out="invoice.get_format_date(invoice.invoice_date_due)"/>
                         </div>
                     </div>
                     <div class="ol_report_info_row_col_line ol_flex">
@@ -109,7 +110,7 @@
                             <tag>Order Date</tag>
                         </div>
                         <div class="value">
-                            <t t-esc="sale_order.date_order" t-options='{"widget": "date_formatter"}'/>
+                            <t t-esc="invoice.get_format_date(sale_order.date_order)"/>
                         </div>
                     </div>
                     <t t-if="sale_order.client_order_ref">
@@ -130,9 +131,9 @@
                         <t t-set="text">Bill To</t>
                         <t t-set="address" t-value="partner_invoice_id"/>
                     </t>
-                    <t t-call="ol_templates.payment" t-if="sale_order.sale_payment_method_id">
+                    <t t-call="ol_templates.payment" t-if="sale_order.sale_payment_method_id or invoice.sale_payment_method_id">
                         <t t-set="block_title">Payment Method</t>
-                        <t t-set="payment_method" t-value="sale_order.sale_payment_method_id"/>
+                        <t t-set="payment_method" t-value="sale_order.sale_payment_method_id or invoice.sale_payment_method_id"/>
                     </t>
                 </div>
 
