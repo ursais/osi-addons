@@ -53,6 +53,7 @@ class SaleOrder(models.Model):
             ("partially invoiced", "Partially Invoiced"),
             ("full paid", "Full Paid"),
         ]
+    )
     mo_tranfer_count = fields.Integer(
         string="MO Intenral Tranfer",
         compute="_compute_mo_tranfer_count",
@@ -211,12 +212,14 @@ class SaleOrder(models.Model):
                         "value_name": v.product_attribute_value_id.product_id.name
                         or v.product_attribute_value_id.name,
                         "sequence": v.attribute_id.sequence,
-                        "product_qty": int(sum(
-                            bom_line_ids.filtered(
-                                lambda bom_line: bom_line.product_id.id
-                                == v.product_id.id
-                            ).mapped("product_qty")
-                        ))
+                        "product_qty": int(
+                            sum(
+                                bom_line_ids.filtered(
+                                    lambda bom_line: bom_line.product_id.id
+                                    == v.product_id.id
+                                ).mapped("product_qty")
+                            )
+                        )
                         or 1,
                     }
                     for v in visible_values
@@ -306,21 +309,24 @@ class SaleOrder(models.Model):
 
     def _compute_mo_tranfer_count(self):
         for rec in self:
-            rec.mo_tranfer_count = len(self.mrp_production_ids.mapped('picking_ids'))
+            rec.mo_tranfer_count = len(self.mrp_production_ids.mapped("picking_ids"))
 
-
-    def action_view_mo_internal_picking(self): 
+    def action_view_mo_internal_picking(self):
         self.ensure_one()
-        picking_ids = self.mrp_production_ids.mapped('picking_ids')
-        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")
+        picking_ids = self.mrp_production_ids.mapped("picking_ids")
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "stock.action_picking_tree_all"
+        )
         if len(picking_ids) > 1:
-            action['domain'] = [('id', 'in', picking_ids.ids)]
+            action["domain"] = [("id", "in", picking_ids.ids)]
         elif picking_ids:
-            action['res_id'] = picking_ids.id
-            action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
-            if 'views' in action:
-                action['views'] += [(state, view) for state, view in action['views'] if view != 'form']
-        action['context'] = dict(self._context)
+            action["res_id"] = picking_ids.id
+            action["views"] = [(self.env.ref("stock.view_picking_form").id, "form")]
+            if "views" in action:
+                action["views"] += [
+                    (state, view) for state, view in action["views"] if view != "form"
+                ]
+        action["context"] = dict(self._context)
         return action
 
     def write(self, vals):
