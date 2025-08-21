@@ -1,6 +1,7 @@
 # Import Odoo Libs
-from odoo import fields, models
+from odoo import _, api, fields, models
 from odoo.addons.repair.models.stock_move import StockMove
+from odoo.exceptions import ValidationError
 
 
 # Override _clean_repair_sale_order_line in repair module to reduce database writes
@@ -32,5 +33,26 @@ class StockMove(models.Model):
         check_company=True,
         index=True,
     )
+
+    # END #########
+
+    # METHODS #####
+
+    @api.constrains("quantity")
+    def _check_quantity(self):
+        """Ensure that the received quantity does not exceed the demanded quantity
+          for incoming pickings that are not yet done.
+        """
+        for rec in self.filtered(
+            lambda l: l.picking_code == "incoming"
+            and l.state != "done"
+            and l.quantity > l.product_uom_qty
+        ):
+            raise ValidationError(
+                _(
+                    "You cannot exceed demand quantity for product:-\n%s",
+                    rec.product_id.name,
+                )
+            )
 
     # END #########

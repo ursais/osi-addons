@@ -16,7 +16,7 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="sale_order">
                 <!-- Find the correct language-->
-                <t t-set="language" t-value="sale_order.partner_id.lang"/>
+                <t t-set="language" t-value="sale_order.contact_ids and sale_order.contact_ids[0].lang or sale_order.partner_id.lang"/>
                 <!-- Re-browse of the record with the correct language -->
                 <t t-set="sale_order" t-value="sale_order.with_context(lang=language)"/>
                 <!-- Call the template document with the language set -->

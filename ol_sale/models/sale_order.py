@@ -21,9 +21,7 @@ class SaleOrder(models.Model):
     )
     account_manager_id = fields.Many2one(
         comodel_name="res.users",
-        related="partner_id.account_manager_id",
         string="Account Manager",
-        store=True,
     )
     end_user = fields.Many2one(comodel_name="res.partner")
     integrator = fields.Many2one(comodel_name="res.partner")
@@ -50,12 +48,14 @@ class SaleOrder(models.Model):
     )
     shipping_ref = fields.Char(string="Shipping Reference")
     has_active_holds = fields.Boolean(compute="_compute_has_active_holds")
-
     invoice_status = fields.Selection(
         selection_add=[
             ("partially invoiced", "Partially Invoiced"),
             ("full paid", "Full Paid"),
         ]
+    mo_tranfer_count = fields.Integer(
+        string="MO Intenral Tranfer",
+        compute="_compute_mo_tranfer_count",
     )
 
     # END #########
@@ -166,6 +166,10 @@ class SaleOrder(models.Model):
     def _onchange_partner_id_sale_order_tag_ids(self):
         self.tag_ids = self.partner_id.sale_order_tag_ids
 
+    @api.onchange("partner_id")
+    def _onchange_partner_id_account_manager(self):
+        self.account_manager_id = self.partner_id.account_manager_id
+
     def get_quote_report_data(self):
         """Get the Sale Order related report data"""
 
@@ -184,7 +188,9 @@ class SaleOrder(models.Model):
             "product_lines": [],
         }
 
-        product_lines = self.order_line.filtered(lambda l: not l.is_delivery)
+        product_lines = self.with_context(
+            lang=self.contact_ids and self.contact_ids[0].lang or self.partner_id.lang
+        ).order_line.filtered(lambda l: not l.is_delivery)
 
         for sale_order_line in product_lines:
             quote_config = sale_order_line.config_session_id or False
@@ -205,17 +211,16 @@ class SaleOrder(models.Model):
                         "value_name": v.product_attribute_value_id.product_id.name
                         or v.product_attribute_value_id.name,
                         "sequence": v.attribute_id.sequence,
-                        "product_qty": sum(
+                        "product_qty": int(sum(
                             bom_line_ids.filtered(
                                 lambda bom_line: bom_line.product_id.id
                                 == v.product_id.id
                             ).mapped("product_qty")
-                        )
-                        or 1.0,
+                        ))
+                        or 1,
                     }
                     for v in visible_values
                 ]
-
             order_line_data = {
                 "order_line": sale_order_line,
                 "quote_config": quote_config,
@@ -234,7 +239,6 @@ class SaleOrder(models.Model):
         order_data["shipping_subtotal_amount"] = sum(
             shipping_lines.mapped("price_subtotal")
         )
-
         return order_data
 
     def _send_order_confirmation_mail(self):
@@ -299,6 +303,35 @@ class SaleOrder(models.Model):
             )
 
         return template
+
+    def _compute_mo_tranfer_count(self):
+        for rec in self:
+            rec.mo_tranfer_count = len(self.mrp_production_ids.mapped('picking_ids'))
+
+
+    def action_view_mo_internal_picking(self): 
+        self.ensure_one()
+        picking_ids = self.mrp_production_ids.mapped('picking_ids')
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")
+        if len(picking_ids) > 1:
+            action['domain'] = [('id', 'in', picking_ids.ids)]
+        elif picking_ids:
+            action['res_id'] = picking_ids.id
+            action['views'] = [(self.env.ref('stock.view_picking_form').id, 'form')]
+            if 'views' in action:
+                action['views'] += [(state, view) for state, view in action['views'] if view != 'form']
+        action['context'] = dict(self._context)
+        return action
+
+    def write(self, vals):
+        res = super(SaleOrder, self).write(vals)
+        if "partner_shipping_id" in vals:
+            for order in self.filtered(lambda a: a.state == "sale"):
+                for picking in order.picking_ids.filtered(
+                    lambda p: p.state not in ["done", "cancel"]
+                ):
+                    picking.partner_id = order.partner_shipping_id
+        return res
 
     @api.onchange(
         "order_line",

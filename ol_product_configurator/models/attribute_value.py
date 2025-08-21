@@ -50,8 +50,11 @@ class AttributeValue(models.Model):
     @api.model
     def name_search(self, name="", args=None, operator="ilike", limit=100):
         # Call super to get the original name_search result
-        res = super().name_search(name=name, args=args, operator=operator, limit=limit)
+        if self._context.get("show_company_dependent",False):
+            ptal_id = self.env["product.template.attribute.line"].browse(self._context.get("show_company_dependent"))
+            args = ['|',("company_ids","in",self.env.company.id),("company_ids","=",False),("attribute_id","=",ptal_id.attribute_id.id)]
 
+        res = super().name_search(name=name, args=args, operator=operator, limit=limit)
         # Only apply the filtering if we're in the wizard context
         if self.env.context.get("wizard_id"):
             # Get the logged-in user's company

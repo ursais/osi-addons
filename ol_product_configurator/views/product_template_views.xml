@@ -60,6 +60,9 @@
             </field>
             <!-- Remove duplicate sequence field -->
             <xpath expr="//field[@name='attribute_line_ids']/tree/field[@name='sequence'][2]" position="replace"/>
+            <field name="default_val" position="attributes">
+                <attribute name="context">{'show_attribute': False,'show_company_dependent':id}</attribute>
+            </field>
         </field>
     </record>
 

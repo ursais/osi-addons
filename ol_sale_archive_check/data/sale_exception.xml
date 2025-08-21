@@ -1,0 +1,13 @@
+<odoo>
+
+    <record id="excep_product_bom_archived" model="exception.rule">
+        <field name="name">Product or BoM Archived</field>
+        <field name="description">One or more Products or BoM's is archived on this order.</field>
+        <field name="sequence">50</field>
+        <field name="model">sale.order</field>
+        <field name="exception_type">by_py_code</field>
+        <field name="code">failed = self.has_archived_products_or_boms</field>
+        <field name="active" eval="True" />
+    </record>
+
+</odoo>

@@ -26,6 +26,7 @@
                 <field name="method" readonly="exception_type != 'by_method'" invisible="exception_type != 'by_method'" />
             </field>
             <field name="model" position="after">
+                <field name="template_id" domain="[('model_id.model', '=', model)]"/>
                 <field name="allowed_group_ids" widget="many2many_tags" />
             </field>
         </field>

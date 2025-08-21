@@ -27,6 +27,7 @@
         "security/ir.model.access.csv",
         "views/stock_picking_type_views.xml",
         "views/stock_picking_view.xml",
+        "views/stock_scrap_view.xml",
         "reports/inventory_label.xml",
         "reports/inventory_sheets.xml",
         "reports/packing_slip_from_so.xml",

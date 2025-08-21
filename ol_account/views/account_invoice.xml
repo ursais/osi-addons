@@ -1,7 +1,7 @@
 <odoo>
 
     <record id="account_move_form" model="ir.ui.view">
-        <field name="name">ol_account.account_move_form</field>
+        <field name="name">ol_account_account_move_form</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form" />
         <field name="arch" type="xml">
@@ -39,6 +39,9 @@
                     <field name="invoice_date_due" force_save="1" placeholder="Date"/>
                 </div>
             </xpath>
+            <field name="name" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
         </field>
     </record>
 

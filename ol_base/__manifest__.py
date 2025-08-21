@@ -63,6 +63,7 @@
         "data/res_users_role.xml",
         "data/warehouse_data.xml",
         "data/m2x_create_edit_option_data.xml",
+        "data/payment_method_data.xml",
         "security/res_groups.xml",
         "views/account_move.xml",
         "views/mrp_bom.xml",

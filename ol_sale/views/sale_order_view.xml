@@ -71,7 +71,11 @@
                 <field name="contact_ids" domain="[('parent_id','=',partner_id)]" widget="many2many_tags" required="1"/>
             </field>
             <field name="partner_id" position="attributes">
-                <attribute name="domain">[('type', 'in', ['contact', 'other']), ('parent_id', '=', False), '|', ('company_id', '=', False), ('company_id', 'parent_of', [company_id])]</attribute>
+                <attribute name="domain">
+                    [ ('type', 'in', ['contact', 'other']), '&amp;',
+                    '|', ('is_company', '=', True), ('parent_id', '=', False),
+                    '|', ('company_id', '=', False), ('company_id', 'parent_of', [company_id])]
+                </attribute>
             </field>
 
             <!-- Add context to invoice/delivery addresses -->
@@ -97,6 +101,15 @@
                     title="Copy"
                     invisible="not product_id or locked"
                 />
+            </xpath>
+
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" name="action_view_mo_internal_picking" invisible="mo_tranfer_count == 0" type="object" icon="fa-bars">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="mo_tranfer_count" /></span>
+                        <span class="o_stat_text">MO Tranfer</span>
+                    </div>
+                </button>
             </xpath>
 
         </field>

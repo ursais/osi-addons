@@ -21,6 +21,9 @@
             <field name="reason_code_id" position="after">
                 <field name="note" />
             </field>
+            <field name="reason_code_id" position="attributes">
+                <attribute name="domain">[('id', 'in', allowed_reason_code_ids),('company_id', '=', company_id)]</attribute>
+            </field>
         </field>
     </record>
 

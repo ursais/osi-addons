@@ -28,4 +28,6 @@
     "demo": [],
     "application": False,
     "installable": True,
+    # Run hook after install to set products report category
+    "post_init_hook": "post_init_hook",
 }
