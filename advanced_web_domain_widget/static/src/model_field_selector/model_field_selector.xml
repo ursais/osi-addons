@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.ModelFieldSelectorPopover2" t-inherit="web.ModelFieldSelectorPopover" t-inherit-mode="primary">
+        <xpath expr="//button[hasclass('o_model_field_selector_popover_item_relation')]" position="replace">
+        </xpath>
+    </t>
+</templates>

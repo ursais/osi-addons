@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="group_access_management_bits" model="res.groups">
+            <field name="name">Access Management</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,21 @@
+<odoo>
+
+    <function name="write" model="ir.model.data">
+      <function name="search" model="ir.model.data">
+        <value eval="[('module', '=', 'account'), ('name', '=', 'action_account_resequence')]"/>
+      </function>
+      <value eval="{'noupdate': False}"/>
+    </function>
+
+    <record id="account.action_account_resequence" model="ir.actions.act_window">
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
+    </record>
+
+    <function name="write" model="ir.model.data">
+      <function name="search" model="ir.model.data">
+        <value eval="[('module', '=', 'account'), ('name', '=', 'action_account_resequence')]"/>
+      </function>
+      <value eval="{'noupdate': True}"/>
+    </function>
+
+</odoo>

@@ -33,9 +33,9 @@
         <field name="arch" type="xml">
             <filter name="consumable" position="after">
                 <separator/>
-                <filter name="system_tier_normal" string="Normal System" domain="[('system_tier', '=', 'normal')]" />
-                <filter name="system_tier_custom" string="Custom Created System" domain="[('system_tier', '=', 'custom_created')]" />
-                <filter name="system_tier_customer" string="Customer System" domain="[('system_tier', '=', 'customer')]" />
+                <filter name="system_tier_normal" string="Normal System (Portfolio)" domain="[('system_tier', '=', 'normal')]" />
+                <filter name="system_tier_custom" string="Custom Created System (Tier 1)" domain="[('system_tier', '=', 'custom_created')]" />
+                <filter name="system_tier_customer" string="Customer System  (Tier 2)" domain="[('system_tier', '=', 'customer')]" />
             </filter>
         </field>
     </record>

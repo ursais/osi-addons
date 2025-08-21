@@ -23,6 +23,7 @@
     "data": [
         "security/ir.model.access.csv",
         "security/security.xml",
+        "data/server_action.xml",
         "views/res_config_settings_views.xml",
         "views/account_invoice.xml",
         "views/account_payment_view.xml",

@@ -182,7 +182,9 @@ class SaleOrder(models.Model):
             "product_lines": [],
         }
 
-        product_lines = self.order_line.filtered(lambda l: not l.is_delivery)
+        product_lines = self.with_context(
+            lang=self.contact_ids and self.contact_ids[0].lang or self.partner_id.lang
+        ).order_line.filtered(lambda l: not l.is_delivery)
 
         for sale_order_line in product_lines:
             quote_config = sale_order_line.config_session_id or False
@@ -232,7 +234,6 @@ class SaleOrder(models.Model):
         order_data["shipping_subtotal_amount"] = sum(
             shipping_lines.mapped("price_subtotal")
         )
-
         return order_data
 
     def _send_order_confirmation_mail(self):
@@ -317,5 +318,33 @@ class SaleOrder(models.Model):
         action['context'] = dict(self._context)
         return action
 
+    def write(self, vals):
+        res = super(SaleOrder, self).write(vals)
+        if "partner_shipping_id" in vals:
+            for order in self.filtered(lambda a: a.state == "sale"):
+                for picking in order.picking_ids.filtered(
+                    lambda p: p.state not in ["done", "cancel"]
+                ):
+                    picking.partner_id = order.partner_shipping_id
+        return res
+
+    @api.onchange(
+        "order_line",
+        "tax_on_shipping_address",
+        "tax_address_id",
+        "partner_id",
+    )
+    def onchange_avatax_calculation(self):
+        """
+        Super avatax calculate taxes method, so instead of raising error if no lines
+        are on the sale order and the 'compute tax on so save' option is enabled, then
+        we just don't compute taxes. Raising an error causes a problem when clicking
+        the product configurator button because it saves the SO before opening the
+        wizard.
+        """
+        avatax_config = self.env.company.get_avatax_config_company()
+        if avatax_config and avatax_config.sale_calculate_tax and not self.order_line:
+            return
+        super().onchange_avatax_calculation()
 
     # END #########
