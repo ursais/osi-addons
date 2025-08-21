@@ -44,7 +44,7 @@
                                 <span t-field="inventory.name"/>
                             </td>
                             <td class="text-right">
-                                <span t-field="inventory.date"/>
+                                <span t-esc="inventory.get_format_date(inventory.date)"/>
                             </td>
                         </tr>
                     </tbody>

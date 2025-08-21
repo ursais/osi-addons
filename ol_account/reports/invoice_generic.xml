@@ -86,7 +86,7 @@
                             <tag>Invoice Date</tag>
                         </div>
                         <div class="value">
-                            <t t-esc="invoice.invoice_date" t-options='{"widget": "date"}'/>
+                            <t t-out="invoice.get_format_date(invoice.invoice_date)"/>
                         </div>
                     </div>
                     <div class="ol_report_info_row_col_line ol_flex">
@@ -94,7 +94,7 @@
                             <tag>Payment Due Date</tag>
                         </div>
                         <div class="value">
-                            <t t-esc="invoice.invoice_date_due" t-options='{"widget": "date"}'/>
+                            <t t-out="invoice.get_format_date(invoice.invoice_date_due)"/>
                         </div>
                     </div>
                     <div class="ol_report_info_row_col_line ol_flex">
@@ -110,7 +110,7 @@
                             <tag>Order Date</tag>
                         </div>
                         <div class="value">
-                            <t t-esc="sale_order.date_order" t-options='{"widget": "date"}'/>
+                            <t t-esc="invoice.get_format_date(sale_order.date_order)"/>
                         </div>
                     </div>
                     <t t-if="sale_order.client_order_ref">

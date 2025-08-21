@@ -3,6 +3,7 @@ import uuid
 
 # Import Odoo libs
 from odoo import models
+from odoo.tools.misc import format_date
 
 
 def all_computed_fields(self, fields):
@@ -72,3 +73,22 @@ class BaseModel(models.AbstractModel):
             "create_date": self.create_date,
             "write_date": self.write_date,
         }
+
+    def get_format_date(self, value):
+        """
+        Return a date string formatted according to the company's language settings.
+
+        This method takes a date value and formats it using the language
+        preference defined in the related company's partner record.
+        If no value is provided, an empty string is returned.
+
+        Args:
+            value (date or datetime): The date to format.
+
+        Returns:
+            str: The formatted date string, or an empty string if `value` is None.
+        """
+        if not value:
+            return ""
+        date = format_date(self.env, value, self.company_id.partner_id.lang)
+        return date
