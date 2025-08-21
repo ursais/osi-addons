@@ -1,0 +1,25 @@
+<odoo>
+
+	<record id="stock_scrap_view_form2_inherit_ol_stock" model="ir.ui.view">
+        <field name="name">stock.scrap.view.form2.inherit.ol_stock</field>
+        <field name="model">stock.scrap</field>
+        <field name="inherit_id" ref="stock.stock_scrap_form_view2"/>
+        <field name="arch" type="xml">
+        	<field name="note" position="before">
+        		<field name="supplier_serial_number"/>
+        	</field>
+        </field>
+    </record>
+
+    <record id="stock_scrap_view_form_inherit_ol_stock" model="ir.ui.view">
+        <field name="name">stock.scrap.view.form.inherit.ol_stock</field>
+        <field name="model">stock.scrap</field>
+        <field name="inherit_id" ref="stock.stock_scrap_form_view"/>
+        <field name="arch" type="xml">
+        	<field name="note" position="before">
+        		<field name="supplier_serial_number" readonly="state == 'done'"/>
+        	</field>
+        </field>
+    </record>
+
+</odoo>
