@@ -131,9 +131,9 @@
                         <t t-set="text">Bill To</t>
                         <t t-set="address" t-value="partner_invoice_id"/>
                     </t>
-                    <t t-call="ol_templates.payment" t-if="sale_order.sale_payment_method_id">
+                    <t t-call="ol_templates.payment" t-if="sale_order.sale_payment_method_id or invoice.sale_payment_method_id">
                         <t t-set="block_title">Payment Method</t>
-                        <t t-set="payment_method" t-value="sale_order.sale_payment_method_id"/>
+                        <t t-set="payment_method" t-value="sale_order.sale_payment_method_id or invoice.sale_payment_method_id"/>
                     </t>
                 </div>
 
