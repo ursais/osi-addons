@@ -15,16 +15,16 @@ class SaleOrder(models.Model):
 
     # END #########
     # METHODS #####
+
     def action_confirm(self):
         res = super().action_confirm()
         if self.mrp_production_ids:
             # This is a patch for workaround of split MO with split transfers
             # Due to execptions MO's are not getting confirmed
-            self.mrp_production_ids.write({"ignore_exception":True})
+            self.mrp_production_ids.write({"ignore_exception": True})
             self.mrp_production_ids.action_confirm()
-            self.mrp_production_ids.write({"ignore_exception":False})
+            self.mrp_production_ids.write({"ignore_exception": False})
         return res
-
 
     def _compute_is_mrp_warning(self):
         for so in self:
@@ -39,19 +39,28 @@ class SaleOrder(models.Model):
 
             so.is_mrp_warning = is_mrp_warning
 
-    @api.depends('procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids')
+    @api.depends(
+        "procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids"
+    )
     def _compute_mrp_production_ids(self):
-        res = super ()._compute_mrp_production_ids()
-        data = self.env['procurement.group']._read_group([('sale_id', 'in', self.ids)], ['sale_id'], ['id:recordset'])
+        res = super()._compute_mrp_production_ids()
+        data = self.env["procurement.group"]._read_group(
+            [("sale_id", "in", self.ids)], ["sale_id"], ["id:recordset"]
+        )
         mrp_productions = {}
         for sale, procurement_groups in data:
-            mrp_productions[sale.id] = procurement_groups.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids | procurement_groups.mrp_production_ids | procurement_groups.stock_move_ids.created_production_id.linked_mo_ids
+            mrp_productions[sale.id] = (
+                procurement_groups.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids
+                | procurement_groups.mrp_production_ids
+                | procurement_groups.stock_move_ids.created_production_id.linked_mo_ids
+            )
         for sale in self:
-            mrp_production_ids = mrp_productions.get(sale.id, self.env['mrp.production'])
+            mrp_production_ids = mrp_productions.get(
+                sale.id, self.env["mrp.production"]
+            )
             sale.mrp_production_count = len(mrp_production_ids)
             sale.mrp_production_ids = mrp_production_ids
         return res
-
 
     def split_mo(self):
         batch_obj = self.env["mrp.production.batch"]
@@ -74,19 +83,25 @@ class SaleOrder(models.Model):
                     qty = mo.product_qty
                     new_mos = []
                     mo_to_split = mo
-                    for i in range(int(mo_to_split.product_qty) - 1):  # i.g Split 2 times to end up with 3 MOs
+                    for i in range(
+                        int(mo_to_split.product_qty) - 1
+                    ):  # i.g Split 2 times to end up with 3 MOs
                         # Always split 1 qty from the current MO
-                        result = mo_to_split.sudo()._split_productions({mo_to_split: [1]})
-                        
+                        result = mo_to_split.sudo()._split_productions(
+                            {mo_to_split: [1]}
+                        )
+
                         # result[-1] is the remaining MO, result[0] is the new one
                         new_mo = result[0]
-                        mo_to_split = result[-1]  # Continue splitting from the remaining part
+                        mo_to_split = result[
+                            -1
+                        ]  # Continue splitting from the remaining part
                         new_mos.append(new_mo)
 
                     # At the end, new_mos has 2 new MOs, and mo_to_split is the last remaining 1-qty MO
                     new_mos.append(mo_to_split)
                     for new_mo in new_mos:
-                        mo.write({'linked_mo_ids' : [(4,new_mo.id)]})
+                        mo.write({"linked_mo_ids": [(4, new_mo.id)]})
 
                     # Assign batch to original MO and its backorders
                     if not mo.mrp_batch_id:
@@ -99,12 +114,16 @@ class SaleOrder(models.Model):
                                         {"responsible_id": rec.env.user.id}
                                     ).id
                                 ),
-                                'ignore_exception':False
+                                "ignore_exception": False,
                             }
                         )
                         mo.backorder_ids.write({"mrp_batch_id": mo.mrp_batch_id.id})
-                        mo.linked_mo_ids.filtered(lambda l : not l.mrp_batch_id).write({"mrp_batch_id": mo.mrp_batch_id.id, 'ignore_exception':False})
-                        
+                        mo.linked_mo_ids.filtered(lambda l: not l.mrp_batch_id).write(
+                            {
+                                "mrp_batch_id": mo.mrp_batch_id.id,
+                                "ignore_exception": False,
+                            }
+                        )
 
     # Methods for Batch Smart Button
     def _compute_mrp_production_batch_id_count(self):
