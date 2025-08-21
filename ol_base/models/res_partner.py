@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import _, fields, api, models
+from odoo import _, api, fields, models
 
 
 class ResPartner(models.Model):
