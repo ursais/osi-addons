@@ -18,11 +18,13 @@
         "sale_order_type",
         "account_check_printing",
         "purchase",
+        "osi_l10n_us_payment_nacha_email",
     ],
     # Data Loaded.
     "data": [
         "security/ir.model.access.csv",
         "security/security.xml",
+        "data/mail_template_data.xml",
         "data/server_action.xml",
         "views/res_config_settings_views.xml",
         "views/account_invoice.xml",
