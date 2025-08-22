@@ -1,0 +1,114 @@
+<odoo>
+
+  	<template id="email_supplier_payment_notification">
+      <t t-call="ol_templates.ol_email">
+
+        <!-- Variables -->
+        <t t-set="title" t-ecs="title"/>
+        <t t-set="preheader_text" t-value="title"/>
+        <t t-set="include_newsletter_disclaimer" t-value="False"/>
+
+        <!-- Body -->
+        <t t-call="ol_templates.ol_email_text_content">
+
+            <div style="font-weight: 500; font-size: 20px; display: block;">
+                <t t-esc="title"/>
+            </div>
+
+            <div style="font-size:16px; line-height:28px; margin-top:30px">
+                <tag>Dear</tag>&amp;nbsp;<t t-esc="payment.partner_id.name"/>,
+            </div>
+
+            <p style="font-size: 16px; line-height: 28px; margin-top: 30px;">
+                <tag>A payment has been initiated via</tag>
+                <t t-esc="payment.payment_method_line_id.name"/>
+                <tag>in the amount of</tag>
+                <t t-esc="payment.amount" t-options="{'widget': 'monetary', 'display_currency': payment.currency_id}" />
+                <tag>for the following invoice(s):</tag>
+            </p>
+
+        </t>
+
+        <!-- Add spacer-->
+        <t t-call="ol_templates.ol_email_spacer"/>
+
+        <t t-call="ol_templates.ol_email_text_content">
+          <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="100%"
+                  style="border: 1px solid #f3f3f3;">
+                <tr style="font-size:0; padding: 0; text-align:top">
+                  <th bgcolor="#f3f3f3"
+                    style="padding: 8px 15px; font-size:12px; font-weight: 500; text-align:left; overflow-wrap: break-word;">
+                    <tag>Invoice Number</tag>
+                  </th>
+
+                  <th bgcolor="#f3f3f3"
+                    style="padding: 8px 15px; font-size:12px; font-weight: 500; text-align:right; overflow-wrap: break-word;">
+                    <tag>Invoice Amount</tag>
+                  </th>
+
+                  <th bgcolor="#f3f3f3"
+                    style="padding: 8px 15px; font-size:12px; font-weight: 500; text-align:right; overflow-wrap: break-word;">
+                    <tag>Payment Amount</tag>
+                  </th>
+                </tr>
+
+                <t t-foreach="payment.get_vendor_allocations()" t-as="allocation">
+                  <tr style="font-size:0; padding: 0; text-align:top">
+                    <td style="vertical-align: top;" colspan="3">
+                      <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
+                              style="font-size: 14px;text-align: left;">
+                        <tr>
+                          <td style="padding: 8px 15px; font-size:12px; text-align: left; vertical-align: top; overflow-wrap: break-word;">
+                            <t t-esc="allocation['name']"/>
+                          </td>
+                          <td style="padding: 8px 15px; font-size:12px; text-align: right; vertical-align: top; overflow-wrap: break-word;">
+                            <t t-esc="allocation['invoice_amount']" 
+                                t-options="{'widget': 'monetary', 'display_currency': payment.currency_id}"/>
+                          </td>
+                          <td style="padding: 8px 15px; font-size:12px; text-align: right; vertical-align: top; overflow-wrap: break-word;">
+                            <t t-esc="allocation['payment_amount']"
+                                t-options="{'widget': 'monetary', 'display_currency': payment.currency_id}"/>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </t>
+
+          </table>
+        </t>
+
+        <!-- Add spacer-->
+        <t t-call="ol_templates.ol_email_spacer"/>
+
+        <t t-call="ol_templates.ol_email_text_content">
+
+            <p style="font-size: 16px; line-height: 28px;">
+                <tag>Please feel free to contact us should you have any questions.</tag>
+            </p>
+            Sincerely,
+            <br/>
+            <tag style="font-size: 16px; font-weight:500; line-height: 28px;">The Finance Team</tag>
+            <br/>
+            <tag style="font-size: 14px; font-weight:500; line-height: 28px;">OnLogic</tag>
+        </t>
+
+      </t>
+    </template>
+
+      <!-- EMAIL TEMPLATE FOR VENDOR INVOICE -->
+    <record id="vendor_payment_template" model="mail.template">
+        <field name="name">Vendor Payment Template</field>
+        <field name="model_id" ref="account.model_account_payment"/>
+        <field name="auto_delete" eval="False"/>
+        <field name="lang">${object.partner_id.lang}</field>
+        <field name="email_from">${(object.journal_id.company_id.email or object.env.company.email or)|safe}</field>
+        <field name="subject">OnLogic - Remittance Notification</field>
+        <field name="partner_to">{{ object.partner_id.id }}</field>
+        <field name="body_html" type="html">
+        	<t t-set="payment" t-value="object.with_context({'lang':object.partner_id.lang or object.env.lang})" />
+            <t t-call="ol_account.email_supplier_payment_notification" t-lang="payment.partner_id.lang or object.env.lang" />
+        </field>
+    </record>
+    
+</odoo>
