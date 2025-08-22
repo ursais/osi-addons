@@ -13,11 +13,13 @@
         "ol_base",
         "mrp",
         "mrp_batch",
+        "product_configurator_mrp_component"
     ],
     # always loaded
     "data": [
-        'reports/mo_bin_label.xml',
-        'views/mrp_production_view.xml',
-        'views/product_template_view.xml',
+        "reports/mo_bin_label.xml",
+        "views/mrp_production_view.xml",
+        "views/product_template_view.xml",
+        "views/stock_lot_view.xml",
     ],
 }

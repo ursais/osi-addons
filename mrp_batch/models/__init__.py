@@ -6,10 +6,10 @@ from . import mrp_workcenter
 from . import mrp_workorder
 from . import product_template
 from . import queue_job
-from . import sale_order
 from . import res_config_settings
 from . import mrp_bom
 from . import mrp_production_batch_schedule
 from . import stock_picking
 from . import stock_move
 from . import stock_rule
+from . import sale_order

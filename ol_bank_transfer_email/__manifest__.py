@@ -14,6 +14,8 @@
         "ol_templates",
         "ol_fraud_detection",
         "sale",
+        "ol_sale",
+        "ol_sale_substate",
     ],
     # always loaded
     "data": [

@@ -1,9 +1,18 @@
 # Import Odoo libs
-from odoo import api, models, _
+from odoo import _, api, fields, models
 
 
 class ResPartner(models.Model):
+    """Inherit res partner for field and methods."""
+
     _inherit = "res.partner"
+
+    # COLUMNS #####
+
+    override_address = fields.Text(string="Override Address")
+
+    # END #########
+    # METHODS #####
 
     @api.depends(
         "complete_name",
@@ -37,7 +46,7 @@ class ResPartner(models.Model):
                         address = f"({street} {city})"
                     else:
                         address = f"({street} {city})"
-                
+
                 company = ""
                 if partner.company_name or partner.parent_id and not partner.is_company:
                     company = (
@@ -50,3 +59,5 @@ class ResPartner(models.Model):
                     name = f"{company} {name} {address}"
 
                 partner.display_name = name.strip()
+
+    # END #########

@@ -1,0 +1,60 @@
+<odoo>
+
+    <record id="view_mrp_eco_form_inherit_staged_cfg" model="ir.ui.view">
+        <field name="name">mrp.eco.form.staged.cfg</field>
+        <field name="model">mrp.eco</field>
+        <field name="inherit_id" ref="mrp_plm.mrp_eco_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='bom_id']" position="before">
+                <field name="show_staged_configuration" invisible="1" />
+                <field name="review_ids" invisible="1" />
+            </xpath>
+            <xpath expr="//page[@name='note']" position="before">
+                <page string="Attributes &amp; Variants (Staged)" invisible="not show_staged_configuration">
+                    <group>
+                        <field name="rebuild_scaffold_bom" widget="boolean_toggle" />
+                    </group>
+                    <div class="alert alert-info mb-0" role="alert" style="text-align: center" invisible="not rebuild_scaffold_bom">
+                        <strong> The Revision BoM will be built automatically when the Apply Changes button is pressed so there is no need to edit the Revision BoM. </strong>
+                    </div>
+                    <div class="alert alert-warning mb-0" role="alert" style="text-align: center" invisible="rebuild_scaffold_bom">
+                        <strong> The Revision BoM will NOT be built automatically so any BoM changes that are needed will need to be made manually. </strong>
+                    </div>
+                    <field name="staged_attribute_line_ids" context="{'default_eco_id': active_id}" readonly="state not in ('progress', 'rebase', 'conflict')">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle" />
+                            <field name="attribute_id" />
+                            <field name="value_ids" widget="many2many_tags" options="{'no_create_edit': True, 'color_field': 'color'}" context="{'default_attribute_id': attribute_id, 'show_attribute': False}" />
+                            <field name="used_in_sale_description" />
+                            <field name="is_qty_required" />
+                            <field name="default_val" domain="[('id', 'in', value_ids)]" context="{'show_attribute': False}" options="{'no_create': True, 'no_create_edit': True}" />
+                            <field name="required" />
+                            <field name="multi" />
+                            <field name="min_qty" invisible="not is_qty_required" />
+                            <field name="max_qty" invisible="not is_qty_required" />
+                        </tree>
+                        <form>
+                            <group>
+                                <group>
+                                    <field name="attribute_id" />
+                                    <field name="value_ids" widget="many2many_tags" />
+                                </group>
+                                <group>
+                                    <field name="used_in_sale_description" />
+                                    <field name="is_qty_required" />
+                                    <field name="default_val" domain="[('id', 'in', value_ids)]" context="{'show_attribute': False}" options="{'no_create': True, 'no_create_edit': True}" />
+                                    <field name="required" />
+                                    <field name="multi" />
+                                    <field name="min_qty" invisible="not is_qty_required" />
+                                    <field name="max_qty" invisible="not is_qty_required" />
+                                </group>
+                            </group>
+                        </form>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
+

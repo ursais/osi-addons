@@ -1,6 +1,6 @@
 <odoo>
 
-    <!-- This email is sent to the Sale Order Account Managers after the related delivery order is shipped and an auto invoice was created -->
+    <!-- This email is sent to the Sale Order Account Managers after the related delivery order is shipped and an auto invoice was created --> 
     <record id="invoice_created_email_template" model="mail.template">
         <field name="name">OnLogic Sale Order Invoice Created</field>
         <field name="model_id" ref="sale.model_sale_order" />
@@ -10,7 +10,7 @@
         <field name="body_html" type="html">
             <t t-call="ol_templates.ol_email">
                 <!-- Variables -->
-                <t t-set="sale_order" t-value="object.with_context({'lang':object.partner_id.lang or object.env.lang})" />
+                <t t-set="sale_order" t-value="object.with_context({'lang':object.contact_ids and object.contact_ids[0].lang or object.partner_id.lang or object.env.lang})" />
                 <t t-set="title" t-value="'Invoice ready for Sale Order ' + sale_order.name" />
                 <t t-set="preheader_text" t-value="'Invoice ready for Sale Order ' + sale_order.name" />
                 <t t-set="include_newsletter_disclaimer" t-value="False" />
@@ -53,7 +53,7 @@
                 </t>
             </t>
         </field>
-        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="lang">{{ object.contact_ids and object.contact_ids[0].lang or object.partner_id.lang }}</field>
         <field name="auto_delete" eval="False" />
     </record>
 

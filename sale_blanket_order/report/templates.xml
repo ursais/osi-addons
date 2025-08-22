@@ -27,7 +27,7 @@
                     </div>
                     <div class="col-3">
                         <strong>Validity Date:</strong>
-                        <p t-field="doc.validity_date" />
+                        <p t-esc="doc.get_format_date(doc.validity_date)" />
                     </div>
                     <div t-if="doc.user_id.name" class="col-3">
                         <strong>Salesperson:</strong>

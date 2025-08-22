@@ -24,7 +24,7 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="doc">
                 <!-- Find the correct language-->
-                <t t-set="language" t-value="doc.partner_id.lang"/>
+                <t t-set="language" t-value="doc.contact_ids and doc.contact_ids[0].lang or doc.partner_id.lang"/>
                 <t t-set="sale_order" t-value="doc.with_context(lang=language)"/>
                 <!-- Call the template document with the language set -->
                 <t t-call="ol_sale.report_sale_order_quote_document" t-lang="language"/>
@@ -79,7 +79,7 @@
                         </div>
                         <div class="value">
                             <strong>
-                                <t t-esc="sale_order.date_order" t-options='{"widget": "date"}'/>
+                                <t t-esc="sale_order.get_format_date(sale_order.date_order)"/>
                             </strong>
                         </div>
                     </div>
@@ -92,7 +92,7 @@
                         </div>
                         <div class="value">
                             <strong>
-                                <t t-esc="sale_order.validity_date" t-options='{"widget": "date"}'/>
+                                <t t-esc="sale_order.get_format_date(sale_order.validity_date)"/>
                             </strong>
                         </div>
                     </div>

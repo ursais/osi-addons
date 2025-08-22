@@ -1,0 +1,45 @@
+<odoo>
+
+    <!-- Sale Order form view -->
+    <record id="ol_sale_archive_check_view_order_form" model="ir.ui.view">
+        <field name="name">sale.archive.check.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <!-- Add alert for product/bom archived. -->
+            <sheet position="before">
+                <field name="has_archived_products_or_boms" invisible="1"/>
+                <div
+                    class="alert alert-danger"
+                    role="alert"
+                    style="margin-bottom:0px; text-align: center"
+                    invisible="not has_archived_products_or_boms"
+                >
+                    <p><strong>This order contains lines with archived products or BOMs. Please review before confirming.</strong></p>
+                </div>
+            </sheet>
+            <xpath expr="//page[@name='order_lines']//field[@name='order_line']//tree//field[@name='product_id']" position="after">
+                <field name="is_archived_or_bom_archived" column_invisible="1" />
+            </xpath>
+            <xpath expr="//page[@name='order_lines']//field[@name='order_line']//tree" position="attributes">
+                <attribute name="decoration-danger">is_archived_or_bom_archived</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ol_sale_archive_check_sale_order_line_tree" model="ir.ui.view">
+        <field name="name">sale.archive.check.order.tree</field>
+        <field name="model">sale.order.line</field>
+        <field name="inherit_id" ref="sale_order_line_menu.sale_order_line_tree"/>
+        <field name="arch" type="xml">
+            <field name="product_id" position="after">
+                <field name="is_archived_or_bom_archived" column_invisible="1" />
+            </field>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="decoration-danger">is_archived_or_bom_archived</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

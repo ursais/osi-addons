@@ -10,8 +10,8 @@
                             <td colspan="2">
                                 <h6>Customer: <t t-foreach="mrp_batch_data.partner_ids" t-as="partner"><span t-esc="partner.name" />,</t></h6>
                             </td>
-                            <td colspan="2"><h6>Scheduled Date: <span t-field="mrp_batch_data.date_start" /></h6></td>
-                        </tr>
+                            <td colspan="2"><h6>Scheduled Date: <span t-esc="mrp_batch_data.get_format_date(mrp_batch_data.date_start)" /></h6></td>
+                        </tr> 
                         <tr>
                             <td colspan="2"><h6>Responsible:<span t-esc="mrp_batch_data.responsible_id.name" /></h6></td>
                             <td colspan="2">
@@ -47,10 +47,10 @@
                                     <span t-esc="mo.product_qty" />
                                 </td>
                                 <td>
-                                    <span t-field="mo.date_start" />
+                                    <span t-esc="mo.get_format_date(mo.date_start)" />
                                 </td>
                                 <td>
-                                    <span t-field="mo.date_finished" />
+                                    <span t-esc="mo.get_format_date(mo.date_finished)" />
                                 </td>
                             </tr>
                         </t>

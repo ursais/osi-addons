@@ -18,7 +18,7 @@
                 <t t-call="web.external_layout">
                     <div class="page">
                         <h2>Cost Workup <span t-field="o.name"/> </h2>
-                        <h5><span t-out="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/></h5>
+                        <h5><span t-out="o.get_format_date(context_timestamp(datetime.datetime.now()))"/></h5>
 
                         <t t-foreach="o.order_line" t-as="line">
                             <table class="table table-sm o_main_table table-bordered mt-4" style="width: 100%;">

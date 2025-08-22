@@ -33,6 +33,7 @@
         "views/tier_definition_view.xml",
         "data/tier_definition.xml",
         "data/tier_validation_exceptions.xml",
+        "data/payment_method_data.xml",
     ],
     # only loaded in demo mode
     "demo": [
