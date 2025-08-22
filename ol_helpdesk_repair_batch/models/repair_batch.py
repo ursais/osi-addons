@@ -146,9 +146,47 @@ class RepairBatch(models.Model):
 
     @api.onchange("lot_ids")
     def _onchange_lot_ids(self):
-        """Auto-set product_id from selected lot if not set, then trigger domain update."""
-        if not self.product_id and self.lot_ids:
-            self.product_id = self.lot_ids[0].product_id
+        """Auto-set product, sale order, sale line, and quantity based on selected lots."""
+        if not self.lot_ids:
+            self.qty = 1
+            self.sale_id = False
+            self.sale_line_id = False
+            return
+
+        # Auto-set product from the first lot if not already set
+        first_lot = self.lot_ids[0]
+        if not self.product_id:
+            self.product_id = first_lot.product_id
+
+        # Determine the real lot record (handles unsaved records)
+        real_lot_id = first_lot._origin.id if first_lot._origin else first_lot.id
+        lot = self.env["stock.lot"].browse(real_lot_id)
+
+        # Set sale order and attempt to link correct sale line
+        if not self.sale_id and lot.sale_order_ids:
+            sale_order = lot.sale_order_ids[0]
+            self.sale_id = sale_order
+
+            # Look for stock move lines of this order that used this lot
+            move_lines = sale_order.picking_ids.move_line_ids.filtered(
+                lambda ml: ml.lot_id.id == lot.id
+            )
+            if (
+                move_lines
+                and move_lines[0].move_id
+                and move_lines[0].move_id.sale_line_id
+            ):
+                self.sale_line_id = move_lines[0].move_id.sale_line_id
+            else:
+                # Fallback: use matching product line if no lot-linked line is found
+                matching_line = sale_order.order_line.filtered(
+                    lambda l: l.product_id == self.product_id
+                )
+                if matching_line:
+                    self.sale_line_id = matching_line[0]
+
+        # Set quantity based on number of selected serials
+        self.qty = len(self.lot_ids) or 1
 
     @api.onchange("sale_id")
     def _onchange_sale_id(self):
@@ -167,8 +205,16 @@ class RepairBatch(models.Model):
             # lot_ids
             move_lines = order.picking_ids.move_ids.move_line_ids
             valid_lot_ids = move_lines.mapped("lot_id").filtered(lambda l: l)
-            if self.lot_ids - valid_lot_ids:
-                self.lot_ids = False
+
+            if self.lot_ids:
+                still_valid = self.lot_ids & valid_lot_ids
+                if still_valid:
+                    self.lot_ids = still_valid
+
+            # auto-set partner if not already set
+            if not self.partner_id:
+                self.partner_id = order.partner_id
+
         else:
             self.sale_line_id = False
 
@@ -343,30 +389,84 @@ class RepairBatch(models.Model):
                         {"repair_batch_line_id": batch_line.id}
                     )
 
+    def _update_ticket_sale_ids(self, old_sale_ids=None):
+        """
+        Helper method:
+        Ensure ticket.original_sale_order_ids correctly reflects the batches linked to it.
+
+        :param old_sale_ids: dict mapping batch.id -> old sale_id before write (optional)
+        """
+        for batch in self:
+            ticket = batch.ticket_id
+            new_sale_id = batch.sale_id.id if batch.sale_id else None
+            old_sale_id = None
+            if old_sale_ids:
+                old_sale_id = old_sale_ids.get(batch.id)
+
+            # Add new sale_id to ticket if not already present
+            if new_sale_id and new_sale_id not in ticket.original_sale_order_ids.ids:
+                ticket.original_sale_order_ids = [(4, new_sale_id)]
+
+            # Remove old sale_id if changed and no other batch references it
+            if old_sale_id and old_sale_id != new_sale_id:
+                other_batches = self.search(
+                    [
+                        ("ticket_id", "=", ticket.id),
+                        ("sale_id", "=", old_sale_id),
+                        ("id", "!=", batch.id),
+                    ]
+                )
+                if not other_batches:
+                    ticket.original_sale_order_ids = [(3, old_sale_id)]
+
     @api.model_create_multi
     def create(self, vals_list):
         batches = super().create(vals_list)
         for batch in batches:
-            # Override create to assign a sequence number to the new batch record
-            batch["name"] = (
-                self.env["ir.sequence"].next_by_code("repair.batch") or "New"
-            )
-
-            # Ensure all open repair orders get the same move_ids linked to batch lines.
+            batch.name = self.env["ir.sequence"].next_by_code("repair.batch") or "New"
             batch._propagate_parts_to_repairs()
+
+        batches._update_ticket_sale_ids()
+
         return batches
 
     def write(self, vals):
+        old_sale_ids = {batch.id: batch.sale_id.id for batch in self if batch.sale_id}
         res = super().write(vals)
 
-        for repair in self:
+        self._update_ticket_sale_ids(old_sale_ids)
+        for batch in self:
             if "part_lines" in vals:
-                repair._propagate_parts_to_repairs()
-
+                batch._propagate_parts_to_repairs()
             if "schedule_date" in vals:
-                (repair.move_id + repair.move_ids).filtered(
+                (batch.move_id + batch.move_ids).filtered(
                     lambda m: m.state not in ("done", "cancel")
-                ).write({"date": repair.schedule_date})
+                ).write({"date": batch.schedule_date})
+        return res
+
+    def unlink(self):
+        # Gather all necessary info before deletion
+        sale_ticket_map = [
+            (batch.sale_id.id if batch.sale_id else None, batch.ticket_id.id)
+            for batch in self
+        ]
+
+        res = super().unlink()
+
+        # After deletion, update tickets
+        for sale_id, ticket_id in sale_ticket_map:
+            if not sale_id:
+                continue
+            ticket = self.env["helpdesk.ticket"].browse(ticket_id)
+            # Check if any remaining batch still references this sale
+            other_batches = self.search(
+                [
+                    ("ticket_id", "=", ticket.id),
+                    ("sale_id", "=", sale_id),
+                ]
+            )
+            if not other_batches:
+                ticket.original_sale_order_ids = [(3, sale_id)]
         return res
 
     def _propagate_parts_to_repairs(self):
