@@ -28,7 +28,26 @@
                   style="font-size:0; font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; 5px 20px;"
                   class="stack-column-left">
                 <p style="margin: 0 0 5px 0; padding: 10px;">
-                  <span style="font-weight: 300;" t-esc="payment_method.get_display_name()"/>
+                  <span style="font-weight: 300;" t-esc="payment_method.display_name"/>
+                  <br/>
+                  <!-- TODO: Add info based on method type.  "Credit card ending in 1234", etc -->
+                  <!-- Ending in ####<br /> -->
+                </p>
+              </td>
+            </tr>
+          </t>
+          <tr>
+            <td bgcolor="#f3f3f3" style="padding: 8px 10px; font-size:16px;">
+              Payment Term
+            </td>
+          </tr>
+          <t t-if="payment_term">
+            <tr>
+              <td align="left" valign="top"
+                  style="font-size:0; font-family: sans-serif; font-size: 14px; line-height: 150%; color: #595A5C; 5px 20px;"
+                  class="stack-column-left">
+                <p style="margin: 0 0 5px 0; padding: 10px;">
+                  <span style="font-weight: 300;" t-esc="payment_term.display_name"/>
                   <br/>
                   <!-- TODO: Add info based on method type.  "Credit card ending in 1234", etc -->
                   <!-- Ending in ####<br /> -->
