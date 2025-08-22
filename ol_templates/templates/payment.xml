@@ -5,4 +5,10 @@
         <div class="ol_block_data" t-esc="payment_method.name"/>
     </template>
 
+    <template id="payment_terms">
+        <div class="ol_block_title" t-esc="block_title"/>
+        <div class="ol_block_data" t-esc="payment_terms.name"/>
+    </template>
+
+
 </odoo>
