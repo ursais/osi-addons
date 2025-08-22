@@ -26,6 +26,8 @@
         "security/security.xml",
         "data/mail_template_data.xml",
         "data/server_action.xml",
+        "data/invoice_lines.xml",
+        "data/coming_due_email_template.xml",
         "views/res_config_settings_views.xml",
         "views/account_invoice.xml",
         "views/account_payment_view.xml",
