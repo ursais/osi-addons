@@ -34,7 +34,7 @@
                 <attribute name="invisible">state != 'draft' or invoice_payment_term_id or move_type in ('in_invoice')</attribute>
             </xpath>
             <xpath expr="//div[@name='due_date']" position="after">
-                <label for="invoice_date_due" string="Bill Date" style="font-weight:bold;" invisible="move_type not in ('in_invoice')"/>
+                <label for="invoice_date_due" string="Due Date" style="font-weight:bold;" invisible="move_type not in ('in_invoice')"/>
                 <div class="d-flex" invisible="move_type not in ('in_invoice')" name="due_date_in_invoice">
                     <field name="invoice_date_due" force_save="1" placeholder="Date"/>
                 </div>
