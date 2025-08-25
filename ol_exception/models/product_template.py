@@ -1,6 +1,5 @@
 # Import Odoo libs
-from odoo import models
-from odoo.exceptions import UserError
+from odoo import fields, models
 
 
 class ProductTemplate(models.Model):
@@ -11,7 +10,12 @@ class ProductTemplate(models.Model):
 
     _inherit = "product.template"
 
-    # METHODS ##########
+    # COLUMNS ######
+
+    tech_exception = fields.Boolean(string="Tech Exception")
+
+    # END ##########
+    # METHODS ######
 
     def _fields_trigger_check_exception(self):
         # Search for exception configs: sudo is used as non-admins don't
@@ -54,6 +58,15 @@ class ProductTemplate(models.Model):
                 ):
                     state_change_triggers = True
                     break
+
+        # --- Detect tech_exception toggle ---
+        tech_exception_triggers = False
+        if "tech_exception" in vals:
+            old_values = self.mapped("tech_exception")
+            new_value = vals["tech_exception"]
+            # If any record's value differs from the incoming one, trigger
+            if any(old != new_value for old in old_values):
+                tech_exception_triggers = True
 
         # Detect relevant field changes that also require downstream checks
         trigger_fields = self._fields_trigger_check_exception()
@@ -110,7 +123,7 @@ class ProductTemplate(models.Model):
         # --- Exception Checks on SO/DO/MO ---
 
         # --- Exception workflow triggering for related orders and MOs ---
-        if state_change_triggers or relevant_changes:
+        if state_change_triggers or tech_exception_triggers or relevant_changes:
             related_products = self.product_variant_ids
             if related_products:
                 # SALE ORDERS (Direct & BOM-based)

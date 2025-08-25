@@ -95,19 +95,6 @@
         <field name="approved_ship" eval="False" />
     </record>
 
-    <record id="product_tech_exception" model="product.state">
-        <field name="code">TE</field>
-        <field name="name">Tech Exception</field>
-        <field name="approved_purchase" eval="True" />
-        <field name="approved_sale" eval="True" />
-        <field name="approved_sale_confirm" eval="True" />
-        <field name="approved_mrp" eval="True" />
-        <field name="approved_component_mrp" eval="True" />
-        <field name="approved_bom" eval="True" />
-        <field name="approved_ship" eval="True" />
-        <field name="trigger_exception" eval="True" />
-    </record>
-
     <!-- Stage Server Action: Allows for prototype products to change initial stages which don't require PLM. -->
     <record id="action_move_initial_stage" model="ir.actions.server">
         <field name="name">Change State to New/Development</field>
