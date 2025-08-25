@@ -54,6 +54,31 @@ class ProductProduct(models.Model):
                     product.write(
                         {"default_code": product.product_tmpl_id.default_code}
                     )
+            if product.length and product.weight or product.height:
+                product._onchange_volume()
         return products
+
+    def _compute_product_weight(self):
+        super()._compute_product_weight()
+        for product in self:
+            bom = self.env["mrp.bom"]._bom_find(products=product, bom_type="phantom")
+            if bom:
+                total_weight = 0.0
+                bom_id = bom.get(product)
+                for line in bom_id.bom_line_ids:
+                    total_weight += (line.product_id.weight or 0.0) * line.product_qty
+                product.weight = total_weight
+
+    @api.onchange("length", "width", "height")
+    def _onchange_volume(self):
+        for rec in self:
+            rec.volume = (rec.length or 0.0) * (rec.width or 0.0) * (rec.height or 0.0)
+
+    def write(self, vals):
+        res = super().write(vals)
+        if "length" in vals or "width" in vals or " height" in vals:
+            for rec in self:
+                rec._onchange_volume()
+        return res
 
     # END ##########
