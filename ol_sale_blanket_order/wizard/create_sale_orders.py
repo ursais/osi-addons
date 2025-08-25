@@ -43,6 +43,7 @@ class BlanketOrderWizard(models.TransientModel):
             "contact_ids": contact_ids,
             "ignore_exception": True,
             "account_manager_id": self.blanket_order_id.account_manager_id.id,
+            "sale_payment_method_id": self.blanket_order_id.sale_payment_method_id.id,
         }
 
     def create_sale_order(self):

@@ -34,8 +34,10 @@
                 <field name="account_manager_id" readonly="state == 'expired'"/>
             </xpath>
             <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="sale_payment_method_id" required="1"/>
                 <field name="carrier_id" />
             </xpath>
+            
             <xpath expr="//field[@name='pricelist_id']" position="replace"/>
             <xpath expr="//field[@name='validity_date']" position="after">
                 <field name="show_update_pricelist" invisible="1"/>

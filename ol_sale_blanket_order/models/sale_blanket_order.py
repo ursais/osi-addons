@@ -77,6 +77,12 @@ class SaleBlanketOrder(models.Model):
         string="Account Manager",
     )
 
+    sale_payment_method_id = fields.Many2one(
+        comodel_name="payment.method",
+        string="Customer Payment Method",
+        help="Payment method selected coming from the sale order.",
+    )
+
     # END #########
     # METHODS #####
 
@@ -158,6 +164,7 @@ class SaleBlanketOrder(models.Model):
         res = super().onchange_partner_id()
         self.carrier_id = self.partner_id.property_delivery_carrier_id
         self.account_manager_id = self.partner_id.account_manager_id
+        self.sale_payment_method_id = self.partner_id.sale_payment_method_id
         return res
 
     @api.onchange("company_id")
@@ -259,6 +266,7 @@ class SaleBlanketOrder(models.Model):
             "contact_ids": contact_ids,
             "ignore_exception": True,
             "account_manager_id": self.partner_id.account_manager_id.id,
+            "sale_payment_method_id": self.sale_payment_method_id.id,
         }
 
     def create_sale_order_cron(self):
