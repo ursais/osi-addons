@@ -13,10 +13,19 @@ class ProductProduct(models.Model):
 
     def _reset_variant_bom_with_scaffold_bom(self):
         """
-        Method to reset the variant's Bill of Materials (BoM) using a scaffold BoM
-        (a BoM template) for product variants. We use the configuration session to
-        do this as it contains all the logic to find and create the BoM based on
-        the configured values and configuration sets on BoM lines.
+        Reset a product variant's Bill of Materials (BoM) using a scaffold BoM
+        (a BoM template). This leverages the configuration session logic to
+        generate a new BoM based on the variant's configured values.
+
+        Steps:
+        - Find scaffold BoM (or fallback template BoM if no scaffold exists).
+        - Locate existing variant-specific BoM(s).
+            * If multiple exist, keep the latest and archive the rest.
+            * If none exist, skip.
+        - Use a configuration session to regenerate the BoM.
+        - Compare old vs new BoM.
+            * If different, keep the new one and increment version.
+            * If identical, discard the new one and reactivate the old.
         """
 
         bom_obj = self.env["mrp.bom"]
@@ -57,12 +66,23 @@ class ProductProduct(models.Model):
                 # If a scaffold BoM is found
                 if scaffold_bom:
                     # Search for the existing variant-specific BoM
-                    variant_bom = bom_obj.search([("product_id", "=", product.id)])
+                    variant_bom = False
+                    variant_boms = bom_obj.search(
+                        [("product_id", "=", product.id)], order="id desc"
+                    )
 
-                    # If there are more than 1 variant bom then archive all and rebuild
-                    if len(variant_bom) > 1:
-                        variant_bom.write({"active": False})
-                        variant_bom = False
+                    if variant_boms:
+                        if len(variant_boms) > 1:
+                            # Keep the latest, archive all others
+                            latest_variant_bom = variant_boms[0]
+                            (variant_boms - latest_variant_bom).write({"active": False})
+                            variant_bom = latest_variant_bom
+                        else:
+                            variant_bom = variant_boms[0]
+
+                    if not variant_bom:
+                        # No existing variant BoM found — nothing to reset
+                        continue
 
                     # Prepare to handle custom quantities for product attribute values
                     product_attribute_value_qty_ids = (
@@ -130,9 +150,10 @@ class ProductProduct(models.Model):
 
                     # Confirm and finalize the session, which generates the new BoM
                     session.action_confirm()
+
                     # Delete the session (SQL to speed things up)
                     self.env.cr.execute(
-                        "delete from product_config_session where id=%s", (session.id,)
+                        "DELETE FROM product_config_session WHERE id=%s", (session.id,)
                     )
 
                     # Retrieve the newly created BoM
@@ -140,22 +161,17 @@ class ProductProduct(models.Model):
                         [("product_id", "=", product.id)], limit=1
                     )
 
-                    # Update the new BoM's version number
-                    new_variant_bom.version = variant_bom.version + 1
-
-                    # Compare the old and new BoMs to check for changes
-                    if self._compare_boms(variant_bom, new_variant_bom):
-                        # If the BoMs are different, keep the new one and
-                        # deactivate the old one permanently
-                        new_variant_bom.version = variant_bom.version + 1
-                    else:
-                        # If there are no differences, delete the new BoM and
-                        # reactivate the original one (SQL to speed things up)
-                        if new_variant_bom:
+                    if new_variant_bom:
+                        # Compare old and new BoMs
+                        if self._compare_boms(variant_bom, new_variant_bom):
+                            # Different → bump version and keep new
+                            new_variant_bom.version = variant_bom.version + 1
+                        else:
+                            # Identical → discard new, reactivate old
                             self.env.cr.execute(
-                                "delete from mrp_bom where id=%s", (new_variant_bom.id,)
+                                "DELETE FROM mrp_bom WHERE id=%s", (new_variant_bom.id,)
                             )
-                        variant_bom.write({"active": True})
+                            variant_bom.write({"active": True})
 
     def _compare_boms(self, bom1, bom2):
         """
