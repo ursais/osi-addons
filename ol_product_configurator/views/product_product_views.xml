@@ -12,6 +12,10 @@
                     This Product has attribute values that belong to a different company
                 </div>
         	</xpath>
+            <field name="volume" position="attributes">
+                <attribute name="readonly">1</attribute>
+                <attribute name="force_save">1</attribute>
+            </field>
         </field>
     </record>
 
