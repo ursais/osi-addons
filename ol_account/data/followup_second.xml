@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
-        <template id="followup_first_email">
+        <template id="followup_second_email">
 
             <t t-call="ol_templates.ol_email">
 
@@ -31,21 +30,20 @@
 
                     <!-- <t t-if="has_migrated_invoices"> -->
                         <!-- Display a warning notification about possible invoice number changes as a result of migrating from Odoo10 to Odoo13-->
-                        <!-- <t t-call="ol_invoice_reminders.invoice_number_change_note"/> -->
+                        <!-- <t t-call="ol_account.invoice_number_change_note"/> -->
                     <!-- </t> -->
 
                     <p style="font-size: 16px; line-height: 28px; margin-top: 30px;">
-                        <t t-if="partner.property_payment_term_id">
+                        <t t-if="payment_term_names">
                             Per our agreed upon payment terms of <t
-                                t-esc="partner.property_payment_term_id.name"/>,&amp;nbsp;
+                                t-esc="payment_term_names"/>,&amp;nbsp;
                         </t>
-                        <tag>we show the following invoice(s) as past due:</tag>
+                        <tag>we show the following invoice(s) continue to be past due:</tag>
                     </p>
                 </t>
 
                 <!-- Add spacer-->
                 <t t-call="ol_templates.ol_email_spacer"/>
-
                 <t t-call="ol_templates.ol_email_text_content">
                     <t t-call="ol_account.invoice_lines">
                         <t t-set="invoice_lines" t-value="invoice_lines"/>
@@ -72,16 +70,18 @@
                 <t t-call="ol_templates.ol_email_spacer"/>
                 <t t-call="ol_templates.ol_email_text_content">
                     <p style="font-size: 16px; line-height: 28px;">
-                        <tag>If your records do not match ours, or if you have already sent payment, please let us know
-                            immediately. If you are still processing payment, please include remittance details with
-                            your payment to help ensure we apply it correctly.
-                        </tag>
-                        <br/>
-                        <br/>
                         <tag>To help, we’ve attached copies of the invoice(s) referenced above.</tag>
                         <br/>
                         <br/>
-                        <tag>Thank you for your business and your help on this matter.</tag>
+                        <span style="font-weight: 500;">
+                            <tag>At OnLogic, we take customer credit standing and invoice due dates seriously. Please
+                                note that we suspend all orders for customers with an invoice more than 14 days past
+                                due.
+                            </tag>
+                        </span>
+                        <br/>
+                        <br/>
+                        Thank you for your business and your help on this matter.
                     </p>
                 </t>
                 <t t-call="ol_templates.ol_email_spacer"/>
@@ -96,17 +96,16 @@
             </t>
         </template>
 
-        <record id="followup_first_email_template" model="mail.template">
-            <field name="name">OnLogic Overdue Invoice(s) - First</field>
+        <record id="followup_second_email_template" model="mail.template">
+            <field name="name">OnLogic Overdue Invoice(s) - Second</field>
             <field name="model_id" ref="base.model_res_partner"/>
             <field name="auto_delete" eval="False"/>
             <field name="lang">${object.partner_id.lang}</field>
             <field name="subject">OnLogic Overdue Invoice</field>
             <field name="body_html" type="html">
                 <t t-set="partner" t-value="object.with_context({'lang':object.lang or object.env.lang})"/>
-                <t t-call="ol_account.followup_first_email" t-lang="partner.lang or object.env.lang"/>
+                <t t-call="ol_account.followup_second_email" t-lang="partner.lang or object.env.lang"/>
             </field>
         </record>
-
     </data>
 </odoo>

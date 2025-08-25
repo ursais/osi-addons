@@ -2,12 +2,12 @@
 <odoo>
     <data>
 
-        <template id="followup_first_email">
+        <template id="followup_final_email">
 
             <t t-call="ol_templates.ol_email">
 
                 <!-- Variables -->
-                <t t-set="title" t-value="'OnLogic Overdue Invoice'"/>
+                <t t-set="title" t-value="'OnLogic Overdue Invoice - Immediate Action Required'"/>
                 <t t-set="preheader_text" t-value="title"/>
                 <t t-set="include_newsletter_disclaimer" t-value="False"/>
 
@@ -26,26 +26,36 @@
                     </div>
 
                     <div style="font-size:16px; line-height:28px; margin-top:30px">
-                        <tag>Dear</tag>&amp;nbsp;<t t-esc="partner.name"/>,
+                        <tag>Dear</tag>&amp;nbsp;<t t-esc="scheduled_item.partner_id.name"/>,
                     </div>
 
                     <!-- <t t-if="has_migrated_invoices"> -->
                         <!-- Display a warning notification about possible invoice number changes as a result of migrating from Odoo10 to Odoo13-->
-                        <!-- <t t-call="ol_invoice_reminders.invoice_number_change_note"/> -->
+                        <!-- <t t-call="ol_account.invoice_number_change_note"/> -->
                     <!-- </t> -->
 
                     <p style="font-size: 16px; line-height: 28px; margin-top: 30px;">
-                        <t t-if="partner.property_payment_term_id">
-                            Per our agreed upon payment terms of <t
-                                t-esc="partner.property_payment_term_id.name"/>,&amp;nbsp;
+                        <t t-if="payment_term_names">
+                            We have not received payment for the orders below within our agreed upon payment terms of <t
+                                t-esc="payment_term_names"/>.&amp;nbsp;
                         </t>
-                        <tag>we show the following invoice(s) as past due:</tag>
+                        <tag>These invoices are severely past due and require immediate payment. If your records do not
+                            match ours, or you have already sent payment, please let us know as soon as possible.
+                        </tag>
+                        <br/>
+                        <br/>
+                        <span style="font-weight: 500;">
+                            <tag>All pending and future orders have been placed on hold until your account is made
+                                current.</tag>&amp;nbsp;
+                        </span>
+                        <tag>If your account is not made current immediately, we will be forced to consider revoking
+                            your credit terms and reporting your company to the credit agencies.
+                        </tag>
                     </p>
                 </t>
 
                 <!-- Add spacer-->
                 <t t-call="ol_templates.ol_email_spacer"/>
-
                 <t t-call="ol_templates.ol_email_text_content">
                     <t t-call="ol_account.invoice_lines">
                         <t t-set="invoice_lines" t-value="invoice_lines"/>
@@ -72,16 +82,28 @@
                 <t t-call="ol_templates.ol_email_spacer"/>
                 <t t-call="ol_templates.ol_email_text_content">
                     <p style="font-size: 16px; line-height: 28px;">
-                        <tag>If your records do not match ours, or if you have already sent payment, please let us know
-                            immediately. If you are still processing payment, please include remittance details with
-                            your payment to help ensure we apply it correctly.
+                        <tag>We do not want to endanger your credit rating or the good relationship that we have
+                            maintained in the past; therefore, we request that this obligation is paid immediately.
                         </tag>
                         <br/>
                         <br/>
-                        <tag>To help, we’ve attached copies of the invoice(s) referenced above.</tag>
+                        <t t-if="company_short_name == 'eu'">
+                            <tag>If OnLogic brings an action for breach of these Terms and Conditions, including any
+                                action to enforce its right to payment, Customer shall be liable for OnLogic's
+                                reasonable attorneys' fees, costs, and expenses incurred in connection with such action.
+                            </tag>
+                        </t>
+                        <t t-else="">
+                            <tag>Any sum not paid by Customer when due shall bear interest until paid at a rate of 1.5%
+                                per month (18% per annum) or the maximum rate permitted by law, whichever is less. If
+                                OnLogic brings an action for breach of these Terms and Conditions, including any action
+                                to enforce its right to payment, Customer shall be liable for OnLogic's reasonable
+                                attorneys' fees, costs, and expenses incurred in connection with such action.
+                            </tag>
+                        </t>
                         <br/>
                         <br/>
-                        <tag>Thank you for your business and your help on this matter.</tag>
+                        Thank you for your business and your help on this matter.
                     </p>
                 </t>
                 <t t-call="ol_templates.ol_email_spacer"/>
@@ -96,15 +118,14 @@
             </t>
         </template>
 
-        <record id="followup_first_email_template" model="mail.template">
-            <field name="name">OnLogic Overdue Invoice(s) - First</field>
+        <record id="followup_final_email_template" model="mail.template">
+            <field name="name">OnLogic Overdue Invoice(s) - Final</field>
             <field name="model_id" ref="base.model_res_partner"/>
             <field name="auto_delete" eval="False"/>
             <field name="lang">${object.partner_id.lang}</field>
-            <field name="subject">OnLogic Overdue Invoice</field>
             <field name="body_html" type="html">
                 <t t-set="partner" t-value="object.with_context({'lang':object.lang or object.env.lang})"/>
-                <t t-call="ol_account.followup_first_email" t-lang="partner.lang or object.env.lang"/>
+                <t t-call="ol_account.followup_final_email" t-lang="partner.lang or object.env.lang"/>
             </field>
         </record>
 
