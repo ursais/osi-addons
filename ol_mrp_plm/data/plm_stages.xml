@@ -150,22 +150,6 @@
         <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.bom_revision')])]" />
     </record>
 
-    <record id="product_techex_initiation" model="mrp.eco.stage">
-        <field name="name">TechEx Initiation</field>
-        <field name="product_state_id" ref="ol_product_state.product_tech_exception"/>
-        <field name="allow_apply_change">True</field>
-        <field name="sequence">19</field>
-        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.tech_exception')])]" />
-    </record>
-
-    <record id="product_techex_removal" model="mrp.eco.stage">
-        <field name="name">TechEx Removal</field>
-        <field name="final_stage">True</field>
-        <field name="cancel_stage">True</field>
-        <field name="sequence">20</field>
-        <field name="type_ids" eval="[(6,0,[ref('ol_mrp_plm.tech_exception')])]" />
-    </record>
-
     <record id="product_state_done" model="mrp.eco.stage">
         <field name="name">Done</field>
         <field name="final_stage">True</field>

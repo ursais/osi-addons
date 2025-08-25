@@ -41,5 +41,5 @@
         sequence="80"
         groups="base_exception.group_exception_rule_manager"
     />
-    
+
 </odoo>
