@@ -24,19 +24,14 @@
         <field name="target_state_value_id" ref="target_state_value_sent" />
         <field name="description">Order to be confirmed when exceptions are cleared</field>
     </record>
-    <record id="base_substate__order_review" model="base.substate">
-        <field name="name">Order Review</field>
-        <field name="sequence">2</field>
-        <field name="target_state_value_id" ref="target_state_value_sent" />
-        <field name="description">Order to be confirmed when exceptions are cleared</field>
-    </record>
-    
 
+    <!-- Order Review (Legacy) for v13 data (after confirmation) Archived-->
     <record id="base_substate__legacy_order_review" model="base.substate">
-        <field name="name">Legacy Order Review</field>
+        <field name="name">Order Review (Legacy)</field>
         <field name="sequence">3</field>
         <field name="target_state_value_id" ref="sale_substate.target_state_value_sale" />
         <field name="description">Order confirmed awaiting production</field>
+        <field name="active">False</field>
     </record>
 
     <!-- Order confirmed awaiting production -->
