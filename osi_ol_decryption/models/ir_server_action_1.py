@@ -11,10 +11,203 @@ import openpyxl
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
+    def update_saleorder_substate(self):
+        substate_ids = self.env['base.substate'].search([('model', '=', 'sale.order')])    
+        complete = substate_ids.filtered(lambda l : l.name == 'Complete')
+        self._cr.execute("update sale_order set substate_id = %s where detailed_state in ('done_partial', 'done',)", (complete.id,))
+        review = substate_ids.filtered(lambda l : l.name == 'Legacy Order Review')
+        self._cr.execute("update sale_order set substate_id = %s where detailed_state in ('review')", (review.id,))
+        waiting = substate_ids.filtered(lambda l : l.name == 'Waiting')
+        self._cr.execute("update sale_order set substate_id = %s where detailed_state in ('sale')", (waiting.id,))
+        production = substate_ids.filtered(lambda l : l.name == 'In Production')
+        self._cr.execute("update sale_order set substate_id = %s where detailed_state in (''in_production','invoiced','invoiced_partial','ship_hold','ship_ready'')", (production.id,))
+        
+        
     def configure_account_sepa_direct_debit(self):
         self.env["ir.module.module"].search(
                 [("name", "=", 'configure_account_sepa_direct_debit'), ("state", "!=", "installed")]
             ).button_immediate_install()
+
+    def create_onlogic_locations_and_route(self):
+        self = self.sudo()
+        # --- Step 1: Create Base View Locations ---
+        locations_to_create_us = [
+            # US
+            ("Primary", "Stock", "view"),
+            ("Overstock", "WH", "view"),
+        ]
+        locations_to_create_eu = [
+            # EU
+            ("Primary", "Stock", "view"),
+            ("Overstock", "EU", "view"),
+        ]
+
+        for name, parent_name, usage in locations_to_create_us:
+            parent = self.env["stock.location"].search(
+                [("name", "=", parent_name), ("company_id", "=", 1)], limit=1
+            )
+            if not parent:
+                continue  
+
+            if not self.env["stock.location"].search(
+                [("name", "=", name), ("company_id", "=", 1)], limit=1
+            ):
+                loaction = self.env["stock.location"].create(
+                    {
+                        "name": name,
+                        "location_id": parent.id,
+                        "usage": usage,
+                        "company_id": 1,
+                    }
+                )
+
+                data = self.env["ir.model.data"].sudo().create(
+                    {
+                        "name": f"stock_location_{name.lower()}",
+                        "model": "stock.location",
+                        "module": "__setup__",
+                        "res_id": loaction.id,
+                        "noupdate": True,
+                    }
+                )
+                
+        for name, parent_name, usage in locations_to_create_eu:
+            parent = self.env["stock.location"].search(
+                [("name", "=", parent_name), ("company_id", "=", 2)], limit=1
+            )
+            if not parent:
+                continue 
+
+            if not self.env["stock.location"].search(
+                [("name", "=", name), ("company_id", "=", 2)], limit=1
+            ):
+                loaction = self.env["stock.location"].create(
+                    {
+                        "name": name, 
+                        "location_id": parent.id,
+                        "usage": usage,
+                        "company_id": 2,
+                    }
+                )
+
+                self.env["ir.model.data"].sudo().create(
+                    {
+                        "name": f"stock_location_eu_{name.lower()}",
+                        "model": "stock.location",
+                        "module": "__setup__",  
+                        "res_id": loaction.id,
+                        "noupdate": True,
+                    }
+                )
+
+        # --- Step 3: Create Route in OnLogic US ---
+
+        route_us = self.env["stock.route"].create(
+            {
+                "name": "Overstock Replenishment",
+                "product_selectable": False,
+                "company_id": 1,
+            }
+        )
+
+        op_type = self.env["stock.picking.type"].search(
+            [
+                ("code", "=", "internal"),
+                ("company_id", "=", 1),
+                ("name", "=", "Internal Transfers"),
+            ],
+            limit=1,
+        )
+
+        # Find Locations
+        source_loc = self.env["stock.location"].search(
+            [("name", "=", "Overstock"), ("company_id", "=", 1)], limit=1
+        )
+        dest_loc = self.env["stock.location"].search(
+            [("name", "=", "Primary"), ("company_id", "=", 1)], limit=1
+        )
+
+        self.env["stock.rule"].create(
+            {
+                "name": "Pull from Overstock",
+                "route_id": route_us.id,
+                "action": "pull",  # Pull From
+                "picking_type_id": op_type.id,
+                "location_src_id": source_loc.id,
+                "location_dest_id": dest_loc.id,
+                "procure_method": "make_to_stock",  # Supply Method = Take From Stock
+                "company_id": 1,
+            }
+        )
+
+        op_type = self.env["stock.picking.type"].search(
+            [
+                ("code", "=", "internal"),
+                ("company_id", "=", 2),
+                ("name", "=", "Internal Transfers"),
+            ],
+            limit=1,
+        )
+
+        # Find Locations
+        source_loc = self.env["stock.location"].search(
+            [("name", "=", "Overstock"), ("company_id", "=", 2)], limit=1
+        )
+        dest_loc = self.env["stock.location"].search(
+            [("name", "=", "Primary"), ("company_id", "=", 2)], limit=1
+        )
+
+        route_eu = self.env["stock.route"].create(
+            {
+                "name": "Overstock Replenishment",
+                "product_selectable": False,
+                "company_id": 2,
+            }
+        )
+
+        self.env["stock.rule"].create(
+            {
+                "name": "Pull from Overstock",
+                "route_id": route_eu.id,
+                "action": "pull",  # Pull From
+                "picking_type_id": op_type.id,
+                "location_src_id": source_loc.id,
+                "location_dest_id": dest_loc.id,
+                "procure_method": "make_to_stock",  # Supply Method = Take From Stock
+                "company_id": 2,
+            }
+        )
+        
+        file_path = "/home/odoo/odoo17/odoo/addons/osi_ol_decryption/osi_ol_decryption/data/US_and_EU_Stock_Locations.xlsx"
+        wb = openpyxl.load_workbook(filename=file_path, data_only=True)
+        count = 1
+        for sheet_name in wb.sheetnames:
+            sheet = wb[sheet_name]
+            if count == 1:
+                company = 1
+                overstock = self.env.ref('__setup__.stock_location_overstock')
+                primary = self.env.ref('__setup__.stock_location_primary')
+            else:
+                company = 2
+                overstock = self.env.ref('__setup__.stock_location_eu_overstock')
+                primary = self.env.ref('__setup__.stock_location_eu_primary')
+
+            for row in sheet.iter_rows(min_row=3):
+                name = row[0].value
+                parent = row[1].value
+                print ("\n parent", parent, name)
+                if parent in ('WH/Stock/Primary', 'EU/Stock/Primary'):
+                    loaction = primary.id
+                if parent in ('EU/Overstock','WH/Overstock'):
+                    loaction = overstock.id
+                if loaction and name:
+                    id = self.env['stock.location'].search([('name', 'ilike', name), ('company_id','=', company)]).id
+                    
+                    if id:
+                        self._cr.execute("update stock_location set location_id = %s where id = %s ", (loaction, id))
+                        self._cr.commit()
+            
+            count +=1
 
     
     def payment_method_update(self):
@@ -293,15 +486,17 @@ class IrActionsServer(models.Model):
                             vals.append("account_type = %s")
                             params.append(diffs['account_type'])
                         if 'deprecated' in diffs:
-                            params.append("deprecated = 'f'")
+                            params.append("f")
+                            vals.append(('deprecated = %s'))
                         if vals:
                             params.append(account.id)
-
+                            
                             query = f"""
                                 UPDATE account_account
                                 SET {', '.join(vals)}
                                 WHERE id = %s
                             """
+                            print ("\n query", query, "\n params", params)
                             self.env.cr.execute(query, tuple(params))
 
                         if 'tag_ids' in diffs:
@@ -329,7 +524,7 @@ class IrActionsServer(models.Model):
                         
                         diffs = {'name': new_name, 'code': new_code, 'account_type': keys_found[0], 'company_id': company.id, 'tag_ids': [(6, 0, tag_ids)]}
                         print ("\n --------------create----------", diffs)
-                        if (diffs.get('code') == '21440.09' and diffs.get('company_id') == 9) or (diffs.get('code') == '99999.1' and diffs.get('company_id') == 3):
+                        if (diffs.get('code') == '21440.09' and diffs.get('company_id') == 9) or (diffs.get('code') == '99999.1' and diffs.get('company_id') == 3) or (diffs.get('code') == '28' and diffs.get('company_id') == 1):
                             continue
                         self.env['account.account'].with_company(company).create(diffs)
         
@@ -878,6 +1073,11 @@ class IrActionsServer(models.Model):
 
                 if open_review:
                     rec.write({"approved_total_cost": open_review.approved_total_cost})
+        product_ids = self.env["product.product"].search(
+            [("length", ">", 0),('width', '>', 0), ('height', '>', 0) ]
+        )
+        for product in product_ids:
+            product._onchange_volume()
 
     def create_stock_putway_rule(self):
         _logger.info("===============create_stock_putway_rule====================")
@@ -1019,7 +1219,8 @@ class IrActionsServer(models.Model):
         product_ids = self.env['product.template'].sudo().search([('phantom_bom_id', '!=', False), ("purchase_ok", "=", True)])
         product_ids.write({'purchase_ok': False, 'candidate_purchase': False})
         product_ids = self.env['product.template'].sudo().search([("categ_id.name", "in", ["Systems", "Computers", "Panel PCs"]), ("purchase_ok", "=", True)])
-        product_ids.write({'purchase_ok': False, "candidate_purchase": False})    
+        product_ids.write({'purchase_ok': False, "candidate_purchase": False})
+            
 
     def uninstall_old_module(self):
         _logger.info("===============uninstall_old_module====================")
