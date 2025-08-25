@@ -1,5 +1,7 @@
 <odoo noupdate="1">
 
+    Legacy Order Review
+
     <!-- Quote has been sent type -->
     <record id="target_state_value_sent" model="target.state.value">
         <field name="name">Quotation Sent</field>
@@ -22,11 +24,25 @@
         <field name="target_state_value_id" ref="target_state_value_sent" />
         <field name="description">Order to be confirmed when exceptions are cleared</field>
     </record>
+    <record id="base_substate__order_review" model="base.substate">
+        <field name="name">Order Review</field>
+        <field name="sequence">2</field>
+        <field name="target_state_value_id" ref="target_state_value_sent" />
+        <field name="description">Order to be confirmed when exceptions are cleared</field>
+    </record>
+    
+
+    <record id="base_substate__legacy_order_review" model="base.substate">
+        <field name="name">Legacy Order Review</field>
+        <field name="sequence">3</field>
+        <field name="target_state_value_id" ref="sale_substate.target_state_value_sale" />
+        <field name="description">Order confirmed awaiting production</field>
+    </record>
 
     <!-- Order confirmed awaiting production -->
     <record id="base_substate__waiting" model="base.substate">
         <field name="name">Waiting</field>
-        <field name="sequence">3</field>
+        <field name="sequence">4</field>
         <field name="target_state_value_id" ref="sale_substate.target_state_value_sale" />
         <field name="description">Order confirmed awaiting production</field>
     </record>
@@ -34,7 +50,7 @@
     <!-- Order is partially or fully planned -->
     <record id="base_substate__production" model="base.substate">
         <field name="name">In Production</field>
-        <field name="sequence">4</field>
+        <field name="sequence">5</field>
         <field name="target_state_value_id" ref="sale_substate.target_state_value_sale" />
         <field name="description">Order is partially or fully planned</field>
     </record>
@@ -42,7 +58,7 @@
     <!-- Order is Shipped -->
     <record id="base_substate__shipped" model="base.substate">
         <field name="name">Shipped</field>
-        <field name="sequence">5</field>
+        <field name="sequence">6</field>
         <field name="target_state_value_id" ref="sale_substate.target_state_value_sale" />
         <field name="description">Order is Shipped</field>
     </record>
