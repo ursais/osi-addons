@@ -449,7 +449,7 @@ class IrActionsServer(models.Model):
                 AND tab.table_name NOT LIKE 'mail%'
                 AND col.table_name NOT LIKE 'report%'
                 -- AND col.table_name in ('res_company')
-                AND col.table_name NOT IN ('res_config_settings', 'res_country_group', 'res_lang', 'knowledge_article')
+                AND col.table_name NOT IN ('res_config_settings', 'res_country_group', 'res_lang', 'knowledge_article', 'stock_rule')
                 AND col.column_name NOT LIKE 'analytic%'
                 ORDER BY col.table_name, col.ordinal_position;"""
         )

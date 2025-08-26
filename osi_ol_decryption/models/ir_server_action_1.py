@@ -11,16 +11,50 @@ import openpyxl
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
+
+
+    def recompute_tax_id_on_contacts(self):
+        # 2nd Script: Recompute Tax ID (vat) on res.partner
+        self = self.sudo()
+        env = self.env
+        Partner = env['res.partner']
+
+        # Get all active contacts that are not companies
+        contacts = Partner.search([('is_company', '=', False), ('active', '=', True)])
+        
+        for contact in contacts:
+            tax_id_to_set = False
+            parent = contact.parent_id
+
+            # Step 1: Walk up parent hierarchy until first company
+            while parent and not parent.is_company:
+                parent = parent.parent_id
+
+            if parent and parent.vat:
+                tax_id_to_set = parent.vat
+
+            # Step 2: Fallback → commercial entity if no company parent with vat
+            if not tax_id_to_set:
+                commercial_entity = contact.commercial_partner_id
+                if commercial_entity and commercial_entity.vat:
+                    tax_id_to_set = commercial_entity.vat
+
+            # Step 3: Update only if we found a vat AND it's different
+            if tax_id_to_set and contact.vat != tax_id_to_set:
+                contact.vat = tax_id_to_set
+
+
     def update_saleorder_substate(self):
-        substate_ids = self.env['base.substate'].search([('model', '=', 'sale.order')])    
+        substate_ids = self.env['base.substate'].with_context(active_test=False).search([('model', '=', 'sale.order')])    
         complete = substate_ids.filtered(lambda l : l.name == 'Complete')
-        self._cr.execute("update sale_order set substate_id = %s where detailed_state in ('done_partial', 'done',)", (complete.id,))
+        self._cr.execute("update sale_order set substate_id = %s where detailed_state in ('done_partial', 'done')", (complete.id,))
         review = substate_ids.filtered(lambda l : l.name == 'Legacy Order Review')
-        self._cr.execute("update sale_order set substate_id = %s where detailed_state in ('review')", (review.id,))
+        if review:
+            self._cr.execute("update sale_order set substate_id = %s where detailed_state in ('review')", (review.id,))
         waiting = substate_ids.filtered(lambda l : l.name == 'Waiting')
         self._cr.execute("update sale_order set substate_id = %s where detailed_state in ('sale')", (waiting.id,))
         production = substate_ids.filtered(lambda l : l.name == 'In Production')
-        self._cr.execute("update sale_order set substate_id = %s where detailed_state in (''in_production','invoiced','invoiced_partial','ship_hold','ship_ready'')", (production.id,))
+        self._cr.execute("update sale_order set substate_id = %s where detailed_state in ('in_production','invoiced','invoiced_partial','ship_hold','ship_ready')", (production.id,))
         
         
     def configure_account_sepa_direct_debit(self):
@@ -267,6 +301,32 @@ class IrActionsServer(models.Model):
             
             if payment:
                 cr.execute("update sale_order set sale_payment_method_id = %s where id = %s", (payment.id, sale[0] ))
+
+            self._cr.execute("select id,payment_method_id from account_move where payment_method_id is not null")
+            account_move_data = self._cr.fetchall()
+            for move in account_move_data:
+                payment = False
+                name = ''
+                cr.execute("select id,sub_method_id,method_id from sale_order_payment_method where id = %s", (move[1],))
+                data = cr.dictfetchone()
+                
+                if data.get('sub_method_id') != None:
+                    name = payment_methods.get(data.get('sub_method_id'))
+                else:
+                    name = payment_methods.get(data.get('method_id'))
+                
+                # if name == 'Custom':
+                #     payment = new_payment_data.filtered(lambda l: l.name == 'Custom')
+                if name == 'Net Terms':
+                    payment = new_payment_data.filtered(lambda l: l.name == 'Payment Terms')
+                elif name in ('Credit Card Prepayment', 'Credit Card'):
+                    payment = new_payment_data.filtered(lambda l: l.name == 'Card')
+                else:
+                    payment = new_payment_data.filtered(lambda l: l.name == name)
+                
+                if payment:
+                    cr.execute("update account_move set sale_payment_method_id = %s where id = %s", (payment.id, move[0] ))
+        
 
     def mig_scrap_reasons(self):
         self = self.sudo()
@@ -1161,6 +1221,8 @@ class IrActionsServer(models.Model):
         Until the product categories and candidates get hashed out, we are going to enable
         all the candidate fields on the products and set the 'ok' fields product based on state.
         """
+        self._cr.execute("update product_template set product_state_id = 7 where product_state_id = 2;")
+        self._cr.execute("update product_template set product_state_id = 8 where product_state_id = 4;")
         table_name = "product_template"
         fields_to_update = [
             "candidate_bom",
@@ -1220,6 +1282,10 @@ class IrActionsServer(models.Model):
         product_ids.write({'purchase_ok': False, 'candidate_purchase': False})
         product_ids = self.env['product.template'].sudo().search([("categ_id.name", "in", ["Systems", "Computers", "Panel PCs"]), ("purchase_ok", "=", True)])
         product_ids.write({'purchase_ok': False, "candidate_purchase": False})
+
+
+
+
             
 
     def uninstall_old_module(self):
@@ -1659,8 +1725,19 @@ class IrActionsServer(models.Model):
             "ol_credit_limit",
             "ol_rma_supplier",
             "ol_fraud_detection",
-	    "account_sepa",
+	        "account_sepa",
             "ol_sale_order_inspection",
+            "ol_sale_backorder",
+            "ol_sale_archive_check",
+            "ol_uuid",
+            "ol_delivery_ups_rest",
+            "ol_delivery",
+            "ol_uuid",
+            "ol_public_content",
+            "ol_sale_archive_check",
+            "ol_pdf_reports",
+            "ol_mrp_plm_product_configuration",
+            "ol_product_currency",
         ]
 
         for module in modules:
