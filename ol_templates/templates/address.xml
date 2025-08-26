@@ -10,6 +10,10 @@
                         <t t-esc="address.company_name or address.commercial_company_name"/>
                     </strong>
                     <br/>
+                    <t t-if="shipping_ref">
+                        <t t-esc="shipping_ref"/>
+                        <br/>
+                    </t>
                     <t t-esc="address.name"/>
                 </t>
                 <t t-if="sender">

@@ -167,6 +167,7 @@
                         <t t-set="show_vat_id" t-value="True"/>
                         <t t-set="text">Ship To</t> 
                         <t t-set="address" t-value="sale_order.partner_shipping_id"/>
+                        <t t-set="shipping_ref" t-value="sale_order.shipping_ref"/>
                     </t>
                 </div>
 
