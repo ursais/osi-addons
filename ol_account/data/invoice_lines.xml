@@ -51,11 +51,11 @@
                                             </td>
 
                                             <td style="padding: 8px 15px; font-size:12px; text-align:left; vertical-align: top; overflow-wrap: break-word;">
-                                                <!-- <t t-esc="line['po_number']"/> -->
+                                                <t t-esc="line.move_id.ref"/>
                                             </td>
 
                                             <td style="padding: 8px 15px; font-size:12px; text-align:left; vertical-align: top; overflow-wrap: break-word;">
-                                                <t t-esc="line['invoice_origin']"/>
+                                                <t t-esc="','.join(line.move_id.line_ids.sale_line_ids.mapped('order_id.name')) or ''"/>
                                             </td>
 
                                             <td style="padding: 8px 15px; font-size:12px; text-align:left; vertical-align: top;">
