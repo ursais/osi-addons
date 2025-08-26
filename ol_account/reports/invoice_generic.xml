@@ -148,6 +148,7 @@
                         <t t-set="text">Ship To</t>
                         <t t-set="show_vat_id" t-value="True"/>
                         <t t-set="address" t-value="sale_order.partner_shipping_id or invoice.partner_shipping_id"/>
+                        <t t-set="shipping_ref" t-value="sale_order.shipping_ref"/>
                     </t>
                     <t t-call="ol_templates.shipment" t-if="sale_order.carrier_id">
                         <t t-set="block_title">Shipping Method</t>

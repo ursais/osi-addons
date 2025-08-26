@@ -179,12 +179,14 @@
                       <t t-call="ol_templates.ol_blind_ship_address">
                           <t t-set="text">Ship To</t>
                           <t t-set="address" t-value="picking.csv_partner_shipping_id"/>
+                          <t t-set="shipping_ref" t-value="sale_order.shipping_ref"/>
                       </t>
                   </t>
                   <t t-else="">
                       <t t-call="ol_templates.address">
                           <t t-set="text">Ship To</t>
                           <t t-set="address" t-value="sale_order.partner_shipping_id or picking.partner_id"/>
+                          <t t-set="shipping_ref" t-value="sale_order.shipping_ref"/>
                       </t>
                   </t>
                   <t t-call="ol_templates.shipment" t-if="sale_order.carrier_id and not blind_drop_ship">
