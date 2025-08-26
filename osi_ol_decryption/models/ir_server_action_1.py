@@ -14,35 +14,30 @@ class IrActionsServer(models.Model):
 
 
     def recompute_tax_id_on_contacts(self):
-        # 2nd Script: Recompute Tax ID (vat) on res.partner
         self = self.sudo()
         env = self.env
         Partner = env['res.partner']
 
-        # Get all active contacts that are not companies
         contacts = Partner.search([('is_company', '=', False), ('active', '=', True)])
         
         for contact in contacts:
             tax_id_to_set = False
             parent = contact.parent_id
 
-            # Step 1: Walk up parent hierarchy until first company
-            while parent and not parent.is_company:
+            while parent and not parent.parent_id:
                 parent = parent.parent_id
 
             if parent and parent.vat:
                 tax_id_to_set = parent.vat
 
-            # Step 2: Fallback → commercial entity if no company parent with vat
             if not tax_id_to_set:
                 commercial_entity = contact.commercial_partner_id
                 if commercial_entity and commercial_entity.vat:
                     tax_id_to_set = commercial_entity.vat
 
-            # Step 3: Update only if we found a vat AND it's different
             if tax_id_to_set and contact.vat != tax_id_to_set:
-                contact.vat = tax_id_to_set
-
+                self._cr.execute("update res_partner set vat = %s where id = %s", (tax_id_to_set,contact.id ))
+                self._cr.commit()
 
     def update_saleorder_substate(self):
         substate_ids = self.env['base.substate'].with_context(active_test=False).search([('model', '=', 'sale.order')])    
