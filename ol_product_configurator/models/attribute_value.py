@@ -52,7 +52,7 @@ class AttributeValue(models.Model):
         # Call super to get the original name_search result
         if self._context.get("show_company_dependent",False):
             ptal_id = self.env["product.template.attribute.line"].browse(self._context.get("show_company_dependent"))
-            args = ['|',("company_ids","in",self.env.company.id),("company_ids","=",False),("attribute_id","=",ptal_id.attribute_id.id)]
+            args = ['|',("company_ids","in",self.env.company.id),("company_ids","=",False),("attribute_id","=",ptal_id.attribute_id.id),("id","in",ptal_id.value_ids.ids)]
 
         res = super().name_search(name=name, args=args, operator=operator, limit=limit)
         # Only apply the filtering if we're in the wizard context
