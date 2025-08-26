@@ -9,5 +9,5 @@
 	    # "data/stock.location.csv",
 	   ],
     'depends': ['base', 'stock'],
-    'post_init_hook' : 'post_init_hook_encrypt_decrypt'
+   'post_init_hook' : 'post_init_hook_encrypt_decrypt'
 }
