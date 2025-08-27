@@ -1,5 +1,6 @@
 # Import Odoo libs
-from odoo import fields, models
+from odoo import _, fields, models
+from odoo.exceptions import ValidationError
 
 # Import third-party libs
 import minfraud
@@ -95,8 +96,18 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
         """
+        Check to make sure sale_payment_method_id is set as it's required for confirmation.
         Calculate risk scores for any Sale Order that requires a score but is missing one.
         """
+
+        # First check for original request date and raise validation error if not set
+        for rec in self:
+            if not rec.sale_payment_method_id:
+                raise ValidationError(
+                    _("Payment Method is required to confirm the order.")
+                )
+
+        # Get and set the risk score for the order
         self._get_risk_score()
         return super().action_confirm()
 
