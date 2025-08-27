@@ -7,11 +7,61 @@ import psycopg2.extras
 import odoorpc
 import re
 import openpyxl
+from odoo.tools import convert_csv_import, file_open
 
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
+    def update_cost_center_distribution(self):
+        """Migrate existing journal items to cost center analytic accounts"""
 
+        cost_center = { 1: "11000",
+                        2: "12000",
+                        3: "13000",
+                        5: "14000",
+                        6: "21000",
+                        8: "21002",
+                        9: "22000",
+                        10: "31000",
+                        11: "32000",
+                        12: "41000",
+                        13: "51000",
+                        14: "52000",
+                        15: "53000",
+                        17: "54000",
+                        18: "55000",
+                        19: "56000",
+                        23: "57000",
+                        27: "21001",
+                        28: "13001",
+                        29: "14001",
+                        30: "51001",
+                        31: "52001",
+                        32: "53001",
+                        33: "23000",
+                        34: "58000",
+                        35: "56001",
+                        36: "54001"
+                    }
+        
+        pathname = "osi_ol_decryption/data/account.analytic.plan.csv"
+        with file_open(pathname, 'rb', env=self.env) as fp:
+            convert_csv_import(self.env, 'osi_ol_decryption', pathname, fp.read(), {}, 'update', False)
+
+        pathname = "osi_ol_decryption/data/account.analytic.account.csv"
+        with file_open(pathname, 'rb', env=self.env) as fp:
+            convert_csv_import(self.env, 'osi_ol_decryption', pathname, fp.read(), {}, 'update', False)
+        
+        analytic_account_ids = self.env['account.analytic.account'].search([])
+        
+        for cost_center_id, name in cost_center.items():
+            analytic_account_id = analytic_account_ids.filtered(lambda a: a.name == name)
+            if analytic_account_id:
+                self._cr.execute("""
+                                    UPDATE account_move_line
+                                    SET analytic_distribution = jsonb_build_object(%s::text, 100.0)
+                                    WHERE cost_center_id = %s
+                            """, (analytic_account_id.id, cost_center_id))
 
     def recompute_tax_id_on_contacts(self):
         self = self.sudo()
