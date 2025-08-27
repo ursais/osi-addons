@@ -1,6 +1,5 @@
 # Import Odoo libs
 from odoo import _, api, fields, models
-from odoo.tools import html_escape
 
 
 class SaleOrder(models.Model):
@@ -53,13 +52,12 @@ class SaleOrder(models.Model):
         bom_model = self.env["mrp.bom"]
 
         for old_line, new_line in zip(original_order.order_line, self.order_line):
-            # Track if something was flagged for this line
             line_flagged = False
 
             # --- Check if product archived ---
             if old_line.product_id and not old_line.product_id.active:
                 msg_lines.append(
-                    f"Product <b>{html_escape(old_line.product_id.display_name)}</b> was archived."
+                    f"Product <b>{old_line.product_id.display_name}</b> was archived."
                 )
                 line_flagged = True
 
@@ -78,33 +76,42 @@ class SaleOrder(models.Model):
                     differences = self._compare_boms(old_line.bom_id, replacement_bom)
                     if differences:
                         msg_lines.append(
-                            f"BoM for product <b>{html_escape(old_line.product_id.display_name)}</b> "
+                            f"BoM for product <b>{old_line.product_id.display_name}</b> "
                             f"was replaced:<br/>"
-                            + "<br/>".join(
-                                f"- {html_escape(diff)}" for diff in differences
-                            )
+                            + "<br/>".join(f"- {diff}" for diff in differences)
                         )
                 else:
                     msg_lines.append(
-                        f"BoM for product <b>{html_escape(old_line.product_id.display_name)}</b> was archived "
+                        f"BoM for product <b>{old_line.product_id.display_name}</b> was archived "
                         "and no replacement BoM found."
                     )
                 line_flagged = True
 
-            # --- Check if any BOM component archived ---
-            if old_line.bom_id:
+            # --- Check if active BoM has archived components or changes ---
+            if old_line.bom_id and old_line.bom_id.active:
+                # 1. Archived components
                 archived_components = old_line.bom_id.bom_line_ids.filtered(
                     lambda bl: not bl.product_id.active
                 )
                 for comp in archived_components:
                     msg_lines.append(
-                        f"Component <b>{html_escape(comp.product_id.display_name)}</b> in BoM "
-                        f"for <b>{html_escape(old_line.product_id.display_name)}</b> was archived."
+                        f"Component <b>{comp.product_id.display_name}</b> in BoM "
+                        f"for <b>{old_line.product_id.display_name}</b> was archived."
                     )
                 if archived_components:
                     line_flagged = True
 
-            # If anything triggered, flag this line
+                # 2. Compare BoM changes
+                if new_line.bom_id and new_line.bom_id != old_line.bom_id:
+                    differences = self._compare_boms(old_line.bom_id, new_line.bom_id)
+                    if differences:
+                        msg_lines.append(
+                            f"BoM for product <b>{old_line.product_id.display_name}</b> "
+                            f"changed:<br/>"
+                            + "<br/>".join(f"- {diff}" for diff in differences)
+                        )
+                        line_flagged = True
+
             if line_flagged:
                 new_line.is_archived_or_bom_archived = True
 

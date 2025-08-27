@@ -10,7 +10,7 @@
                 <page name="onlogic_info" string="OnLogic Information" groups="ol_base.dev_team"/>
             </xpath>
             <xpath expr="//field[@name='child_ids']/form/sheet/group/group" position="inside">
-                <field name="override_address"/>
+                <field name="override_company_name"/>
             </xpath>
         </field>
     </record>
