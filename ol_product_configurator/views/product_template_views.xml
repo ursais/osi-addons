@@ -9,7 +9,7 @@
             <!-- Add alert message if has_advanced_configuration is True -->
             <xpath expr="//field[@name='product_variant_count']" position="before">
                 <field name="has_advanced_configuration" invisible="1"/>
-                <div class="alert alert-warning" role="alert" invisible="has_advanced_configuration == ''">
+                <div class="alert alert-warning" role="alert" invisible="has_advanced_configuration == '' or has_advanced_configuration == 'false'">
                     <strong>Advanced Configuration Enabled!</strong><br/>
                     Not compatible with eCommerce: This product template has advanced configurations that are not currently compatible with eCommerce due to:
                     <br/>
