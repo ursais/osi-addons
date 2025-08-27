@@ -35,9 +35,9 @@ def get_product_data_from_order_lines_data(env, company, order_lines_data):
             pt.uuid,
             pt.default_code,
             pt."weight_dummy" AS "weight",
-            pt.x_shipping_height AS "height",
-            pt.x_shipping_length AS "length",
-            pt.x_shipping_width AS "width",
+            pt.height AS "height",
+            pt.length AS "length",
+            pt.width AS "width",
             pt.volume AS "volume",
             sb_ip.value_integer AS shipping_buffer,
             lp_ip.value_float AS "price",
@@ -72,7 +72,9 @@ def get_product_data_from_order_lines_data(env, company, order_lines_data):
         for order_line_data in order_lines_data:
             product_uuids.append(order_line_data.get("product_id"))
             product_uuids += [
-                x.get("product") for x in order_line_data.get("configuration", []) if x.get("product")
+                x.get("product")
+                for x in order_line_data.get("configuration", [])
+                if x.get("product")
             ]
         return list(set(product_uuids))
 
@@ -122,7 +124,9 @@ def get_product_data_from_order_lines_data(env, company, order_lines_data):
             line_cost = 0
             line_system_configuration = {}
 
-            product_uuids = [c.get("product") for c in configuration if c.get("product")]
+            product_uuids = [
+                c.get("product") for c in configuration if c.get("product")
+            ]
             products_data = get_product_data(company, product_uuids)
 
             for configuration_line in configuration:

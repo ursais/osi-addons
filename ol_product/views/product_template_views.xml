@@ -5,20 +5,29 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_form_view"/>
         <field name="arch" type="xml">
-        	<xpath expr="//page[@name='inventory']//div[@name='volume']" position="after">
-        		<label for="length" invisible="product_variant_count &gt; 1 and not is_product_variant"/>
-                <div class="o_row" name="length" invisible="product_variant_count &gt; 1 and not is_product_variant">
-                    <field name="length" string="Length (cm)" class="oe_inline"/>
-                </div>
-
-                <label for="width" invisible="product_variant_count &gt; 1 and not is_product_variant"/>
-                <div class="o_row" name="width" invisible="product_variant_count &gt; 1 and not is_product_variant">
-                    <field name="width" string="Width (cm)" class="oe_inline"/>
-                </div>
-
-                <label for="height" invisible="product_variant_count &gt; 1 and not is_product_variant"/>
+        	<xpath expr="//page[@name='inventory']//div[@name='weight']" position="after">
+                <label for="height" invisible="product_variant_count &gt; 1 and not is_product_variant" />
                 <div class="o_row" name="height" invisible="product_variant_count &gt; 1 and not is_product_variant">
-                    <field name="height" string="Height (cm)" class="oe_inline"/>
+                    <field name="height" class="oe_inline" />
+                    <div name="height_cm" class="o_field_widget o_readonly_modifier o_field_char">
+                        <span>cm</span>
+                    </div>
+                </div>
+
+                <label for="length" invisible="product_variant_count &gt; 1 and not is_product_variant" />
+                <div class="o_row" name="length" invisible="product_variant_count &gt; 1 and not is_product_variant">
+                    <field name="length" class="oe_inline" />
+                    <div name="length_cm" class="o_field_widget o_readonly_modifier o_field_char">
+                        <span>cm</span>
+                    </div>
+                </div>
+
+                <label for="width" invisible="product_variant_count &gt; 1 and not is_product_variant" />
+                <div class="o_row" name="width" invisible="product_variant_count &gt; 1 and not is_product_variant">
+                    <field name="width" class="oe_inline" />
+                    <div name="width_cm" class="o_field_widget o_readonly_modifier o_field_char">
+                        <span>cm</span>
+                    </div>
                 </div>
         	</xpath>
         	<field name="uom_id" position="after">
