@@ -21,35 +21,6 @@
           </div>
         </div>
 
-        <label for="x_shipping_height"
-          invisible="product_variant_count &gt; 1 and not is_product_variant" />
-        <div class="o_row" name="x_shipping_height"
-          invisible="product_variant_count &gt; 1 and not is_product_variant">
-          <field name="x_shipping_height" class="oe_inline" />
-          <div name="height_cm" class="o_field_widget o_readonly_modifier o_field_char">
-            <span>cm</span>
-          </div>
-        </div>
-
-        <label for="x_shipping_length"
-          invisible="product_variant_count &gt; 1 and not is_product_variant" />
-        <div class="o_row" name="x_shipping_length"
-          invisible="product_variant_count &gt; 1 and not is_product_variant">
-          <field name="x_shipping_length" class="oe_inline" />
-          <div name="length_cm" class="o_field_widget o_readonly_modifier o_field_char">
-            <span>cm</span>
-          </div>
-        </div>
-
-        <label for="x_shipping_width"
-          invisible="product_variant_count &gt; 1 and not is_product_variant" />
-        <div class="o_row" name="x_shipping_width"
-          invisible="product_variant_count &gt; 1 and not is_product_variant">
-          <field name="x_shipping_width" class="oe_inline" />
-          <div name="width_cm" class="o_field_widget o_readonly_modifier o_field_char">
-            <span>cm</span>
-          </div>
-        </div>
       </div>
     </field>
   </record>
