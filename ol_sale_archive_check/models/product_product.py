@@ -27,12 +27,33 @@ class ProductProduct(models.Model):
 
     def _trigger_sale_order_archive_check(self, products):
         complete_substate = self.env.ref("ol_sale_substate.base_substate__complete")
-        sale_orders = self.env["sale.order"].search(
+
+        SaleOrder = self.env["sale.order"]
+
+        # 1. Orders where product_id is directly archived
+        direct_orders = SaleOrder.search(
             [
                 ("substate_id", "!=", complete_substate.id),
                 ("order_line.product_id", "in", products.ids),
             ]
         )
+
+        # 2. Orders where bom_id contains one of the archived products as a component
+        bom_lines = self.env["mrp.bom.line"].search(
+            [("product_id", "in", products.ids)]
+        )
+        bom_ids = bom_lines.mapped("bom_id").ids
+
+        bom_orders = SaleOrder.search(
+            [
+                ("substate_id", "!=", complete_substate.id),
+                ("order_line.bom_id", "in", bom_ids),
+            ]
+        )
+
+        # Merge both sets (duplicates auto-handled by Odoo)
+        sale_orders = direct_orders | bom_orders
+
         for order in sale_orders:
             # Log chatter message for archive status change
             order._log_archive_status_changes(order)

@@ -48,21 +48,23 @@ class SaleOrder(models.Model):
         )
 
     def _log_archive_status_changes(self, original_order):
-        """Compare lines between old and new order for archived products/BOMs."""
+        """Compare lines between old and new order for archived products/BOMs and their components."""
         msg_lines = []
         bom_model = self.env["mrp.bom"]
 
         for old_line, new_line in zip(original_order.order_line, self.order_line):
-            # Check if product archived
+            # Track if something was flagged for this line
+            line_flagged = False
+
+            # --- Check if product archived ---
             if old_line.product_id and not old_line.product_id.active:
                 msg_lines.append(
                     f"Product <b>{html_escape(old_line.product_id.display_name)}</b> was archived."
                 )
-                new_line.is_archived_or_bom_archived = True
+                line_flagged = True
 
-            # Check if BOM archived
+            # --- Check if BOM archived ---
             if old_line.bom_id and not old_line.bom_id.active:
-                # Try to find a replacement BOM
                 replacement_bom = bom_model.search(
                     [
                         ("product_id", "=", old_line.product_id.id),
@@ -85,8 +87,25 @@ class SaleOrder(models.Model):
                 else:
                     msg_lines.append(
                         f"BoM for product <b>{html_escape(old_line.product_id.display_name)}</b> was archived "
-                        "and no replacement was BoM found."
+                        "and no replacement BoM found."
                     )
+                line_flagged = True
+
+            # --- Check if any BOM component archived ---
+            if old_line.bom_id:
+                archived_components = old_line.bom_id.bom_line_ids.filtered(
+                    lambda bl: not bl.product_id.active
+                )
+                for comp in archived_components:
+                    msg_lines.append(
+                        f"Component <b>{html_escape(comp.product_id.display_name)}</b> in BoM "
+                        f"for <b>{html_escape(old_line.product_id.display_name)}</b> was archived."
+                    )
+                if archived_components:
+                    line_flagged = True
+
+            # If anything triggered, flag this line
+            if line_flagged:
                 new_line.is_archived_or_bom_archived = True
 
         if msg_lines:

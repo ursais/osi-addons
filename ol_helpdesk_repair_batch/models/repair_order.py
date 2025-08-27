@@ -119,8 +119,7 @@ class RepairOrder(models.Model):
                     if not line.reason_code_id or not line.note:
                         raise ValidationError(
                             _(
-                                f"""Repair Order {repair.name}: Scrap Reason Code and
-                                 Note are required for remove lines."""
+                                f"Repair Order {repair.name}: Scrap Reason Code and Line Note are required for remove lines."
                             )
                         )
 
