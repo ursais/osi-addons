@@ -1,0 +1,7 @@
+<odoo>
+	<template id="report_payment_receipt_document_ol_account_reports" inherit_id="account.report_payment_receipt_document">
+		<xpath expr="//div[@name='date']/div/span" positios='replace'>
+			<span t-esc="o.get_format_date(mo.date_start)">2023-01-01</span>
+		</xpath>
+	</template>
+</odoo>

@@ -15,6 +15,9 @@
         "ol_base",
         "account_reports",
     ],
+    "data": [
+        "reports/payment_receipt.xml",
+    ],
     "assets": {
         "web.assets_backend": [
             "ol_account_reports/static/src/components/**/*",
