@@ -26,7 +26,6 @@
     # always loaded
     "data": [
         "views/product_view.xml",
-        "views/res_config_views.xml",
         "report/mrp_report_bom_structure.xml",
     ],
     "assets": {
