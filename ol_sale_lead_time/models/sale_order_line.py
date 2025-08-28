@@ -70,6 +70,8 @@ class SaleOrderLine(models.Model):
                 "model": "report.mrp.report_bom_structure",
                 "active_id": self.bom_id.id,
                 "active_ids": [self.bom_id.id],
+                "default_searchQty": self.product_uom_qty,
+                "activate_availabilities": True
             },
         }
 
