@@ -106,7 +106,7 @@
                                             <t t-esc="quote_line['attribute_name']"/>
                                         </div>
                                         <div class="system-configuration-product">
-                                            <t t-esc="quote_line['product_qty']"/> X <t t-esc="quote_line['value_name']"/>
+                                            <t t-esc="quote_line.get('product_qty', 1)"/> X <t t-esc="quote_line.get('value_name', '')"/>
                                         </div>
                                     </div>
                                 </div>
@@ -148,7 +148,5 @@
             </div>
       </t>
   </template>
-
-    
 
 </odoo>
