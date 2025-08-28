@@ -12,6 +12,7 @@
     # any module necessary for this one to work correctly
     "depends": [
         "ol_base",
+        "ol_product_configurator",
         "product_configurator",
         "sale_management",
         "mrp",
