@@ -14,7 +14,6 @@ class IrActionsServer(models.Model):
 
     def update_cost_center_distribution(self):
         """Migrate existing journal items to cost center analytic accounts"""
-
         cost_center = { 1: "11000",
                         2: "12000",
                         3: "13000",
@@ -63,7 +62,10 @@ class IrActionsServer(models.Model):
                                     WHERE cost_center_id = %s
                             """, (analytic_account_id.id, cost_center_id))
 
+
+
     def recompute_tax_id_on_contacts(self):
+        _logger.info("===============recompute_tax_id_on_contacts====================")
         self = self.sudo()
         env = self.env
         Partner = env['res.partner']
@@ -89,7 +91,9 @@ class IrActionsServer(models.Model):
                 self._cr.execute("update res_partner set vat = %s where id = %s", (tax_id_to_set,contact.id ))
                 self._cr.commit()
 
+    
     def update_saleorder_substate(self):
+        _logger.info("===============update_saleorder_substate====================")
         substate_ids = self.env['base.substate'].with_context(active_test=False).search([('model', '=', 'sale.order')])    
         complete = substate_ids.filtered(lambda l : l.name == 'Complete')
         self._cr.execute("update sale_order set substate_id = %s where detailed_state in ('done_partial', 'done')", (complete.id,))
@@ -291,6 +295,7 @@ class IrActionsServer(models.Model):
     
     def payment_method_update(self):
         "Update the Payment Method's"
+        _logger.info("===============payment_method_update====================")
         self = self.sudo()
         payment_ids = []
         cr = self._cr
@@ -321,7 +326,7 @@ class IrActionsServer(models.Model):
         self._cr.execute("update payment_method set active = 't' where id in %s", (tuple(payment_ids),))
         self._cr.commit()
         new_payment_data = self.env['payment.method'].search([])
-        
+        _logger.info("===============payment_method_update_saleORder====================")
         self._cr.execute("select id,payment_method_id from sale_order where payment_method_id is not null")
         sale_order_data = self._cr.fetchall()
         for sale in sale_order_data:
@@ -346,34 +351,36 @@ class IrActionsServer(models.Model):
             
             if payment:
                 cr.execute("update sale_order set sale_payment_method_id = %s where id = %s", (payment.id, sale[0] ))
-
-            self._cr.execute("select id,payment_method_id from account_move where payment_method_id is not null")
-            account_move_data = self._cr.fetchall()
-            for move in account_move_data:
-                payment = False
-                name = ''
-                cr.execute("select id,sub_method_id,method_id from sale_order_payment_method where id = %s", (move[1],))
-                data = cr.dictfetchone()
-                
-                if data.get('sub_method_id') != None:
-                    name = payment_methods.get(data.get('sub_method_id'))
-                else:
-                    name = payment_methods.get(data.get('method_id'))
-                
-                # if name == 'Custom':
-                #     payment = new_payment_data.filtered(lambda l: l.name == 'Custom')
-                if name == 'Net Terms':
-                    payment = new_payment_data.filtered(lambda l: l.name == 'Payment Terms')
-                elif name in ('Credit Card Prepayment', 'Credit Card'):
-                    payment = new_payment_data.filtered(lambda l: l.name == 'Card')
-                else:
-                    payment = new_payment_data.filtered(lambda l: l.name == name)
-                
-                if payment:
-                    cr.execute("update account_move set sale_payment_method_id = %s where id = %s", (payment.id, move[0] ))
-        
+            
+        _logger.info("===============payment_method_update_account_move====================")
+        self._cr.execute("select id,payment_method_id from account_move where payment_method_id is not null")
+        account_move_data = self._cr.fetchall()
+        for move in account_move_data:
+            payment = False
+            name = ''
+            cr.execute("select id,sub_method_id,method_id from sale_order_payment_method where id = %s", (move[1],))
+            data = cr.dictfetchone()
+            
+            if data.get('sub_method_id') != None:
+                name = payment_methods.get(data.get('sub_method_id'))
+            else:
+                name = payment_methods.get(data.get('method_id'))
+            
+            # if name == 'Custom':
+            #     payment = new_payment_data.filtered(lambda l: l.name == 'Custom')
+            if name == 'Net Terms':
+                payment = new_payment_data.filtered(lambda l: l.name == 'Payment Terms')
+            elif name in ('Credit Card Prepayment', 'Credit Card'):
+                payment = new_payment_data.filtered(lambda l: l.name == 'Card')
+            else:
+                payment = new_payment_data.filtered(lambda l: l.name == name)
+            
+            if payment:
+                cr.execute("update account_move set sale_payment_method_id = %s where id = %s", (payment.id, move[0] ))
+    
 
     def mig_scrap_reasons(self):
+        _logger.info("===============mig_scrap_reasons====================")
         self = self.sudo()
         self._cr.execute("select name from failure_reason group by name;")
         failure_reason_ids = self._cr.fetchall()
@@ -400,6 +407,7 @@ class IrActionsServer(models.Model):
                                     AND ss.company_id = %s;""", (reason.id,reason.name, company.id))
 
     def update_product_category_account(self):
+        _logger.info("===============update_product_category_account====================")
         self = self.sudo()
         category_ids = self.env["product.category"].search([])
         acc_product = self.env.ref("lgx_account.41100-02")
@@ -433,6 +441,7 @@ class IrActionsServer(models.Model):
 
 
     def delete_account(self):
+        _logger.info("===============delete_account====================")
         self = self.sudo()
         file_path = "/home/odoo/odoo17/odoo/addons/osi_ol_decryption/osi_ol_decryption/data/account_delete.xlsx"
         wb = openpyxl.load_workbook(filename=file_path, data_only=True)
@@ -461,6 +470,7 @@ class IrActionsServer(models.Model):
 
 
     def update_accounts_from_excel(self):
+        _logger.info("===============update_accounts_from_excel====================")
         import openpyxl
         def format_decimal(value):
             # Ensure it's a float or decimal
@@ -841,6 +851,7 @@ class IrActionsServer(models.Model):
             "select id,default_supplier_contact from res_partner where default_supplier_contact is not null;"
         )
         datas = self._cr.fetchall()
+        self._cr.execute('delete from partner_supplier_contact_rel;')
         for data in datas:
             self._cr.execute(
                 "insert into partner_supplier_contact_rel (partner_id,contact_id) VALUES (%s,%s)",
@@ -853,7 +864,7 @@ class IrActionsServer(models.Model):
             "select id,contact_id from purchase_order where contact_id is not null;"
         )
         datas = self._cr.fetchall()
-
+        self._cr.execute("delete from purchase_order_res_partner_rel;")
         for data in datas:
             self._cr.execute(
                 "insert into purchase_order_res_partner_rel (purchase_order_id,res_partner_id) VALUES (%s,%s)",
