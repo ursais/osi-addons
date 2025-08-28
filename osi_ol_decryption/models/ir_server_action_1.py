@@ -13,6 +13,7 @@ class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
     def update_cost_center_distribution(self):
+        _logger.info("===============update_cost_center_distribution====================")
         """Migrate existing journal items to cost center analytic accounts"""
         cost_center = { 1: "11000",
                         2: "12000",
@@ -113,6 +114,7 @@ class IrActionsServer(models.Model):
 
     def create_onlogic_locations_and_route(self):
         self = self.sudo()
+        self.set_warehouse_locations()
         # --- Step 1: Create Base View Locations ---
         locations_to_create_us = [
             # US
@@ -284,13 +286,98 @@ class IrActionsServer(models.Model):
                 if parent in ('EU/Overstock','WH/Overstock'):
                     loaction = overstock.id
                 if loaction and name:
-                    id = self.env['stock.location'].search([('name', 'ilike', name), ('company_id','=', company)]).id
+                    id = self.env['stock.location'].search([('name', '=', name), ('company_id','=', company)]).id
                     
                     if id:
                         self._cr.execute("update stock_location set location_id = %s where id = %s ", (loaction, id))
                         self._cr.commit()
             
             count +=1
+    
+    def set_warehouse_locations(self):
+        ctx = self.sudo()
+        """Update Warehouse Locations."""
+        # Re-structuring the location hierarchy for v17
+
+        # Define location names to exclude
+        excluded_location_names = [
+            "Amazon",
+            "Out To Supplier",
+            "Taiwan Warehouse",
+            "Tradeshows",
+            "TYC Tong Yu",
+        ]
+
+        # Get the parent location "Physical Locations" (shared parent)
+        physical_locations = (
+            ctx.env["stock.location"]
+            .sudo()
+            .search(
+                [
+                    ("name", "=", "Physical Locations"),
+                    ("usage", "=", "view"),
+                    ("location_id", "=", False),
+                ],
+                limit=1,
+            )
+        )
+
+        # Get the new parent locations for each company
+        parent_us = (
+            ctx.env["stock.location"]
+            .sudo()
+            .search([("name", "=", "WH"), ("company_id.name", "=", "OnLogic US")], limit=1)
+        )
+
+        parent_eu = (
+            ctx.env["stock.location"]
+            .sudo()
+            .search([("name", "=", "EU"), ("company_id.name", "=", "OnLogic EU")], limit=1)
+        )
+
+        # Search for locations directly under "Physical Locations" in either company
+        locations_to_update = (
+            ctx.env["stock.location"]
+            .sudo()
+            .search(
+                [
+                    ("location_id", "=", physical_locations.id),
+                    ("company_id.name", "in", ["OnLogic US", "OnLogic EU"]),
+                    ("name", "not in", excluded_location_names),
+                    ("usage", "=", "internal"),
+                ]
+            )
+        )
+
+        # Perform updates
+        for loc in locations_to_update:
+            if loc.company_id.name == "OnLogic US" and parent_us:
+                loc.sudo().write({"location_id": parent_us.id})
+            elif loc.company_id.name == "OnLogic EU" and parent_eu:
+                loc.sudo().write({"location_id": parent_eu.id})
+
+        # Rename 'Warehouse' to 'Stock' to be more conformed to Odoo Standards
+        us_warehouse_loc = (
+            ctx.env["stock.location"]
+            .sudo()
+            .search(
+                [("name", "=", "Warehouse"), ("company_id.name", "=", "OnLogic US")],
+                limit=1,
+            )
+        )
+        if us_warehouse_loc:
+            us_warehouse_loc.sudo().write({"name": "Stock"})
+
+        eu_warehouse_loc = (
+            ctx.env["stock.location"]
+            .sudo()
+            .search(
+                [("name", "=", "Warehouse"), ("company_id.name", "=", "OnLogic EU")],
+                limit=1,
+            )
+        )
+        if eu_warehouse_loc:
+            eu_warehouse_loc.sudo().write({"name": "Stock"})
 
     
     def payment_method_update(self):
