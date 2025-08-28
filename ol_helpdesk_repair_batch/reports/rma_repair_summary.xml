@@ -33,15 +33,17 @@
             <!--Set template variables-->
             <t t-set="title" t-value="report_title"/>
             <!-- multiple sale orders can be on a rma so display all (although most of the time only one will be added.)-->
-            <t t-set="sale_orders" t-value="', '.join(so.name for so in rma.original_sale_order_ids)"/>
+            <t t-set="sale_orders" t-value="', '.join(so.name for so in (rma.original_sale_order_ids or []))"/>
             <!-- for general fields on the report use the first order -->
-            <t t-set="sale_order" t-value="rma.original_sale_order_ids[0] or False"/>
-            <t t-set="product_lines" t-value="product_lines[rma.id]"/>
+            <t t-set="sale_order" t-value="(rma.original_sale_order_ids and rma.original_sale_order_ids[0]) or False"/>
+            <!-- Product lines (dict lookup, safe fallback) -->
+            <t t-set="product_lines" t-value="product_lines.get(rma.id, [])"/>
+            <!-- Partner & Company fallbacks -->
             <t t-set="customer_company_name" t-value="(rma.partner_id and (rma.partner_id.commercial_partner_id or rma.partner_id)) or False"/>
             <t t-set="currency" t-value="(sale_order and sale_order.currency_id) or rma.company_id.currency_id"/>
             <t t-set="company" t-value="(sale_order and sale_order.company_id) or rma.company_id"/>
             <t t-set="partner" t-value="(sale_order and sale_order.partner_id) or rma.partner_id"/>
-            <t t-set="partner_shipping_id" t-value="(sale_order and sale_order.partner_shipping_id) or partner_id"/>
+            <t t-set="partner_shipping_id" t-value="(sale_order and sale_order.partner_shipping_id) or partner or rma.partner_id"/>
 
             <!-- Report specific styling -->
             <t t-set="report_custom_page_style">
@@ -76,7 +78,6 @@
 
             <!--The first main information block-->
             <div class="ol_report_info_row ol_flex">
-                <!--Basic Invoice information-->
                 <div class="ol_report_info_row_col info">
                     <div class="ol_report_info_row_col_title ol_flex">
                         <div class="key">
@@ -92,35 +93,45 @@
                             <tag>Order Date</tag>
                         </div>
                         <div class="value">
-                            <t t-esc="sale_order.date_order.get_format_date(sale_order.date_order)"/>
+                            <t t-esc="sale_order and sale_order.get_format_date(sale_order.date_order) or ''"/>
                         </div>
                     </div>
 
                     <div class="ol_report_info_row_col_line ol_flex">
                         <div class="key">
-                          <tag>Order(s)</tag>
+                            <tag>Order(s)</tag>
                         </div>
                         <div class="value">
-                            <t t-esc="sale_orders"/>
+                            <t t-esc="sale_orders or ''"/>
                         </div>
                     </div>
                 </div>
 
                 <!--Shipping related information-->
                 <div class="ol_report_info_row_col shipping">
-                    <t t-call="ol_templates.address">
-                        <t t-set="text">Ship To</t>
-                        <t t-set="show_vat_id" t-value="True"/>
-                        <t t-set="address" t-value="partner_shipping_id"/>
+                    <t t-if="partner_shipping_id">
+                        <t t-call="ol_templates.address">
+                            <t t-set="text">Ship To</t>
+                            <t t-set="show_vat_id" t-value="True"/>
+                            <t t-set="address" t-value="partner_shipping_id"/>
+                        </t>
+                    </t>
+                    <t t-else="">
+                        <div>No shipping address available</div>
                     </t>
                 </div>
             </div>
 
-            <!--Product list-->
-            <t t-call="ol_helpdesk_repair_batch.rma_products">
-                <t t-set="products_title">
-                    Hardware Solution
+            <!-- Product list -->
+            <t t-if="product_lines">
+                <t t-call="ol_helpdesk_repair_batch.rma_products">
+                    <t t-set="products_title">Hardware Solution</t>
                 </t>
+            </t>
+            <t t-else="">
+                <div style="margin-top:20px; font-style:italic;">
+                    No repair products linked to this RMA.
+                </div>
             </t>
         </t>
     </template>

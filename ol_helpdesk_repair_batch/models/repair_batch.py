@@ -398,14 +398,15 @@ class RepairBatch(models.Model):
         """
         for batch in self:
             ticket = batch.ticket_id
-            new_sale_id = batch.sale_id.id if batch.sale_id else None
-            old_sale_id = None
-            if old_sale_ids:
-                old_sale_id = old_sale_ids.get(batch.id)
+            new_sale = batch.sale_id
+            new_sale_id = new_sale.id if new_sale else None
+            old_sale_id = old_sale_ids.get(batch.id) if old_sale_ids else None
 
             # Add new sale_id to ticket if not already present
-            if new_sale_id and new_sale_id not in ticket.original_sale_order_ids.ids:
+            if new_sale and new_sale_id not in ticket.original_sale_order_ids.ids:
                 ticket.original_sale_order_ids = [(4, new_sale_id)]
+                if not ticket.partner_id:
+                    ticket.partner_id = new_sale.partner_id
 
             # Remove old sale_id if changed and no other batch references it
             if old_sale_id and old_sale_id != new_sale_id:
@@ -494,7 +495,7 @@ class RepairBatch(models.Model):
                                 "product_id": part.product_id.id,
                                 "product_uom_qty": part.quantity,
                                 "repair_line_type": part.repair_line_type,
-                                "reason_code_id": part.reason_code_id,
+                                "reason_code_id": part.reason_code_id.id,
                                 "note": part.note,
                             }
                         )
@@ -507,7 +508,7 @@ class RepairBatch(models.Model):
                                 "product_id": part.product_id.id,
                                 "product_uom_qty": part.quantity,
                                 "repair_line_type": part.repair_line_type,
-                                "reason_code_id": part.reason_code_id,
+                                "reason_code_id": part.reason_code_id.id,
                                 "note": part.note,
                             }
                         )

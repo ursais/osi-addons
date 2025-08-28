@@ -475,27 +475,28 @@ class HelpdeskTicket(models.Model):
             }
         )
 
-        product_sale_lines = {}
-
         if product_quantities:
             for product_id, qty in product_quantities.items():
                 product = self.env["product.product"].browse(product_id)
 
-                # Set price to 0.0 if the product comes from `repair_product_map`
-                price_unit = (
-                    0.0 if product_id in repair_product_map else product.list_price
-                )
+                # If the product comes from repair_product_map, it’s the parent repaired device
+                if product_id in repair_product_map:
+                    price_unit = 0.0
+                    is_component = False  # We DO want to ship this back
+                else:
+                    price_unit = product.list_price
+                    is_component = True  # These are added parts, don’t ship
 
-                sale_line = sale_order_line_obj.create(
+                sale_order_line_obj.create(
                     {
                         "order_id": sale_order.id,
                         "product_id": product_id,
                         "product_uom_qty": qty,
                         "product_uom": product.uom_id.id,
                         "price_unit": price_unit,
+                        "is_repair_component": is_component,
                     }
                 )
-                product_sale_lines[product_id] = sale_line.id
 
             # Link repairs and moves to the sale order & sale lines
             for product_id, move_repairs in move_repair_map.items():

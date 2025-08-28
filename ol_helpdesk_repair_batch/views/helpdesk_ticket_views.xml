@@ -65,21 +65,21 @@
                             name="%(action_helpdesk_import_sale)d"
                             string="Import from Sales Order"
                             type="action"
-                            class="btn-primary"
+                            class="btn-primary me-2"
                             context="{'default_ticket_id': active_id, 'default_partner_id': partner_id}"
                         />
                         <button
                             name="action_generate_repairs"
                             string="Generate Repairs"
                             type="object"
-                            class="btn-primary"
+                            class="btn-primary me-2"
                             invisible="not show_generate_repairs or not partner_id"
                         />
                         <button
                             name="action_create_receipt"
                             type="object"
                             string="Create Receipt Transfer"
-                            class="btn-secondary"
+                            class="btn-primary me-2"
                             groups="stock.group_stock_user"
                             invisible="not repair_ids or not partner_id"
                         />
@@ -87,7 +87,7 @@
                             name="action_create_sale_order"
                             type="object"
                             string="Create Repair Sale Order"
-                            class="btn-secondary"
+                            class="btn-primary me-2"
                             groups="stock.group_stock_user"
                             invisible="not partner_id"
                         />
@@ -95,7 +95,7 @@
                             name="action_open_credit_note_wizard"
                             type="object"
                             string="Create Credit Note Wizard"
-                            class="btn-primary"
+                            class="btn-primary me-2"
                             invisible="not partner_id"
                         />
                     </div>
