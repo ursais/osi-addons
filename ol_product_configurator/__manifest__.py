@@ -13,6 +13,8 @@
     # any module necessary for this one to work correctly
     "depends": [
         "ol_base",
+        "ol_product",
+        "product_configurator_sale_mrp",
         "product_configurator",
         "product_configurator_mrp",
         "product_configurator_mrp_quantity",
