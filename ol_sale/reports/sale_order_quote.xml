@@ -180,6 +180,15 @@
                 </t>
             </t>
 
+            <t t-if="budgetary_quote"/>
+                <t t-call="ol_templates.report_products_optional">
+                    <t t-set="products_title">
+                        Optional Products
+                    </t>
+                </t>
+            </t>
+            
+
             <t t-if="has_active_holds">
                 <div class="ol_watermark">
                   <tag>FOR INTERNAL USE ONLY</tag>
