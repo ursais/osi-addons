@@ -1,0 +1,829 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ol_sale
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-29 07:46+0000\n"
+"PO-Revision-Date: 2025-08-29 07:46+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: ol_sale
+#: model:ir.actions.report,print_report_name:ol_sale.action_sale_order_quote_report
+msgid "'Quote %s' % (object.name)"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.confirmation_email_template
+msgid ""
+"). We will be in touch with an update within 2 business days. You\n"
+"                        will also receive tracking information when your order ships."
+msgstr "). We nemen binnen 2 werkdagen contact met je op met een update. Je ontvangt ook trackinginformatie wanneer je bestelling wordt verzonden."
+
+#. module: ol_sale
+#: model:mail.template,body_html:ol_sale.customer_shipment_email_template
+msgid ""
+"<!-- Variables -->\n"
+"            <t t-set=\"sale_order\" t-value=\"object.with_context({'lang':object.sale_id.contact_ids and object.sale_id.contact_ids[0].partner_id.lang or object.sale_id.partner_id.lang or object.env.lang}).sale_id\"></t>\n"
+"            <t t-set=\"shipping_email\" t-value=\"True\"></t>\n"
+"            <t t-call=\"ol_templates.ol_email\">\n"
+"                <!-- Variables -->\n"
+"                <t t-set=\"title\" t-value=\"'Order ' + sale_order.name if sale_order else '' + ' Shipped!'\"></t>\n"
+"                <t t-set=\"preheader_text\" t-value=\"'Your Order ' + sale_order.name if sale_order else '' + ' Shipped!'\"></t>\n"
+"                <t t-set=\"include_newsletter_disclaimer\" t-value=\"False\"></t>\n"
+"\n"
+"                <!-- Body -->\n"
+"                <t t-call=\"ol_templates.ol_email_text_content\">\n"
+"                    <span style=\"font-weight: 500; font-size: 20px; display: block;\">\n"
+"                        <tag>Your shipment is on its way</tag>\n"
+"                    </span>\n"
+"                    <div style=\"font-size:16px; line-height:28px; margin-top:30px\">\n"
+"                        <t t-esc=\"sale_order.partner_id.name\"></t>\n"
+"                        ,\n"
+"                    </div>\n"
+"                    <p style=\"font-size: 16px; line-height: 28px; margin-top: 30px;\">\n"
+"                        <tag>Your order has left the building! Although we were very sad to\n"
+"                            see it go, we know you're excited for it\n"
+"                            to arrive. You can track its progress here.\n"
+"                        </tag>\n"
+"                        <br>\n"
+"                        <br>\n"
+"                        <t t-call=\"ol_templates.here_are_your_order_details\">\n"
+"                            <t t-set=\"order\" t-value=\"sale_order\"></t>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </t>\n"
+"\n"
+"                <t t-call=\"ol_templates.ol_billing_shipping_info\">\n"
+"                    <t t-set=\"billing_address\" t-value=\"sale_order.partner_invoice_id\"></t>\n"
+"                    <t t-set=\"shipping_address\" t-value=\"sale_order.partner_shipping_id\"></t>\n"
+"                </t>\n"
+"\n"
+"                <t t-call=\"ol_templates.ol_email_spacer\"></t>\n"
+"                <t t-call=\"ol_templates.ol_delivery_info\">\n"
+"                    <t t-set=\"delivery_method\" t-value=\"sale_order.carrier_id\"></t>\n"
+"                    <t t-set=\"tracking_numbers\" t-value=\"object.mapped('carrier_tracking_ref')\"></t>\n"
+"                </t>\n"
+"\n"
+"                <t t-call=\"ol_templates.ol_email_spacer\"></t>\n"
+"                <t t-call=\"ol_templates.ol_email_text_content\">\n"
+"                    <p style=\"font-size: 16px; line-height: 28px;\">\n"
+"                        <t t-call=\"ol_templates.ol_contact_info\">\n"
+"                            <t t-set=\"extra_text\">\n"
+"                                Thank you for working with OnLogic!\n"
+"                            </t>\n"
+"                            <t t-set=\"company\" t-value=\"sale_order.company_id\"></t>\n"
+"                        </t>\n"
+"                        <br>\n"
+"                        <br>\n"
+"                    </p>\n"
+"                </t>\n"
+"            </t>\n"
+"        "
+msgstr ""
+
+#. module: ol_sale
+#: model:mail.template,body_html:ol_sale.email_template_sale_proforma
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"></t>\n"
+"                    Hello,\n"
+"                    <br><br>\n"
+"                    Your\n"
+"                    <t t-if=\"ctx.get('proforma')\">\n"
+"                        Pro forma invoice for <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"                        <t t-if=\"object.origin\">\n"
+"                            (with reference: <t t-out=\"object.origin or ''\"></t> )\n"
+"                        </t>\n"
+"                        amounting in <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> is available.\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
+"                        <t t-if=\"object.origin\">\n"
+"                            (with reference: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"                        </t>\n"
+"                        amounting in <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> is ready for review.\n"
+"                    </t>\n"
+"                    <br><br>\n"
+"                    Do not hesitate to contact us if you have any questions.\n"
+"                    <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"                        <br><br>\n"
+"                        <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                    </t>\n"
+"                    <br><br>\n"
+"                </p>\n"
+"            </div>\n"
+"        "
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.ol_sale_confirmation
+msgid ""
+"<span class=\"o_stat_text\" invisible=\"not to_send_confirmation_email\">Send</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"to_send_confirmation_email\">Don't Send</span>\n"
+"                        <span class=\"o_stat text\">Conf. Email</span>"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.view_order_form_inherit_ol_sale
+msgid "<span class=\"o_stat_text\">MO Tranfer</span>"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.view_order_form_inherit_ol_sale
+msgid "<strong>Guest Checkout</strong>"
+msgstr ""
+
+#. module: ol_sale
+#: model:mail.template,body_html:ol_sale.invoice_created_email_template
+msgid ""
+"<t t-call=\"ol_templates.ol_email\">\n"
+"                <!-- Variables -->\n"
+"                <t t-set=\"sale_order\" t-value=\"object.with_context({'lang':object.contact_ids and object.contact_ids[0].lang or object.partner_id.lang or object.env.lang})\"></t>\n"
+"                <t t-set=\"title\" t-value=\"'Invoice ready for Sale Order ' + sale_order.name\"></t>\n"
+"                <t t-set=\"preheader_text\" t-value=\"'Invoice ready for Sale Order ' + sale_order.name\"></t>\n"
+"                <t t-set=\"include_newsletter_disclaimer\" t-value=\"False\"></t>\n"
+"                <t t-set=\"access_action\" t-value=\"sale_order.with_context(force_website=True)._get_access_action()\"></t>\n"
+"                <t t-set=\"invoices\" t-value=\"object._context.get('email_template_data', {}).get('invoices')\"></t>\n"
+"                <!-- Body -->\n"
+"                <t t-call=\"ol_templates.ol_email_text_content\">\n"
+"                    <div style=\"font-weight: 500; font-size: 20px;\">\n"
+"                        <tag>An Invoice was created for</tag>\n"
+"                        <t t-esc=\"sale_order.name\"></t>\n"
+"                        !\n"
+"                    </div>\n"
+"                    <p style=\"font-size: 16px; line-height: 28px; margin-top: 30px;\">\n"
+"                        <tag>You can view the related documents via the links below</tag>\n"
+"                        <center style=\"margin-top: 30px;\">\n"
+"                            <ul>\n"
+"                                <li style=\"text-align: left;\">\n"
+"                                    Sale Order:\n"
+"                                    <a t-att-href=\"sale_order._notify_get_action_link('view')\" style=\"font-weight: 500; color: #337ab7;\" class=\"o_default_snippet_text\">\n"
+"                                        <t t-esc=\"sale_order.name\"></t>\n"
+"                                    </a>\n"
+"                                </li>\n"
+"                                <li style=\"text-align: left;\">\n"
+"                                    Invoice:\n"
+"                                    <t t-foreach=\"invoices\" t-as=\"invoice\">\n"
+"                                        <a t-att-href=\"invoice._notify_get_action_link('view')\" style=\"font-weight: 500; color: #337ab7;\" class=\"o_default_snippet_text\">\n"
+"                                            <t t-esc=\"invoice.name\"></t>\n"
+"                                        </a>\n"
+"                                    </t>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                        </center>\n"
+"                        <br>\n"
+"                        <tag>The OnLogic Team</tag>\n"
+"                    </p>\n"
+"                </t>\n"
+"            </t>\n"
+"        "
+msgstr ""
+
+#. module: ol_sale
+#: model:mail.template,body_html:ol_sale.forward_order_confirmation_email_template
+msgid ""
+"<t t-set=\"sale_order\" t-value=\"object.with_context({'lang': object.contact_ids and object.contact_ids[0].lang or object.partner_id.lang or object.env.lang})\"></t>\n"
+"            <t t-call=\"ol_sale.confirmation_email_template\" t-lang=\"sale_order.contact_ids and sale_order.contact_ids[0].lang or sale_order.partner_id.lang or object.env.lang\"></t>\n"
+"        "
+msgstr ""
+
+#. module: ol_sale
+#: model:mail.template,body_html:ol_sale.order_confirmation_email_template
+msgid ""
+"<t t-set=\"sale_order\" t-value=\"object.with_context({'lang':object.contact_ids and object.contact_ids[0].lang or object.partner_id.lang or object.env.lang})\"></t>\n"
+"            <t t-call=\"ol_sale.confirmation_email_template\" t-lang=\"sale_order.contact_ids and sale_order.contact_ids[0].lang or sale_order.partner_id.lang or object.env.lang\"></t>\n"
+"        "
+msgstr ""
+
+#. module: ol_sale
+#: model:mail.template,body_html:ol_sale.order_click_to_buy_email_template
+msgid ""
+"<t t-set=\"sale_order\" t-value=\"object.with_context({'lang':object.partner_id.lang or object.env.lang})\"></t>\n"
+"            <t t-call=\"ol_sale.order_click_to_buy_email_template_master\" t-lang=\"sale_order.partner_id.lang or object.env.lang\"></t>\n"
+"        "
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_res_partner__account_manager_id
+#: model:ir.model.fields,field_description:ol_sale.field_res_users__account_manager_id
+#: model:ir.model.fields,field_description:ol_sale.field_sale_order__account_manager_id
+#: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
+msgid "Account Manager"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.view_forward_confirmation_email_wizard
+msgid "Additional comments"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_product_product__allow_backorder
+#: model:ir.model.fields,field_description:ol_sale.field_product_template__allow_backorder
+msgid "Allow Backorder"
+msgstr ""
+
+#. module: ol_sale
+#: model:exception.rule,name:ol_sale.exception_so_bank_tranfer_payment
+msgid "Awaiting Bank Transfer Payment"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
+msgid "Bill To"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_forward_confirmation_email_wizard__text_body
+msgid "Body text"
+msgstr ""
+
+#. module: ol_sale
+#: model:sale.order.type,name:ol_sale.sale_order_type_budgetary
+msgid "Budgetary"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
+msgid "Budgetary Quote"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.view_forward_confirmation_email_wizard
+msgid "Cancel"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_forward_confirmation_email_wizard__text_closing
+msgid "Closing text"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,help:ol_sale.field_forward_confirmation_email_wizard__recipients
+msgid "Comma separated list of emails"
+msgstr ""
+
+#. module: ol_sale
+#: model:exception.rule,name:ol_sale.excep_component_outof_stock
+msgid "Component Out of Stock"
+msgstr ""
+
+#. module: ol_sale
+#: model:exception.rule,description:ol_sale.excep_component_outof_stock
+msgid "Component Out of Stock and backorders are not allowed."
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.sale_order_line_search_ol_sales
+msgid "Components"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model,name:ol_sale.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_sale_order__contact_ids
+msgid "Contact(s)"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.view_order_form_inherit_ol_sale
+msgid "Copy"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_forward_confirmation_email_wizard__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_forward_confirmation_email_wizard__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: ol_sale
+#: model:product.pricelist,name:ol_sale.europe_pricelist
+msgid "Default EUR Pricelist"
+msgstr ""
+
+#. module: ol_sale
+#: model:product.pricelist,name:ol_sale.usa_pricelist
+msgid "Default USD Pricelist"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.view_order_form_inherit_ol_sale
+msgid "Delivery Date"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_sale_order__delivery_note
+#: model:ir.model.fields,field_description:ol_sale.field_stock_picking__delivery_note
+#: model_terms:ir.ui.view,arch_db:ol_sale.sale_subscription_order_view_form_inherit_ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.view_picking_form_inherit_ol_sale
+msgid "Delivery Note"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_res_partner__delivery_order_count
+#: model:ir.model.fields,field_description:ol_sale.field_res_users__delivery_order_count
+#: model_terms:ir.ui.view,arch_db:ol_sale.view_partner_form_inherit_ol_sale
+msgid "Delivery Orders"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_forward_confirmation_email_wizard__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model,name:ol_sale.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr "Wizard e-mail opstellen"
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_sale_order__end_user
+msgid "End User"
+msgstr ""
+
+#. module: ol_sale
+#: model:crm.tag,name:ol_sale.crm_tag_engineering_prototype
+msgid "Engineering Prototype"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.view_order_form_inherit_ol_sale
+msgid "Expected:"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
+msgid "FOR INTERNAL USE ONLY"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.easy_checkout_text
+msgid "For easier checkout in the future, we encourage you to"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.actions.act_window,name:ol_sale.action_forward_confirmation_email_wizard
+#: model_terms:ir.ui.view,arch_db:ol_sale.ol_sale_confirmation
+#: model_terms:ir.ui.view,arch_db:ol_sale.view_forward_confirmation_email_wizard
+msgid "Forward Confirmation Email"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model,name:ol_sale.model_forward_confirmation_email_wizard
+msgid "Forward Confirmation Email Wizard"
+msgstr ""
+
+#. module: ol_sale
+#: model:mail.template,name:ol_sale.forward_order_confirmation_email_template
+msgid "Forward OnLogic Confirmation Email"
+msgstr ""
+
+#. module: ol_sale
+#: model:mail.template,subject:ol_sale.forward_order_confirmation_email_template
+msgid "Forwarded: Thank you for your order!"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields.selection,name:ol_sale.selection__sale_order__invoice_status__full_paid
+#: model:ir.model.fields.selection,name:ol_sale.selection__sale_order_line__invoice_status__full_paid
+msgid "Full Paid"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_sale_order__is_guest_checkout
+msgid "Guest checkout"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
+msgid "Hardware Solution"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_sale_order__has_active_holds
+msgid "Has Active Holds"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_forward_confirmation_email_wizard__id
+msgid "ID"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_sale_order__integrator
+msgid "Integrator"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_forward_confirmation_email_wizard__text_intro
+msgid "Introduction text"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_sale_order__invoice_status
+#: model:ir.model.fields,field_description:ol_sale.field_sale_order_line__invoice_status
+msgid "Invoice Status"
+msgstr "Factuurstatus"
+
+#. module: ol_sale
+#: model:mail.template,subject:ol_sale.invoice_created_email_template
+msgid "Invoice ready for Sale Order {{ object.name }}"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model,name:ol_sale.model_account_move
+msgid "Journal Entry"
+msgstr "Boeking"
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_forward_confirmation_email_wizard__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_forward_confirmation_email_wizard__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_sale_order__mo_tranfer_count
+msgid "MO Intenral Tranfer"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.mrp_production_form_view_inherit_ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.sale_subscription_order_view_form_inherit_ol_sale
+msgid "MRP Note"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_mrp_production__mrp_note
+#: model:ir.model.fields,field_description:ol_sale.field_sale_order__mrp_note
+msgid "Manufacturing Note"
+msgstr ""
+
+#. module: ol_sale
+#: model:crm.tag,name:ol_sale.crm_tag_no_early_ship
+msgid "No Early Ship"
+msgstr ""
+
+#. module: ol_sale
+#: model:crm.tag,name:ol_sale.crm_tag_no_split_ship
+msgid "No Split Ship"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.mrp_production_form_view_inherit_ol_sale
+msgid "Note"
+msgstr ""
+
+#. module: ol_sale
+#: model:mail.template,name:ol_sale.order_click_to_buy_email_template
+msgid "OnLogic Click To Buy Email"
+msgstr ""
+
+#. module: ol_sale
+#: model:mail.template,name:ol_sale.order_confirmation_email_template
+msgid "OnLogic Confirmation Email"
+msgstr ""
+
+#. module: ol_sale
+#: model:mail.template,name:ol_sale.customer_shipment_email_template
+msgid "OnLogic Customer Shipment Email"
+msgstr ""
+
+#. module: ol_sale
+#: model:mail.template,name:ol_sale.invoice_created_email_template
+msgid "OnLogic Sale Order Invoice Created"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.view_order_form_inherit_ol_sale
+msgid "Original Customer Request Date"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_sale_order__original_request_date
+msgid "Original Customer Requested Date"
+msgstr ""
+
+#. module: ol_sale
+#. odoo-python
+#: code:addons/ol_sale/models/sale_order.py:0
+#, python-format
+msgid "Original Customer Requested Date is required to confirm the order."
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_sale_order__original_commitment_date
+#: model_terms:ir.ui.view,arch_db:ol_sale.view_order_form_inherit_ol_sale
+msgid "Original Shipment Commitment Date"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields.selection,name:ol_sale.selection__sale_order__invoice_status__partially_invoiced
+#: model:ir.model.fields.selection,name:ol_sale.selection__sale_order_line__invoice_status__partially_invoiced
+msgid "Partially Invoiced"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
+msgid "Payment Method"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
+msgid "Payment Terms"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.confirmation_email_template
+msgid "Please review our"
+msgstr "Bekijk alstublieft onze"
+
+#. module: ol_sale
+#: model:ir.model,name:ol_sale.model_product_template
+msgid "Product"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model,name:ol_sale.model_product_attribute
+msgid "Product Attribute"
+msgstr "Productkenmerk"
+
+#. module: ol_sale
+#: model:ir.model,name:ol_sale.model_product_template_attribute_line
+msgid "Product Template Attribute Line"
+msgstr "Productsjabloon kenmerkregel"
+
+#. module: ol_sale
+#: model:ir.model,name:ol_sale.model_mrp_production
+msgid "Production Order"
+msgstr "Productieorder"
+
+#. module: ol_sale
+#: model:product.state,name:ol_sale.product_state_prototype
+msgid "Prototype"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.actions.report,name:ol_sale.action_sale_order_quote_report
+#: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
+msgid "Quote"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
+msgid "Quote Date"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
+msgid "Quote Expiration"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_forward_confirmation_email_wizard__recipients
+#: model_terms:ir.ui.view,arch_db:ol_sale.view_forward_confirmation_email_wizard
+msgid "Recipients"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.click_to_buy_email_template
+msgid "Review and Place Order"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_forward_confirmation_email_wizard__order_id
+msgid "Sale Order"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model,name:ol_sale.model_report_ol_sale_report_sale_order_quote
+msgid "Sale Order Quote"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_res_partner__sale_order_tag_ids
+#: model:ir.model.fields,field_description:ol_sale.field_res_users__sale_order_tag_ids
+msgid "Sale Order Tags"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model,name:ol_sale.model_sale_order
+msgid "Sales Order"
+msgstr "Verkooporder"
+
+#. module: ol_sale
+#: model:ir.model,name:ol_sale.model_sale_order_cancel
+msgid "Sales Order Cancel"
+msgstr "Verkooporder annuleer"
+
+#. module: ol_sale
+#: model:ir.model,name:ol_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Verkooporderregel"
+
+#. module: ol_sale
+#: model:crm.tag,name:ol_sale.crm_tag_sales_prototype
+msgid "Sales Prototype"
+msgstr ""
+
+#. module: ol_sale
+#: model:mail.template,name:ol_sale.email_template_sale_proforma
+msgid "Sales: Send Quotation"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,help:ol_sale.field_sale_order_line__product_state_id
+msgid "Select a state for this product"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.view_forward_confirmation_email_wizard
+msgid "Send"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_stock_picking__to_send_customer_shipment
+msgid "Send Shipment Email"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_sale_order__to_send_confirmation_email
+msgid "Send confirmation email"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
+msgid "Ship To"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
+msgid "Shipping Method"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_sale_order__shipping_ref
+msgid "Shipping Reference"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_product_attribute__used_in_sale_description
+#: model:ir.model.fields,field_description:ol_sale.field_product_template_attribute_line__used_in_sale_description
+msgid "Show in Sale Description"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,field_description:ol_sale.field_sale_order_line__product_state_id
+msgid "State"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.confirmation_email_template
+msgid "Terms and Conditions"
+msgstr "Algemene voorwaarden"
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.confirmation_email_template
+msgid "Thank you for choosing OnLogic, we've received your order (#"
+msgstr "Bedankt dat u voor OnLogic hebt gekozen, we hebben uw bestelling ontvangen (#"
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.confirmation_email_template
+msgid "Here are your order details:"
+msgstr "Hier zijn uw bestelgegevens:"
+
+#. module: ol_sale
+#: model:mail.template,subject:ol_sale.order_confirmation_email_template
+msgid "Thank you for your order!"
+msgstr "Bedankt voor uw bestelling!"
+
+#. module: ol_sale
+#: model:mail.template,subject:ol_sale.order_confirmation_email_template
+msgid "Your Order Number"
+msgstr "Uw bestelnummer"
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.click_to_buy_email_template
+msgid ""
+"Thank you for your quote request. You can view the details of your "
+"configuration in the attached PDF or by clicking the button below, where you"
+" can also finalize your order online"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.click_to_buy_email_template
+msgid "The OnLogic Team"
+msgstr ""
+
+#. module: ol_sale
+#: model:exception.rule,description:ol_sale.exception_so_bank_tranfer_payment
+msgid ""
+"The sale order has payment method as Bank Tranfer and Payment Status is not "
+"Full Paid."
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,help:ol_sale.field_sale_order__contact_ids
+msgid ""
+"These are the contacts that will receive automated email communications."
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,help:ol_sale.field_forward_confirmation_email_wizard__text_body
+msgid "This will get inserted before the product list"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,help:ol_sale.field_forward_confirmation_email_wizard__text_closing
+msgid "This will get inserted to end of the email"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model.fields,help:ol_sale.field_forward_confirmation_email_wizard__text_intro
+msgid "This will get inserted to the start of the email"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.model,name:ol_sale.model_stock_picking
+msgid "Transfer"
+msgstr "Verplaatsing"
+
+#. module: ol_sale
+#: model:mail.template,description:ol_sale.email_template_sale_proforma
+msgid "Used by salespeople when they send quotations or proforma to prospects"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.view_forward_confirmation_email_wizard
+msgid ""
+"You can forward the original Sale Order confirmation email via this\n"
+"                    form.\n"
+"                    You can add an additional comments that will be included into the\n"
+"                    email."
+msgstr ""
+
+#. module: ol_sale
+#: model:mail.template,subject:ol_sale.customer_shipment_email_template
+msgid "Your Order {{ object.sale_id.name or 'n/a' }} Has Shipped"
+msgstr ""
+
+#. module: ol_sale
+#: model:mail.template,subject:ol_sale.order_click_to_buy_email_template
+msgid "Your Quote {{object.name}} is Ready for Review"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
+msgid "Your Reference"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.click_to_buy_email_template
+msgid "Your quote is ready for review"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.actions.server,name:ol_sale.ir_cron_send_shipment_bv_action_ir_actions_server
+msgid "[EU] Send Shipment Emails"
+msgstr ""
+
+#. module: ol_sale
+#: model:ir.actions.server,name:ol_sale.ir_cron_send_shipment_inc_action_ir_actions_server
+msgid "[US] Send Shipment Emails"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.easy_checkout_text
+msgid "create an account"
+msgstr ""
+
+#. module: ol_sale
+#: model_terms:ir.ui.view,arch_db:ol_sale.confirmation_email_template
+msgid "for complete details regarding your order."
+msgstr "voor volledige details over uw bestelling."
+
+#. module: ol_sale
+#: model:mail.template,subject:ol_sale.email_template_sale_proforma
+msgid ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
+"object.name or 'n/a' }})"
+msgstr ""
