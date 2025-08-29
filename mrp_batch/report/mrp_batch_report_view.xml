@@ -47,10 +47,10 @@
                                     <span t-esc="mo.product_qty" />
                                 </td>
                                 <td>
-                                    <span t-esc="mo.get_format_date(mo.date_start)" />
+                                    <span t-esc="mrp_batch_data.get_format_date(mo.date_start)" />
                                 </td>
                                 <td>
-                                    <span t-esc="mo.get_format_date(mo.date_finished)" />
+                                    <span t-esc="mrp_batch_data.get_format_date(mo.date_finished)" />
                                 </td>
                             </tr>
                         </t>
