@@ -1079,6 +1079,45 @@ class IrActionsServer(models.Model):
                 cr.execute(update_query, (unique_ptav_id, variant_value.id))
                 cr.commit()
 
+    def setting_default_val(self):
+        IRProperty = self.env["ir.property"]
+        ResCompany = self.env["res.company"]
+        Field = self.env["ir.model.fields"]
+
+        # Fetch everything in bulk (fewer queries)
+        templates = self.env['product.template'].search([("has_configurable_attributes", "=", True)])
+        companies = ResCompany.search([("short_name", "in", ["eu", "us"])])
+        field = Field.search(
+            [("model_id.model", "=", "product.template.attribute.line"),
+             ("name", "=", "default_val")],
+            limit=1
+        )
+
+        if not field or not companies:
+            return  # nothing to do
+
+        vals_to_create = []
+
+        for template in templates:
+            for line in template.attribute_line_ids:
+                if line.value_ids and not line.default_val:
+                    default_val = line.value_ids[0]
+                    res_id = f"{line._name},{line.id}"
+                    value_reference = f"{default_val._name},{default_val.id}"
+
+                    for company in companies:
+                        vals_to_create.append({
+                            "name": "default_val",
+                            "company_id": company.id,
+                            "fields_id": field.id,
+                            "res_id": res_id,
+                            "value_reference": value_reference,
+                        })
+
+        if vals_to_create:
+            IRProperty.create(vals_to_create)
+            self.env.cr.commit()
+    
     def drop_temp_tables(self):
         cr = self.env.cr
         _logger.info("\n\n============Droping Tables Start")
