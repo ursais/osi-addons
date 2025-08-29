@@ -1,0 +1,644 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ol_templates
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-29 11:51+0000\n"
+"PO-Revision-Date: 2025-08-29 11:51+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_email_spacer
+msgid "&amp;nbsp;"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_standard_email_footer
+msgid "+1 802 861 2300"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_standard_email_footer
+msgid "+31 88 520 0700"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_us
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_international_ach_info_us
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_footer
+msgid "021000021"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_delivery_info
+msgid "3-5 Business Days"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_us
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_international_ach_info_us
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_footer
+msgid "767551010"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.here_are_your_order_details
+msgid ""
+":\n"
+"        <br/>"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_standard_email_footer
+msgid ""
+"<span style=\"font-weight: 500;\">Europe</span>\n"
+"                                  <br/>"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_international_ach_info_us
+msgid ""
+"<span style=\"font-weight: 500;\">International:</span>\n"
+"                            ACH Payment Instructions"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_standard_email_footer
+msgid ""
+"<span style=\"font-weight: 500;\">North America</span>\n"
+"                                  <br/>"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_standard_email_footer
+msgid ""
+"<span style=\"font-weight: 500;\">OnLogic US</span>\n"
+"                                        <br/>\n"
+"                                        OnLogic and the OnLogic logo are registered trademarks of OnLogic US. Other names\n"
+"                                        and brands may be claimed as the property of others."
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_footer
+msgid ""
+"<strong>\n"
+"                        Electronic Payment Info\n"
+"                    </strong>"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_footer
+msgid "<strong>Terms and Conditions</strong>"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.quote_closing_text
+msgid ""
+"<strong>Validity</strong>: Processors, RAM, storage devices, and other commodity components, as well as End of Life product prices are valid for 24 hours. All\n"
+"                  other pricing is valid for 14 days unless otherwise noted. Prices are for MOQ as stated.<br/>\n"
+"                  <strong>Payment</strong>: Prepayment by Credit Card, Bank or Wire transfer required on all orders, unless credit terms are approved.<br/>\n"
+"                  <strong>Lead Time</strong>: Lead times depend on order quantity and product availability.<br/>\n"
+"                  <strong>Returns &amp; Cancellations</strong>: Special Order items and items ordered in 5+ system quantities or 10+ component quantities are non-returnable and\n"
+"                  non-cancelable. Please see our complete Terms and Conditions at www.onlogic.com/terms<br/>\n"
+"                  <strong>Warranty</strong>: Systems built and tested by OnLogic are covered under a two year warranty. Additional warranty plans are available."
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.quote_closing_text
+msgid ""
+"<strong>Validity</strong>: Processors, RAM, storage devices, and other commodity components, as well as End of Life product prices are valid for 24 hours. All\n"
+"          other quoted pricing is valid for 14 days unless otherwise noted. Prices are for MOQ as stated.<br/>\n"
+"                  <strong>Payment</strong>: Prepayment by Credit Card, Bank or Wire transfer required on all orders, unless credit terms are approved.<br/>\n"
+"                  <strong>Lead Time</strong>: Lead times depend on order quantity and product availability.<br/>\n"
+"                  <strong>Returns &amp; Cancellations</strong>: Special Order items, system orders, products delivered on the basis of volume orders and products delivered on the\n"
+"          basis of a tailor-made quotation are non-returnable and non-cancelable. Please see our complete Terms and Conditions attached.<br/>\n"
+"                  <strong>Warranty</strong>: Systems built and tested by OnLogic are covered under a two year warranty. Additional warranty plans are available."
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_international_ach_info_us
+msgid "ABA/Fedwire"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_us
+msgid "ABA/Routing #"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_us
+msgid "ACH Payment Instructions"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_footer
+msgid "Account #"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_header
+msgid "BLIND"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_order_total_data
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_invoice_notes_and_totals
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_notes_and_totals
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_notes_and_totals_refund_invoice
+msgid "Balance Due"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_eu
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_us
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_international_ach_info_us
+msgid "Bank Info."
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_international_ach_info_us
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_footer
+msgid "Bank SWIFT"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_eu
+msgid "Bank transfer"
+msgstr ""
+
+#. module: ol_templates
+#: model:ir.model.fields,field_description:ol_templates.field_ir_actions_report__paperformat_xmlid_base
+msgid "Base name of paper format XML ID"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_us
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_international_ach_info_us
+msgid "Beneficiary Account #"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_eu
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_us
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_international_ach_info_us
+msgid "Beneficiary Info."
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_billing_shipping_info
+msgid "Bill To"
+msgstr "Factuur aan"
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_billing_shipping_info
+msgid "Billing &amp; Shipping Addresses"
+msgstr "Factuur- en verzendadressen"
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_international_ach_info_us
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_footer
+msgid "CHASUS33"
+msgstr ""
+
+#. module: ol_templates
+#: model:ir.model,name:ol_templates.model_res_company
+msgid "Companies"
+msgstr "Bedrijven"
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_templates_settings
+msgid "Company Specific Images"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_notes_and_totals_refund_invoice
+msgid "Credit"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_eu
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_us
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_international_ach_info_us
+msgid "Currency"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_delivery_info
+msgid "Delivery"
+msgstr "Levering"
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_delivery_info
+msgid "Delivery Information"
+msgstr "Leveringsinformatie"
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_us
+msgid "Domestic"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_footer
+msgid "Email"
+msgstr ""
+
+#. module: ol_templates
+#: model:ir.model.fields,field_description:ol_templates.field_res_company__placeholder_image_email_icon
+msgid "Email Icon Placeholder Image"
+msgstr ""
+
+#. module: ol_templates
+#: model:ir.model,name:ol_templates.model_mail_template
+msgid "Email Templates"
+msgstr "E-mailsjablonen"
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_eu
+msgid ""
+"Euro\n"
+"                                                        <span style=\"font-weight: 500;\">ONLY</span>"
+msgstr ""
+
+#. module: ol_templates
+#: model:ir.model.fields,field_description:ol_templates.field_res_company__facebook_image
+msgid "Facebook Image"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.here_are_your_order_details
+msgid "Here are your order details"
+msgstr "Hier zijn uw bestelgegevens"
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_eu
+msgid "IBAN Account Number"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_no_account_info
+msgid ""
+"If you do not have an account, or have any other questions, please contact "
+"us at"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_contact_info
+msgid "If you have any questions, please contact us at"
+msgstr "Als u vragen heeft, kunt u contact met ons opnemen via"
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_backorder_products
+msgid "Impacted Products"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.eu_tax_exempt
+msgid ""
+"Intra EU transaction, 0% VAT rate charged to this invoice based on table II,"
+" section a, part 6, Law OB 1968 or article 138, sub 1, guideline 2006/112."
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_us
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_international_ach_info_us
+msgid ""
+"JP Morgan Chase\n"
+"                                                        <br/>\n"
+"                                                        New York, NY 10017\n"
+"                                                        <br/>\n"
+"                                                        (241) 965-4351"
+msgstr ""
+
+#. module: ol_templates
+#: model:ir.model.fields,field_description:ol_templates.field_res_company__linkedin_image
+msgid "LinkedIN Image"
+msgstr ""
+
+#. module: ol_templates
+#: model:ir.model.fields,field_description:ol_templates.field_res_company__template_logo
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_standard_email_header
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_header
+msgid "Logo"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_eu
+msgid "NL31RABO0116462450"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_invoice_notes_and_totals
+msgid "Notes"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_us
+msgid ""
+"OnLogic\n"
+"                                                            <br/>\n"
+"                                                            435 Community Dr\n"
+"                                                            <br/>\n"
+"                                                            South Burlington, VT 05403\n"
+"                                                            <br/>\n"
+"                                                            (802) 861 2300"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_international_ach_info_us
+msgid ""
+"OnLogic\n"
+"                                                        <br/>\n"
+"                                                        435 Community Dr\n"
+"                                                        <br/>\n"
+"                                                        South Burlington, VT 05403\n"
+"                                                        <br/>\n"
+"                                                        (802) 861 2300"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_eu
+msgid ""
+"OnLogic\n"
+"                                                        <br/>\n"
+"                                                        De Boedingen 39,\n"
+"                                                        <br/>\n"
+"                                                        4906 BA Oosterhout NB,\n"
+"                                                        <br/>\n"
+"                                                        The Netherlands\n"
+"                                                        <br/>\n"
+"                                                        +31 88 5200 700"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_order_total
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_notes_and_totals
+msgid "Order Notes"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_ordered_products
+msgid "Ordered Products"
+msgstr "Bestelde producten"
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_notes_and_totals
+msgid "PAID"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_payment_info
+msgid "Payment Information"
+msgstr "Betalingsinformatie"
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_order_total_data
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_invoice_notes_and_totals
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_notes_and_totals
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_notes_and_totals_refund_invoice
+msgid "Payment Received"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_payment_info
+msgid "Payment Term"
+msgstr "Betalingstermijn"
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_footer
+msgid "Phone"
+msgstr ""
+
+#. module: ol_templates
+#: model:ir.model.fields,field_description:ol_templates.field_res_company__placeholder_image_phone_icon
+msgid "Phone Icon Placeholder Image"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_ordered_products
+#: model_terms:ir.ui.view,arch_db:ol_templates.refund_additional_invoice_line
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_invoiceable_lines
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_products
+msgid "Price"
+msgstr "Prijs"
+
+#. module: ol_templates
+#: model:ir.model.fields,field_description:ol_templates.field_res_company__placeholder_image_product
+msgid "Product Placeholder Image"
+msgstr ""
+
+#. module: ol_templates
+#: model:ir.model.fields,field_description:ol_templates.field_res_company__placeholder_image_profile_picture
+msgid "Profile Placeholder Image"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_ordered_products
+#: model_terms:ir.ui.view,arch_db:ol_templates.refund_additional_invoice_line
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_invoiceable_lines
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_products
+msgid "QTY"
+msgstr "Aantal"
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_eu
+msgid "RABONL2U"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_notes_and_totals_refund_invoice
+msgid "RMA Notes"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_header
+msgid "RUSH"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_eu
+msgid ""
+"Rabobank\n"
+"                                                        <br/>\n"
+"                                                        Utrecht, The Netherlands\n"
+"                                                        <br/>"
+msgstr ""
+
+#. module: ol_templates
+#: model:ir.model,name:ol_templates.model_ir_actions_report
+msgid "Report Action"
+msgstr "Rapport actie"
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_footer
+msgid "Routing #"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_billing_shipping_info
+msgid "Ship To"
+msgstr "Verzenden naar"
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_order_total_data
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_notes_and_totals
+msgid "Shipping &amp; Handling"
+msgstr "Verzending en afhandeling"
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_order_total_data
+#: model_terms:ir.ui.view,arch_db:ol_templates.refund_additional_invoice_line
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_invoice_notes_and_totals
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_invoiceable_lines
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_notes_and_totals
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_notes_and_totals_refund_invoice
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_products
+msgid "Subtotal"
+msgstr "Subtotaal"
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_eu
+msgid "Swift/BIC"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_product_lines
+msgid "System Serial Numbers"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_order_total_data
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_invoice_notes_and_totals
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_notes_and_totals
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_notes_and_totals_refund_invoice
+msgid "Tax"
+msgstr "BTW"
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_contact_info
+msgid "The OnLogic Team"
+msgstr "Het OnLogic Team"
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_order_total_data
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_invoice_notes_and_totals
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_notes_and_totals
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_notes_and_totals_refund_invoice
+msgid "Total"
+msgstr "Totaal"
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.tracking_numbers
+msgid "Tracking Numbers"
+msgstr ""
+
+#. module: ol_templates
+#: model:ir.model.fields,field_description:ol_templates.field_res_company__twitter_image
+msgid "Twitter Image"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_shipping_method
+msgid "UPS Account:"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_international_ach_info_us
+msgid ""
+"US Dollars\n"
+"                                                        <span style=\"font-weight: 500;\">ONLY</span>"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_us
+msgid ""
+"US Dollars\n"
+"                                                      <span style=\"font-weight: 500;\">ONLY</span>"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_footer
+msgid "VAT"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.address
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_blind_bill_address
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_blind_ship_address
+msgid "VAT ID:"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_footer
+msgid "Web"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_standard_email_footer
+msgid ""
+"You are receiving this message because you are subscribed to the OnLogic newsletter. To\n"
+"                                      unsubscribe,"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_delivery_info
+msgid "You will be emailed with tracking information when your order ships."
+msgstr "Zodra je order is verzonden ontvang je van ons een e-mail met Track&Trace informatie."
+
+#. module: ol_templates
+#: model:ir.model.fields,field_description:ol_templates.field_res_company__youtube_image
+msgid "YouTube Image"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.here_are_your_order_details
+msgid "Your Order Number"
+msgstr "Uw bestelnummer"
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.here_are_your_order_details
+msgid "Your PO Number"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_standard_email_footer
+msgid "click here"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_standard_email_footer
+msgid "info.eu@onlogic.com"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_standard_email_footer
+msgid "info@onlogic.com"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.report_footer
+msgid "of"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_contact_info
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_no_account_info
+msgid "or give us a call at"
+msgstr "of bel ons op"
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_standard_email_footer
+msgid "www.onlogic.com"
+msgstr ""
+
+#. module: ol_templates
+#: model_terms:ir.ui.view,arch_db:ol_templates.ol_standard_email_footer
+msgid "www.onlogic.com/eu-en"
+msgstr ""
