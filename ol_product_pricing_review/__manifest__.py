@@ -23,6 +23,7 @@
         "security/security.xml",
         "security/ir.model.access.csv",
         "data/pa_sequence.xml",
+        "data/ir_cron.xml",
         "views/product_category_views.xml",
         "views/product_price_review_views.xml",
         "views/product_product_views.xml",
