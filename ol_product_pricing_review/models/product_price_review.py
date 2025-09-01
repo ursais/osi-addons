@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import fields, api, models
+from odoo import _, fields, api, models
 from odoo.exceptions import ValidationError
 
 
@@ -38,6 +38,7 @@ class ProductPriceReview(models.Model):
         [
             ("new", "Draft"),
             ("in_progress", "In Progress"),
+            ("pending", "Pending"),
             ("reject", "Rejected"),
             ("validated", "Validated"),
         ],
@@ -228,6 +229,7 @@ class ProductPriceReview(models.Model):
         compute="_compute_calculated_price",
         help="Price calculation based on Suggested and Override Margin fields set.",
     )
+    effective_date = fields.Date(string="Effective Date")
 
     # END ##########
     # METHODS ##########
@@ -428,9 +430,13 @@ class ProductPriceReview(models.Model):
                 raise ValidationError("The override margin cannot be 100%")
 
             if rec.override_margin == 0.0 and rec.suggested_margin < 1.0:
-                rec.calculated_price = rec.approved_total_cost / ((1 - rec.suggested_margin) / 1)
+                rec.calculated_price = rec.approved_total_cost / (
+                    (1 - rec.suggested_margin) / 1
+                )
             elif rec.override_margin < 1.0:
-                rec.calculated_price = rec.approved_total_cost / ((1 - rec.override_margin) / 1)
+                rec.calculated_price = rec.approved_total_cost / (
+                    (1 - rec.override_margin) / 1
+                )
             else:
                 rec.calculated_price = rec.approved_total_cost
 
@@ -555,8 +561,14 @@ class ProductPriceReview(models.Model):
         for rec in self:
             rec.state = "reject"
 
+    def reset_to_draft(self):
+        """Set the state of the record to 'draft'."""
+        for review in self:
+            review.state = "new"
+
     def validate_button(self):
         """Validate the price review and update corresponding product fields."""
+        today = fields.Date.context_today(self)
         for rec in self:
             if rec.product_id.disable_price_reviews:
                 raise ValidationError(
@@ -564,6 +576,31 @@ class ProductPriceReview(models.Model):
                     " Please either reject this price review or update the product "
                     "to allow price reviews."
                 )
+
+            if rec.effective_date:
+                if rec.effective_date < today:
+                    raise ValidationError(_("Effective date cannot be in the past"))
+
+            if rec.effective_date and rec.effective_date > today:
+                rec.state = "pending"
+                other_pending = self.search(
+                    [
+                        ("id", "!=", rec.id),
+                        ("product_id", "=", rec.product_id.id),
+                        ("state", "=", "pending"),
+                    ]
+                )
+                if other_pending:
+                    for other in other_pending:
+                        other.reject_button()
+                        body = _(
+                            "Another price review was set to pending with a future effective date "
+                            "that supersedes this one. <a href='#' data-oe-model='product.price.review' "
+                            "data-oe-id='%s'>%s</a>" % (rec.id, rec.display_name)
+                        )
+                        other.message_post(body=body, body_is_html=True)
+                return
+
             elif rec.product_id:
                 # Update Product Values
                 rec.product_id.sudo().write(
@@ -588,6 +625,28 @@ class ProductPriceReview(models.Model):
                 # Recompute the last PO Margin since it's equation values may update.
                 rec.product_id.product_tmpl_id._compute_last_purchase_margin(
                     from_review=True
+                )
+
+    @api.model
+    def _cron_process_pending_price_reviews(self):
+        """
+        Scheduled action to process product price reviews.
+        This cron job finds all price reviews in 'pending', 'new',
+        or 'in_progress' states that are linked to a product. For
+        each review, it attempts to run `validate_button()`:
+        """
+        pending_reviews = self.search(
+            [
+                ("state", "in", ("pending", "new", "in_progress")),
+                ("product_id", "!=", False),
+            ]
+        )
+        for review in pending_reviews:
+            try:
+                review.validate_button()
+            except Exception as e:
+                review.message_post(
+                    body=_("Error while validating price review: %s") % str(e)
                 )
 
     # END ##########
