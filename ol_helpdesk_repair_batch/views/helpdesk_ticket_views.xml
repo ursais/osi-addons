@@ -67,6 +67,7 @@
                             type="action"
                             class="btn-primary me-2"
                             context="{'default_ticket_id': active_id, 'default_partner_id': partner_id}"
+                            help="Opens a wizard that allows you to create batch repairs by importing products from sale orders."
                         />
                         <button
                             name="action_generate_repairs"
@@ -74,6 +75,7 @@
                             type="object"
                             class="btn-primary me-2"
                             invisible="not show_generate_repairs or not partner_id"
+                            help="Generate repair orders for batches that haven't had them created yet. This button is only visible if there is a batch without repair orders."
                         />
                         <button
                             name="action_create_receipt"
@@ -82,6 +84,7 @@
                             class="btn-primary me-2"
                             groups="stock.group_stock_user"
                             invisible="not repair_ids or not partner_id"
+                            help="Create a receipt transfer for the finished goods that are on repair orders. The customer is set as the owner for the products on the receipt (Consignment Functionality). Receipts are auto set for 7 days out."
                         />
                         <button
                             name="action_create_sale_order"
@@ -90,6 +93,7 @@
                             class="btn-primary me-2"
                             groups="stock.group_stock_user"
                             invisible="not partner_id"
+                            help="Create a sale order to ship back the finished, repaired products. All repair 'ADD' lines are added, if 'Do not charge customer' is set on the repair then sale price will be zero, otherwise sale price is the price of the product or pricelist price."
                         />
                         <button
                             name="action_open_credit_note_wizard"
@@ -97,12 +101,13 @@
                             string="Create Credit Note Wizard"
                             class="btn-primary me-2"
                             invisible="not partner_id"
+                            help="Opens the credit note wizard to build and create a credit note."
                         />
                     </div>
                     <group name="repair_batches" string="Repair Batches">
                         <field name="original_sale_order_ids" widget="many2many_tags" readonly="0" />
                         <field name="repair_sale_order_ids" widget="many2many_tags" readonly="1" />
-                        <field nolabel="1" colspan="2" name="repair_batch_ids" context="{'default_partner_id': partner_id, 'default_sale_id': repair_sale_order_ids[0]}" >
+                        <field nolabel="1" colspan="2" name="repair_batch_ids" readonly="not id" context="{'default_partner_id': partner_id, 'default_sale_id': repair_sale_order_ids[0]}" >
                             <tree string="Repair Batch">
                                 <field name="name" optional="show" />
                                 <button name="open_batch_full_form" type="object" icon="fa-external-link" title="Open in Full Form" />
