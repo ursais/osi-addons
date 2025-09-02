@@ -119,7 +119,7 @@ class HelpdeskTicket(models.Model):
                         f"<strong>Serial: {lot.name}</strong><ul>{hist_links}</ul>"
                     )
             ticket.show_repair_history_alert = bool(messages)
-            ticket.repair_history_html = "<br/>".join(messages) if messages else ""
+            ticket.repair_history_html = "".join(messages) if messages else ""
 
     def _compute_button_counts(self):
         for ticket in self:
@@ -416,42 +416,40 @@ class HelpdeskTicket(models.Model):
         sale_order_line_obj = self.env["sale.order.line"]
 
         repair_orders = self.repair_batch_ids.mapped("repair_ids").filtered(
-            lambda r: not r.sale_order_id
+            lambda r: not r.sale_order_id or r.sale_order_id.state == "cancel"
         )
+
         product_quantities = {}
         move_repair_map = {}
         repair_product_map = {}
+
         if repair_orders:
-            # Aggregate product quantities across all batches (including repair orders' product_id)
-            for batch in self.repair_batch_ids:
-                for repair in batch.repair_ids.filtered(lambda r: not r.sale_order_id):
-                    # Aggregate based on repair product_id
-                    if repair.product_id:
-                        product_id = repair.product_id.id
-                        repair_product_map[product_id] = (
-                            repair_product_map.get(product_id, 0) + repair.product_qty
-                        )
+            for repair in repair_orders:
+                # logic for the repaired device itself
+                if repair.product_id:
+                    pid = repair.product_id.id
+                    repair_product_map[pid] = (
+                        repair_product_map.get(pid, 0) + repair.product_qty
+                    )
 
-                    # Aggregate based on move_ids (added components)
-                    for move in repair.move_ids.filtered(
-                        lambda m: m.repair_line_type == "add"
-                    ):
-                        product_id = move.product_id.id
-                        product_quantities[product_id] = (
-                            product_quantities.get(product_id, 0) + move.product_uom_qty
-                        )
-                        move_repair_map.setdefault(product_id, []).append(
-                            (move, repair)
-                        )
+                # logic for added components, grouped by under_warranty
+                for move in repair.move_ids.filtered(
+                    lambda m: m.repair_line_type == "add"
+                ):
+                    pid = move.product_id.id
+                    uw = bool(repair.under_warranty)
+                    key = (pid, uw)
+                    # sum up quantities
+                    product_quantities[key] = (
+                        product_quantities.get(key, 0.0) + move.product_uom_qty
+                    )
+                    # remember which move/repair pair goes to which grouping
+                    move_repair_map.setdefault(key, []).append((move, repair))
 
-            # Merge repair product quantities into product_quantities (set price to zero for these)
-            for product_id, qty in repair_product_map.items():
-                if product_id not in product_quantities:
-                    product_quantities[product_id] = qty
-                else:
-                    product_quantities[
-                        product_id
-                    ] += qty  # Ensure correct total quantity
+        # merge in repaired‐device qtys (these always ship, price = 0)
+        for pid, qty in repair_product_map.items():
+            key = (pid, False)  # price=0 & ship back
+            product_quantities[key] = product_quantities.get(key, 0.0) + qty
 
         # Check to make sure the RMA Return order type exists
         so_type = self.env.ref("ol_helpdesk_repair_batch.rma_return_sale_type", False)
@@ -463,7 +461,6 @@ class HelpdeskTicket(models.Model):
         # Try to get current user's sales team
         team_id = self.env.user.sale_team_id.id if self.env.user.sale_team_id else None
 
-        # Create a single sale order
         sale_order = sale_order_obj.create(
             {
                 "partner_id": self.partner_id.id,
@@ -475,35 +472,53 @@ class HelpdeskTicket(models.Model):
             }
         )
 
-        if product_quantities:
-            for product_id, qty in product_quantities.items():
-                product = self.env["product.product"].browse(product_id)
+        # create lines
+        sale_line_map = {}
+        for (product_id, under_warranty), qty in product_quantities.items():
+            product = self.env["product.product"].browse(product_id)
+            # determine price and shipment flag
+            if (product_id in repair_product_map) and not under_warranty:
+                # original repaired device
+                price = 0.0
+                is_component = False  # we want to ship it back
+            else:
+                # component: under warranty => free; otherwise list price
+                price = 0.0 if under_warranty else product.list_price
+                is_component = True  # we don't want to ship it back
 
-                # If the product comes from repair_product_map, it’s the parent repaired device
-                if product_id in repair_product_map:
-                    price_unit = 0.0
-                    is_component = False  # We DO want to ship this back
-                else:
-                    price_unit = product.list_price
-                    is_component = True  # These are added parts, don’t ship
+            line = sale_order_line_obj.create(
+                {
+                    "order_id": sale_order.id,
+                    "product_id": product_id,
+                    "product_uom_qty": qty,
+                    "product_uom": product.uom_id.id,
+                    "price_unit": price,
+                    "is_repair_component": is_component,
+                    "repair_ids": [
+                        (
+                            6,
+                            0,
+                            [
+                                r.id
+                                for r in self.repair_batch_ids.mapped("repair_ids")
+                                if r.product_id.id == product_id
+                            ],
+                        )
+                    ],
+                }
+            )
+            sale_line_map[(pid, under_warranty)] = line.id
 
-                sale_order_line_obj.create(
-                    {
-                        "order_id": sale_order.id,
-                        "product_id": product_id,
-                        "product_uom_qty": qty,
-                        "product_uom": product.uom_id.id,
-                        "price_unit": price_unit,
-                        "is_repair_component": is_component,
-                    }
-                )
-
-            # Link repairs and moves to the sale order & sale lines
-            for product_id, move_repairs in move_repair_map.items():
-                for move, repair in move_repairs:
+        # link back to repairs/moves
+        for key, pairs in move_repair_map.items():
+            line_id = sale_line_map.get(key)
+            for move, repair in pairs:
+                # Always relink if not linked, or if linked SO is canceled
+                if not repair.sale_order_id or repair.sale_order_id.state == "cancel":
                     repair.sale_order_id = sale_order.id
+                move.sale_line_id = line_id
 
-        self.repair_sale_order_ids = [(6, 0, [sale_order.id])]  # Assign single SO
+        self.repair_sale_order_ids = [(6, 0, [sale_order.id])]
 
         return {
             "name": "Sale Order",

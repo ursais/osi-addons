@@ -11,6 +11,7 @@
                 <field name="ticket_id" optional="hide" />
                 <field name="product_id" optional="show" />
                 <field name="qty" optional="show" />
+                <field name="under_warranty" optional="show" />
                 <field name="lot_ids" widget="many2many_tags" optional="show" />
                 <field name="schedule_date" optional="hide" />
                 <field name="sale_id" optional="hide" />
@@ -58,6 +59,7 @@
                             <field name="product_id" />
                             <field name="sale_id" optional="hide" />
                             <field name="qty" />
+                            <field name="under_warranty" />
                         </group>
                         <group name="sale_info">
                             <field name="schedule_date" />

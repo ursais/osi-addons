@@ -123,6 +123,10 @@ class RepairBatch(models.Model):
     show_create_removal_button = fields.Boolean(
         compute="_compute_show_create_removal_button",
     )
+    under_warranty = fields.Boolean(
+        string="Do not charge customer",
+        help="If checked, the sales price will be set to 0 for all products transferred from the repair order.",
+    )
 
     # END #######
     # METHODS ###
@@ -437,7 +441,7 @@ class RepairBatch(models.Model):
 
         self._update_ticket_sale_ids(old_sale_ids)
         for batch in self:
-            if "part_lines" in vals:
+            if "part_lines" in vals or "under_warranty" in vals:
                 batch._propagate_parts_to_repairs()
             if "schedule_date" in vals:
                 (batch.move_id + batch.move_ids).filtered(
@@ -479,6 +483,10 @@ class RepairBatch(models.Model):
 
             for part in batch.part_lines:
                 for repair in open_repairs:
+                    # Set under_warranty field
+                    if repair.under_warranty != batch.under_warranty:
+                        repair.under_warranty = batch.under_warranty
+
                     # Find or create a move linked to this repair
                     move = self.env["stock.move"].search(
                         [
