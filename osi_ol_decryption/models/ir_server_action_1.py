@@ -1175,7 +1175,7 @@ class IrActionsServer(models.Model):
         for rec in product_ids:
             if rec.get("pim_category") in (
                 "Product Management, Expansion",
-                "Expansion, Product Management",
+                "Expansion, Product Management", "Expansions"
             ):
                 categ_id = category_ids.filtered(lambda l: l.name == "Expansion")
 
@@ -1336,7 +1336,7 @@ class IrActionsServer(models.Model):
                     location_str = location_str + "_" + data[1]
 
             odoo_location = self.env["stock.location"].search(
-                [("complete_name", "ilike", location_str)]
+                [("complete_name", "ilike", location_str), ('company_id', '=', 1)]
             )
             if len(odoo_location) == 1:
                 product_tmpl_id = int(res_id.split(",")[1])
