@@ -43,29 +43,37 @@ class ProductTemplate(models.Model):
         "bom_ids.scaffolding_bom",
         "bom_ids.type",
         "bom_ids.bom_line_ids.config_set_id",
+        "bom_ids.bom_line_ids.config_set_id.configuration_ids.value_ids",
+        "attribute_line_ids.value_ids",
         "attribute_line_ids.multi",
         "attribute_line_ids.custom",
     )
     def _compute_has_advanced_configuration(self):
         """
-        Compute reasons for advanced configuration:
-        - True if Multi or Custom attribute lines are set
-        - True if there are any config_line_ids
-        - True if scaffolding BoM and not kit, has lines missing config_set_id
+        Compute reasons why this product has "advanced configuration".
+        Possible reasons:
+        - Configuration restrictions exist (config_line_ids).
+        - Scaffolding BoM has lines missing a config set.
+        - Multi or Custom attributes exist.
+        - Attribute values are selected on the product but are missing
+            from any BoM line configuration set.
+        Handles both:
+        - Unsaved UI changes (new values just added).
+        - Saved state (values persisted but still unconfigured).
         """
         for product in self:
-            # Skip non-configurable products
+            # If product has no attribute lines → nothing to configure
             if not product.attribute_line_ids:
                 product.has_advanced_configuration = ""
                 continue
 
             reasons = []
 
-            # Reason 1: Config Lines Exist
+            # --- Reason 1: Has Configuration Restrictions ---
             if product.config_line_ids:
                 reasons.append("- Has Configuration Restrictions defined.")
 
-            # Reason 2: If scaffold bom contains lines without config set and isn't kit
+            # --- Reason 2: Scaffolding BoM missing config sets ---
             if any(
                 bom.scaffolding_bom
                 and bom.type != "phantom"
@@ -76,14 +84,58 @@ class ProductTemplate(models.Model):
                     "- Scaffolding BoM has one or more lines missing the Configuration Set."
                 )
 
-            # Reason 3: Multi Attributes Exist
+            # --- Reason 3: Multi attributes exist ---
             if any(line.multi for line in product.attribute_line_ids):
                 reasons.append("- One or more attributes marked as Multi.")
 
-            # Reason 4: Custom Attributes Exist
+            # --- Reason 4: Custom attributes exist ---
             if any(line.custom for line in product.attribute_line_ids):
                 reasons.append("- One or more attributes marked as Custom.")
 
+            # --- Collect all attribute values already covered by any BoM line config set ---
+            configured_value_ids = set(
+                product.bom_ids.bom_line_ids.mapped(
+                    "config_set_id.configuration_ids.value_ids.id"
+                )
+            )
+
+            # Track values that are missing configuration
+            missing_value_ids = set()
+
+            # --- Reason 5: Missing configuration for attribute values ---
+            for line in product.attribute_line_ids:
+                # "origin" = the record in DB (before UI edits).
+                # If line is new, origin may not exist.
+                origin_ids = (
+                    line._origin.value_ids.ids
+                    if getattr(line, "_origin", None) and line._origin.id
+                    else []
+                )
+                current_ids = line.value_ids.ids
+
+                # Case A: Newly added values (UI-only, unsaved yet)
+                # These should be warned about immediately.
+                added_ids = set(current_ids) - set(origin_ids)
+
+                # Case B: All current values that are not represented in BoM configs
+                # This ensures that after save, missing configs are still flagged.
+                unsatisfied_ids = set(current_ids) - configured_value_ids
+
+                # Combine both sets of missing values
+                missing_value_ids.update(added_ids | unsatisfied_ids)
+
+            if missing_value_ids:
+                missing_names = (
+                    self.env["product.attribute.value"]
+                    .browse(list(missing_value_ids))
+                    .mapped("name")
+                )
+                reasons.append(
+                    "- The following attribute values have no BoM configuration: "
+                    + ", ".join(missing_names)
+                )
+
+            # Final result: join all reasons as a multi-line text
             product.has_advanced_configuration = "\n".join(reasons) if reasons else ""
 
     def action_create_rebuild_scaffolding_bom(self):
