@@ -180,7 +180,7 @@
                 </t>
             </t>
 
-            <t t-if="budgetary_quote"/>
+            <t t-if="budgetary_quote">
                 <t t-call="ol_templates.report_products_optional">
                     <t t-set="products_title">
                         Optional Products
