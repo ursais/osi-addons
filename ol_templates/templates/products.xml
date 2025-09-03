@@ -132,7 +132,7 @@
             <t t-set="lines" t-value="sale_order.sale_order_option_ids.filtered(lambda l: l.quantity != 0 and l.product_id.id == sale_order_line.product_id.id and l.config_session_id.id)" />
             <div t-if="lines" class="row">
                 <div class="col-6"></div>
-                <div class="ol_products_line col-6" style="padding: 0px !important;position: relative;top: -20px;">
+                <div class="ol_products_line col-6" style="padding: 0px !important;position: relative;top: -10px;">
                     <t t-foreach="lines" t-as="tier">
                         <div class="ol_products_line_data ol_flex ol_flex_just_cont_space_between" style="width:100%; color:darkgray;">
                             <div class="ol_products_line_data_item product_price">

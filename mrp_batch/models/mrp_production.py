@@ -194,19 +194,19 @@ class MrpProduction(models.Model):
             production.name = self._get_name_backorder(
                 production.name, production.backorder_sequence
             )
-            (
-                production.move_raw_ids | production.move_finished_ids
-            ).name = production.name
-            (
-                production.move_raw_ids | production.move_finished_ids
-            ).origin = production._get_origin()
+            (production.move_raw_ids | production.move_finished_ids).name = (
+                production.name
+            )
+            (production.move_raw_ids | production.move_finished_ids).origin = (
+                production._get_origin()
+            )
             backorder_vals = production.copy_data(
                 default=production._get_backorder_mo_vals()
             )[0]
             backorder_qtys = amounts[production][1:]
-            production.with_context(
-                skip_compute_move_raw_ids=True
-            ).product_qty = amounts[production][0]
+            production.with_context(skip_compute_move_raw_ids=True).product_qty = (
+                amounts[production][0]
+            )
 
             next_seq = max(
                 production.procurement_group_id.mrp_production_ids.mapped(
@@ -292,7 +292,7 @@ class MrpProduction(models.Model):
                     moves.append(move)
 
         backorder_moves = self.env["stock.move"].create(new_moves_vals)
-        # After you create `backorder_moves` in your code, add this picking split logic
+        # After `backorder_moves` created, add picking split logic
         picking_vals_list = []
         original_to_new_picking = {}
         for production in self:
@@ -347,9 +347,9 @@ class MrpProduction(models.Model):
                         "raw_material_production_id": False,
                         "location_id": new_picking.location_id.id,
                         "location_dest_id": new_picking.location_dest_id.id,
-                        "move_orig_ids": [(6, 0, [move.id])]
-                        if original_move
-                        else False,
+                        "move_orig_ids": (
+                            [(6, 0, [move.id])] if original_move else False
+                        ),
                     }
                 )[0]
 
