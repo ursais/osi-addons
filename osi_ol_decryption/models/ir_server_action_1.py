@@ -12,6 +12,13 @@ from odoo.tools import convert_csv_import, file_open
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
+    def split_mo(self):
+        self = self.sudo()
+        mo_ids = self.search(["&", ("state", "=", "confirmed"), ("product_qty", ">", 1)], order='product_qty')
+        for mo in mo_ids:
+            mo.sale_order_id.with_delay().split_mo(split_internal_picking=True)
+
+
     def update_cost_center_distribution(self):
         _logger.info("===============update_cost_center_distribution====================")
         """Migrate existing journal items to cost center analytic accounts"""
@@ -1881,6 +1888,7 @@ class IrActionsServer(models.Model):
             "ol_pdf_reports",
             "ol_mrp_plm_product_configuration",
             "ol_product_currency",
+            "simplify_access_management",
         ]
 
         for module in modules:
