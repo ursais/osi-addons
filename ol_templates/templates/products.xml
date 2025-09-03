@@ -6,7 +6,7 @@
             <div class="ol_products_header ol_flex ol_flex_just_cont_space_between">
                 <div class="ol_products_title ol_flex ol_flex_reverse">
                     <!--The title-->
-                    <t t-esc="products_title"/>
+                    <t t-esc="products_title" />
                 </div>
                 <div class="ol_products_list_header ol_flex ol_flex_just_cont_space_between">
                     <div class="ol_products_list_header_item">
@@ -22,7 +22,7 @@
                 </div>
             </div>
             <!--The list of products-->
-            <t t-call="ol_templates.report_product_lines"/>
+            <t t-call="ol_templates.report_product_lines" />
         </div>
     </template>
 
@@ -31,83 +31,80 @@
     <template id="report_product_lines">
         <div class="ol_product_lines">
             <t t-foreach="product_lines" t-as="product_line">
-                <t t-set="sale_order_line" t-value="product_line.get('order_line', False)"/>
-                <t t-set="invoice_line" t-value="product_line.get('invoice_line')"/>
+                <t t-set="sale_order_line" t-value="product_line.get('order_line', False)" />
+                <t t-set="invoice_line" t-value="product_line.get('invoice_line')" />
                 <div class="ol_products_line">
 
                     <!--Product: image, name, sku, data-->
                     <div class="ol_products_main_cont ol_flex">
                         <div class="ol_product_image">
                             <t t-if="sale_order_line.product_id.image_128">
-                                <img t-attf-src="data:image;base64,{{sale_order_line.product_id.image_128}}"/>
+                                <img t-attf-src="data:image;base64,{{sale_order_line.product_id.image_128}}" />
                             </t>
                         </div>
                         <div class="ol_product_data">
-                            <div class="ol_products_info_cont ol_flex ol_flex_just_cont_space_between">
+                            <div class="ol_products_info_cont ol_flex ol_flex_just_cont_space_between row">
 
-                                <div class="product_info_name">
+                                <div class="product_info_name col-6">
                                     <div class="ol_product_name">
-                                        <t t-esc="sale_order_line.product_id.name"/>
+                                        <t t-esc="sale_order_line.product_id.name" />
                                     </div>
-                                    <div class="ol_product_default_code" t-esc="sale_order_line.product_id.product_tmpl_id.default_code"/>
+                                    <div class="ol_product_default_code" t-esc="sale_order_line.product_id.product_tmpl_id.default_code" />
                                 </div>
 
-                                <!-- Show tier pricing lines for budgetary quotes and proforma invoices -->
-                                <t t-if="budgetary_quote">
-                                    <t t-call="ol_templates.budgetary_quote_product_lines"/>
-                                </t>
-
                                 <!-- Not a budgetary quote or proforma invoice, just show the sale line's values -->
-                                <t t-if="not budgetary_quote">
-                                    <div class="ol_products_line_data ol_flex ol_flex_just_cont_space_between">
+                                <div class="ol_products_line_data ol_flex ol_flex_just_cont_space_between">
 
-                                        <div class="ol_products_line_data_item product_price">
-                                            <t t-if="invoice_line">
-                                                <span t-field="invoice_line.price_unit" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}"/>
+                                    <div class="ol_products_line_data_item product_price">
+                                        <t t-if="invoice_line">
+                                            <span t-field="invoice_line.price_unit" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}" />
+                                        </t>
+                                        <t t-else="">
+                                            <t t-if="sale_order_line.discount">
+                                                <t t-set="price" t-value="sale_order_line.price_subtotal and sale_order_line.product_uom_qty and sale_order_line.price_subtotal / sale_order_line.product_uom_qty" />
+                                                <span t-esc="price" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}" />
                                             </t>
                                             <t t-else="">
-                                                <t t-if="sale_order_line.discount">
-                                                    <t t-set="price" t-value="sale_order_line.price_subtotal and sale_order_line.product_uom_qty and sale_order_line.price_subtotal / sale_order_line.product_uom_qty"/>
-                                                    <span t-esc="price" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}"/>
-                                                </t>
-                                                <t t-else="">
-                                                    <span t-field="sale_order_line.price_unit" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}"/>
-                                                </t>
+                                                <span t-field="sale_order_line.price_unit" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}" />
                                             </t>
-                                        </div>
-
-                                        <div class="ol_products_line_data_item product_qty">
-                                            <t t-if="invoice_line">
-                                                <t t-esc="invoice_line.quantity" t-options="{'widget': 'integer'}"/>
-                                            </t>
-                                            <t t-else="">
-                                                <t t-esc="sale_order_line.product_uom_qty" t-options="{'widget': 'integer'}"/>
-                                            </t>
-                                        </div>
-
-                                        <div class="ol_products_line_data_item product_subtotal">
-                                            <t t-if="invoice_line">
-                                                <span t-field="invoice_line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}"/>
-                                            </t>
-                                            <t t-else="">
-                                                <span t-field="sale_order_line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}"/>
-                                            </t>
-                                        </div>
-
+                                        </t>
                                     </div>
-                                </t>
+
+                                    <div class="ol_products_line_data_item product_qty">
+                                        <t t-if="invoice_line">
+                                            <t t-esc="invoice_line.quantity" t-options="{'widget': 'integer'}" />
+                                        </t>
+                                        <t t-else="">
+                                            <t t-esc="sale_order_line.product_uom_qty" t-options="{'widget': 'integer'}" />
+                                        </t>
+                                    </div>
+
+                                    <div class="ol_products_line_data_item product_subtotal">
+                                        <t t-if="invoice_line">
+                                            <span t-field="invoice_line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}" />
+                                        </t>
+                                        <t t-else="">
+                                            <span t-field="sale_order_line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}" />
+                                        </t>
+                                    </div>
+
+                                </div>
                             </div>
+                            <!-- Show tier pricing lines for budgetary quotes and proforma invoices -->
+                            <t t-if="budgetary_quote">
+                                <t t-call="ol_templates.budgetary_quote_product_lines" />
+                            </t>
 
                             <!--System configuration-->
                             <div class="ol_products_system_configuration">
                                 <div class="system-configuration" t-if="product_line['quote_config']">
-                                    <t t-set="quote_lines" t-value="product_line['quote_lines']"/>
+                                    <t t-set="quote_lines" t-value="product_line['quote_lines']" />
                                     <div class="system-configuration-line ol_flex ol_flex_just_cont_space_between" t-foreach="quote_lines" t-as="quote_line">
                                         <div class="system-configuration-attribute">
-                                            <t t-esc="quote_line['attribute_name']"/>
+                                            <t t-esc="quote_line['attribute_name']" />
                                         </div>
                                         <div class="system-configuration-product">
-                                            <t t-esc="quote_line.get('product_qty', 1)"/> X <t t-esc="quote_line.get('value_name', '')"/>
+                                            <t t-esc="quote_line.get('product_qty', 1)" /> X <t t-esc="quote_line.get('value_name', '')" />
                                         </div>
                                     </div>
                                 </div>
@@ -116,12 +113,12 @@
                     </div>
 
                     <!--System serial numbers and Product notes-->
-                    <t t-set="system_serial_numbers" t-value="sale_order_line.get_line_serial_numbers()"/>
+                    <t t-set="system_serial_numbers" t-value="sale_order_line.get_line_serial_numbers()" />
                     <div class="product-notes" t-if="product_line['quote_config']">
                         <div t-if="system_serial_numbers">
                             <t t-call="ol_templates.serial_numbers">
                                 <t t-set="serial_title">System Serial Numbers</t>
-                                <t t-set="system_serial_numbers" t-value="system_serial_numbers"/>
+                                <t t-set="system_serial_numbers" t-value="system_serial_numbers" />
                             </t>
                         </div>
                     </div>
@@ -132,74 +129,79 @@
 
     <template id="budgetary_quote_product_lines">
         <t t-name="ol_templates.budgetary_quote_product_lines">
-            <div class="ol_products_line">
-                <t t-foreach="sale_order.sale_order_option_ids.filtered(lambda l: l.quantity != 0 and l.product_id.id != sale_order_line.product_id.id)" t-as="tier">
-                  <div class="ol_products_line_data ol_flex ol_flex_just_cont_space_between" style="width:100%; color:darkgray;">
-
-                    <div class="ol_products_line_data_item product_price">
-                      <span t-esc="tier.price_unit" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
-                    </div>
-                    <div class="ol_products_line_data_item product_qty">
-                      <span t-esc="tier.quantity" t-options="{'widget': 'integer'}"/>
-                    </div>
-                    <div class="ol_products_line_data_item product_subtotal">
-                      <span t-esc="tier.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
-                    </div>
-                  </div>
-                </t>
+            <t t-set="lines" t-value="sale_order.sale_order_option_ids.filtered(lambda l: l.quantity != 0 and l.product_id.id == sale_order_line.product_id.id and l.config_session_id.id)" />
+            <div t-if="lines" class="row">
+                <div class="col-6"></div>
+                <div class="ol_products_line col-6" style="padding: 0px !important;position: relative;top: -20px;">
+                    <t t-foreach="lines" t-as="tier">
+                        <div class="ol_products_line_data ol_flex ol_flex_just_cont_space_between" style="width:100%; color:darkgray;">
+                            <div class="ol_products_line_data_item product_price">
+                            <span t-esc="tier.price_unit" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}" />
+                            </div>
+                            <div class="ol_products_line_data_item product_qty">
+                            <span t-esc="tier.quantity" t-options="{'widget': 'integer'}" />
+                            </div>
+                            <div class="ol_products_line_data_item product_subtotal">
+                            <span t-esc="tier.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}" />
+                            </div>
+                        </div>
+                    </t>
+                </div>
             </div>
-      </t>
-  </template>
-
-<template id="report_products_optional">
-        <!-- Products Table -->
-        <table class="table-borderless" style="width:100%; border:none; border-collapse: collapse; ">
-            <thead>
-                <tr style="border-bottom: 1px solid #595A5C; color: #595A5C;">
-                    <th class="ol_products_title" style="text-align:left; padding:4px 0; font-weight:bold;font-weight: 600;font-size: 16px;line-height: 15px; color: #595A5C;">Optional Products</th>
-                    <th class="ol_products_list_header_item" style="text-align:right; padding:4px 0; font-weight:bold;font-weight: 600;font-size: 16px;line-height: 15px; color: #595A5C;">Price</th>
-                    <th class="ol_products_list_header_item" style="text-align:right; padding:4px 0; font-weight:bold;font-weight: 600;font-size: 16px;line-height: 15px; color: #595A5C;">QTY</th>
-                    <th class="ol_products_list_header_item" style="text-align:right; padding:4px 0; font-weight:bold;font-weight: 600;font-size: 16px;line-height: 15px; color: #595A5C;">Subtotal</th>
-                </tr>
-            </thead>
-            <tbody>
-                <t t-call="ol_templates.optional_product_lines"/>
-            </tbody>
-        </table>
-</template>
-
-<template id="optional_product_lines">
-    <t t-name="ol_templates.optional_product_lines">
-        <t t-foreach="sale_order.sale_order_option_ids.filtered(lambda l: l.quantity != 0 and not l.config_session_id.id and not l.line_id)" t-as="tier">
-            <tr>
-                <!-- Product Info -->
-                <td>
-                    <div class="ol_product_name">
-                        <t t-esc="tier.product_id.name"/>
-                    </div>
-                    <div class="ol_product_default_code" t-esc="tier.product_id.product_tmpl_id.default_code"/>
-                </td>
-
-                <!-- Price -->
-                <td style="text-align:right; border:none;">
-                    <span t-esc="tier.price_unit"
-                          t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
-                </td>
-
-                <!-- Qty -->
-                <td style="text-align:right; border:none;">
-                    <span t-esc="tier.quantity" t-options="{'widget': 'integer'}"/>
-                </td>
-
-                <!-- Subtotal -->
-                <td style="text-align:right; border:none !importnat;">
-                    <span t-esc="tier.price_subtotal"
-                          t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
-                </td>
-            </tr>
         </t>
-    </t>
-</template>
+    </template>
 
+    <template id="report_products_optional">
+        <t t-set="lines" t-value="sale_order.sale_order_option_ids.filtered(lambda l: l.quantity != 0 and not l.config_session_id.id and not l.line_id)" />
+        <t t-if="lines">
+            <!-- Products Table -->
+            <table class="table-borderless" style="width:100%; border:none; border-collapse: collapse; ">
+                <thead>
+                    <tr style="border-bottom: 1px solid #595A5C; color: #595A5C;">
+                        <th class="ol_products_title" style="text-align:left; padding:4px 0; font-weight:bold;font-weight: 600;font-size: 16px;line-height: 15px; color: #595A5C;">Optional Products</th>
+                        <th class="ol_products_list_header_item" style="text-align:right; padding:4px 0; font-weight:bold;font-weight: 600;font-size: 16px;line-height: 15px; color: #595A5C;">Price</th>
+                        <th class="ol_products_list_header_item" style="text-align:right; padding:4px 0; font-weight:bold;font-weight: 600;font-size: 16px;line-height: 15px; color: #595A5C;">QTY</th>
+                        <th class="ol_products_list_header_item" style="text-align:right; padding:4px 0; font-weight:bold;font-weight: 600;font-size: 16px;line-height: 15px; color: #595A5C;">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-call="ol_templates.optional_product_lines" />
+                </tbody>
+            </table>
+        </t>
+    </template>
+
+    <template id="optional_product_lines">
+        <t t-name="ol_templates.optional_product_lines">
+            <t t-foreach="sale_order.sale_order_option_ids.filtered(lambda l: l.quantity != 0 and not l.config_session_id.id and not l.line_id)" t-as="tier">
+                <tr>
+                    <!-- Product Info -->
+                    <td>
+                        <div class="ol_product_name">
+                            <t t-esc="tier.product_id.name" />
+                        </div>
+                        <div class="ol_product_default_code" t-esc="tier.product_id.product_tmpl_id.default_code" />
+                    </td>
+
+                    <!-- Price -->
+                    <td style="text-align:right; border:none;">
+                        <span t-esc="tier.price_unit"
+                            t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}" />
+                    </td>
+
+                    <!-- Qty -->
+                    <td style="text-align:right; border:none;">
+                        <span t-esc="tier.quantity" t-options="{'widget': 'integer'}" />
+                    </td>
+
+                    <!-- Subtotal -->
+                    <td style="text-align:right; border:none !importnat;">
+                        <span t-esc="tier.price_subtotal"
+                            t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}" />
+                    </td>
+                </tr>
+            </t>
+        </t>
+    </template>
 
 </odoo>
