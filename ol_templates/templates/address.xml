@@ -14,7 +14,7 @@
                         <t t-esc="shipping_ref"/>
                         <br/>
                     </t>
-                    <t t-esc="address.name"/>
+                    <t t-esc="address.override_company_name or address.name"/>
                 </t>
                 <t t-if="sender">
                     <strong>

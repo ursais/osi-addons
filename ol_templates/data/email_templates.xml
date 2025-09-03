@@ -630,7 +630,7 @@
                                       <br/>
                                       <t t-esc="address.company_name or address.commercial_company_name"/>
                                       <br/>
-                                      <t t-esc="address.name"/>
+                                      <t t-esc="address.override_company_name or address.name"/>
                                       <br/>
                                       <t t-esc="address.street"/>
                                       <br/>
