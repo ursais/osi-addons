@@ -4,6 +4,7 @@
     <record id="helpdesk_team_tech_support" model="helpdesk.team">
         <field name="name">Tech Support</field>
         <field name="use_product_repairs">1</field>
+        <field name="company_id" ref="base.main_company" />
         <field name="use_helpdesk_timesheet">1</field>
     </record>
 
@@ -12,6 +13,7 @@
         <field name="name">Customer RMA</field>
         <field name="use_product_repairs">1</field>
         <field name="use_helpdesk_timesheet">1</field>
+        <field name="company_id" ref="base.main_company" />
         <field name="sequence_id" ref="ir_sequence_helpdesk_ticket_rma" />
     </record>
 
@@ -19,7 +21,17 @@
     <record id="helpdesk_team_engineering" model="helpdesk.team">
         <field name="name">Applications Engineering</field>
         <field name="use_product_repairs">1</field>
+        <field name="company_id" ref="base.main_company" />
         <field name="use_helpdesk_timesheet">1</field>
+    </record>
+
+    <!-- Helpdesk Team: Customer RMA EU -->
+    <record id="helpdesk_team_customer_rma_eu" model="helpdesk.team">
+        <field name="name">Customer RMA (EU)</field>
+        <field name="use_product_repairs">1</field>
+        <field name="use_helpdesk_timesheet">1</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="sequence_id" ref="ir_sequence_helpdesk_ticket_rma" />
     </record>
 
 </odoo>
