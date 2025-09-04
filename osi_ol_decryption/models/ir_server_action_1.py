@@ -38,40 +38,43 @@ class IrActionsServer(models.Model):
             """,
                 (new_tz, old_tz),
             )
+    
+    def clear_analytic_account_refs(self):
+        cr = self._cr
+        cr.execute("""
+            SELECT model, name
+            FROM ir_model_fields
+            WHERE relation = 'account.analytic.account'
+            AND ttype = 'many2one' and store = 't' and model not ilike '%report%'
+        """)
+        for model, field in cr.fetchall():
+            model = model.replace('.', '_')
+            query = f'UPDATE "{model}" SET "{field}" = NULL WHERE "{field}" IS NOT NULL;'
+            cr.execute(query)
 
+        cr.execute("""
+            SELECT relation_table
+            FROM ir_model_fields
+            WHERE relation = 'account.analytic.account'
+            AND ttype = 'many2many' and store = 't';
+        """)
+        for (relation_table,) in cr.fetchall():
+            query = f'DELETE FROM "{relation_table}";'
+            cr.execute(query)
+
+        cr.commit()
+        cr.execute("delete from account_analytic_account")
+        cr.commit()
 
     def update_cost_center_distribution(self):
         _logger.info("===============update_cost_center_distribution====================")
         """Migrate existing journal items to cost center analytic accounts"""
-        cost_center = { 1: "11000",
-                        2: "12000",
-                        3: "13000",
-                        5: "14000",
-                        6: "21000",
-                        8: "21002",
-                        9: "22000",
-                        10: "31000",
-                        11: "32000",
-                        12: "41000",
-                        13: "51000",
-                        14: "52000",
-                        15: "53000",
-                        17: "54000",
-                        18: "55000",
-                        19: "56000",
-                        23: "57000",
-                        27: "21001",
-                        28: "13001",
-                        29: "14001",
-                        30: "51001",
-                        31: "52001",
-                        32: "53001",
-                        33: "23000",
-                        34: "58000",
-                        35: "56001",
-                        36: "54001"
+        cost_center = { 1: "11000",2: "12000",3: "13000",5: "14000",6: "21000",8: "21002",9: "22000",
+                        10: "31000",11: "32000",12: "41000",13: "51000",14: "52000",15: "53000",17: "54000",18: "55000",
+                        19: "56000",23: "57000",27: "21001",28: "13001",29: "14001",30: "51001",31: "52001",32: "53001",
+                        33: "23000",34: "58000",35: "56001",36: "54001"
                     }
-        
+        self.clear_analytic_account_refs()
         pathname = "osi_ol_decryption/data/account.analytic.plan.csv"
         with file_open(pathname, 'rb', env=self.env) as fp:
             convert_csv_import(self.env, 'osi_ol_decryption', pathname, fp.read(), {}, 'update', False)
