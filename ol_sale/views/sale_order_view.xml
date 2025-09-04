@@ -107,7 +107,7 @@
                 <button class="oe_stat_button" name="action_view_mo_internal_picking" invisible="mo_tranfer_count == 0" type="object" icon="fa-bars">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value"><field name="mo_tranfer_count" /></span>
-                        <span class="o_stat_text">MO Tranfer</span>
+                        <span class="o_stat_text">MO Transfers</span>
                     </div>
                 </button>
             </xpath>
