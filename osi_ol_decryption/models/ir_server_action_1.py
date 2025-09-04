@@ -18,6 +18,27 @@ class IrActionsServer(models.Model):
         for mo in mo_ids:
             mo.sale_order_id.with_delay().split_mo(split_internal_picking=True)
 
+    def set_timezones(self):
+        """Set Timezones on companies/partners/users"""
+        # The timezones have changed from US/XXXX to America/XXXX so this corrects Partners
+        # If not corrected, an error 'US/Eastern not recognized' is raised.
+        # Map legacy timezones to valid PostgreSQL timezones
+        tz_map = {
+            "US/Eastern": "America/New_York",
+            "US/Central": "America/Chicago",
+            "US/Mountain": "America/Denver",
+            "US/Pacific": "America/Los_Angeles",
+        }
+        for old_tz, new_tz in tz_map.items():
+            self.env.cr.execute(
+                """
+                UPDATE res_partner
+                SET tz = %s
+                WHERE tz = %s
+            """,
+                (new_tz, old_tz),
+            )
+
 
     def update_cost_center_distribution(self):
         _logger.info("===============update_cost_center_distribution====================")
@@ -503,24 +524,29 @@ class IrActionsServer(models.Model):
     def update_product_category_account(self):
         _logger.info("===============update_product_category_account====================")
         self = self.sudo()
+        us_compnay = self.env.ref("base.main_company")
         category_ids = self.env["product.category"].search([])
         acc_product = self.env.ref("lgx_account.41100-02")
-        acc_materials = self.env.ref("lgx_account.51105-02")
-        us_compnay = self.env.ref("base.main_company")
+        acc_materials = self.env.ref("lgx_account.11765-02")
+        stock_valution = self.env['account.account'].search([('code', '=', '11013.02'), ('company_id', '=', us_compnay.id)])
+        
         for catg in category_ids:
             catg.with_company(us_compnay).write(
                 {
+                    "property_stock_valuation_account_id": stock_valution.id,
                     "property_stock_account_input_categ_id": acc_product.id,
                     "property_stock_account_output_categ_id": acc_materials.id,
                 }
             )
 
         acc_product = self.env.ref("lgx_account.41100-03")
-        acc_materials = self.env.ref("lgx_account.51105-03")
+        acc_materials = self.env.ref("lgx_account.11750-03")
         eu_compnay = self.env.ref("ol_base.onlogic_eu")
+        stock_valution = self.env['account.account'].search([('code', '=', '11013.04'), ('company_id', '=', eu_compnay.id)])
         for catg in category_ids:
             catg.with_company(eu_compnay).write(
                 {
+                    "property_stock_valuation_account_id": stock_valution.id,
                     "property_stock_account_input_categ_id": acc_product.id,
                     "property_stock_account_output_categ_id": acc_materials.id,
                 }
@@ -532,6 +558,29 @@ class IrActionsServer(models.Model):
         self._cr.execute("update account_journal set active = 'f' where id = 270;") #Vendor Bills
         self._cr.execute("update account_journal set name = json_build_object('en_US', 'Purchase Refund Journal') where id = 215;") # Purchase Refund Journal USD
         self._cr.execute("update account_journal set name = json_build_object('en_US', 'Purchase Journal') where id = 214;") # Purchase Journal EUR
+
+        codes = ['11010','11011','11020','11021','11030','11040','11041','11042','11044','11050','11013','11022','11023','11031','11047','11051']
+        
+        #update Journals
+        account_obj = self.env['account.account']
+        journal_obj = self.env['account.journal']
+        for code in codes:
+            journal_id = journal_obj.search([('code', '=', code), ('company_id', '=', us_compnay.id)])
+            if journal_id:
+                code_je = code + "A.02"
+                payment_account_id = account_obj.search([('code', '=', code_je), ('company_id', '=', us_compnay.id)], limit=1)
+                if payment_account_id:
+                    journal_id.outbound_payment_method_line_ids.write({'payment_account_id': payment_account_id.id})
+                    journal_id.inbound_payment_method_line_ids.write({"payment_account_id": payment_account_id.id})
+                
+                code_sa = code + "B.02"
+                suspense_account_id = account_obj.search([('code', '=', code_sa), ('company_id', '=', us_compnay.id)],limit=1)
+                if suspense_account_id:
+                    journal_id.suspense_account_id = suspense_account_id.id
+                code_ba = code + ".02"
+                bank_account_id = account_obj.search([('code', '=', code_ba), ('company_id', '=', us_compnay.id)], limit=1)
+                if bank_account_id:
+                    journal_id.default_account_id = bank_account_id.id
 
 
     def delete_account(self):
@@ -746,7 +795,7 @@ class IrActionsServer(models.Model):
         hot_ar_cron.method_direct_trigger()
 
     def unistall_module(self):
-        _logger.info("===============rununistall_module_hot_ar====================")
+        _logger.info("===============unistall_module====================")
         module_uninstall_list = [
             "documents_hr_expense",
             "hr_expense_extract",
@@ -1727,6 +1776,7 @@ class IrActionsServer(models.Model):
     def install_new_module(self):
         modules = [
             "job_cost_estimate_customer",
+            "queue_job",
             "mrp_batch",
             "ol_crm",
             "ol_crm_estimate",
