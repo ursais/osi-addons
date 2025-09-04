@@ -98,7 +98,7 @@
                           <tag>Ship Date</tag>
                       </div>
                       <div class="value">
-                          <t t-esc="sale_order.get_format_date(ship_date)"/>
+                          <t t-esc="sale_order.get_format_date(commitment_date) or sale_order.get_format_date(expected_date)"/>
                       </div>
                   </div>
                   <t t-if="sale_order.client_order_ref">
@@ -145,7 +145,7 @@
                             <tag>Ship Date</tag>
                         </div>
                         <div class="value">
-                            <t t-esc="sale_order.get_format_date(ship/ol_)"/>
+                            <t t-esc="sale_order.get_format_date(ship_date)"/>
                         </div>
                     </div>
                     <div class="ol_account_manager_cont ol_margin_top_10">
