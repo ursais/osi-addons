@@ -37,8 +37,10 @@ class ExceptionRule(models.Model):
         "group_id",
         string="Allowed Groups to Ignore the Exceptions.",
     )
-
-    template_id = fields.Many2one("mail.template", string="Email Template")
+    template_id = fields.Many2one(
+        "mail.template",
+        string="Email Template",
+    )
 
     # END #########
     # METHODS #####
