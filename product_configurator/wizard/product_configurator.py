@@ -181,6 +181,7 @@ class ProductConfigurator(models.TransientModel):
 
         # Remove None from cfg_val_ids if exist
         cfg_val_ids = [val for val in cfg_val_ids if val]
+        # cfg_val_ids.append(3159)
 
         product_img = config_session_id.get_config_image(cfg_val_ids)
         price = config_session_id.get_cfg_price(cfg_val_ids)
@@ -216,7 +217,6 @@ class ProductConfigurator(models.TransientModel):
         # List to store multi-value IDs
         available_val_ids_m2m = []
         for k, v in dynamic_fields.items():
-            print(f"KKKKKK:{k}:::{v}")
             if not v:
                 continue
             available_val_ids = domains[k][0][2]
@@ -271,7 +271,6 @@ class ProductConfigurator(models.TransientModel):
             if field_prefix in field:
                 attribute_line_id = field.split(field_prefix)[1]
                 attributes_to_consider_removal.append(int(attribute_line_id.split("_")[1]))
-
         # attributes_to_consider_removal = [
         #     int(field.split(field_prefix)[1]) for field in vals if field_prefix in field
         # ]
@@ -285,7 +284,6 @@ class ProductConfigurator(models.TransientModel):
         if "value_ids" in vals:
             val_ids = vals["value_ids"][0]
             vals["value_ids"] = [[val_ids[0], val_ids[1], tools.flatten(val_ids[2])]]
-        print("//////////PW///////",vals,config_session_id.value_ids)
         return vals
 
     def apply_onchange_values(self, values, field_names, field_onchange):
@@ -344,7 +342,7 @@ class ProductConfigurator(models.TransientModel):
             cfg_step = self.env["product.config.step.line"]
 
         dynamic_fields = {k: v for k, v in values.items() if k.startswith(field_prefix)}
-
+        print("@@@@@@@@>>>>0",dynamic_fields)
         # Get the unstored values from the client view
         for k, v in dynamic_fields.items():
             attr_line_id = k.split(field_prefix)[1]
@@ -400,6 +398,7 @@ class ProductConfigurator(models.TransientModel):
         fields as onchange isn't triggered for non-db fields
         """
         if not self._context.get('parent_super'):
+            print("############",values)
             onchange_values = self.apply_onchange_values(
                 values=values, field_names=field_names, field_onchange=fields_spec
             )

@@ -128,6 +128,7 @@ class ProductAttributePrice(models.Model):
 
         # Only run if relevant fields are updated
         if 'default_qty' in vals or 'maximum_qty' in vals:
+            attribute_value_qty = self.env["attribute.value.qty"]
             for record in self:
                 if not record.is_qty_required:
                     continue  # Skip if qty is not required
@@ -144,12 +145,15 @@ class ProductAttributePrice(models.Model):
                 # Compute changes
                 qtys_to_add = new_qty_range - existing_qtys
                 qtys_to_remove = existing_qtys - new_qty_range
-
-                if qtys_to_remove:
+                print(qtys_to_add,qtys_to_remove,"////selffffffffff",self)
+                if qtys_to_remove and self.ptav_product_variant_ids:
                     raise ValidationError(_(
                         "Qty cannot be removed because product variants exist for '%s' - Attribute: %s."
                     ) % (record.product_tmpl_id.display_name, record.attribute_id.name))
 
+                if qtys_to_remove and not self.ptav_product_variant_ids:
+                    qtys = record.attribute_value_qty_ids.filtered(lambda l:l.qty in list(qtys_to_remove))
+                    qtys.unlink()
                 # Add new records
                 qty_vals = [
                     {

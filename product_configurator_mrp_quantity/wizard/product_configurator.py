@@ -119,6 +119,8 @@ class ProductConfigurator(models.TransientModel):
             config_session_id=config_session_id,
             values=values,
         )
+
+        print(self.value_ids,"/////////////Valsssss",vals)
         vals.update({"val_qty_ids":[]})
         field_prefix = self._prefixes.get("field_prefix")
         qty_prefix = self._prefixes.get("qty_field")
@@ -134,6 +136,7 @@ class ProductConfigurator(models.TransientModel):
             and ast.literal_eval(self.values_dict)
             or {}
         )
+        print("AAAAAAAAAAA",vals,values_dict)
         for k,v in vals.items():
             if k.startswith(field_prefix):
                 attrb_line_id = k.split(field_prefix)[1]
@@ -194,8 +197,104 @@ class ProductConfigurator(models.TransientModel):
 
         self.values_dict = values_dict
         vals |= local_dict
-        print("////////@###########$$$$$$$$$",vals)
+        print("////////@###########$$$$$$$$$",vals,local_dict)
+        print("ZZZZZZZZZZZZZZZ",self.product_tmpl_id,self.product_tmpl_id.attribute_line_ids)
         return vals
+
+    # def get_form_vals(
+    #     self,
+    #     dynamic_fields,
+    #     domains,
+    #     cfg_val_ids=None,
+    #     product_tmpl_id=None,
+    #     config_session_id=None,
+    #     values=None,
+    # ):
+    #     """Generate a dictionary to return new values via onchange method.
+    #     Domains hold the values available, this method enforces these values
+    #     if a selection exists in the view that is not available anymore.
+
+    #     :param dynamic_fields: Dictionary with the current {dynamic_field: val}
+    #     :param domains: Odoo domains restricting attribute values
+
+    #     :returns vals: Dictionary passed to {'value': vals} by onchange method
+    #     """
+    #     vals = {}
+    #     dynamic_fields = {k: v for k, v in dynamic_fields.items() if v}
+    #     # List to store multi-value IDs
+    #     available_val_ids_m2m = []
+    #     for k, v in dynamic_fields.items():
+    #         if not v:
+    #             continue
+    #         available_val_ids = domains[k][0][2]
+    #         # Get all value_ids linked to the current config session
+    #         value_ids = self.config_session_id.value_ids
+    #         # Filter attribute lines for multi-select attributes that match IDs
+    #         # in value_ids
+    #         attribute_line_ids = self.product_tmpl_id.attribute_line_ids.filtered(
+    #             lambda line, value_ids=value_ids: line.multi
+    #             and line.attribute_id.id in value_ids.mapped("attribute_id").ids
+    #         )
+    #         # Get multi-value IDs that match attribute lines
+    #         # Filter the `multi_value_ids` associated with attributes in
+    #         # `attribute_line_ids`
+    #         multi_value_ids = value_ids.filtered(
+    #             lambda value,
+    #             attribute_line_ids=attribute_line_ids: value.attribute_id.id
+    #             in attribute_line_ids.mapped("attribute_id").ids
+    #         )
+
+    #         # Retrieve IDs of available multi-value options
+    #         available_val_ids_m2m = multi_value_ids.ids
+
+    #         # Process values for the current attribute field
+    #         if isinstance(v, list):
+    #             for sub_value in v:
+    #                 if sub_value[0] == Command.UNLINK:
+    #                     if sub_value[1] in available_val_ids_m2m:
+    #                         available_val_ids_m2m.remove(sub_value[1])
+    #                 elif sub_value[0] == Command.LINK:
+    #                     if sub_value[1] not in available_val_ids_m2m:
+    #                         available_val_ids_m2m.append(sub_value[1])
+    #                 elif sub_value[0] == Command.SET:
+    #                     available_val_ids_m2m = sub_value[2]
+
+    #             # Update dynamic fields and set `vals` with modified multi-value IDs
+    #             dynamic_fields.update({k: available_val_ids_m2m})
+    #             vals[k] = [[Command.SET, 0, available_val_ids_m2m]]
+
+    #         elif v not in available_val_ids:
+    #             # Handle single values not in available IDs
+    #             dynamic_fields.update({k: None})
+    #             vals[k] = None
+    #         else:
+    #             # Use the single value if it exists in available IDs
+    #             vals[k] = v
+
+    #     field_prefix = self._prefixes.get("field_prefix")
+    #     # List of attributes to remove from value_ids as they are currently changed
+    #     attributes_to_consider_removal = []
+    #     print("//////field_prefix//",field_prefix,vals)
+    #     field_prefix = field_prefix + str(1675)
+    #     for field in vals:
+    #         print("//////field//",field_prefix ,field)
+    #         if field_prefix in field:
+    #             attribute_line_id = field.split(field_prefix)[1]
+    #             attributes_to_consider_removal.append(int(attribute_line_id.split("_")[1]))
+    #     # attributes_to_consider_removal = [
+    #     #     int(field.split(field_prefix)[1]) for field in vals if field_prefix in field
+    #     # ]
+        
+    #     filtered_value_ids = self.value_ids.filtered(
+    #         lambda val: val.attribute_id.id not in attributes_to_consider_removal
+    #     ).ids
+    #     final_config_values = list(filtered_value_ids + list(dynamic_fields.values()))
+    #     vals.update(self.get_onchange_vals(final_config_values, config_session_id))
+    #     # To solve the Multi selection problem removing extra []
+    #     if "value_ids" in vals:
+    #         val_ids = vals["value_ids"][0]
+    #         vals["value_ids"] = [[val_ids[0], val_ids[1], tools.flatten(val_ids[2])]]
+    #     return vals
 
     def onchange(self, values, field_names, field_onchange):
         onchange_values = super().onchange(values, field_names, field_onchange)
@@ -676,6 +775,8 @@ class ProductConfigurator(models.TransientModel):
         - original onchage return M2o values in formate
         (attr-value.id, attr-value.name) but on website
         we need only attr-value.id"""
+
+        print("########values",values)
         product_tmpl_id = self.env["product.template"].browse(
             values.get("product_tmpl_id", [])
         )
@@ -730,11 +831,15 @@ class ProductConfigurator(models.TransientModel):
         except Exception:
             cfg_step = self.env["product.config.step.line"]
 
+        print("##@@@@@@@@@values",values,self.value_ids)
         dynamic_fields = {k: v for k, v in values.items() if k.startswith(field_prefix)}
 
         # Get the unstored values from the client view
         for k, v in dynamic_fields.items():
-            attr_id = int(k.split(field_prefix)[1])
+            zz = k.split(field_prefix)
+            attr_line_id = k.split(field_prefix)[1]
+            attr_id = int(attr_line_id.split("_")[1])
+            print("#@@@@attr_id@@@",zz,attr_id,attr_line_id)
             # if isinstance(v, list):
             #    dynamic_fields[k] = v[0][2]
 
