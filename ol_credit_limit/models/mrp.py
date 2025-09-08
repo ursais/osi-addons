@@ -19,13 +19,16 @@ class MRPProduction(models.Model):
     # METHODS #####
 
     def update_ignore_exceptions(self):
-        self.ensure_one()
+        if not self.ids:
+            return False
+
         query = """
             UPDATE mrp_production 
             SET ignore_exception = TRUE 
             WHERE id IN %s
         """
         self.env.cr.execute(query, (tuple(self.ids),))
+        return True
 
     @api.depends(
         "sale_order_id",
