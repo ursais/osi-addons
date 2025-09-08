@@ -1,0 +1,75 @@
+<odoo>
+
+	<record id="demo_followup_line_5days_before" model="account_followup.followup.line">
+        <field name="name">5 days before</field>
+        <field name="delay">-5</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="send_email">True</field>
+        <field name="auto_execute">True</field>
+        <field name="mail_template_id" ref="ol_account.invoice_reminder_severity_level" />
+    </record>
+
+     <record id="demo_followup_line_1day_late" model="account_followup.followup.line">
+        <field name="name">1 Day Late</field>
+        <field name="delay">1</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="send_email">True</field>
+        <field name="auto_execute">True</field>
+        <field name="mail_template_id" ref="ol_account.followup_first_email_template" />
+    </record>
+
+    <record id="demo_followup_line_7day_late" model="account_followup.followup.line">
+        <field name="name">7 days late</field>
+        <field name="delay">7</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="send_email">True</field>
+        <field name="auto_execute">True</field>
+        <field name="mail_template_id" ref="ol_account.followup_second_email_template" />
+    </record>
+
+    <record id="demo_followup_line_14day_late" model="account_followup.followup.line">
+        <field name="name">14 days late</field>
+        <field name="delay">14</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="send_email">True</field>
+        <field name="auto_execute">True</field>
+        <field name="mail_template_id" ref="ol_account.followup_final_email_template" />
+    </record>
+
+    <record id="demo_followup_line_5days_before_eu" model="account_followup.followup.line">
+        <field name="name">5 days before</field>
+        <field name="delay">-5</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="send_email">True</field>
+        <field name="auto_execute">True</field>
+        <field name="mail_template_id" ref="ol_account.invoice_reminder_severity_level" />
+    </record>
+
+     <record id="demo_followup_line_1day_late_eu" model="account_followup.followup.line">
+        <field name="name">1 Day Late</field>
+        <field name="delay">1</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="send_email">True</field>
+        <field name="auto_execute">True</field>
+        <field name="mail_template_id" ref="ol_account.followup_first_email_template" />
+    </record>
+
+    <record id="demo_followup_line_7day_late_eu" model="account_followup.followup.line">
+        <field name="name">7 days late</field>
+        <field name="delay">7</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="send_email">True</field>
+        <field name="auto_execute">True</field>
+        <field name="mail_template_id" ref="ol_account.followup_second_email_template" />
+    </record>
+
+    <record id="demo_followup_line_14day_late_eu" model="account_followup.followup.line">
+        <field name="name">14 days late</field>
+        <field name="delay">14</field>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="send_email">True</field>
+        <field name="auto_execute">True</field>
+        <field name="mail_template_id" ref="ol_account.followup_final_email_template" />
+    </record>
+
+</odoo>

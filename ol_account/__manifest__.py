@@ -31,6 +31,7 @@
         "data/followup_first.xml",
         "data/followup_second.xml",
         "data/followup_final.xml",
+        "data/account_followup_data.xml",
         "views/res_config_settings_views.xml",
         "views/account_invoice.xml",
         "views/account_payment_view.xml",

@@ -1,0 +1,813 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ol_account
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-08 09:46+0000\n"
+"PO-Revision-Date: 2025-09-08 09:46+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_final_email
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_first_email
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_second_email
+#: model_terms:ir.ui.view,arch_db:ol_account.invoice_lines
+#: model_terms:ir.ui.view,arch_db:ol_account.invoice_reminder_email
+msgid "&amp;nbsp;"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.actions.report,print_report_name:ol_account.action_generic_invoice_report
+msgid "'Invoice'"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.actions.report,print_report_name:ol_account.action_proforma_invoice_report
+msgid "'Proforma Invoice'"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.invoice_reminder_email
+msgid ", we show the following invoice(s) are coming due:"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_first_email
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_second_email
+msgid ",&amp;nbsp;"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_final_email
+msgid ".&amp;nbsp;"
+msgstr ""
+
+#. module: ol_account
+#: model:account_followup.followup.line,name:ol_account.demo_followup_line_1day_late
+#: model:account_followup.followup.line,name:ol_account.demo_followup_line_1day_late_eu
+msgid "1 Day Late"
+msgstr ""
+
+#. module: ol_account
+#: model:account_followup.followup.line,name:ol_account.demo_followup_line_14day_late
+#: model:account_followup.followup.line,name:ol_account.demo_followup_line_14day_late_eu
+msgid "14 days late"
+msgstr ""
+
+#. module: ol_account
+#: model:account_followup.followup.line,name:ol_account.demo_followup_line_5days_before
+#: model:account_followup.followup.line,name:ol_account.demo_followup_line_5days_before_eu
+msgid "5 days before"
+msgstr ""
+
+#. module: ol_account
+#: model:account_followup.followup.line,name:ol_account.demo_followup_line_7day_late
+#: model:account_followup.followup.line,name:ol_account.demo_followup_line_7day_late_eu
+msgid "7 days late"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_final_email
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_second_email
+msgid ""
+"<br/>\n"
+"                        <br/>\n"
+"                        Thank you for your business and your help on this matter."
+msgstr ""
+"<br/>\n"
+"                        <br/>\n"
+"                        Bedankt voor de samenwerking en uw hulp in deze kwestie."
+
+
+#. module: ol_account
+#: model:mail.template,body_html:ol_account.followup_final_email_template
+msgid ""
+"<t t-set=\"partner\" t-value=\"object.with_context({'lang':object.lang or object.env.lang})\"></t>\n"
+"                <t t-call=\"ol_account.followup_final_email\" t-lang=\"partner.lang or object.env.lang\"></t>\n"
+"            "
+msgstr ""
+
+#. module: ol_account
+#: model:mail.template,body_html:ol_account.followup_first_email_template
+msgid ""
+"<t t-set=\"partner\" t-value=\"object.with_context({'lang':object.lang or object.env.lang})\"></t>\n"
+"                <t t-call=\"ol_account.followup_first_email\" t-lang=\"partner.lang or object.env.lang\"></t>\n"
+"            "
+msgstr ""
+
+#. module: ol_account
+#: model:mail.template,body_html:ol_account.followup_second_email_template
+msgid ""
+"<t t-set=\"partner\" t-value=\"object.with_context({'lang':object.lang or object.env.lang})\"></t>\n"
+"                <t t-call=\"ol_account.followup_second_email\" t-lang=\"partner.lang or object.env.lang\"></t>\n"
+"            "
+msgstr ""
+
+#. module: ol_account
+#: model:mail.template,body_html:ol_account.invoice_reminder_severity_level
+msgid ""
+"<t t-set=\"partner\" t-value=\"object.with_context({'lang':object.lang or object.env.lang})\"></t>\n"
+"                <t t-call=\"ol_account.invoice_reminder_email\" t-lang=\"partner.lang or object.env.lang\"></t>\n"
+"            "
+msgstr ""
+
+#. module: ol_account
+#: model:mail.template,body_html:ol_account.vendor_payment_template
+msgid ""
+"<t t-set=\"payment\" t-value=\"object.with_context({'lang':object.partner_id.lang or object.env.lang})\"></t>\n"
+"            <t t-call=\"ol_account.email_supplier_payment_notification\" t-lang=\"payment.partner_id.lang or object.env.lang\"></t>\n"
+"        "
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+msgid "A payment has been initiated via"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model,name:ol_account.model_account_move_send
+msgid "Account Move Send"
+msgstr "Boeking verzenden"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_final_email
+msgid ""
+"All pending and future orders have been placed on hold until your account is made\n"
+"                                current."
+msgstr ""
+"Alle lopende en toekomstige bestellingen zijn opgeschort totdat alle "
+"facturen zijn voldaan zijn."
+
+
+#. module: ol_account
+#: model:res.groups,name:ol_account.group_account_move_delete
+msgid "Allow Account Move Delete"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_final_email
+msgid ""
+"Any sum not paid by Customer when due shall bear interest until paid at a rate of 1.5%\n"
+"                                per month (18% per annum) or the maximum rate permitted by law, whichever is less. If\n"
+"                                OnLogic brings an action for breach of these Terms and Conditions, including any action\n"
+"                                to enforce its right to payment, Customer shall be liable for OnLogic's reasonable\n"
+"                                attorneys' fees, costs, and expenses incurred in connection with such action."
+msgstr ""
+"Over elk bedrag dat niet door de klant is voldaan vóór de vervaldatum zal "
+"een rente worden berekend van 1.5% per maand (18% per jaar) of de maximale "
+"wettelijk toegestane rente (laagste van de twee). Mocht OnLogic een "
+"juridische procedure starten voor het breken van deze algemene voorwaarden, "
+"teneinde het recht op betaling af te dwingen, zal de klant aansprakelijk "
+"worden gesteld voor de advocaatkosten en kosten en uitgaven die gemaakt zijn"
+" door OnLogic met betrekking tot deze (recht)zaak."
+
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_second_email
+msgid ""
+"At OnLogic, we take customer credit standing and invoice due dates seriously. Please\n"
+"                                note that we suspend all orders for customers with an invoice more than 14 days past\n"
+"                                due."
+msgstr ""
+"Bij OnLogic nemen we de kredietstatus van klanten en factuur-vervaldata "
+"serieus. Houd er rekening mee dat we alle bestellingen opschorten van "
+"klanten met een openstaande factuur die meer dan 14 dagen voorbij de "
+"vervaldatum is."
+
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.res_config_settings_view_form
+msgid "Auto Create Customer Invoice"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_config_settings__auto_create_bill_receipt_validate
+#: model_terms:ir.ui.view,arch_db:ol_account.res_config_settings_view_form
+msgid "Auto Create Vendor Bill"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_config_settings__auto_create_invoice_delivery_validate
+msgid "Auto Create invoice"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.res_config_settings_view_form
+msgid "Auto Post Customer Invoice"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_config_settings__auto_post_bill_receipt_validate
+#: model_terms:ir.ui.view,arch_db:ol_account.res_config_settings_view_form
+msgid "Auto Post Vendor Bill"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_config_settings__auto_post_invoice_delivery_validate
+msgid "Auto Post invoice"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.res_config_settings_view_form
+msgid "Automatic Invoice/Bill Create and Post"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.invoice_lines
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Balance Due"
+msgstr "Te betalen"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Bill To"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model,name:ol_account.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configuratie instellingen"
+
+#. module: ol_account
+#: model:ir.model,name:ol_account.model_res_partner
+msgid "Contact"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.res_config_settings_view_form
+msgid "Create customer invoice on delivery validate"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,help:ol_account.field_res_config_settings__auto_create_invoice_delivery_validate
+msgid "Create invoice on delivery validation."
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,help:ol_account.field_res_config_settings__auto_create_bill_receipt_validate
+msgid "Create invoice on receipt validation."
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.res_config_settings_view_form
+msgid "Create vendor bill on receipt validate"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_paypref__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_paypref__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+msgid "Credit"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_final_email
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_first_email
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_second_email
+msgid "Currently open credits:"
+msgstr "Openstaand krediet"
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_account_payment__customer_check_number
+msgid "Customer Check Number"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Customer PO"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_account_bank_statement_line__sale_payment_method_id
+#: model:ir.model.fields,field_description:ol_account.field_account_move__sale_payment_method_id
+#: model:ir.model.fields,field_description:ol_account.field_account_payment__sale_payment_method_id
+msgid "Customer Payment Method"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_partner__sale_payment_method_id
+#: model:ir.model.fields,field_description:ol_account.field_res_users__sale_payment_method_id
+msgid "Customer Preferred Payment Method"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.account_move_form
+msgid "Date"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_final_email
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_first_email
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_second_email
+#: model_terms:ir.ui.view,arch_db:ol_account.invoice_reminder_email
+msgid "Dear"
+msgstr "Beste"
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_paypref__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.account_move_form
+#: model_terms:ir.ui.view,arch_db:ol_account.invoice_lines
+msgid "Due Date"
+msgstr "Vervaldatum"
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_account_bank_statement_line__invoice_date_due_display
+#: model:ir.model.fields,field_description:ol_account.field_account_move__invoice_date_due_display
+#: model:ir.model.fields,field_description:ol_account.field_account_payment__invoice_date_due_display
+msgid "Due Date (Date Only)"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,help:ol_account.field_account_bank_statement_line__invoice_date_due_display
+#: model:ir.model.fields,help:ol_account.field_account_move__invoice_date_due_display
+#: model:ir.model.fields,help:ol_account.field_account_payment__invoice_date_due_display
+msgid ""
+"Field with same date as due date, but to show just the date without the "
+"Remaining Days widget."
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_partner__net_terms_active
+#: model:ir.model.fields,field_description:ol_account.field_res_users__net_terms_active
+msgid "Front End Net Terms Active"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model,name:ol_account.model_report_ol_account_report_generic_invoice
+msgid "Generic Invoice Report"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Hardware Solution"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_paypref__id
+msgid "ID"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+msgid "INVOICE"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_final_email
+msgid ""
+"If OnLogic brings an action for breach of these Terms and Conditions, including any\n"
+"                                action to enforce its right to payment, Customer shall be liable for OnLogic's\n"
+"                                reasonable attorneys' fees, costs, and expenses incurred in connection with such action."
+msgstr ""
+"Mocht OnLogic een juridische procedure starten voor het breken van deze "
+"algemene voorwaarden, teneinde het recht op betaling af te dwingen, zal de "
+"klant aansprakelijk worden gesteld voor de advocaatkosten en kosten en "
+"uitgaven die gemaakt zijn door OnLogic met betrekking tot deze (recht)zaak."
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.invoice_reminder_email
+msgid ""
+"If you have already made payment, please disregard. If your records do not match ours,\n"
+"                            please let us\n"
+"                            know immediately. If you are processing payment, please include remittance details with your\n"
+"                            payment to\n"
+"                            help ensure we apply it correctly."
+msgstr ""
+"U kunt dit bericht negeren indien u al betaald heeft. Als uw administratie "
+"niet overeenkomt met onze, laat het ons dan zo spoedig mogelijk weten. Als "
+"de betaling nog verwerkt wordt, voeg dan een bewijs van overschrijving toe, "
+"zodat wij dit correct kunnen toepassen."
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_final_email
+msgid ""
+"If your account is not made current immediately, we will be forced to consider revoking\n"
+"                            your credit terms and reporting your company to the credit agencies."
+msgstr ""
+"Indien alle openstaande facturen niet onmiddellijk worden voldaan, zijn we "
+"genoodzaakt uw kredietovereenkomst bij ons te blokkeren en mogelijk melding "
+"te doen bij onze incassobureaus."
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_first_email
+msgid ""
+"If your records do not match ours, or if you have already sent payment, please let us know\n"
+"                            immediately. If you are still processing payment, please include remittance details with\n"
+"                            your payment to help ensure we apply it correctly."
+msgstr ""
+"Laat het ons direct weten als uw administratie niet overeenkomt met onze, of"
+" als u de betaling al verzonden hebt. Als de betaling aan uw kant nog "
+"verwerkt wordt, voeg dan een bewijs van overschrijving toe, zodat wij dit "
+"correct kunnen toepassen."
+
+#. module: ol_account
+#: model:ir.actions.report,name:ol_account.action_generic_invoice_report
+msgid "Invoice"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+msgid "Invoice Amount"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.invoice_lines
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+msgid "Invoice Date"
+msgstr "Factuurdatum"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+msgid "Invoice Lines"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+#: model_terms:ir.ui.view,arch_db:ol_account.invoice_lines
+msgid "Invoice Number"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model,name:ol_account.model_account_move
+msgid "Journal Entry"
+msgstr "Boeking"
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_paypref__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_paypref__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_partner__net_terms_allowed
+#: model:ir.model.fields,field_description:ol_account.field_res_users__net_terms_allowed
+msgid "Net Terms Allowed"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_final_email
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_first_email
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_second_email
+#: model_terms:ir.ui.view,arch_db:ol_account.invoice_reminder_email
+msgid "OnLogic"
+msgstr ""
+
+#. module: ol_account
+#: model:mail.template,subject:ol_account.vendor_payment_template
+msgid "OnLogic - Remittance Notification"
+msgstr ""
+
+#. module: ol_account
+#: model:mail.template,subject:ol_account.invoice_reminder_severity_level
+msgid "OnLogic Invoice Coming Due"
+msgstr ""
+
+#. module: ol_account
+#: model:mail.template,name:ol_account.invoice_reminder_severity_level
+msgid "OnLogic Invoice(s) Coming Due"
+msgstr ""
+
+#. module: ol_account
+#: model:mail.template,subject:ol_account.followup_first_email_template
+#: model:mail.template,subject:ol_account.followup_second_email_template
+msgid "OnLogic Overdue Invoice"
+msgstr "OnLogic facturen naderen de vervaldatum"
+
+#. module: ol_account
+#: model:mail.template,name:ol_account.followup_final_email_template
+msgid "OnLogic Overdue Invoice(s) - Final"
+msgstr ""
+
+#. module: ol_account
+#: model:mail.template,name:ol_account.followup_first_email_template
+msgid "OnLogic Overdue Invoice(s) - First"
+msgstr ""
+
+#. module: ol_account
+#: model:mail.template,name:ol_account.followup_second_email_template
+msgid "OnLogic Overdue Invoice(s) - Second"
+msgstr ""
+
+#. module: ol_account
+#. odoo-python
+#: code:addons/ol_account/models/account_move.py:0
+#, python-format
+msgid ""
+"Only draft account moves can be deleted. For posted moves, cancel them "
+"instead."
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Order"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Order Date"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.invoice_lines
+msgid "Order Number"
+msgstr "Ordernummer"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.invoice_lines
+msgid "PO Number"
+msgstr "PO-nummer"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+msgid "Payment Amount"
+msgstr "Betalingsbedrag"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+msgid "Payment Due Date"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Payment Method"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model,name:ol_account.model_res_paypref
+#: model:ir.model.fields,field_description:ol_account.field_account_bank_statement_line__payment_preference
+#: model:ir.model.fields,field_description:ol_account.field_account_move__payment_preference
+#: model:ir.model.fields,field_description:ol_account.field_account_payment__payment_preference
+#: model:ir.model.fields,field_description:ol_account.field_res_partner__payment_preference
+#: model:ir.model.fields,field_description:ol_account.field_res_users__payment_preference
+msgid "Payment Preference"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_paypref__name
+msgid "Payment Preference (short name)"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.actions.act_window,name:ol_account.action_payment_preference
+#: model:ir.ui.menu,name:ol_account.menu_payment_preference_root
+msgid "Payment Preferences"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Payment Terms"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,help:ol_account.field_account_bank_statement_line__sale_payment_method_id
+#: model:ir.model.fields,help:ol_account.field_account_move__sale_payment_method_id
+#: model:ir.model.fields,help:ol_account.field_account_payment__sale_payment_method_id
+msgid "Payment method selected coming from the sale order."
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model,name:ol_account.model_account_payment
+msgid "Payments"
+msgstr "Betalingen"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_first_email
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_second_email
+#: model_terms:ir.ui.view,arch_db:ol_account.invoice_reminder_email
+msgid "Per our agreed upon payment terms of"
+msgstr "Volgens onze afgesproken betalingsvoorwaarden van"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+msgid "Please feel free to contact us should you have any questions."
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,help:ol_account.field_res_config_settings__auto_post_bill_receipt_validate
+msgid "Post bill on receipt validation."
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.res_config_settings_view_form
+msgid "Post customer invoice on delivery validate"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,help:ol_account.field_res_config_settings__auto_post_invoice_delivery_validate
+msgid "Post invoice on delivery validation."
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.res_config_settings_view_form
+msgid "Post vendor bill on receipt validate"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,help:ol_account.field_account_bank_statement_line__payment_preference
+#: model:ir.model.fields,help:ol_account.field_account_move__payment_preference
+#: model:ir.model.fields,help:ol_account.field_account_payment__payment_preference
+msgid "Prefered Vendor payment method."
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.account_move_form
+msgid "Print"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model,name:ol_account.model_report_ol_account_report_proforma_invoice
+msgid "Pro-forma Invoice Report"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Proforma Expiration"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.actions.report,name:ol_account.action_proforma_invoice_report
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Proforma Invoice"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model,name:ol_account.model_sale_order
+msgid "Sales Order"
+msgstr "Verkooporder"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Ship To"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Shipping Method"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_final_email
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_first_email
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_second_email
+#: model_terms:ir.ui.view,arch_db:ol_account.invoice_reminder_email
+msgid ""
+"Sincerely,\n"
+"                    <br/>"
+msgstr ""
+"Vriendelijke groet,\n"
+"                    <br/>"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+msgid ""
+"Sincerely,\n"
+"            <br/>"
+msgstr ""
+"Vriendelijke groet,\n"
+"                    <br/>"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_first_email
+msgid "Thank you for your business and your help on this matter."
+msgstr "Bedankt voor de samenwerking en uw hulp in deze kwestie."
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_final_email
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_first_email
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_second_email
+#: model_terms:ir.ui.view,arch_db:ol_account.invoice_reminder_email
+msgid "The Finance Team"
+msgstr "Het finance team"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_final_email
+msgid ""
+"These invoices are severely past due and require immediate payment. If your records do not\n"
+"                            match ours, or you have already sent payment, please let us know as soon as possible."
+msgstr ""
+"De betalingstermijn van deze facturen is inmiddels ruim verstreken en dienen"
+" per direct betaald te worden. Als uw administratie niet overeenkomt met "
+"onze, of als u de betaling al verzonden heeft, laat het ons zo spoedig "
+"mogelijk weten."
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_first_email
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_second_email
+#: model_terms:ir.ui.view,arch_db:ol_account.invoice_reminder_email
+msgid "To help, we’ve attached copies of the invoice(s) referenced above."
+msgstr ""
+"Om je te helpen, hebben we kopieën van de bovengenoemde factuur(en) "
+"bijgevoegd."
+
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.invoice_lines
+msgid "Total Balance Due:"
+msgstr "Totaal verschuldigd saldo:"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_final_email
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_first_email
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_second_email
+msgid "Total:"
+msgstr "Totaal:"
+
+#. module: ol_account
+#: model:ir.model,name:ol_account.model_stock_picking
+msgid "Transfer"
+msgstr "Verplaatsing"
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_partner__debit_limit
+#: model:ir.model.fields,field_description:ol_account.field_res_users__debit_limit
+msgid "Vendor Credit Limit"
+msgstr "Kredietlimiet"
+
+#. module: ol_account
+#: model:mail.template,name:ol_account.vendor_payment_template
+msgid "Vendor Payment Template"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_final_email
+msgid ""
+"We do not want to endanger your credit rating or the good relationship that we have\n"
+"                            maintained in the past; therefore, we request that this obligation is paid immediately."
+msgstr ""
+"We willen u verzoeken het openstaande bedrag onmiddellijk te voldoen, zodat "
+"uw kredietwaardigheid en onze goede relatie in stand gehouden kan worden."
+
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_final_email
+msgid ""
+"We have not received payment for the orders below within our agreed upon "
+"payment terms of"
+msgstr ""
+"We hebben geen betaling ontvangen voor de onderstaande bestellingen binnen "
+"onze afgesproken betalingstermijn van"
+
+#. module: ol_account
+#. odoo-python
+#: code:addons/ol_account/models/account_move.py:0
+#, python-format
+msgid ""
+"You are not allowed to delete account moves. Please cancel them instead."
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+msgid "for the following invoice(s):"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+msgid "in the amount of"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_first_email
+msgid "we show the following invoice(s) as past due:"
+msgstr "zien we dat de volgende facturen de vervaldatum voorbij zijn:"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.followup_second_email
+msgid "we show the following invoice(s) continue to be past due:"
+msgstr "we laten zien dat de volgende factuur(en) nog steeds achterstallig zijn:"

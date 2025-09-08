@@ -1,91 +1,80 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data> 
-        <template id="invoice_reminder_email">
 
-            <t t-call="ol_templates.ol_email">
+    <template id="invoice_reminder_email">
+        <t t-call="ol_templates.ol_email">
 
-                <!-- Variables -->
-                <t t-set="title" t-value="'OnLogic Invoice Coming Due'"/>
-                <t t-set="preheader_text" t-value="title"/>
-                <t t-set="include_newsletter_disclaimer" t-value="False"/>
-                <t t-set="invoice_lines" t-value="partner.unreconciled_aml_ids"/>
-                <t t-set="invoice_total_residual" t-value="partner.total_due"/>
-                <t t-set="payment_term_names" t-value="partner.followup_line_id.name"/>
-                <t t-set="today" t-value="env.context.get('email_template_data', {}).get('today')"/>
-                <t t-set="company" t-value="env.company"/>
+            <!-- Variables -->
+            <t t-set="title" t-value="'OnLogic Invoice Coming Due'" />
+            <t t-set="preheader_text" t-value="title" />
+            <t t-set="include_newsletter_disclaimer" t-value="False" />
+            <t t-set="invoice_lines" t-value="partner.unreconciled_aml_ids" />
+            <t t-set="invoice_total_residual" t-value="partner.total_due" />
+            <t t-set="payment_term_names" t-value="partner.followup_line_id.name" />
+            <t t-set="today" t-value="env.context.get('email_template_data', {}).get('today')" />
+            <t t-set="company" t-value="env.company" />
 
-                <!-- Body -->
-                <t t-call="ol_templates.ol_email_text_content">
+            <!-- Body -->
+            <t t-call="ol_templates.ol_email_text_content">
+                <div style="font-weight: 500; font-size: 20px; display: block;">
+                    <t t-esc="title" />
+                </div>
 
-                    <div style="font-weight: 500; font-size: 20px; display: block;">
-                        <t t-esc="title"/>
-                    </div>
+                <div style="font-size:16px; line-height:28px; margin-top:30px">
+                    <tag>Dear</tag>&amp;nbsp;<t t-esc="partner.name" />,
+                </div>
 
-                    <div style="font-size:16px; line-height:28px; margin-top:30px">
-                        <tag>Dear</tag>&amp;nbsp;<t t-esc="partner.name"/>,
-                    </div>
-
-                    <!-- <t t-if="has_migrated_invoices"> -->
-                        <!-- Display a warning notification about possible invoice number changes as a result of migrating from Odoo10 to Odoo13-->
-                        <!-- <t t-call="ol_invoice_reminders.invoice_number_change_note"/> -->
-                    <!-- </t> -->
-
-                    <p style="font-size: 16px; line-height: 28px; margin-top: 30px;">
-                        <tag>Per our agreed upon payment terms of</tag>
-                        <t t-esc="payment_term_names"/>
-                        <tag>, we show the following invoice(s) are coming due:</tag>
-                    </p>
-
-                </t>
-
-                <!-- Add spacer-->
-                <t t-call="ol_templates.ol_email_spacer"/>
-
-                <t t-call="ol_templates.ol_email_text_content">
-                    <t t-call="ol_account.invoice_lines">
-                        <t t-set="invoice_lines" t-value="invoice_lines"/>
-                        <t t-set="total_residual" t-value="invoice_total_residual"/>
-                    </t>
-                </t>
-
-                <!-- Add spacer-->
-                <t t-call="ol_templates.ol_email_spacer"/>
-
-                <t t-call="ol_templates.ol_email_text_content">
-
-                    <p style="font-size: 16px; line-height: 28px;">
-                        <tag>If you have already made payment, please disregard. If your records do not match ours,
-                            please let us
-                            know immediately. If you are processing payment, please include remittance details with your
-                            payment to
-                            help ensure we apply it correctly.
-                        </tag>
-                    </p>
-                    <p style="font-size: 16px; line-height: 28px;">
-                        <tag>To help, we’ve attached copies of the invoice(s) referenced above.</tag>
-                    </p>
-                    Sincerely,
-                    <br/>
-                    <tag style="font-size: 16px; font-weight:500; line-height: 28px;">The Finance Team</tag>
-                    <br/>
-                    <tag style="font-size: 14px; font-weight:500; line-height: 28px;">OnLogic</tag>
-                </t>
-
+                <p style="font-size: 16px; line-height: 28px; margin-top: 30px;">
+                    <tag>Per our agreed upon payment terms of</tag>
+                    <t t-esc="payment_term_names" />
+                    <tag>, we show the following invoice(s) are coming due:</tag>
+                </p>
             </t>
-        </template>
 
-        <record id="invoice_reminder_severity_level" model="mail.template">
-            <field name="name">OnLogic Invoice(s) Coming Due</field>
-            <field name="model_id" ref="base.model_res_partner"/>
-            <field name="auto_delete" eval="False"/>
-            <field name="lang">${object.partner_id.lang}</field>
-            <field name="subject">OnLogic Invoice Coming Due</field>
-            <field name="body_html" type="html">
-                <t t-set="partner" t-value="object.with_context({'lang':object.lang or object.env.lang})"/>
-                <t t-call="ol_account.invoice_reminder_email" t-lang="partner.lang or object.env.lang"/>
-            </field>
-        </record>
-        
-    </data>
+            <!-- Add spacer-->
+            <t t-call="ol_templates.ol_email_spacer" />
+
+            <t t-call="ol_templates.ol_email_text_content">
+                <t t-call="ol_account.invoice_lines">
+                    <t t-set="invoice_lines" t-value="invoice_lines" />
+                    <t t-set="total_residual" t-value="invoice_total_residual" />
+                </t>
+            </t>
+
+            <!-- Add spacer-->
+            <t t-call="ol_templates.ol_email_spacer" />
+
+            <t t-call="ol_templates.ol_email_text_content">
+                <p style="font-size: 16px; line-height: 28px;">
+                    <tag>If you have already made payment, please disregard. If your records do not match ours,
+                        please let us
+                        know immediately. If you are processing payment, please include remittance details with your
+                        payment to
+                        help ensure we apply it correctly.
+                    </tag>
+                </p>
+                <p style="font-size: 16px; line-height: 28px;">
+                    <tag>To help, we’ve attached copies of the invoice(s) referenced above.</tag>
+                </p>
+                Sincerely,
+                <br/>
+                <tag style="font-size: 16px; font-weight:500; line-height: 28px;">The Finance Team</tag>
+                <br/>
+                <tag style="font-size: 14px; font-weight:500; line-height: 28px;">OnLogic</tag>
+            </t>
+
+        </t>
+    </template>
+
+    <record id="invoice_reminder_severity_level" model="mail.template">
+        <field name="name">OnLogic Invoice(s) Coming Due</field>
+        <field name="model_id" ref="base.model_res_partner" />
+        <field name="auto_delete" eval="False" />
+        <field name="lang">${object.partner_id.lang}</field>
+        <field name="subject">OnLogic Invoice Coming Due</field>
+        <field name="body_html" type="html">
+            <t t-set="partner" t-value="object.with_context({'lang':object.lang or object.env.lang})" />
+            <t t-call="ol_account.invoice_reminder_email" t-lang="partner.lang or object.env.lang" />
+        </field>
+    </record>
+
 </odoo>

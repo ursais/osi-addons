@@ -1,111 +1,103 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <template id="followup_second_email">
 
-            <t t-call="ol_templates.ol_email">
+    <template id="followup_second_email">
+        <t t-call="ol_templates.ol_email">
 
-                <!-- Variables -->
-                <t t-set="title" t-value="'OnLogic Overdue Invoice'"/>
-                <t t-set="preheader_text" t-value="title"/>
-                <t t-set="include_newsletter_disclaimer" t-value="False"/>
+            <!-- Variables -->
+            <t t-set="title" t-value="'OnLogic Overdue Invoice'" />
+            <t t-set="preheader_text" t-value="title" />
+            <t t-set="include_newsletter_disclaimer" t-value="False" />
+            <t t-set="invoice_lines" t-value="partner.unreconciled_aml_ids.filtered(lambda x: x.move_type == 'out_invoice' and x.amount_residual)" />
+            <t t-set="invoice_total_residual" t-value="partner.total_due" />
+            <t t-set="payment_term_names" t-value="partner.followup_line_id.name" />
+            <t t-set="company" t-value="env.company" />
+            <t t-set="credit_lines" t-value="partner.unreconciled_aml_ids.filtered(lambda x: x.move_type == 'out_refund' and x.amount_residual != 0)" />
+            <t t-set="credit_total_residual" t-value="sum(credit_lines.mapped('amount_residual'))" />
 
-                <t t-set="invoice_lines" t-value="partner.unreconciled_aml_ids.filtered(lambda x: x.move_type == 'out_invoice' and x.amount_residual)"/>
-                <t t-set="invoice_total_residual" t-value="partner.total_due"/>
-                <t t-set="payment_term_names" t-value="partner.followup_line_id.name"/>
-                <t t-set="company" t-value="env.company"/>
-                <t t-set="credit_lines" t-value="partner.unreconciled_aml_ids.filtered(lambda x: x.move_type == 'out_refund' and x.amount_residual != 0)"/>
-                <t t-set="credit_total_residual" t-value="sum(credit_lines.mapped('amount_residual'))"/>
+            <!-- Body -->
+            <t t-call="ol_templates.ol_email_text_content">
 
-                <!-- Body -->
-                <t t-call="ol_templates.ol_email_text_content">
+                <div style="font-weight: 500; font-size: 20px; display: block;">
+                    <t t-esc="title" />
+                </div>
 
-                    <div style="font-weight: 500; font-size: 20px; display: block;">
-                        <t t-esc="title"/>
-                    </div>
+                <div style="font-size:16px; line-height:28px; margin-top:30px">
+                    <tag>Dear</tag>&amp;nbsp;<t t-esc="partner.name" />,
+                </div>
 
-                    <div style="font-size:16px; line-height:28px; margin-top:30px">
-                        <tag>Dear</tag>&amp;nbsp;<t t-esc="partner.name"/>,
-                    </div>
-
-                    <!-- <t t-if="has_migrated_invoices"> -->
-                        <!-- Display a warning notification about possible invoice number changes as a result of migrating from Odoo10 to Odoo13-->
-                        <!-- <t t-call="ol_account.invoice_number_change_note"/> -->
-                    <!-- </t> -->
-
-                    <p style="font-size: 16px; line-height: 28px; margin-top: 30px;">
-                        <t t-if="payment_term_names">
-                            Per our agreed upon payment terms of <t
-                                t-esc="payment_term_names"/>,&amp;nbsp;
-                        </t>
-                        <tag>we show the following invoice(s) continue to be past due:</tag>
-                    </p>
-                </t>
-
-                <!-- Add spacer-->
-                <t t-call="ol_templates.ol_email_spacer"/>
-                <t t-call="ol_templates.ol_email_text_content">
-                    <t t-call="ol_account.invoice_lines">
-                        <t t-set="invoice_lines" t-value="invoice_lines"/>
-                        <t t-set="total_residual" t-value="invoice_total_residual"/>
+                <p style="font-size: 16px; line-height: 28px; margin-top: 30px;">
+                    <t t-if="payment_term_names">
+                        Per our agreed upon payment terms of <t
+                            t-esc="payment_term_names" />,&amp;nbsp;
                     </t>
-                </t>
-
-                <!-- Add spacer-->
-                <t t-if="credit_lines">
-                    <t t-call="ol_templates.ol_email_spacer"/>
-                    <t t-call="ol_templates.ol_email_text_content">
-                        <p style="font-size: 16px; line-height: 28px; margin-top: 30px;">
-                            <tag>Currently open credits:</tag>
-                        </p>
-                        <t t-call="ol_account.invoice_lines">
-                            <t t-set="invoice_lines" t-value="credit_lines"/>
-                            <t t-set="total_residual" t-value="credit_total_residual"/>
-                            <t t-set="total_title">Total:</t>
-                        </t>
-                    </t>
-                </t>
-
-                <!-- Add spacer-->
-                <t t-call="ol_templates.ol_email_spacer"/>
-                <t t-call="ol_templates.ol_email_text_content">
-                    <p style="font-size: 16px; line-height: 28px;">
-                        <tag>To help, we’ve attached copies of the invoice(s) referenced above.</tag>
-                        <br/>
-                        <br/>
-                        <span style="font-weight: 500;">
-                            <tag>At OnLogic, we take customer credit standing and invoice due dates seriously. Please
-                                note that we suspend all orders for customers with an invoice more than 14 days past
-                                due.
-                            </tag>
-                        </span>
-                        <br/>
-                        <br/>
-                        Thank you for your business and your help on this matter.
-                    </p>
-                </t>
-                <t t-call="ol_templates.ol_email_spacer"/>
-                <t t-call="ol_templates.ol_email_text_content">
-                    Sincerely,
-                    <br/>
-                    <tag style="font-size: 16px; font-weight:500; line-height: 28px;">The Finance Team</tag>
-                    <br/>
-                    <tag style="font-size: 14px; font-weight:500; line-height: 28px;">OnLogic</tag>
-                </t>
-
+                    <tag>we show the following invoice(s) continue to be past due:</tag>
+                </p>
             </t>
-        </template>
 
-        <record id="followup_second_email_template" model="mail.template">
-            <field name="name">OnLogic Overdue Invoice(s) - Second</field>
-            <field name="model_id" ref="base.model_res_partner"/>
-            <field name="auto_delete" eval="False"/>
-            <field name="lang">${object.partner_id.lang}</field>
-            <field name="subject">OnLogic Overdue Invoice</field>
-            <field name="body_html" type="html">
-                <t t-set="partner" t-value="object.with_context({'lang':object.lang or object.env.lang})"/>
-                <t t-call="ol_account.followup_second_email" t-lang="partner.lang or object.env.lang"/>
-            </field>
-        </record>
-    </data>
+            <!-- Add spacer-->
+            <t t-call="ol_templates.ol_email_spacer" />
+            <t t-call="ol_templates.ol_email_text_content">
+                <t t-call="ol_account.invoice_lines">
+                    <t t-set="invoice_lines" t-value="invoice_lines" />
+                    <t t-set="total_residual" t-value="invoice_total_residual" />
+                </t>
+            </t>
+
+            <t t-if="credit_lines">
+                <t t-call="ol_templates.ol_email_spacer" />
+                <t t-call="ol_templates.ol_email_text_content">
+                    <p style="font-size: 16px; line-height: 28px; margin-top: 30px;">
+                        <tag>Currently open credits:</tag>
+                    </p>
+                    <t t-call="ol_account.invoice_lines">
+                        <t t-set="invoice_lines" t-value="credit_lines" />
+                        <t t-set="total_residual" t-value="credit_total_residual" />
+                        <t t-set="total_title">Total:</t>
+                    </t>
+                </t>
+            </t>
+
+            <!-- Add spacer-->
+            <t t-call="ol_templates.ol_email_spacer" />
+
+            <t t-call="ol_templates.ol_email_text_content">
+                <p style="font-size: 16px; line-height: 28px;">
+                    <tag>To help, we’ve attached copies of the invoice(s) referenced above.</tag>
+                    <br/>
+                    <br/>
+                    <span style="font-weight: 500;">
+                        <tag>At OnLogic, we take customer credit standing and invoice due dates seriously. Please
+                            note that we suspend all orders for customers with an invoice more than 14 days past
+                            due.
+                        </tag>
+                    </span>
+                    <br/>
+                    <br/>
+                    Thank you for your business and your help on this matter.
+                </p>
+            </t>
+            <t t-call="ol_templates.ol_email_spacer" />
+            <t t-call="ol_templates.ol_email_text_content">
+                Sincerely,
+                <br/>
+                <tag style="font-size: 16px; font-weight:500; line-height: 28px;">The Finance Team</tag>
+                <br/>
+                <tag style="font-size: 14px; font-weight:500; line-height: 28px;">OnLogic</tag>
+            </t>
+
+        </t>
+    </template>
+
+    <record id="followup_second_email_template" model="mail.template">
+        <field name="name">OnLogic Overdue Invoice(s) - Second</field>
+        <field name="model_id" ref="base.model_res_partner" />
+        <field name="auto_delete" eval="False" />
+        <field name="lang">${object.partner_id.lang}</field>
+        <field name="subject">OnLogic Overdue Invoice</field>
+        <field name="body_html" type="html">
+            <t t-set="partner" t-value="object.with_context({'lang':object.lang or object.env.lang})" />
+            <t t-call="ol_account.followup_second_email" t-lang="partner.lang or object.env.lang" />
+        </field>
+    </record>
+
 </odoo>
