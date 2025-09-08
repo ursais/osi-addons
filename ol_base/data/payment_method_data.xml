@@ -17,4 +17,31 @@
         <field name="active">True</field>
     </record>
 
+    <record id="payment_method_ach" model="payment.method">
+        <field name="name">ACH</field>
+        <field name="code">ACH</field>
+        <field name="sequence">20</field>
+        <field name="active">True</field>
+    </record>
+    <record id="payment_method_check" model="payment.method">
+        <field name="name">Check</field>
+        <field name="code">Check</field>
+        <field name="sequence">20</field>
+        <field name="active">True</field>
+    </record>
+    
+    <record id="payment_method_online_portal" model="payment.method">
+        <field name="name">Online Portal</field>
+        <field name="code">OP</field>
+        <field name="sequence">20</field>
+        <field name="active">True</field>
+    </record>
+    
+    <record id="payment_method_automatic_withdrawal" model="payment.method">
+        <field name="name">Automatic Withdrawal</field>
+        <field name="code">AW</field>
+        <field name="sequence">20</field>
+        <field name="active">True</field>
+    </record>
+
 </odoo>
