@@ -1,5 +1,6 @@
 # Import Odoo libs
-from odoo import fields, models
+from odoo import _, fields, models
+from odoo.exceptions import ValidationError
 
 
 class SaleOrder(models.Model):
@@ -10,6 +11,9 @@ class SaleOrder(models.Model):
     # COLUMNS #####
 
     payment_method_mail_send = fields.Boolean(copy=False)
+    allow_quote_payment = fields.Boolean(
+        related="sale_payment_method_id.allow_quote_payment"
+    )
 
     # END #########
     # METHOD #####
@@ -52,5 +56,39 @@ class SaleOrder(models.Model):
                 order.write({"payment_method_mail_send": True})
 
         return res
+
+    def action_confirm(self):
+        """
+        Inherit confirm method to prevent confirmation if bank transfer is pay method and
+        exception is not ignored.
+        """
+        # Get Bank Payment Exception
+        exception = self.env.ref(
+            "ol_bank_transfer_email.exception_so_bank_tranfer_payment",
+            raise_if_not_found=True,
+        )
+
+        # Check if bank transfer payment method is checked, so is not fully paid and bank transfer excetpion isn't ignored.
+        for rec in self:
+            if (
+                "Bank Transfer" in rec.sale_payment_method_id.name
+                and exception not in rec.exception_ids
+                and rec.invoice_status != "full paid"
+            ):
+                if rec.state == "sent":
+                    raise ValidationError(
+                        _(
+                            "The Quotation is set for Bank Transfer and full payment has not been received so it cannot be confirmed."
+                        )
+                    )
+                else:
+                    raise ValidationError(
+                        _(
+                            "The Quotation is set for Bank Transfer and full payment has not been received so it cannot be confirmed.",
+                            "Please move the quote to 'Quotation Sent' state and receive payment before trying to confirm.",
+                        )
+                    )
+
+        return super().action_confirm()
 
     # END #########

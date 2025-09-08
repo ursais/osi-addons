@@ -16,10 +16,12 @@
         "sale",
         "ol_sale",
         "ol_sale_substate",
+        "sale_exception",
     ],
     # always loaded
     "data": [
         "data/bank_transfer_email.xml",
+        "data/sale_exception.xml",
         "views/payment_method_view.xml",
     ],
 }

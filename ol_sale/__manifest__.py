@@ -48,6 +48,7 @@
         "views/sale_subscription_views.xml",
         "views/stock_picking_view.xml",
         "views/mrp_production_view.xml",
+        "views/payment_method_view.xml",
         "views/confirmation_email.xml",
         "wizard/forward_confirmation_email_wizard.xml",
     ],

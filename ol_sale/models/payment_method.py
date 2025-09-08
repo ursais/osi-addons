@@ -1,17 +1,14 @@
 # Import Odoo libs
-from odoo import models
+from odoo import fields, models
 
 
-class SaleOrderPaymentMethod(models.Model):
-    _inherit = "sale.order.payment.method"
+class PaymentMethod(models.Model):
+    """Add new field to Payment Method."""
 
-    def get_payment_method_report_data(self):
-        """Get the Proforma Invoice related report data"""
+    _inherit = "payment.method"
 
-        data = {}
-        for method in self:
-            data[method.id] = {}
-            sale_order = method.order_id
-            order_data = sale_order.get_report_data()
-            data[method.id]['sale_order'] = order_data
-        return data
+    # COLUMNS #####
+
+    allow_quote_payment = fields.Boolean(string="Allow Payments on Sent Quotes")
+
+    # END #########

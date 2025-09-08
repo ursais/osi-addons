@@ -6,4 +6,5 @@ from . import sale_order
 from . import res_partner
 from . import stock_picking
 from . import mrp_production
+from . import payment_method
 from . import account_move
