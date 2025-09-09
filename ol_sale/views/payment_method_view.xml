@@ -1,23 +1,23 @@
 <odoo>
 
-    <record id="payment_method_form_inherit_ol_bank_transfer_email" model="ir.ui.view">
+    <record id="ol_sale_payment_method_form" model="ir.ui.view">
         <field name="name">payment.method.form</field>
         <field name="model">payment.method</field>
         <field name="inherit_id" ref="payment.payment_method_form" />
         <field name="arch" type="xml">
             <field name="code" position="after">
-                <field name="sale_email_template_id"/>
+                <field name="allow_quote_payment"/>
             </field>
         </field>
     </record>
 
-    <record id="payment_method_tree_inherit_ol_bank_transfer_email" model="ir.ui.view">
+    <record id="ol_sale_payment_method_tree" model="ir.ui.view">
         <field name="name">payment.method.tree</field>
         <field name="model">payment.method</field>
         <field name="inherit_id" ref="payment.payment_method_tree" />
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="sale_email_template_id" optional='show'/>
+                <field name="allow_quote_payment" optional='show'/>
             </field>
         </field>
     </record>

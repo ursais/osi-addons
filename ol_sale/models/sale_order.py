@@ -358,74 +358,57 @@ class SaleOrder(models.Model):
             return
         super().onchange_avatax_calculation()
 
-    @api.depends("state", "order_line.invoice_status")
+    @api.depends("state", "order_line.invoice_status", "order_line.is_downpayment")
     def _compute_invoice_status(self):
-        """
-        Compute the invoice status of a SO. Possible statuses:
-        - no: if the SO is not in status 'sale' or 'done', we consider that there is nothing to
-          invoice. This is also the default value if the conditions of no other status is met.
-        - to invoice: if any SO line is 'to invoice', the whole SO is 'to invoice'
-        - invoiced: if all SO lines are invoiced, the SO is invoiced.
-        - upselling: if all SO lines are invoiced or upselling, the status is upselling.
-        """
-        confirmed_orders = self.filtered(lambda so: so.state == "sale")
-        (self - confirmed_orders).invoice_status = "no"
-        if not confirmed_orders:
-            return
-        lines_domain = [("is_downpayment", "=", False), ("display_type", "=", False)]
-        line_invoice_status_all = [
-            (order.id, invoice_status)
-            for order, invoice_status in self.env["sale.order.line"]._read_group(
-                lines_domain + [("order_id", "in", confirmed_orders.ids)],
-                ["order_id", "invoice_status"],
-            )
-        ]
-        for order in confirmed_orders:
-            line_invoice_status = [
-                d[1] for d in line_invoice_status_all if d[0] == order.id
-            ]
-            if order.state != "sale":
+        for order in self:
+            # Default for non-eligible states
+            if order.state not in ("sale", "sent"):
                 order.invoice_status = "no"
-            elif any(
-                invoice_status == "to invoice" for invoice_status in line_invoice_status
+                continue
+
+            # Check if we’re in the special Bank Transfer + sent case
+            if (
+                order.state == "sent"
+                and order.sale_payment_method_id.name != "Bank Transfer"
             ):
-                if any(
-                    invoice_status == "no" for invoice_status in line_invoice_status
+                order.invoice_status = "no"
+                continue
+
+            # --- New downpayment-based coverage logic ---
+            downpayment_lines = order.order_line.filtered("is_downpayment")
+            dp_invoice_lines = downpayment_lines.mapped("invoice_lines")
+            dp_total = sum(dp_invoice_lines.mapped("price_subtotal"))
+            order_total = order.amount_untaxed
+
+            if dp_total >= order_total:
+                # fully covered by downpayment
+                if all(
+                    move.payment_state in ("in_payment", "paid")
+                    for move in dp_invoice_lines.mapped("move_id")
                 ):
-                    # If only discount/delivery/promotion lines can be invoiced, the SO should not
-                    # be invoiceable.
-                    invoiceable_domain = lines_domain + [
-                        ("invoice_status", "=", "to invoice")
-                    ]
-                    invoiceable_lines = order.order_line.filtered_domain(
-                        invoiceable_domain
-                    )
-                    special_lines = invoiceable_lines.filtered(
-                        lambda sol: not sol._can_be_invoiced_alone()
-                    )
-                    if invoiceable_lines == special_lines:
-                        order.invoice_status = "no"
-                    else:
-                        order.invoice_status = "to invoice"
+                    order.invoice_status = "full paid"
                 else:
-                    order.invoice_status = "to invoice"
-            elif line_invoice_status and all(
-                invoice_status == "invoiced" for invoice_status in line_invoice_status
-            ):
+                    order.invoice_status = "invoiced"
+                continue
+            elif 0 < dp_total < order_total:
+                order.invoice_status = "partially invoiced"
+                continue
+
+            # --- Fallback to line-driven logic (normal Odoo aggregation) ---
+            line_statuses = order.order_line.filtered(
+                lambda l: not l.is_downpayment
+            ).mapped("invoice_status")
+            if any(st == "to invoice" for st in line_statuses):
+                order.invoice_status = "to invoice"
+            elif line_statuses and all(st == "invoiced" for st in line_statuses):
                 order.invoice_status = "invoiced"
-            elif line_invoice_status and all(
-                invoice_status in ("invoiced", "upselling")
-                for invoice_status in line_invoice_status
+            elif line_statuses and all(
+                st in ("invoiced", "upselling") for st in line_statuses
             ):
                 order.invoice_status = "upselling"
-            elif line_invoice_status and any(
-                invoice_status == "partially invoiced"
-                for invoice_status in line_invoice_status
-            ):
+            elif any(st == "partially invoiced" for st in line_statuses):
                 order.invoice_status = "partially invoiced"
-            elif line_invoice_status and all(
-                invoice_status == "full paid" for invoice_status in line_invoice_status
-            ):
+            elif line_statuses and all(st == "full paid" for st in line_statuses):
                 order.invoice_status = "full paid"
             else:
                 order.invoice_status = "no"

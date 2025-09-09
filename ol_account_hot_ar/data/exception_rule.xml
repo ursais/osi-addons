@@ -6,7 +6,7 @@
         <field name="sequence">70</field>
         <field name="model">sale.order</field>
         <field name="exception_type">by_domain</field>
-        <field name="domain">[("hot_ar", "=", True)]</field>
+        <field name="domain">[("hot_ar", "=", True), ("state", "in", ["sent", "sale"])]</field>
         <field name="active" eval="True" />
     </record>
 

@@ -20,7 +20,9 @@ class AccountMove(models.Model):
         super()._compute_payment_state()
 
         for move in self:
-            if move.payment_state == "paid" and move.line_ids.mapped("sale_line_ids"):
+            if move.payment_state in ("in_payment", "paid") and move.line_ids.mapped(
+                "sale_line_ids"
+            ):
                 sale_lines = move.line_ids.mapped("sale_line_ids")
                 if sale_lines:
                     # Run invoice status compute
