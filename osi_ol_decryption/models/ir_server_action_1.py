@@ -12,6 +12,82 @@ from odoo.tools import convert_csv_import, file_open
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
+    def tranfer_stock(self):
+        _logger.info("===============tranfer_stock====================")
+        self = self.sudo()
+        Picking = self.env['stock.picking']
+        Move = self.env['stock.move']
+
+        stock_ids = self.env['stock.quant'].search([
+            ('location_id', 'in', [12, 72]),
+            ('quantity', '>', 0),
+            ('product_id', '=', 2908)
+        ])
+        print ("\n stock_ids",stock_ids)
+        self._cr.execute("update mrp_bom_line set company_id = null where bom_id = 261469;")
+        picking_type_us = self.env['stock.picking.type'].search([('name', '=', 'Internal Transfers'), ('company_id', '=', 1)], limit=1)
+        picking_type_eu = self.env['stock.picking.type'].search([('name', '=', 'Internal Transfers'), ('company_id', '=', 2)], limit=1)
+        for stock in stock_ids:
+            res_id = "product.template," + str(stock.product_tmpl_id.id)
+            
+            # fetch loc_row, loc_rack, loc_case
+            self._cr.execute("""
+                SELECT name, value_text
+                FROM temp_ir_property_v13_vp
+                WHERE name IN ('loc_rack','loc_row','loc_case')
+                AND res_id = %s and company_id = %s
+            """, (res_id, stock.company_id.id))
+            
+            datas = {d["name"]: d["value_text"] for d in self._cr.dictfetchall()}
+            print ("\n datas", datas)
+            loc_row = datas.get("loc_row", "")
+            loc_rack = datas.get("loc_rack", "")
+            loc_case = datas.get("loc_case", "")
+            
+            # build location string
+            location_name = loc_row + " " + loc_rack + " " + loc_case
+            if not location_name:
+                continue
+            
+            # find new location
+            new_location = self.env['stock.location'].search([('name', '=', location_name), ('company_id', '=', stock.company_id.id)], limit=1)
+            if not new_location:
+                continue  # skip if no matching location
+            picking_type = False
+            if stock.company_id.id == 1:
+                picking_type = picking_type_us.id
+            else:
+                picking_type = picking_type_eu.id
+            # create internal transfer (picking)
+            picking = Picking.with_company(stock.company_id).create({
+                'picking_type_id': picking_type,
+                'location_id': stock.location_id.id,
+                'location_dest_id': new_location.id,
+                "company_id": stock.company_id.id,
+                'move_ids': [(0, 0, {
+                    'name': stock.product_id.display_name,
+                    'product_id': stock.product_id.id,
+                    'product_uom_qty': stock.quantity,
+                    'quantity': stock.quantity,
+                    'product_uom': stock.product_id.uom_id.id,
+                    'location_id': stock.location_id.id,
+                    'location_dest_id': new_location.id,
+                    # "picked": True,
+                    "company_id": stock.company_id.id,
+                    "bom_line_id": False
+                })]
+            })
+            
+            picking.with_company(stock.company_id).action_assign()
+            picking.with_company(stock.company_id)._action_done()
+            if stock.package_id:
+                new_package_id = stock.package_id.copy({'name': stock.package_id.name})
+                picking.move_line_ids.package_id = stock.package_id.id
+                picking.move_line_ids.result_package_id = new_package_id.id
+            picking.with_company(stock.company_id).button_validate()
+            # self._cr.commit()
+
+
     def split_mo(self):
         self = self.sudo()
         mo_ids = self.search(["&", ("state", "=", "confirmed"), ("product_qty", ">", 1)], order='product_qty')
@@ -40,6 +116,7 @@ class IrActionsServer(models.Model):
             )
     
     def clear_analytic_account_refs(self):
+        _logger.info("===============clear_analytic_account_refs====================")
         cr = self._cr
         cr.execute("""
             SELECT model, name
