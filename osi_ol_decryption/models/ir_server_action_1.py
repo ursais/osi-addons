@@ -21,7 +21,6 @@ class IrActionsServer(models.Model):
         stock_ids = self.env['stock.quant'].search([
             ('location_id', 'in', [12, 72]),
             ('quantity', '>', 0),
-            ('product_id', '=', 2908)
         ])
         print ("\n stock_ids",stock_ids)
         self._cr.execute("update mrp_bom_line set company_id = null where bom_id = 261469;")
