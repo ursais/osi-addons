@@ -44,6 +44,7 @@ class SaleOrder(models.Model):
                     quot_sent_substate
                     and order.substate_id != quot_sent_substate
                     and not active_exceptions
+                    and order.substate_id != order_review_substate
                 ):
                     order.write({"substate_id": quot_sent_substate.id})
 
@@ -82,13 +83,15 @@ class SaleOrder(models.Model):
 
                 if order.invoice_ids:
                     all_invoice = all(
-                        invoice.payment_state == "paid" for invoice in order.invoice_ids
+                        invoice.payment_state in ("in_payment", "paid")
+                        for invoice in order.invoice_ids
                     )
                     if all_invoice and order.substate_id != complete_substate:
                         new_substate = complete_substate
 
                 if new_substate and order.substate_id != new_substate:
                     order.write({"substate_id": new_substate.id})
+            order.detect_exceptions()
 
     def action_lock(self):
         """Trigger a substate check if Lock is pressed"""

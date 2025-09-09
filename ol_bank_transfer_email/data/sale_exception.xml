@@ -6,7 +6,7 @@
         <field name="sequence">55</field>
         <field name="model">sale.order</field>
         <field name="exception_type">by_domain</field>
-        <field name="domain">[("sale_payment_method_id.name", "=", 'Bank Transfer'), ('invoice_status', '!=', 'full paid'), ("state", "=", "sent")]</field>
+        <field name="domain">[("sale_payment_method_id.name", "=", 'Bank Transfer'), ('invoice_status', '!=', 'full paid'), ("state", "in", ["sent", "sale"])]</field>
     </record>
 
 </odoo>

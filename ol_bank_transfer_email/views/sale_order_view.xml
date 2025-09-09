@@ -1,0 +1,17 @@
+<odoo>
+
+    <!-- Sale Order form view -->
+    <record id="view_order_form_inherit_ol_bank_transfer_email" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(sale.action_view_sale_advance_payment_inv)d']" position="after">
+                <field name="allow_quote_payment" invisible="1" />
+                <button id="create_invoice_percentage" name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Down Payment" type="action" context="{'default_advance_payment_method': 'percentage', 'default_amount': 100}" data-hotkey="q" invisible="state != 'sent' or not allow_quote_payment or invoice_status in ('full paid')"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

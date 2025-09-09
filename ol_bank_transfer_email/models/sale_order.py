@@ -12,19 +12,18 @@ class SaleOrder(models.Model):
 
     payment_method_mail_send = fields.Boolean(copy=False)
     allow_quote_payment = fields.Boolean(
-        related="sale_payment_method_id.allow_quote_payment"
+        related="sale_payment_method_id.allow_quote_payment",
+        help="Helper field for form view to show the create down payment invoice button",
     )
 
     # END #########
     # METHOD #####
 
-    # Exceptions that are "ok" and should not block email sending
-    ALLOWED_EXCEPTIONS = [
-        "ol_sale.exception_so_bank_tranfer_payment",
-    ]
-
     def write(self, vals):
-        """Override write to send email if no blocking exceptions."""
+        """
+        Override write to send email if pay method has template.
+        Sent in order review substate.
+        """
         res = super().write(vals)
         order_review = self.env.ref(
             "ol_sale_substate.base_substate__order_review", raise_if_not_found=True
@@ -35,25 +34,9 @@ class SaleOrder(models.Model):
             and l.substate_id.id == order_review.id
             and l.sale_payment_method_id.sale_email_template_id
         ):
-            rule_ids = order.detect_exceptions() or []
-
-            # Browse the exception rules
-            rules = self.env["exception.rule"].browse(rule_ids)
-
-            # Map rule_id -> xml_id
-            xml_ids_map = rules.get_external_id()
-
-            # Check which rules are NOT in whitelist
-            blocking = [
-                r_id
-                for r_id in rule_ids
-                if xml_ids_map.get(r_id) not in self.ALLOWED_EXCEPTIONS
-            ]
-
-            if not blocking:
-                template = order.sale_payment_method_id.sale_email_template_id
-                template.send_mail(order.id, force_send=True)
-                order.write({"payment_method_mail_send": True})
+            template = order.sale_payment_method_id.sale_email_template_id
+            template.send_mail(order.id, force_send=True)
+            order.write({"payment_method_mail_send": True})
 
         return res
 
@@ -68,26 +51,22 @@ class SaleOrder(models.Model):
             raise_if_not_found=True,
         )
 
-        # Check if bank transfer payment method is checked, so is not fully paid and bank transfer excetpion isn't ignored.
+        # Check if bank transfer payment method is set, SO is not fully paid and
+        # bank transfer exception isn't active or ignored.
         for rec in self:
             if (
-                "Bank Transfer" in rec.sale_payment_method_id.name
+                rec.sale_payment_method_id
+                and "Bank Transfer" in rec.sale_payment_method_id.name
                 and exception not in rec.exception_ids
+                and exception not in rec.ignored_exception_ids.exception_rule_id
                 and rec.invoice_status != "full paid"
             ):
-                if rec.state == "sent":
-                    raise ValidationError(
-                        _(
-                            "The Quotation is set for Bank Transfer and full payment has not been received so it cannot be confirmed."
-                        )
+                raise ValidationError(
+                    _(
+                        "The Quotation is set for Bank Transfer and full payment has not been received so it cannot be confirmed."
+                        " Please move the quote to 'Quotation Sent' status and receive payment before trying to confirm."
                     )
-                else:
-                    raise ValidationError(
-                        _(
-                            "The Quotation is set for Bank Transfer and full payment has not been received so it cannot be confirmed.",
-                            "Please move the quote to 'Quotation Sent' state and receive payment before trying to confirm.",
-                        )
-                    )
+                )
 
         return super().action_confirm()
 

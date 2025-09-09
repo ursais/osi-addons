@@ -13,9 +13,9 @@
         "ol_base",
         "ol_templates",
         "ol_fraud_detection",
-        "sale",
         "ol_sale",
         "ol_sale_substate",
+        "sale",
         "sale_exception",
     ],
     # always loaded
@@ -23,5 +23,6 @@
         "data/bank_transfer_email.xml",
         "data/sale_exception.xml",
         "views/payment_method_view.xml",
+        "views/sale_order_view.xml",
     ],
 }

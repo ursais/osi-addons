@@ -55,7 +55,7 @@ def _compute_invoice_status(self):
         ):
             line.invoice_status = "partially invoiced"
         elif line.invoice_lines and all(
-            move.payment_state == "paid"
+            move.payment_state in ("in_payment", "paid")
             for move in line.invoice_lines.mapped("move_id")
         ):
             line.invoice_status = "full paid"
