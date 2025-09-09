@@ -139,6 +139,7 @@
         <field name="candidate_sale" eval="True" />
         <field name="candidate_sale_confirm" eval="True" />
         <field name="candidate_purchase" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
         <field name="candidate_bom" eval="True" />
     </record>
 
@@ -146,6 +147,7 @@
         <field name="candidate_sale" eval="True" />
         <field name="candidate_sale_confirm" eval="True" />
         <field name="candidate_purchase" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
         <field name="candidate_bom" eval="True" />
     </record>
 
@@ -153,6 +155,7 @@
         <field name="candidate_sale" eval="True" />
         <field name="candidate_sale_confirm" eval="True" />
         <field name="candidate_purchase" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
         <field name="candidate_bom" eval="True" />
     </record>
 
@@ -160,6 +163,7 @@
         <field name="candidate_sale" eval="True" />
         <field name="candidate_sale_confirm" eval="True" />
         <field name="candidate_purchase" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
         <field name="candidate_bom" eval="True" />
     </record>
 
@@ -167,6 +171,7 @@
         <field name="candidate_sale" eval="True" />
         <field name="candidate_sale_confirm" eval="True" />
         <field name="candidate_purchase" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
         <field name="candidate_bom" eval="True" />
     </record>
 
@@ -174,6 +179,7 @@
         <field name="candidate_sale" eval="True" />
         <field name="candidate_sale_confirm" eval="True" />
         <field name="candidate_purchase" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
         <field name="candidate_bom" eval="True" />
     </record>
 
@@ -181,6 +187,7 @@
         <field name="candidate_sale" eval="True" />
         <field name="candidate_sale_confirm" eval="True" />
         <field name="candidate_purchase" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
         <field name="candidate_bom" eval="True" />
     </record>
 
