@@ -185,4 +185,11 @@
         <field name="candidate_bom" eval="True" />
     </record>
 
+    <record id="ol_base.product_category_services" model="product.category">
+        <field name="candidate_sale" eval="True" />
+        <field name="candidate_sale_confirm" eval="True" />
+        <field name="candidate_component_manufacture" eval="True" />
+        <field name="candidate_bom" eval="True" />
+    </record>
+
 </odoo>
