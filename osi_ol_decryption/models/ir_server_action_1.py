@@ -38,7 +38,6 @@ class IrActionsServer(models.Model):
             """, (res_id, stock.company_id.id))
             
             datas = {d["name"]: d["value_text"] for d in self._cr.dictfetchall()}
-            print ("\n datas", datas)
             loc_row = datas.get("loc_row", "")
             loc_rack = datas.get("loc_rack", "")
             loc_case = datas.get("loc_case", "")
@@ -89,7 +88,7 @@ class IrActionsServer(models.Model):
 
     def split_mo(self):
         self = self.sudo()
-        mo_ids = self.search(["&", ("state", "=", "confirmed"), ("product_qty", ">", 1)], order='product_qty')
+        mo_ids = self.env['mrp.production'].search(["&", ("state", "=", "confirmed"), ("product_qty", ">", 1)], order='product_qty')
         for mo in mo_ids:
             mo.sale_order_id.with_delay().split_mo(split_internal_picking=True)
 
