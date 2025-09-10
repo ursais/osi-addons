@@ -51,7 +51,7 @@ class SaleOrder(models.Model):
     invoice_status = fields.Selection(
         selection_add=[
             ("partially invoiced", "Partially Invoiced"),
-            ("full paid", "Full Paid"),
+            ("full paid", "Fully Paid"),
         ]
     )
     mo_tranfer_count = fields.Integer(
