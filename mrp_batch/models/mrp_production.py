@@ -129,7 +129,7 @@ class MrpProduction(models.Model):
 
         return res
 
-    def _split_productions(self, amounts=False, cancel_remaining_qty=False, set_consumed_qty=False):
+    def _split_productions(self, amounts=False, cancel_remaining_qty=False, set_consumed_qty=False, split_internal_picking=False):
         """ Splits productions into productions smaller quantities to produce, i.e. creates
         its backorders.
 
@@ -185,6 +185,7 @@ class MrpProduction(models.Model):
             i = 1
             for qty_to_backorder in backorder_qtys:
                 next_seq += 1
+                
                 procurement_group = self.env['procurement.group'].create({
                     'name': f'{mo_name}-{i+1}',
                 })
@@ -240,6 +241,77 @@ class MrpProduction(models.Model):
                     moves.append(move)
 
         backorder_moves = self.env['stock.move'].create(new_moves_vals)
+        
+        # After you create `backorder_moves` in your code, add this picking split logic OSI
+        picking_vals_list = []
+        original_to_new_picking = {}
+        for production in self:
+            if split_internal_picking:
+                # Group backorder moves by picking
+                for picking in production.mapped('picking_ids'):
+                    if picking:
+                        for backorder in production_to_backorders[production]:
+                            # Create a duplicate picking for each backorder
+                            new_picking_vals = picking.copy_data({
+                                'origin': backorder.name,
+                                'move_ids': False,
+                                "move_ids_without_package": False, 
+                                "group_id": backorder.procurement_group_id.id,
+                                'backorder_id': picking.id,  # optional, if you want link
+                            })[0]
+                            picking_vals_list.append((backorder, new_picking_vals))
+
+                # OSI Script Code Create all backorder pickings
+                new_pickings = self.env['stock.picking'].create([vals for bo, vals in picking_vals_list])
+                # Map each backorder MO to its picking
+                for (backorder, vals), picking in zip(picking_vals_list, new_pickings):
+                    original_to_new_picking[(backorder.id, vals['origin'])] = picking
+
+                for move in backorder_moves:
+                    if move.raw_material_production_id:
+                        bo = move.raw_material_production_id
+                    else:
+                        bo = move.production_id
+
+                    original_move = move.move_orig_ids[:1] or move._origin or False
+                    original_picking = original_move.picking_id if original_move else False
+
+                    if not original_picking:
+                        continue
+
+                    # Get the new picking for this backorder + original picking
+                    new_picking = original_to_new_picking.get((bo.id, bo.name))
+                    if not new_picking:
+                        continue
+
+                    # Copy original move values — exclude picking & origin moves for now
+                    new_move_vals = move.copy_data({
+                        'picking_id': new_picking.id,
+                        'origin': bo.name,  # Set the origin text to backorder MO name
+                        'raw_material_production_id': False,
+                        "location_id":new_picking.location_id.id, 
+                        "location_dest_id": new_picking.location_dest_id.id,
+                        'move_orig_ids': [(6, 0, [move.id])] if original_move else False,
+                    })[0]
+                    
+                    # Create the new move in the new picking
+                    new_move = self.env['stock.move'].create(new_move_vals)
+
+                    # Optionally create move lines for new move in proportion
+                    for ml in move.move_line_ids:
+                        new_ml_vals = ml.copy_data({
+                            'move_id': new_move.id
+                        })[0]
+                        self.env['stock.move.line'].create(new_ml_vals)
+
+                    # You might want to keep a mapping from original move to new move
+                    # to handle future reservations
+                for picking in production.mapped('picking_ids'):
+                    for move in picking.move_ids:
+                        unit_factor = move.product_uom_qty / initial_qty_by_production[production]
+                        move.with_context(do_not_unreserve=True, no_procurement=True).product_uom_qty = production.product_qty * unit_factor
+        # END ON Split old 
+        
         move_to_assign = backorder_moves
         # Split `stock.move.line`s. 2 options for this:
         # - do_unreserve -> action_assign
