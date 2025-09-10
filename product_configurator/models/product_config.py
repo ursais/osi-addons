@@ -546,15 +546,14 @@ class ProductConfigSession(models.Model):
 
         for attr_line in product_tmpl_id.attribute_line_ids:
             attr_id = attr_line.attribute_id.id
-            field_name = field_prefix + str(attr_id)
-            custom_field_name = custom_field_prefix + str(attr_id)
+            line_id = attr_line.id
+            field_name = f"{field_prefix}{line_id}_{attr_id}"
+            custom_field_name = f"{custom_field_prefix}{attr_id}"
 
             if field_name not in vals and custom_field_name not in vals:
                 continue
 
-            # Add attribute values from the client except custom attribute
-            # If a custom value is being written, but field name is not in
-            # the write dictionary, then it must be a custom value!
+            # Standard attribute value
             if vals.get(field_name, custom_val.id) != custom_val.id:
                 if attr_line.multi and isinstance(vals[field_name], list):
                     field_val = self._update_field_values(vals, field_name, attr_line)
@@ -567,21 +566,24 @@ class ProductConfigSession(models.Model):
                             attr_line.attribute_id.name,
                         )
                     )
-                attr_val_dict.update({attr_id: field_val})
-                # Ensure there is no custom value stored if we have switched
-                # from custom value to selected attribute value.
+
+                attr_val_dict[line_id] = field_val
+
+                # Clear custom value if switching to standard
                 if attr_line.custom:
-                    custom_val_dict.update({attr_id: False})
+                    custom_val_dict[line_id] = False
+
+            # Custom attribute value
             elif attr_line.custom:
                 val = vals.get(custom_field_name, False)
                 if attr_line.attribute_id.custom_type == "binary":
-                    # TODO: Add widget that enables multiple file uploads
                     val = [{"name": "custom", "datas": vals[custom_field_name]}]
-                custom_val_dict.update({attr_id: val})
-                # Ensure there is no standard value stored if we have switched
-                # from selected value to custom value.
-                attr_val_dict.update({attr_id: custom_val.id})
+                custom_val_dict[line_id] = val
 
+                # Ensure no standard value is stored if switched to custom
+                attr_val_dict[line_id] = custom_val.id
+
+        # Pass line_id keyed dict to update_config
         self.update_config(attr_val_dict, custom_val_dict)
 
     def _update_field_values(self, vals, field_name, attr_line):
@@ -607,11 +609,10 @@ class ProductConfigSession(models.Model):
             elif field_vals and field_vals[0] in (Command.UNLINK, Command.DELETE):
                 if field_vals[1] in final_val:
                     final_val.remove(field_vals[1])
-
         return final_val
 
     def update_config(self, attr_val_dict=None, custom_val_dict=None):
-        """Update the session object with the given value_ids and custom values.
+        """Update session with given line_id keyed values and custom values.
 
         Use this method instead of write in order to prevent incompatible
         configurations as this removed duplicate values for the same attribute.
@@ -638,15 +639,22 @@ class ProductConfigSession(models.Model):
             attr_val_dict = {}
         if custom_val_dict is None:
             custom_val_dict = {}
-        update_vals = {}
 
         value_ids = self.value_ids.ids
-        for attr_id, vals in attr_val_dict.items():
+        update_vals = {}
+
+        # Handle standard attribute values
+        for line_id, vals in attr_val_dict.items():
+            line = self.env["product.template.attribute.line"].browse(line_id)
+            if not line:
+                continue
+
+            # Only remove values linked to this line
             attr_val_ids = self.value_ids.filtered(
-                lambda x, attr_id=attr_id: x.attribute_id.id == int(attr_id)
+                lambda x, line=line: x.id in line.value_ids.ids
             ).ids
-            # Remove all values for this attribute and add vals from dict
             value_ids = list(set(value_ids) - set(attr_val_ids))
+
             if not vals:
                 continue
             if isinstance(vals, list):
@@ -655,28 +663,30 @@ class ProductConfigSession(models.Model):
                 value_ids.append(vals)
 
         if value_ids != self.value_ids.ids:
-            update_vals.update({"value_ids": [(6, 0, value_ids)]})
+            update_vals["value_ids"] = [(6, 0, value_ids)]
 
-        # Remove all custom values included in the custom_vals dict
+        # Remove existing custom values for these lines
+        line_attr_ids = [
+            self.env["product.template.attribute.line"].browse(line_id).attribute_id.id
+            for line_id in custom_val_dict.keys()
+        ]
         self.custom_value_ids.filtered(
-            lambda x: x.attribute_id.id in custom_val_dict.keys()
+            lambda x: x.attribute_id.id in line_attr_ids
         ).unlink()
 
+        # Handle custom values
         if custom_val_dict:
             binary_field_ids = (
                 self.env["product.attribute"]
-                .search(
-                    [
-                        ("id", "in", list(custom_val_dict.keys())),
-                        ("custom_type", "=", "binary"),
-                    ]
-                )
+                .search([("id", "in", line_attr_ids), ("custom_type", "=", "binary")])
                 .ids
             )
         else:
             binary_field_ids = []
 
-        for attr_id, vals in custom_val_dict.items():
+        for line_id, vals in custom_val_dict.items():
+            line = self.env["product.template.attribute.line"].browse(line_id)
+            attr_id = line.attribute_id.id
             if not vals:
                 continue
 
@@ -1136,9 +1146,9 @@ class ProductConfigSession(models.Model):
             if cfg_step == active_cfg_step_line:
                 adjacent_steps.update(
                     {
-                        "next_step": None
-                        if i + 1 == nr_steps
-                        else open_step_lines[i + 1],
+                        "next_step": (
+                            None if i + 1 == nr_steps else open_step_lines[i + 1]
+                        ),
                         "previous_step": None if i == 0 else open_step_lines[i - 1],
                     }
                 )
@@ -1491,7 +1501,12 @@ class ProductConfigSession(models.Model):
         # in values, but it might have more attributes!  These are NOT
         # matches
         more_attrs = products.filtered(
-            lambda p: len(p.product_template_attribute_value_ids.mapped("attribute_line_id").filtered(lambda l: l.active)) != len(value_ids)
+            lambda p: len(
+                p.product_template_attribute_value_ids.mapped(
+                    "attribute_line_id"
+                ).filtered(lambda l: l.active)
+            )
+            != len(value_ids)
         )
         products -= more_attrs
         return products
