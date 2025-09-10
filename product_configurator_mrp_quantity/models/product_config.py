@@ -398,79 +398,82 @@ class ProductConfigSession(models.Model):
         return specs
 
     def _get_bom_line(self, variant, product_tmpl_id):
+        """Return bom line values, applying qty multipliers only when there is an explicit session qty match."""
         bom_line_vals = super()._get_bom_line(variant, product_tmpl_id)
-        session_attr_qty_values = self.session_value_quantity_ids
+        session_qtys = self.session_value_quantity_ids
         parent_bom = self._get_parent_bom(product_tmpl_id)
         attr_values = variant.product_template_attribute_value_ids.mapped(
             "product_attribute_value_id"
         )
+
+        # Case: no parent bom and explicit product in context
         if not parent_bom and self._context.get("product_id"):
             product = self._context.get("product_id")
-            local_session_attr_qty_value = session_attr_qty_values.filtered(
-                lambda local_session: local_session.attr_value_id.product_id.id
-                == product.id
+            sv = session_qtys.filtered(
+                lambda s: s.attr_value_id.product_id
+                and s.attr_value_id.product_id.id == product.id
             )
-            bom_line_vals = {
-                "product_id": product.id,
-                "product_qty": local_session_attr_qty_value.qty > 0
-                and local_session_attr_qty_value.qty
-                or 1,
-            }
-        elif parent_bom and self._context.get("parent_bom_line"):
+            if sv:
+                bom_line_vals = {
+                    "product_id": product.id,
+                    "product_qty": sv[0].qty or 1,
+                }
+            return bom_line_vals
+
+        # Case: when we have a parent bom and are evaluating a parent bom line
+        if parent_bom and self._context.get("parent_bom_line"):
             parent_bom_line = self._context.get("parent_bom_line")
+
+            # If parent bom line has a config_set (configurable set)
             if parent_bom_line.config_set_id:
                 for config in parent_bom_line.config_set_id.configuration_ids:
+                    # Only consider this config if its values are applicable to the variant
                     if set(config.value_ids.ids).issubset(set(attr_values.ids)):
-                        attribute_ids = config.value_ids.mapped("attribute_id").ids
-                        local_session_attr_qty_values = session_attr_qty_values.filtered(
-                            lambda local_session: local_session.attr_value_id.product_id
-                            and local_session.attr_value_id.id
-                            in local_session.template_attri_value_id.attribute_line_id.value_ids.ids
-                            and local_session.attr_value_id.product_id.id
+                        # 1) Try to find a session qty where the attribute value maps to the same product as the parent line
+                        local_match = session_qtys.filtered(
+                            lambda s: s.attr_value_id.product_id
+                            and s.attr_value_id.product_id.id
                             == parent_bom_line.product_id.id
+                            and s.attr_value_id.id in config.value_ids.ids
                         )
-                        non_local_session_attr_qty_values = session_attr_qty_values.filtered(
-                            lambda local_session: not local_session.attr_value_id.product_id
-                            and local_session.attr_value_id.attribute_id.id
-                            in attribute_ids
-                            and local_session.attr_value_id.id
-                            in local_session.template_attri_value_id.attribute_line_id.value_ids.ids
-                        )
-                        session_attr_qty_values = (
-                            session_attr_qty_values - local_session_attr_qty_values
-                        )
-                        if local_session_attr_qty_values:
+                        if local_match:
+                            qty = local_match[0].qty or 1
                             bom_line_vals = {
                                 "product_id": parent_bom_line.product_id.id,
-                                "product_qty": (
-                                    parent_bom_line.product_qty
-                                    * local_session_attr_qty_values.qty
-                                ),
+                                "product_qty": parent_bom_line.product_qty * qty,
                             }
-                        elif non_local_session_attr_qty_values:
+                            break  # found definitive match, stop checking configs
+
+                        # 2) Otherwise try to find a non-product (attribute-level) session qty that belongs
+                        #    to one of the attributes used by this config and to a value in this config.
+                        config_attr_ids = config.value_ids.mapped("attribute_id").ids
+                        nonlocal_match = session_qtys.filtered(
+                            lambda s: (not s.attr_value_id.product_id)
+                            and s.attr_value_id.attribute_id.id in config_attr_ids
+                            and s.attr_value_id.id in config.value_ids.ids
+                        )
+                        if nonlocal_match:
+                            qty = nonlocal_match[0].qty or 1
                             bom_line_vals = {
                                 "product_id": parent_bom_line.product_id.id,
-                                "product_qty": (
-                                    parent_bom_line.product_qty
-                                    * non_local_session_attr_qty_values.qty
-                                ),
+                                "product_qty": parent_bom_line.product_qty * qty,
                             }
-                    else:
-                        parent_bom_product = parent_bom_line.product_id
-                        local_session_attr_qty_value = session_attr_qty_values.filtered(
-                            lambda local_session: local_session.attr_value_id.product_id.id
-                            == parent_bom_product.id
-                            and local_session.attr_value_id.attribute_id.id
-                            in config.value_ids.mapped("attribute_id").ids
-                        )
-                        if local_session_attr_qty_value:
-                            bom_line_vals = {
-                                "product_id": parent_bom_product.id,
-                                "product_qty": local_session_attr_qty_value.qty > 0
-                                and local_session_attr_qty_value.qty
-                                * parent_bom_line.product_qty
-                                or parent_bom_line.product_qty,
-                            }
+                            break  # found match, stop checking configs
+
+                # if no local_match or nonlocal_match found, leave bom_line_vals unchanged
+
+            else:
+                # parent_bom_line has no config_set – check for a direct product match only
+                direct_sv = session_qtys.filtered(
+                    lambda s: s.attr_value_id.product_id
+                    and s.attr_value_id.product_id.id == parent_bom_line.product_id.id
+                )
+                if direct_sv:
+                    qty = direct_sv[0].qty or 1
+                    bom_line_vals = {
+                        "product_id": parent_bom_line.product_id.id,
+                        "product_qty": parent_bom_line.product_qty * qty,
+                    }
 
         return bom_line_vals
 
