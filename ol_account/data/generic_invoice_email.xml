@@ -1,0 +1,98 @@
+<odoo>
+
+    <template id="generic_invoice_email">
+        <t t-call="ol_templates.ol_email">
+            <!-- Variables -->
+            <t t-if="account_move.move_type in ['out_refund', 'in_refund']">
+                <t t-set="title" t-value="'Credit ' + (account_move.name or '')"/>
+                <t t-set="preheader_text" t-value="'Credit ' + (account_move.name  or '')+ ' attached'"/>
+            </t>
+            <t t-else="">
+                <t t-set="title" t-value="'Invoice ' + (account_move.name or '')"/>
+                <t t-set="preheader_text" t-value="'Invoice ' + (account_move.name  or '')+ ' attached'"/>
+            </t>
+            <t t-set="include_newsletter_disclaimer" t-value="False"/>
+
+            <!-- Body -->
+            <t t-call="ol_templates.ol_email_text_content">
+                <div style="font-weight: 500; font-size: 20px;">
+                    <t t-if="account_move.move_type in ['out_refund', 'in_refund']">
+                        <tag>Please find your credit attached</tag>
+                    </t>
+                    <t t-else="">
+                        <tag>Please find your invoice attached</tag>
+                        <!-- ADD Payment Information -->
+                        <t t-call="ol_templates.ol_payment_info">
+                            <t t-if="account_move.sale_payment_method_id">
+                                <t t-set="payment_method" t-value="account_move.sale_payment_method_id"/>
+                            </t>
+                            <t t-if="account_move.invoice_payment_term_id">
+                                <t t-set="payment_term" t-value="account_move.invoice_payment_term_id"/>
+                            </t>
+                        </t>
+                    </t>
+                </div>
+                <div style="font-size:16px; line-height:28px; margin-top:30px">
+                    <t t-esc="account_move.partner_id.name"/>,
+                </div>
+                <t t-if="account_move.move_type in ['out_refund', 'in_refund']">
+                    <p style="font-size: 16px; line-height: 28px; margin-top: 30px;">
+                      Thank you again for working with us, please find the credit attached.
+                    </p>
+                </t>
+                <t t-else="">
+                    <p style="font-size: 16px; line-height: 28px; margin-top: 30px;">
+                      Thank you again for working with us, please find the invoice attached.
+                    </p>
+                </t>
+            </t>
+
+            <t t-call="ol_templates.ol_email_text_content">
+                <p style="font-size: 16px; line-height: 28px;">
+                    <t t-call="ol_templates.ol_contact_info">
+                        <t t-set="company" t-value="account_move.company_id"/>
+                    </t>
+                </p>
+            </t>
+        </t>
+    </template>
+
+    <template id="generic_invoice_email_template_master">
+        <t t-set="account_move" t-value="object.with_context({'lang':object.partner_id.lang})"/>
+        <t t-call="ol_account.generic_invoice_email" t-lang="object.partner_id.lang"/>
+    </template>
+
+    <record id="generic_invoice_email_template" model="mail.template">
+        <field name="name">OnLogic Generic Invoice Email</field>
+        <field name="model_id" search="[('model', '=', 'account.move')]"/>
+        <field name="auto_delete" eval="False"/>
+        <field name="email_from">
+          ${(object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '')|safe}
+        </field>
+        <field name="email_to">${object.partner_id.email|safe}</field>
+        <field name="subject">{{ object.company_id.name }} Invoice {{ object.name }}</field>
+        <field name="report_template_ids" eval="[(4, ref('ol_account.action_generic_invoice_report'))]"/>
+        <field name="lang">${object.partner_id.lang}</field>
+        <field name="body_html" type="html">
+            <t t-set="invoice" t-value="object.with_context({'lang':object.partner_id.lang or object.env.lang})" />
+                <t t-call="ol_account.generic_invoice_email_template_master" t-lang="invoice.partner_id.lang or object.env.lang" />
+        </field>
+    </record>
+
+    <record id="generic_refund_email_template" model="mail.template">
+        <field name="name">OnLogic Generic Refund Email</field>
+        <field name="model_id" search="[('model', '=', 'account.move')]"/>
+        <field name="auto_delete" eval="False"/>
+        <field name="email_from"> ${(object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '')|safe}</field>
+        <field name="email_to">${object.partner_id.email|safe}</field>
+        <field name="email_to">${object.partner_id.email|safe}</field>
+        <field name="subject">{{ object.company_id.name }} Refund {{ object.name }}</field>
+        <field name="report_template_ids" eval="[(4, ref('ol_account.action_generic_invoice_report'))]"/>
+        <field name="lang">${object.partner_id.lang}</field>
+        <field name="body_html" type="html">
+            <t t-set="invoice" t-value="object.with_context({'lang':object.partner_id.lang or object.env.lang})" />
+            <t t-call="ol_account.generic_invoice_email_template_master" t-lang="invoice.partner_id.lang or object.env.lang" />
+        </field>
+    </record>
+
+</odoo>

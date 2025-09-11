@@ -38,7 +38,7 @@
           </t>
           <tr>
             <td bgcolor="#f3f3f3" style="padding: 8px 10px; font-size:16px;">
-              Payment Term
+              Payment Terms
             </td>
           </tr>
           <t t-if="payment_term">
@@ -151,7 +151,7 @@
                t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id or sale_order.env.company.currency_id}"/>
         </td>
       </tr>
-      <t t-if="account_move and account_move.type in ['out_invoice', 'in_invoice']">
+      <t t-if="account_move and account_move.move_type in ['out_invoice', 'in_invoice']">
         <tr style="margin-top: 20px;">
           <td style="width: 50%; text-align: left;">
             <div class="subtotal-text">Payment Received</div>

@@ -34,6 +34,45 @@ class AccountMove(models.Model):
     # END #########
     # METHODS ######
 
+    def _get_mail_template(self):
+        """
+        Override default mail template selection.
+        Falls back to core behavior if custom templates are missing.
+        """
+        self.ensure_one()
+
+        # Check if invoice is linked to at least one sale order
+        sale_order = self.invoice_line_ids.mapped("sale_line_ids.order_id")[:1] or False
+
+        # Outgoing / Incoming Invoice
+        if self.move_type in ("out_invoice", "in_invoice"):
+            if sale_order:
+                # Customer Invoice with Sale Order
+                template = self.env.ref(
+                    "ol_account.customer_invoice_email_template",
+                    raise_if_not_found=False,
+                )
+                if template:
+                    return "ol_account.customer_invoice_email_template"
+
+            # Fallback: Generic Invoice
+            template = self.env.ref(
+                "ol_account.generic_invoice_email_template", raise_if_not_found=False
+            )
+            if template:
+                return "ol_account.generic_invoice_email_template"
+
+        # Refunds
+        elif self.move_type in ("out_refund", "in_refund"):
+            template = self.env.ref(
+                "ol_account.generic_refund_email_template", raise_if_not_found=False
+            )
+            if template:
+                return "ol_account.generic_refund_email_template"
+
+        # Fallback to Odoo’s default if nothing found
+        return super()._get_mail_template()
+
     @api.depends(
         "company_id",
         "partner_id",

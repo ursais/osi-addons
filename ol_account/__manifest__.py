@@ -24,6 +24,8 @@
     "data": [
         "security/ir.model.access.csv",
         "security/security.xml",
+        "data/generic_invoice_email.xml",
+        "data/invoice_email.xml",
         "data/mail_template_data.xml",
         "data/server_action.xml",
         "views/res_config_settings_views.xml",
