@@ -72,7 +72,9 @@ class ProductProduct(models.Model):
     @api.onchange("length", "width", "height")
     def _onchange_volume(self):
         for rec in self:
-            rec.volume = (rec.length or 0.0) * (rec.width or 0.0) * (rec.height or 0.0)
+            rec.volume = (
+                (rec.length or 0.0) * (rec.width or 0.0) * (rec.height or 0.0)
+            ) / 1000000
 
     def write(self, vals):
         res = super().write(vals)
