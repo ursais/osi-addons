@@ -110,5 +110,5 @@
             <t t-call="ol_account.email_supplier_payment_notification" t-lang="payment.partner_id.lang or object.env.lang" />
         </field>
     </record>
-    
+
 </odoo>

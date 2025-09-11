@@ -298,14 +298,30 @@ class SaleOrder(models.Model):
         }
 
     def _find_mail_template(self):
-        template = super()._find_mail_template()
         self.ensure_one()
+
+        template = None
+
+        # Proforma Email
         if self.env.context.get("proforma"):
-            return self.env.ref(
+            template = self.env.ref(
                 "ol_sale.email_template_sale_proforma", raise_if_not_found=False
             )
 
-        return template
+        # Budgetary Quote Email
+        elif self.type_id.name == "Budgetary":
+            template = self.env.ref(
+                "ol_sale.budgetary_quote_template", raise_if_not_found=False
+            )
+
+        # Click to Buy Email (default for others)
+        else:
+            template = self.env.ref(
+                "ol_sale.order_click_to_buy_email_template", raise_if_not_found=False
+            )
+
+        # Use found template, otherwise fallback
+        return template or super()._find_mail_template()
 
     def _compute_mo_tranfer_count(self):
         for rec in self:
