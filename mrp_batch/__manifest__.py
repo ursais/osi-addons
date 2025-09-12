@@ -18,6 +18,7 @@
     ],
     "data": [
         "security/ir.model.access.csv",
+        "security/mrp_batch_security.xml",
         "data/ir_action_server.xml",
         "data/ir_sequence.xml",
         "data/mrp_exception_data.xml",
