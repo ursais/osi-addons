@@ -7,6 +7,25 @@ class ProductAttributeLine(models.Model):
 
     is_qty_required = fields.Boolean(string="Qty Required", copy=False)
 
+    @api.constrains("value_ids")
+    def _check_unique_values_per_attribute(self):
+        for line in self:
+            template = line.product_tmpl_id
+            # Collect all attribute_id/value_id pairs across all lines of the template
+            pairs = []
+            for l in template.attribute_line_ids:
+                for val in l.value_ids:
+                    pairs.append((l.attribute_id.id, val.id))
+            # Count duplicates
+            duplicates = [pair for pair in pairs if pairs.count(pair) > 1]
+            if duplicates:
+                attr = self.env["product.attribute"].browse(duplicates[0][0])
+                val = self.env["product.attribute.value"].browse(duplicates[0][1])
+                raise ValidationError(
+                    "You cannot assign the same value '%s' to multiple lines of the same attribute '%s'."
+                    % (val.name, attr.name)
+                )
+
     def write(self, values):
         """
         OVERRIDE:
