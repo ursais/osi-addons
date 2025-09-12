@@ -17,54 +17,81 @@ class ProductConfigSession(models.Model):
 
     @api.model
     def search_variant(self, value_ids=None, product_tmpl_id=None):
+        """
+        Search for a product variant matching BOTH:
+        - attribute values
+        - session quantity selections
+        If no exact match, return an empty recordset to trigger creation.
+        """
+        # Step 1: Get variants by attribute values (super)
         products = super().search_variant(
             value_ids=value_ids, product_tmpl_id=product_tmpl_id
         )
-        session_attrs_qtys = self.session_value_quantity_ids
-        duplicate_product = self.env["product.product"]
+        if not products:
+            return self.env["product.product"]
+
+        # Step 2: Build session qty signature
+        session_qty_sig = sorted(
+            [
+                (sv.attribute_value_qty_id.id, sv.qty)
+                for sv in self.session_value_quantity_ids
+            ]
+        )
+
+        # Step 3: Check each variant for exact qty match
         for product in products:
-            attribute_value_qty_ids = session_attrs_qtys.mapped(
-                "attribute_value_qty_id"
+            variant_qty_sig = sorted(
+                [
+                    (v.attribute_value_qty_id.id, v.qty)
+                    for v in product.product_attribute_value_qty_ids
+                ]
             )
-            if not attribute_value_qty_ids:
-                duplicate_product = product
-            else:
-                for value_qty in attribute_value_qty_ids:
-                    if product.product_attribute_value_qty_ids.filtered(
-                        lambda x: x.attribute_value_qty_id.id == value_qty.id
-                    ):
-                        duplicate_product = product
-                    elif (
-                        not duplicate_product
-                        and value_qty.id
-                        not in product.product_attribute_value_qty_ids.mapped(
-                            "attribute_value_qty_id"
-                        ).ids
-                    ):
-                        duplicate_product = self.env["product.product"]
-        return duplicate_product
+            if session_qty_sig == variant_qty_sig:
+                return product  # exact match found
+
+        # Step 4: No exact match, return empty to trigger creation
+        return self.env["product.product"]
 
     def create_get_variant(self, value_ids=None, custom_vals=None):
+        """
+        Create a new variant if no exact variant exists with both values and qtys.
+        """
+        # Step 1: Call super to create or fetch variant by values
         result = super().create_get_variant(
             value_ids=value_ids, custom_vals=custom_vals
         )
-        if self.session_value_quantity_ids and result.id != self.product_id.id:
-            # result.product_attribute_value_qty_ids.unlink()
-            self.env.cr.execute(
-                "delete from product_product_attribute_value_qty where product_id=%s",
-                (result.id,),
+
+        # Step 2: Only add qtys if session has qtys
+        if self.session_value_quantity_ids:
+            # Step 2a: Build session qty signature
+            session_qty_sig = sorted(
+                [
+                    (sv.attribute_value_qty_id.id, sv.qty)
+                    for sv in self.session_value_quantity_ids
+                ]
             )
-            qty_attr_obj = self.env["product.product.attribute.value.qty"]
-            qty_list = []
-            for qty_value in self.session_value_quantity_ids:
-                qty_attr_dict = {
-                    "product_id": result.id,
-                    "attr_value_id": qty_value.attr_value_id.id,
-                    "qty": qty_value.qty,
-                    "attribute_value_qty_id": qty_value.attribute_value_qty_id.id,
-                }
-                qty_list.append(qty_attr_dict)
-            qty_attr_obj.create(qty_list)
+            # Step 2b: Check if the variant already matches session qtys
+            variant_qty_sig = sorted(
+                [
+                    (v.attribute_value_qty_id.id, v.qty)
+                    for v in result.product_attribute_value_qty_ids
+                ]
+            )
+            if session_qty_sig != variant_qty_sig:
+                # Clear any existing qtys
+                result.product_attribute_value_qty_ids.unlink()
+                # Create new qtys
+                qty_obj = self.env["product.product.attribute.value.qty"]
+                for sv in self.session_value_quantity_ids:
+                    qty_obj.create(
+                        {
+                            "product_id": result.id,
+                            "attr_value_id": sv.attr_value_id.id,
+                            "qty": sv.qty,
+                            "attribute_value_qty_id": sv.attribute_value_qty_id.id,
+                        }
+                    )
+
         return result
 
     @api.model

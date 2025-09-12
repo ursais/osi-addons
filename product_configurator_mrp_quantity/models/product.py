@@ -10,9 +10,13 @@ class ProductProductAttributeValueQty(models.Model):
     product_id = fields.Many2one(
         "product.product", string="Product Variant", ondelete="cascade", index=True
     )
-    attr_value_id = fields.Many2one("product.attribute.value", required=True, index=True)
+    attr_value_id = fields.Many2one(
+        "product.attribute.value", required=True, index=True
+    )
     qty = fields.Integer(string="Quantity")
-    attribute_value_qty_id = fields.Many2one("attribute.value.qty", ondelete="cascade", index=True)
+    attribute_value_qty_id = fields.Many2one(
+        "attribute.value.qty", ondelete="cascade", index=True
+    )
 
     @api.depends("attr_value_id", "qty")
     def _compute_display_name(self):
@@ -45,7 +49,7 @@ class ProductProduct(models.Model):
     qty_combination_indices = fields.Char(
         compute="_compute_qty_combination_indices", store=True, index=True
     )
-    
+
     def _get_non_config_set_bom_lines(self):
         self.ensure_one()
         attribute_value = self.env["product.attribute.value"]
@@ -81,11 +85,28 @@ class ProductProduct(models.Model):
         )
         additional_total = self._get_non_config_set_bom_lines()
         for extra_price in extra_prices:
-            additional_qty = self.product_attribute_value_qty_ids.filtered(
+            matching_records = self.product_attribute_value_qty_ids.filtered(
                 lambda l: l.attr_value_id.id == extra_price
-            ).qty
+            )
+            additional_qty = sum(matching_records.mapped("qty"))
             extra_prices[extra_price] = extra_prices[extra_price] * additional_qty
         return additional_total + sum(extra_prices.values())
+
+    # def _get_bom_sale_price(self):
+    #     attribute_value_obj = self.env["product.attribute.value"]
+    #     value_ids = self.product_template_attribute_value_ids.mapped(
+    #         "product_attribute_value_id"
+    #     ).filtered(lambda l: not l.product_id)
+    #     extra_prices = attribute_value_obj.get_attribute_value_extra_prices(
+    #         product_tmpl_id=self.product_tmpl_id.id, pt_attr_value_ids=value_ids
+    #     )
+    #     additional_total = self._get_non_config_set_bom_lines()
+    #     for extra_price in extra_prices:
+    #         additional_qty = self.product_attribute_value_qty_ids.filtered(
+    #             lambda l: l.attr_value_id.id == extra_price
+    #         ).qty
+    #         extra_prices[extra_price] = extra_prices[extra_price] * additional_qty
+    #     return additional_total + sum(extra_prices.values())
 
     @api.depends("list_price", "price_extra")
     @api.depends_context("uom")
@@ -126,6 +147,7 @@ class ProductProduct(models.Model):
             product.price_extra = sum(extra_prices.values())
         return result
 
+
 def init(self):
     if index_exists(self.env.cr, "product_product_combination_unique"):
         drop_index(self.env.cr, "product_product_combination_unique", self._table)
@@ -134,5 +156,6 @@ def init(self):
         "CREATE UNIQUE INDEX IF NOT EXISTS product_product_combination_qty_attrs_unique ON %s (product_tmpl_id, combination_indices,qty_combination_indices) WHERE active is true"
         % self._table
     )
+
 
 pp.init = init
