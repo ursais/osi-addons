@@ -1,0 +1,136 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ol_bank_transfer_email
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-12 07:33+0000\n"
+"PO-Revision-Date: 2025-09-12 07:33+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: ol_bank_transfer_email
+#: model:mail.template,body_html:ol_bank_transfer_email.customer_bank_transfer_email_template
+msgid ""
+"<t t-set=\"sale_order\" t-value=\"object.with_context({'lang':object.partner_id.lang or object.env.lang})\"></t>\n"
+"            <t t-call=\"ol_bank_transfer_email.bank_transfer_email_template\" t-lang=\"sale_order.partner_id.lang or object.env.lang\"></t>\n"
+"        "
+msgstr ""
+
+#. module: ol_bank_transfer_email
+#: model:ir.model.fields,field_description:ol_bank_transfer_email.field_sale_order__allow_quote_payment
+msgid "Allow Payments on Sent Quotes"
+msgstr ""
+
+#. module: ol_bank_transfer_email
+#: model:exception.rule,name:ol_bank_transfer_email.exception_so_bank_tranfer_payment
+msgid "Awaiting Bank Transfer Payment"
+msgstr ""
+
+#. module: ol_bank_transfer_email
+#: model_terms:ir.ui.view,arch_db:ol_bank_transfer_email.view_order_form_inherit_ol_bank_transfer_email
+msgid "Create Down Payment"
+msgstr ""
+
+#. module: ol_bank_transfer_email
+#: model:ir.model.fields,help:ol_bank_transfer_email.field_sale_order__allow_quote_payment
+msgid ""
+"Helper field for form view to show the create down payment invoice button"
+msgstr ""
+
+#. module: ol_bank_transfer_email
+#: model:mail.template,name:ol_bank_transfer_email.customer_bank_transfer_email_template
+msgid "OnLogic Customer Bank Transfer Email"
+msgstr "OnLogic Kunden Banküberweisungs-E-Mail"
+
+#. module: ol_bank_transfer_email
+#: model:ir.model,name:ol_bank_transfer_email.model_payment_method
+msgid "Payment Method"
+msgstr "Zahlungsmethode"
+
+#. module: ol_bank_transfer_email
+#: model:ir.model.fields,field_description:ol_bank_transfer_email.field_sale_order__payment_method_mail_send
+msgid "Payment Method Mail Send"
+msgstr ""
+
+#. module: ol_bank_transfer_email
+#: model_terms:ir.ui.view,arch_db:ol_bank_transfer_email.bank_transfer_email_template
+msgid ""
+"Please keep in mind that you may be charged additional bank or wire transfer fees for which you will be\n"
+"                        responsible."
+msgstr ""
+"Bitte beachten Sie, dass Ihnen zusätzliche Bank- oder Überweisungsgebühren in Rechnung gestellt werden können, für die Sie verantwortlich sind.\n"
+"                        verantwortlich."
+
+#. module: ol_bank_transfer_email
+#: model:ir.model.fields,field_description:ol_bank_transfer_email.field_payment_method__sale_email_template_id
+msgid "Sale Email Template"
+msgstr ""
+
+#. module: ol_bank_transfer_email
+#: model:ir.model,name:ol_bank_transfer_email.model_sale_order
+msgid "Sales Order"
+msgstr "Verkaufsauftrag"
+
+#. module: ol_bank_transfer_email
+#. odoo-python
+#: code:addons/ol_bank_transfer_email/models/sale_order.py:0
+#, python-format
+msgid ""
+"The Quotation is set for Bank Transfer and full payment has not been "
+"received so it cannot be confirmed. Please move the quote to 'Quotation "
+"Sent' status and receive payment before trying to confirm."
+msgstr ""
+
+#. module: ol_bank_transfer_email
+#: model:exception.rule,description:ol_bank_transfer_email.exception_so_bank_tranfer_payment
+msgid ""
+"The sale order has payment method as Bank Tranfer and Payment Status is not "
+"Full Paid."
+msgstr ""
+"Die Verkaufsbestellung hat als Zahlungsmethode Banküberweisung und der Zahlungsstatus ist nicht "
+"Voll bezahlt."
+
+#. module: ol_bank_transfer_email
+#: model_terms:ir.ui.view,arch_db:ol_bank_transfer_email.bank_transfer_email_template
+msgid "Total Due"
+msgstr "Gesamtschuld"
+
+#. module: ol_bank_transfer_email
+#: model:ir.model.fields,help:ol_bank_transfer_email.field_payment_method__sale_email_template_id
+msgid ""
+"When set, if this payment method is set on the sale quotation,it will send "
+"the email during confirmation of the sale order."
+msgstr ""
+
+#. module: ol_bank_transfer_email
+#: model_terms:ir.ui.view,arch_db:ol_bank_transfer_email.bank_transfer_email_template
+msgid "Your Order Number"
+msgstr "Ihre Bestellnummer"
+
+#. module: ol_bank_transfer_email
+#: model:mail.template,subject:ol_bank_transfer_email.customer_bank_transfer_email_template
+msgid "Your Order {{object.name}} - Bank Transfer Information"
+msgstr "Ihre Bestellung {{object.name}} - Banküberweisungsinformationen"
+
+#. module: ol_bank_transfer_email
+#: model_terms:ir.ui.view,arch_db:ol_bank_transfer_email.bank_transfer_email_template
+msgid ""
+"Your order has been confirmed and is awaiting payment. Use the information below\n"
+"                    to complete your bank transfer. We will begin processing your order as soon as payment\n"
+"                    is received."
+msgstr ""
+"Ihre Bestellung wurde bestätigt und wartet auf die Zahlung. Verwenden Sie die untenstehenden Informationen.\n"
+"                    um Ihre Banküberweisung abzuschließen. Wir werden mit der Bearbeitung Ihrer Bestellung beginnen, sobald die Zahlung\n"
+"                    wird empfangen."
+
+#. module: ol_bank_transfer_email
+#: model_terms:ir.ui.view,arch_db:ol_bank_transfer_email.bank_transfer_email_template
+msgid "You’re Almost There!"
+msgstr "Du bist fast dort!"
