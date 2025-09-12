@@ -14,6 +14,29 @@ class ResPartner(models.Model):
     # END #########
     # METHODS #####
 
+    def _fields_sync(self, vals):
+        """
+        If a child partner is a company, we don't want it's address fields to be
+        updated if the parent company address changes.
+        """
+        # 1) let the core tell us which fields it treats as “address”
+        address_fields = super()._address_fields()
+
+        # 2) pop out any address changes so the built-in sync won’t propagate them to *all* children
+        address_vals = {f: vals.pop(f) for f in address_fields if f in vals}
+
+        # 3) run the rest of the normal sync (company_id, parent_id, etc.)
+        super()._fields_sync(vals)
+
+        # 4) now push address only to children that are not companies and contact
+        if address_vals:
+            for parent in self:
+                to_update = parent.child_ids.filtered(
+                    lambda c: not c.is_company and c.type == "contact"
+                )
+                if to_update:
+                    to_update.write(address_vals)
+
     @api.depends(
         "complete_name",
         "email",
