@@ -147,11 +147,7 @@ class ProductConfigSession(models.Model):
 
     def update_session_configuration_value(self, vals, product_tmpl_id=None):
         """Update value of configuration and quantities in the session,
-        safely handling default values.
-
-        :param: vals: Dictionary of fields(of configution wizard) and values
-        :param: product_tmpl_id: record set of preoduct template
-        :return: True/False
+        safely handling default values and distinguishing attribute lines.
         """
         self.ensure_one()
         if not product_tmpl_id:
@@ -214,17 +210,47 @@ class ProductConfigSession(models.Model):
                             int(vals[qty_field_name])
                         )
 
-                        # Remove old session records for this attribute line that are not the new value
+                        # Prefer a line-scoped removal: use the template_attri_value -> attribute_line
                         existing_session_attrs = (
                             self.session_value_quantity_ids.filtered(
-                                lambda sv: sv.product_attribute_id.id
-                                == attr_line.attribute_id.id
-                                and sv.attr_value_id.id != field_val
+                                lambda sv, line_id=line_id: bool(
+                                    sv.template_attri_value_id
+                                )
+                                and sv.template_attri_value_id.attribute_line_id.id
+                                == line_id
+                                and (
+                                    (
+                                        isinstance(field_val, list)
+                                        and sv.attr_value_id.id not in field_val
+                                    )
+                                    or (
+                                        not isinstance(field_val, list)
+                                        and sv.attr_value_id.id != field_val
+                                    )
+                                )
                             )
                         )
+
+                        # Fallback: if nothing matched by template_attri_value, fall back to attribute-level match
+                        if not existing_session_attrs:
+                            existing_session_attrs = self.session_value_quantity_ids.filtered(
+                                lambda sv, attr_id=attr_id, field_val=field_val: sv.product_attribute_id.id
+                                == attr_id
+                                and (
+                                    (
+                                        isinstance(field_val, list)
+                                        and sv.attr_value_id.id not in field_val
+                                    )
+                                    or (
+                                        not isinstance(field_val, list)
+                                        and sv.attr_value_id.id != field_val
+                                    )
+                                )
+                            )
+
                         existing_session_attrs.unlink()
 
-                        # Add the new qty
+                        # Add the new qty (we'll handle line-scoping when persisting)
                         qty_val_list.append(
                             {
                                 "product_attribute_id": attr_line.attribute_id.id,
@@ -251,12 +277,26 @@ class ProductConfigSession(models.Model):
                 attribute_value_qty_rec = attribute_value_qty_obj.browse(
                     int(vals[qty_field_name])
                 )
+
+                # Prefer line-scoped selection for writes
                 existing_session_attrs = self.session_value_quantity_ids.filtered(
-                    lambda sv: sv.product_attribute_id.id == attr_line.attribute_id.id
-                    and sv.attr_value_id.id
-                    == attribute_value_qty_rec.product_attribute_value_id.id
+                    lambda sv, line_id=line_id, val_id=attribute_value_qty_rec.product_attribute_value_id.id: bool(
+                        sv.template_attri_value_id
+                    )
+                    and sv.template_attri_value_id.attribute_line_id.id == line_id
+                    and sv.attr_value_id.id == val_id
                     and sv.attribute_value_qty_id.id != attribute_value_qty_rec.id
                 )
+
+                if not existing_session_attrs:
+                    # fallback to attribute/value-based update if line-scoped wasn't available
+                    existing_session_attrs = self.session_value_quantity_ids.filtered(
+                        lambda sv, attr_id=attr_id, val_id=attribute_value_qty_rec.product_attribute_value_id.id: sv.product_attribute_id.id
+                        == attr_id
+                        and sv.attr_value_id.id == val_id
+                        and sv.attribute_value_qty_id.id != attribute_value_qty_rec.id
+                    )
+
                 existing_session_attrs.write(
                     {
                         "qty": attribute_value_qty_rec.qty,
@@ -270,30 +310,8 @@ class ProductConfigSession(models.Model):
     def update_config(
         self, attr_val_dict=None, custom_val_dict=None, qty_val_dict=None
     ):
-        """Update the session object with the given value_ids and custom values.
+        """Update the session object with the given value_ids and custom values and qtys."""
 
-        Use this method instead of write in order to prevent incompatible
-        configurations as this removed duplicate values for the same attribute.
-
-        :param attr_val_dict: Dictionary of the form {
-            int (attribute_id): attribute_value_id OR [attribute_value_ids]
-        }
-
-        :custom_val_dict: Dictionary of the form {
-            int (attribute_id): {
-                'value': 'custom val',
-                OR
-                'attachment_ids': {
-                    [{
-                        'name': 'attachment name',
-                        'datas': base64_encoded_string
-                    }]
-                }
-            }
-        }
-
-
-        """
         if attr_val_dict is None:
             attr_val_dict = {}
         if custom_val_dict is None:
@@ -304,7 +322,7 @@ class ProductConfigSession(models.Model):
         update_vals = {}
         value_ids = self.value_ids.ids
 
-        # Standard values
+        # Standard values (line_id keyed)
         for line_id, vals in attr_val_dict.items():
             line = self.env["product.template.attribute.line"].browse(line_id)
             if not line:
@@ -326,19 +344,47 @@ class ProductConfigSession(models.Model):
         if value_ids != self.value_ids.ids:
             update_vals["value_ids"] = [(6, 0, value_ids)]
 
-        # Session qty updates
+        # Session qty updates (line-aware)
         if qty_val_dict:
             session_qty_list = []
             for qty_val in qty_val_dict:
-                existing_session_ids = self.session_value_quantity_ids.filtered(
-                    lambda sv: sv.product_attribute_id.id
-                    == qty_val["product_attribute_id"]
-                    and sv.attr_value_id.id == qty_val["attr_value_id"]
-                    and sv.attribute_value_qty_id.id
-                    != qty_val["attribute_value_qty_id"]
+                # Find the attribute.value.qty record to determine the template_attri_value (hence the line)
+                avq = self.env["attribute.value.qty"].browse(
+                    qty_val.get("attribute_value_qty_id")
                 )
+                line_id = False
+                if (
+                    avq
+                    and avq.template_attri_value_id
+                    and avq.template_attri_value_id.attribute_line_id
+                ):
+                    line_id = avq.template_attri_value_id.attribute_line_id.id
+
+                if line_id:
+                    # Remove only existing session qtys that belong to this same line & value (but differ in attribute_value_qty_id)
+                    existing_session_ids = self.session_value_quantity_ids.filtered(
+                        lambda sv, line_id=line_id, val_id=qty_val.get(
+                            "attr_value_id"
+                        ), avq_id=qty_val.get("attribute_value_qty_id"): bool(
+                            sv.template_attri_value_id
+                        )
+                        and sv.template_attri_value_id.attribute_line_id.id == line_id
+                        and sv.attr_value_id.id == val_id
+                        and sv.attribute_value_qty_id.id != avq_id
+                    )
+                else:
+                    # Fallback: remove by attribute+value (legacy behavior)
+                    existing_session_ids = self.session_value_quantity_ids.filtered(
+                        lambda sv, qty_val=qty_val: sv.product_attribute_id.id
+                        == qty_val.get("product_attribute_id")
+                        and sv.attr_value_id.id == qty_val.get("attr_value_id")
+                        and sv.attribute_value_qty_id.id
+                        != qty_val.get("attribute_value_qty_id")
+                    )
+
                 existing_session_ids.unlink()
                 session_qty_list.append((0, 0, qty_val))
+
             update_vals["session_value_quantity_ids"] = session_qty_list
 
         # Remove existing custom values for these lines
@@ -381,6 +427,7 @@ class ProductConfigSession(models.Model):
                 custom_vals["value"] = vals
 
             update_vals["custom_value_ids"].append((0, 0, custom_vals))
+
         self.write(update_vals)
 
     @api.model
