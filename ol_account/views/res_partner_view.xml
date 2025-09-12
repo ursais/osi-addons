@@ -16,9 +16,28 @@
             <xpath expr="//group[@name='sale']" position="inside">
                 <field name="sale_payment_method_id"/>
             </xpath>
-             <field name="vat" position="attributes">
+            <!-- Allow vat and address editing for children-->
+            <field name="vat" position="attributes">
                 <attribute name="readonly">parent_id and not is_company</attribute>
-             </field>
+            </field>
+            <field name="street" position="attributes">
+                <attribute name="readonly">type == 'contact' and parent_id and not is_company</attribute>
+            </field>
+            <field name="street2" position="attributes">
+                <attribute name="readonly">type == 'contact' and parent_id and not is_company</attribute>
+            </field>
+            <field name="city" position="attributes">
+                <attribute name="readonly">type == 'contact' and parent_id and not is_company</attribute>
+            </field>
+            <field name="state_id" position="attributes">
+                <attribute name="readonly">type == 'contact' and parent_id and not is_company</attribute>
+            </field>
+            <field name="zip" position="attributes">
+                <attribute name="readonly">type == 'contact' and parent_id and not is_company</attribute>
+            </field>
+            <field name="country_id" position="attributes">
+                <attribute name="readonly">type == 'contact' and parent_id and not is_company</attribute>
+            </field>
         </field>
     </record>
 
