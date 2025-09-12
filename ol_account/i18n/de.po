@@ -1,0 +1,567 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ol_account
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-09-12 10:33+0000\n"
+"PO-Revision-Date: 2025-09-12 10:33+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+msgid "&amp;nbsp;"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.actions.report,print_report_name:ol_account.action_generic_invoice_report
+msgid "'Invoice'"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.actions.report,print_report_name:ol_account.action_proforma_invoice_report
+msgid "'Proforma Invoice'"
+msgstr ""
+
+#. module: ol_account
+#: model:mail.template,body_html:ol_account.customer_invoice_email_template
+msgid ""
+"<t t-set=\"invoice\" t-value=\"object.with_context({'lang': object.partner_id.lang or object.env.lang})\"></t>\n"
+"            <t t-set=\"sale_order\" t-value=\"object.invoice_line_ids.mapped('sale_line_ids.order_id') and object.invoice_line_ids.mapped('sale_line_ids.order_id')[0] or False\"></t>\n"
+"            <t t-call=\"ol_account.invoice_email_template_master\" t-lang=\"invoice.partner_id.lang or object.env.lang\"></t>\n"
+"        "
+msgstr ""
+
+#. module: ol_account
+#: model:mail.template,body_html:ol_account.generic_invoice_email_template
+msgid ""
+"<t t-set=\"invoice\" t-value=\"object.with_context({'lang':object.partner_id.lang or object.env.lang})\"></t>\n"
+"                <t t-call=\"ol_account.generic_invoice_email_template_master\" t-lang=\"invoice.partner_id.lang or object.env.lang\"></t>\n"
+"        "
+msgstr ""
+
+#. module: ol_account
+#: model:mail.template,body_html:ol_account.generic_refund_email_template
+msgid ""
+"<t t-set=\"invoice\" t-value=\"object.with_context({'lang':object.partner_id.lang or object.env.lang})\"></t>\n"
+"            <t t-call=\"ol_account.generic_invoice_email_template_master\" t-lang=\"invoice.partner_id.lang or object.env.lang\"></t>\n"
+"        "
+msgstr ""
+
+#. module: ol_account
+#: model:mail.template,body_html:ol_account.vendor_payment_template
+msgid ""
+"<t t-set=\"payment\" t-value=\"object.with_context({'lang':object.partner_id.lang or object.env.lang})\"></t>\n"
+"            <t t-call=\"ol_account.email_supplier_payment_notification\" t-lang=\"payment.partner_id.lang or object.env.lang\"></t>\n"
+"        "
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+msgid "A payment has been initiated via"
+msgstr "Eine Zahlung wurde eingeleitet über"
+
+#. module: ol_account
+#: model:ir.model,name:ol_account.model_account_move_send
+msgid "Account Move Send"
+msgstr "Kontobuchung senden"
+
+#. module: ol_account
+#: model:res.groups,name:ol_account.group_account_move_delete
+msgid "Allow Account Move Delete"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.res_config_settings_view_form
+msgid "Auto Create Customer Invoice"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_config_settings__auto_create_bill_receipt_validate
+#: model_terms:ir.ui.view,arch_db:ol_account.res_config_settings_view_form
+msgid "Auto Create Vendor Bill"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_config_settings__auto_create_invoice_delivery_validate
+msgid "Auto Create invoice"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.res_config_settings_view_form
+msgid "Auto Post Customer Invoice"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_config_settings__auto_post_bill_receipt_validate
+#: model_terms:ir.ui.view,arch_db:ol_account.res_config_settings_view_form
+msgid "Auto Post Vendor Bill"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_config_settings__auto_post_invoice_delivery_validate
+msgid "Auto Post invoice"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.res_config_settings_view_form
+msgid "Automatic Invoice/Bill Create and Post"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Balance Due"
+msgstr "Fälliger Betrag"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Bill To"
+msgstr "Rechnung an"
+
+#. module: ol_account
+#: model:ir.model,name:ol_account.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurationseinstellungen"
+
+#. module: ol_account
+#: model:ir.model,name:ol_account.model_res_partner
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.res_config_settings_view_form
+msgid "Create customer invoice on delivery validate"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,help:ol_account.field_res_config_settings__auto_create_invoice_delivery_validate
+msgid "Create invoice on delivery validation."
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,help:ol_account.field_res_config_settings__auto_create_bill_receipt_validate
+msgid "Create invoice on receipt validation."
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.res_config_settings_view_form
+msgid "Create vendor bill on receipt validate"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_paypref__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_paypref__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+msgid "Credit"
+msgstr "Kredit"
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_account_payment__customer_check_number
+msgid "Customer Check Number"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Customer PO"
+msgstr "Kundenbestellung"
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_account_bank_statement_line__sale_payment_method_id
+#: model:ir.model.fields,field_description:ol_account.field_account_move__sale_payment_method_id
+#: model:ir.model.fields,field_description:ol_account.field_account_payment__sale_payment_method_id
+msgid "Customer Payment Method"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_partner__sale_payment_method_id
+#: model:ir.model.fields,field_description:ol_account.field_res_users__sale_payment_method_id
+msgid "Customer Preferred Payment Method"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.account_move_form
+msgid "Date"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+msgid "Dear"
+msgstr "Lieber"
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_paypref__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.account_move_form
+msgid "Due Date"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_account_bank_statement_line__invoice_date_due_display
+#: model:ir.model.fields,field_description:ol_account.field_account_move__invoice_date_due_display
+#: model:ir.model.fields,field_description:ol_account.field_account_payment__invoice_date_due_display
+msgid "Due Date (Date Only)"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,help:ol_account.field_account_bank_statement_line__invoice_date_due_display
+#: model:ir.model.fields,help:ol_account.field_account_move__invoice_date_due_display
+#: model:ir.model.fields,help:ol_account.field_account_payment__invoice_date_due_display
+msgid ""
+"Field with same date as due date, but to show just the date without the "
+"Remaining Days widget."
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_partner__net_terms_active
+#: model:ir.model.fields,field_description:ol_account.field_res_users__net_terms_active
+msgid "Front End Net Terms Active"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model,name:ol_account.model_report_ol_account_report_generic_invoice
+msgid "Generic Invoice Report"
+msgstr "Allgemeiner Rechnungsbericht"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Hardware Solution"
+msgstr "Hardware-Lösung"
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_paypref__id
+msgid "ID"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+msgid "INVOICE"
+msgstr "RECHNUNG"
+
+#. module: ol_account
+#: model:ir.actions.report,name:ol_account.action_generic_invoice_report
+msgid "Invoice"
+msgstr "Rechnung"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+msgid "Invoice Amount"
+msgstr "Rechnungsbetrag"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+msgid "Invoice Date"
+msgstr "Rechnungsdatum"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+msgid "Invoice Lines"
+msgstr "Rechnungszeilen"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+msgid "Invoice Number"
+msgstr "Rechnungsnummer"
+
+#. module: ol_account
+#: model:ir.model,name:ol_account.model_account_move
+msgid "Journal Entry"
+msgstr "Journalbuchung"
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_paypref__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_paypref__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_partner__net_terms_allowed
+#: model:ir.model.fields,field_description:ol_account.field_res_users__net_terms_allowed
+msgid "Net Terms Allowed"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+msgid "OnLogic"
+msgstr ""
+
+#. module: ol_account
+#: model:mail.template,subject:ol_account.vendor_payment_template
+msgid "OnLogic - Remittance Notification"
+msgstr "OnLogic - Mitteilung über Überweisung"
+
+#. module: ol_account
+#: model:mail.template,name:ol_account.customer_invoice_email_template
+msgid "OnLogic Customer Invoice Email"
+msgstr "OnLogic Kundenrechnungs-E-Mail"
+
+#. module: ol_account
+#: model:mail.template,name:ol_account.generic_invoice_email_template
+msgid "OnLogic Generic Invoice Email"
+msgstr "OnLogic Allgemeine Rechnungs-E-Mail"
+
+#. module: ol_account
+#: model:mail.template,name:ol_account.generic_refund_email_template
+msgid "OnLogic Generic Refund Email"
+msgstr "OnLogic Allgemeine Rückerstattungs-E-Mail"
+
+#. module: ol_account
+#. odoo-python
+#: code:addons/ol_account/models/account_move.py:0
+#, python-format
+msgid ""
+"Only draft account moves can be deleted. For posted moves, cancel them "
+"instead."
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Order"
+msgstr "Bestellung"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Order Date"
+msgstr "Bestelldatum"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+msgid "Payment Amount"
+msgstr "Zahlungsbetrag"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+msgid "Payment Due Date"
+msgstr "Zahlung Fälligkeitsdatum"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Payment Method"
+msgstr "Zahlungsmethode"
+
+#. module: ol_account
+#: model:ir.model,name:ol_account.model_res_paypref
+#: model:ir.model.fields,field_description:ol_account.field_account_bank_statement_line__payment_preference
+#: model:ir.model.fields,field_description:ol_account.field_account_move__payment_preference
+#: model:ir.model.fields,field_description:ol_account.field_account_payment__payment_preference
+#: model:ir.model.fields,field_description:ol_account.field_res_partner__payment_preference
+#: model:ir.model.fields,field_description:ol_account.field_res_users__payment_preference
+msgid "Payment Preference"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_paypref__name
+msgid "Payment Preference (short name)"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.actions.act_window,name:ol_account.action_payment_preference
+#: model:ir.ui.menu,name:ol_account.menu_payment_preference_root
+msgid "Payment Preferences"
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Payment Terms"
+msgstr "Zahlungsbedingungen"
+
+#. module: ol_account
+#: model:ir.model.fields,help:ol_account.field_account_bank_statement_line__sale_payment_method_id
+#: model:ir.model.fields,help:ol_account.field_account_move__sale_payment_method_id
+#: model:ir.model.fields,help:ol_account.field_account_payment__sale_payment_method_id
+msgid "Payment method selected coming from the sale order."
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model,name:ol_account.model_account_payment
+msgid "Payments"
+msgstr "Zahlungen"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+msgid "Please feel free to contact us should you have any questions."
+msgstr "Bitte zögern Sie nicht, uns zu kontaktieren, wenn Sie Fragen haben."
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.generic_invoice_email
+msgid "Please find your credit attached"
+msgstr "Bitte finden Sie Ihre Gutschrift im Anhang."
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.generic_invoice_email
+#: model_terms:ir.ui.view,arch_db:ol_account.invoice_email_template
+msgid "Please find your invoice attached"
+msgstr "Bitte finden Sie Ihre Rechnung im Anhang."
+
+#. module: ol_account
+#: model:ir.model.fields,help:ol_account.field_res_config_settings__auto_post_bill_receipt_validate
+msgid "Post bill on receipt validation."
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.res_config_settings_view_form
+msgid "Post customer invoice on delivery validate"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,help:ol_account.field_res_config_settings__auto_post_invoice_delivery_validate
+msgid "Post invoice on delivery validation."
+msgstr ""
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.res_config_settings_view_form
+msgid "Post vendor bill on receipt validate"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,help:ol_account.field_account_bank_statement_line__payment_preference
+#: model:ir.model.fields,help:ol_account.field_account_move__payment_preference
+#: model:ir.model.fields,help:ol_account.field_account_payment__payment_preference
+msgid "Prefered Vendor payment method."
+msgstr "Bevorzugte Zahlungsmethode des Anbieters."
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.account_move_form
+msgid "Print"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model,name:ol_account.model_report_ol_account_report_proforma_invoice
+msgid "Pro-forma Invoice Report"
+msgstr "Pro-forma Rechnungsbericht"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Proforma Expiration"
+msgstr "Proforma-Ablauf"
+
+#. module: ol_account
+#: model:ir.actions.report,name:ol_account.action_proforma_invoice_report
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Proforma Invoice"
+msgstr "Proforma-Rechnung"
+
+#. module: ol_account
+#: model:ir.model,name:ol_account.model_sale_order
+msgid "Sales Order"
+msgstr "Verkaufsauftrag"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Ship To"
+msgstr "Lieferadresse"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Shipping Method"
+msgstr "Versandmethode"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+msgid ""
+"Sincerely,\n"
+"            <br/>"
+msgstr ""
+"Mit freundlichen Grüßen,\n"
+"            <br/>"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.generic_invoice_email
+msgid "Thank you again for working with us, please find the credit attached."
+msgstr "Vielen Dank nochmals für die Zusammenarbeit, bitte finden Sie die Gutschrift im Anhang."
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.generic_invoice_email
+msgid "Thank you again for working with us, please find the invoice attached."
+msgstr "Vielen Dank nochmals für die Zusammenarbeit, bitte finden Sie die angehängte Rechnung."
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.invoice_email_template
+msgid "Thank you again for your order, please find the invoice attached."
+msgstr "Vielen Dank nochmals für Ihre Bestellung, bitte finden Sie die Rechnung im Anhang."
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+msgid "The Finance Team"
+msgstr "Das Finanzteam"
+
+#. module: ol_account
+#: model:ir.model,name:ol_account.model_stock_picking
+msgid "Transfer"
+msgstr ""
+
+#. module: ol_account
+#: model:ir.model.fields,field_description:ol_account.field_res_partner__debit_limit
+#: model:ir.model.fields,field_description:ol_account.field_res_users__debit_limit
+msgid "Vendor Credit Limit"
+msgstr "Kreditorenlimit"
+
+#. module: ol_account
+#: model:mail.template,name:ol_account.vendor_payment_template
+msgid "Vendor Payment Template"
+msgstr "Lieferantenzahlungsformular"
+
+#. module: ol_account
+#. odoo-python
+#: code:addons/ol_account/models/account_move.py:0
+#, python-format
+msgid ""
+"You are not allowed to delete account moves. Please cancel them instead."
+msgstr ""
+
+#. module: ol_account
+#: model:mail.template,subject:ol_account.customer_invoice_email_template
+msgid ""
+"Your Invoice ${(sale_order and sale_order.name) or {{ object.name }} or ''}"
+msgstr ""
+"Ihre Rechnung ${(sale_order and sale_order.name) or {{ object.name }} or ''}"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+msgid "for the following invoice(s):"
+msgstr "für die folgenden Rechnungen:"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+msgid "in the amount of"
+msgstr "in der Höhe von"
+
+#. module: ol_account
+#: model:mail.template,subject:ol_account.generic_invoice_email_template
+msgid "{{ object.company_id.name }} Invoice {{ object.name }}"
+msgstr "{{ object.company_id.name }} Rechnung {{ object.name }}"
+
+#. module: ol_account
+#: model:mail.template,subject:ol_account.generic_refund_email_template
+msgid "{{ object.company_id.name }} Refund {{ object.name }}"
+msgstr "{{ object.company_id.name }} Rückerstattung {{ object.name }}"
