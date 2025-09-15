@@ -605,76 +605,6 @@ class IrActionsServer(models.Model):
         _logger.info("Processing completed!")
         _logger.info("\n\n==================Script 5 is End==================")
 
-    # def script_6(self):
-    #     _logger.info("\n\n== Generate Scaffolding BOM==Script 6 is start==================")
-    #     batch_size = 10  # Define batch size
-    #     ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True)])
-    #     total_products = len(ProductTemplates)  # Total number of products to process
-    #     offset = 0
-    #     counter = 1
-    #     cr = self.env.cr  # Cursor for direct SQL operations
-    #     _logger.info("Total products to process: %s", total_products)
-    #     while offset < total_products:
-    #         batch_products = ProductTemplates[offset:offset + batch_size]  # Slice the records to get the current batch
-    #         _logger.info("Processing batch: Offset %s, Batch Size %s", offset, len(batch_products))
-    #         for product_template in batch_products:
-    #             _logger.info("\n\n\n\n==1==SCAFFOLD BOM CREATION Start for Product####%s==ID:::%s:::Counter::%s", 
-    #                          product_template.name, product_template.id, counter)
-    #             # Check for existing scaffold BOMs
-    #             existing_scaffold_bom_query = """SELECT id FROM mrp_bom WHERE scaffolding_bom = true AND product_tmpl_id = %s"""
-    #             cr.execute(existing_scaffold_bom_query, (product_template.id,))
-    #             existing_scaffold_bom = cr.fetchall() 
-    #             if not existing_scaffold_bom:
-    #                 # Find all attribute lines related to the product template
-    #                 attribute_lines = self.env['product.template.attribute.line'].search([('product_tmpl_id', '=', product_template.id)])
-    #                 # Create a Bill of Materials for the product template
-    #                 bom_vals = {
-    #                     'product_tmpl_id': product_template.id,
-    #                     'product_qty': 1.0,
-    #                     'type': 'normal',  # Adjust type if needed
-    #                     'scaffolding_bom': True,
-    #                 }
-    #                 new_bom = self.env['mrp.bom'].create(bom_vals)
-    #                 _logger.info("\n\n\n\n==3==New BOM Creation Done::%s", new_bom)            
-    #                 # Add BoM lines for each product associated with the attribute values
-    #                 for line in attribute_lines:
-    #                     attribute_values = line.value_ids
-    #                     for value in attribute_values:
-    #                         product = value.product_id
-    #                         if product:
-    #                             # Attempt to find or create a configuration set
-    #                             bom_line_config_set = self.env['mrp.bom.line.configuration.set'].search(
-    #                                 [("name", "=", product.display_name)], limit=1
-    #                             )
-    #                             if not bom_line_config_set:
-    #                                 bom_line_config_set = self.env['mrp.bom.line.configuration.set'].create({"name": product.display_name})                        
-    #                             # Ensure value_ids is a list of IDs
-    #                             value_ids = [(6, 0, [value.id])] if value else []
-    #                             select_query = """select * from mrp_bom_line_configuration_product_attribute_value_rel where product_attribute_value_id = %s"""
-    #                             cr.execute(select_query, (value.id,))
-    #                             value_new = cr.fetchall()
-    #                             if not value_new:
-    #                                 self.env['mrp.bom.line.configuration'].create(
-    #                                     {
-    #                                         "config_set_id": bom_line_config_set.id,
-    #                                         "value_ids": value_ids,
-    #                                     }
-    #                                 )                        
-    #                             bom_line_vals = {
-    #                                 'bom_id': new_bom.id,
-    #                                 'product_id': product.id,
-    #                                 'product_qty': 1.0,
-    #                                 "config_set_id": bom_line_config_set.id,
-    #                             }
-    #                             self.env['mrp.bom.line'].create(bom_line_vals)            
-    #                 _logger.info("\n\n\n\n==4==SCAFFOLD BOM CREATION PROCESS Done::%s for Product Template", product_template.name)
-    #             counter += 1    
-    #         offset += batch_size
-    #         self.env.cr.commit()  # Commit changes after processing each batch
-    #         _logger.info("Batch processed. Offset moved to %s", offset)
-    #     _logger.info("Processing completed!")
-    #     _logger.info("\n\n==================Script 6 is End==================")
-
 
     def script_6(self):
         import time
@@ -1142,4 +1072,8 @@ class IrActionsServer(models.Model):
         cr.execute("drop table temp_product_temp_v13_vp;")
         cr.execute("drop table temp_product_template_res_company_rel_v13_VP;")
         cr.execute("drop table temp_product_template_attribute_value_V13_VP;")
+        cr.execute("drop table temp_ir_property_inbound_shipping_method;")
+        cr.execute("drop table temp_ir_property;")
+        cr.execute("drop table temp_res_users;")
+        
         _logger.info("\n\n============Tables Droped")
