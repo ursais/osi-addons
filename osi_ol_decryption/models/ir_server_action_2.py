@@ -1092,6 +1092,23 @@ class IrActionsServer(models.Model):
              ("name", "=", "default_val")],
             limit=1
         )
+        companies_ids= tuple(companies.ids)
+        if companies_ids:
+            select_query = """
+                SELECT id
+                FROM ir_property 
+                WHERE field_id = %s 
+                  AND company_id IN %s
+            """
+            self.env.cr.execute(select_query, (field.id, companies_ids))
+            data = [row[0] for row in self.env.cr.fetchall()]
+
+            # 2. Delete if found
+            if data:
+                unlink_query = "DELETE FROM ir_property WHERE id IN %s"
+                self.env.cr.execute(unlink_query, (tuple(data),))
+                self.env.cr.commit()
+
 
         if not field or not companies:
             return  # nothing to do
@@ -1100,7 +1117,7 @@ class IrActionsServer(models.Model):
 
         for template in templates:
             for line in template.attribute_line_ids:
-                if line.value_ids and not line.default_val:
+                if line.required and line.value_ids and not line.default_val:
                     default_val = line.value_ids[0]
                     res_id = f"{line._name},{line.id}"
                     value_reference = f"{default_val._name},{default_val.id}"
