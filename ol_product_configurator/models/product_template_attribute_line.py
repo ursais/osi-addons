@@ -11,6 +11,8 @@ class ProductTemplateAttributeLine(models.Model):
 
     # COLUMNS ##########
 
-    default_val = fields.Many2one(comodel_name="product.attribute.value",company_dependent=True)
+    default_val = fields.Many2one(
+        comodel_name="product.attribute.value", company_dependent=True
+    )
 
     # END ##########
