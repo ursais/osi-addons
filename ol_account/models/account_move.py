@@ -297,4 +297,25 @@ class AccountMove(models.Model):
 
         return super(AccountMove, self)._compute_date()
 
+    def action_invoice_sent(self):
+        if self.is_sale_document() and not self.partner_id.ap:
+            raise UserError(
+                _(
+                   """
+                   No ‘AP’ contacts are found, 
+                   please add or set the ‘AR’ setting on a contact and try again.
+                   """
+                )
+            )
+
+        if self.is_purchase_document() and not self.partner_id.ar:
+            raise UserError(
+            _(
+                """No ‘AR’ contacts are found,
+                please add or set the ‘AP’ setting on a contact and try again."""
+                )
+            )
+
+        return super().action_invoice_sent()
+
     # END ##########

@@ -39,3 +39,17 @@ class AccountMoveSend(models.TransientModel):
             'res_field': 'invoice_pdf_report_file', # Binary field
         }
         return res
+
+    def _get_default_mail_partner_ids(self, move, mail_template, mail_lang):
+        partners = super()._get_default_mail_partner_ids(move, mail_template, mail_lang)
+        PartnerObj = self.env["res.partner"]
+        move = self.env["account.move"].browse(self._context.get("active_id"))
+        if move.is_sale_document():
+            partners = PartnerObj.search([("id","child_of",move.partner_id.id)])
+            partners = partners.filtered("ap")
+            # partners = move.partner_id + move.partner_id.child_ids.filtered("ap")
+        if move.is_purchase_document():
+            partners = PartnerObj.search([("id","child_of",move.partner_id.id)])
+            partners = partners.filtered("ar")
+            # partners = move.partner_id + move.partner_id.child_ids.filtered("ar")
+        return partners

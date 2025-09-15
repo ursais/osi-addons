@@ -19,6 +19,7 @@
         "account_check_printing",
         "purchase",
         "osi_l10n_us_payment_nacha_email",
+        "account_followup",
     ],
     # Data Loaded.
     "data": [
