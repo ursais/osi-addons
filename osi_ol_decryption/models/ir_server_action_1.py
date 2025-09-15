@@ -12,6 +12,36 @@ from odoo.tools import convert_csv_import, file_open
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
+    def update_inspections(self):
+        _logger.info("===============update_inspections====================")
+
+        finace_id = self.env['sale.order.inspection'].search([('name', '=', 'Finance Manual Exception')])
+        ship_id = self.env['sale.order.inspection'].search([('name', '=', 'Do Not Ship')])
+        build_id = self.env['sale.order.inspection'].search([('name', '=', 'Do Not Build')])
+        self._cr.execute("select sale_id from temp_sale_workflow_hold where check_id in (55,69);")
+        sale_ids = set([row[0] for row in self._cr.fetchall()])
+        for sale in sale_ids:
+            self._cr.execute(
+            "INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id) VALUES (%s, %s)",
+            (sale, finace_id.id))
+        
+        self._cr.execute("select sale_id from temp_sale_workflow_hold where check_id = 63;")
+        sale_ids = set([row[0] for row in self._cr.fetchall()])
+        for sale in sale_ids:
+            self._cr.execute(
+            "INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id) VALUES (%s, %s)",
+            (sale, build_id.id))
+        
+        self._cr.execute("select sale_id from temp_sale_workflow_hold where check_id = 72;")
+        sale_ids = set([row[0] for row in self._cr.fetchall()])
+        for sale in sale_ids:
+            self._cr.execute(
+            "INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id) VALUES (%s, %s)",
+            (sale, ship_id.id))
+        
+        self._cr.execute("drop table temp_ir_property_row_rack_case;")
+            
+
     def tranfer_stock(self):
         _logger.info("===============tranfer_stock====================")
         self = self.sudo()
@@ -22,7 +52,6 @@ class IrActionsServer(models.Model):
             ('location_id', 'in', [12, 72]),
             ('quantity', '>', 0),
         ])
-        print ("\n stock_ids",stock_ids)
         self._cr.execute("update mrp_bom_line set company_id = null where bom_id = 261469;")
         picking_type_us = self.env['stock.picking.type'].search([('name', '=', 'Internal Transfers'), ('company_id', '=', 1)], limit=1)
         picking_type_eu = self.env['stock.picking.type'].search([('name', '=', 'Internal Transfers'), ('company_id', '=', 2)], limit=1)
@@ -1588,9 +1617,6 @@ class IrActionsServer(models.Model):
         product_ids.write({'purchase_ok': False, 'candidate_purchase': False})
         product_ids = self.env['product.template'].sudo().search([("categ_id.name", "in", ["Systems", "Computers", "Panel PCs"]), ("purchase_ok", "=", True)])
         product_ids.write({'purchase_ok': False, "candidate_purchase": False})
-
-
-
 
             
 
