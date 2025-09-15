@@ -38,6 +38,8 @@ class IrActionsServer(models.Model):
             """, (res_id, stock.company_id.id))
             
             datas = {d["name"]: d["value_text"] for d in self._cr.dictfetchall()}
+            # print ("\n datas", datas)
+
             loc_row = datas.get("loc_row", "")
             loc_rack = datas.get("loc_rack", "")
             loc_case = datas.get("loc_case", "")
@@ -214,9 +216,38 @@ class IrActionsServer(models.Model):
         
         
     def configure_account_sepa_direct_debit(self):
-        self.env["ir.module.module"].search(
-                [("name", "=", 'configure_account_sepa_direct_debit'), ("state", "!=", "installed")]
-            ).button_immediate_install()
+        self = self.sudo()
+        env= self.env
+        company = env['res.company'].browse(2)  
+
+        config = env['res.config.settings'].with_context(company_id=company.id).create({'module_account_sepa_direct_debit': True,})
+
+        # Apply settings for that company
+        config.execute()
+        Rabobankbank = env['res.bank'].create({
+            'name': 'Rabobank Amerstreek',
+            "street": "Arendsplein 60",
+            "city": "KX Oosterhout",
+            "zip": "4901",
+            "country" : env.ref('base.nl').id
+        })
+
+        bank = env["res.partner.bank"].browse(2)
+        bank.write({
+            "bank_id": Rabobankbank.id,
+            "acc_holder_name": "Onlogic B.V",
+            "currency_id": env.ref('base.EUR').id,
+            "company_id": company.id,
+        })      
+        wire_journal = env.ref('lgx_aj.11020-03', raise_if_not_found=True)
+        wire_journal.write({"bank_account_id": bank.id, "bank_statements_source": 'undefined'})
+        line = wire_journal.outbound_payment_method_line_ids.filtered(lambda l:l.payment_method_id.name == 'SEPA Credit Transfer')
+        ap_account_id =  env['account.account'].with_company(company).search([('name', '=', 'Outstanding Payments')], limit=1)
+        line.write({"payment_account_id": ap_account_id.id})
+        card_journal = env["account.journal"].with_company(company).search([('name', '=', 'Credit Card Purchase Journal')], limit=1)
+        card_journal.write({"bank_account_id": bank.id, "bank_statements_source": 'undefined'})
+        line = card_journal.outbound_payment_method_line_ids.filtered(lambda l:l.payment_method_id.name == 'SEPA Credit Transfer')
+        line.write({"payment_account_id": ap_account_id.id})
 
     def create_onlogic_locations_and_route(self):
         self = self.sudo()
@@ -386,7 +417,7 @@ class IrActionsServer(models.Model):
             for row in sheet.iter_rows(min_row=3):
                 name = row[0].value
                 parent = row[1].value
-                print ("\n parent", parent, name)
+                # print ("\n parent", parent, name)
                 if parent in ('WH/Stock/Primary', 'EU/Stock/Primary'):
                     loaction = primary.id
                 if parent in ('EU/Overstock','WH/Overstock'):
@@ -732,7 +763,7 @@ class IrActionsServer(models.Model):
                 else:
                     continue  # Skip if sheet name is not a company
             company = self.env['res.company'].search([('name', '=', sheet_company)], limit=1)
-            print ("\n company==========",company)
+            # print ("\n company==========",company)
             sheet = wb[sheet_name]
             updated_count = 0
 
@@ -757,7 +788,7 @@ class IrActionsServer(models.Model):
                 # new_code = format_decimal(new_code) 
                 if not old_code:
                     continue
-                print ("\n old_code:-", old_code, "old_name:-", old_name, "old_type:-", old_type, "new_code:-", new_code, "new_name:-", new_name, "new_type:-", new_type)
+                # print ("\n old_code:-", old_code, "old_name:-", old_name, "old_type:-", old_type, "new_code:-", new_code, "new_name:-", new_name, "new_type:-", new_type)
                 # Search account within company
                 account = self.env['account.account'].search([
                     ('code', '=', old_code),
@@ -806,7 +837,7 @@ class IrActionsServer(models.Model):
                     #     account.with_company(company).write(diffs)
                     #     updated_count += 1
                     if diffs:
-                        print("\n --------------write----------", diffs)
+                        # print("\n --------------write----------", diffs)
                         vals = []
                         params = []
                         vals.append("reconcile = %s")
@@ -832,7 +863,7 @@ class IrActionsServer(models.Model):
                                 SET {', '.join(vals)}
                                 WHERE id = %s
                             """
-                            print ("\n query", query, "\n params", params)
+                            # print ("\n query", query, "\n params", params)
                             self.env.cr.execute(query, tuple(params))
 
                         if 'tag_ids' in diffs:
@@ -853,13 +884,13 @@ class IrActionsServer(models.Model):
                     ('code', '=', new_code),
                     ('name', '=', new_name)], limit=1)
                     if not account:
-                        print ("\n new_typenew_type==========", new_type)
+                        # print ("\n new_typenew_type==========", new_type)
                         if new_type == 'Non-current liabilities':
                             new_type = 'Non-current Liabilities'
                         keys_found = [key for key, value in selection.items() if value == new_type]
                         
                         diffs = {'name': new_name, 'code': new_code, 'account_type': keys_found[0], 'company_id': company.id, 'tag_ids': [(6, 0, tag_ids)]}
-                        print ("\n --------------create----------", diffs)
+                        # print ("\n --------------create----------", diffs)
                         if (diffs.get('code') == '21440.09' and diffs.get('company_id') == 9) or (diffs.get('code') == '99999.1' and diffs.get('company_id') == 3) or (diffs.get('code') == '28' and diffs.get('company_id') == 1):
                             continue
                         self.env['account.account'].with_company(company).create(diffs)
@@ -990,8 +1021,6 @@ class IrActionsServer(models.Model):
                 'stock_move_line',
                 'stock_move',
                 'account_move_line',
-                
-
             ):
                 continue
             if column_name in (
