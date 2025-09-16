@@ -16,16 +16,6 @@ class SaleOrder(models.Model):
     # END #########
     # METHODS #####
 
-    def action_confirm(self):
-        res = super().action_confirm()
-        if self.mrp_production_ids:
-            # This is a patch for workaround of split MO with split transfers
-            # Due to execptions MO's are not getting confirmed
-            self.mrp_production_ids.write({"ignore_exception": True})
-            self.mrp_production_ids.action_confirm()
-            self.mrp_production_ids.write({"ignore_exception": False})
-        return res
-
     def _compute_is_mrp_warning(self):
         for so in self:
             is_mrp_warning = False
@@ -88,7 +78,7 @@ class SaleOrder(models.Model):
                     ):  # i.g Split 2 times to end up with 3 MOs
                         # Always split 1 qty from the current MO
                         result = mo_to_split.sudo()._split_productions(
-                            {mo_to_split: [1]},split_internal_picking=split_internal_picking
+                            amounts={mo_to_split: [1]}, split_internal_picking=split_internal_picking
                         )
 
                         # result[-1] is the remaining MO, result[0] is the new one
@@ -124,6 +114,9 @@ class SaleOrder(models.Model):
                                 "ignore_exception": False,
                             }
                         )
+            rec.mrp_production_ids.write({"ignore_exception": True})
+            rec.mrp_production_ids.action_confirm()    
+            rec.mrp_production_ids.write({"ignore_exception": False})
 
     # Methods for Batch Smart Button
     def _compute_mrp_production_batch_id_count(self):
