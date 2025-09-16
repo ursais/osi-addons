@@ -83,7 +83,7 @@
         <field name="description">Product or Component not sellable</field>
         <field name="sequence">77</field>
         <field name="model">sale.order</field>
-        <field name="code">failed = any(not line.product_id.sale_ok or any(not bom_line.product_id.sale_ok for bom_line in line.bom_id.bom_line_ids) for line in self.order_line)</field>
+        <field name="code">failed = any(line.product_id and not line.product_id.sale_ok or (line.bom_id and any(bom_line.product_id and not bom_line.product_id.sale_ok for bom_line in line.bom_id.bom_line_ids)) for line in self.order_line if line.product_id)</field>
         <field name="active" eval="True"/>
     </record>
 
