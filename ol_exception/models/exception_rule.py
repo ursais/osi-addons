@@ -40,15 +40,6 @@ class ExceptionRule(models.Model):
     template_id = fields.Many2one(
         "mail.template",
         string="Email Template",
-        help="If set, the email template will be triggered when this exception "
-        "is applied to a record.",
-    )
-    user_group_ids = fields.Many2many(
-        "res.groups",
-        string="Email Recipient Groups",
-        help="Users in these groups will receive emails when this exception is "
-        "triggered. When populated, the email is sent to all users with the "
-        "group(s) and email template setting is ignored.",
     )
 
     # END #########
