@@ -46,7 +46,7 @@ class ResPartner(models.Model):
         string="Customer Deposit Balance",
         store=True,
         compute="_compute_customer_deposit_balance",
-        help="Computed sum of all deposits from relevant journal items for the partner and its rollup partners.",
+        help="Compute the total sum of all deposits from journal items related to the partner, including its rollup partners and child contacts.",
     )
     open_bo_balance = fields.Monetary(
         string="Open BO Balance",
@@ -312,7 +312,7 @@ class ResPartner(models.Model):
     def _compute_customer_deposit_balance(self):
         deposit_accounts = self._get_deposit_accounts()
         for partner in self:
-            partners_to_include = partner.rollup_partner_ids + partner._origin
+            partners_to_include = partner.rollup_partner_ids + partner._origin + partner.child_ids
             invoice_line_ids = partners_to_include.invoice_ids.mapped(
                 "invoice_line_ids"
             )
@@ -427,3 +427,13 @@ class ResPartner(models.Model):
                 partner.open_bo_balance = base_balance
 
     # END #########
+
+# class BlanketOrderLine(models.Model):
+#     _inherit = "sale.blanket.order.line"
+
+#     def write(self, values):
+#         orders = super().write(values)
+#         for order in self:
+#             print("////////",order,order.remaining_uom_qty)
+#             order.order_id.partner_id._compute_open_bo_balance()
+#         return orders
