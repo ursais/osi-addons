@@ -1,7 +1,5 @@
 <odoo noupdate="1">
 
-    Legacy Order Review
-
     <!-- Quote has been sent type -->
     <record id="target_state_value_sent" model="target.state.value">
         <field name="name">Quotation Sent</field>

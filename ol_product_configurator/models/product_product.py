@@ -54,7 +54,7 @@ class ProductProduct(models.Model):
                     product.write(
                         {"default_code": product.product_tmpl_id.default_code}
                     )
-            if product.length and product.weight or product.height:
+            if product.length and product.weight and product.height:
                 product._onchange_volume()
         return products
 
@@ -78,7 +78,7 @@ class ProductProduct(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        if "length" in vals or "width" in vals or " height" in vals:
+        if "length" in vals or "width" in vals or "height" in vals:
             for rec in self:
                 rec._onchange_volume()
         return res

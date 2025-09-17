@@ -186,10 +186,6 @@ class SaleOrder(models.Model):
                 changes.append(
                     f"Workcenter: {old_op.workcenter_id.display_name} → {new_op.workcenter_id.display_name}"
                 )
-            if old_op.time_cycle_manual != new_op.time_cycle_manual:
-                changes.append(
-                    f"Time: {old_op.time_cycle_manual} → {new_op.time_cycle_manual} min"
-                )
             if old_op.sequence != new_op.sequence:
                 changes.append(f"Sequence: {old_op.sequence} → {new_op.sequence}")
             if changes:

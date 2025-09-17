@@ -36,16 +36,20 @@ class SaleOrder(models.Model):
     delivery_account_number = fields.Char(string="Delivery Account Number", copy=False)
     delivery_notes = fields.Text(string="Delivery Notes", copy=False, tracking=True)
     # END COLUMNS ###
-    
+
     def copy(self, default=None):
-        
+
         # First, let the original copy method duplicate the Sale Order
         new_sale_order = super().copy(default)
-        
+
         if not new_sale_order.carrier_id.active:
             # If the Sale Order is using an archived carrier remove the related delivery line
-            order_lines_to_remove = new_sale_order.order_line.filtered(lambda line: line.is_delivery)
-            _logger.info(f"DELIVERY | Removed delivery line for `{new_sale_order.carrier_id.name} ({new_sale_order.carrier_id.id})` from Sale Order: `{new_sale_order.name} ({new_sale_order.id})`")
+            order_lines_to_remove = new_sale_order.order_line.filtered(
+                lambda line: line.is_delivery
+            )
+            _logger.info(
+                f"DELIVERY | Removed delivery line for `{new_sale_order.carrier_id.name} ({new_sale_order.carrier_id.id})` from Sale Order: `{new_sale_order.name} ({new_sale_order.id})`"
+            )
             order_lines_to_remove.unlink()
 
         return new_sale_order
@@ -104,9 +108,13 @@ class SaleOrder(models.Model):
             order_original_data[order.id].update(
                 {
                     "carrier_id": order.carrier_id and order.carrier_id.id or "",
-                    "carrier_name": order.carrier_id and order.carrier_id.display_name or "",
+                    "carrier_name": order.carrier_id
+                    and order.carrier_id.display_name
+                    or "",
                     "delivery_price": sum(
-                        order.order_line.filtered(lambda l: l.is_delivery).mapped("price_unit")
+                        order.order_line.filtered(lambda l: l.is_delivery).mapped(
+                            "price_unit"
+                        )
                     ),
                 }
             )
@@ -156,7 +164,9 @@ class SaleOrder(models.Model):
         if carrier_name == display_name:
             msg_body += f"<li>Delivery Method: {display_name}</li>"
         else:
-            msg_body += f"<li>Delivery Method: {carrier_name} &#8594; {display_name}</li>"
+            msg_body += (
+                f"<li>Delivery Method: {carrier_name} &#8594; {display_name}</li>"
+            )
 
         delivery_price = values.get("delivery_price")
         if delivery_price == price:
@@ -187,12 +197,18 @@ class SaleOrder(models.Model):
         if self.env.context.get("skip_order_delivery_chatter", False):
             return False
 
-        delivery_price = sum(self.order_line.filtered(lambda l: l.is_delivery).mapped("price_unit"))
+        delivery_price = sum(
+            self.order_line.filtered(lambda l: l.is_delivery).mapped("price_unit")
+        )
 
-        if self.create_new_delivery_change_msg(values=original_order_values, price=delivery_price):
+        if self.create_new_delivery_change_msg(
+            values=original_order_values, price=delivery_price
+        ):
             msg = "<h5>Delivery Data updated</h5>"
             msg += "<ul>"
-            msg += self.get_delivery_message_body(values=original_order_values, price=delivery_price)
+            msg += self.get_delivery_message_body(
+                values=original_order_values, price=delivery_price
+            )
             msg += f"<li>Changed by: {self.env.user.name}</li>"
             msg += "</ul>"
             self.message_post(body=msg)
