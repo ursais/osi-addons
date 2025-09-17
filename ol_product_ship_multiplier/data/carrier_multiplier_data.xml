@@ -39,13 +39,13 @@
   	<record id="carrier_multiplier_free_shipping" model="delivery.carrier.multiplier">
     	<field name="carrier">Free Shipping</field>
     	<field name="multiplier">0</field>
-    	<field name="company_id"></field>
+    	<field name="company_id" />
   	</record>
 
   	<record id="carrier_multiplier_none" model="delivery.carrier.multiplier">
     	<field name="carrier">None</field>
     	<field name="multiplier">0</field>
-    	<field name="company_id"></field>
+    	<field name="company_id" />
   	</record>
 
 	<record id="carrier_multiplier_day_air_us" model="delivery.carrier.multiplier">

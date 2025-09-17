@@ -29,7 +29,12 @@ class SaleOrderLine(models.Model):
 
     def _prepare_procurement_values(self, group_id=False):
         """
-        We d
+        Extend procurement values to source stock from repairs.
+
+        - If the line is linked to repairs, use the repair's location as the source location
+        (when all repairs share the same location).
+        - If all repairs have the same owner, enforce that owner on the move.
+        - Clear route_ids to prevent manufacturing orders from being created.
         """
         vals = super()._prepare_procurement_values(group_id=group_id)
         if self.repair_ids:

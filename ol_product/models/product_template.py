@@ -86,7 +86,7 @@ class ProductTemplate(models.Model):
         Get the components of the Phantom Kit
         """
 
-        if not self.is_kits:
+        if not self.is_phantom_kit:
             # Non Phantom Kits will have no components
             return False
 
@@ -105,5 +105,7 @@ class ProductTemplate(models.Model):
         Get the latest Phantom Bom of a products
         TODO: Discuss with the Business/OSI what the logic is to find the latest active BOM
         """
-        phantom_bom = self.bom_ids.filtered(lambda b: b.type == "phantom").sorted(key="version", reverse=True)
+        phantom_bom = self.bom_ids.filtered(lambda b: b.type == "phantom").sorted(
+            key="version", reverse=True
+        )
         return phantom_bom[0] if phantom_bom else self.env["mrp.bom"]

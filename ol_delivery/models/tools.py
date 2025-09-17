@@ -93,11 +93,24 @@ def get_product_data_from_order_lines_data(env, company, order_lines_data):
 
     products_data = get_product_data(company=company, product_uuids=product_uuids)
 
+    """
+    There are a few different cases this function needs to handle:
+
+    1. Components: plain jane components. No special processing is needed since all of the fields we care about
+       live on the product itself.
+
+    2. Phantom Kits: Weight, cost, and price is compiled from the components onto the main phantom kit product.
+       For shipping purposes we do not need to know about the BOM of the phantom kit since all the fields we
+       care about are on the phantom kit product directly.
+
+    3. Systems (w/ or w/o Phantom Kits): Systems have configurations which we dissect into component level detail.
+       For our purposes we can treat any phantom kits into the configuration as components (see #2).
+    """
+
     for order_line_data in order_lines_data:
 
         # Set the defaults
         product_uuid = order_line_data.get("product_id", False)
-        product_attribute_uuid = order_line_data.get("option", False)
         product_data = products_data.get(product_uuid)
         if not product_data:
             raise ValidationError(f"Product with UUID {product_uuid} not found!")
@@ -111,13 +124,9 @@ def get_product_data_from_order_lines_data(env, company, order_lines_data):
             "qty": line_qty,
             "price": line_price,
         }
-
-        # TODO: What should we do about Phantom Kits?
-        #       It's not worth writing the code based on Odoo13 logic
-        #       as Odoo17 phantom kit's could be totally different
+        # ======== SYSTEMS ========
         if configuration := order_line_data.get("configuration"):
             # Iterate over the components
-
             line_weight = 0
             line_volume = 0
             line_shipping_buffer = 0
@@ -151,6 +160,7 @@ def get_product_data_from_order_lines_data(env, company, order_lines_data):
                 component_qty = configuration_line.get("qty") or 1
                 component_price = configuration_line.get("price") or 0.0
                 component_cost = component_data.get("cost") or 0.0
+                product_attribute_uuid = configuration_line.get("option", False)
 
                 # Line Volume calculation
                 component_volume = calculate_volume(
@@ -189,9 +199,9 @@ def get_product_data_from_order_lines_data(env, company, order_lines_data):
                     "shipping_buffer": component_shipping_buffer,
                 }
 
-            line_weight = line_weight * line_qty
-            line_volume = line_volume * line_qty
-            line_cost = line_cost * line_qty
+            line_weight *= line_qty
+            line_volume *= line_qty
+            line_cost *= line_qty
 
             line_data.update(
                 {
@@ -205,6 +215,7 @@ def get_product_data_from_order_lines_data(env, company, order_lines_data):
                     "configuration": line_system_configuration,
                 }
             )
+        # ======== COMPONENTS ========
         else:
             line_weight = product_data.get("weight") * line_qty
             line_volume = (

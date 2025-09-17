@@ -2,10 +2,8 @@ from odoo import fields, models
 from odoo.addons.stock_inventory.models.stock_quant import StockQuant
 
 
-# Override _apply_inventory in stock_quant module to fix the link issue of stock move.
-
-
 def _apply_inventory(self):
+    # Override _apply_inventory in stock_quant module to fix the link issue of stock move.
     res = super(StockQuant, self)._apply_inventory()
 
     record_moves = self.env["stock.move.line"]

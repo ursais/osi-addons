@@ -3,7 +3,7 @@ from odoo import fields, models
 
 class ScrapReasonCode(models.Model):
     _inherit = "scrap.reason.code"
-    """Inherit scrap resaon code to add compnay functionality."""
+    """Inherit scrap reason code to add company functionality."""
 
     # COLUMNS #####
 

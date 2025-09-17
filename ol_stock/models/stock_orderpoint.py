@@ -15,9 +15,15 @@ class StockOrderpoint(models.Model):
     # METHODS ######
 
     def _cron_run_overflow_replenishments(self):
-        domain = [("is_overflow", "!=", False), ("active", "=", True)]
-        orderpoints = self.search(domain)
-        if orderpoints:
-            orderpoints.action_replenish()
+        companies = self.env["res.company"].search([])
+        for company in companies:
+            orderpoints = self.with_company(company).search(
+                [
+                    ("is_overflow", "!=", False),
+                    ("active", "=", True),
+                ]
+            )
+            if orderpoints:
+                orderpoints.action_replenish()
 
     # END ##########

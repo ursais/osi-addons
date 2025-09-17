@@ -13,7 +13,8 @@
         "ol_base",
         "mrp",
         "mrp_batch",
-        "product_configurator_mrp_component"
+        "product_configurator_mrp",
+        "product_configurator_mrp_component",
     ],
     # always loaded
     "data": [
@@ -21,5 +22,6 @@
         "views/mrp_production_view.xml",
         "views/product_template_view.xml",
         "views/stock_lot_view.xml",
+        "views/mrp_workorder_views.xml",
     ],
 }
