@@ -1065,6 +1065,34 @@ class IrActionsServer(models.Model):
             IRProperty.create(vals_to_create)
             self.env.cr.commit()
     
+    def update_ar_ap_followup_contacts(self):
+        # task ref: https://osi.mavenlink.com/workspaces/44078089/#tracker/932728167
+        # psql VERSION13DB
+        # create table temp_res_partner_contact_type_v13 as select * from res_partner_contact_type;
+        # pg_dump -d odoo13 -t temp_res_partner_contact_type_v13 > /home/odoo/temp_res_partner_contact_type_v13.sql;
+        # psql -d 17.0.0.13.0 -f /home/odoo/temp_res_partner_contact_type_v13.sql
+
+        cr = self.env.cr
+        select_query = """
+            SELECT contact_id, ar, ap, followup 
+            FROM temp_res_partner_contact_type_v13;
+        """
+        cr.execute(select_query)
+        datas = cr.fetchall()
+
+        for contact_id, ar, ap, followup in datas:
+            update_query = """
+                UPDATE res_partner 
+                SET ar = %s, ap = %s, followup = %s 
+                WHERE id = %s;
+            """
+            cr.execute(update_query, (ar, ap, followup, contact_id))
+            _logger.info("Updated Partner ID %s with values: ar=%s, ap=%s, followup=%s",
+                         contact_id, ar, ap, followup)
+
+        # Commit once after loop
+        self.env.cr.commit()
+
     def drop_temp_tables(self):
         cr = self.env.cr
         _logger.info("\n\n============Droping Tables Start")
