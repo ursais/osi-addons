@@ -4,7 +4,11 @@ from odoo import _, api, fields, models
 
 class StockPicking(models.Model):
     """
-    Inherit Stock Picking Object to add Credit Limit.
+    Inherit Stock Picking to integrate Credit Limit checks.
+
+    Adds:
+      - `credit_hold`: Boolean flag inherited from the related Sale Order.
+      - Automatic update of ignore_exception when no credit hold exists.
     """
 
     _inherit = "stock.picking"
@@ -15,11 +19,19 @@ class StockPicking(models.Model):
         "Credit Hold",
         store=True,
         compute="_compute_credit_hold",
+        help="Indicates whether this picking is blocked due to credit hold "
+        "on the related Sale Order.",
     )
 
     # END #########
     # METHODS #####
     def update_ignore_exceptions(self):
+        """
+        Force-enable `ignore_exception` on this picking.
+
+        This bypasses OCA's base_exception rules when the picking
+        should not be blocked (e.g., no credit hold).
+        """
         self.ensure_one()
         query = """
             UPDATE stock_picking 
@@ -33,6 +45,15 @@ class StockPicking(models.Model):
         "sale_id.override_credit_limit_hold",
     )
     def _compute_credit_hold(self):
+        """
+        Compute credit hold for Stock Pickings.
+
+        Rules:
+          - Inherit credit hold status from the linked Sale Order.
+          - If the picking is NOT on credit hold, automatically
+            mark `ignore_exception` so that exception rules won’t
+            block the picking unnecessarily.
+        """
         for pick in self:
             pick.credit_hold = bool(pick.sale_id.credit_hold)
             if not pick.credit_hold:
