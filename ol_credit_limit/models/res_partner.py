@@ -233,24 +233,22 @@ class ResPartner(models.Model):
     )
     def _compute_remaining_credit(self):
         for partner in self:
-            if not partner.credit_limit:
-                partner.remaining_credit = 0
-            else:
-                rollup_used_credit = 0
-                if partner.rollup_partner_ids:
-                    partners_data = partner.rollup_partner_ids.read(["open_so_balance", "credit"])
-
-                    rollup_open_so = sum(p.get("open_so_balance", 0.0) or 0.0 for p in partners_data)
-                    rollup_credit_total = sum(p.get("credit", 0.0) or 0.0 for p in partners_data)
-
-                    rollup_used_credit = rollup_open_so + rollup_credit_total
-
-                used_credit = (
-                    partner.open_so_balance
-                    + (partner.credit if partner.credit > 0 else 0)
-                    + rollup_used_credit
-                )
-                partner.remaining_credit = partner.credit_limit - used_credit or 0
+            rollup_used_credit = 0
+            customer_payments = partner.credit
+            if partner.rollup_partner_ids:
+                partners_data = partner.rollup_partner_ids.read(["open_so_balance", "credit"])
+                rollup_open_so = sum(p.get("open_so_balance", 0.0) or 0.0 for p in partners_data)
+                rollup_credit_total = sum(p.get("credit", 0.0) or 0.0 for p in partners_data)
+                rollup_used_credit = rollup_open_so + rollup_credit_total
+            used_credit = (
+                partner.open_so_balance
+                + partner.credit
+                + rollup_used_credit
+            )
+            remaining_credit = partner.credit_limit - used_credit or 0
+            if remaining_credit <= 0:
+                remaining_credit = 0
+            partner.remaining_credit = remaining_credit
 
     # @api.depends(
     #     "credit_limit", "total_due", "rollup_partner_ids.total_due", "partner_rollup_id", "invoice_ids","open_so_balance",
@@ -308,6 +306,8 @@ class ResPartner(models.Model):
         "invoice_ids.line_ids.balance",
         "invoice_ids.payment_ids",
         "invoice_ids.payment_state",
+        "rollup_partner_ids.invoice_ids",
+        "rollup_partner_ids.invoice_ids.payment_state",
     )
     def _compute_customer_deposit_balance(self):
         deposit_accounts = self._get_deposit_accounts()
