@@ -54,8 +54,9 @@ class MRPBom(models.Model):
         This method only processes records where `system_tier` is 'normal'. For all other
         `system_tier` values, `available_config_components` is immediately set to False.
 
-        This override is specifically designed to support Script 6 execution, which is triggered
-        via Server Action 2. A context key `is_data_migration` is expected to be present during migration
+        This override is specifically designed to support and reduce the time for the
+        scaffold bom create execution that is run during the v13 -> v17 migration.
+        A context key `is_data_migration` is expected to be present during migration
         to identify when this logic should run."""
         for bom in self:
             if (
