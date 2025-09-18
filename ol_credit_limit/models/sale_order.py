@@ -35,12 +35,13 @@ class SaleOrder(models.Model):
             FROM sale_order
             WHERE partner_id IN %s
             AND invoice_status != 'invoiced'
-            AND state != 'cancel'
+            AND state not in ('cancel','draft')
         """
         self.env.cr.execute(
             query, (tuple(partner_ids.ids),)
         )  # Ensure tuple format for SQL IN clause
         so_list = [so[0] for so in self.env.cr.fetchall()]
+        print("////",so_list)
         return so_obj.browse(so_list)
 
     @api.depends(
@@ -50,8 +51,9 @@ class SaleOrder(models.Model):
     )
     def _compute_credit_hold(self):
         open_saleorders = self._get_open_sale_order(self.mapped("partner_id"))
+        print("////open_saleorders/////",open_saleorders)
         counter_total = 0
-        credit_hold = False
+        self.   credit_hold = False
         all_child = (
             self.env["res.partner"]
             .with_context(active_test=False)
@@ -73,7 +75,9 @@ class SaleOrder(models.Model):
                 ("payment_state", "in", ["in_payment", "paid"]),
             ]
         )
+        print(all_child,"///////open_so_invoices////////",open_so_invoices)
         paid_so_invoices = paid_invoices.mapped("line_ids.sale_line_ids.order_id")
+        print(paid_invoices,"///paid_so_invoices///",paid_so_invoices)
         saleorders = open_saleorders + open_so_invoices
         sorted_orders_asc = (
             self.env["sale.order"]
@@ -83,6 +87,7 @@ class SaleOrder(models.Model):
         )
         counter_total = 0
         for order in sorted_orders_asc:
+            print("///////order/",order)
             if order.id not in paid_so_invoices.ids:
                 counter_total += order.amount_total
             credit_hold = False
@@ -93,6 +98,10 @@ class SaleOrder(models.Model):
             if order.id in paid_so_invoices.ids:
                 credit_hold = False
             order.credit_hold = credit_hold
+
+        # for order in self:
+        #     if not sorted_orders_asc:
+
 
     @api.depends("amount_total", "invoice_status")
     def _compute_uninvoiced_balance(self):

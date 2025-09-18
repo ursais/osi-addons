@@ -382,20 +382,16 @@ class ResPartner(models.Model):
     def _compute_open_bo_balance(self):
         def compute_balance(partners):
             partner_ids = tuple(partners.ids) or (0,)
-            self.env.cr.execute(
-                """
-                SELECT COALESCE(SUM(l.remaining_uom_qty * l.price_unit), 0)
-                FROM sale_blanket_order_line l
-                JOIN sale_blanket_order o ON l.order_id = o.id
-                WHERE o.partner_id IN %s
-                AND o.state = 'open'
-            """,
-                (partner_ids,),
+            lines = self.env["sale.blanket.order.line"].search_read(
+                [("order_id.partner_id", "in", partner_ids),
+                 ("order_id.state", "=", "open")],
+                ["remaining_uom_qty", "price_unit"]
             )
-            return self.env.cr.fetchone()[0]
+
+            total = sum(l["remaining_uom_qty"] * l["price_unit"] for l in lines)
+            return total
 
         for partner in self:
-
             partners_base = partner._origin
             base_balance = compute_balance(partners_base)
 
@@ -427,13 +423,3 @@ class ResPartner(models.Model):
                 partner.open_bo_balance = base_balance
 
     # END #########
-
-# class BlanketOrderLine(models.Model):
-#     _inherit = "sale.blanket.order.line"
-
-#     def write(self, values):
-#         orders = super().write(values)
-#         for order in self:
-#             print("////////",order,order.remaining_uom_qty)
-#             order.order_id.partner_id._compute_open_bo_balance()
-#         return orders
