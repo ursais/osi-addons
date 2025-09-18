@@ -1,4 +1,5 @@
 <odoo>
+
     <record id="view_order_form_inheirt_credit_limit" model="ir.ui.view">
         <field name="name">sale.order.form</field>
         <field name="model">sale.order</field>
@@ -18,7 +19,7 @@
                     <field  name="uninvoiced_balance"/>
                     <field  name="override_credit_limit_hold"/>
                 </group>
-            </xpath> 
+            </xpath>
         </field>
     </record>
 

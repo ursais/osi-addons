@@ -1,4 +1,5 @@
 <odoo>
+
     <record id="view_picking_form_inheirt_credit_limit" model="ir.ui.view">
         <field name="name">stock.picking.form</field>
         <field name="model">stock.picking</field>
@@ -14,4 +15,5 @@
             </field>
         </field>
     </record>
+
 </odoo>
