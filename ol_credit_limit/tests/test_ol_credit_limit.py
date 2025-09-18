@@ -58,7 +58,18 @@ class TestCreditLimit(common.TransactionCase):
 
         # Trigger onchange for coverage
         partner_2 = PartnerObj.create({"name": "RollUp Partner B", "credit_limit": 0.0})
-        partner_2.onchange_credit_limit()
+        res = partner_2.onchange_credit_limit()
+
+        # Assertions for coverage
+        self.assertIsInstance(
+            res, dict, "onchange_credit_limit should return a dictionary"
+        )
+        self.assertIn("warning", res or {}, "Expected warning key in onchange result")
+        self.assertEqual(
+            partner_2.remaining_credit,
+            0.0,
+            "Remaining credit should match credit_limit",
+        )
 
     def test_partner_flow(self):
         """
@@ -217,8 +228,17 @@ class TestCreditLimit(common.TransactionCase):
             }
         )
 
-        # Sale Order creation flow for BOM product is commented out
-        # (would normally test that confirming SO triggers MO creation)
+        # Assert BOM exists for product
+        bom = self.env["mrp.bom"].search([("product_id", "=", bom_product.id)])
+        self.assertTrue(bom, "BOM should be created for bom_product")
+
+        # Assert BOM line exists
+        self.assertEqual(len(bom.bom_line_ids), 1, "BOM should have one line")
+        self.assertEqual(
+            bom.bom_line_ids.product_id,
+            bom_line,
+            "BOM line should match the component product",
+        )
 
     def test_customer_deposit_balance(self):
         """
