@@ -24,6 +24,8 @@
     "data": [
         "security/ir.model.access.csv",
         "security/security.xml",
+        "reports/invoice_generic.xml",
+        "reports/invoice_proforma.xml",
         "data/generic_invoice_email.xml",
         "data/invoice_email.xml",
         "data/mail_template_data.xml",
@@ -33,7 +35,5 @@
         "views/account_payment_view.xml",
         "views/res_partner_view.xml",
         "views/payment_preference_view.xml",
-        "reports/invoice_generic.xml",
-        "reports/invoice_proforma.xml",
     ],
 }
