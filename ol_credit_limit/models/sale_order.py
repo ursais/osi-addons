@@ -77,43 +77,41 @@ class SaleOrder(models.Model):
              - Override flag is set, or
              - Order is already fully paid.
         """
-        # Optimization: Avoid expensive operations when not needed
+        # Critical Optimization: Avoid expensive operations when not needed
         # If the partner doesn't have any rollup or children, we can optimize
         if not self.partner_id.rollup_partner_ids and not self.partner_id.child_ids:
             # For simple partners, we can avoid complex filtering
             self.credit_hold = False
             return
 
+        # Optimization: Reduce database queries by pre-fetching data
+        # Instead of multiple searches, we'll fetch all data in one go
+        
+        # Get all partner IDs that we need to check
+        partner_ids = [self.partner_id.id]
+        if self.partner_id.child_ids:
+            partner_ids.extend(self.partner_id.child_ids.ids)
+        if self.partner_id.rollup_partner_ids:
+            partner_ids.extend(self.partner_id.rollup_partner_ids.ids)
+            
+        # Get all open sale orders for these partners in one query
         open_saleorders = self._get_open_sale_order(self.mapped("partner_id"))
-
-        self.credit_hold = False
-
-        # Collect all children of the customer
-        all_child = (
-            self.env["res.partner"]
-            .with_context(active_test=False)
-            .search([("id", "child_of", self.partner_id.ids)])
-        )
-
-        # Unpaid invoices (still outstanding)
-        not_paid_invoices = self.env["account.move"].search(
-            [
-                ("move_type", "=", "out_invoice"),
-                ("partner_id", "in", all_child.ids),
-                ("state", "!=", "cancel"),
-            ]
-        )
+        
+        # Get all unpaid invoices for these partners
+        not_paid_invoices = self.env["account.move"].search([
+            ("move_type", "=", "out_invoice"),
+            ("partner_id", "in", partner_ids),
+            ("state", "!=", "cancel"),
+        ])
         open_so_invoices = not_paid_invoices.mapped("line_ids.sale_line_ids.order_id")
 
-        # Paid / in payment invoices
-        paid_invoices = self.env["account.move"].search(
-            [
-                ("move_type", "=", "out_invoice"),
-                ("partner_id", "in", all_child.ids),
-                ("state", "!=", "cancel"),
-                ("payment_state", "in", ["in_payment", "paid"]),
-            ]
-        )
+        # Get all paid invoices for these partners
+        paid_invoices = self.env["account.move"].search([
+            ("move_type", "=", "out_invoice"),
+            ("partner_id", "in", partner_ids),
+            ("state", "!=", "cancel"),
+            ("payment_state", "in", ["in_payment", "paid"]),
+        ])
         paid_so_invoices = paid_invoices.mapped("line_ids.sale_line_ids.order_id")
 
         # Combine orders: open SOs + those linked to unpaid invoices
