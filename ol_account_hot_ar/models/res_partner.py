@@ -41,48 +41,41 @@ class ResPartner(models.Model):
             if partner.override_hot_ar:
                 partner.hot_ar = False
             else:
-                # Modified compute logic to update hot_ar field via PSQL query instead of ORM to reduce the execution time.
-                self.env.cr.execute(
-                    """
-                    UPDATE res_partner p
-                    SET hot_ar = EXISTS (
-                        SELECT 1
-                        FROM account_move am
-                        JOIN res_company rc ON rc.id = am.company_id
-                        WHERE am.partner_id = p.id
-                        AND am.payment_state NOT IN ('in_payment', 'paid', 'reversed')
-                        AND am.move_type IN ('out_invoice', 'in_invoice', 'out_refund', 'in_refund')
-                        AND am.hot_ar = TRUE
-                        AND am.override_hot_ar is null
-                        AND am.state = 'posted'
-                        AND rc.hot_ar_grace_period > 0
-                    )
-                    WHERE p.id = %s
-                """,
-                    [partner.id],
+                invoices = self.env["account.move"].search(
+                    [
+                        ("partner_id", "=", partner.id),
+                        ("payment_state", "not in", ("in_payment", "paid", "reversed")),
+                        (
+                            "move_type",
+                            "in",
+                            ("out_invoice", "in_invoice", "out_refund", "in_refund"),
+                        ),
+                        ("hot_ar", "=", True),
+                        ("override_hot_ar", "=", False),
+                        ("state", "=", "posted"),
+                        ("company_id.hot_ar_grace_period", ">", 0),
+                    ]
                 )
-            #            Now update commercial partner based on children
+                # Write to partner (with sudo since this is done systematically)
+                # Using write to trigger
+                partner.sudo().write({"hot_ar": bool(invoices)})
+
+            # Now update commercial partner based on children
             if (
                 partner.commercial_partner_id
                 and partner != partner.commercial_partner_id
             ):
                 commercial_partner = partner.commercial_partner_id
-                # Modified compute logic to update hot_ar field via PSQL query instead of ORM to reduce the execution time.
                 # This will ensure the commercial partner is "hot" if any child is
                 if not self._context.get("commercial_partner"):
-                    commercial_partner_id = commercial_partner.id
-                    self.env.cr.execute(
-                        """
-                        UPDATE res_partner cp
-                        SET hot_ar = EXISTS (
-                            SELECT 1 FROM res_partner child
-                            WHERE child.parent_id = cp.id
-                            AND child.hot_ar = TRUE
-                            AND child.override_hot_ar is null
-                        )
-                        WHERE cp.id = %s
-                    """,
-                        [commercial_partner_id],
+                    commercial_partner.sudo().write(
+                        {
+                            "hot_ar": any(
+                                child.with_context(commercial_partner=True).hot_ar
+                                and not child.override_hot_ar
+                                for child in commercial_partner.child_ids
+                            )
+                        }
                     )
 
     # END #########
