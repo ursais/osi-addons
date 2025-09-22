@@ -8,6 +8,9 @@
             <xpath expr="//field[@name='estimate_ids']/tree/field[@name='job_type']" position="attributes">
                 <attribute name="optional">hide</attribute>
             </xpath>
+            <xpath expr="//field[@name='job_type_ids']" position="after">
+                <field name="customer_request_date"/>
+            </xpath>
             <xpath expr="//field[@name='estimate_ids']/tree/field[@name='product_uom']" position="after">
                 <field name="customer_lead" optional="show" />
             </xpath>
@@ -90,21 +93,15 @@
             <xpath expr="//field[@name='estimate_ids']/tree/field[@name='product_uom']" position="after">
                 <field name="product_type" column_invisible="True" />
                 <field name="forecasted_issue" column_invisible="True" />
-                <button
-                    name="action_product_forecast_report"
-                    type="object"
-                    title="Forecast Report"
-                    icon="fa-area-chart"
-                    invisible="not id or not forecasted_issue or product_type != 'product' or job_type != 'material'"
-                    class="text-danger"
-                />
-                <button
-                    name="action_product_forecast_report"
-                    type="object"
-                    title="Forecast Report"
-                    icon="fa-area-chart"
-                    invisible="not id or forecasted_issue or product_type != 'product' or job_type != 'material'"
-                />
+                <field name="display_qty_widget" column_invisible="True" />
+                <widget name="qty_at_date_widget_estimate" width="20px"/>
+                <field name="virtual_available_at_date" column_invisible="True"/>
+                <field name="scheduled_date" column_invisible="True"/>
+                <field name="free_qty_today" column_invisible="True"/>
+                <field name="display_qty_widget" column_invisible="True"/>
+                <field name="forecasted_issue" column_invisible="True"/>
+                <field name="estimate_state" column_invisible="True"/>
+                <field name="qty_available_today" column_invisible="True"/>
             </xpath>
             <field name="pricelist_id" position="replace">
                 <field name="has_active_pricelist" invisible="1" />

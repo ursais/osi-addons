@@ -32,6 +32,12 @@
         "wizard/quotation_wizard_view.xml",
         "wizard/add_components_wizard_view.xml",
     ],
+    'assets': {
+        'web.assets_backend': [
+            'ol_job_cost_estimate_customer/static/src/qty_at_date_widget.js',
+            'ol_job_cost_estimate_customer/static/src/qty_at_date_widget.xml'
+        ],
+    },
     "application": False,
     "installable": True,
 }

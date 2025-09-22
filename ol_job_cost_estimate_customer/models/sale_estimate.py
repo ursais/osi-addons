@@ -84,6 +84,8 @@ class SaleEstimateJob(models.Model):
         string="Company",
     )
 
+    customer_request_date = fields.Date(string="Customer Request Date")
+
     # END ##########
     # METHODS ##########
 
