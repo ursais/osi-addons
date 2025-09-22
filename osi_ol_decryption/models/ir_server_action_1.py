@@ -352,14 +352,16 @@ class IrActionsServer(models.Model):
                 )
 
         # --- Step 3: Create Route in OnLogic US ---
-
-        route_us = self.env["stock.route"].create(
-            {
-                "name": "Overstock Replenishment",
-                "product_selectable": False,
-                "company_id": 1,
-            }
-        )
+        
+        route_us = self.env["stock.route"].search([('name','=', 'Overstock Replenishment'), ('company_id', '=', 1)])
+        if not route_us:
+            route_us = self.env["stock.route"].create(
+                {
+                    "name": "Overstock Replenishment",
+                    "product_selectable": False,
+                    "company_id": 1,
+                }
+            )
 
         op_type = self.env["stock.picking.type"].search(
             [
@@ -382,6 +384,7 @@ class IrActionsServer(models.Model):
             {
                 "name": "Pull from Overstock",
                 "route_id": route_us.id,
+                git 
                 "action": "pull",  # Pull From
                 "picking_type_id": op_type.id,
                 "location_src_id": source_loc.id,
@@ -408,13 +411,15 @@ class IrActionsServer(models.Model):
             [("name", "=", "Primary"), ("company_id", "=", 2)], limit=1
         )
 
-        route_eu = self.env["stock.route"].create(
-            {
-                "name": "Overstock Replenishment",
-                "product_selectable": False,
-                "company_id": 2,
-            }
-        )
+        route_eu = self.env["stock.route"].search([('name','=', 'Overstock Replenishment'), ('company_id', '=', 2)])
+        if not route_eu:
+            route_eu = self.env["stock.route"].create(
+                {
+                    "name": "Overstock Replenishment",
+                    "product_selectable": False,
+                    "company_id": 2,
+                }
+            )
 
         self.env["stock.rule"].create(
             {
