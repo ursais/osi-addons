@@ -59,7 +59,8 @@ class SaleEstimateLineJob(models.Model):
     estimate_state = fields.Selection(
         related="estimate_id.state",
         store=True,
-        readonly=True,
+        precompute=True,
+        copy=False,
     )
 
     # END #########
