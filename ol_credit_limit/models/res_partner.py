@@ -139,11 +139,21 @@ class ResPartner(models.Model):
         """
         Compute open Sale Order balance for the partner.
         Includes:
-          - Partner’s own SOs
+          - Partner's own SOs
           - Draft invoices
           - Rollup partner balances
           - Handles grouping by parent, rollup, or company
         """
+        # Cache the computed values to avoid recomputation
+        cache_key = "open_so_balance_%s" % self._origin.id
+        cached_values = getattr(self.env, '_open_so_balance_cache', {})
+        
+        # Check if we have cached values for this partner
+        if cache_key in cached_values:
+            # Return cached value
+            for partner in self:
+                partner.open_so_balance = cached_values[cache_key]
+            return
 
         def compute_balance(partners):
             """Helper: SQL to compute total SO balance for given partners."""
@@ -155,7 +165,7 @@ class ResPartner(models.Model):
                 AND invoice_status = 'no'
                 AND partner_id in %s
             """,
-                (tuple(self.ids),),
+                (tuple(partners.ids),),
             )
 
             so_sum = self.env.cr.fetchone()[0] or 0.0
@@ -222,6 +232,11 @@ class ResPartner(models.Model):
                 parent_balance = compute_balance(parent_group)
                 partner.parent_id.open_so_balance = parent_balance
                 partner.open_so_balance = base_balance
+            
+            # Store the computed value in cache
+            if not hasattr(self.env, '_open_so_balance_cache'):
+                self.env._open_so_balance_cache = {}
+            self.env._open_so_balance_cache[cache_key] = partner.open_so_balance
 
     @api.depends(
         "credit_limit",
@@ -242,8 +257,19 @@ class ResPartner(models.Model):
         """
         Compute remaining credit:
         - Deduct SO balances and receivables
-        - Include rollup partners’ usage
+        - Include rollup partners' usage
         """
+        # Cache the computed values to avoid recomputation
+        cache_key = "remaining_credit_%s" % self._origin.id
+        cached_values = getattr(self.env, '_remaining_credit_cache', {})
+        
+        # Check if we have cached values for this partner
+        if cache_key in cached_values:
+            # Return cached value
+            for partner in self:
+                partner.remaining_credit = cached_values[cache_key]
+            return
+
         for partner in self:
             rollup_used_credit = 0
             if partner.rollup_partner_ids:
@@ -262,6 +288,11 @@ class ResPartner(models.Model):
             if remaining_credit <= 0:
                 remaining_credit = 0
             partner.remaining_credit = remaining_credit
+            
+            # Store the computed value in cache
+            if not hasattr(self.env, '_remaining_credit_cache'):
+                self.env._remaining_credit_cache = {}
+            self.env._remaining_credit_cache[cache_key] = partner.remaining_credit
 
     @api.onchange("credit_limit")
     def onchange_credit_limit(self):
