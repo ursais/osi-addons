@@ -41,7 +41,6 @@ class ResPartner(models.Model):
             if partner.override_hot_ar:
                 partner.hot_ar = False
             else:
-                # Modified compute logic to update hot_ar field via PSQL query instead of ORM to reduce the execution time.
                 invoices = self.env["account.move"].search(
                     [
                         ("partner_id", "=", partner.id),
@@ -60,16 +59,16 @@ class ResPartner(models.Model):
                 # Write to partner (with sudo since this is done systematically)
                 # Using write to trigger
                 partner.sudo().write({"hot_ar": bool(invoices)})
-            #            Now update commercial partner based on children
+
+            # Now update commercial partner based on children
             if (
                 partner.commercial_partner_id
                 and partner != partner.commercial_partner_id
             ):
                 commercial_partner = partner.commercial_partner_id
-                # Modified compute logic to update hot_ar field via PSQL query instead of ORM to reduce the execution time.
                 # This will ensure the commercial partner is "hot" if any child is
                 if not self._context.get("commercial_partner"):
-                   commercial_partner.sudo().write(
+                    commercial_partner.sudo().write(
                         {
                             "hot_ar": any(
                                 child.with_context(commercial_partner=True).hot_ar
