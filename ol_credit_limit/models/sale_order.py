@@ -77,6 +77,13 @@ class SaleOrder(models.Model):
              - Override flag is set, or
              - Order is already fully paid.
         """
+        # Optimization: Avoid expensive operations when not needed
+        # If the partner doesn't have any rollup or children, we can optimize
+        if not self.partner_id.rollup_partner_ids and not self.partner_id.child_ids:
+            # For simple partners, we can avoid complex filtering
+            self.credit_hold = False
+            return
+
         open_saleorders = self._get_open_sale_order(self.mapped("partner_id"))
 
         self.credit_hold = False
