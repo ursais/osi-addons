@@ -1,0 +1,59 @@
+<templates id="template" xml:space="preserve">
+    <t t-name ="estimate_widget" t-inherit="sale_stock.QtyAtDatePopover" t-inherit-mode="primary">
+
+        <xpath expr="//table/tbody" position="replace">
+            <tbody>
+                <t t-if="['approve'].includes(props.record.data.estimate_state)">
+
+                    <tr>
+                        <td>
+                            <strong>Reserved</strong><br/>
+                        </td>
+                        <td style="min-width: 50px; text-align: right;">
+                            <b t-out='props.record.data.qty_available_today'/> <t t-out='props.record.data.product_uom[1]'/>
+                        </td>
+                    </tr>
+                    <tr >
+                        <td>
+                            <span t-if="props.calcData.will_be_fulfilled and props.calcData.forecast_expected_date_str">
+                                Remaining demand available at <b t-out="props.calcData.forecast_expected_date_str" t-att-class="props.record.data.scheduled_date &lt; props.record.data.forecast_expected_date ? 'text-danger' : ''"/>
+                            </span>
+                            <span t-elif="!props.calcData.will_be_fulfilled and props.calcData.forecast_expected_date_str" class="text-danger">
+                                Not enough future availability
+                            </span>
+                            <span t-elif="!props.calcData.will_be_fulfilled" class="text-danger">
+                                No future availability
+                            </span>
+                            <span t-else="">
+                                Available in stock
+                            </span>
+                        </td>
+                    </tr>
+                </t>
+                <t t-elif="['draft', 'sent', 'confirm', 'quotesend'].includes(props.record.data.estimate_state)">
+
+                    <tr>
+                        <td><strong>Forecasted Stock</strong><br/><small>On <span t-out="props.calcData.delivery_date"/></small></td>
+                        <td class="text-end"><b t-out='props.record.data.virtual_available_at_date'/> <t t-out='props.record.data.product_uom[1]'/></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Available</strong><br /><small>All planned operations included</small></td>
+                        <td class="text-end"><b t-out='props.record.data.free_qty_today' t-att-class="!props.calcData.will_be_fulfilled ? 'text-danger': ''"/> <t t-out='props.record.data.product_uom[1]'/></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Expected Delivery</strong></td>
+                        <td class="oe-right"><span t-out="props.calcData.delivery_date"/></td>
+                    </tr>
+                    <tr>
+                        <p>This product is replenished on demand.</p>
+                    </tr>
+                </t>
+                <!-- <t t-elif="['draft', 'sent'].includes(props.record.data.estimate_state)">
+                </t> -->
+
+            </tbody>
+        </xpath>
+
+        
+    </t>
+</templates>
