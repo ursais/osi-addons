@@ -43,16 +43,17 @@ class SaleEstimateLineJob(models.Model):
         store=True,
         precompute=True,
     )
-
     product_type = fields.Selection(related="product_id.detailed_type")
     forecasted_issue = fields.Boolean(compute="_compute_forecasted_issue")
     virtual_available_at_date = fields.Float(
-        compute="_compute_qty_at_date", digits="Product Unit of Measure"
+        compute="_compute_qty_at_date",
+        digits="Product Unit of Measure",
     )
     scheduled_date = fields.Datetime(compute="_compute_qty_at_date")
     forecast_expected_date = fields.Datetime(compute="_compute_qty_at_date")
     free_qty_today = fields.Float(
-        compute="_compute_qty_at_date", digits="Product Unit of Measure"
+        compute="_compute_qty_at_date",
+        digits="Product Unit of Measure",
     )
     qty_available_today = fields.Float(compute="_compute_qty_at_date")
     display_qty_widget = fields.Boolean(compute="_compute_qty_to_deliver")

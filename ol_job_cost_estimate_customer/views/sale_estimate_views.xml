@@ -102,24 +102,6 @@
                 <field name="forecasted_issue" column_invisible="True"/>
                 <field name="estimate_state" column_invisible="True"/>
                 <field name="qty_available_today" column_invisible="True"/>
-
-
-
-                <!-- <button
-                    name="action_product_forecast_report"
-                    type="object"
-                    title="Forecast Report"
-                    icon="fa-area-chart"
-                    invisible="not id or not forecasted_issue or product_type != 'product' or job_type != 'material'"
-                    class="text-danger"
-                />
-                <button
-                    name="action_product_forecast_report"
-                    type="object"
-                    title="Forecast Report"
-                    icon="fa-area-chart"
-                    invisible="not id or forecasted_issue or product_type != 'product' or job_type != 'material'"
-                /> -->
             </xpath>
             <field name="pricelist_id" position="replace">
                 <field name="has_active_pricelist" invisible="1" />
