@@ -52,4 +52,24 @@
         </field>
     </record>
 
+    <record id="view_partner_property_form_inherit_ol_account" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.ol_account</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="ol_base.view_partner_property_form_inherit_ol_base" />
+        <field name="arch" type="xml">
+            <field name="ar" position="after">
+                <field name="no_followup_contacts" invisible="not no_followup_contacts"/>
+                <field name="followup_contact_ids" invisible="no_followup_contacts">
+                    <list editable="false">
+                        <field name="name"/>
+                        <field name="ap"/>
+                        <field name="followup"/>
+                        <field name="ar"/>
+                    </list>
+                </field>
+            </field>
+
+        </field>
+    </record>
+
 </odoo>

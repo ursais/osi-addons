@@ -10,6 +10,9 @@ class ResPartner(models.Model):
     # COLUMNS #####
 
     override_company_name = fields.Text(string="Override Company")
+    followup = fields.Boolean(string="Followup")
+    ap = fields.Boolean(string="AP")
+    ar = fields.Boolean(string="AR")
 
     # END #########
     # METHODS #####
