@@ -68,6 +68,18 @@ class HelpdeskTicket(models.Model):
         compute="_compute_repair_history_html",
         help="Helper field used for the alert invisible attribute.",
     )
+    account_manager_id = fields.Many2one(
+        comodel_name="res.users",
+        string="Account Manager",
+        related="partner_id.account_manager_id",
+        store=True,
+    )
+    flags = fields.Char(string="Flags")
+    carrier_id = fields.Many2one(
+        comodel_name="delivery.carrier",
+        string="Shipping Method",
+    )
+    shipping_account = fields.Char(string="Shipping Account")
 
     # END #######
     # METHODS ###
