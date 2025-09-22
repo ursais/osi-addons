@@ -1,11 +1,10 @@
-from odoo import api, fields, models, Command
+from odoo import api, models
 
 
 class FollowupManualReminder(models.TransientModel):
-    _inherit = 'account_followup.manual_reminder'
+    _inherit = "account_followup.manual_reminder"
 
-
-    @api.depends('template_id')
+    @api.depends("template_id")
     def _compute_email_recipient_ids(self):
         for wizard in self:
             partner = wizard.partner_id
