@@ -10,7 +10,8 @@
                     <button name="validate_button" type="object" string="Validate" class="oe_highlight" groups="ol_product_pricing_review.group_pricing_review_approver" invisible="state == 'reject' or  state == 'validated'" />
                     <button name="reject_button" type="object" string="Reject" class="oe_highlight" groups="ol_product_pricing_review.group_pricing_review_approver" invisible="state == 'reject' or  state == 'validated'" />
                     <button name="assign_to_me" type="object" string="Assign To Me" class="oe_highlight" invisible="state == 'reject' or  state == 'validated'" groups="ol_product_pricing_review.group_pricing_review_user" />
-                    <field name="state" widget="statusbar" statusbar_visible="new, in_progress, reject, validated" />
+                    <button name="reset_to_draft" string="Reset to Draft" type="object" icon="fa-undo" invisible="state != 'pending'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="new, in_progress, pending, reject, validated" />
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -28,6 +29,7 @@
                             <field name="company_id" readonly="1" force_save="1" />
                         </group>
                         <group>
+                            <field name="effective_date" readonly="state != 'new'"/>
                             <field name="user_id" readonly="state in ('reject', 'validated')" />
                             <field name="origin_vendor_id" options="{'no_create': True}" readonly="1" force_save="1" />
                             <field name="origin_purchase_id" options="{'no_create': True}" readonly="1" force_save="1" />
@@ -117,6 +119,7 @@
                 <field name="default_code" optional="show" />
                 <field name="state" optional="show" />
                 <button name="assign_to_me" type="object" title="Assign to Me Button" icon="fa-user-plus" groups="ol_product_pricing_review.group_pricing_review_approver" invisible="state == 'reject' or  state == 'validated'" />
+                <field name="effective_date" optional="show" />
                 <field name="user_id" optional="show" />
                 <field name="origin_last_purchase_price" avg="Average" optional="show" widget="monetary" options="{'currency_field': 'origin_last_purchase_currency_id', 'field_digits': True}" />
                 <field name="origin_total_cost" optional="show" avg="Average" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}" />
@@ -163,6 +166,13 @@
                     help="Purchase Reviews in In Progress State."
                 />
                 <filter
+                    name="review_state_pending"
+                    string="Pending"
+                    domain="[('state','=', 'pending')]"
+                    help="Purchase Reviews in Pending State."
+                />
+
+                <filter
                     name="review_state_validated"
                     string="Validated"
                     domain="[('state','=', 'validated')]"
@@ -206,7 +216,7 @@
         <field name="res_model">product.price.review</field>
         <field name="view_mode">tree,form</field>
         <field name="search_view_id" ref="product_price_review_search_view" />
-        <field name="context">{"search_default_review_state_draft": True, "search_default_review_state_in_progress": True}</field>
+        <field name="context">{"search_default_review_state_draft": True, "search_default_review_state_in_progress": True, "search_default_review_state_pending": True}</field>
         <field name="domain">[]</field>
     </record>
 
