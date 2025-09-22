@@ -9,7 +9,7 @@ class AccountMove(models.Model):
     # COLUMNS #####
 
     hot_ar = fields.Boolean(
-        string="Hot AR",
+        string="Hot AR", copy=False
     )
     override_hot_ar = fields.Boolean(
         string="Override Hot AR",
