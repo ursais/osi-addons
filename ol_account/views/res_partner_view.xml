@@ -16,9 +16,28 @@
             <xpath expr="//group[@name='sale']" position="inside">
                 <field name="sale_payment_method_id"/>
             </xpath>
-             <field name="vat" position="attributes">
+            <!-- Allow vat and address editing for children-->
+            <field name="vat" position="attributes">
                 <attribute name="readonly">parent_id and not is_company</attribute>
-             </field>
+            </field>
+            <field name="street" position="attributes">
+                <attribute name="readonly">type == 'contact' and parent_id and not is_company</attribute>
+            </field>
+            <field name="street2" position="attributes">
+                <attribute name="readonly">type == 'contact' and parent_id and not is_company</attribute>
+            </field>
+            <field name="city" position="attributes">
+                <attribute name="readonly">type == 'contact' and parent_id and not is_company</attribute>
+            </field>
+            <field name="state_id" position="attributes">
+                <attribute name="readonly">type == 'contact' and parent_id and not is_company</attribute>
+            </field>
+            <field name="zip" position="attributes">
+                <attribute name="readonly">type == 'contact' and parent_id and not is_company</attribute>
+            </field>
+            <field name="country_id" position="attributes">
+                <attribute name="readonly">type == 'contact' and parent_id and not is_company</attribute>
+            </field>
         </field>
     </record>
 
@@ -30,6 +49,26 @@
             <xpath expr="//group[@name='credit_limits']/div[1]" position="after">
                 <field name="debit_limit" />
             </xpath>
+        </field>
+    </record>
+
+    <record id="view_partner_property_form_inherit_ol_account" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.ol_account</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="ol_base.view_partner_property_form_inherit_ol_base" />
+        <field name="arch" type="xml">
+            <field name="ar" position="after">
+                <field name="no_followup_contacts" invisible="not no_followup_contacts"/>
+                <field name="followup_contact_ids" invisible="no_followup_contacts">
+                    <list editable="false">
+                        <field name="name"/>
+                        <field name="ap"/>
+                        <field name="followup"/>
+                        <field name="ar"/>
+                    </list>
+                </field>
+            </field>
+
         </field>
     </record>
 

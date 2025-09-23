@@ -1,0 +1,39 @@
+<odoo>
+
+    <!-- Tree view readonly -->
+    <record id="ol_mrp_production_workorder_tree_editable_view" model="ir.ui.view">
+        <field name="name">ol.mrp.production.work.order.tree.editable.duration_expected_readonly</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_editable_view"/>
+        <field name="arch" type="xml">
+            <field name="duration_expected" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+        </field>
+    </record>
+
+    <!-- Form view readonly -->
+    <record id="ol_mrp_production_workorder_form_view_inherit" model="ir.ui.view">
+        <field name="name">ol.mrp.production.work.order.form.duration_expected_readonly</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_form_view_inherit"/>
+        <field name="arch" type="xml">
+            <field name="duration_expected" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </field>
+        </field>
+    </record>
+
+    <!-- Make notebook readonly -->
+    <record id="ol_mrp_production_workorder_form_view_inherit_dependencies" model="ir.ui.view">
+        <field name="name">ol.mrp.production.work.order.form.dependencies.duration_expected_readonly</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_form_view_inherit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='dependencies']//field[@name='duration_expected']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

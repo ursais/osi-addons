@@ -241,9 +241,13 @@ class ProductTemplate(models.Model):
         """Checks if the product template can createa price review."""
         for rec in self:
             # check if it's standard product and has a single variant
+            
             rec.can_create_price_review = (
-                not rec.config_ok and len(rec.product_variant_ids) == 1
+                not rec.config_ok 
+                and not rec.is_kits 
+                and len(rec.product_variant_ids) == 1
             )
+
 
     @api.model
     def _create_or_update_price_review(self, rec):

@@ -1,5 +1,6 @@
 # Import Odoo libs
 from odoo import api, fields, models
+from collections import defaultdict
 
 
 class SaleEstimateLineJob(models.Model):
@@ -44,10 +45,132 @@ class SaleEstimateLineJob(models.Model):
     )
     product_type = fields.Selection(related="product_id.detailed_type")
     forecasted_issue = fields.Boolean(compute="_compute_forecasted_issue")
+    virtual_available_at_date = fields.Float(
+        compute="_compute_qty_at_date",
+        digits="Product Unit of Measure",
+    )
+    scheduled_date = fields.Datetime(compute="_compute_qty_at_date")
+    forecast_expected_date = fields.Datetime(compute="_compute_qty_at_date")
+    free_qty_today = fields.Float(
+        compute="_compute_qty_at_date",
+        digits="Product Unit of Measure",
+    )
+    qty_available_today = fields.Float(compute="_compute_qty_at_date")
+    display_qty_widget = fields.Boolean(compute="_compute_qty_to_deliver")
+    estimate_state = fields.Selection(
+        related="estimate_id.state",
+        store=True,
+        precompute=True,
+        copy=False,
+    )
 
     # END #########
 
     # METHODS #####
+
+    @api.depends(
+        "product_type",
+        "product_uom_qty",
+    )
+    def _compute_qty_to_deliver(self):
+        """Compute the visibility of the inventory widget."""
+        for line in self:
+            line.display_qty_widget = True
+
+    @api.depends(
+        "product_id",
+        "customer_lead",
+        "product_uom_qty",
+        "product_uom",
+        "estimate_id.customer_request_date",
+        "estimate_id.warehouse_id",
+        "estimate_id.state",
+    )
+    def _compute_qty_at_date(self):
+        qty_processed_per_product = defaultdict(lambda: 0)
+        grouped_lines = defaultdict(lambda: self.env["sale.estimate.line.job"])
+        treated = self.env["sale.estimate.line.job"]
+
+        # Group lines by warehouse and requested date
+        for line in self:
+            if not (line.product_id and line.display_qty_widget):
+                continue
+            grouped_lines[
+                (
+                    line.estimate_id.warehouse_id.id,
+                    line.estimate_id.customer_request_date,
+                    line.estimate_id.state,
+                )
+            ] |= line
+
+        # Compute quantities for each group
+        for (warehouse, scheduled_date, estimate_state), lines in grouped_lines.items():
+            product_qties = (
+                lines.mapped("product_id")
+                .with_context(to_date=scheduled_date, warehouse=warehouse)
+                .read(["qty_available", "free_qty", "virtual_available"])
+            )
+            qties_per_product = {
+                product["id"]: (
+                    product["qty_available"],
+                    product["free_qty"],
+                    product["virtual_available"],
+                )
+                for product in product_qties
+            }
+
+            for line in lines:
+                line.scheduled_date = scheduled_date
+                line.estimate_state = estimate_state
+                (
+                    qty_available_today,
+                    free_qty_today,
+                    virtual_available_at_date,
+                ) = qties_per_product[line.product_id.id]
+                line.qty_available_today = (
+                    qty_available_today - qty_processed_per_product[line.product_id.id]
+                )
+                line.free_qty_today = (
+                    free_qty_today - qty_processed_per_product[line.product_id.id]
+                )
+                line.virtual_available_at_date = (
+                    virtual_available_at_date
+                    - qty_processed_per_product[line.product_id.id]
+                )
+                line.forecast_expected_date = False
+
+                product_qty = line.product_uom_qty
+                if (
+                    line.product_uom
+                    and line.product_id.uom_id
+                    and line.product_uom != line.product_id.uom_id
+                ):
+                    line.qty_available_today = line.product_id.uom_id._compute_quantity(
+                        line.qty_available_today, line.product_uom
+                    )
+                    line.free_qty_today = line.product_id.uom_id._compute_quantity(
+                        line.free_qty_today, line.product_uom
+                    )
+                    line.virtual_available_at_date = (
+                        line.product_id.uom_id._compute_quantity(
+                            line.virtual_available_at_date, line.product_uom
+                        )
+                    )
+                    product_qty = line.product_uom._compute_quantity(
+                        product_qty, line.product_id.uom_id
+                    )
+
+                qty_processed_per_product[line.product_id.id] += product_qty
+
+            treated |= lines
+
+        # Remaining lines
+        remaining = self - treated
+        remaining.virtual_available_at_date = False
+        remaining.scheduled_date = False
+        remaining.forecast_expected_date = False
+        remaining.free_qty_today = False
+        remaining.qty_available_today = False
 
     @api.depends("product_uom_qty", "product_id")
     def _compute_forecasted_issue(self):

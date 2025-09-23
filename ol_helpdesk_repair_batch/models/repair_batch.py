@@ -127,6 +127,12 @@ class RepairBatch(models.Model):
         string="Do not charge customer",
         help="If checked, the sales price will be set to 0 for all products transferred from the repair order.",
     )
+    invoice_date = fields.Date(string="Invoice Date")
+    salesperson_id = fields.Many2one(
+        comodel_name="res.users",
+        string="Salesperson",
+        related="sale_id.user_id",
+    )
 
     # END #######
     # METHODS ###
@@ -150,7 +156,9 @@ class RepairBatch(models.Model):
 
     @api.onchange("lot_ids")
     def _onchange_lot_ids(self):
-        """Auto-set product, sale order, sale line, and quantity based on selected lots."""
+        """
+        Auto-set product, sale order, sale line, and quantity based on selected lots.
+        """
         if not self.lot_ids:
             self.qty = 1
             self.sale_id = False
@@ -232,7 +240,7 @@ class RepairBatch(models.Model):
         if self.sale_id and self.product_id:
             sale_products = self.sale_id.order_line.mapped("product_id")
             if self.product_id not in sale_products:
-                self.sale_line_id = False  # Or maybe also clear product_id?
+                self.sale_line_id = False
                 self.lot_ids = False
 
     @api.depends(
@@ -282,6 +290,18 @@ class RepairBatch(models.Model):
     def _compute_location_id(self):
         for repair in self:
             repair.location_id = repair.picking_type_id.default_location_src_id
+
+    @api.onchange("sale_id")
+    def _onchange_sale_id_set_invoice_date(self):
+        """Set invoice date based on first invoice on SO."""
+        for batch in self:
+            batch.invoice_date = False
+            if batch.sale_id:
+                invoices = batch.sale_id.invoice_ids.filtered(
+                    lambda inv: inv.state == "posted"
+                ).sorted("invoice_date")
+                if invoices:
+                    batch.invoice_date = invoices[0].invoice_date
 
     def action_generate_repairs(self):
         repair_order_model = self.env["repair.order"]

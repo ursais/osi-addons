@@ -29,6 +29,7 @@
     "data": [
         "security/ir.model.access.csv",
         "reports/sale_order_quote.xml",
+        "data/budgetary_quote_email.xml",
         "data/crm_tag_data.xml",
         "data/product_price_list_data.xml",
         "data/product_state_data.xml",
@@ -48,6 +49,7 @@
         "views/sale_subscription_views.xml",
         "views/stock_picking_view.xml",
         "views/mrp_production_view.xml",
+        "views/payment_method_view.xml",
         "views/confirmation_email.xml",
         "wizard/forward_confirmation_email_wizard.xml",
     ],

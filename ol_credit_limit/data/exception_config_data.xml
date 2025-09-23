@@ -5,7 +5,7 @@
         <field name="trigger_field_ids" eval="[(4, ref('ol_credit_limit.field_sale_order__credit_hold'))]"/>
     </record>
 
-    <!-- Default Trigger Fields for Stock Pickings --> 
+    <!-- Default Trigger Fields for Stock Pickings -->
     <record id="ol_exception.stock_picking_exception_config_ignore_exception" model="exception.config">
         <field name="model_id" ref="stock.model_stock_picking" />
         <field name="trigger_field_ids" eval="[(4, ref('ol_credit_limit.field_stock_picking__credit_hold'))]"/>

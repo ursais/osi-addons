@@ -1,5 +1,7 @@
+from datetime import datetime,date, timedelta
 from odoo.tests import common, tagged
 from odoo.exceptions import ValidationError
+
 
 from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
 
@@ -36,11 +38,20 @@ class TestOlProductPriceReview(common.TransactionCase):
             }
         )
 
-
         # Create a price review
         cls.price_review = cls.PriceReview.create(
             {
                 "product_id": cls.product_template.product_variant_id.id,
+            }
+        )
+
+
+    def _create_review(self, effective_date=None, state="new"):
+        return self.env["product.price.review"].create(
+            {
+                "product_id": self.product_template.product_variant_id.id,
+                "effective_date": effective_date,
+                "state": state,
             }
         )
 
@@ -132,6 +143,7 @@ class TestOlProductPriceReview(common.TransactionCase):
                             "product_id": test_product_tmpl2.product_variant_id.id,
                             "product_qty": 10,
                             "price_unit": 53.50,
+                            "date_planned": datetime.today()
                         },
                     )
                 ],
@@ -214,3 +226,61 @@ class TestOlProductPriceReview(common.TransactionCase):
         self.assertTrue(
             self.product_template.can_create_price_review
         )  # Should be True since it's a standard product
+
+    def test_validate_button_with_past_date(self):
+        """Validation should raise an error if effective_date is before today."""
+        review = self._create_review(effective_date=date.today() - timedelta(days=1))
+        with self.assertRaises(ValidationError):
+            review.validate_button()
+
+    def test_validate_button_with_future_date(self):
+        """Validation should place the review into 'pending' if effective_date is in the future."""
+
+        review = self._create_review(effective_date=date.today() + timedelta(days=3))
+        review.validate_button()
+        self.assertEqual(
+            review.state, "pending", "Future dated review should not be validated"
+        )
+
+    def test_validate_button_with_today_date_sets_validate(self):
+        """Validation should immediately validate the review if effective_date is today."""
+        review = self._create_review(effective_date=date.today())
+        review.validate_button()
+        self.assertEqual(review.state, "validated")
+
+    def test_validate_button_rejects_other_pending_reviews(self):
+        """When a new pending review is created, existing pending reviews for the same"""
+        """product are rejected and a chatter note is logged."""
+
+        pending_review = self._create_review(
+            effective_date=date.today() + timedelta(days=3), state="pending"
+        )
+        pending_review.validate_button()
+        new_review = self._create_review(
+            effective_date=date.today() + timedelta(days=3)
+        )
+        new_review.validate_button()
+        self.assertEqual(new_review.state, "pending")
+        self.assertEqual(pending_review.state, "reject")
+        # chatter message check
+        messages = pending_review.message_ids.mapped("body")
+        self.assertTrue(
+            any("Another price review was set to pending" in msg for msg in messages)
+        )
+
+    def test_reset_to_draft(self):
+        """reset_to_draft should move a review from 'pending' back to 'draft' (new)."""
+        review = self._create_review(effective_date=date.today(), state="pending")
+        review.reset_to_draft()
+        self.assertEqual(review.state, "new")
+
+    def test_scheduled_action_process_pending_reviews(self):
+        """The scheduled action should validate pending reviews whose effective_date is today or earlier."""
+        review = self._create_review(effective_date=date.today(), state="pending")
+        review._cron_process_pending_price_reviews()
+        # should attempt to validate
+        self.assertEqual(
+            review.state,
+            "validated",
+            "Scheduled action should validate pending reviews",
+        )

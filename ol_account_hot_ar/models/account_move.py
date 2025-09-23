@@ -10,6 +10,7 @@ class AccountMove(models.Model):
 
     hot_ar = fields.Boolean(
         string="Hot AR",
+        copy=False,
     )
     override_hot_ar = fields.Boolean(
         string="Override Hot AR",

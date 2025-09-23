@@ -1,6 +1,6 @@
 <odoo>
 
-    <record id="payment_method_form_inherit_ol_bank_email" model="ir.ui.view">
+    <record id="payment_method_form_inherit_ol_bank_transfer_email" model="ir.ui.view">
         <field name="name">payment.method.form</field>
         <field name="model">payment.method</field>
         <field name="inherit_id" ref="payment.payment_method_form" />
@@ -11,7 +11,7 @@
         </field>
     </record>
 
-    <record id="payment_method_tree_inherit_ol_bank_email" model="ir.ui.view">
+    <record id="payment_method_tree_inherit_ol_bank_transfer_email" model="ir.ui.view">
         <field name="name">payment.method.tree</field>
         <field name="model">payment.method</field>
         <field name="inherit_id" ref="payment.payment_method_tree" />

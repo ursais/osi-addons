@@ -86,9 +86,24 @@ class BaseExceptionMethod(models.AbstractModel):
                 record.write({"to_send_exception_email": True})
             # Trigger the Email for execptions.
             if record.to_send_exception_email and all_exception_ids:
-                exception_ids = records.exception_ids.filtered(lambda l: l.template_id)
+                exception_ids = record.exception_ids.filtered(lambda e: e.template_id)
                 for exception in exception_ids:
-                    exception.template_id.send_mail(record.id, force_send=True)
+                    email_values = {}
+
+                    # Collect all users from groups defined on the rule
+                    groups = exception.user_group_ids
+                    if groups:
+                        emails = (
+                            groups.mapped("users")
+                            .filtered(lambda u: u.email)
+                            .mapped("email")
+                        )
+                        if emails:
+                            email_values["email_to"] = ",".join(emails)
+
+                    exception.template_id.send_mail(
+                        record.id, force_send=True, email_values=email_values
+                    )
                 if exception_ids:
                     record.write({"to_send_exception_email": False})
 

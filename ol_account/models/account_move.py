@@ -34,6 +34,45 @@ class AccountMove(models.Model):
     # END #########
     # METHODS ######
 
+    def _get_mail_template(self):
+        """
+        Override default mail template selection.
+        Falls back to core behavior if custom templates are missing.
+        """
+        self.ensure_one()
+
+        # Check if invoice is linked to at least one sale order
+        sale_order = self.invoice_line_ids.mapped("sale_line_ids.order_id")[:1] or False
+
+        # Outgoing / Incoming Invoice
+        if self.move_type in ("out_invoice", "in_invoice"):
+            if sale_order:
+                # Customer Invoice with Sale Order
+                template = self.env.ref(
+                    "ol_account.customer_invoice_email_template",
+                    raise_if_not_found=False,
+                )
+                if template:
+                    return "ol_account.customer_invoice_email_template"
+
+            # Fallback: Generic Invoice
+            template = self.env.ref(
+                "ol_account.generic_invoice_email_template", raise_if_not_found=False
+            )
+            if template:
+                return "ol_account.generic_invoice_email_template"
+
+        # Refunds
+        elif self.move_type in ("out_refund", "in_refund"):
+            template = self.env.ref(
+                "ol_account.generic_refund_email_template", raise_if_not_found=False
+            )
+            if template:
+                return "ol_account.generic_refund_email_template"
+
+        # Fallback to Odoo’s default if nothing found
+        return super()._get_mail_template()
+
     @api.depends(
         "company_id",
         "partner_id",
@@ -257,5 +296,26 @@ class AccountMove(models.Model):
         self = self - moves
 
         return super(AccountMove, self)._compute_date()
+
+    def action_invoice_sent(self):
+        if self.is_sale_document() and not self.partner_id.ap:
+            raise UserError(
+                _(
+                   """
+                   No ‘AP’ contacts are found, 
+                   please add or set the ‘AR’ setting on a contact and try again.
+                   """
+                )
+            )
+
+        if self.is_purchase_document() and not self.partner_id.ar:
+            raise UserError(
+            _(
+                """No ‘AR’ contacts are found,
+                please add or set the ‘AP’ setting on a contact and try again."""
+                )
+            )
+
+        return super().action_invoice_sent()
 
     # END ##########

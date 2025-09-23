@@ -224,6 +224,19 @@ class ProductTemplate(models.Model):
                         }
                         BomLine.create(bom_line_vals)
 
+    @api.onchange("length", "width", "height")
+    def _onchange_volume(self):
+        for rec in self:
+            rec.volume = 00
+            if (
+                not rec.config_ok
+                and len(rec.product_variant_ids) == 1
+                and not rec.is_kits
+            ):
+                rec.volume = (
+                    (rec.length or 0.0) * (rec.width or 0.0) * (rec.height or 0.0)
+                ) / 1000000
+
     def write(self, vals):
         # Check if 'default_code' is being updated
         if "default_code" in vals:

@@ -1,4 +1,5 @@
 <odoo>
+
     <record id="res_partner_form_view_inheirt_credit_limit" model="ir.ui.view">
         <field name="name">res.partner.form</field>
         <field name="model">res.partner</field>
@@ -11,16 +12,16 @@
                 <group name="credit_management" string="Credit Management" groups="ol_credit_limit.group_credit_management_user">
                     <field  name="credit_limit" invisible="partner_rollup_id" />
                     <field  name="partner_rollup_id" invisible="is_company" context="{'is_rollup_partner': id}"/>
-                    <!-- invisible="parent_id.credit_limit &gt; 0" -->
                     <field  name="rollup_partner_ids" invisible="partner_rollup_id or not is_company" readonly="1"/>
                     <field  name="credit_hold" />
                     <field  name="open_so_balance"/>
                     <field  name="open_bo_balance"/>
                     <field  name="outstanding_receivable"/>
                     <field  name="remaining_credit"/>
-                    <field  name="customer_deposit_balance"/>
+                    <field  name="customer_deposit_balance" invisible="parent_id"/>
                 </group>
-            </xpath> 
+            </xpath>
         </field>
     </record>
+
 </odoo>

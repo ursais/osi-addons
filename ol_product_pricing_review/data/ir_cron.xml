@@ -1,0 +1,12 @@
+<odoo>
+    <record id="ir_cron_process_pending_price_reviews" model="ir.cron">
+        <field name="name">Process Pending Price Reviews</field>
+        <field name="model_id" ref="ol_product_pricing_review.model_product_price_review"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_process_pending_price_reviews()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+    </record>
+</odoo>

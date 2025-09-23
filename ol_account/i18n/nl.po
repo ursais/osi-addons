@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-08 09:46+0000\n"
-"PO-Revision-Date: 2025-09-08 09:46+0000\n"
+"POT-Creation-Date: 2025-09-12 10:31+0000\n"
+"PO-Revision-Date: 2025-09-12 10:31+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -118,6 +118,29 @@ msgid ""
 "<t t-set=\"partner\" t-value=\"object.with_context({'lang':object.lang or object.env.lang})\"></t>\n"
 "                <t t-call=\"ol_account.invoice_reminder_email\" t-lang=\"partner.lang or object.env.lang\"></t>\n"
 "            "
+=======
+#: model:mail.template,body_html:ol_account.customer_invoice_email_template
+msgid ""
+"<t t-set=\"invoice\" t-value=\"object.with_context({'lang': object.partner_id.lang or object.env.lang})\"></t>\n"
+"            <t t-set=\"sale_order\" t-value=\"object.invoice_line_ids.mapped('sale_line_ids.order_id') and object.invoice_line_ids.mapped('sale_line_ids.order_id')[0] or False\"></t>\n"
+"            <t t-call=\"ol_account.invoice_email_template_master\" t-lang=\"invoice.partner_id.lang or object.env.lang\"></t>\n"
+"        "
+msgstr ""
+
+#. module: ol_account
+#: model:mail.template,body_html:ol_account.generic_invoice_email_template
+msgid ""
+"<t t-set=\"invoice\" t-value=\"object.with_context({'lang':object.partner_id.lang or object.env.lang})\"></t>\n"
+"                <t t-call=\"ol_account.generic_invoice_email_template_master\" t-lang=\"invoice.partner_id.lang or object.env.lang\"></t>\n"
+"        "
+msgstr ""
+
+#. module: ol_account
+#: model:mail.template,body_html:ol_account.generic_refund_email_template
+msgid ""
+"<t t-set=\"invoice\" t-value=\"object.with_context({'lang':object.partner_id.lang or object.env.lang})\"></t>\n"
+"            <t t-call=\"ol_account.generic_invoice_email_template_master\" t-lang=\"invoice.partner_id.lang or object.env.lang\"></t>\n"
+"        "
 msgstr ""
 
 #. module: ol_account
@@ -131,7 +154,8 @@ msgstr ""
 #. module: ol_account
 #: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
 msgid "A payment has been initiated via"
-msgstr ""
+msgstr "Een betaling is geïnitieerd via"
+
 
 #. module: ol_account
 #: model:ir.model,name:ol_account.model_account_move_send
@@ -154,6 +178,7 @@ msgid "Allow Account Move Delete"
 msgstr ""
 
 #. module: ol_account
+
 #: model_terms:ir.ui.view,arch_db:ol_account.followup_final_email
 msgid ""
 "Any sum not paid by Customer when due shall bear interest until paid at a rate of 1.5%\n"
@@ -227,11 +252,17 @@ msgstr ""
 msgid "Balance Due"
 msgstr "Te betalen"
 
+#: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
+msgid "Balance Due"
+msgstr "Te betalen saldo"
+
+
 #. module: ol_account
 #: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
 #: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
 msgid "Bill To"
-msgstr ""
+msgstr "Factuur aan"
+
 
 #. module: ol_account
 #: model:ir.model,name:ol_account.model_res_config_settings
@@ -294,7 +325,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
 #: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
 msgid "Customer PO"
-msgstr ""
+msgstr "Klantenorder"
 
 #. module: ol_account
 #: model:ir.model.fields,field_description:ol_account.field_account_bank_statement_line__sale_payment_method_id
@@ -359,13 +390,13 @@ msgstr ""
 #. module: ol_account
 #: model:ir.model,name:ol_account.model_report_ol_account_report_generic_invoice
 msgid "Generic Invoice Report"
-msgstr ""
+msgstr "Algemene factuurrapport"
 
 #. module: ol_account
 #: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
 #: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
 msgid "Hardware Solution"
-msgstr ""
+msgstr "Hardwareoplossing"
 
 #. module: ol_account
 #: model:ir.model.fields,field_description:ol_account.field_res_paypref__id
@@ -375,7 +406,7 @@ msgstr ""
 #. module: ol_account
 #: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
 msgid "INVOICE"
-msgstr ""
+msgstr "FACTUUR"
 
 #. module: ol_account
 #: model_terms:ir.ui.view,arch_db:ol_account.followup_final_email
@@ -425,18 +456,19 @@ msgstr ""
 "verwerkt wordt, voeg dan een bewijs van overschrijving toe, zodat wij dit "
 "correct kunnen toepassen."
 
+
 #. module: ol_account
 #: model:ir.actions.report,name:ol_account.action_generic_invoice_report
 msgid "Invoice"
-msgstr ""
+msgstr "Factuur"
 
 #. module: ol_account
 #: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+#: model_terms:ir.ui.view,arch_db:ol_account.invoice_lines
 msgid "Invoice Amount"
-msgstr ""
+msgstr "Factuurbedrag"
 
 #. module: ol_account
-#: model_terms:ir.ui.view,arch_db:ol_account.invoice_lines
 #: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
 msgid "Invoice Date"
 msgstr "Factuurdatum"
@@ -444,13 +476,19 @@ msgstr "Factuurdatum"
 #. module: ol_account
 #: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Factuurregels"
 
 #. module: ol_account
 #: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
 #: model_terms:ir.ui.view,arch_db:ol_account.invoice_lines
 msgid "Invoice Number"
 msgstr ""
+
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+msgid "Invoice Number"
+msgstr "Factuurnummer"
 
 #. module: ol_account
 #: model:ir.model,name:ol_account.model_account_move
@@ -519,6 +557,21 @@ msgid "OnLogic Overdue Invoice(s) - Second"
 msgstr ""
 
 #. module: ol_account
+#: model:mail.template,name:ol_account.customer_invoice_email_template
+msgid "OnLogic Customer Invoice Email"
+msgstr "OnLogic Klantenfactuur E-mail"
+
+#. module: ol_account
+#: model:mail.template,name:ol_account.generic_invoice_email_template
+msgid "OnLogic Generic Invoice Email"
+msgstr "OnLogic Algemene Factuur E-mail"
+
+#. module: ol_account
+#: model:mail.template,name:ol_account.generic_refund_email_template
+msgid "OnLogic Generic Refund Email"
+msgstr "OnLogic Algemene Terugbetalingsmail"
+
+#. module: ol_account
 #. odoo-python
 #: code:addons/ol_account/models/account_move.py:0
 #, python-format
@@ -531,13 +584,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
 #: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
 msgid "Order"
-msgstr ""
+msgstr "Bestelling"
+
 
 #. module: ol_account
 #: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
 #: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
 msgid "Order Date"
-msgstr ""
+msgstr "Besteldatum"
 
 #. module: ol_account
 #: model_terms:ir.ui.view,arch_db:ol_account.invoice_lines
@@ -557,13 +611,14 @@ msgstr "Betalingsbedrag"
 #. module: ol_account
 #: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
 msgid "Payment Due Date"
-msgstr ""
+msgstr "Vervaldatum betaling"
 
 #. module: ol_account
 #: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
 #: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
 msgid "Payment Method"
-msgstr ""
+msgstr "Betaalmethode"
+
 
 #. module: ol_account
 #: model:ir.model,name:ol_account.model_res_paypref
@@ -590,7 +645,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
 #: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
 msgid "Payment Terms"
-msgstr ""
+msgstr "Betalingsvoorwaarden"
 
 #. module: ol_account
 #: model:ir.model.fields,help:ol_account.field_account_bank_statement_line__sale_payment_method_id
@@ -614,7 +669,18 @@ msgstr "Volgens onze afgesproken betalingsvoorwaarden van"
 #. module: ol_account
 #: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
 msgid "Please feel free to contact us should you have any questions."
-msgstr ""
+msgstr "Neem gerust contact met ons op als u vragen heeft."
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.generic_invoice_email
+msgid "Please find your credit attached"
+msgstr "Gelieve uw krediet in de bijlage te vinden"
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.generic_invoice_email
+#: model_terms:ir.ui.view,arch_db:ol_account.invoice_email_template
+msgid "Please find your invoice attached"
+msgstr "Gelieve uw factuur in de bijlage te vinden"
 
 #. module: ol_account
 #: model:ir.model.fields,help:ol_account.field_res_config_settings__auto_post_bill_receipt_validate
@@ -651,18 +717,18 @@ msgstr ""
 #. module: ol_account
 #: model:ir.model,name:ol_account.model_report_ol_account_report_proforma_invoice
 msgid "Pro-forma Invoice Report"
-msgstr ""
+msgstr "Pro forma factuur rapport"
 
 #. module: ol_account
 #: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
 msgid "Proforma Expiration"
-msgstr ""
+msgstr "Proforma Vervaldatum"
 
 #. module: ol_account
 #: model:ir.actions.report,name:ol_account.action_proforma_invoice_report
 #: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
 msgid "Proforma Invoice"
-msgstr ""
+msgstr "Proforma factuur"
 
 #. module: ol_account
 #: model:ir.model,name:ol_account.model_sale_order
@@ -673,13 +739,13 @@ msgstr "Verkooporder"
 #: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
 #: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
 msgid "Ship To"
-msgstr ""
+msgstr "Verzenden naar"
 
 #. module: ol_account
 #: model_terms:ir.ui.view,arch_db:ol_account.report_generic_invoice_document
 #: model_terms:ir.ui.view,arch_db:ol_account.report_sale_order_proforma_invoice_document
 msgid "Shipping Method"
-msgstr ""
+msgstr "Verzendmethode"
 
 #. module: ol_account
 #: model_terms:ir.ui.view,arch_db:ol_account.followup_final_email
@@ -750,6 +816,27 @@ msgid "Total:"
 msgstr "Totaal:"
 
 #. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.generic_invoice_email
+msgid "Thank you again for working with us, please find the credit attached."
+msgstr "Nogmaals bedankt voor de samenwerking, vindt u de credit in de bijlage."
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.generic_invoice_email
+msgid "Thank you again for working with us, please find the invoice attached."
+msgstr "Nogmaals bedankt voor de samenwerking, vindt u de factuur in de bijlage."
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.invoice_email_template
+msgid "Thank you again for your order, please find the invoice attached."
+msgstr "Bedankt nogmaals voor uw bestelling, vindt u de factuur in de bijlage."
+
+#. module: ol_account
+#: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
+msgid "The Finance Team"
+msgstr "Het finance team"
+
+
+#. module: ol_account
 #: model:ir.model,name:ol_account.model_stock_picking
 msgid "Transfer"
 msgstr "Verplaatsing"
@@ -763,7 +850,7 @@ msgstr "Kredietlimiet"
 #. module: ol_account
 #: model:mail.template,name:ol_account.vendor_payment_template
 msgid "Vendor Payment Template"
-msgstr ""
+msgstr "Leverancier Betalingssjabloon"
 
 #. module: ol_account
 #: model_terms:ir.ui.view,arch_db:ol_account.followup_final_email
@@ -771,8 +858,8 @@ msgid ""
 "We do not want to endanger your credit rating or the good relationship that we have\n"
 "                            maintained in the past; therefore, we request that this obligation is paid immediately."
 msgstr ""
-"We willen u verzoeken het openstaande bedrag onmiddellijk te voldoen, zodat "
-"uw kredietwaardigheid en onze goede relatie in stand gehouden kan worden."
+"Wij willen uw kredietwaardigheid en de goede relatie die wij hebben niet in gevaar brengen\n "
+"                            in het verleden aangegane verplichtingen; wij verzoeken u daarom deze verplichting onmiddellijk te voldoen."
 
 
 #. module: ol_account
@@ -784,6 +871,7 @@ msgstr ""
 "We hebben geen betaling ontvangen voor de onderstaande bestellingen binnen "
 "onze afgesproken betalingstermijn van"
 
+
 #. module: ol_account
 #. odoo-python
 #: code:addons/ol_account/models/account_move.py:0
@@ -793,14 +881,20 @@ msgid ""
 msgstr ""
 
 #. module: ol_account
+#: model:mail.template,subject:ol_account.customer_invoice_email_template
+msgid ""
+"Your Invoice ${(sale_order and sale_order.name) or {{ object.name }} or ''}"
+msgstr "Uw factuur ${(sale_order and sale_order.name) or {{ object.name }} or ''}"
+
+#. module: ol_account
 #: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
 msgid "for the following invoice(s):"
-msgstr ""
+msgstr "voor de volgende factuur(en):"
 
 #. module: ol_account
 #: model_terms:ir.ui.view,arch_db:ol_account.email_supplier_payment_notification
 msgid "in the amount of"
-msgstr ""
+msgstr "in het bedrag van"
 
 #. module: ol_account
 #: model_terms:ir.ui.view,arch_db:ol_account.followup_first_email
@@ -811,3 +905,13 @@ msgstr "zien we dat de volgende facturen de vervaldatum voorbij zijn:"
 #: model_terms:ir.ui.view,arch_db:ol_account.followup_second_email
 msgid "we show the following invoice(s) continue to be past due:"
 msgstr "we laten zien dat de volgende factuur(en) nog steeds achterstallig zijn:"
+
+#. module: ol_account
+#: model:mail.template,subject:ol_account.generic_invoice_email_template
+msgid "{{ object.company_id.name }} Invoice {{ object.name }}"
+msgstr "{{ object.company_id.name }} Factuur {{ object.name }}"
+
+#. module: ol_account
+#: model:mail.template,subject:ol_account.generic_refund_email_template
+msgid "{{ object.company_id.name }} Refund {{ object.name }}"
+msgstr "{{ object.company_id.name }} Terugbetaling {{ object.name }}"

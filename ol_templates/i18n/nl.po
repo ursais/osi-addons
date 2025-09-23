@@ -40,7 +40,7 @@ msgstr ""
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_delivery_info
 msgid "3-5 Business Days"
-msgstr ""
+msgstr "3-5 Werkdagen"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_us
@@ -69,6 +69,8 @@ msgid ""
 "<span style=\"font-weight: 500;\">International:</span>\n"
 "                            ACH Payment Instructions"
 msgstr ""
+"<span style=\"font-weight: 500;\">Internationaal:</span>\n"
+"                            ACH Betalingsinstructies"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_standard_email_footer
@@ -76,6 +78,8 @@ msgid ""
 "<span style=\"font-weight: 500;\">North America</span>\n"
 "                                  <br/>"
 msgstr ""
+"<span style=\"font-weight: 500;\">Noord-Amerika</span>\n"
+"                                  <br/>"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_standard_email_footer
@@ -85,6 +89,10 @@ msgid ""
 "                                        OnLogic and the OnLogic logo are registered trademarks of OnLogic US. Other names\n"
 "                                        and brands may be claimed as the property of others."
 msgstr ""
+"<span style=\"font-weight: 500;\">OnLogic VS</span>\n"
+"                                        <br/>\n"
+"                                        OnLogic en het OnLogic-logo zijn geregistreerde handelsmerken van OnLogic US. Andere namen\n"
+"                                        en merken kunnen worden opgeëist als eigendom van anderen."
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.report_footer
@@ -93,11 +101,14 @@ msgid ""
 "                        Electronic Payment Info\n"
 "                    </strong>"
 msgstr ""
+"<strong>\n"
+"                        Elektronische Betalingsinformatie\n"
+"                    </strong>"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.report_footer
 msgid "<strong>Terms and Conditions</strong>"
-msgstr ""
+msgstr "<strong>Voorwaarden en bepalingen</strong>"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.quote_closing_text
@@ -110,6 +121,13 @@ msgid ""
 "                  non-cancelable. Please see our complete Terms and Conditions at www.onlogic.com/terms<br/>\n"
 "                  <strong>Warranty</strong>: Systems built and tested by OnLogic are covered under a two year warranty. Additional warranty plans are available."
 msgstr ""
+"<strong>Geldigheid</strong>: Processors, RAM, opslagapparaten en andere standaardcomponenten, evenals prijzen voor producten aan het einde van hun levenscyclus, zijn 24 uur geldig. Alles\n"
+"                  andere prijzen zijn 14 dagen geldig tenzij anders vermeld. Prijzen zijn voor MOQ zoals aangegeven.<br/>\n"
+"                  <strong>Betaling</strong>: Voor betaling per creditcard, bank of overschrijving is vooruitbetaling vereist voor alle bestellingen, tenzij kredietvoorwaarden zijn goedgekeurd.<br/>\n"
+"                  <strong>Leadtijd</strong>: Levertijden zijn afhankelijk van de bestelhoeveelheid en beschikbaarheid van het product.<br/>\n"
+"                  <strong>Retouren &amp; Annuleringen</strong>: Speciale bestellingen en artikelen die in 5+ systeemhoeveelheden of 10+ componenthoeveelheden zijn besteld, zijn niet retourneerbaar en\n"
+"                  niet annuleerbaar. Raadpleeg onze complete Algemene Voorwaarden op www.onlogic.com/terms<br/>\n"
+"                  <strong>Garantie</strong>: Systemen die door OnLogic zijn gebouwd en getest, vallen onder een garantie van twee jaar. Extra garantieplannen zijn beschikbaar."
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.quote_closing_text
@@ -122,6 +140,13 @@ msgid ""
 "          basis of a tailor-made quotation are non-returnable and non-cancelable. Please see our complete Terms and Conditions attached.<br/>\n"
 "                  <strong>Warranty</strong>: Systems built and tested by OnLogic are covered under a two year warranty. Additional warranty plans are available."
 msgstr ""
+"<strong>Geldigheid</strong>: Processors, RAM, opslagapparaten en andere standaardcomponenten, evenals prijzen voor producten aan het einde van hun levenscyclus, zijn 24 uur geldig. Alles\n"
+"                  andere prijzen zijn 14 dagen geldig tenzij anders vermeld. Prijzen zijn voor MOQ zoals aangegeven.<br/>\n"
+"                  <strong>Betaling</strong>: Voor betaling per creditcard, bank of overschrijving is vooruitbetaling vereist voor alle bestellingen, tenzij kredietvoorwaarden zijn goedgekeurd.<br/>\n"
+"                  <strong>Leadtijd</strong>: Levertijden hangen af van de bestelhoeveelheid en de beschikbaarheid van het product.<br/>\n"
+"                  <strong>Retouren &amp; Annuleringen</strong>: Speciale bestelartikelen, systeembestellingen, producten geleverd op basis van volume bestellingen en producten geleverd op de\n"
+"          De basis van een op maat gemaakte offerte is niet retourneerbaar en niet annuleerbaar. Zie onze volledige Algemene Voorwaarden in de bijlage.<br/>\n"
+"                  <strong>Garantie</strong>: Systemen die door OnLogic zijn gebouwd en getest, vallen onder een garantie van twee jaar. Extra garantieplannen zijn beschikbaar."
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_international_ach_info_us
@@ -136,7 +161,7 @@ msgstr ""
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_us
 msgid "ACH Payment Instructions"
-msgstr ""
+msgstr "ACH Betalingsinstructies"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.report_footer
@@ -154,14 +179,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:ol_templates.report_notes_and_totals
 #: model_terms:ir.ui.view,arch_db:ol_templates.report_notes_and_totals_refund_invoice
 msgid "Balance Due"
-msgstr ""
+msgstr "Te betalen saldo"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_eu
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_us
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_international_ach_info_us
 msgid "Bank Info."
-msgstr ""
+msgstr "Bankinformatie."
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_international_ach_info_us
@@ -172,7 +197,7 @@ msgstr ""
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_eu
 msgid "Bank transfer"
-msgstr ""
+msgstr "Bankoverschrijving"
 
 #. module: ol_templates
 #: model:ir.model.fields,field_description:ol_templates.field_ir_actions_report__paperformat_xmlid_base
@@ -183,14 +208,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_us
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_international_ach_info_us
 msgid "Beneficiary Account #"
-msgstr ""
+msgstr "Begunstigde Rekening #"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_eu
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_us
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_international_ach_info_us
 msgid "Beneficiary Info."
-msgstr ""
+msgstr "Informatie over de Begunstigde."
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_billing_shipping_info
@@ -221,14 +246,14 @@ msgstr ""
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.report_notes_and_totals_refund_invoice
 msgid "Credit"
-msgstr ""
+msgstr "Krediet"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_eu
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_us
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_international_ach_info_us
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_delivery_info
@@ -243,12 +268,12 @@ msgstr "Leveringsinformatie"
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_us
 msgid "Domestic"
-msgstr ""
+msgstr "Binnenlands"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.report_footer
 msgid "Email"
-msgstr ""
+msgstr "E-mail"
 
 #. module: ol_templates
 #: model:ir.model.fields,field_description:ol_templates.field_res_company__placeholder_image_email_icon
@@ -280,7 +305,7 @@ msgstr "Hier zijn uw bestelgegevens"
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_eu
 msgid "IBAN Account Number"
-msgstr ""
+msgstr "IBAN Rekeningnummer"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_no_account_info
@@ -288,6 +313,8 @@ msgid ""
 "If you do not have an account, or have any other questions, please contact "
 "us at"
 msgstr ""
+"Als je geen account hebt, of andere vragen hebt, neem dan alstublieft contact op "
+"ons bij"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_contact_info
@@ -297,7 +324,7 @@ msgstr "Als u vragen heeft, kunt u contact met ons opnemen via"
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_backorder_products
 msgid "Impacted Products"
-msgstr ""
+msgstr "Beïnvloede Producten"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.eu_tax_exempt
@@ -337,7 +364,7 @@ msgstr ""
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.report_invoice_notes_and_totals
 msgid "Notes"
-msgstr ""
+msgstr "Notities"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_us
@@ -381,7 +408,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_order_total
 #: model_terms:ir.ui.view,arch_db:ol_templates.report_notes_and_totals
 msgid "Order Notes"
-msgstr ""
+msgstr "Bestelnotities"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_ordered_products
@@ -404,7 +431,7 @@ msgstr "Betalingsinformatie"
 #: model_terms:ir.ui.view,arch_db:ol_templates.report_notes_and_totals
 #: model_terms:ir.ui.view,arch_db:ol_templates.report_notes_and_totals_refund_invoice
 msgid "Payment Received"
-msgstr ""
+msgstr "Betaling Ontvangen"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_payment_info
@@ -414,7 +441,7 @@ msgstr "Betalingstermijn"
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.report_footer
 msgid "Phone"
-msgstr ""
+msgstr "Telefoon"
 
 #. module: ol_templates
 #: model:ir.model.fields,field_description:ol_templates.field_res_company__placeholder_image_phone_icon
@@ -455,12 +482,12 @@ msgstr ""
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.report_notes_and_totals_refund_invoice
 msgid "RMA Notes"
-msgstr ""
+msgstr "RMA Notities"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.report_header
 msgid "RUSH"
-msgstr ""
+msgstr "HAAST"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_domestic_ach_info_eu
@@ -479,7 +506,7 @@ msgstr "Rapport actie"
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.report_footer
 msgid "Routing #"
-msgstr ""
+msgstr "Routering #"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_billing_shipping_info
@@ -511,7 +538,7 @@ msgstr ""
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.report_product_lines
 msgid "System Serial Numbers"
-msgstr ""
+msgstr "Systeem serienummers"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_order_total_data
@@ -537,7 +564,7 @@ msgstr "Totaal"
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.tracking_numbers
 msgid "Tracking Numbers"
-msgstr ""
+msgstr "Volgnummer"
 
 #. module: ol_templates
 #: model:ir.model.fields,field_description:ol_templates.field_res_company__twitter_image
@@ -566,14 +593,14 @@ msgstr ""
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.report_footer
 msgid "VAT"
-msgstr ""
+msgstr "BTW"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.address
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_blind_bill_address
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_blind_ship_address
 msgid "VAT ID:"
-msgstr ""
+msgstr "BTW-nummer:"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.report_footer
@@ -586,6 +613,8 @@ msgid ""
 "You are receiving this message because you are subscribed to the OnLogic newsletter. To\n"
 "                                      unsubscribe,"
 msgstr ""
+"U ontvangt dit bericht omdat u zich heeft aangemeld voor de OnLogic-nieuwsbrief. Om\n"
+"                                      afmelden,"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_delivery_info
@@ -605,12 +634,12 @@ msgstr "Uw bestelnummer"
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.here_are_your_order_details
 msgid "Your PO Number"
-msgstr ""
+msgstr "Uw inkoopordernummer"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_standard_email_footer
 msgid "click here"
-msgstr ""
+msgstr "klik hier"
 
 #. module: ol_templates
 #: model_terms:ir.ui.view,arch_db:ol_templates.ol_standard_email_footer

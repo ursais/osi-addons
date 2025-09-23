@@ -1,4 +1,5 @@
 <odoo>
+
     <record id="mrp_production_form_view_inheirt_credit_limit" model="ir.ui.view">
         <field name="name">mrp.production.form</field>
         <field name="model">mrp.production</field>
@@ -14,4 +15,5 @@
             </xpath>
         </field>
     </record>
+
 </odoo>

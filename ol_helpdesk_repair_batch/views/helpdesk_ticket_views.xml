@@ -163,6 +163,24 @@
         </field>
     </record>
 
+    <record id="view_helpdesk_ticket_form_inherit_ol_helpdesk_repair_batch" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form.inherit</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="account_manager_id"/>
+            </xpath>
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="flags"/>
+            </xpath>
+            <xpath expr="//field[@name='email_cc']" position="after">
+                <field name="carrier_id"/>
+                <field name="shipping_account"/>
+            </xpath>
+        </field>
+    </record>
+
     <!-- Action for Repair Batches -->
     <record id="action_repair_batches" model="ir.actions.act_window">
         <field name="name">Repair Batches</field>

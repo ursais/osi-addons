@@ -88,6 +88,63 @@ msgid ""
 "            </t>\n"
 "        "
 msgstr ""
+"<!-- Variables -->\n"
+"            <t t-set=\"sale_order\" t-value=\"object.with_context({'lang':object.sale_id.contact_ids and object.sale_id.contact_ids[0].partner_id.lang or object.sale_id.partner_id.lang or object.env.lang}).sale_id\"></t>\n"
+"            <t t-set=\"shipping_email\" t-value=\"True\"></t>\n"
+"            <t t-call=\"ol_templates.ol_email\">\n"
+"                <!-- Variables -->\n"
+"                <t t-set=\"title\" t-value=\"'Bestelling ' + sale_order.name if sale_order else '' + ' Verzonden!'\"></t>\n"
+"                <t t-set=\"preheader_text\" t-value=\"'Jouw Bestelling ' + sale_order.name if sale_order else '' + ' Verzonden!'\"></t>\n"
+"                <t t-set=\"include_newsletter_disclaimer\" t-value=\"False\"></t>\n"
+"\n"
+"                <!-- Body -->\n"
+"                <t t-call=\"ol_templates.ol_email_text_content\">\n"
+"                    <span style=\"font-weight: 500; font-size: 20px; display: block;\">\n"
+"                        <tag>Je zending is onderweg</tag>\n"
+"                    </span>\n"
+"                    <div style=\"font-size:16px; line-height:28px; margin-top:30px\">\n"
+"                        <t t-esc=\"sale_order.partner_id.name\"></t>\n"
+"                        ,\n"
+"                    </div>\n"
+"                    <p style=\"font-size: 16px; line-height: 28px; margin-top: 30px;\">\n"
+"                        <tag>Je bestelling heeft het gebouw verlaten! Hoewel we erg verdrietig waren om\n"
+"                            zie het gaan, we weten dat je er opgewonden over bent\n"
+"                            te arriveren. Je kunt de voortgang hier volgen.\n"
+"                        </tag>\n"
+"                        <br>\n"
+"                        <br>\n"
+"                        <t t-call=\"ol_templates.here_are_your_order_details\">\n"
+"                            <t t-set=\"order\" t-value=\"sale_order\"></t>\n"
+"                        </t>\n"
+"                    </p>\n"
+"                </t>\n"
+"\n"
+"                <t t-call=\"ol_templates.ol_billing_shipping_info\">\n"
+"                    <t t-set=\"billing_address\" t-value=\"sale_order.partner_invoice_id\"></t>\n"
+"                    <t t-set=\"shipping_address\" t-value=\"sale_order.partner_shipping_id\"></t>\n"
+"                </t>\n"
+"\n"
+"                <t t-call=\"ol_templates.ol_email_spacer\"></t>\n"
+"                <t t-call=\"ol_templates.ol_delivery_info\">\n"
+"                    <t t-set=\"delivery_method\" t-value=\"sale_order.carrier_id\"></t>\n"
+"                    <t t-set=\"tracking_numbers\" t-value=\"object.mapped('carrier_tracking_ref')\"></t>\n"
+"                </t>\n"
+"\n"
+"                <t t-call=\"ol_templates.ol_email_spacer\"></t>\n"
+"                <t t-call=\"ol_templates.ol_email_text_content\">\n"
+"                    <p style=\"font-size: 16px; line-height: 28px;\">\n"
+"                        <t t-call=\"ol_templates.ol_contact_info\">\n"
+"                            <t t-set=\"extra_text\">\n"
+"                                Dank u voor het samenwerken met OnLogic!\n"
+"                            </t>\n"
+"                            <t t-set=\"company\" t-value=\"sale_order.company_id\"></t>\n"
+"                        </t>\n"
+"                        <br>\n"
+"                        <br>\n"
+"                    </p>\n"
+"                </t>\n"
+"            </t>\n"
+"        "
 
 #. module: ol_sale
 #: model:mail.template,body_html:ol_sale.email_template_sale_proforma
@@ -123,6 +180,36 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"                    <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"></t>\n"
+"                    Hallo,\n"
+"                    <br><br>\n"
+"                    Jouw\n"
+"                    <t t-if=\"ctx.get('proforma')\">\n"
+"                        Pro forma factuur voor <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"                        <t t-if=\"object.origin\">\n"
+"                            (met verwijzing: <t t-out=\"object.origin or ''\"></t> )\n"
+"                        </t>\n"
+"                        bedrag in <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> is beschikbaar.\n"
+"                    </t>\n"
+"                    <t t-else=\"\">\n"
+"                        <t t-out=\"doc_name or ''\">quotation</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
+"                        <t t-if=\"object.origin\">\n"
+"                            (met verwijzing: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"                        </t>\n"
+"                        bedrag in <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> is klaar voor beoordeling.\n"
+"                    </t>\n"
+"                    <br><br>\n"
+"                    Aarzel niet om contact met ons op te nemen als u vragen heeft.\n"
+"                    <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"                        <br><br>\n"
+"                        <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"                    </t>\n"
+"                    <br><br>\n"
+"                </p>\n"
+"            </div>\n"
+"        "
 
 #. module: ol_sale
 #: model_terms:ir.ui.view,arch_db:ol_sale.ol_sale_confirmation
@@ -131,6 +218,9 @@ msgid ""
 "                        <span class=\"o_stat_text\" invisible=\"to_send_confirmation_email\">Don't Send</span>\n"
 "                        <span class=\"o_stat text\">Conf. Email</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"not to_send_confirmation_email\">Verstuur</span>\n"
+"                        <span class=\"o_stat_text\" invisible=\"to_send_confirmation_email\">Don't Send</span>\n"
+"                        <span class=\"o_stat text\">Conf. E-mail</span>"
 
 #. module: ol_sale
 #: model_terms:ir.ui.view,arch_db:ol_sale.view_order_form_inherit_ol_sale
@@ -187,6 +277,47 @@ msgid ""
 "            </t>\n"
 "        "
 msgstr ""
+"<t t-call=\"ol_templates.ol_email\">\n"
+"                <!-- Variables -->\n"
+"                <t t-set=\"sale_order\" t-value=\"object.with_context({'lang':object.contact_ids and object.contact_ids[0].lang or object.partner_id.lang or object.env.lang})\"></t>\n"
+"                <t t-set=\"title\" t-value=\"'Factuur gereed voor verkooporder ' + sale_order.name\"></t>\n"
+"                <t t-set=\"preheader_text\" t-value=\"'Factuur gereed voor verkooporder ' + sale_order.name\"></t>\n"
+"                <t t-set=\"include_newsletter_disclaimer\" t-value=\"False\"></t>\n"
+"                <t t-set=\"access_action\" t-value=\"sale_order.with_context(force_website=True)._get_access_action()\"></t>\n"
+"                <t t-set=\"invoices\" t-value=\"object._context.get('email_template_data', {}).get('invoices')\"></t>\n"
+"                <!-- Body -->\n"
+"                <t t-call=\"ol_templates.ol_email_text_content\">\n"
+"                    <div style=\"font-weight: 500; font-size: 20px;\">\n"
+"                        <tag>Een factuur is aangemaakt voor</tag>\n"
+"                        <t t-esc=\"sale_order.name\"></t>\n"
+"                        !\n"
+"                    </div>\n"
+"                    <p style=\"font-size: 16px; line-height: 28px; margin-top: 30px;\">\n"
+"                        <tag>You can view the related documents via the links below</tag>\n"
+"                        <center style=\"margin-top: 30px;\">\n"
+"                            <ul>\n"
+"                                <li style=\"text-align: left;\">\n"
+"                                    Verkooporder:\n"
+"                                    <a t-att-href=\"sale_order._notify_get_action_link('view')\" style=\"font-weight: 500; color: #337ab7;\" class=\"o_default_snippet_text\">\n"
+"                                        <t t-esc=\"sale_order.name\"></t>\n"
+"                                    </a>\n"
+"                                </li>\n"
+"                                <li style=\"text-align: left;\">\n"
+"                                    Factuur:\n"
+"                                    <t t-foreach=\"invoices\" t-as=\"invoice\">\n"
+"                                        <a t-att-href=\"invoice._notify_get_action_link('view')\" style=\"font-weight: 500; color: #337ab7;\" class=\"o_default_snippet_text\">\n"
+"                                            <t t-esc=\"invoice.name\"></t>\n"
+"                                        </a>\n"
+"                                    </t>\n"
+"                                </li>\n"
+"                            </ul>\n"
+"                        </center>\n"
+"                        <br>\n"
+"                        <tag>Het OnLogic Team</tag>\n"
+"                    </p>\n"
+"                </t>\n"
+"            </t>\n"
+"        "
 
 #. module: ol_sale
 #: model:mail.template,body_html:ol_sale.forward_order_confirmation_email_template
@@ -234,12 +365,12 @@ msgstr ""
 #. module: ol_sale
 #: model:exception.rule,name:ol_sale.exception_so_bank_tranfer_payment
 msgid "Awaiting Bank Transfer Payment"
-msgstr ""
+msgstr "Wachten op bankoverschrijvingsbetaling"
 
 #. module: ol_sale
 #: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
 msgid "Bill To"
-msgstr ""
+msgstr "Factuur aan"
 
 #. module: ol_sale
 #: model:ir.model.fields,field_description:ol_sale.field_forward_confirmation_email_wizard__text_body
@@ -249,12 +380,12 @@ msgstr ""
 #. module: ol_sale
 #: model:sale.order.type,name:ol_sale.sale_order_type_budgetary
 msgid "Budgetary"
-msgstr ""
+msgstr "Begrotings"
 
 #. module: ol_sale
 #: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
 msgid "Budgetary Quote"
-msgstr ""
+msgstr "Budgettaire Offerte"
 
 #. module: ol_sale
 #: model_terms:ir.ui.view,arch_db:ol_sale.view_forward_confirmation_email_wizard
@@ -369,7 +500,7 @@ msgstr ""
 #. module: ol_sale
 #: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
 msgid "FOR INTERNAL USE ONLY"
-msgstr ""
+msgstr "ALLEEN VOOR INTERNE GEBRUIK"
 
 #. module: ol_sale
 #: model_terms:ir.ui.view,arch_db:ol_sale.easy_checkout_text
@@ -391,12 +522,12 @@ msgstr ""
 #. module: ol_sale
 #: model:mail.template,name:ol_sale.forward_order_confirmation_email_template
 msgid "Forward OnLogic Confirmation Email"
-msgstr ""
+msgstr "Stuur de OnLogic bevestigingsmail door"
 
 #. module: ol_sale
 #: model:mail.template,subject:ol_sale.forward_order_confirmation_email_template
 msgid "Forwarded: Thank you for your order!"
-msgstr ""
+msgstr "Doorsturen: Bedankt voor uw bestelling!"
 
 #. module: ol_sale
 #: model:ir.model.fields.selection,name:ol_sale.selection__sale_order__invoice_status__full_paid
@@ -412,7 +543,7 @@ msgstr ""
 #. module: ol_sale
 #: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
 msgid "Hardware Solution"
-msgstr ""
+msgstr "Hardwareoplossing"
 
 #. module: ol_sale
 #: model:ir.model.fields,field_description:ol_sale.field_sale_order__has_active_holds
@@ -443,7 +574,7 @@ msgstr "Factuurstatus"
 #. module: ol_sale
 #: model:mail.template,subject:ol_sale.invoice_created_email_template
 msgid "Invoice ready for Sale Order {{ object.name }}"
-msgstr ""
+msgstr "Factuur gereed voor verkooporder {{ object.name }}"
 
 #. module: ol_sale
 #: model:ir.model,name:ol_sale.model_account_move
@@ -495,21 +626,21 @@ msgstr ""
 #. module: ol_sale
 #: model:mail.template,name:ol_sale.order_click_to_buy_email_template
 msgid "OnLogic Click To Buy Email"
-msgstr ""
+msgstr "OnLogic Klik Om Te Kopen E-mail"
 
 #. module: ol_sale
 #: model:mail.template,name:ol_sale.order_confirmation_email_template
 msgid "OnLogic Confirmation Email"
-msgstr ""
+msgstr "OnLogic Bevestiging Email"
 
 #. module: ol_sale
 #: model:mail.template,name:ol_sale.customer_shipment_email_template
-msgid "OnLogic Customer Shipment Email"
-msgstr ""
+msgid "OnLogic Customer shipping email"
+msgstr "OnLogic Klantenverzend email"
 
 #. module: ol_sale
 #: model:mail.template,name:ol_sale.invoice_created_email_template
-msgid "OnLogic Sale Order Invoice Created"
+msgid "OnLogic Verkooporder Factuur Aangemaakt"
 msgstr ""
 
 #. module: ol_sale
@@ -544,12 +675,12 @@ msgstr ""
 #. module: ol_sale
 #: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
 msgid "Payment Method"
-msgstr ""
+msgstr "Betaalmethode"
 
 #. module: ol_sale
 #: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
 msgid "Payment Terms"
-msgstr ""
+msgstr "Betalingsvoorwaarden"
 
 #. module: ol_sale
 #: model_terms:ir.ui.view,arch_db:ol_sale.confirmation_email_template
@@ -585,17 +716,17 @@ msgstr ""
 #: model:ir.actions.report,name:ol_sale.action_sale_order_quote_report
 #: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
 msgid "Quote"
-msgstr ""
+msgstr "Citaat"
 
 #. module: ol_sale
 #: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
 msgid "Quote Date"
-msgstr ""
+msgstr "Citeer Datum"
 
 #. module: ol_sale
 #: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
 msgid "Quote Expiration"
-msgstr ""
+msgstr "Citatenverval"
 
 #. module: ol_sale
 #: model:ir.model.fields,field_description:ol_sale.field_forward_confirmation_email_wizard__recipients
@@ -606,7 +737,7 @@ msgstr ""
 #. module: ol_sale
 #: model_terms:ir.ui.view,arch_db:ol_sale.click_to_buy_email_template
 msgid "Review and Place Order"
-msgstr ""
+msgstr "Beoordelen en Plaats Bestelling"
 
 #. module: ol_sale
 #: model:ir.model.fields,field_description:ol_sale.field_forward_confirmation_email_wizard__order_id
@@ -616,7 +747,7 @@ msgstr ""
 #. module: ol_sale
 #: model:ir.model,name:ol_sale.model_report_ol_sale_report_sale_order_quote
 msgid "Sale Order Quote"
-msgstr ""
+msgstr "Verkooporder Offerte"
 
 #. module: ol_sale
 #: model:ir.model.fields,field_description:ol_sale.field_res_partner__sale_order_tag_ids
@@ -647,7 +778,7 @@ msgstr ""
 #. module: ol_sale
 #: model:mail.template,name:ol_sale.email_template_sale_proforma
 msgid "Sales: Send Quotation"
-msgstr ""
+msgstr "Verkoop: Stuur Offerte"
 
 #. module: ol_sale
 #: model:ir.model.fields,help:ol_sale.field_sale_order_line__product_state_id
@@ -667,22 +798,22 @@ msgstr ""
 #. module: ol_sale
 #: model:ir.model.fields,field_description:ol_sale.field_sale_order__to_send_confirmation_email
 msgid "Send confirmation email"
-msgstr ""
+msgstr "Stuur bevestigingsmail"
 
 #. module: ol_sale
 #: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
 msgid "Ship To"
-msgstr ""
+msgstr "Verzenden naar"
 
 #. module: ol_sale
 #: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
 msgid "Shipping Method"
-msgstr ""
+msgstr "Verzendmethode"
 
 #. module: ol_sale
 #: model:ir.model.fields,field_description:ol_sale.field_sale_order__shipping_ref
 msgid "Shipping Reference"
-msgstr ""
+msgstr "Verzending Referentie"
 
 #. module: ol_sale
 #: model:ir.model.fields,field_description:ol_sale.field_product_attribute__used_in_sale_description
@@ -727,6 +858,9 @@ msgid ""
 "configuration in the attached PDF or by clicking the button below, where you"
 " can also finalize your order online"
 msgstr ""
+"Bedankt voor uw offerteaanvraag. U kunt de details van uw "
+"configuratie in de bijgevoegde PDF of door op de knop hieronder te klikken, waar je"
+"kunt uw bestelling ook online afronden"
 
 #. module: ol_sale
 #: model_terms:ir.ui.view,arch_db:ol_sale.click_to_buy_email_template
@@ -783,22 +917,22 @@ msgstr ""
 #. module: ol_sale
 #: model:mail.template,subject:ol_sale.customer_shipment_email_template
 msgid "Your Order {{ object.sale_id.name or 'n/a' }} Has Shipped"
-msgstr ""
+msgstr "Uw bestelling {{ object.sale_id.name or 'n/a' }} Is Verzonden"
 
 #. module: ol_sale
 #: model:mail.template,subject:ol_sale.order_click_to_buy_email_template
 msgid "Your Quote {{object.name}} is Ready for Review"
-msgstr ""
+msgstr "Jouw citaat {{object.name}} is Klaar voor Beoordeling"
 
 #. module: ol_sale
 #: model_terms:ir.ui.view,arch_db:ol_sale.report_sale_order_quote_document
 msgid "Your Reference"
-msgstr ""
+msgstr "Jouw Referentie"
 
 #. module: ol_sale
 #: model_terms:ir.ui.view,arch_db:ol_sale.click_to_buy_email_template
 msgid "Your quote is ready for review"
-msgstr ""
+msgstr "Je offerte is klaar voor beoordeling"
 
 #. module: ol_sale
 #: model:ir.actions.server,name:ol_sale.ir_cron_send_shipment_bv_action_ir_actions_server

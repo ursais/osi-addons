@@ -31,7 +31,7 @@
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
                 <button class="oe_stat_button" name="action_view_price_reviews" type="object" groups="ol_product_pricing_review.group_pricing_review_user" 
-                    invisible="detailed_type not in ['product', 'consu'] or price_review_count == 0" icon="fa-flask">
+                    invisible="detailed_type not in ['product', 'consu'] or price_review_count == 0 or not can_create_price_review" icon="fa-flask">
                     <field string="Price Reviews" name="price_review_count" widget="statinfo" />
                 </button>
             </div>
@@ -43,7 +43,7 @@
                 <button string="Price Review" type="object" name="action_price_review" invisible="not can_create_price_review" />
             </xpath>
             <xpath expr="//page[@name='general_information']" position="after">
-                <page string="Pricing" name="pricing">
+                <page string="Pricing" name="pricing" invisible="not can_create_price_review">
                     <group>
                         <group>
                             <field name="based_on" invisible="1" />

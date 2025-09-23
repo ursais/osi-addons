@@ -1,4 +1,5 @@
 <odoo>
+
 	<function name="write" model="ir.model.data">
         <function name="search" model="ir.model.data">
             <value
@@ -18,4 +19,5 @@
     <function name="unlink" model="exception.rule">
         <value model="exception.rule" eval="obj().search([('name', '=', 'Picking Credit Holde Exception')]).id"/>
     </function>
+
 </odoo>

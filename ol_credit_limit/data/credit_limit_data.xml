@@ -26,4 +26,5 @@
         <field name="domain">[("credit_hold", "=", True), ('picking_type_code', '=', 'outgoing')]</field>
         <field name="active" eval="True" />
     </record>
+
 </odoo>
