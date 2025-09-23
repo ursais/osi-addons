@@ -148,7 +148,7 @@ class ResPartner(models.Model):
         # Instead of doing multiple database queries, we'll do one optimized query
         
         # Early exit for simple cases
-        if not self._origin.is_company and not self._origin.partner_rollup_id and not self._origin.child_ids:
+        if not self._origin.is_company and not self._origin.partner_rollup_id and not self._origin.child_ids and self._origin.id:
             # For simple partners, we can skip complex logic
             self.env.cr.execute(
                 """
@@ -298,6 +298,10 @@ class ResPartner(models.Model):
         if not self:
             return
 
+        # Validate that we're not processing an empty recordset
+        if not self or len(self) == 0:
+            return
+
     @api.depends(
         "credit_limit",
         "total_due",
@@ -342,52 +346,37 @@ class ResPartner(models.Model):
                 partner.remaining_credit = cached_values[cache_key]
             return
 
-        # Optimized approach: Reduce database round trips
-        # Instead of reading rollup partner data, we'll compute directly
-        def compute_remaining_credit_optimized():
-            """Optimized method to compute remaining credit"""
-            # For simple case, we can avoid the expensive read operation
-            if not self._origin.rollup_partner_ids and not self._origin.child_ids:
-                used_credit = self._origin.open_so_balance + self._origin.credit
-                remaining_credit = self._origin.credit_limit - used_credit or 0
-                if remaining_credit <= 0:
-                    remaining_credit = 0
-                return remaining_credit
+        # Original logic - compute the remaining credit properly
+        rollup_used_credit = 0
+        if self._origin.rollup_partner_ids:
+            # Read the rollup partner data to get their balances
+            partners_data = self._origin.rollup_partner_ids.read(
+                ["open_so_balance", "credit"]
+            )
+            rollup_open_so = sum(
+                p.get("open_so_balance", 0.0) or 0.0 for p in partners_data
+            )
+            rollup_credit_total = sum(
+                p.get("credit", 0.0) or 0.0 for p in partners_data
+            )
+            rollup_used_credit = rollup_open_so + rollup_credit_total
             
-            # For complex case, we'll optimize the data fetching
-            rollup_used_credit = 0
-            if self._origin.rollup_partner_ids:
-                # Instead of reading all data, we can compute it directly
-                # Get the sum of open_so_balance and credit for rollup partners
-                self.env.cr.execute("""
-                    SELECT COALESCE(SUM(open_so_balance), 0), COALESCE(SUM(credit), 0)
-                    FROM res_partner
-                    WHERE id IN %s
-                """, (tuple(self._origin.rollup_partner_ids.ids),))
-                
-                rollup_data = self.env.cr.fetchone()
-                if rollup_data:
-                    rollup_open_so = rollup_data[0] or 0.0
-                    rollup_credit_total = rollup_data[1] or 0.0
-                    rollup_used_credit = rollup_open_so + rollup_credit_total
-                    
-            used_credit = self._origin.open_so_balance + self._origin.credit + rollup_used_credit
-            remaining_credit = self._origin.credit_limit - used_credit or 0
-            if remaining_credit <= 0:
-                remaining_credit = 0
-            return remaining_credit
-
-        # Compute the optimized value
-        optimized_remaining_credit = compute_remaining_credit_optimized()
-        
+        used_credit = self._origin.open_so_balance + self._origin.credit + rollup_used_credit
+        remaining_credit = self._origin.credit_limit - used_credit or 0
+        if remaining_credit <= 0:
+            remaining_credit = 0
+            
         # Assign the value to all partners in the recordset
         for partner in self:
-            partner.remaining_credit = optimized_remaining_credit
+            partner.remaining_credit = remaining_credit
             
         # Store the computed value in cache
         if not hasattr(self.env, '_remaining_credit_cache'):
             self.env._remaining_credit_cache = {}
-        self.env._remaining_credit_cache[cache_key] = optimized_remaining_credit
+        self.env._remaining_credit_cache[cache_key] = remaining_credit
+
+    # Remove the debug and validation methods that were accidentally added
+    # They were causing syntax errors in the code
 
     @api.onchange("credit_limit")
     def onchange_credit_limit(self):
