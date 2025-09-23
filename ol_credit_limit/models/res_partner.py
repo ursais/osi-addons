@@ -213,7 +213,8 @@ class ResPartner(models.Model):
             partner_ids = (self._origin.parent_id | self._origin.parent_id.child_ids | self._origin.parent_id.rollup_partner_ids)._origin.ids
         else:
             # Simple case - just the partner itself
-            partner_ids = [self._origin.id]
+            if self._origin.id:
+                partner_ids = [self._origin.id]
 
         # Compute the balance for all partners at once
         total_balance = compute_balance_optimized(partner_ids)
