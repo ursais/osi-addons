@@ -92,22 +92,6 @@ class ProductProduct(models.Model):
             extra_prices[extra_price] = extra_prices[extra_price] * additional_qty
         return additional_total + sum(extra_prices.values())
 
-    # def _get_bom_sale_price(self):
-    #     attribute_value_obj = self.env["product.attribute.value"]
-    #     value_ids = self.product_template_attribute_value_ids.mapped(
-    #         "product_attribute_value_id"
-    #     ).filtered(lambda l: not l.product_id)
-    #     extra_prices = attribute_value_obj.get_attribute_value_extra_prices(
-    #         product_tmpl_id=self.product_tmpl_id.id, pt_attr_value_ids=value_ids
-    #     )
-    #     additional_total = self._get_non_config_set_bom_lines()
-    #     for extra_price in extra_prices:
-    #         additional_qty = self.product_attribute_value_qty_ids.filtered(
-    #             lambda l: l.attr_value_id.id == extra_price
-    #         ).qty
-    #         extra_prices[extra_price] = extra_prices[extra_price] * additional_qty
-    #     return additional_total + sum(extra_prices.values())
-
     @api.depends("list_price", "price_extra")
     @api.depends_context("uom")
     def _compute_product_lst_price(self):
