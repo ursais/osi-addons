@@ -326,55 +326,39 @@ class ResPartner(models.Model):
         """
         # Optimization: Skip computation for simple cases
         # If partner has no rollup partners and no children, we can simplify
-        if not self._origin.rollup_partner_ids and not self._origin.child_ids:
-            # Simple case: just calculate based on own values
-            used_credit = self._origin.open_so_balance + self._origin.credit
-            remaining_credit = self._origin.credit_limit - used_credit or 0
-            if remaining_credit <= 0:
-                remaining_credit = 0
-            for partner in self:
-                partner.remaining_credit = remaining_credit
-            return
+        local_cache = {}
 
-        # Cache the computed values to avoid recomputation
-        cache_key = "remaining_credit_%s" % self._origin.id
-        cached_values = getattr(self.env, '_remaining_credit_cache', {})
-        
-        # Check if we have cached values for this partner
-        if cache_key in cached_values:
-            # Return cached value
-            for partner in self:
-                partner.remaining_credit = cached_values[cache_key]
-            return
-
-        # Original logic - compute the remaining credit properly
-        rollup_used_credit = 0
-        if self._origin.rollup_partner_ids:
-            # Read the rollup partner data to get their balances
-            partners_data = self._origin.rollup_partner_ids.read(
-                ["open_so_balance", "credit"]
-            )
-            rollup_open_so = sum(
-                p.get("open_so_balance", 0.0) or 0.0 for p in partners_data
-            )
-            rollup_credit_total = sum(
-                p.get("credit", 0.0) or 0.0 for p in partners_data
-            )
-            rollup_used_credit = rollup_open_so + rollup_credit_total
-            
-        used_credit = self._origin.open_so_balance + self._origin.credit + rollup_used_credit
-        remaining_credit = self._origin.credit_limit - used_credit or 0
-        if remaining_credit <= 0:
-            remaining_credit = 0
-            
-        # Assign the value to all partners in the recordset
         for partner in self:
-            partner.remaining_credit = remaining_credit
-            
-        # Store the computed value in cache
-        if not hasattr(self.env, '_remaining_credit_cache'):
-            self.env._remaining_credit_cache = {}
-        self.env._remaining_credit_cache[cache_key] = remaining_credit
+            # Use partner (not self._origin) unless you explicitly need unsaved _origin data.
+            origin = getattr(partner, '_origin', partner) or partner
+            cache_key = f"remaining_credit_{origin.id}"
+
+            if cache_key in local_cache:
+                partner.remaining_credit = local_cache[cache_key]
+                continue
+
+            # Simple case: no rollup and no children
+            if not origin.rollup_partner_ids and not origin.child_ids:
+                used_credit = (origin.open_so_balance or 0.0) + (origin.credit or 0.0)
+                remaining = max(0.0, (origin.credit_limit or 0.0) - used_credit)
+                partner.remaining_credit = remaining
+                local_cache[cache_key] = remaining
+                continue
+
+            # General case: include rollup partners
+            rollup_used_credit = 0.0
+            if origin.rollup_partner_ids:
+                # you can use mapped or read; mapped is simple:
+                rollup_open_so = sum(origin.rollup_partner_ids.mapped('open_so_balance') or [])
+                rollup_credit_total = sum(origin.rollup_partner_ids.mapped('credit') or [])
+                rollup_used_credit = (rollup_open_so or 0.0) + (rollup_credit_total or 0.0)
+
+            used_credit = (origin.open_so_balance or 0.0) + (origin.credit or 0.0) + rollup_used_credit
+            remaining = max(0.0, (origin.credit_limit or 0.0) - used_credit)
+
+            partner.remaining_credit = remaining
+            local_cache[cache_key] = remaining
+
 
     # Remove the debug and validation methods that were accidentally added
     # They were causing syntax errors in the code
