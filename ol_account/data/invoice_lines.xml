@@ -1,0 +1,88 @@
+<odoo>
+
+    <template id="invoice_lines">
+        <tr>
+            <td bgcolor="#ffffff" align="center" height="100%" valign="top" width="100%">
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0" align="center" width="100%" style="border: 1px solid #f3f3f3;">
+                    <tr>
+                        <th bgcolor="#f3f3f3"
+                            style="padding: 8px 15px; font-size:12px; font-weight: 500; text-align:left; overflow-wrap: break-word;">
+                            <tag>Invoice Number</tag>
+                        </th>
+
+                        <th bgcolor="#f3f3f3"
+                            style="padding: 8px 15px; font-size:12px; font-weight: 500; text-align:left; overflow-wrap: break-word;">
+                            <tag>PO Number</tag>
+                        </th>
+
+                        <th bgcolor="#f3f3f3"
+                            style="padding: 8px 15px; font-size:12px; font-weight: 500; text-align:left; overflow-wrap: break-word;">
+                            <tag>Order Number</tag>
+                        </th>
+
+                        <th bgcolor="#f3f3f3"
+                            style="padding: 8px 15px; font-size:12px; font-weight: 500; text-align:left; overflow-wrap: break-word;">
+                            <tag>Invoice Date</tag>
+                        </th>
+
+                        <th bgcolor="#f3f3f3"
+                            style="padding: 8px 15px; font-size:12px; font-weight: 500; text-align:left; overflow-wrap: break-word;">
+                            <tag>Due Date</tag>
+                        </th>
+
+                        <th bgcolor="#f3f3f3"
+                            style="padding: 8px 15px; font-size:12px; font-weight: 500; text-align:left; overflow-wrap: break-word;">
+                            <tag>Balance Due</tag>
+                        </th>
+                    </tr>
+                    <t t-foreach="invoice_lines" t-as="line">
+                        <tr style="font-size:0; padding: 0; text-align:top">
+                            <td style="vertical-align: top;" colspan="6">
+                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
+                                        style="font-size: 14px;text-align: left;">
+                                    <tr>
+                                        <td style="padding: 8px 15px; font-size:12px; text-align:left; vertical-align: top; overflow-wrap: break-word;">
+                                            <t t-esc="line.move_name" />
+                                        </td>
+
+                                        <td style="padding: 8px 15px; font-size:12px; text-align:left; vertical-align: top; overflow-wrap: break-word;">
+                                            <t t-esc="line.move_id.ref" />
+                                        </td>
+
+                                        <td style="padding: 8px 15px; font-size:12px; text-align:left; vertical-align: top; overflow-wrap: break-word;">
+                                            <t t-esc="','.join(line.move_id.line_ids.sale_line_ids.mapped('order_id.name')) or ''" />
+                                        </td>
+
+                                        <td style="padding: 8px 15px; font-size:12px; text-align:left; vertical-align: top;">
+                                            <t t-esc="line['invoice_date']" t-options='{"widget": "date"}'/>
+                                        </td>
+
+                                        <td style="padding: 8px 15px; font-size:12px; text-align:left; vertical-align: top;">
+                                            <t t-esc="line['date_maturity']" t-options='{"widget": "date"}'/>
+                                        </td>
+
+                                        <td style="padding: 8px 15px; font-size:12px; text-align:right; vertical-align: top;">
+                                            <t t-esc="line['amount_residual_currency']" t-options="{'widget': 'moneray', 'display_currency': line.currency_id}" />
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </t>
+                    <tr style="font-size:0; padding: 0; text-align:top">
+                        <td style="padding: 0 15px 0 0; vertical-align: top; text-align: right; color: red; font-size: 14px; font-weight: 500;" colspan="6">
+                            <t t-if="total_title">
+                                <t t-esc="total_title" />&amp;nbsp;
+                            </t>
+                            <t t-else="">
+                                <tag>Total Balance Due:</tag>&amp;nbsp;
+                            </t>
+                            <t t-esc="total_residual" t-options="{'widget': 'moneray', 'display_currency': invoice_lines and invoice_lines[0].currency_id or object.env.company.currency_id}" />
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </template>
+
+</odoo>
