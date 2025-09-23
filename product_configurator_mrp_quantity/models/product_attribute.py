@@ -7,6 +7,25 @@ class ProductAttributeLine(models.Model):
 
     is_qty_required = fields.Boolean(string="Qty Required", copy=False)
 
+    @api.constrains("value_ids")
+    def _check_unique_values_per_attribute(self):
+        for line in self:
+            template = line.product_tmpl_id
+            # Collect all attribute_id/value_id pairs across all lines of the template
+            pairs = []
+            for l in template.attribute_line_ids:
+                for val in l.value_ids:
+                    pairs.append((l.attribute_id.id, val.id))
+            # Count duplicates
+            duplicates = [pair for pair in pairs if pairs.count(pair) > 1]
+            if duplicates:
+                attr = self.env["product.attribute"].browse(duplicates[0][0])
+                val = self.env["product.attribute.value"].browse(duplicates[0][1])
+                raise ValidationError(
+                    "You cannot assign the same value '%s' to multiple lines of the same attribute '%s'."
+                    % (val.name, attr.name)
+                )
+
     def write(self, values):
         """
         OVERRIDE:
@@ -29,15 +48,21 @@ class ProductAttributeLine(models.Model):
                         ptav.default_qty,
                         ptav.maximum_qty + 1,
                         ptav.product_attribute_value_id,
-                        ptav
+                        ptav,
                     )
                     qty_vals.extend(qty_list or [])
 
                 elif not is_qty_required and not line.is_qty_required:
                     if ptav.ptav_product_variant_ids:
-                        raise ValidationError(_(
-                            "Qty Required cannot be disabled because variants exist for '%s' - Attribute: %s."
-                        ) % (line.product_tmpl_id.display_name, line.attribute_id.name))
+                        raise ValidationError(
+                            _(
+                                "Qty Required cannot be disabled because variants exist for '%s' - Attribute: %s."
+                            )
+                            % (
+                                line.product_tmpl_id.display_name,
+                                line.attribute_id.name,
+                            )
+                        )
 
                     ptav.attribute_value_qty_ids.unlink()
 
@@ -75,7 +100,9 @@ class ProductAttributePrice(models.Model):
                     _("Maximum Qty can't be smaller then Default Qty")
                 )
 
-    def _get_attribute_value_qty_vals(self, default_qty, maximum_qty, attr_value, template_attri_value_id):
+    def _get_attribute_value_qty_vals(
+        self, default_qty, maximum_qty, attr_value, template_attri_value_id
+    ):
         """
         Helper method to generate a list of quantity records based on the given range.
         Each quantity corresponds to a combination of product template and attribute value.
@@ -107,7 +134,7 @@ class ProductAttributePrice(models.Model):
                     res.default_qty,
                     res.maximum_qty + 1,
                     res.product_attribute_value_id,
-                    res
+                    res,
                 )
                 qty_vals.extend(qty_list or [])
 
@@ -115,8 +142,6 @@ class ProductAttributePrice(models.Model):
             self.env["attribute.value.qty"].create(qty_vals)
 
         return results
-
-
 
     def write(self, vals):
         """
@@ -127,29 +152,39 @@ class ProductAttributePrice(models.Model):
         result = super().write(vals)
 
         # Only run if relevant fields are updated
-        if 'default_qty' in vals or 'maximum_qty' in vals:
+        if "default_qty" in vals or "maximum_qty" in vals:
             for record in self:
                 if not record.is_qty_required:
                     continue  # Skip if qty is not required
-                default_qty = vals.get('default_qty', record.default_qty)
-                maximum_qty = vals.get('maximum_qty', record.maximum_qty)
+                default_qty = vals.get("default_qty", record.default_qty)
+                maximum_qty = vals.get("maximum_qty", record.maximum_qty)
 
                 # Compute new range of qty values
-                new_qty_range = set(range(default_qty, maximum_qty+1))
+                new_qty_range = set(range(default_qty, maximum_qty + 1))
                 existing_qty_lines = record.attribute_value_qty_ids
 
                 # Extract existing qtys
-                existing_qtys = set(existing_qty_lines.mapped('qty'))
+                existing_qtys = set(existing_qty_lines.mapped("qty"))
 
                 # Compute changes
                 qtys_to_add = new_qty_range - existing_qtys
                 qtys_to_remove = existing_qtys - new_qty_range
+                if qtys_to_remove and self.ptav_product_variant_ids:
+                    raise ValidationError(
+                        _(
+                            "Qty cannot be removed because product variants exist for '%s' - Attribute: %s."
+                        )
+                        % (
+                            record.product_tmpl_id.display_name,
+                            record.attribute_id.name,
+                        )
+                    )
 
-                if qtys_to_remove:
-                    raise ValidationError(_(
-                        "Qty cannot be removed because product variants exist for '%s' - Attribute: %s."
-                    ) % (record.product_tmpl_id.display_name, record.attribute_id.name))
-
+                if qtys_to_remove and not self.ptav_product_variant_ids:
+                    qtys = record.attribute_value_qty_ids.filtered(
+                        lambda l: l.qty in list(qtys_to_remove)
+                    )
+                    qtys.unlink()
                 # Add new records
                 qty_vals = [
                     {
