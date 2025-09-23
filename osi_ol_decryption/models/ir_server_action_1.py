@@ -384,7 +384,6 @@ class IrActionsServer(models.Model):
             {
                 "name": "Pull from Overstock",
                 "route_id": route_us.id,
-                git 
                 "action": "pull",  # Pull From
                 "picking_type_id": op_type.id,
                 "location_src_id": source_loc.id,
@@ -668,30 +667,38 @@ class IrActionsServer(models.Model):
         _logger.info("===============update_product_category_account====================")
         self = self.sudo()
         us_compnay = self.env.ref("base.main_company")
-        category_ids = self.env["product.category"].search([])
-        acc_product = self.env.ref("lgx_account.41100-02")
-        acc_materials = self.env.ref("lgx_account.11765-02")
-        stock_valution = self.env['account.account'].search([('code', '=', '11013.02'), ('company_id', '=', us_compnay.id)])
+        category_ids = self.env["product.category"].search([('name', 'not in', ['Services','Build Services','Computer Software', 'Engineering Services','Other','Repair Services','Warranties', 'Deliveries','Expenses','Saleable'])])
+        income_product = self.env.ref("lgx_account.41100-02")
+        expence_product = self.env.ref("lgx_account.51105-02")
+        #input_product = self.env.ref("lgx_account.11705-02") #11710.20
+        input_product = self.env['account.account'].search([('code', '=', '21040.02'), ('company_id', '=', us_compnay.id)])
+        outgoing_account = self.env.ref("lgx_account.11765-02")
+        stock_valution = self.env['account.account'].search([('code', '=', '11720.02'), ('company_id', '=', us_compnay.id)])
         
         for catg in category_ids:
             catg.with_company(us_compnay).write(
                 {
+                    "property_account_income_categ_id": income_product.id,
+                    "property_account_expense_categ_id": expence_product.id,
                     "property_stock_valuation_account_id": stock_valution.id,
-                    "property_stock_account_input_categ_id": acc_product.id,
-                    "property_stock_account_output_categ_id": acc_materials.id,
+                    "property_stock_account_input_categ_id": input_product.id,
+                    "property_stock_account_output_categ_id": outgoing_account.id,
                 }
             )
-
-        acc_product = self.env.ref("lgx_account.41100-03")
-        acc_materials = self.env.ref("lgx_account.11750-03")
         eu_compnay = self.env.ref("ol_base.onlogic_eu")
-        stock_valution = self.env['account.account'].search([('code', '=', '11013.04'), ('company_id', '=', eu_compnay.id)])
+        income_product = self.env.ref("lgx_account.41100-03")
+        expence_product = self.env.ref("lgx_account.51105-03")
+        input_product = self.env['account.account'].search([('code', '=', '21040.04'), ('company_id', '=', eu_compnay.id)])
+        outgoing_account = self.env.ref("lgx_account.11750-03")
+        stock_valution = self.env['account.account'].search([('code', '=', '11720.04'), ('company_id', '=', eu_compnay.id)])
         for catg in category_ids:
             catg.with_company(eu_compnay).write(
                 {
+                    "property_account_income_categ_id": income_product.id,
+                    "property_account_expense_categ_id": expence_product.id,
                     "property_stock_valuation_account_id": stock_valution.id,
-                    "property_stock_account_input_categ_id": acc_product.id,
-                    "property_stock_account_output_categ_id": acc_materials.id,
+                    "property_stock_account_input_categ_id": input_product.id,
+                    "property_stock_account_output_categ_id": outgoing_account.id,
                 }
             )
         
