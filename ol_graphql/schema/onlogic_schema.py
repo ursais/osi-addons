@@ -63,7 +63,8 @@ class MutationsAbstract(graphene.ObjectType):
 class GQLLoader:
     def __init__(self):
         os.chdir("../")
-        self.onlogic_modules = f"/odoo/addons/private-addons/onlogic-addons"
+        # self.onlogic_modules = f"/odoo/addons/private-addons/onlogic-addons"
+        self.onlogic_modules = f"/odoo/addons/"  # OSI DEMO ONLY
         self.directories_to_exclude = ["__pycache__", "_base"]
         self.modules = self.get_modules()
         # Set up the base data
