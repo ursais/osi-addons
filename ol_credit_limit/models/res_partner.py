@@ -86,7 +86,7 @@ class ResPartner(models.Model):
                     partner.rollup_partner_ids.mapped("total_due")
                 )
             else:
-                partner.outstanding_receivable = 0.0
+                partner.outstanding_receivable = partner.total_due
 
     def _get_open_sale_order(self):
         """
@@ -146,9 +146,14 @@ class ResPartner(models.Model):
         """
         # Critical Optimization: Pre-calculate and cache the most expensive operations
         # Instead of doing multiple database queries, we'll do one optimized query
-        
+
         # Early exit for simple cases
-        if not self._origin.is_company and not self._origin.partner_rollup_id and not self._origin.child_ids and self._origin.id:
+        if (
+            not self._origin.is_company
+            and not self._origin.partner_rollup_id
+            and not self._origin.child_ids
+            and self._origin.id
+        ):
             # For simple partners, we can skip complex logic
             self.env.cr.execute(
                 """
@@ -167,8 +172,8 @@ class ResPartner(models.Model):
 
         # Cache the computed values to avoid recomputation
         cache_key = "open_so_balance_%s" % self._origin.id
-        cached_values = getattr(self.env, '_open_so_balance_cache', {})
-        
+        cached_values = getattr(self.env, "_open_so_balance_cache", {})
+
         # Check if we have cached values for this partner
         if cache_key in cached_values:
             # Return cached value
@@ -178,12 +183,12 @@ class ResPartner(models.Model):
 
         # Optimized approach: Reduce database round trips
         # Instead of multiple queries, we'll consolidate the logic
-        
+
         def compute_balance_optimized(partner_ids):
             """Optimized helper to compute total SO balance for given partners."""
             if not partner_ids:
                 return 0.0
-                
+
             # Single optimized query for all partners
             self.env.cr.execute(
                 """
@@ -204,13 +209,23 @@ class ResPartner(models.Model):
         partner_ids = []
         if self._origin.is_company:
             # Company case: include all related partners
-            partner_ids = (self._origin.rollup_partner_ids | self._origin.child_ids | self._origin)._origin.ids
+            partner_ids = (
+                self._origin.rollup_partner_ids | self._origin.child_ids | self._origin
+            )._origin.ids
         elif self._origin.partner_rollup_id and not self._origin.parent_id:
             # Rollup partner case
-            partner_ids = (self._origin.partner_rollup_id | self._origin.partner_rollup_id.child_ids | self._origin)._origin.ids
+            partner_ids = (
+                self._origin.partner_rollup_id
+                | self._origin.partner_rollup_id.child_ids
+                | self._origin
+            )._origin.ids
         elif self._origin.parent_id and not self._origin.partner_rollup_id:
             # Parent partner case
-            partner_ids = (self._origin.parent_id | self._origin.parent_id.child_ids | self._origin.parent_id.rollup_partner_ids)._origin.ids
+            partner_ids = (
+                self._origin.parent_id
+                | self._origin.parent_id.child_ids
+                | self._origin.parent_id.rollup_partner_ids
+            )._origin.ids
         else:
             # Simple case - just the partner itself
             if self._origin.id:
@@ -218,7 +233,7 @@ class ResPartner(models.Model):
 
         # Compute the balance for all partners at once
         total_balance = compute_balance_optimized(partner_ids)
-        
+
         # For the simple case, we can directly assign the value
         if len(self) == 1:
             for partner in self:
@@ -227,7 +242,7 @@ class ResPartner(models.Model):
 
         # For batch processing, we still need to handle the complex logic
         # But we've already reduced the number of database calls
-        
+
         # Continue with existing logic but with optimizations
         for partner in self:
             if not partner.id:
@@ -288,9 +303,9 @@ class ResPartner(models.Model):
                 parent_balance = compute_balance_optimized(parent_group.ids)
                 partner.parent_id.open_so_balance = parent_balance
                 partner.open_so_balance = base_balance
-            
+
             # Store the computed value in cache
-            if not hasattr(self.env, '_open_so_balance_cache'):
+            if not hasattr(self.env, "_open_so_balance_cache"):
                 self.env._open_so_balance_cache = {}
             self.env._open_so_balance_cache[cache_key] = partner.open_so_balance
 
@@ -330,7 +345,7 @@ class ResPartner(models.Model):
 
         for partner in self:
             # Use partner (not self._origin) unless you explicitly need unsaved _origin data.
-            origin = getattr(partner, '_origin', partner) or partner
+            origin = getattr(partner, "_origin", partner) or partner
             cache_key = f"remaining_credit_{origin.id}"
 
             if cache_key in local_cache:
@@ -349,16 +364,25 @@ class ResPartner(models.Model):
             rollup_used_credit = 0.0
             if origin.rollup_partner_ids:
                 # you can use mapped or read; mapped is simple:
-                rollup_open_so = sum(origin.rollup_partner_ids.mapped('open_so_balance') or [])
-                rollup_credit_total = sum(origin.rollup_partner_ids.mapped('credit') or [])
-                rollup_used_credit = (rollup_open_so or 0.0) + (rollup_credit_total or 0.0)
+                rollup_open_so = sum(
+                    origin.rollup_partner_ids.mapped("open_so_balance") or []
+                )
+                rollup_credit_total = sum(
+                    origin.rollup_partner_ids.mapped("credit") or []
+                )
+                rollup_used_credit = (rollup_open_so or 0.0) + (
+                    rollup_credit_total or 0.0
+                )
 
-            used_credit = (origin.open_so_balance or 0.0) + (origin.credit or 0.0) + rollup_used_credit
+            used_credit = (
+                (origin.open_so_balance or 0.0)
+                + (origin.credit or 0.0)
+                + rollup_used_credit
+            )
             remaining = max(0.0, (origin.credit_limit or 0.0) - used_credit)
 
             partner.remaining_credit = remaining
             local_cache[cache_key] = remaining
-
 
     # Remove the debug and validation methods that were accidentally added
     # They were causing syntax errors in the code
@@ -376,12 +400,18 @@ class ResPartner(models.Model):
         """
         Prevent circular rollup assignments.
         """
-        if self.id == self.partner_rollup_id.partner_rollup_id.id:
-            raise UserError(
-                _(
-                    "You cannot set a Rollup Partner since this contact has related Rollup Partners."
+        for partner in self:
+            # Guard against empty partner_rollup_id
+            if not partner.partner_rollup_id:
+                continue
+
+            if partner.id == partner.partner_rollup_id.partner_rollup_id.id:
+                raise UserError(
+                    _(
+                        "You cannot set a Rollup Partner since this contact "
+                        "has related Rollup Partners."
+                    )
                 )
-            )
 
     @api.model
     def name_search(self, name="", args=None, operator="ilike", limit=100):
