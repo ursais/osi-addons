@@ -37,6 +37,11 @@
             <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
                 <field name="note" optional="show" />
             </xpath>
+
+            <!-- Unhide Expected Arrival -->
+            <xpath expr="//field[@name='order_line']/tree/field[@name='date_planned']" position="attributes">
+                <attribute name="optional">show</attribute>
+            </xpath>
         </field>
     </record>
 
