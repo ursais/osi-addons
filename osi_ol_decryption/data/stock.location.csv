@@ -2326,6 +2326,164 @@ __setup__.stock_location_1124_G_2,1124 G 2,stock.stock_location_stock,stock.ware
 __setup__.stock_location_1124_G_3,1124 G 3,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
 __setup__.stock_location_1124_G_4,1124 G 4,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
 __setup__.stock_location_1124_G_5,1124 G 5,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1202_A_5,1202 A 5,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1202_B_5,1202 B 5,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1202_C_5,1202 C 5,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1202_D_5,1202 D 5,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1202_E_5,1202 E 5,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1302_A_5,1302 A 5,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1302_B_5,1302 B 5,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1302_C_5,1302 C 5,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1302_D_5,1302 D 5,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1302_E_5,1302 E 5,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_A_1,1528 A 1,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_A_2,1528 A 2,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_A_3,1528 A 3,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_A_4,1528 A 4,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_A_5,1528 A 5,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_B_1,1528 B 1,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_B_2,1528 B 2,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_B_3,1528 B 3,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_B_4,1528 B 4,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_B_5,1528 B 5,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_C_1,1528 C 1,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_C_2,1528 C 2,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_C_3,1528 C 3,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_C_4,1528 C 4,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_C_5,1528 C 5,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_D_1,1528 D 1,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_D_2,1528 D 2,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_D_3,1528 D 3,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_D_4,1528 D 4,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_D_5,1528 D 5,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_E_1,1528 E 1,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_E_2,1528 E 2,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_E_3,1528 E 3,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_E_4,1528 E 4,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1528_E_5,1528 E 5,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_A_1,1529 A 1,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_A_2,1529 A 2,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_A_3,1529 A 3,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_A_4,1529 A 4,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_A_5,1529 A 5,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_B_1,1529 B 1,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_B_2,1529 B 2,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_B_3,1529 B 3,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_B_4,1529 B 4,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_B_5,1529 B 5,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_C_1,1529 C 1,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_C_2,1529 C 2,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_C_3,1529 C 3,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_C_4,1529 C 4,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_C_5,1529 C 5,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_D_1,1529 D 1,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_D_2,1529 D 2,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_D_3,1529 D 3,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_D_4,1529 D 4,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_D_5,1529 D 5,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_E_1,1529 E 1,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_E_2,1529 E 2,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_E_3,1529 E 3,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_E_4,1529 E 4,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1529_E_5,1529 E 5,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1915_A,1915 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1915_B,1915 B,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1915_C,1915 C,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1916_A,1916 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1916_B,1916 B,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1916_C,1916 C,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1917_A,1917 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1917_B,1917 B,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1917_C,1917 C,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1918_A,1918 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1918_B,1918 B,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1918_C,1918 C,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1919_A,1919 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1928_A,1928 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1929_A,1929 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1930_A,1930 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1931_A,1931 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1932_A,1932 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1933_A,1933 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1934_A,1934 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1935_A,1935 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1936_A,1936 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1937_A,1937 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1938_A,1938 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_1939_A,1939 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2015_A,2015 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2015_B,2015 B,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2015_C,2015 C,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2016_A,2016 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2016_B,2016 B,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2016_C,2016 C,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2017_A,2017 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2017_B,2017 B,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2017_C,2017 C,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2018_A,2018 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2018_B,2018 B,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2018_C,2018 C,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2019_A,2019 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2028_A,2028 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2029_A,2029 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2030_A,2030 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2031_A,2031 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2032_A,2032 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2033_A,2033 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2034_A,2034 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2035_A,2035 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2036_A,2036 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2037_A,2037 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2038_A,2038 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2039_A,2039 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2128_A,2128 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2129_A,2129 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2130_A,2130 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2131_A,2131 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2132_A,2132 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2133_A,2133 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2134_A,2134 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2135_A,2135 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2136_A,2136 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2137_A,2137 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2138_A,2138 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2139_A,2139 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2228_A,2228 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2229_A,2229 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2230_A,2230 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2231_A,2231 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2232_A,2232 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2233_A,2233 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2234_A,2234 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2235_A,2235 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2236_A,2236 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2237_A,2237 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2238_A,2238 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2239_A,2239 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2328_A,2328 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2329_A,2329 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2330_A,2330 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2331_A,2331 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2332_A,2332 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2333_A,2333 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2334_A,2334 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2335_A,2335 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2336_A,2336 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2337_A,2337 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2338_A,2338 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2339_A,2339 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2428_A,2428 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2429_A,2429 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2430_A,2430 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2431_A,2431 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2432_A,2432 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2433_A,2433 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2434_A,2434 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2435_A,2435 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2436_A,2436 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2437_A,2437 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2438_A,2438 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
+__setup__.stock_location_2439_A,2439 A,stock.stock_location_stock,stock.warehouse0,internal,base.main_company
 __setup__.stock_location_eu_10_A_3,10 A 3,__export__.stock_location_72,__export__.stock_warehouse_3,internal,ol_base.onlogic_eu
 __setup__.stock_location_eu_10_A_4,10 A 4,__export__.stock_location_72,__export__.stock_warehouse_3,internal,ol_base.onlogic_eu
 __setup__.stock_location_eu_10_D_3,10 D 3,__export__.stock_location_72,__export__.stock_warehouse_3,internal,ol_base.onlogic_eu
