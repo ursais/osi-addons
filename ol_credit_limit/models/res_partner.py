@@ -276,55 +276,26 @@ class ResPartner(models.Model):
         """
         Compute remaining credit:
         - Deduct SO balances and receivables
-        - Include rollup partners' usage
+        - Include rollup partners’ usage
         """
-        # Optimization: Skip computation for simple cases
-        # If partner has no rollup partners and no children, we can simplify
-        local_cache = {}
-
         for partner in self:
-            # Use partner (not self._origin) unless you explicitly need unsaved _origin data.
-            origin = getattr(partner, "_origin", partner) or partner
-            cache_key = f"remaining_credit_{origin.id}"
-
-            if cache_key in local_cache:
-                partner.remaining_credit = local_cache[cache_key]
-                continue
-
-            # Simple case: no rollup and no children
-            if not origin.rollup_partner_ids and not origin.child_ids:
-                used_credit = (origin.open_so_balance or 0.0) + (origin.credit or 0.0)
-                remaining = max(0.0, (origin.credit_limit or 0.0) - used_credit)
-                partner.remaining_credit = remaining
-                local_cache[cache_key] = remaining
-                continue
-
-            # General case: include rollup partners
-            rollup_used_credit = 0.0
-            if origin.rollup_partner_ids:
-                # you can use mapped or read; mapped is simple:
+            rollup_used_credit = 0
+            if partner.rollup_partner_ids:
+                partners_data = partner.rollup_partner_ids.read(
+                    ["open_so_balance", "credit"]
+                )
                 rollup_open_so = sum(
-                    origin.rollup_partner_ids.mapped("open_so_balance") or []
+                    p.get("open_so_balance", 0.0) or 0.0 for p in partners_data
                 )
                 rollup_credit_total = sum(
-                    origin.rollup_partner_ids.mapped("credit") or []
+                    p.get("credit", 0.0) or 0.0 for p in partners_data
                 )
-                rollup_used_credit = (rollup_open_so or 0.0) + (
-                    rollup_credit_total or 0.0
-                )
-
-            used_credit = (
-                (origin.open_so_balance or 0.0)
-                + (origin.credit or 0.0)
-                + rollup_used_credit
-            )
-            remaining = max(0.0, (origin.credit_limit or 0.0) - used_credit)
-
-            partner.remaining_credit = remaining
-            local_cache[cache_key] = remaining
-
-    # Remove the debug and validation methods that were accidentally added
-    # They were causing syntax errors in the code
+                rollup_used_credit = rollup_open_so + rollup_credit_total
+            used_credit = partner.open_so_balance + partner.credit + rollup_used_credit
+            remaining_credit = partner.credit_limit - used_credit or 0
+            if remaining_credit <= 0:
+                remaining_credit = 0
+            partner.remaining_credit = remaining_credit
 
     @api.onchange("credit_limit")
     def onchange_credit_limit(self):
