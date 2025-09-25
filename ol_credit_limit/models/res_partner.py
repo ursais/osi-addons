@@ -139,57 +139,17 @@ class ResPartner(models.Model):
         """
         Compute open Sale Order balance for the partner.
         Includes:
-          - Partner's own SOs
-          - Draft invoices
-          - Rollup partner balances
-          - Handles grouping by parent, rollup, or company
+        - Partner's own SOs
+        - Draft invoices
+        - Rollup partner balances
+        - Handles grouping by parent, rollup, or company
         """
-        # Critical Optimization: Pre-calculate and cache the most expensive operations
-        # Instead of doing multiple database queries, we'll do one optimized query
-
-        # Early exit for simple cases
-        if (
-            not self._origin.is_company
-            and not self._origin.partner_rollup_id
-            and not self._origin.child_ids
-            and self._origin.id
-        ):
-            # For simple partners, we can skip complex logic
-            self.env.cr.execute(
-                """
-                SELECT COALESCE(SUM(amount_total), 0)
-                FROM sale_order
-                WHERE state = 'sale'
-                AND invoice_status = 'no'
-                AND partner_id = %s
-            """,
-                (self._origin.id,),
-            )
-            so_sum = self.env.cr.fetchone()[0] or 0.0
-            for partner in self:
-                partner.open_so_balance = so_sum
-            return
-
-        # Cache the computed values to avoid recomputation
-        cache_key = "open_so_balance_%s" % self._origin.id
-        cached_values = getattr(self.env, "_open_so_balance_cache", {})
-
-        # Check if we have cached values for this partner
-        if cache_key in cached_values:
-            # Return cached value
-            for partner in self:
-                partner.open_so_balance = cached_values[cache_key]
-            return
-
-        # Optimized approach: Reduce database round trips
-        # Instead of multiple queries, we'll consolidate the logic
-
+        
         def compute_balance_optimized(partner_ids):
             """Optimized helper to compute total SO balance for given partners."""
             if not partner_ids:
                 return 0.0
 
-            # Single optimized query for all partners
             self.env.cr.execute(
                 """
                 SELECT SUM(amount_total)
@@ -200,50 +160,10 @@ class ResPartner(models.Model):
             """,
                 (tuple(partner_ids),),
             )
+            
+            return self.env.cr.fetchone()[0] or 0.0
 
-            so_sum = self.env.cr.fetchone()[0] or 0.0
-            return so_sum
-
-        # Get all partner IDs that we need to compute for
-        # This is more efficient than individual queries
-        partner_ids = []
-        if self._origin.is_company:
-            # Company case: include all related partners
-            partner_ids = (
-                self._origin.rollup_partner_ids | self._origin.child_ids | self._origin
-            )._origin.ids
-        elif self._origin.partner_rollup_id and not self._origin.parent_id:
-            # Rollup partner case
-            partner_ids = (
-                self._origin.partner_rollup_id
-                | self._origin.partner_rollup_id.child_ids
-                | self._origin
-            )._origin.ids
-        elif self._origin.parent_id and not self._origin.partner_rollup_id:
-            # Parent partner case
-            partner_ids = (
-                self._origin.parent_id
-                | self._origin.parent_id.child_ids
-                | self._origin.parent_id.rollup_partner_ids
-            )._origin.ids
-        else:
-            # Simple case - just the partner itself
-            if self._origin.id:
-                partner_ids = [self._origin.id]
-
-        # Compute the balance for all partners at once
-        total_balance = compute_balance_optimized(partner_ids)
-
-        # For the simple case, we can directly assign the value
-        if len(self) == 1:
-            for partner in self:
-                partner.open_so_balance = total_balance
-            return
-
-        # For batch processing, we still need to handle the complex logic
-        # But we've already reduced the number of database calls
-
-        # Continue with existing logic but with optimizations
+        # Process each partner individually to avoid singleton errors
         for partner in self:
             if not partner.id:
                 partner.open_so_balance = 0
@@ -251,72 +171,91 @@ class ResPartner(models.Model):
 
             _logger.info("_compute_open_so_balance %s", partner.id)
 
-            # Collect all relevant partner IDs: self + children
-            self.env.cr.execute(
-                "SELECT id FROM res_partner WHERE parent_id = ANY(%s)",
-                ([partner.id],),
-            )
-            child_ids = [row[0] for row in self.env.cr.fetchall()]
+            # Early exit for simple cases - check each partner individually
+            if (
+                not partner.is_company
+                and not partner.partner_rollup_id
+                and not partner.child_ids
+            ):
+                # Simple partner case
+                partner.open_so_balance = compute_balance_optimized([partner.id])
+                continue
+
+            # Get child IDs for current partner
+            child_ids = partner.child_ids.ids
             all_partner_ids = child_ids + [partner.id]
 
-            # Calculate open SO total and draft invoice amount
+            # Calculate base amounts for current partner
             open_so_total = compute_balance_optimized([partner.id])
+            
             self.env.cr.execute(
                 """
                 SELECT COALESCE(SUM(amount_residual_signed), 0)
                 FROM account_move
                 WHERE move_type = 'out_invoice'
-                  AND state = 'draft'
-                  AND partner_id = ANY(%s)
+                AND state = 'draft'
+                AND partner_id = ANY(%s)
                 """,
-                ([all_partner_ids],),
+                (all_partner_ids,),
             )
             draft_invoice_total = self.env.cr.fetchone()[0] or 0
-            rollup_balance = sum(partner.rollup_partner_ids.mapped("open_so_balance"))
+            
+            # Calculate rollup balance safely
+            rollup_balance = 0
+            if partner.rollup_partner_ids:
+                rollup_balance = sum(partner.rollup_partner_ids.mapped("open_so_balance"))
 
             base_balance = open_so_total + draft_invoice_total + rollup_balance
 
-            # Different grouping logic depending on partner structure
-            if partner._origin.is_company:
-                full_group = (
-                    partner.rollup_partner_ids | partner.child_ids | partner._origin
-                )
-                partner.open_so_balance = compute_balance_optimized(full_group.ids)
+            # Handle different partner structures
+            if partner.is_company:
+                # Company case: include all related partners
+                full_group_ids = []
+                if partner.rollup_partner_ids:
+                    full_group_ids.extend(partner.rollup_partner_ids.ids)
+                if partner.child_ids:
+                    full_group_ids.extend(partner.child_ids.ids)
+                full_group_ids.append(partner.id)
+                
+                partner.open_so_balance = compute_balance_optimized(full_group_ids)
 
             elif partner.partner_rollup_id and not partner.parent_id:
-                rollup_group = (
-                    partner.partner_rollup_id
-                    | partner.partner_rollup_id.child_ids
-                    | partner._origin
-                )
+                # Rollup partner case
                 partner.open_so_balance = base_balance
-                partner.partner_rollup_id.open_so_balance = compute_balance_optimized(
-                    rollup_group.ids
-                )
+                
+                # Handle rollup partner separately to avoid singleton error
+                rollup_partner = partner.partner_rollup_id
+                if rollup_partner:
+                    rollup_group_ids = [rollup_partner.id]
+                    if rollup_partner.child_ids:
+                        rollup_group_ids.extend(rollup_partner.child_ids.ids)
+                    rollup_group_ids.append(partner.id)
+                    
+                    # Only update if we're computing for the rollup partner itself
+                    # or use ensure_one() to avoid singleton errors
+                    if rollup_partner.id in self.ids:
+                        rollup_partner.open_so_balance = compute_balance_optimized(rollup_group_ids)
 
             elif partner.parent_id and not partner.partner_rollup_id:
-                parent_group = (
-                    partner.parent_id
-                    | partner.parent_id.child_ids
-                    | partner.parent_id.rollup_partner_ids
-                )
-                parent_balance = compute_balance_optimized(parent_group.ids)
-                partner.parent_id.open_so_balance = parent_balance
+                # Parent partner case
                 partner.open_so_balance = base_balance
-
-            # Store the computed value in cache
-            if not hasattr(self.env, "_open_so_balance_cache"):
-                self.env._open_so_balance_cache = {}
-            self.env._open_so_balance_cache[cache_key] = partner.open_so_balance
-
-        # Additional optimization: Add a check to avoid processing when not needed
-        # This prevents unnecessary processing when called inappropriately
-        if not self:
-            return
-
-        # Validate that we're not processing an empty recordset
-        if not self or len(self) == 0:
-            return
+                
+                # Handle parent partner separately
+                parent_partner = partner.parent_id
+                if parent_partner:
+                    parent_group_ids = [parent_partner.id]
+                    if parent_partner.child_ids:
+                        parent_group_ids.extend(parent_partner.child_ids.ids)
+                    if parent_partner.rollup_partner_ids:
+                        parent_group_ids.extend(parent_partner.rollup_partner_ids.ids)
+                    
+                    # Only update if we're computing for the parent itself
+                    if parent_partner.id in self.ids:
+                        parent_partner.open_so_balance = compute_balance_optimized(parent_group_ids)
+            
+            else:
+                # Simple case
+                partner.open_so_balance = base_balance    
 
     @api.depends(
         "credit_limit",
