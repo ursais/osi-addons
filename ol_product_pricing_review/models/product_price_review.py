@@ -577,7 +577,7 @@ class ProductPriceReview(models.Model):
                     "to allow price reviews."
                 )
 
-            if rec.effective_date:
+            if rec.effective_date and not self.env.context.get('is_cron'):
                 if rec.effective_date < today:
                     raise ValidationError(_("Effective date cannot be in the past"))
 
@@ -635,15 +635,17 @@ class ProductPriceReview(models.Model):
         or 'in_progress' states that are linked to a product. For
         each review, it attempts to run `validate_button()`:
         """
+        today = fields.Date.context_today(self)
         pending_reviews = self.search(
             [
                 ("state", "in", ("pending", "new", "in_progress")),
                 ("product_id", "!=", False),
+                ('effective_date', '<=', today)
             ]
         )
         for review in pending_reviews:
             try:
-                review.validate_button()
+                review.with_context(is_cron=True).validate_button()
             except Exception as e:
                 review.message_post(
                     body=_("Error while validating price review: %s") % str(e)
