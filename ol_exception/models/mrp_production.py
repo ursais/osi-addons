@@ -48,6 +48,7 @@ class MRPProduction(models.Model):
         return list(fields_to_check)
 
     def _check_mrp_check_exception(self, vals):
+
         check_exceptions = any(
             field in vals for field in self._fields_trigger_check_exception()
         )
@@ -58,5 +59,11 @@ class MRPProduction(models.Model):
         res = super().write(vals)
         self._check_mrp_check_exception(vals)
         return res
+
+    def button_mark_done(self):
+        for rec in self:
+            if rec.detect_exceptions() and not rec.ignore_exception:
+                return rec._popup_exceptions()
+        return super(MRPProduction, self).button_mark_done()
 
     # END ##########
