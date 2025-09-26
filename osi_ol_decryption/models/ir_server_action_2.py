@@ -749,7 +749,7 @@ class IrActionsServer(models.Model):
         # 1. create table temp_product_temp_v13_vp as select * from  product_template;
         # 1. create table temp_product_template_res_company_rel_v13_VP as select * from  product_template_res_company_rel;
         # 2. pg_dump -d V13DBNAME -t temp_phantom_bom_id > /home/odoo/temp_phantom_bom_id.sql;
-        # 3. psql -d V17DBNAME -f /home/odoo/temp_phantom_bom_id.sql
+        # 3.    
         # Created by Vandan Pandeji
 
 
@@ -878,34 +878,57 @@ class IrActionsServer(models.Model):
                 )
  
         self.env["ir.property"].sudo().create(payment_property_vals)
+
+
+        # OSI-ONL Ticket for # 66470 Attribute Value Visibility on System Not Respecting Migrated Values
+        # create table temp_product_attribute_value_v13 as select * from  product_attribute_value;
+
+        cr.execute("""
+            UPDATE product_attribute_value pav
+            SET visible_to_user = tmp.visible_to_user
+            FROM temp_product_attribute_value_v13 tmp
+            WHERE pav.id = tmp.id
+              AND pav.active = TRUE
+        """)
+        cr.commit()
+        _logger.info(">>> product_attribute_value visible_to_user is done")
+        cr.execute("""
+            UPDATE product_template_attribute_value ptav
+            SET visible_to_user = pav.visible_to_user
+            FROM product_attribute_value pav
+            WHERE ptav.product_attribute_value_id = pav.id
+              AND pav.active = TRUE
+        """)
+        cr.commit()
+        _logger.info(">>> product_template_attribute_value visible_to_user is done")
         
 
-        def update_visibility(cr, used_in_sale_description_value, visible_to_user_value):
-            query = """
-                SELECT id 
-                FROM product_template_attribute_line 
-                WHERE active = 't' AND used_in_sale_description = %s;
-            """
-            cr.execute(query, (used_in_sale_description_value,))
-            ptal_ids = [row[0] for row in cr.fetchall()]
+        # def update_visibility(cr, used_in_sale_description_value, visible_to_user_value):
+        #     query = """
+        #         SELECT id 
+        #         FROM product_template_attribute_line 
+        #         WHERE active = 't' AND used_in_sale_description = %s;
+        #     """
+        #     cr.execute(query, (used_in_sale_description_value,))
+        #     ptal_ids = [row[0] for row in cr.fetchall()]
             
-            if ptal_ids:  # Only execute update if IDs were found
-                update_query = """
-                    UPDATE product_template_attribute_value 
-                    SET visible_to_user = %s 
-                    WHERE attribute_line_id IN %s AND ptav_active = 't';
-                """
-                cr.execute(update_query, (visible_to_user_value, tuple(ptal_ids)))
+        #     if ptal_ids:  # Only execute update if IDs were found
+        #         update_query = """
+        #             UPDATE product_template_attribute_value 
+        #             SET visible_to_user = %s 
+        #             WHERE attribute_line_id IN %s AND ptav_active = 't';
+        #         """
+        #         cr.execute(update_query, (visible_to_user_value, tuple(ptal_ids)))
             
-            return len(ptal_ids)
+        #     return len(ptal_ids)
 
-        # Update 'visible_to_user' = 't' where 'used_in_sale_description' is true
-        count_true = update_visibility(cr, 't', 't')
+        # # Update 'visible_to_user' = 't' where 'used_in_sale_description' is true
+        # count_true = update_visibility(cr, 't', 't')
 
-        # Update 'visible_to_user' = 'f' where 'used_in_sale_description' is false
-        count_false = update_visibility(cr, 'f', 'f')
+        # # Update 'visible_to_user' = 'f' where 'used_in_sale_description' is false
+        # count_false = update_visibility(cr, 'f', 'f')
 
-        _logger.info("\n\n\n\n===Task: 929566975 and 927975110 Done")
+        # _logger.info("\n\n\n\n===Task: 929566975 and 927975110 Done")
         cr.commit()
 
         _logger.info("\n\n\n\n=================DONE=======")
@@ -1103,5 +1126,6 @@ class IrActionsServer(models.Model):
         cr.execute("drop table temp_ir_property_inbound_shipping_method;")
         cr.execute("drop table temp_ir_property;")
         cr.execute("drop table temp_res_users;")
+        cr.execute("drop table temp_product_attribute_value_v13;")
         
         _logger.info("\n\n============Tables Droped")
