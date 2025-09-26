@@ -31,9 +31,8 @@ class IrActionsReport(models.Model):
         Add the Report Objects to the context so it's accessible later on
         """
         model = (
-            self.model
+            self._get_report(report_ref).model or self.model
             or (data and data.get("context").get("active_model"))
-            or self._get_report(report_ref).model
         )
         report_objects = self.env[model].browse(res_ids)
         return super(
