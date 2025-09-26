@@ -16,6 +16,21 @@ class AttributeAttribute(models.Model):
         required=True,
     )
 
+    attribute_type = fields.Selection(
+        [
+            ("char", "Char"),
+            ("text", "Text"),
+            ("select", "Select"),
+            ("multiselect", "Multiselect"),
+            ("boolean", "Boolean"),
+            ("nullable_integer", "Integer"),
+            ("date", "Date"),
+            ("datetime", "Datetime"),
+            ("binary", "Binary"),
+            ("nullable_float", "Float"),
+        ],
+    )
+
     _sql_constraints = [
         (
             "unique_code",

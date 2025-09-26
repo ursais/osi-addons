@@ -54,6 +54,12 @@
         "account_avatax_oca",
         "web_m2x_options_manager",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "ol_base/static/src/js/field_integer_nullable.js",
+            "ol_base/static/src/js/field_float_nullable.js",
+        ],
+    },
     # always loaded
     "data": [
         "data/company_data.xml",
