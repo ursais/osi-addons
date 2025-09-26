@@ -30,11 +30,9 @@ class IrActionsReport(models.Model):
         """
         Add the Report Objects to the context so it's accessible later on
         """
-        model = (
-            self._get_report(report_ref).model or self.model
-            or (data and data.get("context").get("active_model"))
-        )
+        model = self._get_report(report_ref).model or self.model
         report_objects = self.env[model].browse(res_ids)
+
         return super(
             IrActionsReport, self.with_context(report_objects=report_objects)
         )._render_qweb_pdf(report_ref, res_ids=res_ids, data=data)
