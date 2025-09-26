@@ -23,7 +23,9 @@
             (4, ref('sale_stock.field_sale_order__procurement_group_id')),
             (4, ref('sale.field_sale_order__locked')),
             (4, ref('ol_sale.field_sale_order__to_send_confirmation_email')),
-            (4, ref('ol_sale.field_sale_order__original_commitment_date'))]" />
+            (4, ref('ol_sale.field_sale_order__original_commitment_date')),
+            (4, ref('sale.field_sale_order__partner_shipping_id'))
+            ]" />
         <field name="allowed_to_write_after_validation" eval="True" />
         <field name="allowed_to_write_under_validation" eval="True" />
         <field name="company_id" eval="False" />
