@@ -303,7 +303,7 @@ class AccountMove(models.Model):
                 _(
                    """
                    No ‘AP’ contacts are found, 
-                   please add or set the ‘AR’ setting on a contact and try again.
+                   please add or set the ‘AP’ setting on a contact and try again.
                    """
                 )
             )
@@ -312,7 +312,7 @@ class AccountMove(models.Model):
             raise UserError(
             _(
                 """No ‘AR’ contacts are found,
-                please add or set the ‘AP’ setting on a contact and try again."""
+                please add or set the ‘AR’ setting on a contact and try again."""
                 )
             )
 
