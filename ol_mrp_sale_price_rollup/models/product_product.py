@@ -120,16 +120,60 @@ class ProductProduct(models.Model):
             else:
                 list_price = product.list_price
 
-            product.lst_price = list_price + product.price_extra
+            # Don't use list_price in the equation for phantom boms, we only
+            # care about bom price for kits
+            if product.phantom_bom_id or getattr(product, "is_kits", False):
+                product.lst_price = product.bom_lst_price + product.attr_val_lst_price
+            # For all other products, set normal lst_price which is
+            # list_price + extra price
+            else:
+                product.lst_price = list_price + product.price_extra
 
         return res
 
     def write(self, vals):
+        if self._context.get("skip_bom_update"):
+            return super().write(vals)
+
         res = super().write(vals)
-        if "lst_price" in vals or "price_extra" in vals or "list_price" in vals:
+        price_fields = {
+            "lst_price",
+            "price_extra",
+            "list_price",
+            "approved_total_cost",
+            "bom_lst_price",
+        }
+        if price_fields & vals.keys():
             for product in self:
-                product._set_sale_price_from_bom()
-                product._set_approved_total_cost_from_bom()
+                # Pass context flag to skip recursion
+                ctx = dict(self._context, skip_bom_update=True)
+
+                # Update own BoM price/cost
+                product.with_context(ctx)._set_sale_price_from_bom()
+                product.with_context(ctx)._set_approved_total_cost_from_bom()
+
+                # Update template list_price if single variant
+                template = product.product_tmpl_id
+                if (
+                    template.product_variant_count == 1
+                    and not template.has_configurable_attributes
+                ):
+                    template.list_price = product.lst_price
+
+                # Recompute finished products using this product
+                boms_using_this = self.env["mrp.bom"].search(
+                    [
+                        ("bom_line_ids.product_id", "=", product.id),
+                        ("type", "=", "phantom"),
+                    ]
+                )
+                finished_products = boms_using_this.mapped(
+                    "product_tmpl_id.product_variant_id"
+                )
+                ctx = dict(self._context, from_component=True)
+                for finished in finished_products:
+                    finished.with_context(ctx).button_bom_sale_price()
+
         return res
 
     def button_bom_sale_price(self):
@@ -412,7 +456,7 @@ class ProductProduct(models.Model):
             # Final calculation for price_extra
             total_price_extra = product.bom_lst_price + attr_val_lst_price
             if bom.type == "phantom":
-                total_price_extra = attr_val_lst_price
+                total_price_extra = product.bom_lst_price
 
             # Directly assign to override any existing value
             product.price_extra = total_price_extra
