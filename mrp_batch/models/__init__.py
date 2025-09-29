@@ -9,6 +9,7 @@ from . import queue_job
 from . import res_config_settings
 from . import mrp_bom
 from . import mrp_production_batch_schedule
+from . import stock_picking_batch
 from . import stock_picking
 from . import stock_move
 from . import stock_rule

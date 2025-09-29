@@ -355,7 +355,11 @@ class MrpProductionBatch(models.Model):
         required=True,
         default=lambda self: self.env.company,
     )
-
+    picking_batch_ids = fields.One2many(
+        "stock.picking.batch",
+        "mrp_batch_id",
+        string="Batch Transfers",
+    )
     # Count of associated sale orders
     sale_order_count = fields.Integer(
         "Total Sale Order Count",
@@ -365,6 +369,12 @@ class MrpProductionBatch(models.Model):
     picking_count = fields.Integer(
         "Total Sale Order Count",
         compute="_compute_picking_count",
+    )
+    # Count of associated batch pickings
+    picking_batch_count = fields.Integer(
+        string="Batch Transfers Count",
+        compute="_compute_picking_count",
+        store=False,
     )
 
     # END #########
@@ -564,6 +574,35 @@ class MrpProductionBatch(models.Model):
                 "target": "current",  # Opens in the same window
                 "context": "{'create': False}",
             }
+
+    def action_open_batch_transfers(self):
+        # Ensures the method is called on a single record.
+        self.ensure_one()
+        # Defines the base action for viewing the stock picking batch.
+        action = {
+            "res_model": "stock.picking.batch",
+            "type": "ir.actions.act_window",
+        }
+        # Checks if there is only one batch ID in `picking_batch_ids`.
+        if len([batch.id for batch in self.picking_batch_ids]) == 1:
+            # If there is a single batch, open it in form view.
+            action.update(
+                {
+                    "view_mode": "form",
+                    "res_id": self.picking_batch_ids.id,
+                }
+            )
+        else:
+            # If there are multiple batches, open them in tree and form view with a
+            # domain filter.
+            action.update(
+                {
+                    "name": "Batch Transfer",
+                    "domain": [("id", "in", self.picking_batch_ids.ids)],
+                    "view_mode": "tree, form",
+                }
+            )
+        return action
 
     # Compute Methods
     @api.depends(
@@ -1238,14 +1277,14 @@ class MrpProductionBatch(models.Model):
                     )
                     == -1
                 ):
-                    product_status_map[
-                        product.id
-                    ] = f"{product.default_code}: Not Available"
+                    product_status_map[product.id] = (
+                        f"{product.default_code}: Not Available"
+                    )
 
                 if move.forecast_expected_date:
-                    product_status_map[
-                        product.id
-                    ] = f"{product.default_code}: Exp. {format_date(self.env, move.forecast_expected_date)}"
+                    product_status_map[product.id] = (
+                        f"{product.default_code}: Exp. {format_date(self.env, move.forecast_expected_date)}"
+                    )
 
             # Populate the details field
             batch.components_availability_details = "\n".join(
@@ -1481,11 +1520,11 @@ class MrpProductionBatch(models.Model):
             if all(job.state in ["done", "failed", "cancelled"] for job in jobs):
                 batch.is_queuing = False
 
-        
     def _compute_picking_count(self):
         # Compute the total count of internal tranfer associated with productions
         for rec in self:
             rec.picking_count = len(rec.production_ids.mapped("picking_ids"))
+            rec.picking_batch_count = len(rec.picking_batch_ids)
 
     # Smart Button Methods
     def action_view_mo_delivery(self):
