@@ -110,6 +110,9 @@
                         <button name="action_view_mo_delivery" type="object" class="oe_stat_button" icon="fa-pencil-square-o" invisible="picking_count == 0">
                             <field name="picking_count" widget="statinfo" string="Internal Tranfer" />
                         </button>
+                        <button name="action_open_batch_transfers" type="object" string="Batch Transfers" icon="fa-truck" class="oe_stat_button" invisible="picking_batch_count == 0">
+                            <field name="picking_batch_count" widget="statinfo" string="Batch Transfers"/>
+                        </button>
                     </div>
                     <div class="alert alert-danger mb8" role="alert" invisible="not exception_ids">
                         IMPORTANT: There are manufacturing orders with exceptions.

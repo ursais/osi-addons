@@ -28,6 +28,9 @@
                             </div>
                         </div>
                     </setting>
+                    <setting id="use_batch_transfer" string="Enable Batch Transfers for Manufacturing Batches">
+                        <field name="use_batch_transfer" class="oe_inline"/>
+                    </setting>
                 </block>
                 <block title="Manufacturing Batch Queuing" id="mrp_batch_queuing">
                     <setting id="enable_delay_action_assign" string="Enable Queuing Action Assign">

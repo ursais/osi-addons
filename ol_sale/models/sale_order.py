@@ -323,25 +323,54 @@ class SaleOrder(models.Model):
         # Use found template, otherwise fallback
         return template or super()._find_mail_template()
 
+    @api.depends("mrp_production_ids.picking_ids.batch_id")
     def _compute_mo_tranfer_count(self):
         for rec in self:
-            rec.mo_tranfer_count = len(self.mrp_production_ids.mapped("picking_ids"))
+            pickings = rec.mrp_production_ids.mapped("picking_ids")
+            batch_pickings = pickings.mapped("batch_id")
+            if batch_pickings:
+                rec.mo_tranfer_count = len(batch_pickings)
+            else:
+                rec.mo_tranfer_count = len(pickings)
 
     def action_view_mo_internal_picking(self):
         self.ensure_one()
-        picking_ids = self.mrp_production_ids.mapped("picking_ids")
-        action = self.env["ir.actions.actions"]._for_xml_id(
-            "stock.action_picking_tree_all"
-        )
-        if len(picking_ids) > 1:
-            action["domain"] = [("id", "in", picking_ids.ids)]
-        elif picking_ids:
-            action["res_id"] = picking_ids.id
-            action["views"] = [(self.env.ref("stock.view_picking_form").id, "form")]
-            if "views" in action:
-                action["views"] += [
-                    (state, view) for state, view in action["views"] if view != "form"
+        pickings = self.mrp_production_ids.mapped("picking_ids")
+        batch_pickings = pickings.mapped("batch_id")
+
+        action = None
+        if batch_pickings:
+            # Open batch pickings
+            action = self.env["ir.actions.actions"]._for_xml_id(
+                "stock_picking_batch.stock_picking_batch_action"
+            )
+            if len(batch_pickings) > 1:
+                action["domain"] = [("id", "in", batch_pickings.ids)]
+            else:
+                action["res_id"] = batch_pickings.id
+                action["views"] = [
+                    (
+                        self.env.ref("stock_picking_batch.stock_picking_batch_form").id,
+                        "form",
+                    )
                 ]
+        else:
+            # Fall back to normal pickings
+            action = self.env["ir.actions.actions"]._for_xml_id(
+                "stock.action_picking_tree_all"
+            )
+            if len(pickings) > 1:
+                action["domain"] = [("id", "in", pickings.ids)]
+            elif pickings:
+                action["res_id"] = pickings.id
+                action["views"] = [(self.env.ref("stock.view_picking_form").id, "form")]
+                if "views" in action:
+                    action["views"] += [
+                        (state, view)
+                        for state, view in action["views"]
+                        if view != "form"
+                    ]
+
         action["context"] = dict(self._context)
         return action
 

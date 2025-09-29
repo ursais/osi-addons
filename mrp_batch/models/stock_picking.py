@@ -4,6 +4,12 @@ from odoo import fields, models
 class StockPicking(models.Model):
     _inherit = "stock.picking"
 
+    mrp_batch_id = fields.Many2one(
+        "mrp.production.batch",
+        string="MO Batch",
+        help="Manufacturing batch this picking is linked to.",
+    )
+
     def write(self, vals):
         # Check if the 'scheduled_date' field is being changed
         if "scheduled_date" in vals:
@@ -44,7 +50,7 @@ class StockPicking(models.Model):
                     .get_param("mrp_batch.enable_delay_component_availability")
                 )
                 for batch in batches_to_recompute:
-                    if enable_component_available_delay == 'True':
+                    if enable_component_available_delay == "True":
                         batch.with_delay()._compute_components_availability()
                     else:
                         batch._compute_components_availability()

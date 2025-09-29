@@ -8,7 +8,7 @@ class SaleOrder(models.Model):
     # COLUMNS #########
 
     mrp_batch_count = fields.Integer(
-        string="mrp batch count",
+        string="MO Batch Count",
         compute="_compute_mrp_production_batch_id_count",
     )
     is_mrp_warning = fields.Boolean(compute="_compute_is_mrp_warning")
@@ -57,6 +57,7 @@ class SaleOrder(models.Model):
         batch_mode = (
             self.env["ir.config_parameter"].sudo().get_param("mrp_batch.batch_mode")
         )
+
         for rec in self:
             existing_batch_id = None
 
@@ -78,7 +79,8 @@ class SaleOrder(models.Model):
                     ):  # i.g Split 2 times to end up with 3 MOs
                         # Always split 1 qty from the current MO
                         result = mo_to_split.sudo()._split_productions(
-                            amounts={mo_to_split: [1]}, split_internal_picking=split_internal_picking
+                            amounts={mo_to_split: [1]},
+                            split_internal_picking=split_internal_picking,
                         )
 
                         # result[-1] is the remaining MO, result[0] is the new one
@@ -115,7 +117,7 @@ class SaleOrder(models.Model):
                             }
                         )
             rec.mrp_production_ids.write({"ignore_exception": True})
-            rec.mrp_production_ids.action_confirm()    
+            rec.mrp_production_ids.action_confirm()
             rec.mrp_production_ids.write({"ignore_exception": False})
 
     # Methods for Batch Smart Button

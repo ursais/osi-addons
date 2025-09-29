@@ -15,6 +15,7 @@
         "sale_management",
         "sale_mrp",
         "queue_job",
+        "stock_picking_batch",
     ],
     "data": [
         "security/ir.model.access.csv",
@@ -40,6 +41,7 @@
         "views/product_template_view.xml",
         "views/mrp_workorder_view.xml",
         "views/res_config_settings_views.xml",
+        "views/stock_picking_views.xml",
     ],
     "auto_install": False,
     "application": False,
