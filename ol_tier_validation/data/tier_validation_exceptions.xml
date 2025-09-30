@@ -24,7 +24,13 @@
             (4, ref('sale.field_sale_order__locked')),
             (4, ref('ol_sale.field_sale_order__to_send_confirmation_email')),
             (4, ref('ol_sale.field_sale_order__original_commitment_date')),
-            (4, ref('sale.field_sale_order__partner_shipping_id'))
+            (4, ref('sale.field_sale_order__partner_shipping_id')),
+            (4, ref('sale_substate.field_sale_order__substate_id')),
+            (4, ref('ol_exception.field_sale_order__ignored_exception_ids')),
+            (4, ref('sale_exception.field_sale_order__main_exception_id')),
+            (4, ref('sale_exception.field_sale_order__exceptions_summary')),
+            (4, ref('sale_exception.field_sale_order__exception_ids')),
+            (4, ref('sale_exception.field_sale_order__ignore_exception')),
             ]" />
         <field name="allowed_to_write_after_validation" eval="True" />
         <field name="allowed_to_write_under_validation" eval="True" />
@@ -47,6 +53,11 @@
             (4, ref('purchase.field_purchase_order__order_line')),
             (4, ref('purchase.field_purchase_order__priority')),
             (4, ref('purchase.field_purchase_order__state')),
+            (4, ref('ol_exception.field_purchase_order__ignored_exception_ids')),
+            (4, ref('purchase_exception.field_purchase_order__main_exception_id')),
+            (4, ref('purchase_exception.field_purchase_order__exceptions_summary')),
+            (4, ref('purchase_exception.field_purchase_order__exception_ids')),
+            (4, ref('purchase_exception.field_purchase_order__ignore_exception')),
             ]" />
         <field name="allowed_to_write_after_validation" eval="True" />
         <field name="allowed_to_write_under_validation" eval="False" />

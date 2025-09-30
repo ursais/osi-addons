@@ -25,6 +25,10 @@
         "account",
         "account_avatax_sale_oca",
         "ol_stock_constrained_availability",
+        "ol_purchase",
+        "ol_sale",
+        "sale_substate",
+        "ol_exception",
         "sale_stock",
     ],
     # always loaded
