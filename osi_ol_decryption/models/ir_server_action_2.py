@@ -749,7 +749,7 @@ class IrActionsServer(models.Model):
         # 1. create table temp_product_temp_v13_vp as select * from  product_template;
         # 1. create table temp_product_template_res_company_rel_v13_VP as select * from  product_template_res_company_rel;
         # 2. pg_dump -d V13DBNAME -t temp_phantom_bom_id > /home/odoo/temp_phantom_bom_id.sql;
-        # 3.    
+        # 3. psql -d V17DBNAME -f /home/odoo/temp_phantom_bom_id.sql   
         # Created by Vandan Pandeji
 
 
@@ -1033,60 +1033,193 @@ class IrActionsServer(models.Model):
                 cr.commit()
 
     def setting_default_val(self):
-        IRProperty = self.env["ir.property"]
-        ResCompany = self.env["res.company"]
-        Field = self.env["ir.model.fields"]
+        #======================OLD CODE ===============
+        # IRProperty = self.env["ir.property"]
+        # ResCompany = self.env["res.company"]
+        # Field = self.env["ir.model.fields"]
 
-        # Fetch everything in bulk (fewer queries)
-        templates = self.env['product.template'].search([("has_configurable_attributes", "=", True)])
+        # # Fetch everything in bulk (fewer queries)
+        # templates = self.env['product.template'].search([("has_configurable_attributes", "=", True)])
+        # companies = ResCompany.search([("short_name", "in", ["eu", "us"])])
+        # field = Field.search(
+        #     [("model_id.model", "=", "product.template.attribute.line"),
+        #      ("name", "=", "default_val")],
+        #     limit=1
+        # )
+        # companies_ids= tuple(companies.ids)
+        # if companies_ids:
+        #     select_query = """
+        #         SELECT id
+        #         FROM ir_property 
+        #         WHERE field_id = %s 
+        #           AND company_id IN %s
+        #     """
+        #     self.env.cr.execute(select_query, (field.id, companies_ids))
+        #     data = [row[0] for row in self.env.cr.fetchall()]
+
+        #     # 2. Delete if found
+        #     if data:
+        #         unlink_query = "DELETE FROM ir_property WHERE id IN %s"
+        #         self.env.cr.execute(unlink_query, (tuple(data),))
+        #         self.env.cr.commit()
+
+
+        # if not field or not companies:
+        #     return  # nothing to do
+
+        # vals_to_create = []
+
+        # for template in templates:
+        #     for line in template.attribute_line_ids:
+        #         if line.required and line.value_ids and not line.default_val:
+        #             default_val = line.value_ids[0]
+        #             res_id = f"{line._name},{line.id}"
+        #             value_reference = f"{default_val._name},{default_val.id}"
+
+        #             for company in companies:
+        #                 vals_to_create.append({
+        #                     "name": "default_val",
+        #                     "company_id": company.id,
+        #                     "fields_id": field.id,
+        #                     "res_id": res_id,
+        #                     "value_reference": value_reference,
+        #                 })
+
+        # if vals_to_create:
+        #     IRProperty.create(vals_to_create)
+        #     self.env.cr.commit()
+        #======================OLD CODE ===============
+
+        # New Script Made on Sep 30 2025
+        # Fetch Data from Version 13 and update it in veriosn 17 
+        # v13 table name: temp_product_template_attribute_line_default_val_v13
+        """ New Query
+                -- Drop if exists
+            DROP TABLE IF EXISTS temp_product_template_attribute_line_default_val_v13;
+
+            -- Create table
+            CREATE TABLE temp_product_template_attribute_line_default_val_v13 (
+                line_id                    INT,
+                attribute_id               INT,
+                product_tmpl_id            INT,
+                attribute_name             VARCHAR(255),
+                value_id                   INT,
+                value_attribute_id         INT,
+                product_attribute_value_id INT,
+                is_default                 BOOLEAN
+            );
+
+            -- Insert data
+            INSERT INTO temp_product_template_attribute_line_default_val_v13 (
+                line_id, attribute_id, product_tmpl_id, attribute_name,
+                value_id, value_attribute_id, product_attribute_value_id, is_default
+            )
+            SELECT 
+                ptal.id AS line_id,
+                ptal.attribute_id,
+                ptal.product_tmpl_id,
+                pa.name AS attribute_name,
+                ptav.id AS value_id,
+                ptav.attribute_id AS value_attribute_id,
+                ptav.product_attribute_value_id,
+                ptav.is_default
+            FROM product_template_attribute_line ptal
+            JOIN product_attribute pa
+                   ON pa.id = ptal.attribute_id
+            JOIN product_template_attribute_value ptav
+                   ON ptav.attribute_line_id = ptal.id
+                  AND ptav.ptav_active = 't'  
+                  AND ptav.is_default = 't'
+            WHERE ptal.active = 't';
+
+
+        """
+
+
+        cr = self.env.cr
+        AttributeValue = self.env["product.attribute.value"].with_context(prefetch_fields=False)
+        AttributeLine = self.env["product.template.attribute.line"].sudo().with_context(prefetch_fields=False)
+        IRProperty = self.env["ir.property"].with_context(prefetch_fields=False)
+        ResCompany = self.env["res.company"].with_context(prefetch_fields=False)
         companies = ResCompany.search([("short_name", "in", ["eu", "us"])])
+        Field = self.env["ir.model.fields"].with_context(prefetch_fields=False)
         field = Field.search(
             [("model_id.model", "=", "product.template.attribute.line"),
              ("name", "=", "default_val")],
             limit=1
         )
-        companies_ids= tuple(companies.ids)
+
+        companies_ids = tuple(companies.ids)
         if companies_ids:
-            select_query = """
-                SELECT id
-                FROM ir_property 
-                WHERE field_id = %s 
+            # Delete old property records in one go
+            cr.execute("""
+                DELETE FROM ir_property
+                WHERE fields_id = %s 
                   AND company_id IN %s
-            """
-            self.env.cr.execute(select_query, (field.id, companies_ids))
-            data = [row[0] for row in self.env.cr.fetchall()]
+            """, (field.id, companies_ids))
+            cr.commit()
 
-            # 2. Delete if found
-            if data:
-                unlink_query = "DELETE FROM ir_property WHERE id IN %s"
-                self.env.cr.execute(unlink_query, (tuple(data),))
-                self.env.cr.commit()
+        lines = AttributeLine.search([("active", "=", True), ("required", "=", True)])
 
+        vals_lists = []
+        company_ids = companies.ids  # cache once
 
-        if not field or not companies:
-            return  # nothing to do
+        for line in lines:
+            cr.execute("""
+                SELECT product_attribute_value_id
+                FROM temp_product_template_attribute_line_default_val_v13
+                WHERE line_id = %s
+                LIMIT 1;
+            """, (line.id,))
+            row = cr.fetchone()
+            value_id = row[0] if row else False
+            if not value_id:
+                continue
 
-        vals_to_create = []
+            value = AttributeValue.browse(value_id)
+            
+            if not value.exists():
+                continue
 
-        for template in templates:
-            for line in template.attribute_line_ids:
-                if line.required and line.value_ids and not line.default_val:
-                    default_val = line.value_ids[0]
-                    res_id = f"{line._name},{line.id}"
-                    value_reference = f"{default_val._name},{default_val.id}"
+            tobe_update_value = value
+            if value.active:
+                tobe_update_value = value
+            else:
+                cr.execute("""
+                    SELECT id
+                    FROM product_attribute_value
+                    WHERE name->>'en_US' = %s
+                      AND attribute_id = %s
+                      AND active = TRUE
+                    LIMIT 1
+                """, (value.name, line.attribute_id.id))
+                row = cr.fetchone()
+                tobe_update_value = AttributeValue.browse(row[0]) if row else False
 
-                    for company in companies:
-                        vals_to_create.append({
-                            "name": "default_val",
-                            "company_id": company.id,
-                            "fields_id": field.id,
-                            "res_id": res_id,
-                            "value_reference": value_reference,
-                        })
+            _logger.info("tobe_update_value: %s records", tobe_update_value)
+            if not tobe_update_value:
+                continue
 
-        if vals_to_create:
-            IRProperty.create(vals_to_create)
-            self.env.cr.commit()
+            default_val = tobe_update_value
+            value_reference = f"{default_val._name},{default_val.id}"
+            res_id = f"{line._name},{line.id}"
+
+            # Create values for all companies at once (no loop inside)
+            vals_lists.extend([
+                {
+                    "name": "default_val",
+                    "company_id": cid,
+                    "fields_id": field.id,
+                    "res_id": res_id,
+                    "value_reference": value_reference,
+                }
+                for cid in company_ids
+            ])
+
+        if vals_lists:
+            IRProperty.sudo().create(vals_lists)
+            _logger.info("Data Creation DONE:::: %s records", len(vals_lists))
+            cr.commit()
     
     def update_ar_ap_followup_contacts(self):
         # task ref: https://osi.mavenlink.com/workspaces/44078089/#tracker/932728167
