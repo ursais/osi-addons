@@ -646,6 +646,8 @@ class MrpProduction(models.Model):
         old_batches = {mo.id: mo.mrp_batch_id for mo in self}
         res = super().write(vals)
 
+        batches_to_recompute = set()
+
         for mo in self:
             old_batch = old_batches.get(mo.id)
             new_batch = mo.mrp_batch_id
@@ -660,10 +662,17 @@ class MrpProduction(models.Model):
                                 "mrp_batch_id": False,
                             }
                         )
+                batches_to_recompute.add(old_batch)
 
             if new_batch:
                 # Relink pickings to the new batch
                 mo._link_pickings_to_batches()
+                batches_to_recompute.add(new_batch)
+
+        # Recompute batch states
+        if batches_to_recompute:
+            for batch in batches_to_recompute:
+                batch._compute_batch_state()
 
         return res
 
