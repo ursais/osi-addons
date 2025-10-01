@@ -1,0 +1,11 @@
+<odoo>
+
+    <record id="product_config_session_rule" model="ir.rule">
+        <field name="name">Product Config Session: multi-company access</field>
+        <field name="model_id" ref="product_configurator.model_product_config_session"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]
+        </field>
+    </record>
+
+</odoo>
