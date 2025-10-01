@@ -23,6 +23,9 @@
                     invisible="not bom_id"
                 />
             </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="first_estimated_ship_date" readonly="1"/>
+            </xpath>
         </field>
     </record>
 

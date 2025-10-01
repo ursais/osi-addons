@@ -1,19 +1,103 @@
+from datetime import timedelta
 from odoo import api, fields, models
 
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
+    available_date = fields.Date(
+        string="Available Date",
+        compute="_compute_available_date",
+    )
+
+    @api.depends("order_id.date_order", "customer_lead")
+    def _compute_available_date(self):
+        for line in self:
+            base_date = line.order_id.date_order.date() or field.Date.today()
+            if line.customer_lead:
+                line.available_date = base_date + timedelta(days=line.customer_lead)
+            else:
+                line.available_date = base_date
+
     @api.depends("product_id", "product_uom_qty")
     def _compute_customer_lead(self):
         for line in self:
             if not line.product_id:
                 continue
-            elif line.bom_id:
-                lead_time = line._get_bom_lead_time()
             else:
-                lead_time = line._get_standard_lead_time()
-            line.customer_lead = lead_time
+                line._set_dynamic_lead_times()
+            # elif line.bom_id:
+            #     lead_time = line._get_bom_lead_time()
+            # else:
+            #     lead_time = line._get_standard_lead_time()
+            # line.customer_lead = lead_time
+    
+    def _set_dynamic_lead_times(self):
+        """Compute customer_lead for all lines in this order,
+        considering shared BOM components and availability."""
+        today = fields.Date.today()
+
+        for order in self:
+            # --- Step 1: Build component requirements map ---
+            component_demand = {}   # {product_id: total_qty}
+            line_components = {}    # {line_id: [product_id, ...]}
+
+            for line in order.order_line:
+                required_qty = line.product_uom_qty
+                comps = []
+
+                if line.bom_id:
+                    for comp in line.bom_id.bom_line_ids:
+                        comp_qty = required_qty * comp.product_qty
+                        component_demand[comp.product_id.id] = (
+                            component_demand.get(comp.product_id.id, 0) + comp_qty
+                        )
+                        comps.append(comp.product_id.id)
+                    line_components[line.id] = comps
+
+                elif line.product_id.type == "product":
+                    # stockable product without BOM
+                    component_demand[line.product_id.id] = (
+                        component_demand.get(line.product_id.id, 0) + required_qty
+                    )
+                    line_components[line.id] = [line.product_id.id]
+
+                else:
+                    line_components[line.id] = []
+
+            # --- Step 2: Compute availability dates for all components ---
+            product_avail = {}
+            for product_id, qty in component_demand.items():
+                product = self.env["product.product"].browse(product_id)
+                avail_date = order._get_virtual_avail_date(product, qty)
+                product_avail[product_id] = avail_date
+
+            # --- Step 3: Assign line-level customer_lead ---
+            for line in order.order_line:
+                if not line_components[line.id]:
+                    line.customer_lead = 0
+                    continue
+
+                comp_dates = [product_avail[pid] for pid in line_components[line.id]]
+                base_date = max(comp_dates)
+
+                lead_days = (base_date - today).days
+
+                # Add rush/manufacturing delays
+                if order.is_rush_order:
+                    rush_days = int(
+                        self.env["ir.config_parameter"].sudo().get_param("onl.rush_lead_days", 0)
+                    )
+                    lead_days += rush_days
+                else:
+                    lead_days += line.product_id.produce_delay
+                    mfg_sec = int(
+                        self.env["ir.config_parameter"].sudo().get_param("stock.manufacturing_lead_security", 0)
+                    )
+                    lead_days += mfg_sec
+
+                line.customer_lead = max(0, lead_days)
+
 
     def _get_bom_lead_time(self):
         """Fetch lead time from the BOM overview report based on max component delay + main product lead time."""
@@ -71,7 +155,7 @@ class SaleOrderLine(models.Model):
                 "active_id": self.bom_id.id,
                 "active_ids": [self.bom_id.id],
                 "default_searchQty": self.product_uom_qty,
-                "activate_availabilities": True
+                "activate_availabilities": True,
             },
         }
 
@@ -95,6 +179,6 @@ class SaleOrderLine(models.Model):
         res = super().write(vals)
 
         for line in self:
-            if "product_id" in vals:
+            if any(k in vals for k in ["product_id", "product_uom_qty", "bom_id"]):
                 line._compute_customer_lead()
         return res
