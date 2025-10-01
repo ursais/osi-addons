@@ -12,6 +12,71 @@ from odoo.tools import convert_csv_import, file_open
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
+    from odoo import api, SUPERUSER_ID
+
+    def migrate_helpdesk_rma_to_ticket(self):
+        self = self.sudo()
+        odoo_13 = odoorpc.ODOO("localhost", port=8069, timeout=12000)
+        odoo_13.login("odoo13_prod", "admin", "pw")
+        Rma = odoo_13.env["helpdesk.rma"]
+        Ticket = self.env['helpdesk.ticket']
+        partner_obj = self.env['res.partner']
+        ticket_type_ids = self.env["helpdesk.ticket.type"].search([])
+        team_id = self.env.ref('ol_helpdesk_repair_batch.helpdesk_team_customer_rma')
+        tema_eu_id = self.env.ref('ol_helpdesk_repair_batch.helpdesk_team_customer_rma_eu')
+        self._cr.execute("select id,assigned_to,state,type,warranty_expiration,rush,sale_order_id,partner_id,summary,company_id,flags,shipping_method,shipping_account from helpdesk_rma;")
+        rma_data_ids = self._cr.dictfetchall()
+        
+        def get_stage(value):
+            if value == 'new':
+                return self.env.ref('ol_helpdesk_repair_batch.helpdesk_stage_rma_requested').id
+            elif value == 'accepted':
+                return self.env.ref('ol_helpdesk_repair_batch.helpdesk_stage_rma_accepted').id
+            elif value == 'in_progress':
+                return self.env.ref('ol_helpdesk_repair_batch.helpdesk_stage_rma_in_progress').id
+            elif value == 'resolved':
+                return self.env.ref('ol_helpdesk_repair_batch.helpdesk_stage_rma_resolved').id
+            elif value == 'cancelled':
+                return self.env.ref('ol_helpdesk_repair_batch.helpdesk_stage_rma_cancelled').id
+            return False
+        
+        for rma in rma_data_ids:
+            print ("\n rma=========", rma.get('id'))
+            v13_data = Rma.search_read(domain=[('rma_line_ids.repair_order_ids', '!=', False), ('id', '=', rma.get('id'))],
+            fields=[
+                "id",
+                "related_repair_replacement_sale_ids",
+                "related_repair_order_ids",
+            ],
+        )
+            partner_id = partner_obj.browse(rma.get('partner_id'))
+            type = ticket_type_ids.filtered(lambda a:a.name == rma.get('type', "").capitalize())
+
+            vals = {
+                "user_id": rma.get('assigned_to'),
+                "ticket_type_id": type.id,
+                "team_id": team_id.id if rma.get('company_id') == 1 else tema_eu_id.id,
+                "stage_id": get_stage(rma.get('state')),
+                # "warranty_expiration": rma.warranty_experation if rma.related_repair_order_ids and len(rma.related_repair_order_ids) == 1 else False,
+                "priority": "2" if rma.get('rush') else "0",  # '2' usually means urgent in Odoo
+                "original_sale_order_ids": [(6, 0, [rma.get('sale_order_id')])] if rma.get('sale_order_id') else False,
+                "repair_sale_order_ids": [(6, 0, v13_data[0].get('related_repair_replacement_sale_ids'))] if v13_data else [],
+                "partner_id": partner_id.id,
+                "partner_email": partner_id.email,
+                "partner_phone": partner_id.phone,
+                "description": rma.get('summary'),
+                # "repair_ids": [(6, 0, rma.related_repair_order_ids.ids)],
+                "company_id": rma.get('company_id'),
+                # "flags": rma.get('flags', ''),
+                # "carrier_id": rma.get('shipping_method') if rma.get('shipping_method') else False,
+                # "shipping_account": rma.get('shipping_account', ''),
+            }
+            print ("\n ================", vals)
+            # Create Ticket
+            Ticket.create(vals)
+
+
+
     def update_inspections(self):
         _logger.info("===============update_inspections====================")
 
@@ -668,6 +733,7 @@ class IrActionsServer(models.Model):
         self = self.sudo()
         us_compnay = self.env.ref("base.main_company")
         category_ids = self.env["product.category"].search([('name', 'not in', ['Services','Build Services','Computer Software', 'Engineering Services','Other','Repair Services','Warranties', 'Deliveries','Expenses','Saleable'])])
+        systems_ids = self.env["product.category"].search([('name', 'in', ['Systems', 'Computers', 'Panel PCs'])])
         income_product = self.env.ref("lgx_account.41100-02")
         expence_product = self.env.ref("lgx_account.51105-02")
         #input_product = self.env.ref("lgx_account.11705-02") #11710.20
@@ -685,6 +751,17 @@ class IrActionsServer(models.Model):
                     "property_stock_account_output_categ_id": outgoing_account.id,
                 }
             )
+        # input_product_sys = self.env['account.account'].search([('code', '=', '11730.02'), ('company_id', '=', us_compnay.id)])
+        # stock_valution_sys = self.env['account.account'].search([('code', '=', '11740.02'), ('company_id', '=', us_compnay.id)])
+        # for sys in systems_ids:
+        #     sys.with_company(us_compnay).write(
+        #         {
+        #             "property_stock_valuation_account_id": stock_valution_sys.id,
+        #             "property_stock_account_input_categ_id": input_product_sys.id,
+        #         }
+        #     )
+
+
         eu_compnay = self.env.ref("ol_base.onlogic_eu")
         income_product = self.env.ref("lgx_account.41100-03")
         expence_product = self.env.ref("lgx_account.51105-03")
@@ -701,6 +778,18 @@ class IrActionsServer(models.Model):
                     "property_stock_account_output_categ_id": outgoing_account.id,
                 }
             )
+        # input_product_sys = self.env['account.account'].search([('code', '=', '11730.04'), ('company_id', '=', eu_compnay.id)])
+        # stock_valution_sys = self.env['account.account'].search([('code', '=', '11740.04'), ('company_id', '=', eu_compnay.id)])
+        # for sys in systems_ids:
+        #     sys.with_company(eu_compnay).write(
+        #         {
+        #             "property_stock_valuation_account_id": stock_valution_sys.id,
+        #             "property_stock_account_input_categ_id": input_product_sys.id,
+        #         }
+        #     )
+
+        
+
         
         # update the journal Data
         bill_journal = self.env.ref('account.2_purchase', raise_if_not_found=True)
@@ -1378,9 +1467,10 @@ class IrActionsServer(models.Model):
         )
         attribute_ids = self.env["attribute.set"].search([])
         for rec in product_ids:
+            _logger.info("\n product Category============== %s", rec.get("pim_category"))
             if rec.get("pim_category") in (
-                "Product Management, Expansion",
-                "Expansion, Product Management", "Expansions"
+                "Product Management, Expansion","Product Management, Expansions",
+                "Expansion, Product Management", "Expansions", "Expansions, Product Management"
             ):
                 categ_id = category_ids.filtered(lambda l: l.name == "Expansion")
 
