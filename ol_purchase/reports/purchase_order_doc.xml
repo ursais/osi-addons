@@ -133,7 +133,7 @@
                           <td>Submitted</td>
                           <td>
                               <t t-if="data.get('order_date')">
-                                  <span t-esc="purchase_order.get_format_date(data['order_date'])" t-options="{'widget': 'date'}"/>
+                                  <span t-esc="purchase_order.get_format_date(data['order_date'])"/>
                               </t>
                               <t t-else="">
                                   <span t-esc="purchase_order.get_format_date(purchase_order.date_approve)"/>
