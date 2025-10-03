@@ -73,6 +73,8 @@ class ResPartner(models.Model):
         "rollup_partner_ids.total_due",
         "rollup_partner_ids.invoice_ids.state",
         "rollup_partner_ids.invoice_ids.amount_residual",
+        "invoice_ids.state",
+        "invoice_ids.amount_residual"
     )
     def _compute_outstanding_receivable(self):
         """
@@ -86,7 +88,7 @@ class ResPartner(models.Model):
                     partner.rollup_partner_ids.mapped("total_due")
                 )
             else:
-                partner.outstanding_receivable = 0.0
+                partner.outstanding_receivable = partner.total_due
 
     def _get_open_sale_order(self):
         """
@@ -127,101 +129,59 @@ class ResPartner(models.Model):
         "sale_order_ids",
         "sale_order_ids.partner_id",
         "sale_order_ids.amount_total",
-        "sale_order_ids.invoice_status",
         "sale_order_ids.state",
-        "rollup_partner_ids.sale_order_ids.invoice_status",
+        "sale_order_ids.uninvoiced_balance",
         "invoice_ids",
         "invoice_ids.amount_residual_signed",
         "invoice_ids.payment_state",
         "invoice_ids.state",
+        "rollup_partner_ids.open_so_balance"
     )
     def _compute_open_so_balance(self):
         """
         Compute open Sale Order balance for the partner.
         Includes:
-          - Partner’s own SOs
-          - Draft invoices
-          - Rollup partner balances
-          - Handles grouping by parent, rollup, or company
+        - Partner's own SOs
+        - Rollup partner balances
+        - Handles grouping by parent, rollup, or company
         """
+        
+        def compute_balance_optimized(partner_ids):
+            """Optimized helper to compute total SO balance for given partners."""
+            if not partner_ids:
+                return 0.0
+            partner_ids_obj = self.browse(partner_ids)
+            so_total = sum(partner_ids_obj.mapped("sale_order_ids").mapped("uninvoiced_balance"))            
+            return so_total
 
-        def compute_balance(partners):
-            """Helper: SQL to compute total SO balance for given partners."""
-            self.env.cr.execute(
-                """
-                SELECT SUM(amount_total)
-                FROM sale_order
-                WHERE state = 'sale'
-                AND invoice_status = 'no'
-                AND partner_id in %s
-            """,
-                (tuple(self.ids),),
-            )
-
-            so_sum = self.env.cr.fetchone()[0] or 0.0
-
-            return so_sum
-
+        # Process each partner individually to avoid singleton errors
         for partner in self:
-
             if not partner.id:
                 partner.open_so_balance = 0
                 continue
 
             _logger.info("_compute_open_so_balance %s", partner.id)
 
-            # Collect all relevant partner IDs: self + children
-            self.env.cr.execute(
-                "SELECT id FROM res_partner WHERE parent_id = ANY(%s)",
-                ([partner.id],),
-            )
-            child_ids = [row[0] for row in self.env.cr.fetchall()]
-            all_partner_ids = child_ids + [partner.id]
+            # Early exit for simple cases - check each partner individually
+            if (
+                not partner.is_company
+                and not partner.partner_rollup_id
+                and not partner.child_ids
+            ):
+                # Simple partner case
+                partner.open_so_balance = compute_balance_optimized([partner.id])
+                continue
 
-            # Calculate open SO total and draft invoice amount
-            open_so_total = compute_balance(partner._origin)
-            self.env.cr.execute(
-                """
-                SELECT COALESCE(SUM(amount_residual_signed), 0)
-                FROM account_move
-                WHERE move_type = 'out_invoice'
-                  AND state = 'draft'
-                  AND partner_id = ANY(%s)
-                """,
-                ([all_partner_ids],),
-            )
-            draft_invoice_total = self.env.cr.fetchone()[0] or 0
-            rollup_balance = sum(partner.rollup_partner_ids.mapped("open_so_balance"))
-
-            base_balance = open_so_total + draft_invoice_total + rollup_balance
-
-            # Different grouping logic depending on partner structure
-            if partner._origin.is_company:
-                full_group = (
-                    partner.rollup_partner_ids | partner.child_ids | partner._origin
-                )
-                partner.open_so_balance = compute_balance(full_group)
-
-            elif partner.partner_rollup_id and not partner.parent_id:
-                rollup_group = (
-                    partner.partner_rollup_id
-                    | partner.partner_rollup_id.child_ids
-                    | partner._origin
-                )
-                partner.open_so_balance = base_balance
-                partner.partner_rollup_id.open_so_balance = compute_balance(
-                    rollup_group
-                )
-
-            elif partner.parent_id and not partner.partner_rollup_id:
-                parent_group = (
-                    partner.parent_id
-                    | partner.parent_id.child_ids
-                    | partner.parent_id.rollup_partner_ids
-                )
-                parent_balance = compute_balance(parent_group)
-                partner.parent_id.open_so_balance = parent_balance
-                partner.open_so_balance = base_balance
+            # Calculate base amounts for current partner
+            open_so_total = compute_balance_optimized([partner.id])
+                        
+            # Calculate rollup balance safely
+            rollup_balance = 0
+            if partner.rollup_partner_ids:
+                rollup_balance = sum(partner.rollup_partner_ids.mapped("open_so_balance"))
+            
+            base_balance = open_so_total + rollup_balance
+            partner.open_so_balance = base_balance
 
     @api.depends(
         "credit_limit",
@@ -248,17 +208,14 @@ class ResPartner(models.Model):
             rollup_used_credit = 0
             if partner.rollup_partner_ids:
                 partners_data = partner.rollup_partner_ids.read(
-                    ["open_so_balance", "credit"]
-                )
-                rollup_open_so = sum(
-                    p.get("open_so_balance", 0.0) or 0.0 for p in partners_data
+                    ["credit"]
                 )
                 rollup_credit_total = sum(
                     p.get("credit", 0.0) or 0.0 for p in partners_data
                 )
-                rollup_used_credit = rollup_open_so + rollup_credit_total
-            used_credit = partner.open_so_balance + partner.credit + rollup_used_credit
-            remaining_credit = partner.credit_limit - used_credit or 0
+                rollup_used_credit = rollup_credit_total
+            used_credit = partner.credit + rollup_used_credit
+            remaining_credit = partner.credit_limit - partner.open_so_balance -  used_credit or 0
             if remaining_credit <= 0:
                 remaining_credit = 0
             partner.remaining_credit = remaining_credit
@@ -276,12 +233,18 @@ class ResPartner(models.Model):
         """
         Prevent circular rollup assignments.
         """
-        if self.id == self.partner_rollup_id.partner_rollup_id.id:
-            raise UserError(
-                _(
-                    "You cannot set a Rollup Partner since this contact has related Rollup Partners."
+        for partner in self:
+            # Guard against empty partner_rollup_id
+            if not partner.partner_rollup_id:
+                continue
+
+            if partner.id == partner.partner_rollup_id.partner_rollup_id.id:
+                raise UserError(
+                    _(
+                        "You cannot set a Rollup Partner since this contact "
+                        "has related Rollup Partners."
+                    )
                 )
-            )
 
     @api.model
     def name_search(self, name="", args=None, operator="ilike", limit=100):
