@@ -57,7 +57,6 @@ class SaleOrder(models.Model):
         batch_mode = (
             self.env["ir.config_parameter"].sudo().get_param("mrp_batch.batch_mode")
         )
-
         for rec in self:
             existing_batch_id = None
 
