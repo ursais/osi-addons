@@ -7,9 +7,10 @@ import { QtyAtDateWidget, QtyAtDatePopover } from "@sale_stock/widgets/qty_at_da
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 
-// ---------------------------
-// Custom Popover Component jjjjj
-// ---------------------------
+// ------------------------
+// Custom Popover Component
+// This extends Odoo's standard `QtyAtDatePopover` used in the "Quantity at Date" widget (sale_stock) to use in estimate lines.
+// ------------------------
 export class CustomQtyAtDatePopover extends QtyAtDatePopover {
     setup() {
         super.setup();
@@ -35,9 +36,9 @@ export class CustomQtyAtDatePopover extends QtyAtDatePopover {
 
 CustomQtyAtDatePopover.template = "estimate_widget";
 
-// ---------------------------
-//  Custom Widget jjjjj
-// ---------------------------
+// --------------
+//  Custom Widget
+// --------------
 export class CustomQtyAtDateWidget extends QtyAtDateWidget {
     setup() {
         super.setup();
@@ -81,9 +82,9 @@ export class CustomQtyAtDateWidget extends QtyAtDateWidget {
     }
 }
 
-// ---------------------------
-//  Register the Widget jjjj
-// ---------------------------
+// --------------------
+//  Register the Widget
+// --------------------
 registry.category("view_widgets").add(
     "qty_at_date_widget_estimate",
     { component: CustomQtyAtDateWidget },
