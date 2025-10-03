@@ -75,7 +75,15 @@ class SaleEstimateLineJob(models.Model):
     def _compute_qty_to_deliver(self):
         """Compute the visibility of the inventory widget."""
         for line in self:
-            line.display_qty_widget = True
+            if (
+                line.estimate_state in ("draft", "sent", "confirm", "approve")
+                and line.product_type == "product"
+                and line.product_uom
+                and line.product_uom_qty > 0
+            ):
+                line.display_qty_widget = True
+            else:
+                line.display_qty_widget = False
 
     @api.depends(
         "product_id",
