@@ -73,6 +73,8 @@ class ResPartner(models.Model):
         "rollup_partner_ids.total_due",
         "rollup_partner_ids.invoice_ids.state",
         "rollup_partner_ids.invoice_ids.amount_residual",
+        "invoice_ids.state",
+        "invoice_ids.amount_residual"
     )
     def _compute_outstanding_receivable(self):
         """
@@ -127,20 +129,19 @@ class ResPartner(models.Model):
         "sale_order_ids",
         "sale_order_ids.partner_id",
         "sale_order_ids.amount_total",
-        "sale_order_ids.invoice_status",
         "sale_order_ids.state",
-        "rollup_partner_ids.sale_order_ids.invoice_status",
+        "sale_order_ids.uninvoiced_balance",
         "invoice_ids",
         "invoice_ids.amount_residual_signed",
         "invoice_ids.payment_state",
         "invoice_ids.state",
+        "rollup_partner_ids.open_so_balance"
     )
     def _compute_open_so_balance(self):
         """
         Compute open Sale Order balance for the partner.
         Includes:
         - Partner's own SOs
-        - Draft invoices
         - Rollup partner balances
         - Handles grouping by parent, rollup, or company
         """
@@ -149,19 +150,9 @@ class ResPartner(models.Model):
             """Optimized helper to compute total SO balance for given partners."""
             if not partner_ids:
                 return 0.0
-
-            self.env.cr.execute(
-                """
-                SELECT SUM(amount_total)
-                FROM sale_order
-                WHERE state = 'sale'
-                AND invoice_status = 'no'
-                AND partner_id IN %s
-            """,
-                (tuple(partner_ids),),
-            )
-            
-            return self.env.cr.fetchone()[0] or 0.0
+            partner_ids_obj = self.browse(partner_ids)
+            so_total = sum(partner_ids_obj.mapped("sale_order_ids").mapped("uninvoiced_balance"))            
+            return so_total
 
         # Process each partner individually to avoid singleton errors
         for partner in self:
@@ -181,81 +172,16 @@ class ResPartner(models.Model):
                 partner.open_so_balance = compute_balance_optimized([partner.id])
                 continue
 
-            # Get child IDs for current partner
-            child_ids = partner.child_ids.ids
-            all_partner_ids = child_ids + [partner.id]
-
             # Calculate base amounts for current partner
             open_so_total = compute_balance_optimized([partner.id])
-            
-            self.env.cr.execute(
-                """
-                SELECT COALESCE(SUM(amount_residual_signed), 0)
-                FROM account_move
-                WHERE move_type = 'out_invoice'
-                AND state = 'draft'
-                AND partner_id = ANY(%s)
-                """,
-                (all_partner_ids,),
-            )
-            draft_invoice_total = self.env.cr.fetchone()[0] or 0
-            
+                        
             # Calculate rollup balance safely
             rollup_balance = 0
             if partner.rollup_partner_ids:
                 rollup_balance = sum(partner.rollup_partner_ids.mapped("open_so_balance"))
-
-            base_balance = open_so_total + draft_invoice_total + rollup_balance
-
-            # Handle different partner structures
-            if partner.is_company:
-                # Company case: include all related partners
-                full_group_ids = []
-                if partner.rollup_partner_ids:
-                    full_group_ids.extend(partner.rollup_partner_ids.ids)
-                if partner.child_ids:
-                    full_group_ids.extend(partner.child_ids.ids)
-                full_group_ids.append(partner.id)
-                
-                partner.open_so_balance = compute_balance_optimized(full_group_ids)
-
-            elif partner.partner_rollup_id and not partner.parent_id:
-                # Rollup partner case
-                partner.open_so_balance = base_balance
-                
-                # Handle rollup partner separately to avoid singleton error
-                rollup_partner = partner.partner_rollup_id
-                if rollup_partner:
-                    rollup_group_ids = [rollup_partner.id]
-                    if rollup_partner.child_ids:
-                        rollup_group_ids.extend(rollup_partner.child_ids.ids)
-                    rollup_group_ids.append(partner.id)
-                    
-                    # Only update if we're computing for the rollup partner itself
-                    # or use ensure_one() to avoid singleton errors
-                    if rollup_partner.id in self.ids:
-                        rollup_partner.open_so_balance = compute_balance_optimized(rollup_group_ids)
-
-            elif partner.parent_id and not partner.partner_rollup_id:
-                # Parent partner case
-                partner.open_so_balance = base_balance
-                
-                # Handle parent partner separately
-                parent_partner = partner.parent_id
-                if parent_partner:
-                    parent_group_ids = [parent_partner.id]
-                    if parent_partner.child_ids:
-                        parent_group_ids.extend(parent_partner.child_ids.ids)
-                    if parent_partner.rollup_partner_ids:
-                        parent_group_ids.extend(parent_partner.rollup_partner_ids.ids)
-                    
-                    # Only update if we're computing for the parent itself
-                    if parent_partner.id in self.ids:
-                        parent_partner.open_so_balance = compute_balance_optimized(parent_group_ids)
             
-            else:
-                # Simple case
-                partner.open_so_balance = base_balance    
+            base_balance = open_so_total + rollup_balance
+            partner.open_so_balance = base_balance
 
     @api.depends(
         "credit_limit",
@@ -282,17 +208,17 @@ class ResPartner(models.Model):
             rollup_used_credit = 0
             if partner.rollup_partner_ids:
                 partners_data = partner.rollup_partner_ids.read(
-                    ["open_so_balance", "credit"]
+                    ["credit"]
                 )
-                rollup_open_so = sum(
-                    p.get("open_so_balance", 0.0) or 0.0 for p in partners_data
-                )
+                # rollup_open_so = sum(
+                #     p.get("open_so_balance", 0.0) or 0.0 for p in partners_data
+                # )
                 rollup_credit_total = sum(
                     p.get("credit", 0.0) or 0.0 for p in partners_data
                 )
-                rollup_used_credit = rollup_open_so + rollup_credit_total
-            used_credit = partner.open_so_balance + partner.credit + rollup_used_credit
-            remaining_credit = partner.credit_limit - used_credit or 0
+                rollup_used_credit = rollup_credit_total
+            used_credit = partner.credit + rollup_used_credit
+            remaining_credit = partner.credit_limit - partner.open_so_balance -  used_credit or 0
             if remaining_credit <= 0:
                 remaining_credit = 0
             partner.remaining_credit = remaining_credit

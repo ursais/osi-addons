@@ -160,7 +160,8 @@ class SaleOrder(models.Model):
 
     @api.depends(
         "amount_total",
-        "invoice_status",
+        "invoice_ids",
+        "invoice_ids.amount_total"
     )
     def _compute_uninvoiced_balance(self):
         """
@@ -169,9 +170,14 @@ class SaleOrder(models.Model):
         - Otherwise zero.
         """
         for order in self:
-            order.uninvoiced_balance = (
-                order.amount_total if order.invoice_status != "invoiced" else 0
-            )
+            invoice_ids = order.invoice_ids
+            out_invoice_ids = invoice_ids.filtered(lambda l: l.state not in ('draft','cancel') and l.move_type == 'out_invoice')
+            refund_ids = invoice_ids.filtered(lambda l: l.state not in ('draft','cancel') and l.move_type == 'out_refund')
+            total = sum(out_invoice_ids.mapped('amount_total'))
+            refunds = sum(refund_ids.mapped('amount_total'))
+            invoice_amount = order.amount_total + refunds - total
+            order.uninvoiced_balance = invoice_amount or 0.0
+
 
     @api.depends(
         "company_id",
