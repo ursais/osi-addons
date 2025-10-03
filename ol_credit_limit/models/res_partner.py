@@ -210,9 +210,6 @@ class ResPartner(models.Model):
                 partners_data = partner.rollup_partner_ids.read(
                     ["credit"]
                 )
-                # rollup_open_so = sum(
-                #     p.get("open_so_balance", 0.0) or 0.0 for p in partners_data
-                # )
                 rollup_credit_total = sum(
                     p.get("credit", 0.0) or 0.0 for p in partners_data
                 )
