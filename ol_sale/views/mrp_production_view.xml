@@ -1,14 +1,14 @@
 <odoo>
 
-	<record id="mrp_production_form_view_inherit_ol_sale" model="ir.ui.view">
+    <record id="mrp_production_form_view_inherit_ol_sale" model="ir.ui.view">
         <field name="name">mrp.production.form.view.inherit.ol.sale</field>
         <field name="model">mrp.production</field>
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
         <field name="arch" type="xml">
-        	<xpath expr="//page[@name='miscellaneous']" position="after">
-        		<page string="Note" name="note">
-	                <field name="mrp_note" string="MRP Note" placeholder="MRP Note"/>
-	            </page>
+            <xpath expr="//page[@name='miscellaneous']" position="after">
+                <page string="Note" name="note">
+                    <field name="mrp_note" string="MRP Note" placeholder="MRP Note"/>
+                </page>
             </xpath>
         </field>
     </record>

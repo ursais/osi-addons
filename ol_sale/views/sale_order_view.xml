@@ -24,25 +24,41 @@
             <!-- Added  Original Shipment Commitment Date -->
             <xpath expr="//group[@name='sale_shipping']" position="inside">
                 <div class="o_td_label">
-                    <label for="original_commitment_date" string="Original Shipment Commitment Date"/>
+                    <label for="create_date" string="Creation Date"/>
                 </div>
-                <field name="original_commitment_date" nolabel="1" readonly="1"/>
+                <field name="create_date" nolabel="1" readonly="1"/>
+
+                <div class="o_td_label">
+                    <label for="date_confirm" string="Confirm Date"/>
+                </div>
+                <field name="date_confirm" nolabel="1" readonly="1"/>
             </xpath>
 
             <!-- Added  Original Customer Request Date and Delivery Date -->
             <xpath expr="//group[@name='order_details']//field[@name='has_active_pricelist']" position="before">
-                <div class="o_td_label">
-                    <label for="original_request_date" string="Original Customer Request Date"/>
+                <div class="o_td_label" invisible = "state in ['draft','sent','cancel']">
+                    <label for="original_commitment_date" string="Original Customer Request Date" />
                 </div>
-                <field name="original_request_date" nolabel="1" readonly="state == 'sale'"/>
+                <field name="original_commitment_date" nolabel="1"  readonly="1" invisible = "state in ['draft','sent','cancel']"/>
+
                 <div class="o_td_label">
-                   <label for="commitment_date" string="Delivery Date"/>
+                   <label for="commitment_date" string="Customer Request Date"/>
                 </div>
                 <div class="o_row">
-                    <field name="commitment_date"/>
-                    <span class="text-muted" invisible="effective_date and commitment_date">Expected: <field name="expected_date" class="oe_inline" widget="date"/></span>
+                    <field name="commitment_date" />
+                    <span class="text-muted" invisible="state == 'sale'">Expected: <field name="expected_date" class="oe_inline" widget="date" invisible="state == 'sale'"/></span>
                 </div>
                 <field name="effective_date" invisible="not effective_date"/>
+                <!-- first_estimate_date -->
+                <div class="o_td_label" invisible = "state in ['draft','sent','cancel']">
+                    <label for="first_estimate_date" string="First Estimate Date"/>
+                </div>
+                <field name="first_estimate_date" nolabel="1" readonly="1" invisible = "state in ['draft','sent','cancel']"/>
+
+                <div class="o_td_label" invisible = "state in ['draft','sent','cancel']">
+                    <label for="current_estimate_ship_date" string="Current Estimate ship Date"/>
+                </div>
+                <field name="current_estimate_ship_date" nolabel="1" readonly="1" invisible = "state in ['draft','sent','cancel']"/>
             </xpath>
 
             <!-- Added Product State in Sale order line after name field in tree view -->
