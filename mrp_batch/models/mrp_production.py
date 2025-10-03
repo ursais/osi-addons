@@ -1,20 +1,11 @@
-# Import Odoo libs
-from odoo import api, fields, models
-from odoo.exceptions import UserError
-from ast import literal_eval
+# Import Python libs
 from collections import defaultdict
-from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, _, Command
-from odoo.addons.web.controllers.utils import clean_action
-from odoo.exceptions import UserError, ValidationError
-from odoo.tools import float_compare, float_round, float_is_zero, format_datetime
-from odoo.tools.misc import (
-    OrderedSet,
-    format_date,
-    groupby as tools_groupby,
-    topological_sort,
-)
+# Import Odoo libs
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+from odoo.tools import float_compare, float_is_zero
+from odoo.tools.misc import OrderedSet
 
 
 class MrpProduction(models.Model):
