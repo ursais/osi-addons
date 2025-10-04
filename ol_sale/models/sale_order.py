@@ -73,6 +73,9 @@ class SaleOrder(models.Model):
         string="MO Intenral Tranfer",
         compute="_compute_mo_tranfer_count",
     )
+    request_date_change_pending = fields.Boolean(
+        string="Customer Request Date Change Proposed", default=False,copy=False,
+    )
 
     # END #########
 
@@ -465,5 +468,16 @@ class SaleOrder(models.Model):
         for sale in self:
             if sale.commitment_date and sale.expected_date:
                 sale.first_estimate_date = max(sale.commitment_date,sale.expected_date)
+
+    @api.onchange('commitment_date', 'expected_date')
+    def _onchange_commitment_date(self):
+        super()._onchange_commitment_date()
+        mo_batchs = self.env["mrp.production.batch"].search([("sale_order_ids","in",self._origin.id)])
+        if mo_batchs and self.commitment_date and self.state not in ('sale', 'done'):
+            mo_batchs.write({"date_change_exception":True,"customer_request_date_proposed":self.commitment_date})
+            if mo_batchs.production_ids:
+                mo_batchs.production_ids.write({"date_change_exception":True})
+
+
 
     # END #########

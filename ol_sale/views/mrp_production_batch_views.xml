@@ -5,6 +5,16 @@
         <field name="model">mrp.production.batch</field>
         <field name="inherit_id" ref="mrp_batch.mrp_production_batch_form_view"/>
         <field name="arch" type="xml">
+            <xpath expr="//header" position = "after">
+                <field name="date_change_exception" invisible="1"/>
+                <div class="alert alert-danger mb-0" role="alert" invisible="not date_change_exception" >
+                    <strong>A New Customer Request date has been Proposed for <b><field name="customer_request_date_proposed" readonly="1"/></b></strong>
+                </div>
+            </xpath>
+            <xpath expr="//header//button[@name='action_cancel']" position="after">
+                <button name="action_approve_date_change" type="object" class="btn btn-success" groups="ol_base.role_operations_res_groups" string="Approve Date Change" invisible="not date_change_exception" />
+                <button name="button_reject" type="object" class="btn btn-danger" groups="ol_base.role_operations_res_groups" string="Reject Date Change" invisible="not date_change_exception" />
+            </xpath>
             <field name="date_start" position="before">
                 <field name="ops_build_date"/>
             </field>

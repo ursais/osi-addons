@@ -24,6 +24,7 @@
         "sale_exception",
         "sale_order_revision",
         "account_avatax_sale_oca",
+        "ol_rush_order"
     ],
     # always loaded
     "data": [

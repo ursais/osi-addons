@@ -14,5 +14,7 @@ class MrpProduction(models.Model):
         related="sale_order_id.mrp_note",
         store=True,
     )
+    date_change_exception = fields.Boolean(string="Customer Request Date Change Proposed", default=False)
+
 
     # END #########
