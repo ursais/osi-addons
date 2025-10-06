@@ -28,11 +28,11 @@ class StockPicking(models.Model):
     def update_ignore_exceptions(self):
         """
         Force-enable `ignore_exception` on this picking.
-
-        This bypasses OCA's base_exception rules when the picking
-        should not be blocked (e.g., no credit hold).
         """
         self.ensure_one()
+        if not self.ids:
+            return 
+
         query = """
             UPDATE stock_picking 
             SET ignore_exception = TRUE 
