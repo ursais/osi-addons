@@ -7,18 +7,28 @@
                 <br/>
                 <t t-if="not sender">
                     <strong>
-                        <t t-esc="address.company_name or address.commercial_company_name"/>
+                        <t t-if="address.override_company_name">
+                            <t t-esc="address.override_company_name"/>
+                        </t>
+                        <t t-else="">
+                            <t t-esc="address.company_name or address.commercial_company_name"/>
+                        </t>
                     </strong>
                     <br/>
                     <t t-if="shipping_ref">
                         <t t-esc="shipping_ref"/>
                         <br/>
                     </t>
-                    <t t-esc="address.override_company_name or address.name"/>
+                    <t t-esc="address.name"/>
                 </t>
                 <t t-if="sender">
                     <strong>
-                        <t t-esc="address._name == 'res.company' and address.external_display_name or address.name"/>
+                        <t t-if="address.override_company_name">
+                            <t t-esc="address.override_company_name"/>
+                        </t>
+                        <t t-else="">
+                            <t t-esc="address._name == 'res.company' and address.external_display_name or address.name"/>
+                        </t>
                     </strong>
                 </t>
                 <br/>
@@ -58,7 +68,12 @@
                     </strong>
                     <br/>
                 </t>
-                <t t-esc="address.name"/>
+                <t t-if="address.override_company_name">
+                    <t t-esc="address.override_company_name"/>
+                </t>
+                <t t-else="">
+                    <t t-esc="address.name"/>
+                </t>
                 <br/>
                 <t t-esc="address.street"/>
                 <br/>
@@ -91,7 +106,12 @@
                 <span t-if="text" class="ol-address-text" t-esc="text"/>
                 <br/>
                 <strong>
-                    <t t-esc="address.company_name or address.commercial_company_name"/>
+                    <t t-if="address.override_company_name">
+                        <t t-esc="address.override_company_name"/>
+                    </t>
+                    <t t-else="">
+                        <t t-esc="address.company_name or address.commercial_company_name"/>
+                    </t>
                 </strong>
                 <br/>
                 <t t-esc="address.street"/>
