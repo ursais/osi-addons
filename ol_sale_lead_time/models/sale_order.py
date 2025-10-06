@@ -48,12 +48,9 @@ class SaleOrder(models.Model):
         )
 
         running_total = qty_available
-        print ("\nincoming_moves", incoming_moves, qty)
         for move in incoming_moves:
             running_total += move.product_uom_qty
-            print ("\n running_total", running_total)
-            print ("\n move.product_uom_qty", move.product_uom_qty, move.date_deadline)
-            if qty >= running_total:
+            if running_total >= qty:
                 return fields.Date.to_date(move.date_deadline)
 
         return today
@@ -107,9 +104,7 @@ class SaleOrder(models.Model):
                 if not line_components[line.id]:
                     line.customer_lead = 0
                     continue
-                print ("\n line_components", line_components, "\n product_avail", product_avail)
                 comp_dates = [product_avail[pid] for pid in line_components[line.id]]
-                print ("\n comp_dates",comp_dates)  
                 base_date = comp_dates and max(comp_dates) or today
                 lead_days = (base_date - today).days
 
@@ -117,6 +112,13 @@ class SaleOrder(models.Model):
                 if order.rush_order:
                     rush_days = order.company_id.rush_lead_time
                     lead_days += rush_days
+                    mfg_sec = (
+                        self.env["ir.config_parameter"]
+                        .sudo()
+                        .get_param("mrp.use_manufacturing_lead", 0)
+                    )
+                    if mfg_sec:
+                        lead_days += order.company_id.manufacturing_lead
                 else:
                     lead_days += line.bom_id.produce_delay
                     mfg_sec = (

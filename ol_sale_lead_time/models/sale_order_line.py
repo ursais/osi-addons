@@ -96,7 +96,7 @@ class SaleOrderLine(models.Model):
         res = super().create(vals_list)
         for line in res:
             if line.config_session_id:
-                line._set_dynamic_lead_times()
+                line.order_id._set_dynamic_lead_times()
         return res
 
     def write(self, vals):
