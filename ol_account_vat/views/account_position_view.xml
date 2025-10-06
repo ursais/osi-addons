@@ -6,7 +6,8 @@
         <field name="inherit_id" ref="account.view_account_position_form" />
         <field name="arch" type="xml">
             <field name="country_id" position="after">
-                <field name="ignore_for_domestic_deliveries"/>
+                <field name="b2b"/>
+                <field name="vat_delivery_match"/>
             </field>
         </field>
     </record>

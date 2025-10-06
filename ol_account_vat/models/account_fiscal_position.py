@@ -8,39 +8,77 @@ class AccountFiscalPosition(models.Model):
     _inherit = "account.fiscal.position"
     # COLUMNS #####
 
-    ignore_for_domestic_deliveries = fields.Boolean(
-        string="Ignore for Domestic Deliveries",
+    b2b =fields.Boolean("B2B")
+    vat_delivery_match = fields.Boolean(
+        string="VAT ID Matches Delivery Country",
     )
+
     # END #########
 
     # METHODS ######
     @api.model
     def _get_fiscal_position(self, partner, delivery=None):
         """
-            Retrieve the appropriate fiscal position based on the partner and optional delivery address.
+        Determine the most appropriate fiscal position based on partner type,
+        VAT match status, and fiscal position configuration flags.
 
-            This method extends the base implementation by adding logic to exclude fiscal positions 
-            marked as "ignore_for_domestic_deliveries" if the delivery address is domestic 
-            (i.e., matches the company's country).
+        Logic:
+        --------
+        1. Start from standard Odoo fiscal position logic (super call).
+        2. Get all auto-apply fiscal positions.
+        3. For non-company partners (B2C):
+            - Exclude all positions where 'b2b' is True.
+        4. For companies (B2B):
+            - Determine if VAT country matches delivery country.
+            - If not matching, exclude positions with 'vat_delivery_match' = True.
+        5. If multiple fiscal positions remain, select the one with the
+           highest score based on:
+              vat_required (weight 4) +
+              b2b (weight 2) +
+              vat_delivery_match (weight 1)
+           If tied, Python’s max() preserves order, effectively using sequence.
+        6. If no positions match, fallback to the fiscal position from super().
 
-            Args:
-                partner (res.partner): The partner for whom the fiscal position is being determined.
-                delivery (res.partner, optional): An optional delivery address. If not provided,
-                    the partner's country is used.
-
-            Returns:
-                account.fiscal.position: A filtered fiscal position record or records based on 
-                domestic delivery rules.
+        Returns:
+            recordset (account.fiscal.position): The most suitable fiscal position.
         """
-        fiscal_position = super()._get_fiscal_position(partner, delivery=delivery)
-        country_id = self.env.company.country_id
 
-        delivery_country_id = delivery.country_id if delivery else partner.country_id
-        if delivery_country_id == country_id:
-            fiscal_position = fiscal_position.filtered(
-                lambda l: not l.ignore_for_domestic_deliveries
+        # Get default fiscal position from super
+        default_fp = super()._get_fiscal_position(partner, delivery=delivery)
+
+        # Safety check
+        if not partner or not delivery:
+            return default_fp
+
+        # Helper scoring function
+        def _score(fp):
+            return (4 * int(fp.vat_required)) + (2 * int(fp.b2b)) + int(fp.vat_delivery_match)
+
+        # Fetch all auto-apply fiscal positions once
+        fiscals = self.search([("auto_apply", "=", True)])
+
+        partner_company = partner.commercial_partner_id
+        is_company = partner_company.is_company
+
+        # --- B2C (not a company) ---
+        if not is_company:
+            fiscals = fiscals.filtered(lambda fp: not fp.b2b)
+
+        # --- B2B (company) ---
+        else:
+            # Check if VAT prefix matches delivery country code
+            vat_match = (
+                partner.vat
+                and delivery.country_id
+                and partner.vat[:2].upper() == delivery.country_id.code.upper()
             )
+            if not vat_match:
+                fiscals = fiscals.filtered(lambda fp: not fp.vat_delivery_match)
 
-        return fiscal_position
+        # If no fiscal positions found, fallback to default
+        if not fiscals:
+            return default_fp
 
+        # Pick fiscal position with highest score
+        return max(fiscals, key=_score)
     # END ##########
