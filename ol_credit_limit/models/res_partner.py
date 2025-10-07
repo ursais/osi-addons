@@ -74,7 +74,8 @@ class ResPartner(models.Model):
         "rollup_partner_ids.invoice_ids.state",
         "rollup_partner_ids.invoice_ids.amount_residual",
         "invoice_ids.state",
-        "invoice_ids.amount_residual"
+        "invoice_ids.amount_residual",
+        "rollup_partner_ids.outstanding_receivable"
     )
     def _compute_outstanding_receivable(self):
         """
@@ -85,7 +86,7 @@ class ResPartner(models.Model):
             if partner.rollup_partner_ids:
                 # Sum own total_due and all linked partners' total_due
                 partner.outstanding_receivable = partner.total_due + sum(
-                    partner.rollup_partner_ids.mapped("total_due")
+                    partner.rollup_partner_ids.mapped("outstanding_receivable")
                 )
             else:
                 partner.outstanding_receivable = partner.total_due
