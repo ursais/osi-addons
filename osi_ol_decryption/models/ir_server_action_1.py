@@ -9,6 +9,7 @@ import re
 import openpyxl
 from odoo.tools import convert_csv_import, file_open
 
+
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
@@ -315,14 +316,15 @@ class IrActionsServer(models.Model):
         company = env['res.company'].browse(2)  
 
         config = env['res.config.settings'].with_context(company_id=company.id).create({'module_account_sepa_direct_debit': True,})
+        company.sepa_initiating_party_name = 'OnLogic B.V'
 
         # Apply settings for that company
         config.execute()
         Rabobankbank = env['res.bank'].create({
             'name': 'Rabobank Amerstreek',
             "street": "Arendsplein 60",
-            "city": "KX Oosterhout",
-            "zip": "4901",
+            "city": "Oosterhout",
+            "zip": "4901 KX",
             "country" : env.ref('base.nl').id
         })
 
