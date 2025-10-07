@@ -1249,6 +1249,133 @@ class IrActionsServer(models.Model):
         # Commit once after loop
         self.env.cr.commit()
 
+    def update_phantoms_bom_data(self):
+        batch_size = 10  # Define batch size
+        ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True)])
+        # --- Setup ---
+        MrpBom = self.env["mrp.bom"]
+        Company = self.env["res.company"].sudo()
+        companies = self.Company.search([])
+        total_products = len(ProductTemplates)  # Total number of products to process
+        offset = 0
+        counter = 1
+        cr = self.env.cr
+        _logger.info("Total products to process: %s", total_products)
+
+        # =====================================================
+        # STEP 1: Normalize company assignments and clean up
+        # =====================================================
+
+        # Clear company_id on phantom BoMs that belong to global products
+        # (Only do this if both the BoM and product are intended to be global)
+        cr.execute("""
+            UPDATE mrp_bom
+               SET company_id = NULL
+             WHERE type = 'phantom'
+               AND company_id IS NOT NULL
+               AND product_tmpl_id IN (
+                   SELECT id FROM product_template WHERE company_id IS NULL
+               )
+        """)
+
+        # Clear company_id on phantom BoM lines linked to global BoMs/products
+        cr.execute("""
+            UPDATE mrp_bom_line
+               SET company_id = NULL
+             WHERE company_id IS NOT NULL
+               AND bom_id IN (
+                   SELECT b.id
+                     FROM mrp_bom b
+                     JOIN product_template pt ON b.product_tmpl_id = pt.id
+                    WHERE b.type = 'phantom'
+                      AND b.company_id IS NULL
+                      AND pt.company_id IS NULL
+               )
+        """)
+        cr.commit()
+
+        # Archive phantom BoMs that have no lines
+        empty_boms = MrpBom.search([
+            ('type', '=', 'phantom'),
+            ('bom_line_ids', '=', False),
+            ('active', '=', True),
+        ])
+        if empty_boms:
+            empty_boms.write({'active': False})
+            cr.commit()
+
+        # =====================================================
+        # STEP 2: Process all products with phantom BoMs
+        # - Deduplicate equivalent BoMs
+        # - Ensure all companies point to the same master BoM
+        # - Archive unused BoMs
+        # =====================================================
+
+        products = env["product.template"].search([
+            ("bom_ids.type", "=", "phantom")
+        ])
+
+        def boms_are_equivalent(bom1, bom2):
+            """Helper to check if two phantom BoMs are functionally equivalent."""
+            if bom1.type != "phantom" or bom2.type != "phantom":
+                return False
+            if bom1.code and bom2.code and bom1.code != bom2.code:
+                return False
+            # Compare sorted (product_id, qty) tuples
+            lines1 = sorted(
+                [(l.product_id.id, l.product_qty) for l in bom1.bom_line_ids],
+                key=lambda x: (x[0], x[1])
+            )
+            lines2 = sorted(
+                [(l.product_id.id, l.product_qty) for l in bom2.bom_line_ids],
+                key=lambda x: (x[0], x[1])
+            )
+            return lines1 == lines2
+
+        for product in products:
+            phantom_boms = self.env["mrp.bom"]
+            used_boms = self.env["mrp.bom"]
+
+            # Collect phantom_bom_id across all companies
+            for company in companies:
+                phantom_bom = product.with_company(company).phantom_bom_id
+                if phantom_bom:
+                    phantom_boms |= phantom_bom
+                    used_boms |= phantom_bom
+
+        # Fetch all phantom BoMs for this product
+        all_boms = MrpBom.search([
+            ("product_tmpl_id", "=", product.id),
+            ("type", "=", "phantom"),
+        ])
+
+        if phantom_boms:
+            master_bom = phantom_boms[0]
+
+            # Deduplicate equivalent phantom BoMs
+            for bom in phantom_boms:
+                if bom != master_bom and boms_are_equivalent(master_bom, bom):
+                    bom.write({"active": False})
+                    # Update phantom_bom_id references to master BoM
+                    for company in companies:
+                        if product.with_company(company).phantom_bom_id == bom:
+                            product.with_company(company).write({
+                                "phantom_bom_id": master_bom.id
+                            })
+
+            # Ensure all companies consistently point to master BoM
+            for company in companies:
+                if product.with_company(company).phantom_bom_id != master_bom:
+                    product.with_company(company).write({
+                        "phantom_bom_id": master_bom.id
+                    })
+
+        # Archive unused phantom BoMs not referenced by any company
+        unused_boms = all_boms - used_boms
+        if unused_boms:
+            unused_boms.write({"active": False})
+            cr.commit()
+
     def drop_temp_tables(self):
         cr = self.env.cr
         _logger.info("\n\n============Droping Tables Start")
