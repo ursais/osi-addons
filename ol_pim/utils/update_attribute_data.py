@@ -2,6 +2,13 @@ from odoo.tools.misc import file_path
 import csv
 import logging
 
+from odoo import fields
+from odoo.addons.ol_base.fields.fields import NullableInteger, NullableFloat
+
+# Ensure these types are known at import time
+fields.Field.by_type.setdefault("nullable_integer", NullableInteger)
+fields.Field.by_type.setdefault("nullable_float", NullableFloat)
+
 _logger = logging.getLogger(__name__)
 
 
