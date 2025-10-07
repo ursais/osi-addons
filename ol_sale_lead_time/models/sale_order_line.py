@@ -10,14 +10,12 @@ class SaleOrderLine(models.Model):
         compute="_compute_available_date",
     )
 
-    @api.depends("order_id.date_order", "customer_lead")
+    @api.depends("customer_lead")
     def _compute_available_date(self):
         for line in self:
-            base_date = line.order_id.date_order.date() or field.Date.today()
+            line.available_date = fields.Date.today()
             if line.customer_lead:
-                line.available_date = base_date + timedelta(days=line.customer_lead)
-            else:
-                line.available_date = base_date
+                line.available_date += timedelta(days=line.customer_lead)
 
     @api.depends("product_id", "product_uom_qty")
     def _compute_customer_lead(self):

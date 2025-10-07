@@ -11,6 +11,24 @@ class SaleOrder(models.Model):
         readonly=True,
         copy=False,
     )
+    last_esd_date = fields.Date("Last ESD Date")
+    esd_warning_message = fields.Html(compute="_compute_esd_warning_message")
+
+    @api.depends("last_esd_date")
+    def _compute_esd_warning_message(self):
+        for order in self:
+            if not order.last_esd_date:
+                order.esd_warning_message = False
+                continue
+
+            delta_days = (fields.Date.today() - order.last_esd_date).days
+            if delta_days > 1:
+                order.esd_warning_message = (
+                    f"Estimated Ship Date calculated {delta_days} day{'s' if delta_days > 1 else ''} ago. "
+                    "The Estimated Ship Date is an estimate at time of calculation and may be outdated."
+                )
+            else:
+                order.esd_warning_message = False
 
     def action_confirm(self):
         res = super().action_confirm()
@@ -37,26 +55,38 @@ class SaleOrder(models.Model):
         if qty_available >= qty:
             return today
 
-        incoming_moves = self.env["stock.move"].search(
-            [
-                ("product_id", "=", product.id),
-                ("state", "in", ("confirmed", "assigned", "waiting")),
-                ("location_dest_id.usage", "=", "internal"),
-                ("picking_type_id.code", "=", "incoming"),
-            ],
-            order="date_deadline asc",
+        self.env.cr.execute(
+            """
+                SELECT
+                    sm.date_deadline, sm.product_uom_qty
+                FROM
+                    stock_move sm
+                JOIN
+                    stock_location sl ON sm.location_dest_id = sl.id
+                JOIN
+                    stock_picking_type spt ON sm.picking_type_id = spt.id
+                WHERE sm.product_id = %s
+                AND sm.state IN ('confirmed', 'assigned', 'waiting')
+                AND sl.usage = 'internal'
+                AND spt.code = 'incoming'
+                ORDER BY sm.date_deadline ASC
+            """,
+            [product.id],
         )
 
+        incoming_moves = self.env.cr.fetchall()
+
         running_total = qty_available
-        for move in incoming_moves:
-            running_total += move.product_uom_qty
+        for date_deadline, product_uom_qty in incoming_moves:
+            running_total += product_uom_qty
             if running_total >= qty:
-                return fields.Date.to_date(move.date_deadline)
+                return fields.Date.to_date(date_deadline)
 
         return today
 
     def action_compute_esd(self):
         for order in self:
+            order.last_esd_date = fields.Date.today()
             order.order_line._compute_customer_lead()
 
     def _set_dynamic_lead_times(self):
@@ -96,10 +126,13 @@ class SaleOrder(models.Model):
             product_avail = {}
             for product_id, qty in component_demand.items():
                 product = self.env["product.product"].browse(product_id)
+                print ("\n product", product.name, "\n idddddddd", product.id)
                 avail_date = order._get_virtual_avail_date(product, qty)
+                print ("\n avail_date",avail_date)
                 product_avail[product_id] = avail_date and avail_date or today
 
             # --- Step 3: Assign line-level customer_lead ---
+            print ("\n product_avail", product_avail)
             for line in order.order_line:
                 if not line_components[line.id]:
                     line.customer_lead = 0
