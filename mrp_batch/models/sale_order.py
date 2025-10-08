@@ -52,72 +52,138 @@ class SaleOrder(models.Model):
             sale.mrp_production_ids = mrp_production_ids
         return res
 
-    def split_mo(self, split_internal_picking=False):
+    def split_mo(self):
+        """
+        Split MOs linked to this sale order into single-qty MOs,
+        give each new MO its own procurement.group, then confirm each MO
+        so Odoo generates the component/internal transfers naturally.
+
+        Batch creation behavior:
+          - If ir.config_parameter 'mrp_batch.batch_mode' == 'single' -> create one batch for the whole order
+          - Otherwise -> do NOT create a batch per MO (no automatic per-MO batch creation)
+        """
         batch_obj = self.env["mrp.production.batch"]
+        group_obj = self.env["procurement.group"]
         batch_mode = (
             self.env["ir.config_parameter"].sudo().get_param("mrp_batch.batch_mode")
         )
-        for rec in self:
-            existing_batch_id = None
 
+        for order in self:
+            existing_batch = None
             if batch_mode == "single":
-                # Create a single batch for all MOs in this record
-                existing_batch_id = batch_obj.create(
-                    {"responsible_id": rec.env.user.id}
+                # one batch for the whole order (created once)
+                existing_batch = batch_obj.sudo().create(
+                    {"responsible_id": order.env.user.id}
                 )
-            for mo in rec.mrp_production_ids:
+
+            for mo in order.mrp_production_ids:
+                # only split serial-tracked products that allow splitting
                 if (
-                    mo.product_id.tracking == "serial"
-                    and mo.product_id.is_allow_split_mo
+                    mo.product_id.tracking != "serial"
+                    or not mo.product_id.is_allow_split_mo
                 ):
-                    qty = mo.product_qty
-                    new_mos = []
-                    mo_to_split = mo
-                    for i in range(
-                        int(mo_to_split.product_qty) - 1
-                    ):  # i.g Split 2 times to end up with 3 MOs
-                        # Always split 1 qty from the current MO
-                        result = mo_to_split.sudo()._split_productions(
-                            amounts={mo_to_split: [1]},
-                            split_internal_picking=split_internal_picking,
-                        )
+                    continue
 
-                        # result[-1] is the remaining MO, result[0] is the new one
-                        new_mo = result[0]
-                        mo_to_split = result[
-                            -1
-                        ]  # Continue splitting from the remaining part
-                        new_mos.append(new_mo)
+                if mo.product_qty <= 1:
+                    continue
 
-                    # At the end, new_mos has 2 new MOs, and mo_to_split is the last remaining 1-qty MO
-                    new_mos.append(mo_to_split)
-                    for new_mo in new_mos:
-                        mo.write({"linked_mo_ids": [(4, new_mo.id)]})
+                # ensure there is a procurement group for the original MO
+                if not mo.procurement_group_id:
+                    mo.procurement_group_id = group_obj.sudo().create({"name": mo.name})
 
-                    # Assign batch to original MO and its backorders
-                    if not mo.mrp_batch_id:
-                        mo.write(
+                remaining_mo = mo
+                new_mos = []
+                delivery_move = mo.move_dest_ids
+
+                # native split: split off single-qty MOs
+                for i in range(int(mo.product_qty) - 1):
+                    # _split_productions returns new production records; use sudo to avoid rights issues
+                    result = remaining_mo.sudo()._split_productions(
+                        amounts={remaining_mo: [1]}
+                    )
+                    new_created = result[0]
+                    remaining_mo = result[-1]
+                    new_mos.append(new_created)
+
+                # include the last (remainder) MO
+                new_mos.append(remaining_mo)
+
+                # Assign a fresh procurement.group to each split MO and (optionally) assign the single batch
+                for idx, new_mo in enumerate(new_mos, start=1):
+                    new_group = group_obj.sudo().create({"name": f"{mo.name}-{idx}"})
+                    new_mo.sudo().write({"procurement_group_id": new_group.id})
+
+                    # ONLY assign a batch if batch_mode == "single"
+                    if existing_batch:
+                        new_mo.sudo().write({"mrp_batch_id": existing_batch.id})
+
+                # Now: ensure any existing moves belong to the new group, then confirm each MO
+                for new_mo in new_mos:
+                    # If the split copied moves, reassign their group/origin so pickings split correctly
+                    moves = new_mo.move_raw_ids | new_mo.move_finished_ids
+                    if moves:
+                        moves.sudo().write(
                             {
-                                "mrp_batch_id": (
-                                    existing_batch_id.id
-                                    if batch_mode == "single"
-                                    else batch_obj.create(
-                                        {"responsible_id": rec.env.user.id}
-                                    ).id
-                                ),
-                                "ignore_exception": False,
+                                "group_id": new_mo.procurement_group_id.id,
+                                "origin": new_mo.name,
                             }
                         )
-                        mo.backorder_ids.write({"mrp_batch_id": mo.mrp_batch_id.id})
-                        mo.linked_mo_ids.filtered(lambda l: not l.mrp_batch_id).write(
+
+                    # Update move quantities to match split qty
+                    for move in new_mo.move_finished_ids:
+                        move.product_uom_qty = new_mo.product_qty
+
+                    # Confirm the MO if it's still draft so Odoo generates/updates moves & pickings.
+                    # We toggle ignore_exception to mimic your previous safe-confirm pattern.
+                    if new_mo.state in ("draft",):
+                        new_mo.sudo().write({"ignore_exception": True})
+                        new_mo.sudo().action_confirm()
+                        new_mo.sudo().write({"ignore_exception": False})
+
+                    # Ensure pickings that were created for this MO are at least tagged with the group/origin
+                    if new_mo.picking_ids:
+                        new_mo.picking_ids.sudo().write(
                             {
-                                "mrp_batch_id": mo.mrp_batch_id.id,
-                                "ignore_exception": False,
+                                "group_id": new_mo.procurement_group_id.id,
+                                "origin": new_mo.name,
                             }
                         )
-            rec.mrp_production_ids.write({"ignore_exception": True})
-            rec.mrp_production_ids.action_confirm()
-            rec.mrp_production_ids.write({"ignore_exception": False})
+
+                # keep a reference on the original MO to the new MOs
+                mo.sudo().write({"linked_mo_ids": [(6, 0, [m.id for m in new_mos])]})
+
+                # Assign batch to original MO and its backorders
+                if not mo.mrp_batch_id:
+                    mo.write(
+                        {
+                            "mrp_batch_id": (
+                                existing_batch.id
+                                if batch_mode == "single"
+                                else batch_obj.create(
+                                    {"responsible_id": self.env.user.id}
+                                ).id
+                            ),
+                            "ignore_exception": False,
+                        }
+                    )
+                    # mo.backorder_ids.write({"mrp_batch_id": mo.mrp_batch_id.id})
+                    mo.linked_mo_ids.filtered(lambda l: not l.mrp_batch_id).write(
+                        {
+                            "mrp_batch_id": mo.mrp_batch_id.id,
+                            "ignore_exception": False,
+                        }
+                    )
+
+                # Reset finished moves destination
+                finished_product_moves = mo.linked_mo_ids.move_finished_ids.filtered(
+                    lambda m: not m.move_dest_ids
+                )
+                finished_product_moves.move_dest_ids = [(6, 0, [delivery_move.id])]
+
+            # optional commit so successive operations see persisted state (keeps DB in a stable state)
+            self.env.cr.commit()
+
+        return True
 
     # Methods for Batch Smart Button
     def _compute_mrp_production_batch_id_count(self):
