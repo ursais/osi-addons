@@ -1389,3 +1389,37 @@ class IrActionsServer(models.Model):
         cr.execute("drop table temp_product_attribute_value_v13;")
         
         _logger.info("\n\n============Tables Droped")
+
+    def update_workcenter_mo(self):
+        #TASK Ref: https://osi.mavenlink.com/workspaces/44078089/#tracker/928787261
+        MrpBom = self.env["mrp.bom"]
+        RoutingWorkcenter = self.env["mrp.routing.workcenter"]
+
+        scaffolding_boms = MrpBom.search([("scaffolding_bom", "=", True),("type","=","normal")])
+
+        # Try to fetch workcenters safely
+        def safe_ref(xml_id):
+            try:
+                return env.ref(xml_id)
+            except ValueError:
+                return False
+
+        test_workcenter = safe_ref("mrp_batch.import_test")
+        build_workcenter = safe_ref("mrp_batch.import_build")
+        box_workcenter = safe_ref("mrp_batch.import_box")
+
+        if all([test_workcenter, build_workcenter, box_workcenter]):
+            workcenter_lines = []
+            for bom in scaffolding_boms:
+                for wc in [test_workcenter, build_workcenter, box_workcenter]:
+                    workcenter_lines.append({
+                        "workcenter_id": wc.id,
+                        "name": wc.name,
+                        "type": wc.type,
+                        "time_cycle_manual": 0.0,
+                        "bom_id": bom.id,
+                        "sequence": 10 if wc == test_workcenter else 20 if wc == build_workcenter else 30,
+                    })
+
+        if workcenter_lines:
+            RoutingWorkcenter.create(workcenter_lines)
