@@ -16,19 +16,21 @@ class IrActionsServer(models.Model):
     from odoo import api, SUPERUSER_ID
 
     def migrate_helpdesk_rma_to_ticket(self):
-        self = self.sudo()
-        odoo_13 = odoorpc.ODOO("localhost", port=8069, timeout=12000)
-        odoo_13.login("odoo13_prod", "admin", "pw")
-        Rma = odoo_13.env["helpdesk.rma"]
+        _logger.info("===============migrate_helpdesk_rma_to_ticket====================")
+        self = self.sudo() 
         Ticket = self.env['helpdesk.ticket']
         partner_obj = self.env['res.partner']
+        repair_obj = self.env['repair.order']
         ticket_type_ids = self.env["helpdesk.ticket.type"].search([])
         team_id = self.env.ref('ol_helpdesk_repair_batch.helpdesk_team_customer_rma')
         tema_eu_id = self.env.ref('ol_helpdesk_repair_batch.helpdesk_team_customer_rma_eu')
-        self._cr.execute("select id,assigned_to,state,type,warranty_expiration,rush,sale_order_id,partner_id,summary,company_id,flags,shipping_method,shipping_account from helpdesk_rma;")
+        self._cr.execute("select id,assigned_to,state,type,warranty_expiration,rush,sale_order_id,partner_id,summary,company_id,flags,shipping_method,shipping_account from helpdesk_rma")
         rma_data_ids = self._cr.dictfetchall()
+        counter = 1
         
         def get_stage(value):
+            if not value:
+                return False
             if value == 'new':
                 return self.env.ref('ol_helpdesk_repair_batch.helpdesk_stage_rma_requested').id
             elif value == 'accepted':
@@ -42,39 +44,51 @@ class IrActionsServer(models.Model):
             return False
         
         for rma in rma_data_ids:
-            print ("\n rma=========", rma.get('id'))
-            v13_data = Rma.search_read(domain=[('rma_line_ids.repair_order_ids', '!=', False), ('id', '=', rma.get('id'))],
-            fields=[
-                "id",
-                "related_repair_replacement_sale_ids",
-                "related_repair_order_ids",
-            ],
-        )
+            self._cr.execute("select id from temp_helpdesk_rma_line where rma_id = %s", (rma.get('id'),))
+            rma_line_ids = [ids[0] for ids in self._cr.fetchall() if ids[0] is not None]
+            historical_repair_order_ids = []
+            if rma_line_ids:
+                self._cr.execute("select historical_repair_order_id from temp_support_repair_order where rma_line_id in %s", (tuple(rma_line_ids),))
+                historical_repair_order_ids = [ids[0] for ids in self._cr.fetchall() if ids[0] is not None]
+            
             partner_id = partner_obj.browse(rma.get('partner_id'))
-            type = ticket_type_ids.filtered(lambda a:a.name == rma.get('type', "").capitalize())
+            type_name = rma.get('type', "") and rma.get('type', "").capitalize()
+            type = self.env["helpdesk.ticket.type"]
+            if type_name != None:
+                type = ticket_type_ids.filtered(lambda a:a.name == type_name.capitalize())
 
             vals = {
                 "user_id": rma.get('assigned_to'),
                 "ticket_type_id": type.id,
                 "team_id": team_id.id if rma.get('company_id') == 1 else tema_eu_id.id,
-                "stage_id": get_stage(rma.get('state')),
-                # "warranty_expiration": rma.warranty_experation if rma.related_repair_order_ids and len(rma.related_repair_order_ids) == 1 else False,
+                "stage_id": get_stage(rma.get('state', False)),
                 "priority": "2" if rma.get('rush') else "0",  # '2' usually means urgent in Odoo
                 "original_sale_order_ids": [(6, 0, [rma.get('sale_order_id')])] if rma.get('sale_order_id') else False,
-                "repair_sale_order_ids": [(6, 0, v13_data[0].get('related_repair_replacement_sale_ids'))] if v13_data else [],
+                # "repair_sale_order_ids": [(6, 0, v13_data[0].get('related_repair_replacement_sale_ids'))] if v13_data else [],
                 "partner_id": partner_id.id,
                 "partner_email": partner_id.email,
                 "partner_phone": partner_id.phone,
                 "description": rma.get('summary'),
-                # "repair_ids": [(6, 0, rma.related_repair_order_ids.ids)],
+                # "repair_ids": [(6, 0, historical_repair_order_ids)],
                 "company_id": rma.get('company_id'),
-                # "flags": rma.get('flags', ''),
-                # "carrier_id": rma.get('shipping_method') if rma.get('shipping_method') else False,
-                # "shipping_account": rma.get('shipping_account', ''),
+                "flags": rma.get('flags', '') if rma.get('flags', '') != None else '',
+                "carrier_id": rma.get('shipping_method') if rma.get('shipping_method') else False,
+                "shipping_account": rma.get('shipping_account', '') if rma.get('shipping_account', '') != None else '',
             }
-            print ("\n ================", vals)
+            
             # Create Ticket
-            Ticket.create(vals)
+            counter += 1
+            ticket_id = Ticket.with_context(tracking_disable=True).create(vals)
+            if historical_repair_order_ids:
+                self._cr.execute("update repair_order set ticket_id = %s where id in %s", (ticket_id.id,tuple(historical_repair_order_ids)))
+                if len(historical_repair_order_ids) == 1:
+                    repair = repair_obj.browse(historical_repair_order_ids)
+                    if repair.lot_id:
+                        repair.lot_id.warranty_expiration_date = rma.get('warranty_expiration')
+
+            if (counter + 1) % 10000 == 0:  # We save every 100k records
+                _logger.info("===============records %s============"% (counter, vals))
+                self.env.cr.commit()
 
 
 
@@ -336,12 +350,14 @@ class IrActionsServer(models.Model):
             "company_id": company.id,
         })      
         wire_journal = env.ref('lgx_aj.11020-03', raise_if_not_found=True)
-        wire_journal.write({"bank_account_id": bank.id, "bank_statements_source": 'undefined'})
+        self._cr.execute("update account_journal set bank_account_id = %s, bank_statements_source = 'undefined' where id = %s", (bank.id, wire_journal.id))
+        # wire_journal.write({"bank_account_id": bank.id, "bank_statements_source": 'undefined'})
         line = wire_journal.outbound_payment_method_line_ids.filtered(lambda l:l.payment_method_id.name == 'SEPA Credit Transfer')
         ap_account_id =  env['account.account'].with_company(company).search([('name', '=', 'Outstanding Payments')], limit=1)
         line.write({"payment_account_id": ap_account_id.id})
         card_journal = env["account.journal"].with_company(company).search([('name', '=', 'Credit Card Purchase Journal')], limit=1)
-        card_journal.write({"bank_account_id": bank.id, "bank_statements_source": 'undefined'})
+        self._cr.execute("update account_journal set bank_account_id = %s, bank_statements_source = 'undefined' where id = %s", (bank.id, card_journal.id))
+        # card_journal.write({"bank_account_id": bank.id, "bank_statements_source": 'undefined'})
         line = card_journal.outbound_payment_method_line_ids.filtered(lambda l:l.payment_method_id.name == 'SEPA Credit Transfer')
         line.write({"payment_account_id": ap_account_id.id})
 
