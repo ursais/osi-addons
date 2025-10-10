@@ -12,10 +12,15 @@
                 <div class="alert alert-danger mb-0" role="alert" invisible="not credit_hold" groups="ol_credit_limit.group_credit_management_user">
                     <strong> CREDIT HOLD </strong>
                 </div>
+                <div class="alert alert-danger mb-0" role="alert" invisible="not remaining_credit_exceed" groups="ol_credit_limit.group_credit_management_user">
+                    <strong> Order Exceeds Remaining Credit </strong>
+                </div>
+
             </xpath>
             <xpath expr="//page[@name='other_information']//group[@name='sale_reporting']" position="after">
                 <group name="credit_management" string="Credit Management" groups="ol_credit_limit.group_credit_management_user">
                     <field  name="credit_hold"/>
+                    <field  name="remaining_credit_exceed" invisible="1"/>
                     <field  name="uninvoiced_balance"/>
                     <field  name="override_credit_limit_hold"/>
                 </group>

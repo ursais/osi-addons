@@ -277,8 +277,11 @@ class ResPartner(models.Model):
         "invoice_ids.line_ids.balance",
         "invoice_ids.payment_ids",
         "invoice_ids.payment_state",
+        "invoice_ids.state",
+        "rollup_partner_ids.invoice_ids.state",
         "rollup_partner_ids.invoice_ids",
         "rollup_partner_ids.invoice_ids.payment_state",
+        "rollup_partner_ids.customer_deposit_balance"
     )
     def _compute_customer_deposit_balance(self):
         """
@@ -288,10 +291,7 @@ class ResPartner(models.Model):
         """
         deposit_accounts = self._get_deposit_accounts()
         for partner in self:
-            partners_to_include = (
-                partner.rollup_partner_ids + partner._origin + partner.child_ids
-            )
-            invoice_line_ids = partners_to_include.invoice_ids.mapped(
+            invoice_line_ids = partner.invoice_ids.filtered(lambda l : l.state=='posted').mapped(
                 "invoice_line_ids"
             )
             if invoice_line_ids:
@@ -310,6 +310,13 @@ class ResPartner(models.Model):
             customer_deposit_balance = self.env.cr.fetchone()[0] or 0
             customer_deposit_balance = customer_deposit_balance * -1
             partner.customer_deposit_balance = customer_deposit_balance
+
+            rollup_balance = 0
+            if partner.rollup_partner_ids:
+                rollup_balance = sum(partner.rollup_partner_ids.mapped("customer_deposit_balance"))
+            
+            base_balance = partner.customer_deposit_balance
+            partner.customer_deposit_balance = base_balance + rollup_balance
 
     @api.depends(
         "partner_rollup_id",
