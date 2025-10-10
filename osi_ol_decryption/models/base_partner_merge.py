@@ -131,7 +131,7 @@ class IrActionsServer(models.Model):
             if src_partner_id and src_partner_id[0] in dest_partner_ids:
                 
                 _logger.info("\ndest_partner_ids==========%s", dest_partner_ids)
-                if src_partner_id[0] in (198303,982434,1557239,1409315,236979,128408,1476522,26684,571350,1196062,981782,1209104,1211507, 1564211, 1766198):
+                if src_partner_id[0] in (198303,982434,1557239,1409315,236979,128408,1476522,26684,571350,1196062,981782,1209104,1211507, 1564211, 1766198,1203590,1210725,1563795,1373245,1452184,859996,245829,):
                     continue
                 src_partner_id = obj_resp.browse(src_partner_id[0])
                 child_ids = self.env['res.partner']
@@ -139,7 +139,7 @@ class IrActionsServer(models.Model):
                 if child_ids:
                     _logger.info("\nData sikp You cannot merge a contact with one of his parent %s", child_ids)
                     continue
-                    
+                dest_partner_ids = (obj_resp.browse(dest_partner_ids) - src_partner_id).ids
                     
                 if len(dest_partner_ids) > 3:
                     for i in range(0, len(dest_partner_ids), batch_size):
