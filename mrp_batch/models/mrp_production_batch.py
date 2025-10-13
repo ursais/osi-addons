@@ -355,7 +355,11 @@ class MrpProductionBatch(models.Model):
         required=True,
         default=lambda self: self.env.company,
     )
-
+    picking_batch_ids = fields.One2many(
+        "stock.picking.batch",
+        "mrp_batch_id",
+        string="Batch Transfers",
+    )
     # Count of associated sale orders
     sale_order_count = fields.Integer(
         "Total Sale Order Count",
@@ -365,6 +369,12 @@ class MrpProductionBatch(models.Model):
     picking_count = fields.Integer(
         "Total Sale Order Count",
         compute="_compute_picking_count",
+    )
+    # Count of associated batch pickings
+    picking_batch_count = fields.Integer(
+        string="Batch Transfers Count",
+        compute="_compute_picking_count",
+        store=False,
     )
 
     # END #########
@@ -565,33 +575,73 @@ class MrpProductionBatch(models.Model):
                 "context": "{'create': False}",
             }
 
+    def action_open_batch_transfers(self):
+        # Ensures the method is called on a single record.
+        self.ensure_one()
+        # Defines the base action for viewing the stock picking batch.
+        action = {
+            "res_model": "stock.picking.batch",
+            "type": "ir.actions.act_window",
+        }
+        # Checks if there is only one batch ID in `picking_batch_ids`.
+        if len([batch.id for batch in self.picking_batch_ids]) == 1:
+            # If there is a single batch, open it in form view.
+            action.update(
+                {
+                    "view_mode": "form",
+                    "res_id": self.picking_batch_ids.id,
+                }
+            )
+        else:
+            # If there are multiple batches, open them in tree and form view with a
+            # domain filter.
+            action.update(
+                {
+                    "name": "Batch Transfer",
+                    "domain": [("id", "in", self.picking_batch_ids.ids)],
+                    "view_mode": "tree, form",
+                }
+            )
+        return action
+
     # Compute Methods
     @api.depends(
         "production_ids",
         "production_ids.mrp_batch_id",
+        "production_ids.state",
     )
     def _compute_batch_state(self):
         """Compute the state of the batch based on the states of associated MOs,
         ignoring 'cancel' states unless all are 'cancel'."""
+        # Pre-compute all non-cancel states
+        batch_states = {}
         for batch in self:
             if batch.state == "hold":
                 continue  # Do not update if batch is on hold
 
-            # Exclude 'cancel' states from the evaluation
+            # Pre-filter and collect non-cancel states
             non_cancel_states = batch.production_ids.filtered(
                 lambda mo: mo.state != "cancel"
             ).mapped("state")
 
             if not non_cancel_states and batch.production_ids:  # All are 'cancel'
-                batch.state = "cancel"
+                batch_states[batch.id] = "cancel"
             elif all(state == "draft" for state in non_cancel_states):
-                batch.state = "draft"
+                batch_states[batch.id] = "draft"
             elif all(state == "confirmed" for state in non_cancel_states):
-                batch.state = "confirm"
+                batch_states[batch.id] = "confirm"
             elif any(state in ("progress", "to_close") for state in non_cancel_states):
-                batch.state = "progress"
+                batch_states[batch.id] = "progress"
             elif all(state == "done" for state in non_cancel_states):
-                batch.state = "done"
+                batch_states[batch.id] = "done"
+            else:
+                # Default to draft if no clear state
+                batch_states[batch.id] = "draft"
+
+        # Apply computed states
+        for batch in self:
+            if batch.state != "hold":
+                batch.state = batch_states.get(batch.id, batch.state)
 
     @api.depends(
         "production_ids.sale_order_id.tag_ids",
@@ -630,9 +680,11 @@ class MrpProductionBatch(models.Model):
         for rec in self:
             rec.partner_ids = False
             if rec.production_ids:
-                rec.partner_ids = (
-                    rec.production_ids.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id.partner_id.ids
+                # get partner IDs in one operation
+                partners = (
+                    rec.production_ids.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id.partner_id
                 )
+                rec.partner_ids = partners.ids
 
     @api.depends("production_ids")
     def _compute_sale_order_ids(self):
@@ -640,6 +692,7 @@ class MrpProductionBatch(models.Model):
         for rec in self:
             rec.sale_order_ids = False
             if rec.production_ids:
+                # get sale order IDs in one operation
                 rec.sale_order_ids = rec.production_ids.sale_order_id.ids
 
     @api.depends("production_ids")
@@ -648,6 +701,7 @@ class MrpProductionBatch(models.Model):
         for rec in self:
             rec.product_ids = False
             if rec.production_ids:
+                # get product IDs in one operation
                 rec.product_ids = rec.production_ids.product_id.ids
 
     @api.depends("production_ids")
@@ -656,6 +710,7 @@ class MrpProductionBatch(models.Model):
         for rec in self:
             rec.product_tmpl_ids = False
             if rec.production_ids:
+                # get product template IDs in one operation
                 rec.product_tmpl_ids = rec.production_ids.product_tmpl_id.ids
 
     @api.depends(
@@ -700,10 +755,10 @@ class MrpProductionBatch(models.Model):
         for rec in self:
             rec.earliest_start = False
             if rec.production_ids:
-                start_date = min(
-                    production.date_start for production in rec.production_ids
-                )
-                rec.earliest_start = start_date
+                # Use min directly on the mapped values
+                start_dates = rec.production_ids.mapped("date_start")
+                if start_dates:
+                    rec.earliest_start = min(start_dates)
 
     @api.depends(
         "date_start",
@@ -728,10 +783,10 @@ class MrpProductionBatch(models.Model):
         for rec in self:
             rec.date_finished = False
             if rec.production_ids:
-                start_date = min(
-                    production.date_finished for production in rec.production_ids
-                )
-                rec.date_finished = start_date
+                # Use min directly on the mapped values
+                finished_dates = rec.production_ids.mapped("date_finished")
+                if finished_dates:
+                    rec.date_finished = min(finished_dates)
 
     @api.depends(
         "production_ids",
@@ -840,7 +895,6 @@ class MrpProductionBatch(models.Model):
             planned_tag = self.env["mrp.production.batch.tag"].search(
                 [("name", "=", "Planned")], limit=1
             )
-            # raise UserError("%s %s" % (delayed_tag, planned_tag))
 
             # Add or remove Delayed tag based on is_delayed
             if rec.is_delayed and delayed_tag:
@@ -1126,13 +1180,17 @@ class MrpProductionBatch(models.Model):
             )
 
             # Compute quantities
-            rec.qty_producing = sum(mo.product_qty for mo in valid_productions)
-            rec.qty_produced = sum(mo.qty_produced for mo in valid_productions)
-            rec.qty_remaining = rec.qty_producing - rec.qty_produced
+            qty_producing = sum(mo.product_qty for mo in valid_productions)
+            qty_produced = sum(mo.qty_produced for mo in valid_productions)
+            qty_remaining = qty_producing - qty_produced
+
+            rec.qty_producing = qty_producing
+            rec.qty_produced = qty_produced
+            rec.qty_remaining = qty_remaining
 
             # Compute percentage complete
-            if rec.qty_producing > 0.0:
-                rec.percent_complete = rec.qty_produced / rec.qty_producing
+            if qty_producing > 0.0:
+                rec.percent_complete = qty_produced / qty_producing
             else:
                 rec.percent_complete = 0.0
 
@@ -1155,7 +1213,11 @@ class MrpProductionBatch(models.Model):
 
             # Fetch all raw moves and ensure calculations are up to date
             all_raw_moves = valid_productions.move_raw_ids
-            all_raw_moves._fields["forecast_availability"].compute_value(all_raw_moves)
+            # Only compute forecast availability once for all moves
+            if all_raw_moves:
+                all_raw_moves._fields["forecast_availability"].compute_value(
+                    all_raw_moves
+                )
 
             latest_forecast_date = False
             is_unavailable = False
@@ -1238,14 +1300,14 @@ class MrpProductionBatch(models.Model):
                     )
                     == -1
                 ):
-                    product_status_map[
-                        product.id
-                    ] = f"{product.default_code}: Not Available"
+                    product_status_map[product.id] = (
+                        f"{product.default_code}: Not Available"
+                    )
 
                 if move.forecast_expected_date:
-                    product_status_map[
-                        product.id
-                    ] = f"{product.default_code}: Exp. {format_date(self.env, move.forecast_expected_date)}"
+                    product_status_map[product.id] = (
+                        f"{product.default_code}: Exp. {format_date(self.env, move.forecast_expected_date)}"
+                    )
 
             # Populate the details field
             batch.components_availability_details = "\n".join(
@@ -1268,11 +1330,13 @@ class MrpProductionBatch(models.Model):
                 batch.reservation_state = False
                 continue
 
-            if any(mo.reservation_state == "assigned" for mo in valid_productions):
+            # Pre-calculate states
+            states = valid_productions.mapped("reservation_state")
+            if "assigned" in states:
                 batch.reservation_state = "assigned"
-            elif any(mo.reservation_state == "confirmed" for mo in valid_productions):
+            elif "confirmed" in states:
                 batch.reservation_state = "confirmed"
-            elif any(mo.reservation_state == "waiting" for mo in valid_productions):
+            elif "waiting" in states:
                 batch.reservation_state = "waiting"
             else:
                 batch.reservation_state = False
@@ -1282,7 +1346,11 @@ class MrpProductionBatch(models.Model):
     def _compute_sale_order_count(self):
         # Compute the total count of sales orders associated with productions
         for rec in self:
-            rec.sale_order_count
+            rec.sale_order_count = len(
+                rec.production_ids.mapped(
+                    "procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id"
+                )
+            )
 
     def action_view_sale(self):
         # Ensure the method is called on a single record
@@ -1481,11 +1549,11 @@ class MrpProductionBatch(models.Model):
             if all(job.state in ["done", "failed", "cancelled"] for job in jobs):
                 batch.is_queuing = False
 
-        
     def _compute_picking_count(self):
         # Compute the total count of internal tranfer associated with productions
         for rec in self:
             rec.picking_count = len(rec.production_ids.mapped("picking_ids"))
+            rec.picking_batch_count = len(rec.picking_batch_ids)
 
     # Smart Button Methods
     def action_view_mo_delivery(self):
