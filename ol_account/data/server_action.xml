@@ -20,7 +20,7 @@
 
     <function name="write" model="ir.model.data">
         <function name="search" model="ir.model.data">
-            <value eval="[('module', '=', 'account'), ('name', '=', 'account_send_payment_receipt_by_email_action')]" />
+            <value eval="[('module', '=', 'account'), ('name', 'in', ['account_send_payment_receipt_by_email_action', 'account_send_payment_receipt_by_email_action_multi'])]" />
         </function>
         <value eval="{'noupdate': False}" />
     </function>
@@ -37,4 +37,14 @@
         <field name="binding_view_types">form</field>
     </record>
 
+    <record id="account.account_send_payment_receipt_by_email_action_multi" model="ir.actions.act_window">
+        <field name="context" eval="{
+                'mail_post_autofollow': True,
+                'default_composition_mode': 'mass_mail',
+                'default_use_template': True,
+                'default_template_id': ref('ol_account.vendor_payment_template'),
+                'default_email_layout_xmlid': 'mail.mail_notification_light',
+            }"/>
+        <field name="binding_view_types">list</field>
+    </record>
 </odoo>
