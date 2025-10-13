@@ -27,6 +27,11 @@ class SaleOrder(models.Model):
         store=True,
     )
     override_credit_limit_hold = fields.Boolean("Override Credit Limit Hold")
+    remaining_credit_exceed = fields.Boolean(
+        string="Remaining Credit Check",
+        compute="_compute_remaining_credit_exceed",
+    )
+
 
     # END #########
     # METHODS #####
@@ -61,6 +66,38 @@ class SaleOrder(models.Model):
         so_list = [so[0] for so in self.env.cr.fetchall()]
         return so_obj.browse(so_list)
 
+    # @api.depends(
+    #     "state",
+    # )
+    def _compute_remaining_credit_exceed(self):
+        """
+        Remaining credit limit computation before confirmation of SO:
+        - Find the top roll up partner from SO partner_id
+        - If remaining_credit <= SO amount, set remaining_credit_exceed = True
+        """
+        if not self:
+            return
+
+        for order in self:
+            # We only want to compute this for Quote and Quote sent
+            if order.state not in ('draft', 'sent'):
+                order.remaining_credit_exceed = False
+                continue
+            
+            partner = order.partner_id
+            
+            # Find the top roll up partner by traversing up the partner_rollup_id chain
+            # Go up the chain until we find the top most rollup partner
+            current_partner = partner
+            while current_partner.partner_rollup_id:
+                current_partner = current_partner.partner_rollup_id
+            
+            # Check if the top roll up partner's remaining credit is less than or equal to 0
+            if current_partner.remaining_credit < order.amount_total:
+                order.remaining_credit_exceed = True
+            else:
+                order.remaining_credit_exceed = False
+
     @api.depends(
         "partner_id.partner_rollup_id",
         "partner_id.remaining_credit",
@@ -93,7 +130,8 @@ class SaleOrder(models.Model):
     @api.depends(
         "amount_total",
         "invoice_ids",
-        "invoice_ids.amount_total"
+        "invoice_ids.amount_total",
+        "state"
     )
     def _compute_uninvoiced_balance(self):
         """
@@ -102,6 +140,9 @@ class SaleOrder(models.Model):
         - Otherwise zero.
         """
         for order in self:
+            if order.state != 'sale':
+                order.uninvoiced_balance = 0.0
+                continue
             invoice_ids = order.invoice_ids
             out_invoice_ids = invoice_ids.filtered(lambda l: l.state not in ('draft','cancel') and l.move_type == 'out_invoice')
             refund_ids = invoice_ids.filtered(lambda l: l.state not in ('draft','cancel') and l.move_type == 'out_refund')
