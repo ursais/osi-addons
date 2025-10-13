@@ -153,12 +153,20 @@
 
                     <t t-call="ol_templates.payment" t-if="sale_order.sale_payment_method_id">
                         <t t-set="block_title">Payment Method</t>
+                        <t t-set="payment_terms" t-value=""/>
                         <t t-set="payment_method" t-value="sale_order.sale_payment_method_id"/>
+                        <t t-if="payment_method.name == 'Payment Terms' and sale_order.payment_term_id">
+                            <t t-set="payment_method" t-value="sale_order.payment_term_id"/>
+                        </t>
+                        <t t-if="payment_method.name == 'Payment Terms' and not sale_order.payment_term_id">
+                            <t t-set="payment_method" t-value="False"/>
+                            <t t-set="payment_terms" t-value="'Net Terms'"/>
+                        </t>
                     </t>
-                    <t t-call="ol_templates.payment_terms" t-if="sale_order.payment_term_id">
+                    <!-- <t t-call="ol_templates.payment_terms" t-if="sale_order.payment_term_id">
                         <t t-set="block_title">Payment Terms</t>
                         <t t-set="payment_terms" t-value="sale_order.payment_term_id"/>
-                    </t>
+                    </t> -->
                 </div>
 
                 <!--Shipping related information-->
