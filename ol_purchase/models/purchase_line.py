@@ -39,12 +39,12 @@ class PurchaseOrderLine(models.Model):
         """
         # Exclude lines that are already confirmed and have price_unit set
         self = self - self.filtered(
-            lambda l: l.order_id.state == "purchase" and l.price_unit
+            lambda l: l.id and l.order_id.state == "purchase" and l.price_unit
         )
         # Call the original compute method for the remaining records
         return super(
             PurchaseOrderLine, self
-        )._compute_price_unit_and_date_planned_and_name
+        )._compute_price_unit_and_date_planned_and_name()
 
     def _update_move_date_deadline(self, new_date):
         """
