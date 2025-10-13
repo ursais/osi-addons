@@ -1,19 +1,29 @@
+from datetime import timedelta
 from odoo import api, fields, models
 
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
+    available_date = fields.Date(
+        string="Available Date",
+        compute="_compute_available_date",
+    )
+
+    @api.depends("customer_lead")
+    def _compute_available_date(self):
+        for line in self:
+            line.available_date = fields.Date.today()
+            if line.customer_lead:
+                line.available_date += timedelta(days=line.customer_lead)
+
     @api.depends("product_id", "product_uom_qty")
     def _compute_customer_lead(self):
         for line in self:
             if not line.product_id:
-                continue
-            elif line.bom_id:
-                lead_time = line._get_bom_lead_time()
+                line.customer_lead = 0
             else:
-                lead_time = line._get_standard_lead_time()
-            line.customer_lead = lead_time
+                line.order_id._set_dynamic_lead_times()
 
     def _get_bom_lead_time(self):
         """Fetch lead time from the BOM overview report based on max component delay + main product lead time."""
@@ -71,7 +81,7 @@ class SaleOrderLine(models.Model):
                 "active_id": self.bom_id.id,
                 "active_ids": [self.bom_id.id],
                 "default_searchQty": self.product_uom_qty,
-                "activate_availabilities": True
+                "activate_availabilities": True,
             },
         }
 
@@ -84,7 +94,7 @@ class SaleOrderLine(models.Model):
         res = super().create(vals_list)
         for line in res:
             if line.config_session_id:
-                line._compute_customer_lead()
+                line.order_id._set_dynamic_lead_times()
         return res
 
     def write(self, vals):
@@ -95,6 +105,6 @@ class SaleOrderLine(models.Model):
         res = super().write(vals)
 
         for line in self:
-            if "product_id" in vals:
-                line._compute_customer_lead()
+            if any(k in vals for k in ["product_id", "product_uom_qty", "bom_id"]):
+                line.order_id._set_dynamic_lead_times()
         return res

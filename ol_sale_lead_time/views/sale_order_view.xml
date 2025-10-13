@@ -23,6 +23,24 @@
                     invisible="not bom_id"
                 />
             </xpath>
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="first_estimated_ship_date" readonly="1"/>
+                
+            </xpath>
+            <xpath expr="//page[@name='order_lines']//field[@name='order_line']//tree//field[@name='product_uom']" position="after">
+                <field name="available_date"/>
+            </xpath>
+            <sheet position="before">
+                <div
+                    class="alert alert-danger"
+                    role="alert"
+                    style="margin-bottom:0px;"
+                    invisible="not esd_warning_message"
+                >
+                    <field name="last_esd_date" invisible="1"/>
+                    <field name="esd_warning_message" readonly="1"/>
+                </div>
+            </sheet>
         </field>
     </record>
 
