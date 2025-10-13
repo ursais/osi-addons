@@ -7,7 +7,7 @@ class ReportBomStructure(models.AbstractModel):
     @api.model
     def get_html(self, bom_id=False, searchQty=1, searchVariant=False):
         """Overridden to update the Default QTY base on SOL or BOL line Qty"""
-        if self._context.get("default_searchQty"):
+        if self._context.get("default_searchQty") and not searchQty:
             searchQty = self._context.get("default_searchQty")
         return super().get_html(
             bom_id=bom_id, searchQty=searchQty, searchVariant=searchVariant
