@@ -24,6 +24,7 @@
         "sale_exception",
         "sale_order_revision",
         "account_avatax_sale_oca",
+        "ol_rush_order"
     ],
     # always loaded
     "data": [
@@ -51,6 +52,8 @@
         "views/mrp_production_view.xml",
         "views/payment_method_view.xml",
         "views/confirmation_email.xml",
+        "views/mrp_production_batch_views.xml",
+        "views/res_config_settings_views.xml",
         "wizard/forward_confirmation_email_wizard.xml",
     ],
 }

@@ -1,0 +1,22 @@
+<odoo>
+
+    <record id="res_config_settings_view_form_inherit_ol_sale" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.ol_sale</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="mrp.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='mrp']" position="inside">
+                <block title="Rush order Lead time General Settings" id="mrp_rush_lead_settings">
+                    <setting id="default_rush_lead_time" string="Default Rush Order Lead Days">
+                        <div class="content-group">
+                            <div class="mt16" >
+                                <field name="rush_lead_time" class="oe_inline"/> days
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

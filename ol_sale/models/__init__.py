@@ -8,3 +8,5 @@ from . import stock_picking
 from . import mrp_production
 from . import payment_method
 from . import account_move
+from . import mrp_batch
+from . import res_config_setting
