@@ -316,7 +316,7 @@ class SaleOrderLine(models.Model):
         """
         for line in self:
             if line.product_id and not line.product_id.allow_backorder:
-                max_qty, _ = line._max_sellable_qty_now()
+                max_qty, sources = line._max_sellable_qty_now()
                 if line.product_uom_qty > max_qty:
                     raise ValidationError(
                         _(
