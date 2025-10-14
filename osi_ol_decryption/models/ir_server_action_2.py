@@ -1255,7 +1255,7 @@ class IrActionsServer(models.Model):
         # --- Setup ---
         MrpBom = self.env["mrp.bom"]
         Company = self.env["res.company"].sudo()
-        companies = self.Company.search([])
+        companies = Company.search([])
         total_products = len(ProductTemplates)  # Total number of products to process
         offset = 0
         counter = 1
@@ -1311,7 +1311,7 @@ class IrActionsServer(models.Model):
         # - Archive unused BoMs
         # =====================================================
 
-        products = env["product.template"].search([
+        products = self.env["product.template"].search([
             ("bom_ids.type", "=", "phantom")
         ])
 
@@ -1331,18 +1331,16 @@ class IrActionsServer(models.Model):
                 key=lambda x: (x[0], x[1])
             )
             return lines1 == lines2
-
         for product in products:
             phantom_boms = self.env["mrp.bom"]
             used_boms = self.env["mrp.bom"]
 
             # Collect phantom_bom_id across all companies
             for company in companies:
-                phantom_bom = product.with_company(company).phantom_bom_id
+                phantom_bom = product.sudo().with_company(company).phantom_bom_id
                 if phantom_bom:
                     phantom_boms |= phantom_bom
                     used_boms |= phantom_bom
-
         # Fetch all phantom BoMs for this product
         all_boms = MrpBom.search([
             ("product_tmpl_id", "=", product.id),
@@ -1358,15 +1356,14 @@ class IrActionsServer(models.Model):
                     bom.write({"active": False})
                     # Update phantom_bom_id references to master BoM
                     for company in companies:
-                        if product.with_company(company).phantom_bom_id == bom:
-                            product.with_company(company).write({
+                        if product.sudo().with_company(company).phantom_bom_id == bom:
+                            product.sudo().with_company(company).write({
                                 "phantom_bom_id": master_bom.id
                             })
-
             # Ensure all companies consistently point to master BoM
             for company in companies:
-                if product.with_company(company).phantom_bom_id != master_bom:
-                    product.with_company(company).write({
+                if product.sudo().with_company(company).phantom_bom_id != master_bom:
+                    product.sudo().with_company(company).write({
                         "phantom_bom_id": master_bom.id
                     })
 
@@ -1400,16 +1397,15 @@ class IrActionsServer(models.Model):
         # Try to fetch workcenters safely
         def safe_ref(xml_id):
             try:
-                return env.ref(xml_id)
+                return self.env.ref(xml_id)
             except ValueError:
                 return False
 
         test_workcenter = safe_ref("mrp_batch.import_test")
         build_workcenter = safe_ref("mrp_batch.import_build")
         box_workcenter = safe_ref("mrp_batch.import_box")
-
+        workcenter_lines = []
         if all([test_workcenter, build_workcenter, box_workcenter]):
-            workcenter_lines = []
             for bom in scaffolding_boms:
                 for wc in [test_workcenter, build_workcenter, box_workcenter]:
                     workcenter_lines.append({
@@ -1423,3 +1419,4 @@ class IrActionsServer(models.Model):
 
         if workcenter_lines:
             RoutingWorkcenter.create(workcenter_lines)
+            _logger.info("\n\n============RoutingWorkcenter Done")
