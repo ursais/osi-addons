@@ -486,9 +486,10 @@ class SaleOrder(models.Model):
             sale.current_estimate_ship_date = False
             commitment_date =  sale.commitment_date
             current_estimate_ship_date = commitment_date
-            mrp_batch_data = self.env["mrp.production.batch"].search([("sale_order_ids","in",sale.id)])
-            if mrp_batch_data and mrp_batch_data.estimated_ship_date:
-                current_estimate_ship_date = max(mrp_batch_data.estimated_ship_date,commitment_date.date())
+            mrp_batch_datas = self.env["mrp.production.batch"].search([("sale_order_ids","in",sale.id)])
+            for mrp_batch_data in mrp_batch_datas:
+                if mrp_batch_data and mrp_batch_data.estimated_ship_date:
+                    current_estimate_ship_date = max(mrp_batch_data.estimated_ship_date,commitment_date.date())
             sale.current_estimate_ship_date = current_estimate_ship_date
 
 
