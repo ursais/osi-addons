@@ -45,12 +45,12 @@ export class CustomQtyAtDateWidget extends QtyAtDateWidget {
         // Point the popover to the custom one
         this.popover = usePopover(CustomQtyAtDatePopover, { position: "top" });
     }
-
+ 
     initCalcData() {
         // calculate data not in record
         const { data } = this.props.record;
         if (data.scheduled_date) {
-            this.calcData.will_be_fulfilled = data.virtual_available_at_date >= data.qty_to_deliver;
+            this.calcData.will_be_fulfilled = data.virtual_available_at_date >= data.product_uom_qty;
             this.calcData.will_be_late = data.forecast_expected_date && data.forecast_expected_date > data.scheduled_date;
             if (['draft', 'sent'].includes(data.state)) {
                 // Moves aren't created yet, then the forecasted is only based on virtual_available of quant
