@@ -18,14 +18,14 @@ class SaleOrder(models.Model):
 
     first_estimate_date = fields.Date(
         string="First Estimated Date",
-        compute = "_compute_first_estimate_date",
+        compute="_compute_first_estimate_date",
         store=True,
         copy=False,
     )
 
     current_estimate_ship_date = fields.Date(
         string="Current Estimated Ship Date",
-        compute = "_compute_current_estimate_ship_date",
+        compute="_compute_current_estimate_ship_date",
         store=True,
         copy=False,
     )
@@ -74,7 +74,9 @@ class SaleOrder(models.Model):
         compute="_compute_mo_tranfer_count",
     )
     request_date_change_pending = fields.Boolean(
-        string="Customer Request Date Change Proposed", default=False,copy=False,
+        string="Customer Request Date Change Proposed",
+        default=False,
+        copy=False,
     )
 
     # END #########
@@ -162,7 +164,7 @@ class SaleOrder(models.Model):
             if not rec.commitment_date:
                 raise ValidationError(
                     _(
-                       "Customer Request Date is required for orders before confirmation."
+                        "Customer Request Date is required for orders before confirmation."
                     )
                 )
 
@@ -480,36 +482,52 @@ class SaleOrder(models.Model):
             else:
                 order.invoice_status = "no"
 
-    @api.depends("commitment_date","mrp_production_ids","mrp_production_ids.mrp_batch_id","mrp_production_ids.mrp_batch_id.components_availability","mrp_production_ids.mrp_batch_id.components_availability_state")
+    @api.depends(
+        "commitment_date",
+        "mrp_production_ids",
+        "mrp_production_ids.mrp_batch_id",
+        "mrp_production_ids.mrp_batch_id.components_availability",
+        "mrp_production_ids.mrp_batch_id.components_availability_state",
+    )
     def _compute_current_estimate_ship_date(self):
         for sale in self:
             sale.current_estimate_ship_date = False
-            commitment_date =  sale.commitment_date
-            if not commitment_date:
-                continue
+            commitment_date = sale.commitment_date
             current_estimate_ship_date = commitment_date
-            mrp_batch_datas = self.env["mrp.production.batch"].search([("sale_order_ids","in",sale.id)])
-            for mrp_batch_data in mrp_batch_datas:
-                if mrp_batch_data and mrp_batch_data.estimated_ship_date:
-                    current_estimate_ship_date = max(mrp_batch_data.estimated_ship_date,commitment_date.date())
+            mrp_batch_data = self.env["mrp.production.batch"].search(
+                [("sale_order_ids", "in", sale.id)]
+            )
+            if mrp_batch_data:
+                batch_dates = mrp_batch_data.mapped("estimated_ship_date")
+                batch_dates = [d for d in batch_dates if d]  # filter out False/None
+                if batch_dates:
+                    # take the latest of the batches and commitment_date
+                    current_estimate_ship_date = max(
+                        max(batch_dates),
+                        commitment_date.date() if commitment_date else max(batch_dates),
+                    )
             sale.current_estimate_ship_date = current_estimate_ship_date
 
-
-    @api.depends("commitment_date","expected_date")
+    @api.depends("commitment_date", "expected_date")
     def _compute_first_estimate_date(self):
         for sale in self:
             if sale.commitment_date and sale.expected_date:
-                sale.first_estimate_date = max(sale.commitment_date,sale.expected_date)
+                sale.first_estimate_date = max(sale.commitment_date, sale.expected_date)
 
-    @api.onchange('commitment_date', 'expected_date')
+    @api.onchange("commitment_date", "expected_date")
     def _onchange_commitment_date(self):
         super()._onchange_commitment_date()
-        mo_batchs = self.env["mrp.production.batch"].search([("sale_order_ids","in",self._origin.id)])
-        if mo_batchs and self.commitment_date and self.state not in ('sale', 'done'):
-            mo_batchs.write({"date_change_exception":True,"customer_request_date_proposed":self.commitment_date})
+        mo_batchs = self.env["mrp.production.batch"].search(
+            [("sale_order_ids", "in", self._origin.id)]
+        )
+        if mo_batchs and self.commitment_date and self.state not in ("sale", "done"):
+            mo_batchs.write(
+                {
+                    "date_change_exception": True,
+                    "customer_request_date_proposed": self.commitment_date,
+                }
+            )
             if mo_batchs.production_ids:
-                mo_batchs.production_ids.write({"date_change_exception":True})
-
-
+                mo_batchs.production_ids.write({"date_change_exception": True})
 
     # END #########
