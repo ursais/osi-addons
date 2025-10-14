@@ -485,6 +485,8 @@ class SaleOrder(models.Model):
         for sale in self:
             sale.current_estimate_ship_date = False
             commitment_date =  sale.commitment_date
+            if not commitment_date:
+                continue
             current_estimate_ship_date = commitment_date
             mrp_batch_datas = self.env["mrp.production.batch"].search([("sale_order_ids","in",sale.id)])
             for mrp_batch_data in mrp_batch_datas:
