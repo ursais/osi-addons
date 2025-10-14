@@ -33,35 +33,41 @@ class ResPartner(models.Model):
         string="Credit Hold",
         compute="_compute_credit_hold",
         store=True,
+        recursive=True,
     )
     open_so_balance = fields.Monetary(
         string="Open SO Balance",
         compute="_compute_open_so_balance",
         store=True,
+        recursive=True,
         help="Sum of all open sale orders including rollup partner orders.",
     )
     remaining_credit = fields.Monetary(
         string="Remaining Credit",
         compute="_compute_remaining_credit",
         store=True,
+        recursive=True,
         help="Credit Remaining after sum of total_due plus all credit rollup partner’s total dues.",
     )
     customer_deposit_balance = fields.Monetary(
         string="Customer Deposit Balance",
         store=True,
         compute="_compute_customer_deposit_balance",
+        recursive=True,
         help="Compute the total sum of all deposits from journal items related to the partner, including its rollup partners and child contacts.",
     )
     open_bo_balance = fields.Monetary(
         string="Open BO Balance",
         store=True,
         compute="_compute_open_bo_balance",
+        recursive=True,
         help="Computed sum of remaining blanket order quantities multiplied by price, for the partner and its rollup partners.",
     )
     outstanding_receivable = fields.Monetary(
         string="Outstanding Receivable",
         store=True,
         compute="_compute_outstanding_receivable",
+        recursive=True,
         help="Computed sum of outstanding receivable(anything invoiced and not paid) for the partner and its rollup partners.",
     )
 
@@ -75,7 +81,7 @@ class ResPartner(models.Model):
         "rollup_partner_ids.invoice_ids.amount_residual",
         "invoice_ids.state",
         "invoice_ids.amount_residual",
-        "rollup_partner_ids.outstanding_receivable"
+        "rollup_partner_ids.outstanding_receivable",
     )
     def _compute_outstanding_receivable(self):
         """
@@ -136,7 +142,7 @@ class ResPartner(models.Model):
         "invoice_ids.amount_residual_signed",
         "invoice_ids.payment_state",
         "invoice_ids.state",
-        "rollup_partner_ids.open_so_balance"
+        "rollup_partner_ids.open_so_balance",
     )
     def _compute_open_so_balance(self):
         """
@@ -146,13 +152,15 @@ class ResPartner(models.Model):
         - Rollup partner balances
         - Handles grouping by parent, rollup, or company
         """
-        
+
         def compute_balance_optimized(partner_ids):
             """Optimized helper to compute total SO balance for given partners."""
             if not partner_ids:
                 return 0.0
             partner_ids_obj = self.browse(partner_ids)
-            so_total = sum(partner_ids_obj.mapped("sale_order_ids").mapped("uninvoiced_balance"))            
+            so_total = sum(
+                partner_ids_obj.mapped("sale_order_ids").mapped("uninvoiced_balance")
+            )
             return so_total
 
         # Process each partner individually to avoid singleton errors
@@ -175,12 +183,14 @@ class ResPartner(models.Model):
 
             # Calculate base amounts for current partner
             open_so_total = compute_balance_optimized([partner.id])
-                        
+
             # Calculate rollup balance safely
             rollup_balance = 0
             if partner.rollup_partner_ids:
-                rollup_balance = sum(partner.rollup_partner_ids.mapped("open_so_balance"))
-            
+                rollup_balance = sum(
+                    partner.rollup_partner_ids.mapped("open_so_balance")
+                )
+
             base_balance = open_so_total + rollup_balance
             partner.open_so_balance = base_balance
 
@@ -208,15 +218,15 @@ class ResPartner(models.Model):
         for partner in self:
             rollup_used_credit = 0
             if partner.rollup_partner_ids:
-                partners_data = partner.rollup_partner_ids.read(
-                    ["credit"]
-                )
+                partners_data = partner.rollup_partner_ids.read(["credit"])
                 rollup_credit_total = sum(
                     p.get("credit", 0.0) or 0.0 for p in partners_data
                 )
                 rollup_used_credit = rollup_credit_total
             used_credit = partner.credit + rollup_used_credit
-            remaining_credit = partner.credit_limit - partner.open_so_balance -  used_credit or 0
+            remaining_credit = (
+                partner.credit_limit - partner.open_so_balance - used_credit or 0
+            )
             if remaining_credit <= 0:
                 remaining_credit = 0
             partner.remaining_credit = remaining_credit
@@ -281,7 +291,7 @@ class ResPartner(models.Model):
         "rollup_partner_ids.invoice_ids.state",
         "rollup_partner_ids.invoice_ids",
         "rollup_partner_ids.invoice_ids.payment_state",
-        "rollup_partner_ids.customer_deposit_balance"
+        "rollup_partner_ids.customer_deposit_balance",
     )
     def _compute_customer_deposit_balance(self):
         """
@@ -291,9 +301,9 @@ class ResPartner(models.Model):
         """
         deposit_accounts = self._get_deposit_accounts()
         for partner in self:
-            invoice_line_ids = partner.invoice_ids.filtered(lambda l : l.state=='posted').mapped(
-                "invoice_line_ids"
-            )
+            invoice_line_ids = partner.invoice_ids.filtered(
+                lambda l: l.state == "posted"
+            ).mapped("invoice_line_ids")
             if invoice_line_ids:
                 ids_tuple = tuple(invoice_line_ids.ids)
             else:
@@ -313,8 +323,10 @@ class ResPartner(models.Model):
 
             rollup_balance = 0
             if partner.rollup_partner_ids:
-                rollup_balance = sum(partner.rollup_partner_ids.mapped("customer_deposit_balance"))
-            
+                rollup_balance = sum(
+                    partner.rollup_partner_ids.mapped("customer_deposit_balance")
+                )
+
             base_balance = partner.customer_deposit_balance
             partner.customer_deposit_balance = base_balance + rollup_balance
 
