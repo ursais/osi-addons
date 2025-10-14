@@ -93,8 +93,8 @@ class MrpProductionBatch(models.Model):
             default_produce_delay = (
                 self.env["ir.config_parameter"]
                 .sudo()
-                .get_param("mrp_batch.default_produce_delay")
-            )
+                .get_param("mrp_batch.default_produce_delay")                
+            ) 
             use_manufacturing_lead = (
                 self.env["ir.config_parameter"]
                 .sudo()
@@ -123,9 +123,7 @@ class MrpProductionBatch(models.Model):
             if not forecast_expected_date:
                 continue
             forecast_expected_date = max(forecast_expected_date)
-            total_lead_time = int(record.company_id.manufacturing_lead) + int(
-                default_produce_delay
-            )
+            total_lead_time = int(record.company_id.manufacturing_lead) + int(default_produce_delay)
             if not record.rush_order:
                 if forecast_expected_date:
                     estimated_ship_date = forecast_expected_date + timedelta(
