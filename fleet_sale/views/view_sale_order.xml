@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (C) 2022 Open Source Integrators
+    License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+    
+    This view extends the sale order form to add a vehicle field
+    that allows users to associate sale orders with fleet vehicles.
+    The field is placed after the payment term field for logical grouping.
+    Allows navigation to vehicle from sale order.
+-->
+<odoo>
+    <record id="view_sale_order_fleet_inherit_form" model="ir.ui.view">
+        <field name="name">sale.order.fleet.inherit.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <!-- Add vehicle field after payment term field -->
+            <field name="payment_term_id" position="after">
+                <field 
+                    name="vehicle_id" 
+                    placeholder="Select a vehicle..."
+                    options="{'no_create': True}"
+                    help="Fleet vehicle associated with this sale order"
+                    groups="fleet.fleet_group_user" />
+            </field>
+        </field>
+    </record>
+</odoo>
