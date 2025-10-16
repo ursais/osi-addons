@@ -20,21 +20,39 @@ class PurchaseOrder(models.Model):
     def button_confirm(self):
         res = super().button_confirm()
 
-        # Get all relevant products from order lines across orders
         product_ids = self.mapped("order_line.product_id")
+        PriceReview = self.env["product.price.review"]
 
-        # Check for products without price reviews in batch
-        products_without_reviews = self.env["product.product"].browse(
-            self.env["product.price.review"]
-            .search([("product_id", "in", product_ids.ids)])
-            .mapped("product_id")
+        # Find existing reviews for the products
+        existing_reviews = PriceReview.search([("product_id", "in", product_ids.ids)])
+        products_with_reviews = existing_reviews.mapped("product_id")
+
+        # Find and reject any pending reviews directly
+        pending_reviews = PriceReview.search(
+            [
+                ("product_id", "in", product_ids.ids),
+                ("state", "=", "pending"),
+            ]
         )
-        products_to_create_review = product_ids - products_without_reviews
+        if pending_reviews:
+            pending_reviews.reject_button()
+            pending_reviews.message_post(
+                body=_(
+                    "Pending price review automatically rejected due to "
+                    "new Purchase Order confirmation."
+                ),
+                body_is_html=True,
+            )
 
-        # Create or update price reviews for the relevant products
+        # Determine which products need a new review:
+        # - Products without any review
+        # - Products whose pending review was just rejected
+        products_to_create_review = (
+            product_ids - products_with_reviews
+        ) | pending_reviews.mapped("product_id")
+
+        # Create or update price reviews for those products
         for product in products_to_create_review:
-            # We use sudo here because we need the system to create or update a price
-            # Even if the user triggering this doesn't have permission or only read only
             product.product_tmpl_id.sudo()._create_or_update_price_review(
                 product.product_tmpl_id
             )
@@ -47,7 +65,7 @@ class PurchaseOrder(models.Model):
             order.price_review_count = self.env["product.price.review"].search_count(
                 [
                     ("product_id", "in", order.order_line.product_id.ids),
-                    ("state", "in", ["new", "in_progress"]),
+                    ("state", "in", ["new", "in_progress", "pending"]),
                 ]
             )
 
@@ -57,7 +75,7 @@ class PurchaseOrder(models.Model):
         price_reviews = self.env["product.price.review"].search(
             [
                 ("product_id", "in", self.order_line.product_id.ids),
-                ("state", "in", ["new", "in_progress"]),
+                ("state", "in", ["new", "in_progress", "pending"]),
             ]
         )
         if len(price_reviews) == 1:
