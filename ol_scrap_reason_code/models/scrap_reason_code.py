@@ -7,6 +7,7 @@ class ScrapReasonCode(models.Model):
 
     # COLUMNS #####
 
+    active = fields.Boolean(default=True)
     company_id = fields.Many2one(
         "res.company",
         string="Company",

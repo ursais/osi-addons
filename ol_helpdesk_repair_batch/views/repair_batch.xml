@@ -7,6 +7,7 @@
             <tree string="Repair Batch">
                 <field name="name" optional="show" />
                 <field name="repair_count" column_invisible="1" />
+                <field name="sale_id" optional="show" />
                 <field name="partner_id" optional="hide" />
                 <field name="ticket_id" optional="hide" />
                 <field name="product_id" optional="show" />
@@ -14,7 +15,6 @@
                 <field name="under_warranty" optional="show" />
                 <field name="lot_ids" widget="many2many_tags" optional="show" />
                 <field name="schedule_date" optional="hide" />
-                <field name="sale_id" optional="hide" />
                 <field name="invoice_date" optional="hide" />
                 <field name="salesperson_id" optional="hide" />
                 <field name="sale_line_id" optional="hide" />
@@ -57,26 +57,23 @@
                     <group name="information">
                         <group name="general">
                             <field name="tracking" invisible="1" />
+                            <field name="lot_ids_domain" invisible="1" />
+                            <field name="sale_id" />
+                            <field name="lot_ids" domain="lot_ids_domain" widget="many2many_tags" />
                             <field name="partner_id" />
                             <field name="product_id" />
-                            <field name="sale_id" />
-                            <field name="salesperson_id"  />
                             <field name="qty" />
                             <field name="under_warranty" />
                         </group>
                         <group name="sale_info">
-                            <field name="schedule_date" />
+                            <field name="schedule_date" readonly="state in ['done', 'cancel']" />
                             <field name="ticket_id" />
+                            <field name="salesperson_id"  />
                             <field name="sale_line_id" domain="[('order_id', '=', sale_id), ('product_id', '!=', False)]" />
                             <field name="invoice_date" />
-                            <field name="schedule_date" readonly="state in ['done', 'cancel']" />
                             <field name="user_id" domain="[('share', '=', False)]" />
                             <field name="company_id" />
                         </group>
-                    </group>
-                    <group name="lot_serials" string="Serials">
-                        <field name="lot_ids_domain" invisible="1" />
-                        <field name="lot_ids" domain="lot_ids_domain" widget="many2many_tags" />
                     </group>
                     <notebook>
                         <page string="Bulk Actions">
@@ -143,13 +140,11 @@
                 <field name="sale_id"/>
                 <field name="user_id" string="Responsible"/>
                 <field name="schedule_date"/>
-
                 <filter name="filter_draft" string="Draft" domain="[('state', '=', 'draft')]" />
                 <filter name="filter_confirmed" string="Confirmed" domain="[('state', '=', 'confirmed')]" />
                 <filter name="filter_under_repair" string="Under Repair" domain="[('state', '=', 'under_repair')]" />
                 <filter name="filter_done" string="Done" domain="[('state', '=', 'done')]" />
                 <filter name="filter_cancel" string="Cancelled" domain="[('state', '=', 'cancel')]" />
-
                 <group expand="1" string="Group By">
                     <filter name="group_by_ticket" string="Ticket" context="{'group_by': 'ticket_id'}"/>
                     <filter name="group_by_partner" string="Partner" context="{'group_by': 'partner_id'}"/>

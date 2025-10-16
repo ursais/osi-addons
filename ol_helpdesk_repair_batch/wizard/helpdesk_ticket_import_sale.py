@@ -1,4 +1,4 @@
-# Import Odoo libs
+# Import Python libs
 from datetime import timedelta
 
 # Import Odoo libs
@@ -33,6 +33,7 @@ class HelpdeskTicketImportSale(models.TransientModel):
         comodel_name="res.partner",
         string="Customer",
     )
+    warned_partner_change = fields.Boolean(default=False)
 
     # END #######
     # METHODS ###
@@ -40,6 +41,9 @@ class HelpdeskTicketImportSale(models.TransientModel):
     @api.onchange("sale_order_id")
     def _onchange_sale_order(self):
         if self.sale_order_id:
+            # Set Partner
+            self.partner_id = self.sale_order_id.partner_id
+
             lines = []
             for line in self.sale_order_id.order_line:
                 # Fetch serial numbers (lots) for this specific product in the sale order
@@ -72,6 +76,29 @@ class HelpdeskTicketImportSale(models.TransientModel):
         if not self.line_ids:
             raise UserError("No sale order lines selected.")
 
+        # --- Check partner change ---
+        if (
+            self.ticket_id.partner_id
+            and self.partner_id != self.ticket_id.partner_id
+            and not self.warned_partner_change
+        ):
+            # First time warning: ask user to confirm again
+            self.warned_partner_change = True
+            return {
+                "type": "ir.actions.client",
+                "tag": "display_notification",
+                "params": {
+                    "title": "Partner Change Warning",
+                    "message": (
+                        f"The ticket currently has partner "
+                        f"{self.ticket_id.partner_id.name}. It will be updated to "
+                        f"{self.partner_id.name} if you continue."
+                    ),
+                    "sticky": True,
+                    "type": "warning",
+                },
+            }
+
         repair_batch_model = self.env["repair.batch"]
         repair_batches = {}
 
@@ -93,19 +120,30 @@ class HelpdeskTicketImportSale(models.TransientModel):
 
         # Create repair batches
         for product_id, data in repair_batches.items():
+            # Determine if there's a single sale order line for this product
+            sale_lines = self.line_ids.filtered(lambda l: l.product_id.id == product_id)
+            sale_line_id = (
+                sale_lines.sale_order_line_id.id if len(sale_lines) == 1 else False
+            )
+
             repair_batch_model.create(
                 {
                     "ticket_id": self.ticket_id.id,
                     "partner_id": self.partner_id.id,
                     "product_id": product_id,
                     "qty": data["qty"],
+                    "sale_id": self.sale_order_id.id,
+                    "sale_line_id": sale_line_id,
                     "lot_ids": [(6, 0, list(data["lot_ids"]))],
                     "schedule_date": fields.Datetime.now() + timedelta(days=7),
                 }
             )
 
         # Assign partner if not already set
-        if not self.ticket_id.partner_id:
+        if (
+            not self.ticket_id.partner_id
+            or self.partner_id != self.ticket_id.partner_id
+        ):
             self.ticket_id.partner_id = self.partner_id
 
         # Append the original sale orders

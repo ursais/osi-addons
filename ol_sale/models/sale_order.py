@@ -347,7 +347,6 @@ class SaleOrder(models.Model):
         # Use found template, otherwise fallback
         return template or super()._find_mail_template()
 
-    @api.depends("mrp_production_ids.picking_ids.batch_id")
     def _compute_mo_tranfer_count(self):
         for rec in self:
             pickings = rec.mrp_production_ids.mapped("picking_ids")
