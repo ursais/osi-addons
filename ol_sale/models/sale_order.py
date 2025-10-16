@@ -485,9 +485,6 @@ class SaleOrder(models.Model):
     @api.depends(
         "commitment_date",
         "mrp_production_ids",
-        "mrp_production_ids.mrp_batch_id",
-        "mrp_production_ids.mrp_batch_id.components_availability",
-        "mrp_production_ids.mrp_batch_id.components_availability_state",
     )
     def _compute_current_estimate_ship_date(self):
         for sale in self:
