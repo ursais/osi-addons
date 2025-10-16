@@ -81,12 +81,22 @@ class SaleOrder(models.Model):
                     if all_delivered and order.substate_id != shipped_substate:
                         new_substate = shipped_substate
 
-                if order.invoice_ids:
+                if order.invoice_ids and order.picking_ids:
                     all_invoice = all(
                         invoice.payment_state in ("in_payment", "paid")
                         for invoice in order.invoice_ids
                     )
-                    if all_invoice and order.substate_id != complete_substate:
+                    all_picking = all(
+                        picking.state == "done"
+                        for picking in order.picking_ids.filtered(
+                            lambda l: l.picking_type_code == "outgoing"
+                        )
+                    )
+                    if (
+                        all_invoice
+                        and all_picking
+                        and order.substate_id != complete_substate
+                    ):
                         new_substate = complete_substate
 
                 if new_substate and order.substate_id != new_substate:
