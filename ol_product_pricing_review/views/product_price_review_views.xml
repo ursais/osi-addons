@@ -29,7 +29,7 @@
                             <field name="company_id" readonly="1" force_save="1" />
                         </group>
                         <group>
-                            <field name="effective_date" readonly="state != 'new'"/>
+                            <field name="effective_date" readonly="state in ('new', 'in_progress', 'pending')"/>
                             <field name="user_id" readonly="state in ('reject', 'validated')" />
                             <field name="origin_vendor_id" options="{'no_create': True}" readonly="1" force_save="1" />
                             <field name="origin_purchase_id" options="{'no_create': True}" readonly="1" force_save="1" />
