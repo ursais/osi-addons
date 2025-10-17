@@ -30,9 +30,8 @@ class SaleOrder(models.Model):
         )
 
         for order in self:
-            # Only apply these rules if order is in 'sent' or 'sale' state
+            # --- Quotation state ---
             if order.state == "sent":
-                # Set substate to review if there are exceptions
                 active_exceptions = order.exception_ids.filtered(lambda e: e.active)
                 if active_exceptions and not order.ignore_exception:
                     if (
@@ -40,19 +39,27 @@ class SaleOrder(models.Model):
                         and order.substate_id != order_review_substate
                     ):
                         order.write({"substate_id": order_review_substate.id})
+                    continue
                 elif (
                     quot_sent_substate
-                    and order.substate_id != quot_sent_substate
                     and not active_exceptions
                     and order.substate_id != order_review_substate
                 ):
                     order.write({"substate_id": quot_sent_substate.id})
+                    continue
 
+            # --- Sale state ---
             elif order.state == "sale":
                 new_substate = None
 
+                # Stock lines
+                stock_lines = order.order_line.filtered(
+                    lambda l: not l.display_type
+                    and l.product_id.type in ("product", "consu")
+                )
+
+                # --- Production / Waiting ---
                 if order.mrp_production_ids:
-                    # Determine if any MOs are planned or started
                     has_active_mo = any(
                         mo.is_planned
                         or mo.state in ("progress", "to_close")
@@ -62,46 +69,54 @@ class SaleOrder(models.Model):
                         )
                         for mo in order.mrp_production_ids
                     )
-                    # Set to in production if any mo is planned or started
-                    if production_substate and has_active_mo:
-                        new_substate = production_substate
-                    # Otherwise set to waiting
-                    elif waiting_substate:
-                        new_substate = waiting_substate
+                    new_substate = (
+                        production_substate if has_active_mo else waiting_substate
+                    )
 
-                if order.picking_ids:
-                    # Determine if fully delivered
-                    all_delivered = all(
+                # --- Shipped (overrides production/waiting if stock delivered) ---
+                if stock_lines and all(
+                    line.qty_delivered >= line.product_uom_qty for line in stock_lines
+                ):
+                    new_substate = shipped_substate
+
+                # --- Complete logic ---
+                # Only posted final invoices (non-downpayment) count
+                final_invoices = order.invoice_ids.filtered(
+                    lambda inv: inv.state == "posted"
+                    and any(not line.is_downpayment for line in inv.invoice_line_ids)
+                )
+
+                # Fully paid if at least one posted final invoice exists and all such invoices are in payment or paid
+                fully_paid = bool(final_invoices) and all(
+                    inv.payment_state in ("in_payment", "paid")
+                    for inv in final_invoices
+                )
+
+                # Fully delivered (true for service-only orders)
+                fully_delivered = (
+                    all(
                         line.qty_delivered >= line.product_uom_qty
-                        for line in order.order_line
-                        if not line.display_type
-                        and line.product_id.type in ("product", "consu")
+                        for line in stock_lines
                     )
-                    # Set to complete if fully delivered
-                    if all_delivered and order.substate_id != shipped_substate:
-                        new_substate = shipped_substate
+                    if stock_lines
+                    else True
+                )
 
-                if order.invoice_ids and order.picking_ids:
-                    all_invoice = all(
-                        invoice.payment_state in ("in_payment", "paid")
-                        for invoice in order.invoice_ids
-                    )
-                    all_picking = all(
-                        picking.state == "done"
-                        for picking in order.picking_ids.filtered(
-                            lambda l: l.picking_type_code == "outgoing"
-                        )
-                    )
-                    if (
-                        all_invoice
-                        and all_picking
-                        and order.substate_id != complete_substate
-                    ):
-                        new_substate = complete_substate
+                # Only mark complete if both conditions met
+                if fully_paid and fully_delivered:
+                    new_substate = complete_substate
 
+                # Apply substate if changed
                 if new_substate and order.substate_id != new_substate:
                     order.write({"substate_id": new_substate.id})
+
+            # --- Detect exceptions ---
             order.detect_exceptions()
+
+    @api.depends("invoice_ids.payment_state")
+    def _compute_update_substate(self):
+        for order in self:
+            order.update_substate()
 
     def action_lock(self):
         """Trigger a substate check if Lock is pressed"""
