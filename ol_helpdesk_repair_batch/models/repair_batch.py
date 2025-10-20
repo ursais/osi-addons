@@ -1,3 +1,6 @@
+# Import Python libs
+from datetime import timedelta
+
 # Import Odoo libs
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -79,7 +82,7 @@ class RepairBatch(models.Model):
     )
     schedule_date = fields.Datetime(
         string="Scheduled Date",
-        default=fields.Datetime.now,
+        default=lambda self: fields.Datetime.now() + timedelta(days=7),
         index=True,
         required=True,
         copy=False,
@@ -413,36 +416,56 @@ class RepairBatch(models.Model):
                         {"repair_batch_line_id": batch_line.id}
                     )
 
-    def _update_ticket_sale_ids(self, old_sale_ids=None):
+    def _update_ticket_sale_ids(self, old_sale_ids=None, old_ticket_ids=None):
         """
-        Helper method:
         Ensure ticket.original_sale_order_ids correctly reflects the batches linked to it.
 
-        :param old_sale_ids: dict mapping batch.id -> old sale_id before write (optional)
+        :param old_sale_ids: dict mapping batch.id -> old sale_id before write
+        :param old_ticket_ids: dict mapping batch.id -> old ticket_id before write
         """
         for batch in self:
-            ticket = batch.ticket_id
+            new_ticket = batch.ticket_id
             new_sale = batch.sale_id
+
+            new_ticket_id = new_ticket.id if new_ticket else None
             new_sale_id = new_sale.id if new_sale else None
             old_sale_id = old_sale_ids.get(batch.id) if old_sale_ids else None
+            old_ticket_id = old_ticket_ids.get(batch.id) if old_ticket_ids else None
 
-            # Add new sale_id to ticket if not already present
-            if new_sale and new_sale_id not in ticket.original_sale_order_ids.ids:
-                ticket.original_sale_order_ids = [(4, new_sale_id)]
-                if not ticket.partner_id:
-                    ticket.partner_id = new_sale.partner_id
+            # --- Handle new ticket / sale ---
+            if (
+                new_ticket
+                and new_sale
+                and new_sale_id not in new_ticket.original_sale_order_ids.ids
+            ):
+                new_ticket.original_sale_order_ids = [(4, new_sale_id)]
+                if not new_ticket.partner_id:
+                    new_ticket.partner_id = new_sale.partner_id
 
-            # Remove old sale_id if changed and no other batch references it
+            # --- Handle sale change ---
             if old_sale_id and old_sale_id != new_sale_id:
                 other_batches = self.search(
                     [
-                        ("ticket_id", "=", ticket.id),
+                        ("ticket_id", "=", new_ticket_id or old_ticket_id),
                         ("sale_id", "=", old_sale_id),
                         ("id", "!=", batch.id),
                     ]
                 )
+                if not other_batches and old_ticket_id:
+                    old_ticket = self.env["helpdesk.ticket"].browse(old_ticket_id)
+                    old_ticket.original_sale_order_ids = [(3, old_sale_id)]
+
+            # --- Handle ticket removal (disassociation) ---
+            if old_ticket_id and old_ticket_id != new_ticket_id and old_sale_id:
+                other_batches = self.search(
+                    [
+                        ("ticket_id", "=", old_ticket_id),
+                        ("sale_id", "=", old_sale_id),
+                    ]
+                )
                 if not other_batches:
-                    ticket.original_sale_order_ids = [(3, old_sale_id)]
+                    old_ticket = self.env["helpdesk.ticket"].browse(old_ticket_id)
+                    old_ticket.original_sale_order_ids = [(3, old_sale_id)]
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -457,9 +480,13 @@ class RepairBatch(models.Model):
 
     def write(self, vals):
         old_sale_ids = {batch.id: batch.sale_id.id for batch in self if batch.sale_id}
+        old_ticket_ids = {
+            batch.id: batch.ticket_id.id for batch in self if batch.ticket_id
+        }
         res = super().write(vals)
 
-        self._update_ticket_sale_ids(old_sale_ids)
+        self._update_ticket_sale_ids(old_sale_ids, old_ticket_ids)
+
         for batch in self:
             if "part_lines" in vals or "under_warranty" in vals:
                 batch._propagate_parts_to_repairs()
@@ -467,6 +494,7 @@ class RepairBatch(models.Model):
                 (batch.move_id + batch.move_ids).filtered(
                     lambda m: m.state not in ("done", "cancel")
                 ).write({"date": batch.schedule_date})
+
         return res
 
     def unlink(self):

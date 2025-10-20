@@ -27,6 +27,7 @@ class HelpdeskTicket(models.Model):
     original_sale_order_ids = fields.Many2many(
         comodel_name="sale.order",
         string="Original Sale Orders",
+        readonly=True,
         help="Original Sale Orders where the systems were originally sold, populated by the Import from Sale Order wizard.",
     )
     repair_sale_order_count = fields.Integer(

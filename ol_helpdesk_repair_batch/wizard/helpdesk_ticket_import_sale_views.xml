@@ -7,8 +7,8 @@
             <form string="Import Sale Order">
                 <group>
                     <field name="ticket_id" invisible="1" />
+                    <field name="sale_order_id" />
                     <field name="partner_id" />
-                    <field name="sale_order_id" domain="[('partner_id', '=', partner_id)]" />
                 </group>
                 <separator string="Sale Order Lines" />
                 <field name="line_ids">
