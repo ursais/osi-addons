@@ -33,6 +33,12 @@ class MrpProduction(models.Model):
         self._update_related_sale_substates()
         return res
 
+    def button_mark_done(self):
+        """Trigger a substate check if produce is pressed"""
+        res = super().button_mark_done()
+        self._update_related_sale_substates()
+        return res
+
     def write(self, vals):
         """
         Trigger a substate check if the MO state changes.
