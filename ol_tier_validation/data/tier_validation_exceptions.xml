@@ -31,6 +31,7 @@
             (4, ref('sale_exception.field_sale_order__exceptions_summary')),
             (4, ref('sale_exception.field_sale_order__exception_ids')),
             (4, ref('sale_exception.field_sale_order__ignore_exception')),
+            (4, ref('ol_sale_lead_time.field_sale_order__last_esd_date')),
             ]" />
         <field name="allowed_to_write_after_validation" eval="True" />
         <field name="allowed_to_write_under_validation" eval="True" />

@@ -30,6 +30,7 @@
         "sale_substate",
         "ol_exception",
         "sale_stock",
+        "ol_sale_lead_time",
     ],
     # always loaded
     "data": [
