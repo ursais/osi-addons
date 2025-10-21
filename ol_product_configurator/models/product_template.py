@@ -31,23 +31,12 @@ class ProductTemplate(models.Model):
     has_advanced_configuration = fields.Text(
         string="Has Advanced Configurations",
         compute="_compute_has_advanced_configuration",
-        store=True,
         readonly=True,
     )
 
     # END ##########
     # METHODS ##########
 
-    @api.depends(
-        "config_line_ids",
-        "bom_ids.scaffolding_bom",
-        "bom_ids.type",
-        "bom_ids.bom_line_ids.config_set_id",
-        "bom_ids.bom_line_ids.config_set_id.configuration_ids.value_ids",
-        "attribute_line_ids.value_ids",
-        "attribute_line_ids.multi",
-        "attribute_line_ids.custom",
-    )
     def _compute_has_advanced_configuration(self):
         """
         Compute reasons why this product has "advanced configuration".
