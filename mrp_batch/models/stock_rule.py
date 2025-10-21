@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import models,api
+from odoo import models, api
 
 
 class StockRule(models.Model):
@@ -42,11 +42,13 @@ class StockRule(models.Model):
         sale_line_id = values.get("sale_line_id")
         if sale_line_id:
             sale_order = self.env["sale.order.line"].browse(sale_line_id).order_id
+            sale_line = self.env["sale.order.line"].browse(sale_line_id)
             # Attach sale_order_id to the manufacturing order
             res.update(
                 {
                     "sale_order_id": sale_order.id,
-                    "ignore_exception":True
+                    "sale_order_line_id": sale_line.id,
+                    "ignore_exception": True,
                 }
             )
         return res
@@ -66,11 +68,11 @@ class StockRule(models.Model):
     def _run_pull(self, procurements):
         res = super()._run_pull(procurements)
         enable_split = (
-                self.env["ir.config_parameter"]
-                .sudo()
-                .get_param("mrp_batch.enable_delay_so_action_confirm")
-            )
-        
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("mrp_batch.enable_delay_so_action_confirm")
+        )
+
         for procurement, rule in procurements:
             sale_line_id = procurement.values.get("sale_line_id")
             if sale_line_id:
@@ -83,12 +85,13 @@ class StockRule(models.Model):
 
     def _should_auto_confirm_procurement_mo(self, p):
         # We need to stop auto confirming MO to stop triggering single tranfer for all split MO,
-        # Instead we will manually confirming MOs 
-        auto_confirm_mo = self.env['ir.config_parameter'].sudo().get_param(
-            'auto_confirm_mo', ''
+        # Instead we will manually confirming MOs
+        auto_confirm_mo = (
+            self.env["ir.config_parameter"].sudo().get_param("auto_confirm_mo", "")
         )
         if auto_confirm_mo == "True":
-           return super()._should_auto_confirm_procurement_mo(p)
+            return super()._should_auto_confirm_procurement_mo(p)
         else:
-           return False
+            return False
+
     # # END #########

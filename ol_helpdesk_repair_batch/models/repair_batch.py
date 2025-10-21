@@ -401,14 +401,12 @@ class RepairBatch(models.Model):
                 product_id, line_type = key
                 repairs_with_this_move = set(move.repair_id.id for move in group_moves)
                 if set(repairs.ids) == repairs_with_this_move:
-                    total_qty = sum(move.product_uom_qty for move in group_moves)
-
                     batch_line = self.env["repair.batch.line"].create(
                         {
                             "repair_batch_id": batch.id,
                             "product_id": product_id,
                             "repair_line_type": line_type,
-                            "quantity": total_qty,
+                            "quantity": move.product_uom_qty,
                         }
                     )
 
@@ -639,12 +637,31 @@ class RepairBatch(models.Model):
         batch._update_batch_state()
 
     def action_repair_end(self):
-        """Mark all related repair orders as repaired"""
+        """Mark all related repair orders as repaired or show confirmation wizard."""
         for batch in self:
-            batch.repair_ids.filtered(
+            mismatched_repairs = []
+            for repair in batch.repair_ids.filtered(
                 lambda r: r.state == "under_repair"
-            ).action_repair_end()
-        batch._update_batch_state()
+            ):
+                if repair._has_quantity_mismatch():
+                    mismatched_repairs.append(repair.id)
+                else:
+                    repair.action_repair_end()
+
+            if mismatched_repairs:
+                return {
+                    "name": "Confirm Repair Quantity Differences",
+                    "type": "ir.actions.act_window",
+                    "res_model": "repair.batch.end.confirm.wizard",
+                    "view_mode": "form",
+                    "target": "new",
+                    "context": {
+                        "default_batch_id": batch.id,
+                        "default_repair_ids": mismatched_repairs,
+                    },
+                }
+
+            batch._update_batch_state()
 
     def action_repair_cancel(self):
         """Cancel all related repair orders"""

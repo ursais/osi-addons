@@ -1,0 +1,34 @@
+<odoo>
+
+    <record id="view_repair_batch_end_confirm_wizard" model="ir.ui.view">
+        <field name="name">repair.batch.end.confirm.wizard.form</field>
+        <field name="model">repair.batch.end.confirm.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Confirm Repair Quantity Differences">
+                <group>
+                    <field name="batch_id" invisible="1" />
+                    <field name="repair_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                </group>
+                <separator string="Parts with Mismatched Quantities"/>
+                <field name="line_ids" nolabel="1">
+                    <tree editable="bottom" create="0">
+                        <field name="move_id" readonly="1" invisible_column="1" />
+                        <field name="repair_id" readonly="1" />
+                        <field name="product_id" readonly="1" />
+                        <field name="demand_qty"/>
+                        <field name="used_qty"/>
+                        <field name="difference" readonly="1" />
+                    </tree>
+                </field>
+                <footer>
+                    <button string="Apply Changes and End Repairs"
+                            type="object"
+                            name="action_apply_and_end_repairs"
+                            class="btn-primary"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

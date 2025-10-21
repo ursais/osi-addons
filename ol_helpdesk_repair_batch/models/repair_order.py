@@ -91,6 +91,18 @@ class RepairOrder(models.Model):
                 repair.show_repair_history_alert = False
                 repair.history_repair_html = ""
 
+    def _has_quantity_mismatch(self):
+        """Return True if 'add' stock moves have mismatched demand vs done qty."""
+        self.ensure_one()
+        for move in self.move_ids.filtered(lambda m: m.repair_line_type == "add"):
+            # Compare theoretical vs actual used quantities
+            if (
+                abs(move.product_uom_qty - sum(move.move_line_ids.mapped("quantity")))
+                > 0.0001
+            ):
+                return True
+        return False
+
     def open_repair_full_form(self):
         self.ensure_one()
         return {

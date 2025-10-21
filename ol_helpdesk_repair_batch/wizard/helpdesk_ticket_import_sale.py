@@ -155,7 +155,7 @@ class HelpdeskTicketImportSale(models.TransientModel):
                 sale_lines.sale_order_line_id.id if len(sale_lines) == 1 else False
             )
 
-            repair_batch_model.create(
+            batch = repair_batch_model.create(
                 {
                     "ticket_id": self.ticket_id.id,
                     "partner_id": self.partner_id.id,
@@ -167,6 +167,8 @@ class HelpdeskTicketImportSale(models.TransientModel):
                     "schedule_date": fields.Datetime.now() + timedelta(days=7),
                 }
             )
+            # Set fields
+            batch._onchange_sale_id_set_invoice_date()
 
         # Assign partner if not already set
         if (
