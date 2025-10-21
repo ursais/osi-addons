@@ -15,7 +15,6 @@ class StockPicking(models.Model):
     sale_locked = fields.Boolean(
         "Sale Order Locked",
         related="sale_id.locked",
-        store=True,
     )
 
     # END ##########
