@@ -637,18 +637,22 @@ class RepairBatch(models.Model):
         batch._update_batch_state()
 
     def action_repair_end(self):
-        """Mark all related repair orders as repaired or show confirmation wizard."""
+        """End all repairs in the batch, or show wizard if there are mismatched moves."""
         for batch in self:
-            mismatched_repairs = []
-            for repair in batch.repair_ids.filtered(
-                lambda r: r.state == "under_repair"
-            ):
-                if repair._has_quantity_mismatch():
-                    mismatched_repairs.append(repair.id)
-                else:
-                    repair.action_repair_end()
+            # Fetch all 'add' moves not done/cancelled
+            moves = self.env["stock.move"].search(
+                [
+                    ("repair_id", "in", batch.repair_ids.ids),
+                    ("repair_line_type", "=", "add"),
+                    ("state", "!=", "done"),
+                    ("state", "!=", "cancel"),
+                ]
+            )
+            # Filter mismatched quantities in Python
+            mismatched_moves = moves.filtered(lambda m: m.product_uom_qty != m.quantity)
 
-            if mismatched_repairs:
+            if mismatched_moves:
+                # Open wizard with all mismatched moves
                 return {
                     "name": "Confirm Repair Quantity Differences",
                     "type": "ir.actions.act_window",
@@ -657,9 +661,16 @@ class RepairBatch(models.Model):
                     "target": "new",
                     "context": {
                         "default_batch_id": batch.id,
-                        "default_repair_ids": mismatched_repairs,
+                        "default_move_ids": mismatched_moves.ids,
+                        "default_repair_ids": mismatched_moves.mapped("repair_id").ids,
                     },
                 }
+
+            # No mismatches, end all repairs immediately
+            for repair in batch.repair_ids.filtered(
+                lambda r: r.state == "under_repair"
+            ):
+                repair.action_repair_end()
 
             batch._update_batch_state()
 

@@ -7,107 +7,77 @@ class RepairBatchEndConfirmWizard(models.TransientModel):
     _description = "Confirm Repair Quantity Differences"
 
     batch_id = fields.Many2one(
-        comodel_name="repair.batch",
+        "repair.batch",
         string="Batch",
-        readonly=True,
+        required=True,
     )
     repair_ids = fields.Many2many(
-        comodel_name="repair.order",
+        "repair.order",
         string="Repairs to Confirm",
-        readonly=True,
     )
-    line_ids = fields.One2many(
-        comodel_name="repair.batch.end.confirm.line",
-        inverse_name="wizard_id",
-        string="Differences",
-        copy=False,
+    move_ids = fields.Many2many(
+        "stock.move",
+        string="Moves with mismatched quantities",
+        readonly=False,
+        domain=[("repair_line_type", "=", "add")],
     )
 
-    @api.onchange("batch_id", "repair_ids")
-    def _onchange_batch_repairs(self):
-        if self.batch_id:
-            self.repair_ids = self.batch_id.repair_ids.filtered(
-                lambda r: r.state not in ("done", "cancel")
-            )
+    @api.model
+    def default_get(self, fields):
+        """Preload all mismatched repair moves and their repairs with latest DB values."""
+        res = super().default_get(fields)
+        batch_id = self.env.context.get("default_batch_id")
+        repair_ids_ctx = self.env.context.get("default_repair_ids", [])
+        repair_ids = self.env["repair.order"].browse(repair_ids_ctx)
 
-            lines = []
-            for line in self.repair_ids.move_ids.filtered(
-                lambda m: m.repair_line_type == "add"
-                and m.product_uom_qty != m.quantity
-                and m.state not in ("done", "cancel")
-            ):
-                lines.append(
-                    (
-                        0,
-                        0,
-                        {
-                            "wizard_id": self.id,
-                            "move_id": line.id,
-                            "product_id": line.product_id.id,
-                            "demand_qty": line.product_uom_qty,
-                            "used_qty": line.quantity,
-                            "repair_id": line.repair_id.id,
-                        },
-                    )
-                )
+        if batch_id:
+            batch = self.env["repair.batch"].browse(batch_id)
+            # Add all repairs still under repair
+            repair_ids |= batch.repair_ids.filtered(lambda r: r.state == "under_repair")
 
-            self.line_ids = lines
+        # Fetch all relevant 'add' moves from DB (avoid cached values)
+        moves = self.env["stock.move"].search(
+            [
+                ("repair_id", "in", repair_ids.ids),
+                ("repair_line_type", "=", "add"),
+                ("state", "!=", "done"),
+                ("state", "!=", "cancel"),
+            ]
+        )
+        # Filter only mismatched quantities
+        mismatched_moves = moves.filtered(lambda m: m.product_uom_qty != m.quantity)
+
+        res["repair_ids"] = [(6, 0, repair_ids.ids)]
+        res["move_ids"] = [(6, 0, mismatched_moves.ids)]
+        res["batch_id"] = batch_id
+        return res
 
     def action_apply_and_end_repairs(self):
-        if not self.line_ids:
-            raise UserError("No lines to process.")
+        """Apply quantity updates and end all repairs immediately."""
+        if not self.move_ids:
+            raise UserError("No mismatched repair moves found to update.")
 
-        # Update all moves first
-        for line in self.line_ids:
-            move = line.move_id
-            if move:
-                move.write(
-                    {
-                        "quantity": line.used_qty,
-                        "product_uom_qty": line.demand_qty,
-                    }
-                )
-
-        # Get all repairs affected by these lines
-        repairs = self.repair_ids
-        if not repairs:
-            repairs = self.env["repair.order"].browse(
-                self.line_ids.mapped("repair_id.id")
+        # Apply user-updated quantities move by move
+        for move in self.move_ids:
+            move.write(
+                {
+                    "product_uom_qty": move.product_uom_qty,
+                    "quantity": move.quantity,
+                }
             )
 
-        # Attempt to end repairs
-        for repair in repairs:
-            try:
-                repair.action_repair_end()
-            except UserError as e:
-                # Show a message to the user instead of silently failing
-                raise UserError(f"Failed to end repair {repair.display_name}: {e}")
+        # Recompute reservations for all relevant moves
+        self.move_ids.filtered(
+            lambda m: m.state not in ("done", "cancel")
+        )._action_assign()
 
-        self.batch_id._update_batch_state()
+        # End all repairs in this wizard
+        self.repair_ids.filtered(
+            lambda r: r.state == "under_repair"
+        ).action_repair_end()
+
+        # Update batch state
+        if self.batch_id:
+            self.batch_id._update_batch_state()
+
         return {"type": "ir.actions.act_window_close"}
-
-
-class RepairBatchEndConfirmLine(models.TransientModel):
-    _name = "repair.batch.end.confirm.line"
-    _description = "Repair Difference Summary Line"
-
-    wizard_id = fields.Many2one(
-        "repair.batch.end.confirm.wizard", required=True, ondelete="cascade"
-    )
-    repair_id = fields.Many2one("repair.order", string="Repair", readonly=True)
-    move_id = fields.Many2one("stock.move", string="Part Line (Move)", readonly=True)
-    product_id = fields.Many2one("product.product", string="Product", readonly=True)
-    demand_qty = fields.Float(string="Demand (Expected)")
-    used_qty = fields.Float(
-        string="Actually Used", help="Editable — set the true used quantity"
-    )
-    difference = fields.Float(
-        string="Difference",
-        compute="_compute_difference",
-        store=False,
-    )
-
-    @api.depends("demand_qty", "used_qty")
-    def _compute_difference(self):
-        for line in self:
-            line.difference = (line.used_qty or 0.0) - (line.demand_qty or 0.0)
