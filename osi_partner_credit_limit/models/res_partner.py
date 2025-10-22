@@ -1,11 +1,11 @@
 # Copyright (C) 2019 - 2021, Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+import logging
 from datetime import datetime, timedelta
 
 from odoo import fields, models
 
-import logging
 logger = logging.getLogger(__name__)
 
 
@@ -36,6 +36,7 @@ class Partner(models.Model):
         string="Customer Credit Period",
         help="Period past scheduled date for customer hold to verify credit card authorization",
     )
+
     def get_existing_invoice_balance(self, partner_id):
         # Open invoices (unpaid or partially paid invoices --
         # It is already included in partner.credit
@@ -79,7 +80,6 @@ class Partner(models.Model):
 
         return existing_order_balance
 
-
     def calculate_credit(self):
         for partner_id in self:
             existing_order_balance = self.get_existing_order_balance(partner_id)
@@ -91,6 +91,7 @@ class Partner(models.Model):
             partner_id.credit_available = (
                 partner_id.credit_limit - partner_id.credit_used
             )
+
     def write(self, vals):
         res = super(Partner, self).write(vals)
         if "credit_limit" or "credit_hold" in vals:
