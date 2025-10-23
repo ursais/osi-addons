@@ -24,11 +24,14 @@
         "sale_exception",
         "sale_order_revision",
         "account_avatax_sale_oca",
-        "ol_rush_order"
+        "ol_rush_order",
+        "ol_stock_constrained_availability",
+        "ol_sale_lead_time",
     ],
     # always loaded
     "data": [
         "security/ir.model.access.csv",
+        "security/res_groups.xml",
         "reports/sale_order_quote.xml",
         "data/budgetary_quote_email.xml",
         "data/crm_tag_data.xml",

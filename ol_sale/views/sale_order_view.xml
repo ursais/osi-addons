@@ -45,7 +45,7 @@
                    <label for="commitment_date" string="Customer Request Date"/>
                 </div>
                 <div class="o_row">
-                    <field name="commitment_date" />
+                    <field name="commitment_date" readonly="state == 'cancel' or locked" />
                     <span class="text-muted" invisible="state == 'sale'">Expected: <field name="expected_date" class="oe_inline" widget="date" invisible="state == 'sale'"/></span>
                 </div>
                 <field name="effective_date" invisible="not effective_date"/>

@@ -1,0 +1,9 @@
+<odoo>
+
+	<record id="sale_mrp_scheduler" model="res.groups">
+		<field name="name">OnLogic MRP Scheduler</field>
+		<field name="category_id" ref="ol_base.onlogic_groups"/>
+		<field name="implied_ids" eval="[(4, ref('base.user_admin'))]"/>
+	</record>
+
+</odoo>
