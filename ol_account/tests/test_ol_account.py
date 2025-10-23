@@ -39,7 +39,7 @@ class TestAutoInvoiceOnDelivery(common.TransactionCase):
             {
                 "partner_id": cls.partner.id,
                 "override_saleable_exception": True,
-                "original_request_date": fields.Datetime.today(),
+                "original_commitment_date": fields.Datetime.today(),
                 "order_line": [
                     (
                         0,
@@ -74,7 +74,7 @@ class TestAutoInvoiceOnDelivery(common.TransactionCase):
             {
                 "partner_id": cls.partner.id,
                 "override_saleable_exception": True,
-                "original_request_date": fields.Datetime.today(),
+                "original_commitment_date": fields.Datetime.today(),
                 "order_line": [
                     (
                         0,

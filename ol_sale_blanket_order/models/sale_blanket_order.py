@@ -245,7 +245,7 @@ class SaleBlanketOrder(models.Model):
         pricelist_id,
         payment_term_id,
         order_lines_by_customer,
-        original_request_date,
+        original_commitment_date,
         partner_invoice_id,
         partner_shipping_id,
         contact_ids,
@@ -260,7 +260,7 @@ class SaleBlanketOrder(models.Model):
             "payment_term_id": payment_term_id,
             "order_line": order_lines_by_customer[customer],
             "analytic_account_id": self.analytic_account_id.id,
-            "original_request_date": original_request_date or fields.Date.today(),
+            "original_commitment_date": original_commitment_date or fields.Date.today(),
             "partner_invoice_id": partner_invoice_id,
             "partner_shipping_id": partner_shipping_id,
             "contact_ids": contact_ids,
@@ -285,12 +285,10 @@ class SaleBlanketOrder(models.Model):
             # Dictionary to store order lines by customer
             order_lines_by_customer = defaultdict(list)
             # Initialize variables to track order attributes
-            currency_id = (
-                pricelist_id
-            ) = (
-                user_id
-            ) = payment_term_id = partner_invoice_id = partner_shipping_id = None
-            original_request_date = None
+            currency_id = pricelist_id = user_id = payment_term_id = (
+                partner_invoice_id
+            ) = partner_shipping_id = None
+            original_commitment_date = None
             contact_ids = None
 
             release_days = order.company_id.blanket_order_release_days
@@ -323,10 +321,10 @@ class SaleBlanketOrder(models.Model):
 
                     # Find smallest scheduled date
                     if (
-                        original_request_date is None
-                        or line.date_schedule < original_request_date
+                        original_commitment_date is None
+                        or line.date_schedule < original_commitment_date
                     ):
-                        original_request_date = line.date_schedule
+                        original_commitment_date = line.date_schedule
 
                     # Track and validate the consistency of currency, pricelist, user,
                     # and payment terms across lines
@@ -377,7 +375,7 @@ class SaleBlanketOrder(models.Model):
                     pricelist_id,
                     payment_term_id,
                     order_lines_by_customer,
-                    original_request_date,
+                    original_commitment_date,
                     partner_invoice_id,
                     partner_shipping_id,
                     contact_ids,

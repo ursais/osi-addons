@@ -21,8 +21,8 @@ class TestSaleOlValidation(common.TransactionCase):
         Test to ensure that Validation Error is raised
         when original request date is missing
         """
-        # Without original_request_date
-        sale_wo_original_request_date = self.env["sale.order"].create(
+        # Without original_commitment_date
+        sale_wo_original_commitment_date = self.env["sale.order"].create(
             {
                 "partner_id": self.customer.id,
                 "pricelist_id": self.customer.property_product_pricelist.id,
@@ -41,11 +41,11 @@ class TestSaleOlValidation(common.TransactionCase):
                 ],
             }
         )
-        # With original_request_date
-        sale_w_original_request_date = self.env["sale.order"].create(
+        # With original_commitment_date
+        sale_w_original_commitment_date = self.env["sale.order"].create(
             {
                 "partner_id": self.customer.id,
-                "original_request_date": "2024-06-12",
+                "original_commitment_date": "2024-06-12",
                 "commitment_date": "2024-06-10",
                 "pricelist_id": self.customer.property_product_pricelist.id,
                 "order_line": [
@@ -64,21 +64,21 @@ class TestSaleOlValidation(common.TransactionCase):
             }
         )
         with self.assertRaises(ValidationError):
-            sale_wo_original_request_date.action_confirm()
+            sale_wo_original_commitment_date.action_confirm()
         try:
-            sale_w_original_request_date.action_confirm()
+            sale_w_original_commitment_date.action_confirm()
         except ValidationError:
             self.fail("action_confirm() raised ValidationError unexpectedly!")
 
         # Assert the sale order was confirmed
-        self.assertEqual(sale_w_original_request_date.state, "sale")
+        self.assertEqual(sale_w_original_commitment_date.state, "sale")
 
     def test02_sale_order_confirm(self):
         # Create a sale order with necessary details
         sale_order = self.env["sale.order"].create(
             {
                 "partner_id": self.customer.id,
-                "original_request_date": "2024-06-12",
+                "original_commitment_date": "2024-06-12",
                 "commitment_date": "2024-06-10",
                 "pricelist_id": self.customer.property_product_pricelist.id,
                 "override_saleable_exception": True,

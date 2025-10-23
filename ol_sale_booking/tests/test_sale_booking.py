@@ -5,7 +5,6 @@ from datetime import date, timedelta
 from odoo.addons.base.tests.common import DISABLED_MAIL_CONTEXT
 
 
-
 @tagged("-at_install", "post_install")
 class TestSaleBooking(common.TransactionCase):
     @classmethod
@@ -13,8 +12,8 @@ class TestSaleBooking(common.TransactionCase):
         super().setUpClass()
         cls.env = cls.env(context=dict(cls.env.context, **DISABLED_MAIL_CONTEXT))
         cls.product = cls.env.ref("product.product_product_6")
-        cls.customer = cls.env["res.partner"].create({"name":"Vandan Pandeji"})
-        cls.vendor = cls.env["res.partner"].create({"name":"Vendor"})
+        cls.customer = cls.env["res.partner"].create({"name": "Vandan Pandeji"})
+        cls.vendor = cls.env["res.partner"].create({"name": "Vendor"})
         cls.payment_term = cls.env.ref("account.account_payment_term_immediate")
         cls.sale_pricelist = cls.env["product.pricelist"].create(
             {"name": "Test Pricelist", "currency_id": cls.env.ref("base.USD").id}
@@ -30,22 +29,22 @@ class TestSaleBooking(common.TransactionCase):
                 "uom_id": cls.env.ref("uom.product_uom_unit").id,
                 "default_code": "PROD_DEL01",
                 "sale_delay": 0,
-                "product_state_id":cls.env.ref("ol_product_state.product_state_active").id
+                "product_state_id": cls.env.ref(
+                    "ol_product_state.product_state_active"
+                ).id,
             }
         )
 
-        vendor_pricelist = cls.env["product.supplierinfo"].create({
-            "partner_id":cls.vendor.id,
-            "product_id":cls.product.id})
-
-
+        vendor_pricelist = cls.env["product.supplierinfo"].create(
+            {"partner_id": cls.vendor.id, "product_id": cls.product.id}
+        )
 
     def test_sale_creation(self):
         sale_order = self.env["sale.order"].create(
             {
                 "partner_id": self.customer.id,
                 "pricelist_id": self.customer.property_product_pricelist.id,
-                "original_request_date": "2025-06-12",
+                "original_commitment_date": "2025-06-12",
                 "order_line": [
                     (
                         0,
@@ -62,7 +61,9 @@ class TestSaleBooking(common.TransactionCase):
             }
         )
         sale_order.action_confirm()
-        sale_booking_id = self.env["sale.booking"].search([("order_id","=",sale_order.id)])
+        sale_booking_id = self.env["sale.booking"].search(
+            [("order_id", "=", sale_order.id)]
+        )
         self.assertEqual(sale_order.name, sale_booking_id.origin)
         self.assertEqual(sale_order.company_id.id, sale_booking_id.company_id.id)
         self.assertEqual(sale_order.currency_id.id, sale_booking_id.currency_id.id)
@@ -70,7 +71,7 @@ class TestSaleBooking(common.TransactionCase):
             {
                 "partner_id": self.customer.id,
                 "pricelist_id": self.customer.property_product_pricelist.id,
-                "original_request_date": "2025-06-12",
+                "original_commitment_date": "2025-06-12",
                 "order_line": [
                     (
                         0,
