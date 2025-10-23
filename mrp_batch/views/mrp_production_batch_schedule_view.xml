@@ -43,7 +43,7 @@
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show" />
                                     <field name="sale_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show" />
                                     <field name="date_start" widget="datetime" options="{'show_time': false}" optional="show" />
-                                    <field name="earliest_start" widget="datetime" options="{'show_time': false}" optional="show" />
+                                    <field name="earliest_start" widget="datetime" options="{'show_time': false}" optional="hide" />
                                     <field name="date_deadline" widget="datetime" options="{'show_time': false}" optional="show" />
                                     <field name="components_availability_state" column_invisible="True" options='{"lazy": true}'/>
                                     <field name="components_availability" options="{'lazy': true}" invisible="state in ['done', 'cancel']" optional="show" decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'" decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')" decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')"/>
