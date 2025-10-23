@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class StockPicking(models.Model):

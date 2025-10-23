@@ -401,14 +401,12 @@ class RepairBatch(models.Model):
                 product_id, line_type = key
                 repairs_with_this_move = set(move.repair_id.id for move in group_moves)
                 if set(repairs.ids) == repairs_with_this_move:
-                    total_qty = sum(move.product_uom_qty for move in group_moves)
-
                     batch_line = self.env["repair.batch.line"].create(
                         {
                             "repair_batch_id": batch.id,
                             "product_id": product_id,
                             "repair_line_type": line_type,
-                            "quantity": total_qty,
+                            "quantity": move.product_uom_qty,
                         }
                     )
 
@@ -639,12 +637,42 @@ class RepairBatch(models.Model):
         batch._update_batch_state()
 
     def action_repair_end(self):
-        """Mark all related repair orders as repaired"""
+        """End all repairs in the batch, or show wizard if there are mismatched moves."""
         for batch in self:
-            batch.repair_ids.filtered(
+            # Fetch all 'add' moves not done/cancelled
+            moves = self.env["stock.move"].search(
+                [
+                    ("repair_id", "in", batch.repair_ids.ids),
+                    ("repair_line_type", "=", "add"),
+                    ("state", "!=", "done"),
+                    ("state", "!=", "cancel"),
+                ]
+            )
+            # Filter mismatched quantities in Python
+            mismatched_moves = moves.filtered(lambda m: m.product_uom_qty != m.quantity)
+
+            if mismatched_moves:
+                # Open wizard with all mismatched moves
+                return {
+                    "name": "Confirm Repair Quantity Differences",
+                    "type": "ir.actions.act_window",
+                    "res_model": "repair.batch.end.confirm.wizard",
+                    "view_mode": "form",
+                    "target": "new",
+                    "context": {
+                        "default_batch_id": batch.id,
+                        "default_move_ids": mismatched_moves.ids,
+                        "default_repair_ids": mismatched_moves.mapped("repair_id").ids,
+                    },
+                }
+
+            # No mismatches, end all repairs immediately
+            for repair in batch.repair_ids.filtered(
                 lambda r: r.state == "under_repair"
-            ).action_repair_end()
-        batch._update_batch_state()
+            ):
+                repair.action_repair_end()
+
+            batch._update_batch_state()
 
     def action_repair_cancel(self):
         """Cancel all related repair orders"""

@@ -425,113 +425,203 @@ class HelpdeskTicket(models.Model):
         }
 
     def action_create_sale_order(self):
-        sale_order_obj = self.env["sale.order"]
-        sale_order_line_obj = self.env["sale.order.line"]
+        SaleOrder = self.env["sale.order"]
+        SaleOrderLine = self.env["sale.order.line"]
+        StockMove = self.env["stock.move"]
+        StockPicking = self.env["stock.picking"]
 
+        # Step 1: Find repairs needing processing
         repair_orders = self.repair_batch_ids.mapped("repair_ids").filtered(
             lambda r: not r.sale_order_id or r.sale_order_id.state == "cancel"
         )
+        if not repair_orders:
+            return
 
-        product_quantities = {}
-        move_repair_map = {}
-        repair_product_map = {}
-
-        if repair_orders:
-            for repair in repair_orders:
-                # logic for the repaired device itself
-                if repair.product_id:
-                    pid = repair.product_id.id
-                    repair_product_map[pid] = (
-                        repair_product_map.get(pid, 0) + repair.product_qty
-                    )
-
-                # logic for added components, grouped by under_warranty
-                for move in repair.move_ids.filtered(
-                    lambda m: m.repair_line_type == "add"
-                ):
-                    pid = move.product_id.id
-                    uw = bool(repair.under_warranty)
-                    key = (pid, uw)
-                    # sum up quantities
-                    product_quantities[key] = (
-                        product_quantities.get(key, 0.0) + move.product_uom_qty
-                    )
-                    # remember which move/repair pair goes to which grouping
-                    move_repair_map.setdefault(key, []).append((move, repair))
-
-        # merge in repaired‐device qtys (these always ship, price = 0)
-        for pid, qty in repair_product_map.items():
-            key = (pid, False)  # price=0 & ship back
-            product_quantities[key] = product_quantities.get(key, 0.0) + qty
-
-        # Check to make sure the RMA Return order type exists
-        so_type = self.env.ref("ol_helpdesk_repair_batch.rma_return_sale_type", False)
-        if not so_type:
-            raise ValidationError(
-                "The 'RMA Return' sale order type is missing. Please see your administrator."
+        # Step 2: Find or create draft SO
+        existing_so = self.repair_sale_order_ids.filtered(lambda s: s.state == "draft")[
+            :1
+        ]
+        if existing_so:
+            sale_order = existing_so
+        else:
+            so_type = self.env.ref(
+                "ol_helpdesk_repair_batch.rma_return_sale_type", raise_if_not_found=True
             )
-
-        # Try to get current user's sales team
-        team_id = self.env.user.sale_team_id.id if self.env.user.sale_team_id else None
-
-        sale_order = sale_order_obj.create(
-            {
-                "partner_id": self.partner_id.id,
-                "origin": self.name,
-                "to_send_confirmation_email": False,
-                "type_id": so_type.id,
-                "team_id": team_id,
-                "user_id": self.env.user.id,
-            }
-        )
-
-        # create lines
-        sale_line_map = {}
-        for (product_id, under_warranty), qty in product_quantities.items():
-            product = self.env["product.product"].browse(product_id)
-            # determine price and shipment flag
-            if (product_id in repair_product_map) and not under_warranty:
-                # original repaired device
-                price = 0.0
-                is_component = False  # we want to ship it back
-            else:
-                # component: under warranty => free; otherwise list price
-                price = 0.0 if under_warranty else product.list_price
-                is_component = True  # we don't want to ship it back
-
-            line = sale_order_line_obj.create(
+            team_id = (
+                self.env.user.sale_team_id.id if self.env.user.sale_team_id else None
+            )
+            sale_order = SaleOrder.create(
                 {
-                    "order_id": sale_order.id,
-                    "product_id": product_id,
-                    "product_uom_qty": qty,
-                    "product_uom": product.uom_id.id,
-                    "price_unit": price,
-                    "is_repair_component": is_component,
-                    "repair_ids": [
-                        (
-                            6,
-                            0,
-                            [
-                                r.id
-                                for r in self.repair_batch_ids.mapped("repair_ids")
-                                if r.product_id.id == product_id
-                            ],
-                        )
-                    ],
+                    "partner_id": self.partner_id.id,
+                    "origin": self.name,
+                    "to_send_confirmation_email": False,
+                    "type_id": so_type.id,
+                    "team_id": team_id,
+                    "user_id": self.env.user.id,
                 }
             )
-            sale_line_map[(pid, under_warranty)] = line.id
+            # Link new SO to batch
+            self.repair_sale_order_ids = [(4, sale_order.id)]
 
-        # link back to repairs/moves
-        for key, pairs in move_repair_map.items():
-            line_id = sale_line_map.get(key)
-            for move, repair in pairs:
-                # Always relink if not linked, or if linked SO is canceled
-                if not repair.sale_order_id or repair.sale_order_id.state == "cancel":
-                    repair.sale_order_id = sale_order.id
-                move.sale_line_id = line_id
+        # Step 3: Track already processed repairs
+        processed_repairs = sale_order.order_line.mapped("repair_ids").ids
 
-        self.repair_sale_order_ids = [(6, 0, [sale_order.id])]
+        # Step 4: Build product mapping
+        product_quantities = {}  # key -> (product_id, is_component, under_warranty)
+        move_repair_map = {}  # key -> list of (move or None, repair)
+
+        for repair in repair_orders:
+            if repair.id in processed_repairs:
+                continue
+
+            # Main repaired product
+            if repair.product_id:
+                key = (repair.product_id.id, False, False)
+                product_quantities[key] = (
+                    product_quantities.get(key, 0.0) + repair.product_qty
+                )
+                move_repair_map.setdefault(key, []).append((None, repair))
+
+            # Components
+            for move in repair.move_ids.filtered(lambda m: m.repair_line_type == "add"):
+                key = (move.product_id.id, True, bool(repair.under_warranty))
+                product_quantities[key] = (
+                    product_quantities.get(key, 0.0) + move.product_uom_qty
+                )
+                move_repair_map.setdefault(key, []).append((move, repair))
+
+        # Step 5: Merge with existing sale lines or create new
+        sale_line_map = {}
+        for key, qty in product_quantities.items():
+            pid, is_component, under_warranty = key
+            product = self.env["product.product"].browse(pid)
+
+            # Determine price
+            if not is_component and not under_warranty:
+                price = 0.0
+            else:
+                price = 0.0 if under_warranty else product.list_price
+
+            # Reuse existing line if present
+            existing_line = sale_order.order_line.filtered(
+                lambda l: l.product_id.id == pid
+                and l.is_repair_component == is_component
+            )
+            if existing_line:
+                # Add quantity for new repairs
+                existing_line.product_uom_qty += qty
+                new_repairs = [
+                    r.id
+                    for _, r in move_repair_map[key]
+                    if r.id not in existing_line.repair_ids.ids
+                ]
+                if new_repairs:
+                    existing_line.repair_ids = [(4, rid) for rid in new_repairs]
+                sale_line = existing_line
+            else:
+                sale_line = SaleOrderLine.create(
+                    {
+                        "order_id": sale_order.id,
+                        "product_id": pid,
+                        "product_uom_qty": qty,
+                        "product_uom": product.uom_id.id,
+                        "price_unit": price,
+                        "is_repair_component": is_component,
+                        "repair_ids": [(6, 0, [r.id for _, r in move_repair_map[key]])],
+                    }
+                )
+            # If line is a component that was consumed, then auto deliver
+            if sale_line.is_repair_component:
+                sale_line.qty_delivered = sale_line.product_uom_qty
+
+            sale_line_map[key] = sale_line
+
+        # Step 6: Create or reuse a single DO for main repaired products
+        main_keys = [k for k in sale_line_map.keys() if not k[1]]  # is_component=False
+        if main_keys:
+            first_key = main_keys[0]
+            _, first_repair = move_repair_map[first_key][0]
+            picking_type = sale_order.warehouse_id.out_type_id
+
+            # Find existing draft/unassigned picking
+            picking = self.env["stock.picking"].search(
+                [
+                    ("sale_id", "=", sale_order.id),
+                    ("picking_type_id", "=", picking_type.id),
+                    ("state", "in", ["draft", "waiting"]),
+                ],
+                limit=1,
+            )
+            if not picking:
+                picking = StockPicking.create(
+                    {
+                        "picking_type_id": picking_type.id,
+                        "partner_id": sale_order.partner_id.id,
+                        "origin": sale_order.name,
+                        "location_id": first_repair.location_id.id,
+                        "location_dest_id": sale_order.partner_id.property_stock_customer.id,
+                        "sale_id": sale_order.id,
+                        "company_id": sale_order.company_id.id,
+                    }
+                )
+
+            # Step 7: Create moves & move lines per repair, reusing existing moves
+            for key in main_keys:
+                line = sale_line_map[key]
+
+                # Check for existing move
+                existing_move = picking.move_ids.filtered(
+                    lambda m: m.sale_line_id == line
+                )
+                if existing_move:
+                    move = existing_move
+                    # Update qty
+                    existing_lots = move.move_line_ids.mapped("lot_id").ids
+                    new_qty = sum(
+                        r.product_qty or 1.0
+                        for _, r in move_repair_map[key]
+                        if r.lot_id.id not in existing_lots
+                    )
+                    if new_qty:
+                        move.product_uom_qty += new_qty
+                else:
+                    move_vals = {
+                        "name": line.name,
+                        "product_id": line.product_id.id,
+                        "product_uom_qty": sum(
+                            r.product_qty or 1.0 for _, r in move_repair_map[key]
+                        ),
+                        "product_uom": line.product_uom.id,
+                        "location_id": first_repair.location_id.id,
+                        "location_dest_id": sale_order.partner_id.property_stock_customer.id,
+                        "picking_id": picking.id,
+                        "sale_line_id": line.id,
+                        "restrict_partner_id": repair.partner_id.id,
+                        "company_id": sale_order.company_id.id,
+                    }
+                    move = StockMove.create(move_vals)
+
+                # Create move lines per repair if not existing
+                existing_lots = move.move_line_ids.mapped("lot_id").ids
+                for _, repair in move_repair_map[key]:
+                    if repair.lot_id and repair.lot_id.id not in existing_lots:
+                        self.env["stock.move.line"].create(
+                            {
+                                "move_id": move.id,
+                                "product_id": move.product_id.id,
+                                "qty_done": repair.product_qty or 1.0,
+                                "product_uom_id": move.product_uom.id,
+                                "location_id": repair.location_id.id,
+                                "location_dest_id": sale_order.partner_id.property_stock_customer.id,
+                                "lot_id": repair.lot_id.id,
+                                "company_id": move.company_id.id,
+                            }
+                        )
+            # Confirm & assign picking
+            picking.action_confirm()
+            picking.action_assign()
+            picking.sale_id = sale_order
+            picking.owner_id = repair.partner_id
 
         return {
             "name": "Sale Order",

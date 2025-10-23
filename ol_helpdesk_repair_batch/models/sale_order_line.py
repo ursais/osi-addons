@@ -1,5 +1,5 @@
 # Import Odoo libs
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class SaleOrderLine(models.Model):
@@ -42,13 +42,24 @@ class SaleOrderLine(models.Model):
             if len(repair_locations) == 1:
                 vals["location_id"] = repair_locations.id
 
-            # Ensure owner consistency
-            owners = self.repair_ids.mapped("partner_id")
-            if len(owners) == 1:
-                vals["owner_id"] = owners.id
-
             # Prevent MO creation
             vals["route_ids"] = self.env["stock.route"].browse()
         return vals
+
+    @api.depends(
+        "qty_delivered_method",
+        "analytic_line_ids.so_line",
+        "analytic_line_ids.unit_amount",
+        "analytic_line_ids.product_uom_id",
+    )
+    def _compute_qty_delivered(self):
+        # Lines that are standard (stockable / handled by stock moves)
+        stock_lines = self.filtered(lambda l: not l.is_repair_component)
+        super(SaleOrderLine, stock_lines)._compute_qty_delivered()
+
+        # Lines that are repair components (already consumed)
+        repair_lines = self.filtered(lambda l: l.is_repair_component)
+        for line in repair_lines:
+            line.qty_delivered = line.product_uom_qty
 
     # END #######
