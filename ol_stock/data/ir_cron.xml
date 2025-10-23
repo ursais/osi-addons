@@ -1,14 +1,47 @@
-<odoo noupdate="1">
+<odoo>
 
-	<record id="ir_cron_overflow_replenishment" model="ir.cron">
-		<field name="name">Overflow Replenishment Scheduler</field>
+	<record id="ir_cron_overflow_replenishment_us_1" model="ir.cron">
+		<field name="name">Overflow Replenishment (US)</field>
 		<field name="model_id" ref="stock.model_stock_warehouse_orderpoint"/>
 		<field name="state">code</field>
-		<field name="code">model._cron_run_overflow_replenishments()</field>
+		<field name="code">model._cron_run_overflow_replenishments(company_id=1)</field>
 		<field name="interval_number">1</field>
-        <field name="interval_type">days</field>
+		<field name="interval_type">days</field>
+		<field name="nextcall" eval="(DateTime.now() + relativedelta(hour=14, minute=0, second=0)).strftime('%Y-%m-%d %H:%M:%S')" />
 		<field name="active">True</field>
-		<field name="nextcall" eval="(DateTime.now().replace(hour=10, minute=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" />
+	</record>
+
+	<record id="ir_cron_overflow_replenishment_us_2" model="ir.cron">
+		<field name="name">Overflow Replenishment (US)</field>
+		<field name="model_id" ref="stock.model_stock_warehouse_orderpoint"/>
+		<field name="state">code</field>
+		<field name="code">model._cron_run_overflow_replenishments(company_id=1)</field>
+		<field name="interval_number">1</field>
+		<field name="interval_type">days</field>
+		<field name="nextcall" eval="(DateTime.now() + relativedelta(hour=18, minute=0, second=0)).strftime('%Y-%m-%d %H:%M:%S')" />
+		<field name="active">True</field>
+	</record>
+
+	<record id="ir_cron_overflow_replenishment_eu_1" model="ir.cron">
+		<field name="name">Overflow Replenishment (EU)</field>
+		<field name="model_id" ref="stock.model_stock_warehouse_orderpoint"/>
+		<field name="state">code</field>
+		<field name="code">model._cron_run_overflow_replenishments(company_id=2)</field>
+		<field name="interval_number">1</field>
+		<field name="interval_type">days</field>
+		<field name="nextcall" eval="(DateTime.now() + relativedelta(hour=8, minute=0, second=0)).strftime('%Y-%m-%d %H:%M:%S')" />
+		<field name="active">True</field>
+	</record>
+
+	<record id="ir_cron_overflow_replenishment_eu_2" model="ir.cron">
+		<field name="name">Overflow Replenishment (EU)</field>
+		<field name="model_id" ref="stock.model_stock_warehouse_orderpoint"/>
+		<field name="state">code</field>
+		<field name="code">model._cron_run_overflow_replenishments(company_id=2)</field>
+		<field name="interval_number">1</field>
+		<field name="interval_type">days</field>
+		<field name="nextcall" eval="(DateTime.now() + relativedelta(hour=0, minute=0, second=0)).strftime('%Y-%m-%d %H:%M:%S')" />
+		<field name="active">True</field>
 	</record>
 
 </odoo>

@@ -14,8 +14,13 @@ class StockOrderpoint(models.Model):
     # END #########
     # METHODS ######
 
-    def _cron_run_overflow_replenishments(self):
-        companies = self.env["res.company"].search([])
+    def _cron_run_overflow_replenishments(self, company_id=None):
+        """Run overflow replenishments for a specific company if provided."""
+        companies = (
+            self.env["res.company"].browse(company_id)
+            if company_id
+            else self.env["res.company"].search([])
+        )
         for company in companies:
             orderpoints = self.with_company(company).search(
                 [
