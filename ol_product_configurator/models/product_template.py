@@ -63,12 +63,19 @@ class ProductTemplate(models.Model):
                 reasons.append("- Has Configuration Restrictions defined.")
 
             # --- Reason 2: Scaffolding BoM missing config sets ---
-            if any(
-                bom.scaffolding_bom
-                and bom.type != "phantom"
-                and any(not line.config_set_id for line in bom.bom_line_ids)
-                for bom in product.bom_ids
-            ):
+            boms = self.env["mrp.bom"].search([
+                ("product_tmpl_id", "=", product.id),
+                ("scaffolding_bom", "=", True),
+                ("type", "!=", "phantom"),
+            ])
+
+            bom_lines = self.env["mrp.bom.line"].search([
+                ("bom_id", "in", boms.ids),
+                ("config_set_id", "=", False),
+            ], limit=1)
+
+
+            if bom_lines:
                 reasons.append(
                     "- Scaffolding BoM has one or more lines missing the Configuration Set."
                 )
