@@ -234,21 +234,33 @@ class MrpProductionBatch(models.Model):
             if not batch.customer_request_date_proposed:
                 continue
 
+            # Safely handle both Date and Datetime types
+            def to_context_dt(record, value):
+                """Ensure a datetime for context_timestamp"""
+                if not value:
+                    return False
+                if isinstance(value, datetime):
+                    dt_value = value
+                else:
+                    # convert Date -> Datetime (midnight)
+                    dt_value = datetime.combine(value, datetime.min.time())
+                return fields.Datetime.context_timestamp(record, dt_value)
+
+            old_local = to_context_dt(batch, batch.customer_request_date_proposed)
+            new_local = to_context_dt(batch, batch.date_start)
+
+            formatted_old = old_local.strftime("%Y-%m-%d %H:%M") if old_local else "-"
+            formatted_new = new_local.strftime("%Y-%m-%d %H:%M") if new_local else "-"
+
             for production in batch.production_ids:
                 sale_order = production.sale_order_id
                 if not sale_order:
                     continue
 
                 partner = sale_order.user_id.partner_id
-                old_local = fields.Datetime.context_timestamp(
-                    batch, batch.customer_request_date_proposed
+                sale_order.commitment_date = (
+                    batch.date_start.date() if batch.date_start else False
                 )
-                new_local = fields.Datetime.context_timestamp(batch, batch.date_start)
-
-                formatted_old = old_local.strftime("%Y-%m-%d %H:%M")
-                formatted_new = new_local.strftime("%Y-%m-%d %H:%M")
-
-                sale_order.commitment_date = batch.date_start.date()
 
                 partner_url = _("Dear ") + partner._get_html_link()
                 body = _(
