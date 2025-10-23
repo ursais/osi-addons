@@ -12,8 +12,8 @@
                 </div>
             </xpath>
             <xpath expr="//header//button[@name='action_cancel']" position="after">
-                <button name="action_approve_date_change" type="object" class="btn btn-success" groups="ol_base.role_operations_res_groups" string="Approve Date Change" invisible="not date_change_exception" />
-                <button name="button_reject" type="object" class="btn btn-danger" groups="ol_base.role_operations_res_groups" string="Reject Date Change" invisible="not date_change_exception" />
+                <button name="action_approve_date_change" type="object" class="btn btn-success" groups="ol_sale.sale_mrp_scheduler" string="Approve Date Change" invisible="not date_change_exception" />
+                <button name="button_reject" type="object" class="btn btn-danger" groups="ol_sale.sale_mrp_scheduler" string="Reject Date Change" invisible="not date_change_exception" />
             </xpath>
             <field name="date_start" position="before">
                 <field name="ops_build_date"/>
@@ -28,7 +28,7 @@
 
             <field name="date_start" position="attributes">
                 <attribute name="string">Customer Request Date</attribute>
-                <attribute name="groups">ol_base.role_operations_res_groups</attribute>
+                <attribute name="groups">ol_sale.sale_mrp_scheduler</attribute>
             </field>
 
             <field name="sale_tag_ids" position="after">

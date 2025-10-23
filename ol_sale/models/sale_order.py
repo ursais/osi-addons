@@ -1,3 +1,6 @@
+# Import Python libs
+from datetime import date, datetime, timedelta
+
 # Import Odoo libs
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
@@ -15,24 +18,22 @@ class SaleOrder(models.Model):
         string="Original Customer Requested Date",
         copy=False,
     )
-
     first_estimate_date = fields.Date(
         string="First Estimated Date",
-        compute="_compute_first_estimate_date",
-        store=True,
         copy=False,
+        help="Set from estimated ship date during confirmation of the order.",
     )
-
     current_estimate_ship_date = fields.Date(
         string="Current Estimated Ship Date",
         compute="_compute_current_estimate_ship_date",
         store=True,
         copy=False,
+        help="Furthest out of MO batch estimated ship dates AND expected date for SO component lines (Customer Lead)",
     )
-
     original_commitment_date = fields.Datetime(
         string="Original Customer Requested Date",
         copy=False,
+        help="The date the customer originally requested, set during confirmation.",
     )
     account_manager_id = fields.Many2one(
         comodel_name="res.users",
@@ -47,11 +48,10 @@ class SaleOrder(models.Model):
         default=True,
         copy=False,
     )
-
-    # This field is populated via Integrations, but also used in emails
     is_guest_checkout = fields.Boolean(
         string="Guest checkout",
         copy=False,
+        help="This field is populated via Integrations, but also used in emails",
     )
     contact_ids = fields.Many2many(
         comodel_name="res.partner",
@@ -73,14 +73,8 @@ class SaleOrder(models.Model):
         string="MO Intenral Tranfer",
         compute="_compute_mo_tranfer_count",
     )
-    request_date_change_pending = fields.Boolean(
-        string="Customer Request Date Change Proposed",
-        default=False,
-        copy=False,
-    )
 
     # END #########
-
     # METHODS #########
 
     def _check_component_out_of_stock(self):
@@ -170,10 +164,14 @@ class SaleOrder(models.Model):
 
             # store original commitment date on first confirmation (do not overwrite)
             if not rec.original_commitment_date and rec.commitment_date:
-                rec.original_commitment_date = fields.Date.to_date(rec.commitment_date)
+                rec.original_commitment_date = rec.commitment_date
 
         # Call the parent method once for all records
         res = super().action_confirm()
+
+        # store first estimated date date on first confirmation (do not overwrite)
+        if rec.commitment_date and rec.expected_date:
+            rec.first_estimate_date = max(rec.commitment_date, rec.expected_date)
 
         # Send confirmation email
         self.send_confirmation_email()
@@ -182,9 +180,6 @@ class SaleOrder(models.Model):
         if not self.detect_exceptions():
             self.to_send_confirmation_email = False
 
-        # # Update original_commitment_date for each record after confirmation
-        # for rec in self:
-        #     rec.original_commitment_date = self.commitment_date or self.expected_date
         return res
 
     @api.onchange("partner_id")
@@ -405,6 +400,20 @@ class SaleOrder(models.Model):
                     lambda p: p.state not in ["done", "cancel"]
                 ):
                     picking.partner_id = order.partner_shipping_id
+        if "commitment_date" in vals:
+            for order in self.filtered(lambda a: a.state == "sale"):
+                mo_batchs = self.env["mrp.production.batch"].search(
+                    [("sale_order_ids", "in", order.id)]
+                )
+                if mo_batchs and order.commitment_date:
+                    mo_batchs.write(
+                        {
+                            "date_change_exception": True,
+                            "customer_request_date_proposed": order.commitment_date,
+                        }
+                    )
+                    if mo_batchs.production_ids:
+                        mo_batchs.production_ids.write({"date_change_exception": True})
         return res
 
     @api.onchange(
@@ -426,7 +435,11 @@ class SaleOrder(models.Model):
             return
         super().onchange_avatax_calculation()
 
-    @api.depends("state", "order_line.invoice_status", "order_line.is_downpayment")
+    @api.depends(
+        "state",
+        "order_line.invoice_status",
+        "order_line.is_downpayment",
+    )
     def _compute_invoice_status(self):
         for order in self:
             # Default for non-eligible states
@@ -484,46 +497,61 @@ class SaleOrder(models.Model):
     @api.depends(
         "commitment_date",
         "mrp_production_ids",
+        "order_line.customer_lead",
     )
     def _compute_current_estimate_ship_date(self):
-        for sale in self:
-            sale.current_estimate_ship_date = False
-            commitment_date = sale.commitment_date
-            current_estimate_ship_date = commitment_date
-            mrp_batch_data = self.env["mrp.production.batch"].search(
-                [("sale_order_ids", "in", sale.id)]
-            )
-            if mrp_batch_data:
-                batch_dates = mrp_batch_data.mapped("estimated_ship_date")
-                batch_dates = [d for d in batch_dates if d]  # filter out False/None
-                if batch_dates:
-                    # take the latest of the batches and commitment_date
-                    current_estimate_ship_date = max(
-                        max(batch_dates),
-                        commitment_date.date() if commitment_date else max(batch_dates),
-                    )
-            sale.current_estimate_ship_date = current_estimate_ship_date
+        Date = fields.Date
+        today = Date.today
 
-    @api.depends("commitment_date", "expected_date")
-    def _compute_first_estimate_date(self):
-        for sale in self:
-            if sale.commitment_date and sale.expected_date:
-                sale.first_estimate_date = max(sale.commitment_date, sale.expected_date)
+        def normalize_date(value):
+            """Normalize various date representations to a date object."""
+            if not value:
+                return None
+            if isinstance(value, date) and not isinstance(value, datetime):
+                return value
+            if isinstance(value, datetime):
+                return value.date()
+            if isinstance(value, (int, float)):
+                return today() + timedelta(days=value)
+            if isinstance(value, str):
+                try:
+                    return Date.from_string(value)
+                except Exception:
+                    return None
+            return None
 
-    @api.onchange("commitment_date", "expected_date")
-    def _onchange_commitment_date(self):
-        super()._onchange_commitment_date()
-        mo_batchs = self.env["mrp.production.batch"].search(
-            [("sale_order_ids", "in", self._origin.id)]
-        )
-        if mo_batchs and self.commitment_date and self.state not in ("sale", "done"):
-            mo_batchs.write(
-                {
-                    "date_change_exception": True,
-                    "customer_request_date_proposed": self.commitment_date,
-                }
+        for sale in self:
+            # Collect all candidate dates
+            dates = []
+
+            # Add commitment date
+            if sale.commitment_date:
+                dates.append(normalize_date(sale.commitment_date))
+
+            # Add batch estimated ship dates
+            batch_dates = self.env["mrp.production.batch"].search_read(
+                [
+                    ("sale_order_ids", "in", sale.id),
+                    ("state", "not in", ("cancel", "done")),
+                ],
+                ["estimated_ship_date"],
             )
-            if mo_batchs.production_ids:
-                mo_batchs.production_ids.write({"date_change_exception": True})
+            dates.extend(
+                normalize_date(b["estimated_ship_date"])
+                for b in batch_dates
+                if b["estimated_ship_date"]
+            )
+
+            # Add lead-time-based dates from storable, non-configurable products
+            for line in sale.order_line:
+                product = line.product_id
+                if product and product.type == "product" and not product.config_ok:
+                    norm_date = normalize_date(line.customer_lead)
+                    if norm_date:
+                        dates.append(norm_date)
+
+            # Assign the latest valid date (or False)
+            valid_dates = [d for d in dates if d]
+            sale.current_estimate_ship_date = max(valid_dates) if valid_dates else False
 
     # END #########

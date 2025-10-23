@@ -56,7 +56,8 @@ class MrpProductionBatch(models.Model):
         readonly=True,
     )
     date_change_exception = fields.Boolean(
-        string="Customer Request Date Change Proposed", default=False
+        string="Customer Request Date Change Proposed",
+        default=False,
     )
     customer_request_date_proposed = fields.Date(
         string="Proposed Customer Request Date"
@@ -93,8 +94,8 @@ class MrpProductionBatch(models.Model):
             default_produce_delay = (
                 self.env["ir.config_parameter"]
                 .sudo()
-                .get_param("mrp_batch.default_produce_delay")                
-            ) 
+                .get_param("mrp_batch.default_produce_delay")
+            )
             use_manufacturing_lead = (
                 self.env["ir.config_parameter"]
                 .sudo()
@@ -123,7 +124,9 @@ class MrpProductionBatch(models.Model):
             if not forecast_expected_date:
                 continue
             forecast_expected_date = max(forecast_expected_date)
-            total_lead_time = int(record.company_id.manufacturing_lead) + int(default_produce_delay)
+            total_lead_time = int(record.company_id.manufacturing_lead) + int(
+                default_produce_delay
+            )
             if not record.rush_order:
                 if forecast_expected_date:
                     estimated_ship_date = forecast_expected_date + timedelta(
@@ -187,15 +190,17 @@ class MrpProductionBatch(models.Model):
                     )
                 batch.allocation_date = allocation_date
 
-    # END #########
-
-    # Object Button Methods ##############
-
+    # Object Button Methods
     def action_approve_date_change(self):
         if self.customer_request_date_proposed:
+            local_dt = fields.Datetime.context_timestamp(
+                self, self.customer_request_date_proposed
+            )
+            formatted_date = local_dt.strftime("%Y-%m-%d %H:%M")
+
             self.message_post(
-                body=_("Customer Request Date Change Approved Updated to %s.")
-                % (self.customer_request_date_proposed)
+                body=_("Customer Request Date Change Approved. Updated to %s.")
+                % formatted_date
             )
             self.date_start = self.customer_request_date_proposed
             self.customer_request_date_proposed = False
@@ -212,26 +217,29 @@ class MrpProductionBatch(models.Model):
                     continue
 
                 partner = sale_order.user_id.partner_id
-                # Revert Sale Order commitment_date to original batch start
-                old_date = batch.customer_request_date_proposed
-                new_date = batch.date_start.date()
-                sale_order.commitment_date = new_date
+                old_local = fields.Datetime.context_timestamp(
+                    batch, batch.customer_request_date_proposed
+                )
+                new_local = fields.Datetime.context_timestamp(batch, batch.date_start)
+
+                formatted_old = old_local.strftime("%Y-%m-%d %H:%M")
+                formatted_new = new_local.strftime("%Y-%m-%d %H:%M")
+
+                sale_order.commitment_date = batch.date_start.date()
 
                 partner_url = _("Dear ") + partner._get_html_link()
                 body = _(
-                    f"\nCustomer Request Date Change was Rejected The date was changed back from {old_date} to the original date {new_date}. "
+                    f"\nCustomer Request Date Change was Rejected. "
+                    f"The date was changed back from {formatted_old} to the original date {formatted_new}."
                 )
 
-                # Post message to Sale Order chatter
                 sale_order.message_post(
                     author_id=batch.env.user.partner_id.id,
                     body=partner_url + body,
                     subtype_xmlid="mail.mt_comment",
                 )
 
-            # Reset batch fields
             batch.customer_request_date_proposed = False
             batch.date_change_exception = False
             batch.message_post(body=_("Customer Request Date Change Rejected."))
-
         # END #########
