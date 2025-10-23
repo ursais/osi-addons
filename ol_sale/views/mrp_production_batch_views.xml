@@ -3,12 +3,12 @@
     <record id="mrp_production_batch_form_view_inherit_ol_sale" model="ir.ui.view">
         <field name="name">mrp.production.batch.form.view.inherit.ol.sale</field>
         <field name="model">mrp.production.batch</field>
-        <field name="inherit_id" ref="mrp_batch.mrp_production_batch_form_view"/>
+        <field name="inherit_id" ref="mrp_batch.mrp_production_batch_form_view" />
         <field name="arch" type="xml">
             <xpath expr="//header" position = "after">
-                <field name="date_change_exception" invisible="1"/>
+                <field name="date_change_exception" invisible="1" />
                 <div class="alert alert-danger mb-0" role="alert" invisible="not date_change_exception" >
-                    <strong>A New Customer Request date has been Proposed for <b><field name="customer_request_date_proposed" readonly="1"/></b></strong>
+                    <strong>A New Customer Request date has been Proposed for <b><field name="customer_request_date_proposed" readonly="1" /></b></strong>
                 </div>
             </xpath>
             <xpath expr="//header//button[@name='action_cancel']" position="after">
@@ -16,11 +16,13 @@
                 <button name="button_reject" type="object" class="btn btn-danger" groups="ol_sale.sale_mrp_scheduler" string="Reject Date Change" invisible="not date_change_exception" />
             </xpath>
             <field name="date_start" position="before">
-                <field name="ops_build_date"/>
+                <field name="can_edit_scheduler_fields" invisible="1" />
+                <field name="ops_build_date" readonly="not can_edit_scheduler_fields" />
             </field>
             <field name="earliest_start" position="after">
-                <field name="estimated_ship_date"/>
-                <field name="allocation_date"/>
+                <field name="estimated_ship_date" />
+                <field name="allocation_date" />
+                <field name="original_commitment_date" />
             </field>
             <field name="earliest_start" position="attributes">
                 <attribute name="invisible">1</attribute>
@@ -32,13 +34,13 @@
             </field>
 
             <field name="sale_tag_ids" position="after">
-                <field name="ops_sequence"/>
+                <field name="ops_sequence" readonly="not can_edit_scheduler_fields" />
             </field>
 
             <field name="total_revenue" position="after">
-                <field name="sales_person_id"/>
-                <field name="account_manager_id"/>
-                <field name="date_confirm"/>
+                <field name="sales_person_id" />
+                <field name="account_manager_id" />
+                <field name="date_confirm" />
             </field>
 
         </field>
@@ -47,20 +49,21 @@
     <record id="mrp_production_batch_tree_view_inherit_ol_sale" model="ir.ui.view">
         <field name="name">mrp.production.batch.tree.view.inherit.ol.sale</field>
         <field name="model">mrp.production.batch</field>
-        <field name="inherit_id" ref="mrp_batch.mrp_production_batch_tree_view"/>
+        <field name="inherit_id" ref="mrp_batch.mrp_production_batch_tree_view" />
         <field name="arch" type="xml">
             <field name="date_start" position="attributes">
                 <attribute name="string">Customer Request Date</attribute>
             </field>
             <field name="sale_tag_ids" position="after">
-                <field name="ops_build_date"/>
-                <field name="ops_sequence"/>
-                <field name="estimated_ship_date"/>
-                <field name="allocation_date"/>
-                <field name="sales_person_id"/>
-                <field name="account_manager_id"/>
+                <field name="can_edit_scheduler_fields" column_invisible="1" />
+                <field name="ops_build_date" readonly="not can_edit_scheduler_fields" optional="show" />
+                <field name="ops_sequence" readonly="not can_edit_scheduler_fields" optional="show" />
+                <field name="estimated_ship_date" optional="show" />
+                <field name="allocation_date" optional="show" />
+                <field name="original_commitment_date" optional="hide" />
+                <field name="sales_person_id" optional="show" />
+                <field name="account_manager_id" optional="show" />
             </field>
-
         </field>
     </record>
 

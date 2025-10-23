@@ -14,10 +14,6 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     # COLUMNS #####
-    original_request_date = fields.Date(
-        string="Original Customer Requested Date",
-        copy=False,
-    )
     first_estimate_date = fields.Date(
         string="First Estimated Date",
         copy=False,
@@ -150,7 +146,7 @@ class SaleOrder(models.Model):
 
     def action_confirm(self):
         """
-        Inherit method for set up value for original_request_date and original_commitment_date
+        Inherit method for set up value for original_commitment_date
         """
 
         # First check for original request date and raise validation error if not set

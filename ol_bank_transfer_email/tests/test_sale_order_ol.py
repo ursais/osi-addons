@@ -31,7 +31,7 @@ class TestSaleBankTranfer(common.TransactionCase):
         sale_order = self.env["sale.order"].create(
             {
                 "partner_id": self.customer.id,
-                "original_request_date": "2025-04-24",
+                "original_commitment_date": "2025-04-24",
                 "commitment_date": "2025-05-30",
                 "pricelist_id": self.customer.property_product_pricelist.id,
                 "override_saleable_exception": True,

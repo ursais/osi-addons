@@ -39,7 +39,7 @@ class BlanketOrderWizard(models.TransientModel):
             "analytic_account_id": self.blanket_order_id.analytic_account_id.id,
             "partner_invoice_id": partner_invoice_id,
             "partner_shipping_id": partner_shipping_id,
-            "original_request_date": date_schedule,
+            "original_commitment_date": date_schedule,
             "contact_ids": contact_ids,
             "ignore_exception": True,
             "account_manager_id": self.blanket_order_id.account_manager_id.id,

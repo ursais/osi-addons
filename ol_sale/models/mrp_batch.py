@@ -13,8 +13,10 @@ class MrpProductionBatch(models.Model):
         string="Build Date",
         copy=False,
     )
-
-    ops_sequence = fields.Integer(string="Ops Sequence", copy=False)
+    ops_sequence = fields.Integer(
+        string="Ops Sequence",
+        copy=False,
+    )
     allocation_date = fields.Date(
         string="Allocation Date",
         compute="_compute_allocation_date",
@@ -28,20 +30,19 @@ class MrpProductionBatch(models.Model):
         copy=False,
     )
     sales_person_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Sale Person",
         copy=False,
         compute="_compute_sales_person_account_manager",
         store=True,
     )
     account_manager_id = fields.Many2one(
-        "res.users",
+        comodel_name="res.users",
         string="Account Manager",
         copy=False,
         compute="_compute_sales_person_account_manager",
         store=True,
     )
-
     date_confirm = fields.Datetime(
         string="Confirmation Date",
         readonly=True,
@@ -59,15 +60,33 @@ class MrpProductionBatch(models.Model):
         string="Customer Request Date Change Proposed",
         default=False,
     )
+    original_commitment_date = fields.Date(
+        string="Original Customer Requested Date",
+        compute="_compute_original_commitment_date",
+        store=True,
+    )
     customer_request_date_proposed = fields.Date(
-        string="Proposed Customer Request Date"
+        string="Proposed Customer Request Date",
+        help="Proposed requested date change.",
+    )
+    can_edit_scheduler_fields = fields.Boolean(
+        compute="_compute_can_edit_scheduler_fields",
+        help="Helper field for views where fields are readonly based on group.",
     )
 
+    def _compute_can_edit_scheduler_fields(self):
+        for rec in self:
+            rec.can_edit_scheduler_fields = self.env.user.has_group(
+                "ol_sale.sale_mrp_scheduler"
+            )
+
     # END #########
+    # METHODS #####
 
-    # Other Internal Methods
-
-    @api.depends("production_ids")
+    @api.depends(
+        "sale_order_ids.account_manager_id",
+        "sale_order_ids.user_id",
+    )
     def _compute_sales_person_account_manager(self):
         # Compute the Sale Order(s) based on associated production records
         for rec in self:
@@ -87,6 +106,12 @@ class MrpProductionBatch(models.Model):
                 date_confirm = fields.Datetime.now()
             rec.date_confirm = date_confirm
 
+    @api.depends("sale_order_ids.original_commitment_date")
+    def _compute_original_commitment_date(self):
+        for rec in self:
+            dates = rec.sale_order_ids.mapped("original_commitment_date")
+            rec.original_commitment_date = min(dates) if dates else False
+
     @api.depends("components_availability", "components_availability_state")
     def _compute_estimated_ship_date(self):
         for record in self:
@@ -96,12 +121,6 @@ class MrpProductionBatch(models.Model):
                 .sudo()
                 .get_param("mrp_batch.default_produce_delay")
             )
-            use_manufacturing_lead = (
-                self.env["ir.config_parameter"]
-                .sudo()
-                .get_param("mrp.use_manufacturing_lead")
-            )
-            #
             rush_lead_time = (
                 self.env["ir.config_parameter"]
                 .sudo()
@@ -112,7 +131,7 @@ class MrpProductionBatch(models.Model):
             )
             if not valid_productions:
                 continue
-            sale_order = record.production_ids.mapped("sale_order_id")
+
             # Fetch all raw moves and ensure calculations are up to date
             all_raw_moves = valid_productions.move_raw_ids
             all_raw_moves._fields["forecast_availability"].compute_value(all_raw_moves)
@@ -242,4 +261,5 @@ class MrpProductionBatch(models.Model):
             batch.customer_request_date_proposed = False
             batch.date_change_exception = False
             batch.message_post(body=_("Customer Request Date Change Rejected."))
-        # END #########
+
+    # END #########
