@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Make analytic distribution more prominent in purchase order form -->
+    <record id="purchase_order_view_form_inherit_analytic_required" model="ir.ui.view">
+        <field name="name">purchase.order.form (analytic required)</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase_analytic.purchase_order_view_form_inherit_purchase_analytic"/>
+        <field name="arch" type="xml">
+            <field name="analytic_distribution" position="attributes">
+                <attribute name="required">True</attribute>
+                <attribute name="placeholder">Select analytic accounts...</attribute>
+            </field>
+        </field>
+    </record>
+
+    <!-- Add analytic distribution to purchase order line tree view -->
+    <record id="purchase_order_line_view_tree_inherit_analytic_required" model="ir.ui.view">
+        <field name="name">purchase.order.line.tree (analytic required)</field>
+        <field name="model">purchase.order_line</field>
+        <field name="inherit_id" ref="purchase.purchase_order_line_tree"/>
+        <field name="arch" type="xml">
+            <field name="price_unit" position="after">
+                <field name="analytic_distribution" 
+                       widget="analytic_distribution"
+                       groups="analytic.group_analytic_accounting"
+                       optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Make analytic distribution more prominent in purchase order line form -->
+    <record id="purchase_order_line_view_form_inherit_analytic_required" model="ir.ui.view">
+        <field name="name">purchase.order.line.form (analytic required)</field>
+        <field name="model">purchase.order_line</field>
+        <field name="inherit_id" ref="purchase.purchase_order_line_form"/>
+        <field name="arch" type="xml">
+            <field name="price_unit" position="after">
+                <field name="analytic_distribution" 
+                       widget="analytic_distribution"
+                       groups="analytic.group_analytic_accounting"
+                       required="True"
+                       placeholder="Select analytic accounts..."/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Add warning message for missing analytic distribution -->
+    <record id="purchase_order_view_form_analytic_warning" model="ir.ui.view">
+        <field name="name">purchase.order.form (analytic warning)</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_ref" position="after">
+                <div class="alert alert-warning" 
+                     attrs="{'invisible': [('state', 'in', ['done', 'cancel'])]}"
+                     groups="analytic.group_analytic_accounting">
+                    <strong>Note:</strong> Some products may require analytic distribution 
+                    based on their account settings. Please ensure all lines have the 
+                    appropriate analytic accounts assigned.
+                </div>
+            </field>
+        </field>
+    </record>
+</odoo>
