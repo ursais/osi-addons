@@ -209,12 +209,16 @@ class MrpProductionBatch(models.Model):
                     )
                 batch.allocation_date = allocation_date
 
-    # Object Button Methods
     def action_approve_date_change(self):
         if self.customer_request_date_proposed:
-            local_dt = fields.Datetime.context_timestamp(
-                self, self.customer_request_date_proposed
-            )
+            proposed = self.customer_request_date_proposed
+            if isinstance(proposed, datetime):
+                local_dt = fields.Datetime.context_timestamp(self, proposed)
+            else:
+                local_dt = fields.Datetime.context_timestamp(
+                    self, datetime.combine(proposed, datetime.min.time())
+                )
+
             formatted_date = local_dt.strftime("%Y-%m-%d %H:%M")
 
             self.message_post(
