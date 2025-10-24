@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <template id="ckus_check_micr">
+        <div class="ckus_check">
+            <t t-if="page['state'] == 'cancelled'">
+                <div class="o-watermark">VOID</div>
+            </t>
+            <div class="sequence_number" t-esc="page['sequence_number']" />
+            <div class="ckus_date" t-esc="page['date']" />
+            <div class="ckus_amount boxed">
+                <t t-esc="page['amount'].replace(o.currency_id.symbol, '')" />
+
+            </div>
+            <div class="row ckus_payee_addr_top" style="margin-top: -50px;">
+                <div
+                    class="col-4 text-left"
+                    t-esc="o.company_id.partner_id"
+                    t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: True}"
+                />
+                <div class="col-1" />
+                <div class="col-5 text-left">
+                            <t
+                        t-esc="o.journal_id.bank_id.name"
+                        style="font-size: 10px;"
+                    /><br />
+                            <t t-esc="o.journal_id.bank_id.street" />,
+                            <t t-esc="o.journal_id.bank_id.city" /><br />
+                            <t t-esc="o.journal_id.bank_id.state.name" />
+                            <t t-esc="o.journal_id.bank_id.zip" /><br />
+                            <t t-esc="o.journal_id.bank_id.country.name" />
+
+                        </div>
+                <div class="col-2" />
+            </div>
+            <div class="ckus_amount_in_word" t-esc="page['amount_in_word']" />
+            <div class="ckus_amount_line"><hr class="first" color="black" /></div>
+            <div class="ckus_text"><span>US Dollar</span></div>
+            <div class="ckus_pay"><span>PAY TO THE ORDER OF</span></div>
+            <div class="row ckus_payee_addr">
+                <div
+                    class="col-4 text-left"
+                    t-esc="page['partner_id']"
+                    t-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: True}"
+                />
+                <div
+                    t-if="o.journal_id.bank_account_id.signature_180"
+                    class="col-8 float-right"
+                    t-field="o.journal_id.bank_account_id.signature_180"
+                    t-options="{&quot;widget&quot;: &quot;image&quot;, &quot;style&quot;:&quot;float: right;&quot;}"
+                />
+            </div>
+            <div class="ckus_sign_line">
+                <hr class="last" color="black" />
+            </div>
+            <div class="ckus_number_micr">
+                <span>c</span><span t-esc="page['sequence_number']" /><span>c</span>
+                <span>a</span><span
+                    t-esc="o.journal_id.bank_account_id.aba_routing"
+                /><span>a</span>
+                <span t-field="o.journal_id.bank_account_id.acc_number" /><span>c</span>
+            </div>
+        </div>
+    </template>
+
+    <template id="ckus_stub_micr">
+        <div t-attf-class="ckus_stub ckus_stub_{{ stub_num }}">
+            <div class="row summary_line">
+                <div class="col-4 text-left">
+                    <span t-esc="page['partner_name']" />
+                </div>
+                <div class="col-4 text-middle">
+                    <span t-esc="page['date']" />
+                </div>
+                <div class="col-4 text-right sequence_number">
+                    <span t-if="page['sequence_number']">Check No:</span><span
+                        t-if="page['sequence_number']"
+                        t-esc="page['sequence_number']"
+                    />
+                </div>
+            </div>
+
+            <table
+                class="table table-bordered table-sm stub_lines"
+                t-if="page['stub_lines']"
+            >
+                <thead><tr>
+                    <th class="text-left">Due Date</th>
+                    <th class="text-left">Description</th>
+                    <th class="text-right">Invoice Amount</th>
+                    <th class="text-right">Balance Due</th>
+                    <th class="text-right">Payment</th>
+                </tr></thead>
+                <tbody>
+                    <t t-foreach="page['stub_lines']" t-as="stub_line">
+                        <t t-if="stub_line.get('header')">
+                            <tr><th colspan="6"><t
+                                        t-esc="stub_line['name']"
+                                    /></th></tr>
+                        </t>
+                        <t t-if="not stub_line.get('header')"><tr>
+                            <td class="text-left"><t
+                                        t-if="stub_line['due_date']"
+                                        t-esc="stub_line['due_date']"
+                                    /></td>
+                            <td
+                                    class="text-left text-truncate"
+                                    style="max-width: 500px;"
+                                ><t t-esc="stub_line['number']" /></td>
+                            <td class="text-right"><t
+                                        t-esc="stub_line['amount_total']"
+                                    /></td>
+                            <td class="text-right">
+                                <t t-esc="stub_line['amount_residual']" />
+                            </td>
+                            <td class="text-right"><t
+                                        t-esc="stub_line['amount_paid']"
+                                    /></td>
+                        </tr></t>
+                    </t>
+                    <tr t-if="page['stub_cropped']"><td
+                            colspan="6"
+                            class="text-right"
+                        >...</td></tr>
+                </tbody>
+            </table>
+            <div class="stub_total_amount">Check Amount:
+                <span class="text-nowrap"><t t-esc="page['amount']" /></span>
+            </div>
+        </div>
+    </template>
+</odoo>

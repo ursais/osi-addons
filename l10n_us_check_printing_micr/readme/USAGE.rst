@@ -1,0 +1,2 @@
+- Go to Accounting > Payments
+- Click on a "print check" button to print report.
