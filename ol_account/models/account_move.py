@@ -297,25 +297,47 @@ class AccountMove(models.Model):
 
         return super(AccountMove, self)._compute_date()
 
+    def _check_ar_ap_setting(self):
+        if self.is_sale_document():
+            ap_contacts = self.env["res.partner"].search(
+                [
+                    ("ap", "=", True),
+                    ("id", "child_of", self.partner_id.id),
+                ]
+            )
+            if not ap_contacts:
+                raise UserError(
+                    _(
+                        """No ‘AP’ contacts are found %s, """
+                        """please add or set the ‘AP’ setting on a contact and try again.""",
+                        self.partner_id.display_name,
+                    )
+                )
+
+        if self.is_purchase_document():
+            ar_contacts = self.env["res.partner"].search(
+                [
+                    ("ar", "=", True),
+                    ("id", "child_of", self.partner_id.id),
+                ]
+            )
+            if not ar_contacts:
+                raise UserError(
+                    _(
+                        """No ‘AR’ contacts are found for %s, """
+                        """please add or set the ‘AR’ setting on a contact and try again.""",
+                        self.partner_id.display_name,
+                    )
+                )
+
+    def action_send_and_print(self):
+        for rec in self:
+            rec._check_ar_ap_setting()
+        return super().action_send_and_print()
+
     def action_invoice_sent(self):
-        if self.is_sale_document() and not self.partner_id.ap:
-            raise UserError(
-                _(
-                   """
-                   No ‘AP’ contacts are found, 
-                   please add or set the ‘AP’ setting on a contact and try again.
-                   """
-                )
-            )
-
-        if self.is_purchase_document() and not self.partner_id.ar:
-            raise UserError(
-            _(
-                """No ‘AR’ contacts are found,
-                please add or set the ‘AR’ setting on a contact and try again."""
-                )
-            )
-
+        for rec in self:
+            rec._check_ar_ap_setting()
         return super().action_invoice_sent()
 
     # END ##########
