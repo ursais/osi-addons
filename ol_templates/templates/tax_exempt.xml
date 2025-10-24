@@ -1,7 +1,7 @@
 <odoo>
 
     <template id="eu_tax_exempt">
-        <t>
+        <t t-if="sale_order.company_id.short_name == 'eu'">
             <!--We need to show this message on the EU side if the customer company has a valid VAT id-->
             <br/>
             <p>Intra EU transaction, 0% VAT rate charged to this invoice based on table II, section a, part 6, Law OB 1968 or article 138, sub 1, guideline 2006/112.</p>
