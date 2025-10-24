@@ -6,18 +6,28 @@
     "category": "Helpdesk",
     "license": "LGPL-3",
     "summary": """Adds the ability to create sales orders from tickets and
-    tickets from sales orders without the need of Project/Timesheet modules.""",
+    tickets from sales orders without the need of Project/Timesheet modules.
+    Includes Shipstation integration monitoring and health checking.""",
     "author": "Open Source Integrators",
     "maintainers": ["opensourceintegrators"],
     "website": "https://github.com/ursais/osi-addons",
     "depends": [
         "helpdesk_sale",
+        "mail",
     ],
+    "external_dependencies": {
+        "python": ["requests"],
+    },
     "data": [
         "security/ir.model.access.csv",
+        "data/shipstation_cron.xml",
+        "data/shipstation_mail_template.xml",
         "views/helpdesk_team_view.xml",
         "views/helpdesk_ticket_view.xml",
         "views/sale_order_view.xml",
+        "views/shipstation_monitor_views.xml",
+        "views/shipstation_config_views.xml",
     ],
     "installable": True,
+    "auto_install": False,
 }

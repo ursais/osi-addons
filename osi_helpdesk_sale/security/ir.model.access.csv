@@ -1,2 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_sale_helpdesk,access_sale_helpdesk,model_helpdesk_ticket,sales_team.group_sale_salesman,1,0,0,0
+access_shipstation_monitor_user,shipstation.monitor.user,model_shipstation_monitor,helpdesk.group_helpdesk_user,1,0,0,0
+access_shipstation_monitor_manager,shipstation.monitor.manager,model_shipstation_monitor,helpdesk.group_helpdesk_manager,1,1,1,1
+access_shipstation_health_log_user,shipstation.health.log.user,model_shipstation_health_log,helpdesk.group_helpdesk_user,1,0,0,0
+access_shipstation_health_log_manager,shipstation.health.log.manager,model_shipstation_health_log,helpdesk.group_helpdesk_manager,1,1,1,1

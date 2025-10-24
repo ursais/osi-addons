@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Shipstation Monitor Tree View -->
+    <record id="shipstation_monitor_view_tree" model="ir.ui.view">
+        <field name="name">shipstation.monitor.tree</field>
+        <field name="model">shipstation.monitor</field>
+        <field name="arch" type="xml">
+            <tree string="Shipstation Monitors" decoration-success="status == 'healthy'" 
+                  decoration-warning="status == 'warning'" 
+                  decoration-danger="status == 'critical'">
+                <field name="display_name"/>
+                <field name="status"/>
+                <field name="last_check"/>
+                <field name="response_time"/>
+                <field name="uptime_percentage"/>
+                <field name="total_checks"/>
+                <field name="alert_enabled"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Shipstation Monitor Form View -->
+    <record id="shipstation_monitor_view_form" model="ir.ui.view">
+        <field name="name">shipstation.monitor.form</field>
+        <field name="model">shipstation.monitor</field>
+        <field name="arch" type="xml">
+            <form string="Shipstation Monitor">
+                <header>
+                    <button name="run_health_check" string="Run Health Check" type="object" 
+                            class="btn-primary" icon="fa-play"/>
+                    <button name="action_view_health_history" string="View History" type="object" 
+                            class="btn-secondary" icon="fa-history"/>
+                    <field name="status" widget="statusbar" statusbar_visible="healthy,warning,critical"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_health_history" type="object" 
+                                class="oe_stat_button" icon="fa-history">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="total_checks"/>
+                                </span>
+                                <span class="o_stat_text">Total Checks</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Monitor Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="api_url"/>
+                            <field name="api_key" password="True"/>
+                            <field name="api_secret" password="True"/>
+                        </group>
+                        <group>
+                            <field name="check_interval"/>
+                            <field name="timeout_seconds"/>
+                            <field name="retry_attempts"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="last_check"/>
+                            <field name="next_check"/>
+                            <field name="response_time"/>
+                            <field name="http_status"/>
+                        </group>
+                        <group>
+                            <field name="uptime_percentage"/>
+                            <field name="successful_checks"/>
+                            <field name="failed_checks"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="alert_enabled"/>
+                            <field name="alert_email"/>
+                            <field name="last_alert"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Error Details" name="error_details">
+                            <field name="error_message" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Shipstation Health Log Tree View -->
+    <record id="shipstation_health_log_view_tree" model="ir.ui.view">
+        <field name="name">shipstation.health.log.tree</field>
+        <field name="model">shipstation.health.log</field>
+        <field name="arch" type="xml">
+            <tree string="Health Check Logs" decoration-success="status == 'healthy'" 
+                  decoration-warning="status == 'warning'" 
+                  decoration-danger="status == 'critical'">
+                <field name="display_name"/>
+                <field name="monitor_id"/>
+                <field name="check_time"/>
+                <field name="status"/>
+                <field name="response_time"/>
+                <field name="http_status"/>
+                <field name="error_message"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Shipstation Health Log Form View -->
+    <record id="shipstation_health_log_view_form" model="ir.ui.view">
+        <field name="name">shipstation.health.log.form</field>
+        <field name="model">shipstation.health.log</field>
+        <field name="arch" type="xml">
+            <form string="Health Check Log">
+                <header>
+                    <button name="action_view_monitor" string="View Monitor" type="object" 
+                            class="btn-secondary" icon="fa-eye"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="monitor_id"/>
+                            <field name="check_time"/>
+                            <field name="status"/>
+                        </group>
+                        <group>
+                            <field name="response_time"/>
+                            <field name="http_status"/>
+                            <field name="retry_count"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="request_url"/>
+                        <field name="user_agent"/>
+                    </group>
+                    <notebook>
+                        <page string="Error Details" name="error_details">
+                            <field name="error_message" readonly="1"/>
+                            <field name="error_type"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Shipstation Monitor Dashboard -->
+    <record id="shipstation_monitor_dashboard_view" model="ir.ui.view">
+        <field name="name">shipstation.monitor.dashboard</field>
+        <field name="model">shipstation.monitor</field>
+        <field name="arch" type="xml">
+            <kanban string="Shipstation Monitor Dashboard" 
+                    class="o_kanban_small_column">
+                <field name="name"/>
+                <field name="status"/>
+                <field name="last_check"/>
+                <field name="response_time"/>
+                <field name="uptime_percentage"/>
+                <field name="total_checks"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                        </strong>
+                                    </div>
+                                    <div class="o_kanban_record_top_right">
+                                        <span t-attf-class="badge badge-#{record.status.raw_value == 'healthy' and 'success' or record.status.raw_value == 'warning' and 'warning' or 'danger'}">
+                                            <field name="status"/>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div class="o_kanban_record_subtitle">
+                                        Last Check: <field name="last_check"/>
+                                    </div>
+                                    <div class="o_kanban_record_subtitle">
+                                        Response Time: <field name="response_time"/> ms
+                                    </div>
+                                    <div class="o_kanban_record_subtitle">
+                                        Uptime: <field name="uptime_percentage"/>%
+                                    </div>
+                                    <div class="o_kanban_record_subtitle">
+                                        Total Checks: <field name="total_checks"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Actions -->
+    <record id="action_shipstation_monitor" model="ir.actions.act_window">
+        <field name="name">Shipstation Monitors</field>
+        <field name="res_model">shipstation.monitor</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="context">{'search_default_healthy': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first Shipstation monitor!
+            </p>
+            <p>
+                Monitor your Shipstation integration health and get alerts when issues occur.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_shipstation_health_log" model="ir.actions.act_window">
+        <field name="name">Health Check Logs</field>
+        <field name="res_model">shipstation.health.log</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_critical': 1}</field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_shipstation_monitor_root" 
+              name="Shipstation Monitoring" 
+              web_icon="osi_helpdesk_sale,static/description/icon.png"
+              sequence="100"/>
+    
+    <menuitem id="menu_shipstation_monitor" 
+              name="Monitors" 
+              parent="menu_shipstation_monitor_root" 
+              action="action_shipstation_monitor" 
+              sequence="10"/>
+    
+    <menuitem id="menu_shipstation_health_log" 
+              name="Health Logs" 
+              parent="menu_shipstation_monitor_root" 
+              action="action_shipstation_health_log" 
+              sequence="20"/>
+
+</odoo>

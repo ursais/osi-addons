@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Automated Shipstation Health Check Cron Job -->
+    <record id="ir_cron_shipstation_health_check" model="ir.cron">
+        <field name="name">Shipstation Health Check</field>
+        <field name="model_id" ref="model_shipstation_monitor"/>
+        <field name="state">code</field>
+        <field name="code">model.run_scheduled_checks()</field>
+        <field name="interval_number">15</field>
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="doall">False</field>
+    </record>
+
+    <!-- Cleanup Old Health Logs Cron Job -->
+    <record id="ir_cron_shipstation_cleanup_logs" model="ir.cron">
+        <field name="name">Shipstation Log Cleanup</field>
+        <field name="model_id" ref="model_shipstation_health_log"/>
+        <field name="state">code</field>
+        <field name="code">model.cleanup_old_logs()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="doall">False</field>
+    </record>
+</odoo>

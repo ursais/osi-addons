@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Shipstation Configuration Settings View -->
+    <record id="res_config_settings_view_form_shipstation" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.shipstation</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Shipstation Integration" string="Shipstation Integration" data-key="osi_helpdesk_sale">
+                    <h2>Shipstation Integration Monitoring</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="shipstation_enabled"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="shipstation_enabled"/>
+                                <div class="text-muted">
+                                    Enable Shipstation integration monitoring system
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt16 o_settings_container" invisible="not shipstation_enabled">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="shipstation_default_api_url"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="shipstation_default_api_url"/>
+                                <div class="text-muted">
+                                    Default Shipstation API URL for new monitors
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="shipstation_global_alert_email"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="shipstation_global_alert_email"/>
+                                <div class="text-muted">
+                                    Global email address for Shipstation alerts
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt16 o_settings_container" invisible="not shipstation_enabled">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="shipstation_default_check_interval"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="shipstation_default_check_interval"/>
+                                <div class="text-muted">
+                                    Default health check interval in minutes
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="shipstation_default_timeout"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="shipstation_default_timeout"/>
+                                <div class="text-muted">
+                                    Default request timeout in seconds
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt16 o_settings_container" invisible="not shipstation_enabled">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="shipstation_auto_create_monitor"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="shipstation_auto_create_monitor"/>
+                                <div class="text-muted">
+                                    Automatically create a default monitor when needed
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="shipstation_log_retention_days"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="shipstation_log_retention_days"/>
+                                <div class="text-muted">
+                                    Number of days to keep health check logs
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt16 o_settings_container" invisible="not shipstation_enabled">
+                        <div class="col-12">
+                            <div class="o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <button name="action_test_shipstation_connection" 
+                                            string="Test Connection" 
+                                            type="object" 
+                                            class="btn btn-secondary"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label>Test Connection</label>
+                                    <div class="text-muted">
+                                        Test Shipstation connection with current settings
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt16 o_settings_container" invisible="not shipstation_enabled">
+                        <div class="col-12">
+                            <div class="o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <button name="action_create_default_monitor" 
+                                            string="Create Default Monitor" 
+                                            type="object" 
+                                            class="btn btn-primary"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label>Create Default Monitor</label>
+                                    <div class="text-muted">
+                                        Create a default Shipstation monitor with current settings
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

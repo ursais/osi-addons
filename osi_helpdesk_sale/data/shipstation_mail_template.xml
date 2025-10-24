@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Critical Alert Email Template -->
+    <record id="shipstation_critical_alert_template" model="mail.template">
+        <field name="name">Shipstation Critical Alert</field>
+        <field name="model_id" ref="model_shipstation_monitor"/>
+        <field name="subject">🚨 CRITICAL: Shipstation Integration Down - {{ object.name }}</field>
+        <field name="email_from">{{ (object.alert_email and object.alert_email) or 'noreply@company.com' }}</field>
+        <field name="email_to">{{ object.alert_email }}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <div style="margin: 0px; padding: 0px; font-size: 13px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <strong>CRITICAL ALERT: Shipstation Integration is DOWN</strong>
+                    </p>
+                    <br/>
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <strong>Monitor:</strong> {{ object.name }}<br/>
+                        <strong>Status:</strong> <span style="color: red;">{{ object.status.upper() }}</span><br/>
+                        <strong>Last Check:</strong> {{ object.last_check }}<br/>
+                        <strong>Error Message:</strong> {{ object.error_message or 'No additional details' }}<br/>
+                        <strong>HTTP Status:</strong> {{ object.http_status or 'N/A' }}<br/>
+                        <strong>Response Time:</strong> {{ object.response_time or 'N/A' }} ms
+                    </p>
+                    <br/>
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <strong>Immediate Action Required:</strong><br/>
+                        1. Check Shipstation service status<br/>
+                        2. Verify API credentials<br/>
+                        3. Review network connectivity<br/>
+                        4. Check Odoo logs for additional details
+                    </p>
+                    <br/>
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <strong>Monitor Dashboard:</strong><br/>
+                        <a href="{{ object.get_base_url() }}/web#id={{ object.id }}&amp;model=shipstation.monitor&amp;view_type=form">
+                            View Monitor Details
+                        </a>
+                    </p>
+                    <br/>
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        This is an automated alert from the Odoo Shipstation Monitoring System.
+                    </p>
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <!-- Warning Alert Email Template -->
+    <record id="shipstation_warning_alert_template" model="mail.template">
+        <field name="name">Shipstation Warning Alert</field>
+        <field name="model_id" ref="model_shipstation_monitor"/>
+        <field name="subject">⚠️ WARNING: Shipstation Integration Issue - {{ object.name }}</field>
+        <field name="email_from">{{ (object.alert_email and object.alert_email) or 'noreply@company.com' }}</field>
+        <field name="email_to">{{ object.alert_email }}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <div style="margin: 0px; padding: 0px; font-size: 13px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <strong>WARNING: Shipstation Integration Issue Detected</strong>
+                    </p>
+                    <br/>
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <strong>Monitor:</strong> {{ object.name }}<br/>
+                        <strong>Status:</strong> <span style="color: orange;">{{ object.status.upper() }}</span><br/>
+                        <strong>Last Check:</strong> {{ object.last_check }}<br/>
+                        <strong>Error Message:</strong> {{ object.error_message or 'No additional details' }}<br/>
+                        <strong>HTTP Status:</strong> {{ object.http_status or 'N/A' }}<br/>
+                        <strong>Response Time:</strong> {{ object.response_time or 'N/A' }} ms
+                    </p>
+                    <br/>
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <strong>Recommended Actions:</strong><br/>
+                        1. Monitor the situation closely<br/>
+                        2. Check if this is a temporary issue<br/>
+                        3. Review recent changes to Shipstation configuration<br/>
+                        4. Consider escalating if issues persist
+                    </p>
+                    <br/>
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        <strong>Monitor Dashboard:</strong><br/>
+                        <a href="{{ object.get_base_url() }}/web#id={{ object.id }}&amp;model=shipstation.monitor&amp;view_type=form">
+                            View Monitor Details
+                        </a>
+                    </p>
+                    <br/>
+                    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                        This is an automated alert from the Odoo Shipstation Monitoring System.
+                    </p>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

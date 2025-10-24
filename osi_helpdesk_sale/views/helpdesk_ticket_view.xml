@@ -33,6 +33,75 @@
                     <field name="sale_count" widget="statinfo" string="Sales" />
                 </button>
             </xpath>
+            
+            <!-- Shipstation Integration Section -->
+            <xpath expr="//field[@name='description']" position="after">
+                <group string="Shipstation Integration" name="shipstation_integration">
+                    <group>
+                        <field name="shipstation_status" widget="badge" 
+                               decoration-success="shipstation_status == 'healthy'"
+                               decoration-warning="shipstation_status == 'warning'"
+                               decoration-danger="shipstation_status == 'critical'"
+                               decoration-muted="shipstation_status == 'unknown' or shipstation_status == 'not_configured'"/>
+                        <field name="shipstation_last_check"/>
+                        <field name="shipstation_response_time"/>
+                    </group>
+                    <group>
+                        <field name="shipstation_monitor_id" readonly="1"/>
+                        <button name="check_shipstation_status" string="Check Status" type="object" 
+                                class="btn btn-secondary" icon="fa-refresh"/>
+                        <button name="action_view_shipstation_monitor" string="Monitor Dashboard" type="object" 
+                                class="btn btn-info" icon="fa-dashboard"/>
+                        <button name="action_view_shipstation_logs" string="View Logs" type="object" 
+                                class="btn btn-secondary" icon="fa-history"/>
+                    </group>
+                </group>
+                <group string="Shipstation Error Details" name="shipstation_error" 
+                       invisible="not shipstation_error_message">
+                    <field name="shipstation_error_message" readonly="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Shipstation Status in Tree View -->
+    <record id="helpdesk_ticket_view_helpdesk_sale_tree" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.helpdesk_sale.tree</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_tree" />
+        <field name="arch" type="xml">
+            <field name="stage_id" position="after">
+                <field name="shipstation_status" widget="badge" 
+                       decoration-success="shipstation_status == 'healthy'"
+                       decoration-warning="shipstation_status == 'warning'"
+                       decoration-danger="shipstation_status == 'critical'"
+                       decoration-muted="shipstation_status == 'unknown' or shipstation_status == 'not_configured'"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Search View for Shipstation Status -->
+    <record id="helpdesk_ticket_view_helpdesk_sale_search" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.helpdesk_sale.search</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_search" />
+        <field name="arch" type="xml">
+            <field name="stage_id" position="after">
+                <field name="shipstation_status"/>
+            </field>
+            <filter name="stage" position="after">
+                <separator/>
+                <filter string="Shipstation Healthy" name="shipstation_healthy" 
+                        domain="[('shipstation_status', '=', 'healthy')]"/>
+                <filter string="Shipstation Warning" name="shipstation_warning" 
+                        domain="[('shipstation_status', '=', 'warning')]"/>
+                <filter string="Shipstation Critical" name="shipstation_critical" 
+                        domain="[('shipstation_status', '=', 'critical')]"/>
+                <filter string="Shipstation Unknown" name="shipstation_unknown" 
+                        domain="[('shipstation_status', '=', 'unknown')]"/>
+                <filter string="Shipstation Not Configured" name="shipstation_not_configured" 
+                        domain="[('shipstation_status', '=', 'not_configured')]"/>
+            </filter>
         </field>
     </record>
 
