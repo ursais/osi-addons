@@ -6,7 +6,6 @@
         <field name="inherit_id" ref="sale_subscription.sale_subscription_order_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//page[@name='notes']/field[@name='internal_note_display']" position="after">
-                <field name="delivery_note" nolabel="1" placeholder="Delivery Note"/>
                 <field name="mrp_note" nolabel="1" placeholder="MRP Note"/>
             </xpath>
         </field>

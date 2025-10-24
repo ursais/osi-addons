@@ -278,7 +278,6 @@
             <div class="ol_picking_comments_header">Comments</div>
             <div class="ol_picking_comments_content">
                 <t t-if="picking.picking_type_code == 'outgoing'">
-                    <div t-esc="sale_order.delivery_note" />
                     <div t-esc="picking.note" />
                 </t>
                 <t t-if="picking.picking_type_code == 'internal'">

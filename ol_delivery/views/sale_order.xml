@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="view_order_form_with_carrier" model="ir.ui.view">
+    <record id="view_order_form_with_carrier_ol_delivery" model="ir.ui.view">
         <field name="name">ol_delivery.sale.order.form.view.with_carrier</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="delivery.view_order_form_with_carrier" />
@@ -9,6 +9,7 @@
             <field name="payment_term_id" position="after">
                 <field name="delivery_account_number" />
                 <field name="delivery_notes" />
+                <field name="general_notes" />
                 <field name="delivery_price_type"
                     invisible="1" />
                 <field name="delivery_override_reason"

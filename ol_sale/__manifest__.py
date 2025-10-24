@@ -51,7 +51,6 @@
         "views/sale_order_view.xml",
         "views/res_partner_view.xml",
         "views/sale_subscription_views.xml",
-        "views/stock_picking_view.xml",
         "views/mrp_production_view.xml",
         "views/payment_method_view.xml",
         "views/confirmation_email.xml",
