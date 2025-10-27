@@ -24,7 +24,7 @@ class IrActionsServer(models.Model):
         ticket_type_ids = self.env["helpdesk.ticket.type"].search([])
         team_id = self.env.ref('ol_helpdesk_repair_batch.helpdesk_team_customer_rma')
         tema_eu_id = self.env.ref('ol_helpdesk_repair_batch.helpdesk_team_customer_rma_eu')
-        self._cr.execute("select id,assigned_to,state,type,warranty_expiration,rush,sale_order_id,partner_id,summary,company_id,flags,shipping_method,shipping_account from helpdesk_rma")
+        self._cr.execute("select id,name,assigned_to,state,type,warranty_expiration,rush,sale_order_id,partner_id,summary,company_id,flags,shipping_method,shipping_account from helpdesk_rma")
         rma_data_ids = self._cr.dictfetchall()
         counter = 1
         
@@ -59,6 +59,7 @@ class IrActionsServer(models.Model):
 
             vals = {
                 "user_id": rma.get('assigned_to'),
+                "name": rma.get('name'),
                 "ticket_type_id": type.id,
                 "team_id": team_id.id if rma.get('company_id') == 1 else tema_eu_id.id,
                 "stage_id": get_stage(rma.get('state', False)),
@@ -84,10 +85,11 @@ class IrActionsServer(models.Model):
                 if len(historical_repair_order_ids) == 1:
                     repair = repair_obj.browse(historical_repair_order_ids)
                     if repair.lot_id:
-                        repair.lot_id.warranty_expiration_date = rma.get('warranty_expiration')
+                        self._cr.execute("update stock_lot set warranty_expiration_date = %s where id = %s", (rma.get('warranty_expiration'), repair.lot_id.id))
+                        # repair.lot_id.warranty_expiration_date = rma.get('warranty_expiration')
 
             if (counter + 1) % 10000 == 0:  # We save every 100k records
-                _logger.info("===============records %s============"% (counter, vals))
+                _logger.info("===============records %s============"% (counter))
                 self.env.cr.commit()
 
 
@@ -339,7 +341,8 @@ class IrActionsServer(models.Model):
             "street": "Arendsplein 60",
             "city": "Oosterhout",
             "zip": "4901 KX",
-            "country" : env.ref('base.nl').id
+            "country" : env.ref('base.nl').id,
+            "bic": 'RABONL2U',
         })
 
         bank = env["res.partner.bank"].browse(2)
@@ -367,13 +370,13 @@ class IrActionsServer(models.Model):
         # --- Step 1: Create Base View Locations ---
         locations_to_create_us = [
             # US
-            ("Primary", "Stock", "view"),
-            ("Overstock", "WH", "view"),
+            ("Primary", "Stock", "internal"),
+            ("Overstock", "WH", "internal"),
         ]
         locations_to_create_eu = [
             # EU
-            ("Primary", "Stock", "view"),
-            ("Overstock", "EU", "view"),
+            ("Primary", "Stock", "internal"),
+            ("Overstock", "EU", "internal"),
         ]
 
         for name, parent_name, usage in locations_to_create_us:
@@ -533,7 +536,6 @@ class IrActionsServer(models.Model):
             for row in sheet.iter_rows(min_row=3):
                 name = row[0].value
                 parent = row[1].value
-                # print ("\n parent", parent, name)
                 if parent in ('WH/Stock/Primary', 'EU/Stock/Primary'):
                     loaction = primary.id
                 if parent in ('EU/Overstock','WH/Overstock'):
@@ -745,6 +747,47 @@ class IrActionsServer(models.Model):
                                     WHERE fr.id = ss.failure_reason 
                                     AND fr.name = %s 
                                     AND ss.company_id = %s;""", (reason.id,reason.name, company.id))
+    def set_localizations(self):
+        """Set localizations for the US/EU companies."""
+
+        companies = self.env["res.company"].sudo().search([])
+        for company in companies:
+            if not company.chart_template:
+                # Set US Company template
+                if company.id in [
+                    1,
+                    3,
+                    4,
+                    5,
+                    7,
+                    8,
+                    11,
+                ]:
+                    company.sudo().write({"chart_template": "generic_coa"})
+                # Set NL Template
+                if company.id in [2, 10]:
+                    company.sudo().write({"chart_template": "nl"})
+                    self.env["account.chart.template"].try_loading(
+                        company.chart_template, company=company.id
+                    )
+                # Set TW Template
+                if company.id == 6:
+                    company.sudo().write({"chart_template": "tw"})
+                    self.env["account.chart.template"].try_loading(
+                        company.chart_template, company=company.id
+                    )
+                # Set DE Template
+                if company.id == 9:
+                    company.sudo().write({"chart_template": "de_skr04"})
+                    self.env["account.chart.template"].try_loading(
+                        company.chart_template, company=company.id
+                    )
+                # Set MY Template
+                if company.id == 12:
+                    company.sudo().write({"chart_template": "my"})
+                    self.env["account.chart.template"].try_loading(
+                        company.chart_template, company=company.id
+                    )    
 
     def update_product_category_account(self):
         _logger.info("===============update_product_category_account====================")
@@ -1949,7 +1992,7 @@ class IrActionsServer(models.Model):
                 "ir.model",
             ):
                 table = data.model.replace(".", "_")
-                _logger.info(data.read([]))
+#                _logger.info(data.read([]))
                 if table in ("ir_ui_view", "ir_ui_menu"):
                     self._cr.execute("alter table %s DISABLE TRIGGER ALL" % (table,))
                     # otable = data.name.split('model_')[1]
@@ -2037,6 +2080,7 @@ class IrActionsServer(models.Model):
             "ol_crm_mrp_plm",
             "ol_crm_purchase_request",
             "ol_crm_sale_blanket_order",
+            "sale",
             "ol_exception",
             "ol_job_cost_estimate_customer",
             "ol_mrp_plm_cancel",
@@ -2053,6 +2097,7 @@ class IrActionsServer(models.Model):
             "ol_purchase_request_estimate",
             "ol_rush_order",
             "ol_account",
+            "ol_stock_constrained_availability",
             "ol_sale",
             "ol_sale_blanket_order",
             "ol_sale_stock_tags",
@@ -2193,6 +2238,55 @@ class IrActionsServer(models.Model):
             "ol_mrp_plm_product_configuration",
             "ol_product_currency",
             "simplify_access_management",
+            "account_inter_company_rules",
+            "account_reports",
+            "base_substate",
+            "crm_project_task",
+            "delivery_dhl",
+            "delivery_dhl_rest",
+            "delivery_fedex_rest",
+            "delivery_ups_rest",
+            "delivery_usps_rest",
+            "frepple",
+            "l10n_de_reports",
+            "l10n_eu_oss",
+            "l10n_my_reports",
+            "l10n_nl_intrastat",
+            "l10n_tw_reports",
+            "l10n_us_payment_nacha",
+            "mrp_bom_comparison",
+            "mrp_repair_component_history",
+            "oi_login_as",
+            "ol_api",
+            "ol_bank_transfer_email",
+            "ol_graphql",
+            "ol_graphql_partner",
+            "ol_graphql_product",
+            "ol_graphql_sale",
+            "ol_graphql_user",
+            "ol_l10n_nl_intrastat",
+            "ol_multicompany",
+            "ol_product_create_wizard",
+            "ol_product_system_stock",
+            "ol_queue_job",
+            "ol_tax_and_shipping_api",
+            "ol_template",
+            "ol_templates",
+            "ol_ui",
+            "ol_webhooks",
+            "ol_webhooks_graphql",
+            "osi_l10n_us_payment_nacha_email",
+            "payment_paypal",
+            "procurement_purchase_no_grouping",
+            "purchase_last_price_info",
+            "purchase_request",
+            "purchase_request_tier_validation",
+            "purchase_tier_validation",
+            "sale_order_revision",
+            "sale_substate",
+            "stock_intrastat",
+            "stock_no_negative",
+            "web_company_color",
         ]
 
         for module in modules:
