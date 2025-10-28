@@ -6,7 +6,7 @@
     <field name="inherit_id" ref="base.view_company_form" />
     <field name="arch" type="xml">
       <xpath expr="//notebook/page[last()]" position="after">
-        <page string="Delivery Settings">
+        <page name="delivery_settings" string="Delivery Settings">
           <group name="uplift_settings" string="Uplift Settings">
             <field name="minimum_volume" />
             <field name="use_delivery_uplift" />

@@ -5,7 +5,9 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools import pdf
 
 from .ups_request import OnLogicUPSRequest
-from odoo.addons.ol_delivery.models.delivery_request_objects import OnLogicDeliveryPackage
+from odoo.addons.ol_delivery.models.delivery_request_objects import (
+    OnLogicDeliveryPackage,
+)
 
 
 class ProviderUPS(models.Model):
@@ -39,7 +41,9 @@ class ProviderUPS(models.Model):
         Divide the cubic size in inches by the divisor to calculate the dimensional weight in pounds. Increase any fraction to the next whole pound.
         The divisor varies by rate type: 139 for Daily Rates; 166 for Retail Rates. Dimensional Weight = (L x W x H) ÷ Divisor.
         """
-        cubic_size = package_type.packaging_length * package_type.width * package_type.height
+        cubic_size = (
+            package_type.packaging_length * package_type.width * package_type.height
+        )
         if self.env.company.short_name == "us":
             divisor = 166
         elif self.env.company.short_name == "eu":
@@ -73,7 +77,9 @@ class ProviderUPS(models.Model):
         order_weight = self.env.context.get("order_weight", False)
         total_weight = order_weight or total_weight
         if total_weight == 0.0:
-            weight_uom_name = self.env["product.template"]._get_weight_uom_name_from_ir_config_parameter()
+            weight_uom_name = self.env[
+                "product.template"
+            ]._get_weight_uom_name_from_ir_config_parameter()
             raise UserError(
                 _(
                     "The package cannot be created because the total weight of the products in the picking is 0.0 %s",
@@ -131,7 +137,12 @@ class ProviderUPS(models.Model):
 
         check_value = ups._check_required_value(order=order)
         if check_value:
-            return {"success": False, "price": 0.0, "error_message": check_value, "warning_message": False}
+            return {
+                "success": False,
+                "price": 0.0,
+                "error_message": check_value,
+                "warning_message": False,
+            }
 
         total_qty = sum(
             [
@@ -187,7 +198,12 @@ class ProviderUPS(models.Model):
                 price = 0.0
 
             service_name = next(
-                (x[1] for x in service_types if x[0] == result.get("service_code", False)), None
+                (
+                    x[1]
+                    for x in service_types
+                    if x[0] == result.get("service_code", False)
+                ),
+                None,
             )
 
             result.update(
@@ -229,6 +245,7 @@ class ProviderUPS(models.Model):
                 label_file_type=self.ups_label_file_type,
                 ups_carrier_account=ups_carrier_account,
                 picking=picking,
+                env=self.env,
             )
 
             order = picking.sale_id
@@ -244,25 +261,38 @@ class ProviderUPS(models.Model):
                     [("name", "=", result["currency_code"])], limit=1
                 )
                 price = quote_currency._convert(
-                    float(result["price"]), currency_order, company, order.date_order or fields.Date.today()
+                    float(result["price"]),
+                    currency_order,
+                    company,
+                    order.date_order or fields.Date.today(),
                 )
 
             package_labels = result.get("label_binary_data", [])
 
             carrier_tracking_ref = "+".join([pl[0] for pl in package_labels])
             logmessage = _(
-                "Shipment created into UPS<br/>" "<b>Tracking Numbers:</b> %s<br/>" "<b>Packages:</b> %s"
+                "Shipment created into UPS<br/>"
+                "<b>Tracking Numbers:</b> %s<br/>"
+                "<b>Packages:</b> %s"
             ) % (carrier_tracking_ref, ",".join([p.name for p in packages if p.name]))
             if self.ups_label_file_type != "GIF":
                 attachments = [
-                    ("LabelUPS-%s.%s" % (pl[0], self.ups_label_file_type), pl[1]) for pl in package_labels
+                    ("LabelUPS-%s.%s" % (pl[0], self.ups_label_file_type), pl[1])
+                    for pl in package_labels
                 ]
             else:
-                attachments = [("LabelUPS.pdf", pdf.merge_pdf([pl[1] for pl in package_labels]))]
+                attachments = [
+                    ("LabelUPS.pdf", pdf.merge_pdf([pl[1] for pl in package_labels]))
+                ]
             if result.get("invoice_binary_data"):
-                attachments.append(("UPSCommercialInvoice.pdf", result["invoice_binary_data"]))
+                attachments.append(
+                    ("UPSCommercialInvoice.pdf", result["invoice_binary_data"])
+                )
             picking.message_post(body=logmessage, attachments=attachments)
-            shipping_data = {"exact_price": price, "tracking_number": carrier_tracking_ref}
+            shipping_data = {
+                "exact_price": price,
+                "tracking_number": carrier_tracking_ref,
+            }
             res = res + [shipping_data]
             if self.return_label_on_delivery:
                 try:

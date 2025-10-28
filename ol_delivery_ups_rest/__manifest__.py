@@ -12,6 +12,7 @@
         "views/sale_order.xml",
         "views/stock_package_type.xml",
         "views/stock_picking.xml",
+        "views/res_company.xml",
     ],
     "license": "AGPL-3",
 }

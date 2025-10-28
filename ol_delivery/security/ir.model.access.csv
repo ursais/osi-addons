@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_put_in_pack_wizard,access_put_in_pack_wizard,model_put_in_pack_wizard,ol_product_operations_category.operations_technical_team,1,1,1,1

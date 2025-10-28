@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_company_form" model="ir.ui.view">
+        <field name="name">ol_delivery_ups_rest.company.form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="ol_delivery.view_company_form" />
+        <field name="arch" type="xml">
+            <page name="delivery_settings" position="inside">
+                <group name="ups_delivery_settings" string="UPS Delivery Settings">
+                    <field name="incoterm_id"/>
+                </group>
+            </page>
+        </field>
+    </record>
+</odoo>
