@@ -5,7 +5,7 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form" />
         <field name="arch" type="xml">
-            <xpath expr="//header" position="inside">
+            <xpath expr="//sheet" position="inside">
                 <field name="is_ups_delivery" invisible="1" />
             </xpath>
             <notebook position="inside">
