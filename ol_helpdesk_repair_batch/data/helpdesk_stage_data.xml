@@ -42,6 +42,7 @@
     <record id="helpdesk_stage_rma_new" model="helpdesk.stage">
         <field name="name">New - Info Gather</field>
         <field name="team_ids" eval="[(4, ref('helpdesk_team_customer_rma')), (4, ref('helpdesk_team_customer_rma_eu'))]"/>
+        <field name="template_id" ref="email_template_rma_create"/>
         <field name="sequence">11</field>
     </record>
 
@@ -61,6 +62,7 @@
     <record id="helpdesk_stage_rma_in_progress" model="helpdesk.stage">
         <field name="name">RMA In Progress</field>
         <field name="team_ids" eval="[(4, ref('helpdesk_team_customer_rma')), (4, ref('helpdesk_team_customer_rma_eu'))]"/>
+        <field name="template_id" ref="email_template_rma_in_progress"/>
         <field name="sequence">14</field>
     </record>
 
@@ -68,7 +70,7 @@
         <field name="name">RMA Shipped</field>
         <field name="team_ids" eval="[(4, ref('helpdesk_team_customer_rma')), (4, ref('helpdesk_team_customer_rma_eu'))]"/>
         <field name="sequence">15</field>
-        <field name="template_id" ref="email_template_rma_shipped"/>
+        <field name="template_id" ref="email_template_rma_complete"/>
     </record>
 
     <record id="helpdesk_stage_rma_resolved" model="helpdesk.stage">
