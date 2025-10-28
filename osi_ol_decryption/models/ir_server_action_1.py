@@ -747,47 +747,11 @@ class IrActionsServer(models.Model):
                                     WHERE fr.id = ss.failure_reason 
                                     AND fr.name = %s 
                                     AND ss.company_id = %s;""", (reason.id,reason.name, company.id))
-    def set_localizations(self):
-        """Set localizations for the US/EU companies."""
+        self._cr.execute("select name from failure_reason where active ='t' group by name;")
+        failure_reason = [a[0] for a in self._cr.fetchall()]
+        reason_ids = self.env['scrap.reason.code'].search([('name', 'not in', failure_reason)])
+        reason_ids.write({'active': False})
 
-        companies = self.env["res.company"].sudo().search([])
-        for company in companies:
-            if not company.chart_template:
-                # Set US Company template
-                if company.id in [
-                    1,
-                    3,
-                    4,
-                    5,
-                    7,
-                    8,
-                    11,
-                ]:
-                    company.sudo().write({"chart_template": "generic_coa"})
-                # Set NL Template
-                if company.id in [2, 10]:
-                    company.sudo().write({"chart_template": "nl"})
-                    self.env["account.chart.template"].try_loading(
-                        company.chart_template, company=company.id
-                    )
-                # Set TW Template
-                if company.id == 6:
-                    company.sudo().write({"chart_template": "tw"})
-                    self.env["account.chart.template"].try_loading(
-                        company.chart_template, company=company.id
-                    )
-                # Set DE Template
-                if company.id == 9:
-                    company.sudo().write({"chart_template": "de_skr04"})
-                    self.env["account.chart.template"].try_loading(
-                        company.chart_template, company=company.id
-                    )
-                # Set MY Template
-                if company.id == 12:
-                    company.sudo().write({"chart_template": "my"})
-                    self.env["account.chart.template"].try_loading(
-                        company.chart_template, company=company.id
-                    )    
 
     def update_product_category_account(self):
         _logger.info("===============update_product_category_account====================")

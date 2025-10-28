@@ -637,13 +637,12 @@ class IrActionsServer(models.Model):
 
         offset = 0
         counter = 1
-
+#        print ("=============total_products===========", total_products)
         while offset < total_products:
             batch_templates = all_templates[offset:offset + batch_size]
             _logger.info("Processing batch: Offset=%s, Size=%s", offset, len(batch_templates))
-
             for template_id, template_name in batch_templates:
-                # _logger.info("==> Processing Product: %s (ID: %s) [#%s]", template_name, template_id, counter)
+                _logger.info("==> Processing Product: %s (ID: %s) [#%s]", template_name, template_id, counter)
 
                 # Check for existing BOM
                 t_check = time.time()
@@ -652,55 +651,60 @@ class IrActionsServer(models.Model):
                     _logger.info("[Skipped] Existing BOM for: %s [%.3f sec]", template_name, time.time() - t_check)
                     counter += 1
                     continue
-
                 # Create BOM
                 
-                new_bom = MrpBom.create({
+                new_bom = MrpBom.with_context(is_data_migration=True).create({
                     'product_tmpl_id': template_id,
                     'product_qty': 1.0,
                     'type': 'normal',
                     'scaffolding_bom': True,
                 })
-                
+                new_bom_id = new_bom.id
+                # new_bom._compute_available_config_components()
                 # Get attribute lines
                 attribute_lines = ProductTemplateAttributeLine.search([('product_tmpl_id', '=', template_id)])
-
                 for line in attribute_lines:
                     valid_values = line.value_ids.filtered(lambda v: v.product_id)
 
                     for value in valid_values:
                         product = value.product_id
+                        display_name = product.display_name
+                        product_id = product.id
+                        product_tmpl_id = product.product_tmpl_id.id
+                        value_id = value.id
+                        
 
                         # Lookup or create config set using cached dict
-                        config_set = config_set_map.get(product.display_name)
+                        config_set = config_set_map.get(display_name)
                         if not config_set:
-                            config_set = MrpBomLineConfigSet.create({"name": product.display_name})
-                            config_set_map[product.display_name] = config_set
-
+                            config_set = MrpBomLineConfigSet.create({"name": display_name})
+                            config_set_map[display_name] = config_set
                         # Check if config link exists in DB
                         cr.execute("""
                             SELECT 1 FROM mrp_bom_line_configuration_product_attribute_value_rel
                             WHERE product_attribute_value_id = %s
-                        """, (value.id,))
+                        """, (value_id,))
                         if not cr.fetchone():
                             MrpBomLineConfig.create({
                                 "config_set_id": config_set.id,
-                                "value_ids": [(6, 0, [value.id])]
-                            })
-                        
+                                "value_ids": [(6, 0, [value_id])]
+                            })  
                         # Create BOM line
                         MrpBomLine.create({
-                            'bom_id': new_bom.id,
-                            'product_id': product.id,
+                            'bom_id': new_bom_id,
+                            'product_id': product_id,
                             'product_qty': 1.0,
                             'config_set_id': config_set.id,
+                            'product_tmpl_id': product_tmpl_id
                         })
                         
 
-                _logger.info("✅ Finished BOM creation for: %s", template_name)
+                #_logger.info("✅ Finished BOM creation for: %s", template_name)
                 counter += 1
-
-            self.env.cr.commit()
+                template_id = ProductTemplate.browse(template_id)
+                template_id.with_context(by_pass=True)._compute_has_advanced_configuration()
+                self = self.with_context(bypass=True)
+                self._cr.commit()
             offset += batch_size
             _logger.info("Batch committed. Offset now at: %s", offset)
 
@@ -830,7 +834,7 @@ class IrActionsServer(models.Model):
         cr.execute("update product_template as pt set public_destination = (select tpt.public_destination from temp_product_temp_v13_vp as tpt where tpt.id=pt.id); ")
         
         _logger.info("\n\n==Script 8:Company IDS Many2Many Product Template Migration=")
-        cr.execute("INSERT INTO product_template_company_display_rel (product_template_id, company_id) SELECT product_template_id, res_company_id FROM temp_product_template_res_company_rel_v13_VP;")
+#        cr.execute("INSERT INTO product_template_company_display_rel (product_template_id, company_id) SELECT product_template_id, res_company_id FROM temp_product_template_res_company_rel_v13_VP;")
 
         AttributeValues = self.env["product.attribute.value"].search([("active","=",True),("product_id","!=",False)])
         AttributeValues._compute_company_ids()
@@ -1196,7 +1200,7 @@ class IrActionsServer(models.Model):
                 row = cr.fetchone()
                 tobe_update_value = AttributeValue.browse(row[0]) if row else False
 
-            _logger.info("tobe_update_value: %s records", tobe_update_value)
+            #_logger.info("tobe_update_value: %s records", tobe_update_value)
             if not tobe_update_value:
                 continue
 
@@ -1243,10 +1247,10 @@ class IrActionsServer(models.Model):
                 WHERE id = %s;
             """
             cr.execute(update_query, (ar, ap, followup, contact_id))
-            _logger.info("Updated Partner ID %s with values: ar=%s, ap=%s, followup=%s",
-                         contact_id, ar, ap, followup)
 
         # Commit once after loop
+        _logger.info("update_ar_ap_followup_contacts Script Completed")
+
         self.env.cr.commit()
 
     def update_phantoms_bom_data(self):
@@ -1331,6 +1335,10 @@ class IrActionsServer(models.Model):
                 key=lambda x: (x[0], x[1])
             )
             return lines1 == lines2
+<<<<<<< Updated upstream
+=======
+    
+>>>>>>> Stashed changes
         for product in products:
             phantom_boms = self.env["mrp.bom"]
             used_boms = self.env["mrp.bom"]
