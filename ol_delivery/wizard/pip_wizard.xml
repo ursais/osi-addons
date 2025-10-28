@@ -1,0 +1,47 @@
+<odoo>
+    <record id="view_put_in_pack_wizard" model="ir.ui.view">
+        <field name="name">view.put.in.pack.wizard.form</field>
+        <field name="model">put.in.pack.wizard</field>
+        <field name="arch" type="xml">
+            <form create="False" class="put-in-pack-no-control-panel">
+                <div class="alert alert-info">
+                    <button string="Reset Wizard" name="action_reset_wizard" type="object" class="w-100"/>
+                </div>
+                <group name="object_selector_group" invisible="operating_object" col="1">
+                    <button string="Serial Number" name="action_set_selector" type="object" context="{'object_type': 'serial'}" class="w-100 btn btn-secondary"/>
+                    <button string="Delivery Order" name="action_set_selector" type="object" context="{'object_type': 'delivery_order'}" class="w-100 btn btn-secondary"/>
+                    <button string="Package" name="action_set_selector" type="object" context="{'object_type': 'package'}" class="w-100 btn btn-secondary"/>
+                    <button string="Master Case" name="action_set_selector" type="object" context="{'object_type': 'master_case'}" class="w-100 btn btn-secondary"/>
+                </group>
+                <field name="scanned_serial" invisible="True"/>
+                <field name="operating_object" invisible="True"/>
+                <field name="state" invisible="True"/>
+                <field name="serial_move_line" invisible="True"/>
+                <field name="_barcode_scanned" widget="onlogic_barcode_handler"/>
+                <field name="user_feedback" readonly="True" invisible="not user_feedback"/>
+                <group invisible="not operating_object">
+                    <field name="delivery" readonly="True" force_save="1" options="{'no_open': True}"/>
+                    <field name="packages" readonly="True" force_save="1">
+                        <tree no_open="True">
+                            <field name="display_name" options="{'no_open': True}"/>
+                        </tree>
+                    </field>
+                    <field name="move_lines" readonly="True" force_save="1">
+                        <tree no_open="True">
+                            <field name="lot_id" string="Lot" options="{'no_open': True}"/>
+                            <field name="result_package_id" string="Pack" options="{'no_open': True}"/>
+                            <button string="Remove from package" name="remove_serial_from_package" type="object" invisible="not result_package_id" confirm="Are you sure you want to remove this serial number from its package?" context="{'wizard_id': parent.id}"/>
+                        </tree>
+                    </field>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="action_menu_pip" model="ir.actions.act_window">
+        <field name="name">Put in Pack</field>
+        <field name="res_model">put.in.pack.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_put_in_pack_wizard"/>
+    </record>
+    <menuitem name="Put in Pack Tool" id="pip_menu_root" action="action_menu_pip" web_icon="fa fa-cubes,#f59b42,#000000" />
+</odoo>

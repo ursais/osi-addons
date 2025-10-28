@@ -10,6 +10,7 @@ from odoo import _
 from odoo.addons.ol_base.models.tools import option_to_val
 from odoo.addons.delivery_ups_rest.models import ups_request
 from odoo.exceptions import ValidationError
+from odoo.tools import float_repr
 
 # We override the UPS API URLs and API version
 ups_request.TEST_BASE_URL = "https://wwwcie.ups.com"
@@ -48,19 +49,25 @@ class OnLogicUPSRequest(ups_request.UPSRequest):
         url = f"/api/rating/{ups_request.API_VERSION}/{request_option}"
 
         shipment = {
-            "Package": self._set_package_details(packages, carrier, ship_from, ship_to, cod_info),
+            "Package": self._set_package_details(
+                packages, carrier, ship_from, ship_to, cod_info
+            ),
             "Shipper": self._get_ship_data_from_partner(shipper, self.shipper_number),
             "ShipFrom": self._get_ship_data_from_partner(ship_from),
             "ShipTo": self._get_ship_data_from_partner(ship_to),
             "NumOfPieces": str(int(total_qty)),
             "ShipmentServiceOptions": (
-                {"SaturdayDeliveryIndicator": saturday_delivery} if saturday_delivery else None
+                {"SaturdayDeliveryIndicator": saturday_delivery}
+                if saturday_delivery
+                else None
             ),
             "ShipmentTotalWeight": {
                 "UnitOfMeasurement": {
                     "Code": carrier.ups_package_weight_unit,
                     "Description": option_to_val(
-                        carrier, "ups_package_weight_unit", carrier.ups_package_weight_unit
+                        carrier,
+                        "ups_package_weight_unit",
+                        carrier.ups_package_weight_unit,
                     ),
                 },
                 "Weight": self.format_float(total_weight),
@@ -68,7 +75,13 @@ class OnLogicUPSRequest(ups_request.UPSRequest):
             "InvoiceLineTotal": {
                 "CurrencyCode": order.partner_id.country_id.currency_id.name,
                 "MonetaryValue": self.format_float(
-                    sum([line.price_subtotal for line in order.order_line if not line.is_delivery])
+                    sum(
+                        [
+                            line.price_subtotal
+                            for line in order.order_line
+                            if not line.is_delivery
+                        ]
+                    )
                 ),
             },
             "DeliveryTimeInformation": {
@@ -155,7 +168,9 @@ class OnLogicUPSRequest(ups_request.UPSRequest):
         if len(set(currencies)) != 1:
             msg = f"UPS REST: Different currencies in UPS response: {currencies}"
             if self.sale_order:
-                msg = f"{msg} | Sale Order: {self.sale_order.name} ({self.sale_order.id})"
+                msg = (
+                    f"{msg} | Sale Order: {self.sale_order.name} ({self.sale_order.id})"
+                )
             _logger.error(msg)
         return results
 
@@ -171,10 +186,14 @@ class OnLogicUPSRequest(ups_request.UPSRequest):
         # TimeInTransit information may not always be available. If it is not, then we should return nothing
         # so the request does not fail
         if arrival_date and arrival_time:
-            delivery_time = dt.datetime.strptime(f"{arrival_date} {arrival_time}", "%Y%m%d %H%M%S")
+            delivery_time = dt.datetime.strptime(
+                f"{arrival_date} {arrival_time}", "%Y%m%d %H%M%S"
+            )
             return {
                 "delivery_time": delivery_time or "",
-                "is_saturday_delivery": bool(int(service_summary.get("SaturdayDelivery", 0))),
+                "is_saturday_delivery": bool(
+                    int(service_summary.get("SaturdayDelivery", 0))
+                ),
             }
         return {}
 
@@ -208,13 +227,16 @@ class OnLogicUPSRequest(ups_request.UPSRequest):
             res.append("ZIP code")
         if res:
             return _(
-                "The address of your company is missing or wrong.\n(Missing field(s) : %s)", ",".join(res)
+                "The address of your company is missing or wrong.\n(Missing field(s) : %s)",
+                ",".join(res),
             )
         # OnLogic: We don't want to check the phone number's length
         # if len(self._clean_phone_number(shipper.phone)) < 10:
         # return _("Shipper Phone must be at least 10 alphanumeric characters.")
         # Check required field for warehouse address
-        res = [required_field[field] for field in required_field if not ship_from[field]]
+        res = [
+            required_field[field] for field in required_field if not ship_from[field]
+        ]
         # OnLogic: We don't want to check state based on the country
         # if ship_from.country_id.code in ("US", "CA", "IE") and not ship_from.state_id.code:
         # res.append("State")
@@ -224,13 +246,18 @@ class OnLogicUPSRequest(ups_request.UPSRequest):
             res.append("ZIP code")
         if res:
             return _(
-                "The address of your warehouse is missing or wrong.\n(Missing field(s) : %s)", ",".join(res)
+                "The address of your warehouse is missing or wrong.\n(Missing field(s) : %s)",
+                ",".join(res),
             )
         # OnLogic: We don't want to check the phone number's length
         # if len(self._clean_phone_number(ship_from.phone)) < 10:
         # return (_("Warehouse Phone must be at least 10 alphanumeric characters."),)
         # Check required field for recipient address
-        res = [required_field[field] for field in required_field if field != "phone" and not ship_to[field]]
+        res = [
+            required_field[field]
+            for field in required_field
+            if field != "phone" and not ship_to[field]
+        ]
         # OnLogic: We don't want to check state based on the country
         # if ship_to.country_id.code in ("US", "CA", "IE") and not ship_to.state_id.code:
         # res.append("State")
@@ -268,9 +295,9 @@ class OnLogicUPSRequest(ups_request.UPSRequest):
                     "The delivery cannot be done because the weight of your product %s is missing.",
                     ml.product_id.display_name,
                 )
-            packages_without_weight = picking.move_line_ids.mapped("result_package_id").filtered(
-                lambda p: not p.shipping_weight
-            )
+            packages_without_weight = picking.move_line_ids.mapped(
+                "result_package_id"
+            ).filtered(lambda p: not p.shipping_weight)
             if packages_without_weight:
                 return _(
                     "Packages %s do not have a positive shipping weight.",
@@ -279,11 +306,254 @@ class OnLogicUPSRequest(ups_request.UPSRequest):
         if not phone:
             res.append("Phone")
         if res:
-            return _("The recipient address is missing or wrong.\n(Missing field(s) : %s)", ",".join(res))
+            return _(
+                "The recipient address is missing or wrong.\n(Missing field(s) : %s)",
+                ",".join(res),
+            )
         # OnLogic: We don't want to check the phone number's length
         # if len(self._clean_phone_number(phone)) < 10:
         # return (_("Recipient Phone must be at least 10 alphanumeric characters."),)
         return False
+
+    def _get_ship_data_from_partner(self, partner, shipper_no=None):
+        """
+        @ol_upgrade: Override of _get_ship_data_from_partner in odoo/addons/enterprise/delivery_ups_rest/models/ups_request.py
+        """
+
+        return {
+            # @ol_upgrade (+1/-0) add CompanyName to the return dict as some contacts require it for UPS EEI info
+            "CompanyName": (partner.name or "")[:35],
+            "AttentionName": (partner.name or "")[:35],
+            "Name": (partner.parent_id.name or partner.name or "")[:35],
+            "EMailAddress": partner.email or "",
+            "ShipperNumber": shipper_no or "",
+            "Phone": {
+                "Number": (partner.phone or partner.mobile or "").replace(" ", ""),
+            },
+            "Address": {
+                "AddressLine": [partner.street or "", partner.street2 or ""],
+                "City": partner.city or "",
+                # @ol_upgrade(+1/-1) sanitize zip code if there are dashes in it
+                "PostalCode": partner.zip.split("-")[0] or "",
+                "CountryCode": partner.country_id.code or "",
+                "StateProvinceCode": partner.state_id.code or "",
+            },
+        }
+
+    def _set_invoice(self, shipment_info, commodities, ship_to, is_return):
+        """
+        @ol_upgrade: Override of _set_invoice in odoo/addons/enterprise/delivery_ups_rest/models/ups_request.py
+        to reference the tariff code object on products for HTS code rather than hs_code
+        """
+        invoice_products = []
+        for commodity in commodities:
+            # split the name of the product to maximum 3 substrings of length 35
+            name = commodity.product_id.name
+            product = {
+                "Description": [
+                    line
+                    for line in [name[35 * i : 35 * (i + 1)] for i in range(3)]
+                    if line
+                ],
+                "Unit": {
+                    "Number": str(int(commodity.qty)),
+                    "UnitOfMeasurement": {
+                        "Code": "PC" if commodity.qty == 1 else "PCS",
+                    },
+                    "Value": float_repr(commodity.monetary_value, 2),
+                },
+                "OriginCountryCode": commodity.country_of_origin,
+                # @ol_upgrade(+1/-1) reference tariff code object rather than hs_code
+                "CommodityCode": commodity.product_id.tariff_code_id.code.replace(
+                    ".", ""
+                )
+                or "",
+            }
+            invoice_products.append(product)
+        if len(ship_to.commercial_partner_id.name) > 35:
+            raise ValidationError(
+                _("The name of the customer should be no more than 35 characters.")
+            )
+        contacts = {
+            "SoldTo": {
+                "Name": ship_to.commercial_partner_id.name,
+                "AttentionName": ship_to.name,
+                "Address": {
+                    "AddressLine": [
+                        line for line in (ship_to.street, ship_to.street2) if line
+                    ],
+                    "City": ship_to.city,
+                    "PostalCode": ship_to.zip,
+                    "CountryCode": ship_to.country_id.code,
+                    "StateProvinceCode": (
+                        ship_to.state_id.code or ""
+                        if ship_to.country_id.code in ("US", "CA", "IE")
+                        else None
+                    ),
+                },
+            }
+        }
+        return {
+            "FormType": "01",
+            "Product": invoice_products,
+            "CurrencyCode": shipment_info.get("itl_currency_code"),
+            "InvoiceDate": shipment_info.get("invoice_date"),
+            "ReasonForExport": "RETURN" if is_return else "SALE",
+            "Contacts": contacts,
+        }
+
+    def include_eei(
+        self,
+        request,
+        shipper,
+        ship_from,
+        ship_to,
+        commodities,
+        env,
+        picking,
+    ):
+        """
+        EEI (Electronic Export Information) is customs documentation required for international shipments over
+        $2500. In order to make a shipping request that requires EEI, we need to enrich the request with
+        lots of additional information.
+        """
+        shipment = request["ShipmentRequest"]["Shipment"]
+
+        global_tax_information = {
+            "AgentTaxIdentificationNumber": {
+                "AgentRole": "20",
+                "TaxIdentificationNumber": {
+                    "IdentificationNumber": shipper.vat,
+                    "IDNumberCustomerRole": "37",
+                    "IDNumberEncryptionIndicator": "0",
+                    "IDNumberPurposeCode": "01",
+                    "IDNumberTypeCode": "1002",
+                },
+            },
+        }
+        shipment["GlobalTaxInformation"] = global_tax_information
+
+        # Update ShipFrom form
+        ship_from_form = shipment["ShipFrom"]
+        ship_from_form.update(
+            {
+                "TaxIdentificationNumber": ship_from.vat,
+                "TaxIDType": {
+                    "Code": "EIN",
+                    "Description": "EIN",
+                },
+            }
+        )
+        shipment["ShipFrom"] = ship_from_form
+
+        # Update InternationalForms
+        intl_forms = shipment["ShipmentServiceOptions"]["InternationalForms"]
+
+        # Update Contacts
+        if fa := picking.forward_agent:
+            forward_agent = self._get_ship_data_from_partner(fa)
+            forward_agent.update({"TaxIdentificationNumber": fa.vat})
+            intl_forms["Contacts"].update({"ForwardAgent": forward_agent})
+
+        ultimate_consignee = self._get_ship_data_from_partner(ship_to)
+        ultimate_consignee.update(
+            {
+                "UltimateConsigneeType": {
+                    "Code": "D",
+                    "Description": "Direct Consumer",
+                }
+            }
+        )
+
+        intl_forms["Contacts"].update({"UltimateConsignee": ultimate_consignee})
+
+        # Define EEI Filing option form
+        eei_filing_option = {
+            "Code": "3",
+            "EMailAddress": "shipping@onlogic.com",
+            "Description": "UPS files EEI on shipper behalf",
+            "UPSFiled": {
+                "POA": {
+                    "Code": "2",
+                    "Description": "Blanket POA",
+                }
+            },
+        }
+
+        intl_forms["EEIFilingOption"] = eei_filing_option
+
+        # Update form type to inclue "11" which represents an EEI form
+        form_type = intl_forms["FormType"]
+        if isinstance(form_type, str):
+            form_type = [form_type]
+        form_type.append("11")
+        intl_forms["FormType"] = form_type
+
+        # Update product forms
+        products = intl_forms["Product"]
+        updated_products = []
+        for product, commodity in zip(products, commodities):
+            product_line_value = commodity.monetary_value * commodity.qty
+            # EEI Information
+            eei_information = {
+                "ExportInformation": "OS",  # https://www.ups.com/worldshiphelp/WSA/ENU/AppHelp/mergedProjects/CORE/Codes/Export_Codes.htm
+                "License": {
+                    "Code": "C32",  # See "EEI License Codes" in https://developer.ups.com/api/reference/shipping/appendix1?loc=en_US
+                    "ECCNNumber": "EAR99",
+                },
+            }
+            # SCHEDULE B
+            schedule_b = {
+                "Number": commodity.product_id.tariff_code_id.schedule_b.replace(
+                    ".", ""
+                ),
+                "Quantity": str(commodity.qty),
+                "UnitOfMeasurement": {
+                    "Code": "NO",
+                    "Description": "Number",
+                },
+            }
+
+            product.update(
+                {
+                    "EEIInformation": eei_information,
+                    "ExportType": "D" if commodity.country_of_origin == "US" else "F",
+                    "ScheduleB": schedule_b,
+                    "SEDTotalValue": str(product_line_value),
+                }
+            )
+            updated_products.append(product)
+
+        intl_forms["Product"] = updated_products
+
+        # PartiesToTransaction should be "N" (Not related) for any shipment unless we are shipping to ourselves
+        # i.e. any of the addresses associated with our companies
+        parties_to_transaction = "N"
+        if ship_to in env["res.company"].search([]).partner_id:
+            parties_to_transaction = "R"
+
+        intl_forms.update(
+            {
+                "CurrencyCode": "USD",
+                "EEIShipmentReferenceNumber": picking.name,
+                "ExportDate": dt.datetime.now().strftime("%Y%m%d"),
+                "ExportingCarrier": "UPS",
+                "InBondCode": "70",
+                "InvoiceDate": dt.datetime.now().strftime("%Y%m%d"),
+                "ModeOfTransport": "Auto",
+                "PartiesToTransaction": parties_to_transaction,
+                "PointOfOrigin": ship_from.state_id.code,
+                "PointOfOriginType": "S",
+                "PurchaseOrderNumber": (
+                    picking.purchase_id.name if picking.purchase_id else ""
+                ),
+                "ReasonForExport": "SALE",
+            }
+        )
+
+        shipment["ShipmentServiceOptions"]["InternationalForms"] = intl_forms
+
+        return request
 
     def _send_shipping(
         self,
@@ -301,6 +571,7 @@ class OnLogicUPSRequest(ups_request.UPSRequest):
         ups_carrier_account=False,
         is_return=False,
         picking=None,
+        env=False,
     ):
         url = f"/api/shipments/{ups_request.API_VERSION}/ship"
         # Payment Info
@@ -329,16 +600,23 @@ class OnLogicUPSRequest(ups_request.UPSRequest):
         shipment_service_options = {}
         if shipment_info.get("require_invoice"):
             shipment_service_options["InternationalForms"] = self._set_invoice(
-                shipment_info, [c for pkg in packages for c in pkg.commodities], ship_to, is_return
+                shipment_info,
+                [c for pkg in packages for c in pkg.commodities],
+                ship_to,
+                is_return,
             )
-            shipment_service_options["InternationalForms"]["PurchaseOrderNumber"] = shipment_info.get(
-                "purchase_order_number"
+            shipment_service_options["InternationalForms"]["PurchaseOrderNumber"] = (
+                shipment_info.get("purchase_order_number")
             )
-            shipment_service_options["InternationalForms"]["TermsOfShipment"] = shipment_info.get(
-                "terms_of_shipment"
+            shipment_service_options["InternationalForms"]["TermsOfShipment"] = (
+                shipment_info.get("terms_of_shipment")
             )
         if saturday_delivery:
             shipment_service_options["SaturdayDeliveryIndicator"] = saturday_delivery
+
+        shipment_rating_options = {}
+        if carrier.negotiated_rates:
+            shipment_rating_options["NegotiatedRatesIndicator"] = "1"
 
         request = {
             "ShipmentRequest": {
@@ -349,28 +627,43 @@ class OnLogicUPSRequest(ups_request.UPSRequest):
                     "LabelImageFormat": {
                         "Code": label_file_type,
                     },
-                    "LabelStockSize": {"Height": "6", "Width": "4"} if label_file_type != "GIF" else None,
+                    "LabelStockSize": (
+                        {"Height": "6", "Width": "4"}
+                        if label_file_type != "GIF"
+                        else None
+                    ),
                 },
                 "Shipment": {
                     "Description": shipment_info.get("description"),
                     "ReturnService": {"Code": "9"} if is_return else None,
                     "Package": self._set_package_details(
-                        packages, carrier, ship_from, ship_to, cod_info, ship=True, is_return=is_return
+                        packages,
+                        carrier,
+                        ship_from,
+                        ship_to,
+                        cod_info,
+                        ship=True,
+                        is_return=is_return,
                     ),
-                    "Shipper": self._get_ship_data_from_partner(shipper, self.shipper_number),
+                    "Shipper": self._get_ship_data_from_partner(
+                        shipper, self.shipper_number
+                    ),
                     "ShipFrom": self._get_ship_data_from_partner(ship_from),
                     "ShipTo": self._get_ship_data_from_partner(ship_to),
                     "Service": {
                         "Code": service_type,
                     },
                     "NumOfPiecesInShipment": (
-                        int(shipment_info.get("total_qty")) if service_type == "96" else None
+                        int(shipment_info.get("total_qty"))
+                        if service_type == "96"
+                        else None
                     ),
-                    "ShipmentServiceOptions": shipment_service_options if shipment_service_options else None,
-                    "ShipmentRatingOptions": {
-                        # TODO: This should be dependent on the carrier's negotiated_rates setting
-                        "NegotiatedRatesIndicator": "1",
-                    },
+                    "ShipmentServiceOptions": (
+                        shipment_service_options if shipment_service_options else None
+                    ),
+                    "ShipmentRatingOptions": (
+                        shipment_rating_options if shipment_rating_options else None
+                    ),
                     "PaymentInformation": {
                         "ShipmentCharge": payment_info,
                     },
@@ -388,11 +681,44 @@ class OnLogicUPSRequest(ups_request.UPSRequest):
             }
 
         # Shipments from US to CA or PR require extra info
-        if ship_from.country_id.code == "US" and ship_to.country_id.code in ["CA", "PR"]:
+        if ship_from.country_id.code == "US" and ship_to.country_id.code in [
+            "CA",
+            "PR",
+        ]:
             request["ShipmentRequest"]["Shipment"]["InvoiceLineTotal"] = {
                 "CurrencyCode": shipment_info.get("itl_currency_code"),
                 "MonetaryValue": shipment_info.get("ilt_monetary_value"),
             }
+
+        # If we need an EEI filing, include it here
+        # EEI is required for both US and EU if the following conditions are met:
+        # 1. It is a foreign shipment, i.e. we are shipping to a different country
+        # 2. Any HTS code in the shipment has products totaling more than $2500
+        # 3. Except if the destination is Canada in which case EEI is not needed
+        tariff_codes = {}
+        for package in packages:
+            for commodity in package.commodities:
+                tariff_codes[commodity.product_id.tariff_code_id.id] = (
+                    commodity.monetary_value * commodity.qty
+                )
+        if (  # If the destination of the delivery is in another country
+            picking.picking_type_id.warehouse_id.partner_id.country_id
+            != picking.partner_id.country_id
+            # We only need EEI for shipments from the US
+            and ship_from.country_id.code == "US"
+            # and the value of products under a single tariff code is >= $2500
+            and max(tariff_codes.values()) >= 2500
+        ) and not picking.partner_id.country_id.code == "CA":
+            request = self.include_eei(
+                request,
+                shipper,
+                ship_from,
+                ship_to,
+                [c for pkg in packages for c in pkg.commodities],
+                env,
+                picking,
+            )
+
         res = self._send_request(url, "POST", json=request)
         picking.ups_request_log = pprint.pformat(request, indent=1)
         if res.status_code == 401:
@@ -417,7 +743,10 @@ class OnLogicUPSRequest(ups_request.UPSRequest):
         labels_binary = [
             (
                 pack["TrackingNumber"],
-                self._save_label(pack["ShippingLabel"]["GraphicImage"], label_file_type=label_file_type),
+                self._save_label(
+                    pack["ShippingLabel"]["GraphicImage"],
+                    label_file_type=label_file_type,
+                ),
             )
             for pack in packs
         ]
