@@ -94,6 +94,8 @@ class AccountFiscalPosition(models.Model):
                         or partner.country_id.code == l.country_id.code
                     )
                 )
+                if not_intra_fiscals and partner.vat and delivery and not delivery.vat and delivery.type == "delivery" and not delivery.is_company:
+                    fiscals = not_intra_fiscals.filtered(lambda fp: not fp.vat_required)
                 if not not_intra_fiscals:
                     fiscals = fiscals.filtered(lambda l: not l.country_group_id and not l.country_id)
             else:
