@@ -212,7 +212,7 @@ class SaleOrder(models.Model):
             )
             msg += f"<li>Changed by: {self.env.user.name}</li>"
             msg += "</ul>"
-            self.message_post(body=msg)
+            self.message_post(body=msg, body_is_html=True)
 
             return True
 
