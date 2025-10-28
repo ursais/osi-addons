@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-
     <record id="vpicktree" model="ir.ui.view">
         <field name="name">ol_delivery.stock.picking.tree</field>
         <field name="model">stock.picking</field>
@@ -28,6 +27,17 @@
             <field name="picking_type_id" position="after">
                 <field name="carrier_id" />
             </field>
+             <xpath expr="//page[@name='note']/field[@name='note']" position="after">
+                <label for="delivery_notes"/>
+                <field name="delivery_notes" string="Delivery Note" placeholder="Delivery Notes"/>
+            </xpath>
         </field>
     </record>
+
+    <template id="picking_comments_ol_delivery" inherit_id="ol_stock.picking_comments">
+        <xpath expr="//div[hasclass('ol_picking_comments_content')]/t[1]" position="inside">
+            <div t-esc="sale_order.delivery_notes" />
+        </xpath>
+    </template>
+
 </odoo>

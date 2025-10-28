@@ -9,11 +9,6 @@ class StockPicking(models.Model):
 
     # COLUMNS #####
 
-    delivery_note = fields.Text(
-        string="Delivery Note",
-        related="sale_id.delivery_note",
-        store=True,
-    )
     to_send_customer_shipment = fields.Boolean(
         string="Send Shipment Email",
         tracking=True,

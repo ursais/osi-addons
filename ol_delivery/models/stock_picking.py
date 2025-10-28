@@ -13,8 +13,16 @@ class StockPicking(models.Model):
         store=True,
     )
     delivery_account_number = fields.Char(
-        string="Shipping Account", compute="_compute_delivery_account_number", readonly=True, store=True
+        string="Shipping Account",
+        compute="_compute_delivery_account_number",
+        readonly=True,
+        store=True,
     )
+    delivery_notes = fields.Text(
+        string="Delivery Note",
+        related="sale_id.delivery_notes",
+    )
+
     # END #########
 
     @api.depends("move_ids.product_id.lithium_shipping_hazard")
@@ -38,4 +46,6 @@ class StockPicking(models.Model):
         This is computed instead of related so that later modules can extend it
         """
         for picking in self:
-            picking.delivery_account_number = picking.group_id.sale_id.delivery_account_number
+            picking.delivery_account_number = (
+                picking.group_id.sale_id.delivery_account_number
+            )

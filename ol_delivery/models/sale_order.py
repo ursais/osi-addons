@@ -35,6 +35,7 @@ class SaleOrder(models.Model):
     delivery_override_reason = fields.Text(string="Override Reason", copy=False)
     delivery_account_number = fields.Char(string="Delivery Account Number", copy=False)
     delivery_notes = fields.Text(string="Delivery Notes", copy=False, tracking=True)
+    general_notes = fields.Text(string="General Notes", copy=False)
     # END COLUMNS ###
 
     def copy(self, default=None):

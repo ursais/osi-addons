@@ -12,6 +12,7 @@
         "ol_base",
         "ol_product",
         "ol_graphql_sale",
+        "ol_stock",
     ],
     "author": "OnLogic",
     "website": "https://www.onlogic.com",

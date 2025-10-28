@@ -37,7 +37,6 @@ class SaleOrder(models.Model):
     )
     end_user = fields.Many2one(comodel_name="res.partner")
     integrator = fields.Many2one(comodel_name="res.partner")
-    delivery_note = fields.Text(string="Delivery Note")
     mrp_note = fields.Text(string="Manufacturing Note")
     to_send_confirmation_email = fields.Boolean(
         string="Send confirmation email",
