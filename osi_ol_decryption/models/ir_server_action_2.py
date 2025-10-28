@@ -1335,10 +1335,6 @@ class IrActionsServer(models.Model):
                 key=lambda x: (x[0], x[1])
             )
             return lines1 == lines2
-<<<<<<< Updated upstream
-=======
-    
->>>>>>> Stashed changes
         for product in products:
             phantom_boms = self.env["mrp.bom"]
             used_boms = self.env["mrp.bom"]
