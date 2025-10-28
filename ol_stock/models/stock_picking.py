@@ -31,6 +31,7 @@ class StockPicking(models.Model):
     @api.depends(
         "state",
         "move_ids.sale_line_id.qty_delivered",
+        "move_ids.sale_line_id.product_uom_qty",
     )
     def _compute_total_sales_price(self):
         """Compute the total sales price for the picking, including delivery costs."""
@@ -44,7 +45,7 @@ class StockPicking(models.Model):
 
             # Calculate the total amount from each sale line based on delivered quantity
             sale_line_amount = sum(
-                sale_line.price_unit * sale_line.qty_delivered
+                sale_line.price_unit * sale_line.product_uom_qty
                 for sale_line in picking.mapped("move_ids.sale_line_id")
             )
 
