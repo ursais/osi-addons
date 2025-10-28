@@ -43,7 +43,9 @@
                         <tag>RMA Notes</tag>
                     </strong>
                 </div>
-                <t t-call="ol_templates.eu_tax_exempt"/>
+                <t t-if="invoice.company_id.short_name == 'eu'">
+                    <t t-call="ol_templates.eu_tax_exempt"/>
+                </t>
                 <div style="overflow-wrap: break-word;">
                     <p t-esc="sale_order.note"/>
                 </div>
