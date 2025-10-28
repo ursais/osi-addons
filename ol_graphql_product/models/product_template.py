@@ -19,8 +19,9 @@ class ProductTemplate(models.Model):
     _name = "product.template"
     _inherit = ["product.template", "graphql.mixin"]
 
-    pim_latest_message = JsonField(string="Latest PIM Message", readonly=True)
-    pricing_latest_message = JsonField(string="Latest Pricing Message", readonly=True)
+    pim_latest_message = JsonField(string="Latest PIM Message", readonly=True, copy=False)
+    pricing_latest_message = JsonField(string="Latest Pricing Message", readonly=True, copy=False)
+
 
     def get_encoded_options(self):
         """
