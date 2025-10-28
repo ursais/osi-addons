@@ -22,4 +22,20 @@
         </field>
     </record>
 
+    <record id="mrp_eco_notification_form" model="ir.ui.view">
+        <field name="name">mrp.eco.notification.form</field>
+        <field name="model">mrp.eco</field>
+        <field name="inherit_id" ref="mrp_plm.mrp_eco_view_form" />
+        <field name="arch" type="xml">
+            <!-- Add chatter widget to ECO form view for proper mail functionality -->
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
