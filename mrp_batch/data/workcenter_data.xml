@@ -13,6 +13,10 @@
         <field name="name">Cell-C</field>
         <field name="color">3</field>
     </record>
+    <record id="import_wc_tag_cell_d" model="mrp.workcenter.tag">
+        <field name="name">Cell-D</field>
+        <field name="color">4</field>
+    </record>
 
     <record id="import_wc_tag_eu" model="mrp.workcenter.tag">
         <field name="name">EU</field>
@@ -57,7 +61,6 @@
         <field name="company_id"></field>
         <field name="tag_ids" eval="[(4, ref('mrp_batch.import_wc_tag_cell_c'))]"></field>
     </record>
-    
     <record id="import_test_c" model="mrp.workcenter">
         <field name="name">Test C</field>
         <field name="type">test</field>
@@ -66,20 +69,35 @@
         <field name="tag_ids" eval="[(4, ref('mrp_batch.import_wc_tag_cell_c'))]"></field>
     </record>
 
+    <record id="import_build_d" model="mrp.workcenter">
+        <field name="name">Build D</field>
+        <field name="type">build</field>
+        <field name="code">B-D</field>
+        <field name="company_id"></field>
+        <field name="tag_ids" eval="[(4, ref('mrp_batch.import_wc_tag_cell_d'))]"></field>
+    </record>
+    <record id="import_test_d" model="mrp.workcenter">
+        <field name="name">Test D</field>
+        <field name="type">test</field>
+        <field name="code">T-D</field>
+        <field name="company_id"></field>
+        <field name="tag_ids" eval="[(4, ref('mrp_batch.import_wc_tag_cell_d'))]"></field>
+    </record>
+
     <!-- Define workcenters with alternative workcenters -->
     <record id="import_build" model="mrp.workcenter">
         <field name="name">Build</field>
         <field name="type">build</field>
         <field name="code">B</field>
         <field name="company_id"></field>
-        <field name="alternative_workcenter_ids" eval="[(4, ref('mrp_batch.import_build_a')), (4, ref('mrp_batch.import_build_b')), (4, ref('mrp_batch.import_build_c'))]"></field>
+        <field name="alternative_workcenter_ids" eval="[(4, ref('mrp_batch.import_build_a')), (4, ref('mrp_batch.import_build_b')), (4, ref('mrp_batch.import_build_c')), (4, ref('mrp_batch.import_test_d'))]"></field>
     </record>
     <record id="import_test" model="mrp.workcenter">
         <field name="name">Test</field>
         <field name="type">test</field>
         <field name="code">T</field>
         <field name="company_id"></field>
-        <field name="alternative_workcenter_ids" eval="[(4, ref('mrp_batch.import_test_a')), (4, ref('mrp_batch.import_test_b')), (4, ref('mrp_batch.import_test_c'))]"></field>
+        <field name="alternative_workcenter_ids" eval="[(4, ref('mrp_batch.import_test_a')), (4, ref('mrp_batch.import_test_b')), (4, ref('mrp_batch.import_test_c')), (4, ref('mrp_batch.import_test_d'))]"></field>
     </record>
 
     <record id="import_test_eu" model="mrp.workcenter">
@@ -124,6 +142,14 @@
         <field name="tag_ids" eval="[(4, ref('mrp_batch.import_wc_tag_cell_c'))]"></field>
     </record>
 
+    <record id="import_box_d" model="mrp.workcenter">
+        <field name="name">Box D</field>
+        <field name="code">BX-D</field>
+        <field name="type">other</field>
+        <field name="company_id"></field>
+        <field name="tag_ids" eval="[(4, ref('mrp_batch.import_wc_tag_cell_d'))]"></field>
+    </record>
+
     <record id="import_box_eu" model="mrp.workcenter">
         <field name="name">Box EU</field>
         <field name="type">build</field>
@@ -140,7 +166,5 @@
         <field name="company_id"></field>
         <field name="alternative_workcenter_ids" eval="[(4, ref('mrp_batch.import_box_a')), (4, ref('mrp_batch.import_box_b')), (4, ref('mrp_batch.import_box_c'))]"></field>
     </record>
-
-
 
 </odoo>
