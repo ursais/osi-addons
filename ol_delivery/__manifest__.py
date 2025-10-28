@@ -21,10 +21,18 @@
     "category": "Inventory/Delivery",
     "data": [
         "wizard/choose_delivery_carrier_views.xml",
+        "wizard/pip_wizard.xml",
         "views/sale_order.xml",
         "views/delivery_carrier.xml",
         "views/product_template.xml",
         "views/res_company.xml",
         "views/stock_picking.xml",
+        "security/ir.model.access.csv",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "ol_delivery/static/src/css/pip.css",
+            "ol_delivery/static/src/js/pip.js",
+        ]
+    },
 }

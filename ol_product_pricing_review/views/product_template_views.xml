@@ -93,6 +93,15 @@
                 <field name="override_price" invisible="has_configurable_attributes" readonly="1" widget="monetary" options="{'currency_field': 'price_currency_id', 'field_digits': True}" />
                 <field name="special_price" invisible="has_configurable_attributes" readonly="1" widget="monetary" options="{'currency_field': 'price_currency_id', 'field_digits': True}" />
             </field>
+            <xpath expr="//div[@name='standard_price_uom']" position="after">
+                <label for="approved_total_cost" invisible="product_variant_count &gt; 1 and not is_product_variant" />
+                <div name="approved_total_cost_uom" invisible="product_variant_count &gt; 1 and not is_product_variant">
+                    <field name="approved_total_cost" readonly="1" class="oe_inline" widget="monetary" options="{'currency_field': 'cost_currency_id', 'field_digits': True}" />
+                    <span groups="uom.group_uom"> per
+                        <field name="uom_name" class="oe_inline"/>
+                    </span>
+                </div>
+            </xpath>
         </field>
     </record>
 
