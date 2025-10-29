@@ -93,6 +93,7 @@ class SaleOrder(models.Model):
         """Compute customer_lead for all lines in this order,
         considering shared BOM components and availability."""
         today = fields.Date.today()
+        max_component_delay = False
 
         for order in self:
             # --- Step 1: Build component requirements map ---
@@ -126,13 +127,10 @@ class SaleOrder(models.Model):
             product_avail = {}
             for product_id, qty in component_demand.items():
                 product = self.env["product.product"].browse(product_id)
-                print ("\n product", product.name, "\n idddddddd", product.id)
                 avail_date = order._get_virtual_avail_date(product, qty)
-                print ("\n avail_date",avail_date)
                 product_avail[product_id] = avail_date and avail_date or today
 
             # --- Step 3: Assign line-level customer_lead ---
-            print ("\n product_avail", product_avail)
             for line in order.order_line:
                 if not line_components[line.id]:
                     line.customer_lead = 0
@@ -140,6 +138,26 @@ class SaleOrder(models.Model):
                 comp_dates = [product_avail[pid] for pid in line_components[line.id]]
                 base_date = comp_dates and max(comp_dates) or today
                 lead_days = (base_date - today).days
+                if not lead_days:
+                    bom_data = self.env["report.mrp.report_bom_structure"]._get_report_data(
+                        line.bom_id.id
+                    )
+
+                    # Get components list from the BOM data
+                    components = bom_data.get("lines", {}).get("components", [])
+
+                    max_component_delay = self.env[
+                        "report.mrp.report_bom_structure"
+                    ]._get_max_component_delay(components)
+                    if max_component_delay:
+                        lead_days += max_component_delay
+                if not lead_days and not max_component_delay:
+                    no_po_lead_time = (
+                        self.env["ir.config_parameter"]
+                        .sudo()
+                        .get_param("ol_sale.no_po_lead_time", 0)
+                    )
+                    lead_days += int(no_po_lead_time)
 
                 # Add rush/manufacturing delays
                 if order.rush_order:
@@ -161,5 +179,4 @@ class SaleOrder(models.Model):
                     )
                     if mfg_sec:
                         lead_days += order.company_id.manufacturing_lead
-
                 line.customer_lead = max(0, lead_days)

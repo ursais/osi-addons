@@ -140,12 +140,12 @@ class MrpProductionBatch(models.Model):
             forecast_expected_date = all_raw_moves.filtered(
                 "forecast_expected_date"
             ).mapped("forecast_expected_date")
-            if not forecast_expected_date:
-                continue
-            forecast_expected_date = max(forecast_expected_date)
+            if forecast_expected_date:
+                forecast_expected_date = max(forecast_expected_date)
             total_lead_time = int(record.company_id.manufacturing_lead) + int(
                 default_produce_delay
             )
+            estimated_ship_date = False
             if not record.rush_order:
                 if forecast_expected_date:
                     estimated_ship_date = forecast_expected_date + timedelta(
@@ -166,6 +166,12 @@ class MrpProductionBatch(models.Model):
                     estimated_ship_date = record.ops_build_date + timedelta(
                         days=total_lead_time
                     )
+                elif record.components_availability_state != "available" and record.production_ids.sale_order_id:
+                    sale_order_id = record.production_ids.sale_order_id
+                    if sale_order_id.commitment_date:
+                        estimated_ship_date = record.production_ids.sale_order_id.commitment_date.date()        
+                # 
+                if estimated_ship_date:
                     weekday = estimated_ship_date.weekday()
                     # If Saturday (5), add 2 days → Monday
                     # If Sunday (6), add 1 day → Monday
