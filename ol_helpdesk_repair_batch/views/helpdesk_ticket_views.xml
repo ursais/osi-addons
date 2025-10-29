@@ -23,6 +23,15 @@
                     invisible="in_transfer_count == 0">
                     <field name="in_transfer_count" widget="statinfo"/>
                 </button>
+                <button name="action_view_pickings"
+                        type="object"
+                        icon="fa-exchange"
+                        string="Internal Transfers"
+                        class="oe_stat_button"
+                        invisible="picking_count == 0"
+                    >
+                    <field name="picking_count" widget="statinfo"/>
+                </button>
                 <button
                     name="action_view_repair_sale_orders"
                     string="Sale Order(s)"

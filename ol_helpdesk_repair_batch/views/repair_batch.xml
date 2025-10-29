@@ -49,6 +49,18 @@
                     <button name="action_repair_cancel_draft" string="Set to Draft" type="object" class="btn-danger" invisible="state != 'cancel'" />
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_view_pickings"
+                            type="object"
+                            string="Internal Transfers"
+                            icon="fa-exchange"
+                            class="oe_stat_button"
+                            invisible="picking_count == 0"
+                        >
+                            <field name="picking_count" widget="statinfo"/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <h1>
                             <field name="name" options="{'line_breaks': False}" widget="text" class="field_name" placeholder="New" readonly="1" force_save="1" />
