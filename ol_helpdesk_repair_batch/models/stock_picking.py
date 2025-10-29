@@ -13,5 +13,11 @@ class StockPicking(models.Model):
         comodel_name="helpdesk.ticket",
         string="Ticket",
     )
+    repair_id = fields.Many2one(
+        comodel_name="repair.order",
+        string="Repair Order",
+        ondelete="set null",
+        index=True,
+    )
 
     # END #######

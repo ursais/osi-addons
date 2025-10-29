@@ -136,9 +136,30 @@ class RepairBatch(models.Model):
         string="Salesperson",
         related="sale_id.user_id",
     )
+    picking_count = fields.Integer(
+        string="Internal Transfers",
+        compute="_compute_picking_count",
+        store=False,
+    )
 
     # END #######
     # METHODS ###
+
+    def _compute_picking_count(self):
+        for batch in self:
+            all_pickings = batch.mapped("repair_ids.picking_ids")
+            batch.picking_count = len(all_pickings)
+
+    def action_view_pickings(self):
+        """Open all internal transfers related to repairs in this batch."""
+        self.ensure_one()
+        pickings = self.mapped("repair_ids.picking_ids")
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "stock.action_picking_tree_all"
+        )
+        action["domain"] = [("id", "in", pickings.ids)]
+        action["context"] = {"default_repair_batch_id": self.id}
+        return action
 
     @api.depends("repair_ids.move_ids")
     def _compute_show_create_removal_button(self):

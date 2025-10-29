@@ -1,6 +1,6 @@
 # Import Odoo libs
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 class RepairOrder(models.Model):
@@ -46,6 +46,17 @@ class RepairOrder(models.Model):
         compute="_compute_history_fields",
         help="Helper field used for the alert invisible attribute.",
     )
+    picking_ids = fields.One2many(
+        comodel_name="stock.picking",
+        inverse_name="repair_id",
+        string="Internal Transfers",
+        readonly=True,
+        copy=False,
+    )
+    picking_count = fields.Integer(
+        string="Internal Transfers",
+        compute="_compute_picking_count",
+    )
 
     # END #######
     # METHODS ###
@@ -59,6 +70,19 @@ class RepairOrder(models.Model):
     def _compute_show_create_removal_button(self):
         for rec in self:
             rec.show_create_removal_button = not rec.move_ids
+
+    def _compute_picking_count(self):
+        for rec in self:
+            rec.picking_count = len(rec.picking_ids)
+
+    def action_view_pickings(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "stock.action_picking_tree_all"
+        )
+        action["domain"] = [("id", "in", self.picking_ids.ids)]
+        action["context"] = {"default_repair_id": self.id}
+        return action
 
     @api.depends("lot_id")
     def _compute_history_fields(self):
@@ -191,6 +215,133 @@ class RepairOrder(models.Model):
         if new_moves:
             self.write({"move_ids": new_moves})
 
+    def action_repair_start(self):
+        res = super().action_repair_start()
+        for repair in self:
+            repair._create_or_update_internal_transfer()
+        return res
+
+    def _get_open_picking(self):
+        """Return the most recent picking that is not done/cancelled."""
+        self.ensure_one()
+        return (
+            self.picking_ids.filtered(lambda p: p.state not in ("done", "cancel"))
+            or False
+        )
+
+    def _create_or_update_internal_transfer(self):
+        """Create or update internal transfers for 'add' moves, including deltas after done transfers."""
+        for repair in self:
+            add_moves = repair.move_ids.filtered(
+                lambda m: m.repair_line_type == "add" and m.product_id.type == "product"
+            )
+            if not add_moves:
+                continue
+
+            # Find warehouse
+            warehouse = (
+                self.env["stock.warehouse"].search(
+                    [
+                        ("view_location_id", "parent_of", repair.location_id.id),
+                        ("company_id", "=", repair.company_id.id),
+                    ],
+                    limit=1,
+                )
+                or repair.company_id.warehouse_id
+            )
+            picking_type = warehouse.int_type_id
+            if not picking_type:
+                raise UserError(
+                    _("No internal picking type found for warehouse %s.")
+                    % warehouse.display_name
+                )
+
+            src_loc = picking_type.default_location_src_id or warehouse.lot_stock_id
+            dest_loc = repair.location_id
+
+            # Compute product quantities already delivered (done pickings)
+            done_moves = repair.picking_ids.filtered(
+                lambda p: p.state == "done"
+            ).mapped("move_ids")
+            delivered = {}
+            for m in done_moves:
+                delivered[m.product_id.id] = (
+                    delivered.get(m.product_id.id, 0.0) + m.product_uom_qty
+                )
+
+            # Compute desired totals based on repair add moves
+            desired = {}
+            for m in add_moves:
+                desired[m.product_id.id] = (
+                    desired.get(m.product_id.id, 0.0) + m.product_uom_qty
+                )
+
+            # Compute remaining delta per product
+            deltas = {}
+            for pid, total in desired.items():
+                already = delivered.get(pid, 0.0)
+                if total > already:  # only if more needed
+                    deltas[pid] = total - already
+
+            if not deltas:
+                continue  # nothing new needed
+
+            # Find or create open picking
+            picking = repair.picking_ids.filtered(
+                lambda p: p.state not in ("done", "cancel")
+            )
+            if not picking:
+                picking = self.env["stock.picking"].create(
+                    {
+                        "partner_id": repair.partner_id.id,
+                        "picking_type_id": picking_type.id,
+                        "location_id": src_loc.id,
+                        "location_dest_id": dest_loc.id,
+                        "origin": repair.name,
+                        "company_id": repair.company_id.id,
+                        "repair_id": repair.id,
+                    }
+                )
+
+            # Sync only the delta quantities
+            repair._sync_add_deltas_to_picking(picking, deltas)
+
+            # Confirm & assign
+            picking.action_confirm()
+            picking.action_assign()
+
+    def _sync_add_deltas_to_picking(self, picking, deltas):
+        """Ensure the open picking has moves for the required delta quantities."""
+        Move = self.env["stock.move"]
+        existing = picking.move_ids.filtered(
+            lambda m: m.state not in ("done", "cancel")
+        )
+
+        # Update or create moves for each product delta
+        for product_id, qty_needed in deltas.items():
+            move = existing.filtered(lambda m: m.product_id.id == product_id)
+            if move:
+                move.product_uom_qty = qty_needed
+            else:
+                product = self.env["product.product"].browse(product_id)
+                Move.create(
+                    {
+                        "name": picking.name or picking.origin,
+                        "product_id": product_id,
+                        "product_uom_qty": qty_needed,
+                        "product_uom": product.uom_id.id,
+                        "location_id": picking.location_id.id,
+                        "location_dest_id": picking.location_dest_id.id,
+                        "picking_id": picking.id,
+                        "company_id": picking.company_id.id,
+                        "origin": picking.origin,
+                    }
+                )
+
+        # Remove any obsolete moves (not in deltas)
+        obsolete = existing.filtered(lambda m: m.product_id.id not in deltas)
+        obsolete.unlink()
+
     def write(self, vals):
         """
         If the repair state is changing we want to make sure the batch
@@ -204,7 +355,11 @@ class RepairOrder(models.Model):
                 if order.repair_batch_id:
                     # Trigger the _update_batch_state method on the batch
                     order.repair_batch_id._update_batch_state()
-
+        # Create/Update internal transfers
+        if "move_ids" in vals:
+            for repair in self:
+                if repair.state == "under_repair":
+                    repair._create_or_update_internal_transfer()
         return res
 
     # END #######

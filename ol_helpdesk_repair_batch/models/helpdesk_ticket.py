@@ -44,6 +44,11 @@ class HelpdeskTicket(models.Model):
         compute="_compute_button_counts",
         help="Counts the number of IN transfers",
     )
+    picking_count = fields.Integer(
+        string="Internal Transfers",
+        compute="_compute_button_counts",
+        help="Counts the number of Internal transfers",
+    )
     show_generate_repairs = fields.Boolean(
         string="Show Generate Repairs Button",
         compute="_compute_show_generate_repairs",
@@ -143,6 +148,7 @@ class HelpdeskTicket(models.Model):
             ticket.in_transfer_count = len(
                 self.env["stock.picking"].search([("ticket_id", "=", self.id)])
             )
+            ticket.picking_count = len(self.repair_ids.picking_ids.ids)
             ticket.out_refund_count = len(
                 self.env["account.move"].search(
                     [
@@ -232,6 +238,15 @@ class HelpdeskTicket(models.Model):
                 }
             )
 
+        return action
+
+    def action_view_pickings(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id(
+            "stock.action_picking_tree_all"
+        )
+        action["domain"] = [("id", "in", self.repair_ids.picking_ids.ids)]
+        action["context"] = {"default_repair_id": self.id}
         return action
 
     def action_view_refund_ids(self):
