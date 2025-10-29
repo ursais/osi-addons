@@ -1,4 +1,4 @@
-from odoo import api, models, SUPERUSER_ID
+from odoo import api, models, SUPERUSER_ID, fields
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -356,9 +356,9 @@ class IrActionsServer(models.Model):
         self._cr.execute("update account_journal set bank_account_id = %s, bank_statements_source = 'undefined' where id = %s", (bank.id, wire_journal.id))
         # wire_journal.write({"bank_account_id": bank.id, "bank_statements_source": 'undefined'})
         line = wire_journal.outbound_payment_method_line_ids.filtered(lambda l:l.payment_method_id.name == 'SEPA Credit Transfer')
-        ap_account_id =  env['account.account'].with_company(company).search([('name', '=', 'Outstanding Payments')], limit=1)
+        ap_account_id =  env['account.account'].with_company(company).search([('name', '=', 'Outstanding Payments'),('company_id', '=', 2)], limit=1)
         line.write({"payment_account_id": ap_account_id.id})
-        card_journal = env["account.journal"].with_company(company).search([('name', '=', 'Credit Card Purchase Journal')], limit=1)
+        card_journal = env["account.journal"].with_company(company).search([('name', '=', 'Credit Card Purchase Journal'),('company_id', '=', 2)], limit=1)
         self._cr.execute("update account_journal set bank_account_id = %s, bank_statements_source = 'undefined' where id = %s", (bank.id, card_journal.id))
         # card_journal.write({"bank_account_id": bank.id, "bank_statements_source": 'undefined'})
         line = card_journal.outbound_payment_method_line_ids.filtered(lambda l:l.payment_method_id.name == 'SEPA Credit Transfer')
@@ -533,7 +533,7 @@ class IrActionsServer(models.Model):
                 overstock = self.env.ref('__setup__.stock_location_eu_overstock')
                 primary = self.env.ref('__setup__.stock_location_eu_primary')
 
-            for row in sheet.iter_rows(min_row=3):
+            for row in sheet.iter_rows(min_row=2):
                 name = row[0].value
                 parent = row[1].value
                 if parent in ('WH/Stock/Primary', 'EU/Stock/Primary'):
@@ -1435,7 +1435,6 @@ class IrActionsServer(models.Model):
             if product.get("backorder_config") != "no-backorder":
                 product_17 = obj_product_17.browse(product.get("id"))
                 product_17.write({"allow_backorder": True})
-
         return True
 
     
@@ -1746,7 +1745,62 @@ class IrActionsServer(models.Model):
         product_ids = self.env['product.template'].sudo().search([("categ_id.name", "in", ["Systems", "Computers", "Panel PCs"]), ("purchase_ok", "=", True)])
         product_ids.write({'purchase_ok': False, "candidate_purchase": False})
 
+    def set_localizations(self):
+        """Set localizations for the US/EU companies."""
+        date = fields.Datetime.today()
+        companies = self.env["res.company"].sudo().search([])
+        for company in companies:
+            _logger.info("\n\n\n\ncompanycompanycompany %s", company)
+            if not company.chart_template:
+                # Set US Company template
+                if company.id in [
+                    1,
+                    3,
+                    4,
+                    5,
+                    7,
+                    8,
+                    11,
+                ]:
+                    company.sudo().write({"chart_template": "generic_coa"})
+                # Set NL Template
+                if company.id in [2, 10]:
+                    company.sudo().write({"chart_template": "nl"})
+                    self.env.flush_all()
+                    self.env["account.chart.template"].try_loading(
+                        company.chart_template, company=company.id
+                    )
+                    self._cr.commit()
+                # Set TW Template
+                if company.id == 6:
+                    
+                    company.sudo().write({"chart_template": "tw"})
+                    self.env.flush_all()
+
+                    self.env["account.chart.template"].try_loading(
+                        company.chart_template, company=company.id
+                    )
+                    self._cr.commit()
+                # Set DE Template
+                if company.id == 9:
+                    
+                    company.sudo().write({"chart_template": "de_skr04"})
+                    self.env.flush_all()
+                    self.env["account.chart.template"].try_loading(
+                        company.chart_template, company=company.id
+                    )
+                    self._cr.commit()
+                # Set MY Template
+                if company.id == 12:
+                    company.sudo().write({"chart_template": "my"})
+                    self.env.flush_all()
+                    self.env["account.chart.template"].try_loading(
+                        company.chart_template, company=company.id
+                    )
+                    self._cr.commit()
             
+        accounts = self.env['account.account'].search([('company_id', '=', 2), ('create_date', '>=', date)])
+        self._cr.execute("update account_account set deprecated ='f' where id in %s", (tuple(accounts.ids),))  
 
     def uninstall_old_module(self):
         _logger.info("===============uninstall_old_module====================")
@@ -2221,13 +2275,13 @@ class IrActionsServer(models.Model):
             "mrp_bom_comparison",
             "mrp_repair_component_history",
             "oi_login_as",
-            "ol_api",
+            "ol_api", 
             "ol_bank_transfer_email",
-            "ol_graphql",
-            "ol_graphql_partner",
-            "ol_graphql_product",
-            "ol_graphql_sale",
-            "ol_graphql_user",
+            # "ol_graphql",
+            # "ol_graphql_partner",
+            # "ol_graphql_product",
+            # "ol_graphql_sale",
+            # "ol_graphql_user",
             "ol_l10n_nl_intrastat",
             "ol_multicompany",
             "ol_product_create_wizard",
@@ -2237,8 +2291,8 @@ class IrActionsServer(models.Model):
             "ol_template",
             "ol_templates",
             "ol_ui",
-            "ol_webhooks",
-            "ol_webhooks_graphql",
+#            "ol_webhooks",
+#            "ol_webhooks_graphql",
             "osi_l10n_us_payment_nacha_email",
             "payment_paypal",
             "procurement_purchase_no_grouping",
@@ -2251,11 +2305,16 @@ class IrActionsServer(models.Model):
             "stock_intrastat",
             "stock_no_negative",
             "web_company_color",
+            "account_move_name_sequence",
         ]
 
-        for module in modules:
-            self.env["ir.module.module"].search(
-                [("name", "=", module), ("state", "!=", "installed")]
-            ).button_immediate_install()
+        modules_ids = self.env["ir.module.module"].search(
+                [("name", "in", modules), ("state", "!=", "installed")]
+            )
+        for module in modules_ids:
+            # self.env["ir.module.module"].search(
+            #     [("name", "=", module), ("state", "!=", "installed")]
+            # ).button_immediate_install()
+            module.button_immediate_install()
 
 
