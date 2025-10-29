@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Demo data: Mark the specific false positive report from the ticket -->
+    <record id="domain_report_osi_mimecast_false" model="helpdesk.domain.report">
+        <field name="domain">opensourceintegrators.com</field>
+        <field name="submitter">mimecast.org</field>
+        <field name="report_id">02b3415036b9b132d7f5d44104c40daa680b781463d5c09ee14245138b9e7232</field>
+        <field name="validation_status">false_positive</field>
+        <field name="notes">False positive report from Mimecast. The opensourceintegrators.com domain is legitimate and owned by Open Source Integrators. This report should be marked as false positive to prevent unnecessary ticket creation.</field>
+    </record>
+</odoo>

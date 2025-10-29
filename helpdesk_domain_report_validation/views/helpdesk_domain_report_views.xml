@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_helpdesk_domain_report_tree" model="ir.ui.view">
+        <field name="name">helpdesk.domain.report.tree</field>
+        <field name="model">helpdesk.domain.report</field>
+        <field name="arch" type="xml">
+            <tree string="Domain Reports">
+                <field name="domain" />
+                <field name="submitter" />
+                <field name="report_id" />
+                <field name="validation_status" widget="badge" decoration-success="validation_status == 'valid'" decoration-warning="validation_status == 'pending'" decoration-danger="validation_status == 'false_positive'" decoration-info="validation_status == 'whitelisted'" />
+                <field name="ticket_count" />
+                <field name="create_date" />
+                <field name="company_id" groups="base.group_multi_company" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_helpdesk_domain_report_form" model="ir.ui.view">
+        <field name="name">helpdesk.domain.report.form</field>
+        <field name="model">helpdesk.domain.report</field>
+        <field name="arch" type="xml">
+            <form string="Domain Report">
+                <header>
+                    <button name="action_mark_valid" string="Mark as Valid" type="object" class="oe_highlight" invisible="validation_status == 'valid'" />
+                    <button name="action_mark_false_positive" string="Mark as False Positive" type="object" class="btn-warning" invisible="validation_status == 'false_positive'" />
+                    <button name="action_whitelist" string="Whitelist Domain" type="object" class="btn-primary" invisible="validation_status == 'whitelisted'" />
+                    <field name="validation_status" widget="statusbar" statusbar_visible="pending,valid,false_positive,whitelisted" />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_tickets" type="object" class="oe_stat_button" icon="fa-ticket" invisible="ticket_count == 0">
+                            <field name="ticket_count" widget="statinfo" string="Tickets" />
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active" />
+                    <group>
+                        <group>
+                            <field name="domain" />
+                            <field name="submitter" />
+                            <field name="report_id" />
+                        </group>
+                        <group>
+                            <field name="active" invisible="1" />
+                            <field name="company_id" groups="base.group_multi_company" />
+                            <field name="create_date" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Notes">
+                            <field name="notes" placeholder="Add notes about this domain report..." />
+                        </page>
+                        <page string="Related Tickets" invisible="ticket_count == 0">
+                            <field name="ticket_ids" readonly="1">
+                                <tree>
+                                    <field name="name" />
+                                    <field name="partner_id" />
+                                    <field name="stage_id" />
+                                    <field name="priority" widget="priority" />
+                                    <field name="user_id" widget="many2one_avatar_user" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter />
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_helpdesk_domain_report_search" model="ir.ui.view">
+        <field name="name">helpdesk.domain.report.search</field>
+        <field name="model">helpdesk.domain.report</field>
+        <field name="arch" type="xml">
+            <search string="Domain Reports">
+                <field name="domain" />
+                <field name="submitter" />
+                <field name="report_id" />
+                <separator />
+                <filter string="Pending Validation" name="pending" domain="[('validation_status', '=', 'pending')]" />
+                <filter string="Valid Reports" name="valid" domain="[('validation_status', '=', 'valid')]" />
+                <filter string="False Positives" name="false_positive" domain="[('validation_status', '=', 'false_positive')]" />
+                <filter string="Whitelisted" name="whitelisted" domain="[('validation_status', '=', 'whitelisted')]" />
+                <separator />
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]" />
+                <group expand="0" string="Group By">
+                    <filter string="Validation Status" name="group_validation_status" context="{'group_by': 'validation_status'}" />
+                    <filter string="Submitter" name="group_submitter" context="{'group_by': 'submitter'}" />
+                    <filter string="Domain" name="group_domain" context="{'group_by': 'domain'}" />
+                    <filter string="Company" name="group_company" context="{'group_by': 'company_id'}" groups="base.group_multi_company" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_helpdesk_domain_report" model="ir.actions.act_window">
+        <field name="name">Domain Reports</field>
+        <field name="res_model">helpdesk.domain.report</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_pending': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new domain report
+            </p>
+            <p>
+                Domain reports track and validate domain-based reports from email
+                security services like Mimecast. Mark false positives to prevent
+                unnecessary ticket creation.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_helpdesk_domain_report" name="Domain Reports" parent="helpdesk.menu_helpdesk_root" action="action_helpdesk_domain_report" sequence="30" />
+</odoo>

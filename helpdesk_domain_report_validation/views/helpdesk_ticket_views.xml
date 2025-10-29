@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Inherit Helpdesk Ticket Form View -->
+    <record id="view_helpdesk_ticket_form_domain_report" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form.domain.report</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form" />
+        <field name="arch" type="xml">
+            <!-- Add button in button box -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_domain_report" type="object" class="oe_stat_button" icon="fa-shield" invisible="not domain_report_id" string="Domain Report" />
+            </xpath>
+
+            <!-- Add domain report fields in a new group -->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="is_domain_report" invisible="1" />
+                <field name="domain_report_id" invisible="not is_domain_report" />
+                <field name="domain_validation_status" widget="badge" decoration-success="domain_validation_status == 'valid'" decoration-warning="domain_validation_status == 'pending'" decoration-danger="domain_validation_status == 'false_positive'" decoration-info="domain_validation_status == 'whitelisted'" invisible="not is_domain_report" />
+            </xpath>
+
+            <!-- Add action button to mark as false positive -->
+            <xpath expr="//header" position="inside">
+                <button name="action_mark_report_false_positive" string="Mark Report as False Positive" type="object" invisible="not is_domain_report or domain_validation_status == 'false_positive'" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit Helpdesk Ticket Tree View -->
+    <record id="view_helpdesk_ticket_tree_domain_report" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.tree.domain.report</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="is_domain_report" column_invisible="True" />
+                <field name="domain_validation_status" optional="hide" widget="badge" decoration-success="domain_validation_status == 'valid'" decoration-warning="domain_validation_status == 'pending'" decoration-danger="domain_validation_status == 'false_positive'" decoration-info="domain_validation_status == 'whitelisted'" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit Helpdesk Ticket Search View -->
+    <record id="view_helpdesk_ticket_search_domain_report" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.search.domain.report</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_tickets_view_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='my_activities']" position="after">
+                <separator />
+                <filter string="Domain Reports" name="domain_reports" domain="[('is_domain_report', '=', True)]" />
+                <filter string="False Positive Reports" name="false_positive_reports" domain="[('domain_validation_status', '=', 'false_positive')]" />
+                <filter string="Whitelisted Reports" name="whitelisted_reports" domain="[('domain_validation_status', '=', 'whitelisted')]" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
