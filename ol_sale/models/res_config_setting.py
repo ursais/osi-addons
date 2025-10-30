@@ -12,3 +12,9 @@ class ResConfigSettings(models.TransientModel):
         config_parameter="ol_sale.rush_lead_time",
         default=2,
     )
+
+    no_po_lead_time = fields.Integer(
+        string="No Purchase order Lead Time ",
+        config_parameter="ol_sale.no_po_lead_time",
+        default=999,
+    )

@@ -15,6 +15,16 @@
                         </div>
                     </setting>
                 </block>
+
+                <block title="No Purchase order Lead time General Settings" id="no_po_lead_settings">
+                    <setting id="default_no_po_lead_time" string="Default No Purchase order Lead Days">
+                        <div class="content-group">
+                            <div class="mt16" >
+                                <field name="no_po_lead_time" class="oe_inline"/> days
+                            </div>
+                        </div>
+                    </setting>
+                </block>
             </xpath>
         </field>
     </record>
