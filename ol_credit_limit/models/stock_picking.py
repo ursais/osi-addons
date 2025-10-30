@@ -25,13 +25,14 @@ class StockPicking(models.Model):
 
     # END #########
     # METHODS #####
+
     def update_ignore_exceptions(self):
         """
         Force-enable `ignore_exception` on this picking.
         """
         self.ensure_one()
         if not self.ids:
-            return 
+            return
 
         query = """
             UPDATE stock_picking 

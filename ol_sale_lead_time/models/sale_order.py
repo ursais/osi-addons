@@ -6,6 +6,8 @@ from odoo import api, models, fields
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
+    # COLUMNS ###
+
     first_estimated_ship_date = fields.Date(
         string="First Estimated Ship Date",
         readonly=True,
@@ -13,6 +15,9 @@ class SaleOrder(models.Model):
     )
     last_esd_date = fields.Date("Last ESD Date")
     esd_warning_message = fields.Html(compute="_compute_esd_warning_message")
+
+    # END #######
+    # METHODS ###
 
     @api.depends("last_esd_date")
     def _compute_esd_warning_message(self):
@@ -139,9 +144,9 @@ class SaleOrder(models.Model):
                 base_date = comp_dates and max(comp_dates) or today
                 lead_days = (base_date - today).days
                 if not lead_days:
-                    bom_data = self.env["report.mrp.report_bom_structure"]._get_report_data(
-                        line.bom_id.id
-                    )
+                    bom_data = self.env[
+                        "report.mrp.report_bom_structure"
+                    ]._get_report_data(line.bom_id.id)
 
                     # Get components list from the BOM data
                     components = bom_data.get("lines", {}).get("components", [])
@@ -187,3 +192,5 @@ class SaleOrder(models.Model):
                     if mfg_sec:
                         lead_days += order.company_id.manufacturing_lead
                 line.customer_lead = max(0, lead_days)
+
+    # END #######

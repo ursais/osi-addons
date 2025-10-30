@@ -1,3 +1,4 @@
+# Import Odoo libs
 from odoo import fields, models
 
 
@@ -12,4 +13,5 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         help="Lead time (in days) to handle rush orders, specific per company.",
     )
+
     # END #######

@@ -1,10 +1,15 @@
+# Import Odoo libs
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
 class RepairBatchEndConfirmWizard(models.TransientModel):
+    """Wizard to let user modify consumption when ending repairs from batch."""
+
     _name = "repair.batch.end.confirm.wizard"
     _description = "Confirm Repair Quantity Differences"
+
+    # COLUMNS ###
 
     batch_id = fields.Many2one(
         "repair.batch",
@@ -21,6 +26,9 @@ class RepairBatchEndConfirmWizard(models.TransientModel):
         readonly=False,
         domain=[("repair_line_type", "=", "add")],
     )
+
+    # END #######
+    # METHODS ###
 
     @api.model
     def default_get(self, fields):
@@ -81,3 +89,5 @@ class RepairBatchEndConfirmWizard(models.TransientModel):
             self.batch_id._update_batch_state()
 
         return {"type": "ir.actions.act_window_close"}
+
+    # END #######

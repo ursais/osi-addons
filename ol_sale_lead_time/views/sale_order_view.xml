@@ -25,7 +25,6 @@
             </xpath>
             <xpath expr="//field[@name='payment_term_id']" position="after">
                 <field name="first_estimated_ship_date" readonly="1"/>
-                
             </xpath>
             <xpath expr="//page[@name='order_lines']//field[@name='order_line']//tree//field[@name='product_uom']" position="after">
                 <field name="available_date"/>

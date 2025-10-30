@@ -1,4 +1,5 @@
 <odoo>
+
     <record id="res_config_settings_view_form_inherit_rush_lead" model="ir.ui.view">
         <field name="name">res.config.settings.view.form.inherit.rush.lead</field>
         <field name="model">res.config.settings</field>
@@ -6,13 +7,14 @@
         <field name="arch" type="xml">
             <xpath expr="//block[@name='quotation_order_setting_container']" position="inside">
                 <setting id="default_rush_lead_time" string="Default Rush Lead Time">
-                        <div class="content-group">
-                            <div class="mt16" >
-                                <field name="rush_lead_time" class="oe_inline"/> days
-                            </div>
+                    <div class="content-group">
+                        <div class="mt16" >
+                            <field name="rush_lead_time" class="oe_inline"/> days
                         </div>
-                    </setting>
+                    </div>
+                </setting>
             </xpath>
         </field>
     </record>
+
 </odoo>

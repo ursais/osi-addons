@@ -1,9 +1,12 @@
+# Import Odoo libs
 from datetime import timedelta
 from odoo import api, fields, models
 
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
+
+    # COLUMNS ###
 
     available_date = fields.Date(
         string="Available Date",
