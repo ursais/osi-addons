@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 
+        Fleet Vehicle Form View Extension
+        
+        This view inherits from the fleet vehicle form view and adds a smart button
+        to display and access helpdesk tickets related to the vehicle.
+        
+        Features:
+        - Smart button showing count of helpdesk tickets
+        - Direct navigation to vehicle-specific helpdesk tickets
+        - Only visible to helpdesk users
+    -->
+<record id="view_fleet_vehicle_inherit_form_helpdesk" model="ir.ui.view">
+    <field name="name">view.fleet.vehicle.inherit.form.helpdesk</field>
+    <field name="model">fleet.vehicle</field>
+    <field name="inherit_id" ref="fleet.fleet_vehicle_view_form" />
+    <field name="arch" type="xml">
+        <!-- 
+            Add helpdesk tickets smart button to the button box
+            The button displays the count of tickets and opens a filtered view
+            when clicked, showing only tickets for this vehicle
+        -->
+        <div name="button_box" position="inside">
+            <button
+                name="open_fleet_helpdesk"
+                type="object"
+                class="oe_stat_button"
+                icon="fa-list-alt"
+                help="View all helpdesk tickets for this vehicle"
+                groups="helpdesk.group_helpdesk_user"
+            >
+                <field
+                    name="ticket_count"
+                    widget="statinfo"
+                    string="Tickets"
+                />
+            </button>
+        </div>
+    </field>
+</record>
+</odoo>
