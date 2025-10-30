@@ -4,6 +4,7 @@ from datetime import date, datetime, timedelta
 # Import Odoo libs
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+import pytz
 
 
 class SaleOrder(models.Model):
@@ -401,10 +402,21 @@ class SaleOrder(models.Model):
                     [("sale_order_ids", "in", order.id)]
                 )
                 if mo_batchs and order.commitment_date:
+                    user_tz = pytz.timezone(self.env.user.tz or 'UTC')
+
+                    # Convert user local time to terminal (UTC) time
+                    user_time = user_tz.localize(fields.Datetime.from_string(order.commitment_date))
+                    terminal_time = user_time.astimezone(pytz.UTC)
+
+                    # Convert to datetime (strip timezone info if needed)
+                    terminal_time_naive = terminal_time.replace(tzinfo=None)
+
+                    # Extract only the date
+                    terminal_date = terminal_time_naive.date()
                     mo_batchs.write(
                         {
                             "date_change_exception": True,
-                            "customer_request_date_proposed": order.commitment_date,
+                            "customer_request_date_proposed": terminal_date,
                         }
                     )
                     if mo_batchs.production_ids:

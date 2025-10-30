@@ -171,7 +171,14 @@ class SaleOrder(models.Model):
                     if mfg_sec:
                         lead_days += order.company_id.manufacturing_lead
                 else:
-                    lead_days += line.bom_id.produce_delay
+                    produce_delay = (
+                        self.env["ir.config_parameter"]
+                        .sudo()
+                        .get_param("mrp_batch.default_produce_delay", 0)
+                    )
+                    if not produce_delay:
+                        produce_delay = line.bom_id.produce_delay
+                    lead_days += int(produce_delay)
                     mfg_sec = (
                         self.env["ir.config_parameter"]
                         .sudo()

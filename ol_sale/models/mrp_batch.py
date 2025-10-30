@@ -184,6 +184,10 @@ class MrpProductionBatch(models.Model):
                 estimated_ship_date = forecast_expected_date + timedelta(
                     days=int(rush_lead_time)
                 )
+                if record.components_availability_state != "available" and record.production_ids.sale_order_id:
+                    sale_order_id = record.production_ids.sale_order_id
+                    if sale_order_id.commitment_date:
+                        estimated_ship_date = record.production_ids.sale_order_id.commitment_date.date()
                 weekday = estimated_ship_date.weekday()
                 # If Saturday (5), add 2 days → Monday
                 # If Sunday (6), add 1 day → Monday
