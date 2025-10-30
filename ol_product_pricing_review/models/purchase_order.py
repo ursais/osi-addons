@@ -19,44 +19,44 @@ class PurchaseOrder(models.Model):
 
     def button_confirm(self):
         res = super().button_confirm()
-
         product_ids = self.mapped("order_line.product_id")
-        PriceReview = self.env["product.price.review"]
+        is_kit_compo = product_ids.mapped("is_kits")
+        if not is_kit_compo:
+            PriceReview = self.env["product.price.review"]
 
-        # Find existing reviews for the products
-        existing_reviews = PriceReview.search([("product_id", "in", product_ids.ids)])
-        products_with_reviews = existing_reviews.mapped("product_id")
+            # Find existing reviews for the products
+            existing_reviews = PriceReview.search([("product_id", "in", product_ids.ids)])
+            products_with_reviews = existing_reviews.mapped("product_id")
 
-        # Find and reject any pending reviews directly
-        pending_reviews = PriceReview.search(
-            [
-                ("product_id", "in", product_ids.ids),
-                ("state", "=", "pending"),
-            ]
-        )
-        if pending_reviews:
-            pending_reviews.reject_button()
-            pending_reviews.message_post(
-                body=_(
-                    "Pending price review automatically rejected due to "
-                    "new Purchase Order confirmation."
-                ),
-                body_is_html=True,
+            # Find and reject any pending reviews directly
+            pending_reviews = PriceReview.search(
+                [
+                    ("product_id", "in", product_ids.ids),
+                    ("state", "=", "pending"),
+                ]
             )
+            if pending_reviews:
+                pending_reviews.reject_button()
+                pending_reviews.message_post(
+                    body=_(
+                        "Pending price review automatically rejected due to "
+                        "new Purchase Order confirmation."
+                    ),
+                    body_is_html=True,
+                )
 
-        # Determine which products need a new review:
-        # - Products without any review
-        # - Products whose pending review was just rejected
-        products_to_create_review = (
-            product_ids - products_with_reviews
-        ) | pending_reviews.mapped("product_id")
+            # Determine which products need a new review:
+            # - Products without any review
+            # - Products whose pending review was just rejected
+            products_to_create_review = (
+                product_ids - products_with_reviews
+            ) | pending_reviews.mapped("product_id")
 
-        # Create or update price reviews for those products
-        for product in products_to_create_review:
-            product.product_tmpl_id.sudo()._create_or_update_price_review(
-                product.product_tmpl_id
-            )
-
+            # Create or update price reviews for those products
+            for product in products_to_create_review:
+                product.product_tmpl_id.sudo()._create_or_update_price_review(
+                    product.product_tmpl_id
+                )
         return res
 
     def _compute_price_review_count(self):

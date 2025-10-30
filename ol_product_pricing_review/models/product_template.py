@@ -162,7 +162,7 @@ class ProductTemplate(models.Model):
     )
     def _compute_last_purchase_margin(self, from_review=False, from_threshold=False):
         """This will compute the last purchase margin."""
-        for rec in self:
+        for rec in self.filtered(lambda l: not l.product_variant_id.is_kits):
             last_purchase_margin = rec.last_purchase_margin or 0.0
 
             # Convert last purchase price if different currency
@@ -282,7 +282,7 @@ class ProductTemplate(models.Model):
         check and update/create one if needed."""
         res = super().write(vals)
         for rec in self:
-            if "margin_min" in vals or "margin_max" in vals:
+            if "margin_min" in vals or "margin_max" in vals and not rec.is_kits:
                 rec._compute_last_purchase_margin(from_threshold=True)
         return res
 
