@@ -23,7 +23,7 @@
                 </t>
                 <t t-if="sender">
                     <strong>
-                        <t t-if="address.override_company_name">
+                        <t t-if="address._name != 'res.company' and address.override_company_name">
                             <t t-esc="address.override_company_name"/>
                         </t>
                         <t t-else="">
