@@ -6,16 +6,17 @@ class AccountFiscalPosition(models.Model):
     """Inherit Fiscal Position for field/method changes."""
 
     _inherit = "account.fiscal.position"
+
     # COLUMNS #####
 
-    b2b =fields.Boolean("B2B")
+    b2b = fields.Boolean("B2B")
     vat_delivery_match = fields.Boolean(
         string="VAT ID Matches Delivery Country",
     )
 
     # END #########
+    # METHODS #####
 
-    # METHODS ######
     @api.model
     def _get_fiscal_position(self, partner, delivery=None):
         """
@@ -52,14 +53,20 @@ class AccountFiscalPosition(models.Model):
         delivery = delivery or partner
 
         # === Step 3: Get all auto-apply fiscal positions ===
-        fiscals = self.search([
-            ("auto_apply", "=", True),
-            ("company_id", "=", self.env.company.id),
-        ])
+        fiscals = self.search(
+            [
+                ("auto_apply", "=", True),
+                ("company_id", "=", self.env.company.id),
+            ]
+        )
 
         # === Step 4: Define scoring function ===
         def _score(fp):
-            return (4 * int(fp.vat_required)) + (2 * int(fp.b2b)) + int(fp.vat_delivery_match)
+            return (
+                (4 * int(fp.vat_required))
+                + (2 * int(fp.b2b))
+                + int(fp.vat_delivery_match)
+            )
 
         # === Step 5: Handle B2C logic ===
         if not is_company:
@@ -90,21 +97,30 @@ class AccountFiscalPosition(models.Model):
             if vat_match:
                 not_intra_fiscals = fiscals.filtered(
                     lambda l: (
-                        partner.country_id.code in l.country_group_id.country_ids.mapped("code")
+                        partner.country_id.code
+                        in l.country_group_id.country_ids.mapped("code")
                         or partner.country_id.code == l.country_id.code
                     )
                 )
-                if not_intra_fiscals and partner.vat and delivery and not delivery.vat and delivery.type == "delivery" and not delivery.is_company:
+                if (
+                    not_intra_fiscals
+                    and partner.vat
+                    and delivery
+                    and not delivery.vat
+                    and delivery.type == "delivery"
+                    and not delivery.is_company
+                ):
                     fiscals = not_intra_fiscals.filtered(lambda fp: not fp.vat_required)
                 if not not_intra_fiscals:
-                    fiscals = fiscals.filtered(lambda l: not l.country_group_id and not l.country_id)
+                    fiscals = fiscals.filtered(
+                        lambda l: not l.country_group_id and not l.country_id
+                    )
             else:
                 fiscals = fiscals.filtered(lambda fp: not fp.vat_delivery_match)
 
         # === Step 7: Special handling for Netherlands (NL) ===
-        if (
-            (partner.country_id and partner.country_id.code == "NL")
-            or (delivery.country_id and delivery.country_id.code == "NL")
+        if (partner.country_id and partner.country_id.code == "NL") or (
+            delivery.country_id and delivery.country_id.code == "NL"
         ):
             fiscals = fiscals.filtered(
                 lambda fp: (
@@ -122,3 +138,5 @@ class AccountFiscalPosition(models.Model):
         # === Step 9: Pick the best fiscal position by score ===
         best_fp = max(fiscals, key=_score)
         return best_fp
+
+    # END #########

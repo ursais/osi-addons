@@ -1,8 +1,11 @@
+# Import Odoo libs
 from odoo import api, models
 
 
 class ReportBomStructure(models.AbstractModel):
     _inherit = "report.mrp.report_bom_structure"
+
+    # METHODS #######
 
     @api.model
     def get_html(self, bom_id=False, searchQty=1, searchVariant=False):
@@ -12,3 +15,5 @@ class ReportBomStructure(models.AbstractModel):
         return super().get_html(
             bom_id=bom_id, searchQty=searchQty, searchVariant=searchVariant
         )
+
+    # END #######

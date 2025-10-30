@@ -1,7 +1,7 @@
 {
     "name": "Onlogic Accounting Vat",
-    "summary": "Accounting Enhancements.",
-    "description": """Accounting Enhancements.""",
+    "summary": "Accounting VAT Enhancements.",
+    "description": """Accounting VAT Enhancements.""",
     "author": "Onlogic",
     "website": "https://www.onlogic.com",
     "onlogic": True,

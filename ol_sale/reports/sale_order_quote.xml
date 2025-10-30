@@ -163,17 +163,13 @@
                             <t t-set="payment_terms" t-value="'Net Terms'"/>
                         </t>
                     </t>
-                    <!-- <t t-call="ol_templates.payment_terms" t-if="sale_order.payment_term_id">
-                        <t t-set="block_title">Payment Terms</t>
-                        <t t-set="payment_terms" t-value="sale_order.payment_term_id"/>
-                    </t> -->
                 </div>
 
                 <!--Shipping related information-->
                 <div class="ol_report_info_row_col shipping">
                     <t t-call="ol_templates.address">
                         <t t-set="show_vat_id" t-value="True"/>
-                        <t t-set="text">Ship To</t> 
+                        <t t-set="text">Ship To</t>
                         <t t-set="address" t-value="sale_order.partner_shipping_id"/>
                         <t t-set="shipping_ref" t-value="sale_order.shipping_ref"/>
                     </t>
@@ -195,7 +191,6 @@
                     </t>
                 </t>
             </t>
-            
 
             <t t-if="has_active_holds">
                 <div class="ol_watermark">
