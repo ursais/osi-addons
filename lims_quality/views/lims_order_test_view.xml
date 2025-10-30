@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_test_form_inherit" model="ir.ui.view">
+        <field name="name">lims.order.test.form.inherit</field>
+        <field name="model">lims.order.test</field>
+        <field name="inherit_id" ref="lims.lims_order_test_form" />
+        <field name="arch" type="xml">
+            <field name="tag_ids" position="after">
+                <field name="quality_control_point_id" />
+                <field name="quality_check_id" />
+            </field>
+        </field>
+    </record>
+</odoo>
