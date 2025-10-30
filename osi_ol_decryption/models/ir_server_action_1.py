@@ -203,7 +203,7 @@ class IrActionsServer(models.Model):
         self = self.sudo()
         mo_ids = self.env['mrp.production'].search(["&", ("state", "=", "confirmed"), ("product_qty", ">", 1)], order='product_qty')
         for mo in mo_ids:
-            mo.sale_order_id.with_delay().split_mo(split_internal_picking=True)
+            mo.sale_order_id.with_delay().split_mo()
 
     def set_timezones(self):
         """Set Timezones on companies/partners/users"""
@@ -2266,11 +2266,11 @@ class IrActionsServer(models.Model):
             "delivery_ups_rest",
             "delivery_usps_rest",
             "frepple",
-            "l10n_de_reports",
-            "l10n_eu_oss",
-            "l10n_my_reports",
-            "l10n_nl_intrastat",
-            "l10n_tw_reports",
+            # "l10n_de_reports",
+            # "l10n_eu_oss",
+            # "l10n_my_reports",
+            # "l10n_nl_intrastat",
+            # "l10n_tw_reports",
             "l10n_us_payment_nacha",
             "mrp_bom_comparison",
             "mrp_repair_component_history",
@@ -2308,13 +2308,13 @@ class IrActionsServer(models.Model):
             "account_move_name_sequence",
         ]
 
-        modules_ids = self.env["ir.module.module"].search(
-                [("name", "in", modules), ("state", "!=", "installed")]
-            )
-        for module in modules_ids:
-            # self.env["ir.module.module"].search(
-            #     [("name", "=", module), ("state", "!=", "installed")]
-            # ).button_immediate_install()
-            module.button_immediate_install()
+        # modules_ids = self.env["ir.module.module"].search(
+        #         [("name", "in", modules), ("state", "!=", "installed")]
+        #     )
+        for module in modules:
+            self.env["ir.module.module"].search(
+                [("name", "=", module), ("state", "!=", "installed")]
+            ).button_immediate_install()
+            # module.button_immediate_install()
 
 
