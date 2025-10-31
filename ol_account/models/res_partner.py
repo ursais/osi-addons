@@ -1,5 +1,6 @@
 # Import Odoo libs
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 
 class ResPartner(models.Model):
