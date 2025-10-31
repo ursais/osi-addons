@@ -10,6 +10,7 @@
     "license": "AGPL-3",
     # Modules required to this module to work properly
     "depends": [
+        "ol_base",
         "account",
     ],
     # Data Loaded.
