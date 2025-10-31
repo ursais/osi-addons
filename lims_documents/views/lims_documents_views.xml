@@ -1,0 +1,57 @@
+<odoo>
+    <record id="view_lims_order_document_wizard_form" model="ir.ui.view">
+        <field name="name">lims.order.document.wizard.form</field>
+        <field name="model">lims.order.document.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create Document">
+                <group>
+                    <field name="name" />
+                    <field name="description" />
+                    <field name="order_id" readonly="1" />
+                    <field name="upload" filename="filename" />
+                    <field name="filename" invisible="1" />
+                </group>
+                <footer>
+                    <button
+                        name="action_create_document"
+                        string="Create Document"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_lims_order_document_wizard" model="ir.actions.act_window">
+        <field name="name">Create Document</field>
+        <field name="res_model">lims.order.document.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="view_lims_order_form_inherit_documents" model="ir.ui.view">
+        <field name="name">lims.order.form.inherit.documents</field>
+        <field name="model">lims.order</field>
+        <field name="inherit_id" ref="lims.lims_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button
+                    name="action_open_create_document_wizard"
+                    type="object"
+                    string="Create Document"
+                    class="btn-primary"
+                />
+                <button
+                    name="action_view_documents"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-file"
+                >
+                    <field name="document_count" widget="statinfo" string="Documents" />
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
