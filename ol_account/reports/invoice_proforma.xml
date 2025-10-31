@@ -117,10 +117,6 @@
                             <t t-set="payment_terms" t-value="'Net Terms'"/>
                         </t>
                     </t>
-                    <!-- <t t-call="ol_templates.payment_terms" t-if="sale_order.payment_term_id">
-                        <t t-set="block_title">Payment Terms</t>
-                        <t t-set="payment_terms" t-value="sale_order.payment_term_id"/>
-                    </t> -->
               </div>
 
                 <!--Shipping related information-->

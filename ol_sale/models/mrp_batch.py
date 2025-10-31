@@ -114,18 +114,16 @@ class MrpProductionBatch(models.Model):
 
     @api.depends("components_availability", "components_availability_state")
     def _compute_estimated_ship_date(self):
+        default_produce_delay = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("mrp_batch.default_produce_delay")
+        )
+        rush_lead_time = (
+            self.env["ir.config_parameter"].sudo().get_param("ol_sale.rush_lead_time")
+        )
         for record in self:
             record.estimated_ship_date = False
-            default_produce_delay = (
-                self.env["ir.config_parameter"]
-                .sudo()
-                .get_param("mrp_batch.default_produce_delay")
-            )
-            rush_lead_time = (
-                self.env["ir.config_parameter"]
-                .sudo()
-                .get_param("ol_sale.rush_lead_time")
-            )
             valid_productions = record.production_ids.filtered(
                 lambda mo: mo.state not in ("draft", "cancel", "done", "to_close")
             )
@@ -166,11 +164,16 @@ class MrpProductionBatch(models.Model):
                     estimated_ship_date = record.ops_build_date + timedelta(
                         days=total_lead_time
                     )
-                elif record.components_availability_state != "available" and record.production_ids.sale_order_id:
+                elif (
+                    record.components_availability_state != "available"
+                    and record.production_ids.sale_order_id
+                ):
                     sale_order_id = record.production_ids.sale_order_id
                     if sale_order_id.commitment_date:
-                        estimated_ship_date = record.production_ids.sale_order_id.commitment_date.date()        
-                # 
+                        estimated_ship_date = (
+                            record.production_ids.sale_order_id.commitment_date.date()
+                        )
+                # Make sure estimated ship date doesn't fall on weekend
                 if estimated_ship_date:
                     weekday = estimated_ship_date.weekday()
                     # If Saturday (5), add 2 days → Monday
@@ -184,10 +187,15 @@ class MrpProductionBatch(models.Model):
                 estimated_ship_date = forecast_expected_date + timedelta(
                     days=int(rush_lead_time)
                 )
-                if record.components_availability_state != "available" and record.production_ids.sale_order_id:
+                if (
+                    record.components_availability_state != "available"
+                    and record.production_ids.sale_order_id
+                ):
                     sale_order_id = record.production_ids.sale_order_id
                     if sale_order_id.commitment_date:
-                        estimated_ship_date = record.production_ids.sale_order_id.commitment_date.date()
+                        estimated_ship_date = (
+                            record.production_ids.sale_order_id.commitment_date.date()
+                        )
                 weekday = estimated_ship_date.weekday()
                 # If Saturday (5), add 2 days → Monday
                 # If Sunday (6), add 1 day → Monday
