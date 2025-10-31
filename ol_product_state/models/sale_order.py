@@ -20,7 +20,9 @@ class SaleOrder(models.Model):
         errors = []
 
         for order in self:
-            for line in order.order_line.filtered(lambda l: l.bom_id):
+            for line in order.order_line.filtered(
+                lambda l: l.bom_id and not l.product_id.is_kits
+            ):
                 finished_product = line.product_id
 
                 def format_product(prod):
