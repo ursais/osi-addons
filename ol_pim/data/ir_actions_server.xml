@@ -1,0 +1,15 @@
+<odoo>
+
+    <record id="action_populate_pim_fields" model="ir.actions.server">
+        <field name="name">Populate PIM Fields From PIM Latest Message Data</field>
+        <field name="model_id" ref="product.model_product_template" />
+        <field name="binding_model_id" ref="product.model_product_template" />
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
+        <field name="state">code</field>
+        <field name="code">
+for product in records:
+    product.with_delay().action_populate_from_pim_latest_message()
+        </field>
+    </record>
+
+</odoo>

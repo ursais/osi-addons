@@ -22,6 +22,7 @@
     # always loaded
     "data": [
         "data/documents_folder.xml",
+        "data/ir_actions_server.xml",
         "views/attribute_attribute_views.xml",
         "views/attribute_group_views.xml",
         "views/attribute_option_views.xml",
