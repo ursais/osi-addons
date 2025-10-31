@@ -94,7 +94,7 @@ class StockQuant(models.Model):
             # Get the queue jobs unique identifier
             identity_key = quant.get_identity_key()
 
-            channel = self.env.ref("ol_webhooks.channel_webhook").complete_name
+            channel = self.env.ref("ol_webhooks.channel_webhook", raise_if_not_found=False).complete_name
 
             # We use delayed queue.jobs for this to not affect the normal user actions
             # We add a 60 second delay to stack up queue.jobs for the same stock quant
