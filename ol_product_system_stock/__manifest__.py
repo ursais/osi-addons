@@ -7,6 +7,7 @@
         "ol_base",
         "ol_product",
         "ol_mrp_plm",
+        "ol_api",
     ],
     "author": "OnLogic",
     "website": "https://www.onlogic.com",
