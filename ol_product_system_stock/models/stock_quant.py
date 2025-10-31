@@ -94,13 +94,19 @@ class StockQuant(models.Model):
             # Get the queue jobs unique identifier
             identity_key = quant.get_identity_key()
 
-            channel = self.env.ref("ol_webhooks.channel_webhook", raise_if_not_found=False).complete_name
+            channel_rec = self.env.ref(
+                "ol_webhooks.channel_webhook", raise_if_not_found=False
+            )
+            channel = channel_rec.complete_name if channel_rec else None
 
             # We use delayed queue.jobs for this to not affect the normal user actions
             # We add a 60 second delay to stack up queue.jobs for the same stock quant
             # and to allow Odoo to finish any long running processes to finish
             quant.with_delay(
-                eta=60, max_retries=1, identity_key=identity_key, channel=channel
+                eta=60,
+                max_retries=1,
+                identity_key=identity_key,
+                channel=channel,
             ).delayed_call_stock_change_response_functions(company=quant.env.company)
 
     def get_identity_key(self):
