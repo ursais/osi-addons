@@ -94,8 +94,8 @@
         <field name="name">Vendor Payment Template</field>
         <field name="model_id" ref="account.model_account_payment" />
         <field name="auto_delete" eval="False" />
-        <field name="lang">${object.partner_id.lang}</field>
-        <field name="email_from">${(object.journal_id.company_id.email or object.env.company.email or)|safe}</field>
+        <field name="lang">{{ object.partner_id.lang }}</field>
+        <field name="email_from">{{(object.company_id.email_formatted or user.email_formatted) }}</field>
         <field name="subject">OnLogic - Remittance Notification</field>
         <field name="partner_to">{{ object.partner_id.id }}</field>
         <field name="body_html" type="html">
