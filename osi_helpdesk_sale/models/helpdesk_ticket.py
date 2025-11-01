@@ -37,11 +37,14 @@ class HelpdeskTicket(models.Model):
                 self.partner_id.name, self.partner_id.sale_warn_msg
             )
             raise ValidationError(_(msg))
+        # Ensure note is empty string instead of False to prevent
+        # string conversion issues in reports/emails
+        note = self.description or ""
         order_id = self.env["sale.order"].create(
             {
                 "partner_id": self.partner_id.id,
                 "user_id": self.user_id.id,
-                "note": self.description,
+                "note": note,
             }
         )
         order_id.helpdesk_ticket_ids = [(6, 0, self.ids)]

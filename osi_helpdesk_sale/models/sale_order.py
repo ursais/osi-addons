@@ -25,15 +25,19 @@ class SaleOrder(models.Model):
 
     def create_ticket(self):
         self.ensure_one()
-        ticket_id = self.env["helpdesk.ticket"].create(
-            {
-                "name": self.name,
-                "partner_id": self.partner_id.id,
-                "user_id": self.user_id.id,
-                "partner_email": self.partner_id.email,
-                "description": self.note,
-            }
-        )
+        # Ensure description is empty string instead of False to prevent
+        # string conversion issues in reports/emails
+        description = self.note or ""
+        # Only set partner_email if it has a value
+        ticket_vals = {
+            "name": self.name,
+            "partner_id": self.partner_id.id,
+            "user_id": self.user_id.id,
+            "description": description,
+        }
+        if self.partner_id.email:
+            ticket_vals["partner_email"] = self.partner_id.email
+        ticket_id = self.env["helpdesk.ticket"].create(ticket_vals)
         ticket_id.sale_ids = [(6, 0, self.ids)]
         return {
             "name": _("Create Ticket"),
