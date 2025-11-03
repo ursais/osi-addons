@@ -55,4 +55,20 @@ class StockMove(models.Model):
                 )
             )
 
+    def unlink(self):
+        for move in self:
+            picking = move.picking_id
+            if (
+                picking
+                and picking.picking_type_id.code == 'outgoing' and picking.sale_id
+                and not self.env.user.has_group('ol_stock.group_allow_add_delete_line_out')
+            ):
+                raise ValidationError(_(
+                    "You are not allowed to delete stock moves for outgoing transfers "
+                    "that are linked to a sale order."
+                ))
+        
+        return super(StockMove, self).unlink()
+    
+
     # END #########

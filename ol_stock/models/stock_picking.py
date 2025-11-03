@@ -1,9 +1,9 @@
 # Import Python Libs
 import uuid
 
+
 # Import Odoo libs
 from odoo import api, fields, models
-
 
 class StockPicking(models.Model):
     """Inherit stock Picking to unreserve on creation if operation type is set to."""
@@ -53,16 +53,21 @@ class StockPicking(models.Model):
             picking.total_sales_price = sale_line_amount + carrier_price
 
     def _compute_can_add_stock_moves(self):
-        for rec in self:
-            # For receipts only allow adding a line if the user has the security group
-            is_receipt = rec.picking_type_id and rec.picking_type_id.code == "incoming"
-            if is_receipt:
-                rec.can_add_stock_moves = self.env.user.has_group(
+        user = self.env.user
+        for picking in self:
+            code = picking.picking_type_id.code
+            picking.can_add_stock_moves = False 
+
+            if code == "incoming":
+                picking.can_add_stock_moves = user.has_group(
                     "ol_stock.group_allow_incoming_move_addition"
                 )
+
+            elif code == "outgoing" and picking.sale_id:
+                picking.can_add_stock_moves = user.has_group(
+                    "ol_stock.group_allow_add_delete_line_out")
             else:
-                # For all other transfers, let users add a line
-                rec.can_add_stock_moves = True
+                picking.can_add_stock_moves = True
 
     def action_confirm(self):
         # Call the original button_validate method to confirm the picking

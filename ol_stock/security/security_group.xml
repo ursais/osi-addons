@@ -1,10 +1,13 @@
-
 <odoo>
-
     <record id="group_allow_incoming_move_addition" model="res.groups">
         <field name="name">Receipts: Allow Adding Lines to Incoming Transfers</field>
         <field name="category_id" ref="ol_base.onlogic_groups"/>
         <field name="users" eval="[(4, ref('base.user_admin'))]" />
     </record>
 
+    <record id="group_allow_add_delete_line_out" model="res.groups">
+        <field name="name">Delivery Orders: Allow Adding/Deleting Lines on OUT Transfers</field>
+        <field name="category_id" ref="ol_base.onlogic_groups"/>
+        <field name="users" eval="[(4, ref('base.user_admin'))]" />
+    </record>
 </odoo>
