@@ -95,33 +95,41 @@ class IrActionsServer(models.Model):
 
 
     def update_inspections(self):
+        self = self.sudo()
         _logger.info("===============update_inspections====================")
-
-        finace_id = self.env['sale.order.inspection'].search([('name', '=', 'Finance Manual Exception')])
-        ship_id = self.env['sale.order.inspection'].search([('name', '=', 'Do Not Ship')])
-        build_id = self.env['sale.order.inspection'].search([('name', '=', 'Do Not Build')])
+        inspection_obj = self.env['sale.order.inspection']
+        finace_id = inspection_obj.search([('name', '=', 'Finance Manual Exception')])
+        ship_id = inspection_obj.search([('name', '=', 'Do Not Ship')])
+        build_id = inspection_obj.search([('name', '=', 'Do Not Build')])
         self._cr.execute("select sale_id from temp_sale_workflow_hold where check_id in (55,69);")
         sale_ids = set([row[0] for row in self._cr.fetchall()])
         for sale in sale_ids:
             self._cr.execute(
-            "INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id) VALUES (%s, %s)",
+            "INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id) VALUES (%s, %s) ON CONFLICT DO NOTHING",
             (sale, finace_id.id))
         
         self._cr.execute("select sale_id from temp_sale_workflow_hold where check_id = 63;")
         sale_ids = set([row[0] for row in self._cr.fetchall()])
         for sale in sale_ids:
             self._cr.execute(
-            "INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id) VALUES (%s, %s)",
+            "INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id) VALUES (%s, %s) ON CONFLICT DO NOTHING",
             (sale, build_id.id))
         
         self._cr.execute("select sale_id from temp_sale_workflow_hold where check_id = 72;")
         sale_ids = set([row[0] for row in self._cr.fetchall()])
         for sale in sale_ids:
             self._cr.execute(
-            "INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id) VALUES (%s, %s)",
+            "INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id) VALUES (%s, %s) ON CONFLICT DO NOTHING",
             (sale, ship_id.id))
-        
-        self._cr.execute("drop table temp_ir_property_row_rack_case;")
+        self._cr.execute("select id,name from temp_sale_workflow_check where id not in (55,69,63,72);")
+        for check in self._cr.fetchall():
+            inspection = inspection_obj.search([('name', '=', check[1])])
+            self._cr.execute("select sale_id from temp_sale_workflow_hold where check_id = %s;"% (check[0],))
+            sale_ids = set([row[0] for row in self._cr.fetchall()])
+            for sale in sale_ids:
+                self._cr.execute(
+                "INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id) VALUES (%s, %s) ON CONFLICT DO NOTHING",
+                (sale, inspection.id))
             
 
     def tranfer_stock(self):
@@ -814,10 +822,13 @@ class IrActionsServer(models.Model):
         #     )
 
         
-
+        journal_obj = self.env['account.journal']
         
         # update the journal Data
-        bill_journal = self.env.ref('account.2_purchase', raise_if_not_found=True)
+        bill_journal = self.env.ref('account.2_purchase', raise_if_not_found=False)
+        if not bill_journal:
+            bill_journal = journal_obj.search([('name', '=', 'Vendor Bills'), ('company_id', '=', 2)])
+
         self._cr.execute("update account_journal set active = 'f' where id = 162;") #Purchase Journal USD
         self._cr.execute("update account_journal set active = 'f' where id = 158;") #Purchase Refund Journal USD
         self._cr.execute("update account_journal set active = 'f' where id = %s;", (bill_journal.id,)) #Vendor Bills
@@ -828,7 +839,7 @@ class IrActionsServer(models.Model):
         
         #update Journals
         account_obj = self.env['account.account']
-        journal_obj = self.env['account.journal']
+        
         for code in codes:
             journal_id = journal_obj.search([('code', '=', code), ('company_id', '=', us_compnay.id)])
             if journal_id:
@@ -944,7 +955,7 @@ class IrActionsServer(models.Model):
                 # new_code = format_decimal(new_code) 
                 if not old_code:
                     continue
-                # print ("\n old_code:-", old_code, "old_name:-", old_name, "old_type:-", old_type, "new_code:-", new_code, "new_name:-", new_name, "new_type:-", new_type)
+                print ("\n old_code:-", old_code, "old_name:-", old_name, "old_type:-", old_type, "new_code:-", new_code, "new_name:-", new_name, "new_type:-", new_type)
                 # Search account within company
                 account = self.env['account.account'].search([
                     ('code', '=', old_code),
@@ -1426,15 +1437,19 @@ class IrActionsServer(models.Model):
         self._cr.execute(
             "update product_template_attribute_value set is_qty_required ='t' where maximum_qty > 1"
         )
+        #move to .sh file
+        # products = obj_product.search_read(
+        #     [("id", "!=", False)], fields=["id", "backorder_config"], order="id"
+        # )
 
-        products = obj_product.search_read(
-            [("id", "!=", False)], fields=["id", "backorder_config"], order="id"
-        )
+        # for product in products:
+        #     if product.get("backorder_config") != "no-backorder":
+        #         product_17 = obj_product_17.browse(product.get("id"))
+        #         product_17.write({"allow_backorder": True})
+        #     else:
+        #         product_17 = obj_product_17.browse(product.get("id"))
+        #         product_17.write({"allow_backorder": False})
 
-        for product in products:
-            if product.get("backorder_config") != "no-backorder":
-                product_17 = obj_product_17.browse(product.get("id"))
-                product_17.write({"allow_backorder": True})
         return True
 
     
@@ -2282,7 +2297,7 @@ class IrActionsServer(models.Model):
             # "ol_graphql_product",
             # "ol_graphql_sale",
             # "ol_graphql_user",
-            "ol_l10n_nl_intrastat",
+            #"ol_l10n_nl_intrastat",
             "ol_multicompany",
             "ol_product_create_wizard",
             "ol_product_system_stock",
@@ -2291,7 +2306,7 @@ class IrActionsServer(models.Model):
             "ol_template",
             "ol_templates",
             "ol_ui",
-#            "ol_webhooks",
+           "ol_webhooks",
 #            "ol_webhooks_graphql",
             "osi_l10n_us_payment_nacha_email",
             "payment_paypal",
