@@ -80,7 +80,7 @@
                 <widget
                     name="web_ribbon"
                     title="Reversed"
-                    invisible="payment_state != 'reversed'" 
+                    invisible="payment_state != 'reversed'"
                 />
             </xpath>
 

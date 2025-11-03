@@ -1,9 +1,11 @@
 # Copyright (C) 2019 - 2021, Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import fields, models, _
-from odoo.exceptions import UserError
 import datetime
+
+from odoo import _, fields, models
+from odoo.exceptions import UserError
+
 
 class StockPicking(models.Model):
     _inherit = "stock.picking"

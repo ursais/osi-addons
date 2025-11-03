@@ -2,8 +2,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import math
+
 from odoo import _, api, fields, models
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class AccountPayment(models.Model):
@@ -58,22 +59,24 @@ class AccountPayment(models.Model):
         self.is_visible_check = False
         self.is_readonly_check = False
         if self.payment_type:
-            if (
-                self.payment_type == "inbound"
-                and self.payment_method_code in ("check_printing", "ACH-Out", "manual")
+            if self.payment_type == "inbound" and self.payment_method_code in (
+                "check_printing",
+                "ACH-Out",
+                "manual",
             ):
                 self.is_visible_check = True
                 self.check_number = 0
             elif self._context.get("is_vendor"):
-                if (
-                    self.payment_type == "outbound"
-                    and self.payment_method_code
-                    in ("check_printing", "ACH-Out", "manual")
+                if self.payment_type == "outbound" and self.payment_method_code in (
+                    "check_printing",
+                    "ACH-Out",
+                    "manual",
                 ):
                     self.is_visible_check = False
-            elif (
-                self.payment_type == "outbound"
-                and self.payment_method_code in ("check_printing", "ACH-Out", "manual")
+            elif self.payment_type == "outbound" and self.payment_method_code in (
+                "check_printing",
+                "ACH-Out",
+                "manual",
             ):
                 self.is_visible_check = True
                 if not self.check_manual_sequencing:
@@ -111,18 +114,30 @@ class AccountPayment(models.Model):
                     rec.message_post(body=message)
 
         # Since this method can be called via a client_action_multi, we need to make sure the received records are what we expect
-        self = self.filtered(lambda r: r.payment_method_line_id.code == 'check_printing' and r.state != 'reconciled')
+        self = self.filtered(
+            lambda r: r.payment_method_line_id.code == "check_printing"
+            and r.state != "reconciled"
+        )
 
         if len(self) == 0:
-            raise UserError(_("Payments to print as a checks must have 'Check' selected as payment method and "
-                              "not have already been reconciled"))
+            raise UserError(
+                _(
+                    "Payments to print as a checks must have 'Check' selected as payment method and "
+                    "not have already been reconciled"
+                )
+            )
         if any(payment.journal_id != self[0].journal_id for payment in self):
-            raise UserError(_("In order to print multiple checks at once, they must belong to the same bank journal."))
+            raise UserError(
+                _(
+                    "In order to print multiple checks at once, they must belong to the same bank journal."
+                )
+            )
 
         if not self[0].journal_id.check_manual_sequencing:
             # The wizard asks for the number printed on the first pre-printed check
             # so payments are attributed the number of the check the'll be printed on.
-            self.env.cr.execute("""
+            self.env.cr.execute(
+                """
                   SELECT payment.id
                     FROM account_payment payment
                     JOIN account_move move ON movE.id = payment.move_id
@@ -130,29 +145,44 @@ class AccountPayment(models.Model):
                    AND payment.check_number IS NOT NULL
                 ORDER BY payment.check_number::BIGINT DESC
                    LIMIT 1
-            """, {
-                'journal_id': self.journal_id.id,
-            })
+            """,
+                {
+                    "journal_id": self.journal_id.id,
+                },
+            )
             last_printed_check = self.browse(self.env.cr.fetchone())
-            bills_per_check = self.env['ir.config_parameter'].sudo().get_param('advance_check_void.bills_per_check') or 9
+            bills_per_check = (
+                self.env["ir.config_parameter"]
+                .sudo()
+                .get_param("advance_check_void.bills_per_check")
+                or 9
+            )
             number_len = len(last_printed_check.check_number or "")
-            next_check_number = '%0{}d'.format(number_len) % (int(last_printed_check.check_number) + (math.ceil(len(last_printed_check.reconciled_bill_ids) / bills_per_check) or 1))
+            next_check_number = "%0{}d".format(number_len) % (
+                int(last_printed_check.check_number)
+                + (
+                    math.ceil(
+                        len(last_printed_check.reconciled_bill_ids) / bills_per_check
+                    )
+                    or 1
+                )
+            )
 
             return {
-                'name': _('Print Pre-numbered Checks'),
-                'type': 'ir.actions.act_window',
-                'res_model': 'print.prenumbered.checks',
-                'view_mode': 'form',
-                'target': 'new',
-                'context': {
-                    'payment_ids': self.ids,
-                    'default_next_check_number': next_check_number,
-                }
+                "name": _("Print Pre-numbered Checks"),
+                "type": "ir.actions.act_window",
+                "res_model": "print.prenumbered.checks",
+                "view_mode": "form",
+                "target": "new",
+                "context": {
+                    "payment_ids": self.ids,
+                    "default_next_check_number": next_check_number,
+                },
             }
         else:
-            self.filtered(lambda r: r.state == 'draft').action_post()
+            self.filtered(lambda r: r.state == "draft").action_post()
             return self.do_print_checks()
-        
+
     def void_check_button(self):
         return {
             "name": _("Void Check"),
@@ -209,7 +239,7 @@ class AccountPayment(models.Model):
                     if res.state != "sent":
                         chk.write({"state": "void"})
         return result
-    
+
     def create(self, vals):
         res = super(AccountPayment, self).create(vals)
         for rec in res:
