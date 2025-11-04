@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit CRM Lead Form View -->
+    <record id="view_crm_lead_form_inherit_multiyear" model="ir.ui.view">
+        <field name="name">crm.lead.form.multiyear</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_leads"/>
+        <field name="arch" type="xml">
+            <!-- Add Multi-Year fields after the description field -->
+            <xpath expr="//field[@name='description']" position="after">
+                <group string="Project Information" attrs="{'invisible': [('x_project_type', 'not in', ['Monitoring', 'Test and Inspection', 'Renew - Test and Inspection'])]}">
+                    <field name="x_multiyear" attrs="{'required': [('x_project_type', 'in', ['Monitoring', 'Test and Inspection', 'Renew - Test and Inspection'])]}"/>
+                    <field name="x_number_of_years" attrs="{'required': [('x_multiyear', '=', True)], 'invisible': [('x_multiyear', '=', False)]}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit CRM Lead Opportunity Form View -->
+    <record id="view_crm_lead_opportunity_form_inherit_multiyear" model="ir.ui.view">
+        <field name="name">crm.lead.form.opportunity.multiyear</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+        <field name="arch" type="xml">
+            <!-- Add Multi-Year fields after the description field -->
+            <xpath expr="//field[@name='description']" position="after">
+                <group string="Project Information" attrs="{'invisible': [('x_project_type', 'not in', ['Monitoring', 'Test and Inspection', 'Renew - Test and Inspection'])]}">
+                    <field name="x_multiyear" attrs="{'required': [('x_project_type', 'in', ['Monitoring', 'Test and Inspection', 'Renew - Test and Inspection'])]}"/>
+                    <field name="x_number_of_years" attrs="{'required': [('x_multiyear', '=', True)], 'invisible': [('x_multiyear', '=', False)]}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit CRM Lead Kanban View to add fields to kanban -->
+    <record id="view_crm_lead_kanban_inherit_multiyear" model="ir.ui.view">
+        <field name="name">crm.lead.kanban.multiyear</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.view_crm_lead_kanban"/>
+        <field name="arch" type="xml">
+            <!-- Add fields to kanban record for use in kanban form -->
+            <xpath expr="//field[@name='planned_revenue']" position="after">
+                <field name="x_multiyear" invisible="1"/>
+                <field name="x_number_of_years" invisible="1"/>
+                <field name="x_project_type" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit CRM Lead Kanban View to add fields to kanban form -->
+    <record id="view_crm_lead_kanban_form_inherit_multiyear" model="ir.ui.view">
+        <field name="name">crm.lead.kanban.form.multiyear</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+        <field name="arch" type="xml">
+            <!-- Add Multi-Year fields to kanban form -->
+            <xpath expr="//field[@name='description']" position="after">
+                <group string="Project Information" attrs="{'invisible': [('x_project_type', 'not in', ['Monitoring', 'Test and Inspection', 'Renew - Test and Inspection'])]}">
+                    <field name="x_multiyear" attrs="{'required': [('x_project_type', 'in', ['Monitoring', 'Test and Inspection', 'Renew - Test and Inspection'])]}"/>
+                    <field name="x_number_of_years" attrs="{'required': [('x_multiyear', '=', True)], 'invisible': [('x_multiyear', '=', False)]}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
