@@ -144,18 +144,21 @@ class SaleOrder(models.Model):
                 base_date = comp_dates and max(comp_dates) or today
                 lead_days = (base_date - today).days
                 if not lead_days:
-                    bom_data = self.env[
-                        "report.mrp.report_bom_structure"
-                    ]._get_report_data(line.bom_id.id)
+                    # Check if bom_id exists and is valid before calling report
+                    if line.bom_id:
+                        bom_data = self.env[
+                            "report.mrp.report_bom_structure"
+                        ]._get_report_data(line.bom_id.id)
 
-                    # Get components list from the BOM data
-                    components = bom_data.get("lines", {}).get("components", [])
+                        # Get components list from the BOM data
+                        components = bom_data.get("lines", {}).get("components", [])
 
-                    max_component_delay = self.env[
-                        "report.mrp.report_bom_structure"
-                    ]._get_max_component_delay(components)
-                    if max_component_delay:
-                        lead_days += max_component_delay
+                        max_component_delay = self.env[
+                            "report.mrp.report_bom_structure"
+                        ]._get_max_component_delay(components)
+                        if max_component_delay:
+                            lead_days += max_component_delay
+
                 if not lead_days and not max_component_delay:
                     no_po_lead_time = (
                         self.env["ir.config_parameter"]
@@ -182,7 +185,7 @@ class SaleOrder(models.Model):
                         .get_param("mrp_batch.default_produce_delay", 0)
                     )
                     if not produce_delay:
-                        produce_delay = line.bom_id.produce_delay
+                        produce_delay = line.bom_id.produce_delay if line.bom_id else 0
                     lead_days += int(produce_delay)
                     mfg_sec = (
                         self.env["ir.config_parameter"]
