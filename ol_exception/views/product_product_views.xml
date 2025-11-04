@@ -1,0 +1,17 @@
+<odoo>
+
+    <record id="ol_exception_product_normal_form_view" model="ir.ui.view">
+        <field name="name">ol_exception.product.product.view.form.inherit</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <field name="uom_id" position="after">
+                <field name="tech_exception" />
+            </field>
+            <xpath expr="//sheet/div[hasclass('oe_button_box')]" position="before">
+                <widget name="web_ribbon" title="TECH EXCEPTION" bg_color="text-bg-danger" invisible="not tech_exception"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

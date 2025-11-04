@@ -1,0 +1,45 @@
+<odoo>
+
+   	<record id="ol_exception_sale_order_form" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_exception.view_order_form" />
+        <field name="arch" type="xml">
+            <field name="ignore_exception" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </field>
+            <field name="ignore_exception" position="after">
+                <field name="ignored_exception_ids" widget="many2many_tags" groups="base_exception.group_exception_rule_manager" />
+            </field>
+        </field>
+    </record>
+
+   	<record id="ol_exception_view_order_tree" model="ir.ui.view">
+        <field name="name">sale.order.tree</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_exception.view_order_tree" />
+        <field name="arch" type="xml">
+            <field name="main_exception_id" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+            <field name="main_exception_id" position="after">
+                <field name="exceptions_summary" optional="show" />
+            </field>
+        </field>
+    </record>
+
+   	<record id="ol_exception_view_quotation_tree" model="ir.ui.view">
+        <field name="name">sale.order.tree</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_exception.view_quotation_tree" />
+        <field name="arch" type="xml">
+            <field name="main_exception_id" position="attributes">
+                <attribute name="optional">show</attribute>
+            </field>
+            <field name="main_exception_id" position="after">
+                <field name="exceptions_summary" optional="show" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

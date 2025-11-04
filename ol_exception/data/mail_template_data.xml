@@ -1,0 +1,25 @@
+<odoo>
+
+	<record id="email_template_sale_downpayment" model="mail.template">
+        <field name="name">Sales: Sale Order has Downpayment and has a balance due</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="subject">{{'Sale Order has Downpayment and has a balance due' }}</field>
+        <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
+        <field name="body_html" type="html">
+            <div style="margin: 0px; padding: 0px;">
+                <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                    Hello OnLogic Finance Department,
+                    <br/><br/>
+                    Sale Order has a Downpayment with a balance due.
+                    <br/><br/>
+                    <a t-att-href="'%s/web#id=%d&amp;model=%s&amp;view_type=form' % (request.env['ir.config_parameter'].sudo().get_param('web.base.url'), object.id, object._name)" target="_blank" class="btn btn-primary">
+                        View Sale Order
+                    </a>
+                </p>
+            </div>
+        </field>
+        <field name="lang">{{ object.company_id.partner_id.lang }}</field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+</odoo>

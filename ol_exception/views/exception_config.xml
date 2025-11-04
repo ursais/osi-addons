@@ -1,0 +1,45 @@
+<odoo>
+
+    <record id="view_exception_config_form" model="ir.ui.view">
+        <field name="name">exception.config.form</field>
+        <field name="model">exception.config</field>
+        <field name="arch" type="xml">
+            <form string="Exception Trigger Fields">
+                <sheet>
+                    <group>
+                        <field name="model_id"/>
+                        <field name="trigger_field_ids" widget="many2many_tags" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_exception_config_tree" model="ir.ui.view">
+        <field name="name">exception.config.tree</field>
+        <field name="model">exception.config</field>
+        <field name="arch" type="xml">
+            <tree string="Exception Trigger Fields" editable="bottom">
+                <field name="model_id"/>
+                <field name="trigger_field_ids" widget="many2many_tags"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_exception_config" model="ir.actions.act_window">
+        <field name="name">Exception Trigger Fields</field>
+        <field name="res_model">exception.config</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_exception_config_tree"/>
+    </record>
+
+    <menuitem
+        id="menu_exception_config"
+        name="Exception Trigger Fields"
+        action="action_exception_config"
+        parent="base.menu_custom"
+        sequence="80"
+        groups="base_exception.group_exception_rule_manager"
+    />
+
+</odoo>
