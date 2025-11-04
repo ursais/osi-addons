@@ -1,0 +1,107 @@
+<odoo>
+
+    <record id="product_state.product_state_sellable" model="product.state">
+        <field name="default">False</field>
+        <field name="active">False</field>
+    </record>
+    <record id="product_state.product_state_obsolete" model="product.state">
+        <field name="active">False</field>
+    </record>
+
+    <record id="product_state_new" model="product.state">
+        <field name="code">new</field>
+        <field name="name">New</field>
+        <field name="default">False</field>
+        <field name="sequence">0</field>
+        <field name="approved_purchase" eval="False" />
+        <field name="approved_sale" eval="False" />
+        <field name="approved_sale_confirm" eval="False" />
+        <field name="approved_mrp" eval="False" />
+        <field name="approved_component_mrp" eval="False" />
+        <field name="approved_bom" eval="False" />
+        <field name="approved_ship" eval="False" />
+    </record>
+
+    <record id="product_state.product_state_draft" model="product.state">
+        <field name="default">True</field>
+        <field name="approved_purchase" eval="True" />
+        <field name="approved_sale" eval="False" />
+        <field name="approved_sale_confirm" eval="False" />
+        <field name="approved_mrp" eval="False" />
+        <field name="approved_component_mrp" eval="False" />
+        <field name="approved_bom" eval="False" />
+        <field name="approved_ship" eval="False" />
+    </record>
+
+    <record id="product_state_pre_order" model="product.state">
+        <field name="code">pre_order</field>
+        <field name="name">Pre-Order</field>
+        <field name="sequence">11</field>
+        <field name="approved_purchase" eval="True" />
+        <field name="approved_sale" eval="True" />
+        <field name="approved_sale_confirm" eval="True" />
+        <field name="approved_mrp" eval="False" />
+        <field name="approved_component_mrp" eval="False" />
+        <field name="approved_bom" eval="True" />
+        <field name="approved_ship" eval="False" />
+    </record>
+
+    <record id="product_state_active" model="product.state">
+        <field name="code">active</field>
+        <field name="name">Active</field>
+        <field name="sequence">12</field>
+        <field name="approved_purchase" eval="True" />
+        <field name="approved_sale" eval="True" />
+        <field name="approved_sale_confirm" eval="True" />
+        <field name="approved_mrp" eval="True" />
+        <field name="approved_component_mrp" eval="True" />
+        <field name="approved_bom" eval="True" />
+        <field name="approved_ship" eval="True" />
+    </record>
+
+    <record id="product_state_discontinued" model="product.state">
+        <field name="code">discontinued</field>
+        <field name="name">Discontinued</field>
+        <field name="sequence">13</field>
+        <field name="approved_purchase" eval="False" />
+        <field name="approved_sale" eval="True" />
+        <field name="approved_sale_confirm" eval="True" />
+        <field name="approved_mrp" eval="True" />
+        <field name="approved_component_mrp" eval="True" />
+        <field name="approved_bom" eval="True" />
+        <field name="approved_ship" eval="True" />
+    </record>
+
+    <record id="product_state.product_state_end" model="product.state">
+        <field name="approved_purchase" eval="False" />
+        <field name="approved_sale" eval="False" />
+        <field name="approved_sale_confirm" eval="False" />
+        <field name="approved_mrp" eval="True" />
+        <field name="approved_component_mrp" eval="True" />
+        <field name="approved_bom" eval="True" />
+        <field name="approved_ship" eval="True" />
+    </record>
+
+    <record id="product_state_canceled" model="product.state">
+        <field name="code">canceled</field>
+        <field name="name">Canceled</field>
+        <field name="sequence">31</field>
+        <field name="approved_purchase" eval="False" />
+        <field name="approved_sale" eval="False" />
+        <field name="approved_sale_confirm" eval="False" />
+        <field name="approved_mrp" eval="False" />
+        <field name="approved_component_mrp" eval="False" />
+        <field name="approved_bom" eval="False" />
+        <field name="approved_ship" eval="False" />
+    </record>
+
+    <!-- Stage Server Action: Allows for prototype products to change initial stages which don't require PLM. -->
+    <record id="action_move_initial_stage" model="ir.actions.server">
+        <field name="name">Change State to New/Development</field>
+        <field name="model_id" ref="product.model_product_template"/>
+        <field name="binding_model_id" ref="product.model_product_template"/>
+        <field name="state">code</field>
+        <field name="code">records.toggle_product_state()</field>
+    </record>
+
+</odoo>

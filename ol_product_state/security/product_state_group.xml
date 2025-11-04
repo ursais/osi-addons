@@ -1,0 +1,15 @@
+<odoo>
+
+    <!-- Add security group to bypass PLM workflows -->
+    <record id="group_product_state_change" model="res.groups">
+        <field name="name">Product State: Allow Change (Bypass PLM)</field>
+        <field name="category_id" ref="ol_base.onlogic_groups"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
+    </record>
+
+    <!-- Add product manager security group to root and admin accounts -->
+    <record id="sale_product_approval.group_product_administrator" model="res.groups">
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]" />
+    </record>
+
+</odoo>
