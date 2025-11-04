@@ -1,0 +1,227 @@
+<odoo>
+
+    <record id="action_helpdesk_import_sale" model="ir.actions.act_window">
+        <field name="name">Import Sale Order</field>
+        <field name="res_model">helpdesk.ticket.import.sale</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="ol_helpdesk_repair_batch_helpdesk_ticket_view_form_inherit_stock_user" model="ir.ui.view">
+		<field name="name">helpdesk.ticket.repair.form</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="priority">100</field>
+        <field name="inherit_id" ref="helpdesk_repair.helpdesk_ticket_view_form_inherit_stock_user" />
+        <field name="arch" type="xml">
+            <button name="action_open_helpdesk_ticket" position="before">
+                <button
+                    name="action_view_in_transfers"
+                    string="IN(s)"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-arrow-down"
+                    invisible="in_transfer_count == 0">
+                    <field name="in_transfer_count" widget="statinfo"/>
+                </button>
+                <button name="action_view_pickings"
+                        type="object"
+                        icon="fa-exchange"
+                        string="Internal Transfers"
+                        class="oe_stat_button"
+                        invisible="picking_count == 0"
+                    >
+                    <field name="picking_count" widget="statinfo"/>
+                </button>
+                <button
+                    name="action_view_repair_sale_orders"
+                    string="Sale Order(s)"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-usd"
+                    invisible="repair_sale_order_count == 0">
+                    <field name="repair_sale_order_count" widget="statinfo"/>
+                </button>
+                <button
+                    name="action_view_out_transfers"
+                    string="OUT(s)"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-truck"
+                    invisible="out_transfer_count == 0">
+                    <field name="out_transfer_count" widget="statinfo"/>
+                </button>
+                <button
+                    name="action_view_refund_ids"
+                    string="Refund(s)"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-usd"
+                    invisible="out_refund_count == 0">
+                    <field name="out_refund_count" widget="statinfo"/>
+                </button>
+            </button>
+            <xpath expr="//page[@name='description']" position="after">
+                <field name="use_product_repairs" invisible="1" groups="stock.group_stock_user" />
+                <page name="repairs" string="Repairs" invisible="not use_product_repairs">
+                    <field name="show_repair_history_alert" invisible="1" />
+                    <div class="alert alert-info" invisible="not show_repair_history_alert">
+                        <strong>Some linked serial numbers have other repairs:</strong>
+                        <field name="repair_history_html" widget="html" readonly="1"/>
+                    </div>
+                    <field name="show_generate_repairs" invisible="1" />
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="%(action_helpdesk_import_sale)d"
+                            string="Import from Sales Order"
+                            type="action"
+                            class="btn-primary me-2"
+                            context="{'default_ticket_id': active_id, 'default_partner_id': partner_id}"
+                            help="Opens a wizard that allows you to create batch repairs by importing products from sale orders."
+                        />
+                        <button
+                            name="action_generate_repairs"
+                            string="Generate Repairs"
+                            type="object"
+                            class="btn-primary me-2"
+                            invisible="not show_generate_repairs or not partner_id"
+                            help="Generate repair orders for batches that haven't had them created yet. This button is only visible if there is a batch without repair orders."
+                        />
+                        <button
+                            name="action_create_receipt"
+                            type="object"
+                            string="Create Receipt Transfer"
+                            class="btn-primary me-2"
+                            groups="stock.group_stock_user"
+                            invisible="not repair_ids or not partner_id"
+                            help="Create a receipt transfer for the finished goods that are on repair orders. The customer is set as the owner for the products on the receipt (Consignment Functionality). Receipts are auto set for 7 days out."
+                        />
+                        <button
+                            name="action_create_sale_order"
+                            type="object"
+                            string="Create Repair Sale Order"
+                            class="btn-primary me-2"
+                            groups="stock.group_stock_user"
+                            invisible="not partner_id"
+                            help="Create a sale order to ship back the finished, repaired products. All repair 'ADD' lines are added, if 'Do not charge customer' is set on the repair then sale price will be zero, otherwise sale price is the price of the product or pricelist price."
+                        />
+                        <button
+                            name="action_open_credit_note_wizard"
+                            type="object"
+                            string="Create Credit Note Wizard"
+                            class="btn-primary me-2"
+                            invisible="not partner_id"
+                            help="Opens the credit note wizard to build and create a credit note."
+                        />
+                    </div>
+                    <group name="repair_batches" string="Repair Batches">
+                        <field name="original_sale_order_ids" widget="many2many_tags" readonly="1" />
+                        <field name="repair_sale_order_ids" widget="many2many_tags" readonly="1" />
+                        <field nolabel="1" colspan="2" name="repair_batch_ids" readonly="not id" context="{'default_partner_id': partner_id, 'default_sale_id': repair_sale_order_ids[0]}" >
+                            <tree string="Repair Batch">
+                                <field name="name" optional="show" />
+                                <button name="open_batch_full_form" type="object" icon="fa-external-link" title="Open in Full Form" />
+                                <field name="repair_count" column_invisible="1" />
+                                <field name="partner_id" optional="hide" />
+                                <field name="ticket_id" optional="hide" />
+                                <field name="product_id" optional="show" />
+                                <field name="qty" optional="show" />
+                                <field name="lot_ids" widget="many2many_tags" optional="show" />
+                                <field name="schedule_date" optional="hide" />
+                                <field name="sale_id" optional="hide" />
+                                <field name="sale_line_id" optional="hide" />
+                                <field name="company_id" optional="hide" />
+                                <field name="repair_ids" optional="show" />
+                                <field name="state" optional="show" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')" />
+                                <button name="action_generate_repairs" type="object" string="Create Repairs" class="btn-secondary" invisible="repair_count >= qty" />
+                            </tree>
+                        </field>
+                    </group>
+                    <group name="repair_orders" string="Repair Orders">
+                        <field nolabel="1" colspan="2" name="repair_ids" >
+                            <tree string="Repairs order" multi_edit="1" sample="1" decoration-info="state == 'draft'">
+                                <field name="company_id" column_invisible="True" />
+                                <field name="priority" optional="show" widget="priority" nolabel="1" />
+                                <field name="name" />
+                                <button name="open_repair_full_form" type="object" icon="fa-external-link" title="Open in Full Form" />
+                                <field name="schedule_date" optional="show" widget="remaining_days" />
+                                <field name="product_id" readonly="1" optional="show" />
+                                <field name="parts_availability_state" column_invisible="True" />
+                                <field name="parts_availability" invisible="state not in ['confirmed', 'under_repair']" optional="show" decoration-success="parts_availability_state == 'available'" decoration-warning="parts_availability_state == 'expected'" decoration-danger="parts_availability_state == 'late'" />
+                                <field name="product_qty" optional="hide" string="Quantity" readonly="state != 'draft'" />
+                                <field name="product_uom" string="Unit of Measure" readonly="1" groups="uom.group_uom" optional="hide" />
+                                <field name="user_id" optional="hide" widget='many2one_avatar_user'/>
+                                <field name="partner_id" readonly="1" optional="hide" />
+                                <field name="picking_id" optional="hide" />
+                                <field name="is_returned" optional="hide" />
+                                <field name="sale_order_id" optional="hide" />
+                                <field name="lot_id" optional="show" />
+                                <field name="warranty_expiration_date" optional="show" />
+                                <field name="location_id" optional="hide" />
+                                <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide" />
+                                <field name="state" optional="show" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')" />
+                                <field name="activity_exception_decoration" widget="activity_exception" />
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+            <button name="action_repair_order_form" position="replace" />
+            <field name="email_cc" position="before">
+                <field name="partner_email" widget="email" />
+            </field>
+        </field>
+    </record>
+
+    <record id="view_helpdesk_ticket_form_inherit_ol_helpdesk_repair_batch" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form.inherit</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="account_manager_id"/>
+            </xpath>
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="flags"/>
+            </xpath>
+            <xpath expr="//field[@name='email_cc']" position="after">
+                <field name="carrier_id"/>
+                <field name="shipping_account"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Action for Repair Batches -->
+    <record id="action_repair_batches" model="ir.actions.act_window">
+        <field name="name">Repair Batches</field>
+        <field name="res_model">repair.batch</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+    </record>
+
+    <!-- Main "Repairs" menu under Helpdesk -->
+    <menuitem
+        id="menu_helpdesk_repairs_root"
+        name="Repairs"
+        parent="helpdesk.menu_helpdesk_root"
+        sequence="19"
+    />
+
+    <!-- Submenu: Repair Batches -->
+    <menuitem
+        id="menu_repair_batches"
+        name="Repair Batches"
+        parent="menu_helpdesk_repairs_root"
+        action="action_repair_batches"
+        sequence="10"
+    />
+
+    <!-- Submenu: Repair Orders -->
+    <menuitem
+        id="menu_repair_orders"
+        name="Repair Orders"
+        parent="menu_helpdesk_repairs_root"
+        action="repair.action_repair_order_tree"
+        sequence="20"
+    />
+
+</odoo>

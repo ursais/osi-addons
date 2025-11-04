@@ -1,0 +1,27 @@
+<odoo>
+
+    <record id="ol_helpdesk_repair_batch_os" model="helpdesk.tag">
+        <field name="name">Operating System</field>
+    </record>
+
+    <record id="ol_helpdesk_repair_batch_eth" model="helpdesk.tag">
+        <field name="name">Ethernet Connection</field>
+    </record>
+
+    <record id="ol_helpdesk_repair_batch_firmware" model="helpdesk.tag">
+        <field name="name">Firmware</field>
+    </record>
+
+    <record id="ol_helpdesk_repair_batch_Hardware" model="helpdesk.tag">
+        <field name="name">Hardware Failure</field>
+    </record>
+
+    <record id="ol_helpdesk_repair_batch_poe" model="helpdesk.tag">
+        <field name="name">PoE</field>
+    </record>
+
+    <record id="ol_helpdesk_repair_batch_rush" model="helpdesk.tag">
+        <field name="name">Rush</field>
+    </record>
+
+</odoo>

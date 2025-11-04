@@ -1,0 +1,157 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="ol_helpdesk_repair_batch_view_tree" model="ir.ui.view">
+        <field name="name">repair.batch.tree</field>
+        <field name="model">repair.batch</field>
+        <field name="arch" type="xml">
+            <tree string="Repair Batch">
+                <field name="name" optional="show" />
+                <field name="repair_count" column_invisible="1" />
+                <field name="sale_id" optional="show" />
+                <field name="partner_id" optional="hide" />
+                <field name="ticket_id" optional="hide" />
+                <field name="product_id" optional="show" />
+                <field name="qty" optional="show" />
+                <field name="under_warranty" optional="show" />
+                <field name="lot_ids" widget="many2many_tags" optional="show" />
+                <field name="schedule_date" optional="hide" />
+                <field name="invoice_date" optional="hide" />
+                <field name="salesperson_id" optional="hide" />
+                <field name="sale_line_id" optional="hide" />
+                <field name="company_id" optional="hide" />
+                <field name="repair_ids" optional="show" />
+                <field name="state" optional="show" widget="badge" decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')" />
+                <button name="action_generate_repairs" type="object" string="Create Repairs" class="btn-secondary" invisible="repair_count &gt;= qty" />
+            </tree>
+        </field>
+    </record>
+    <record id="ol_helpdesk_repair_batch_view_form" model="ir.ui.view">
+        <field name="name">repair.batch.form</field>
+        <field name="model">repair.batch</field>
+        <field name="arch" type="xml">
+            <form string="Repair Batch">
+                <field name="unreserve_visible" invisible="1" />
+                <field name="reserve_visible" invisible="1" />
+                <field name="start_repair_visible" invisible="1" />
+                <field name="end_repair_visible" invisible="1" />
+                <field name="cancel_visible" invisible="1" />
+                <field name="repair_count" invisible="1" />
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,complete" />
+                    <button name="action_generate_repairs" type="object" string="Create Repairs" class="btn-secondary" invisible="repair_count &gt;= qty" />
+                    <button name="action_validate" string="Confirm Repairs" type="object" class="btn-primary" invisible="state != 'draft' or repair_count == 0" />
+                    <button name="action_repair_start" string="Start Repair" type="object" class="btn-secondary" invisible="not start_repair_visible" />
+                    <button name="action_repair_end" string="End Repair" type="object" class="btn-success" invisible="not end_repair_visible" />
+                    <button name="action_assign" string="Check availability" type="object" invisible="state in ('draft', 'done', 'cancel') or not reserve_visible" />
+                    <button name="action_unreserve" string="Unreserve" type="object" invisible="not unreserve_visible" />
+                    <button name="action_repair_cancel" string="Cancel" type="object" class="btn-danger" invisible="not cancel_visible" />
+                    <button name="action_repair_cancel_draft" string="Set to Draft" type="object" class="btn-danger" invisible="state != 'cancel'" />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_pickings" type="object" string="Internal Transfers" icon="fa-exchange" class="oe_stat_button" invisible="picking_count == 0">
+                            <field name="picking_count" widget="statinfo" />
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" options="{'line_breaks': False}" widget="text" class="field_name" placeholder="New" readonly="1" force_save="1" />
+                        </h1>
+                    </div>
+                    <group name="information">
+                        <group name="general">
+                            <field name="tracking" invisible="1" />
+                            <field name="lot_ids_domain" invisible="1" />
+                            <field name="lot_ids" domain="lot_ids_domain" widget="many2many_tags" />
+                            <field name="sale_id" />
+                            <field name="partner_id" />
+                            <field name="product_id" />
+                            <field name="qty" />
+                            <field name="under_warranty" />
+                        </group>
+                        <group name="sale_info">
+                            <field name="schedule_date" readonly="state in ['done', 'cancel']" />
+                            <field name="ticket_id" />
+                            <field name="salesperson_id" />
+                            <field name="sale_line_id" domain="[('order_id', '=', sale_id), ('product_id', '!=', False)]" />
+                            <field name="invoice_date" />
+                            <field name="user_id" domain="[('share', '=', False)]" />
+                            <field name="company_id" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Bulk Actions">
+                            <field name="show_create_removal_button" invisible="1" />
+                            <button name="action_batch_create_removal_lines" type="object" string="Load Removed Components on Repair Orders" class="oe_highlight" invisible="not show_create_removal_button" />
+                            <field name="part_lines" readonly="state == 'cancel' or state == 'done'" context="{'default_repair_batch_id': id, 'default_company_id': company_id}">
+                                <tree string="Operations" editable="bottom">
+                                    <field name="repair_line_type" required="1" />
+                                    <field name="product_id" required="1" />
+                                    <field name="quantity" string="Quantity" required="1" />
+                                    <field name="reason_code_id_domain" invisible="1" />
+                                    <field name="reason_code_id" optional="show" domain="reason_code_id_domain" />
+                                    <field name="note" optional="show" />
+                                </tree>
+                            </field>
+                            <div class="clearfix" />
+                        </page>
+                        <page string="Repair Orders">
+                            <field name="repair_ids">
+                                <tree string="Repairs order" multi_edit="1" sample="1" decoration-info="state == 'draft'">
+                                    <field name="name" optional="hide" />
+                                    <field name="company_id" column_invisible="True" />
+                                    <field name="priority" optional="show" widget="priority" nolabel="1" />
+                                    <field name="name" />
+                                    <field name="schedule_date" optional="show" widget="remaining_days" />
+                                    <field name="product_id" readonly="1" optional="show" />
+                                    <field name="parts_availability_state" column_invisible="True" />
+                                    <field name="parts_availability" invisible="state not in ['confirmed', 'under_repair']" optional="show" decoration-success="parts_availability_state == 'available'" decoration-warning="parts_availability_state == 'expected'" decoration-danger="parts_availability_state == 'late'" />
+                                    <field name="product_qty" optional="hide" string="Quantity" readonly="state != 'draft'" />
+                                    <field name="product_uom" string="Unit of Measure" readonly="1" groups="uom.group_uom" optional="hide" />
+                                    <field name="user_id" optional="hide" widget="many2one_avatar_user" />
+                                    <field name="partner_id" readonly="1" optional="hide" />
+                                    <field name="picking_id" optional="hide" />
+                                    <field name="is_returned" optional="hide" />
+                                    <field name="sale_order_id" optional="hide" />
+                                    <field name="lot_id" optional="show" />
+                                    <field name="location_id" optional="hide" />
+                                    <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show" />
+                                    <field name="state" optional="show" widget="badge" decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')" />
+                                    <field name="activity_exception_decoration" widget="activity_exception" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="ol_helpdesk_repair_batch_view_search" model="ir.ui.view">
+        <field name="name">repair.batch.search</field>
+        <field name="model">repair.batch</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="ticket_id" />
+                <field name="product_id" />
+                <field name="partner_id" />
+                <field name="sale_id" />
+                <field name="user_id" string="Responsible" />
+                <field name="schedule_date" />
+                <filter name="filter_draft" string="Draft" domain="[('state', '=', 'draft')]" />
+                <filter name="filter_confirmed" string="Confirmed" domain="[('state', '=', 'confirmed')]" />
+                <filter name="filter_under_repair" string="Under Repair" domain="[('state', '=', 'under_repair')]" />
+                <filter name="filter_done" string="Done" domain="[('state', '=', 'done')]" />
+                <filter name="filter_cancel" string="Cancelled" domain="[('state', '=', 'cancel')]" />
+                <group expand="1" string="Group By">
+                    <filter name="group_by_ticket" string="Ticket" context="{'group_by': 'ticket_id'}" />
+                    <filter name="group_by_partner" string="Partner" context="{'group_by': 'partner_id'}" />
+                    <filter name="group_by_user" string="Responsible" context="{'group_by': 'user_id'}" />
+                    <filter name="group_by_product" string="Product" context="{'group_by': 'product_id'}" />
+                    <filter name="group_by_state" string="Status" context="{'group_by': 'state'}" />
+                    <filter name="group_by_date" string="Scheduled Date" context="{'group_by': 'schedule_date'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

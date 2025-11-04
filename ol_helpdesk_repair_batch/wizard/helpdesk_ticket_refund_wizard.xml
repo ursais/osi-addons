@@ -1,0 +1,60 @@
+<odoo>
+
+    <record id="view_repair_credit_note_wizard_form" model="ir.ui.view">
+        <field name="name">Credit Note Wizard</field>
+        <field name="model">repair.credit.note.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create Credit Note">
+                <header>
+                    <button
+                        name="action_add_from_sale_orders"
+                        type="object"
+                        string="Add From Sale Orders"
+                        class="btn-primary"
+                    />
+                    <button
+                        name="action_add_from_repairs"
+                        type="object"
+                        string="Add Removed Components"
+                        class="btn-secondary"
+                    />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="ticket_id" invisible="1" />
+                            <field name="partner_id" />
+                            <field name="original_sale_order_ids" widget="many2many_tags" domain="[('partner_id', '=', partner_id)]" />
+                        </group>
+                        <group>
+                            <field name="restock_fee" widget="percentage" />
+                            <field name="original_repair_order_ids" widget="many2many_tags" domain="[('ticket_id', '=', ticket_id)]" />
+                        </group>
+                    </group>
+                    <group string="Credit Note Lines">
+                        <field name="line_ids" nolabel="1" colspan="2">
+                            <tree editable="bottom">
+                                <field name="product_id" />
+                                <field name="name" string="Label" optional="show" />
+                                <field name="quantity" />
+                                <field name="price_unit" />
+                                <field name="tax_ids" widget="many2many_tags" optional="show" />
+                                <field name="account_id" optional="hide" />
+                                <field name="discount" widget="percent" optional="show" />
+                                <field name="currency_id" column_invisible="1" />
+                                <field name="price_subtotal" widget="monetary" sum="Price Subtotal" readonly="1" optional="hide" />
+                                <field name="price_tax" widget="monetary" sum="Price Tax" readonly="1" optional="hide" />
+                                <field name="price_total" widget="monetary" sum="Price Total" readonly="1" optional="show" />
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Cancel" special="cancel" />
+                    <button name="action_confirm" string="Create Credit Note" type="object" class="btn-primary" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

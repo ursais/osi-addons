@@ -1,0 +1,8 @@
+<odoo noupdate="1">
+
+    <record id="rma_return_sale_type" model="sale.order.type">
+        <field name="name">RMA Return</field>
+        <field name="company_id" eval="False" />
+    </record>
+
+</odoo>
