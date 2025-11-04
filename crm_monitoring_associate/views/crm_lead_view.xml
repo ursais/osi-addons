@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2024 - TODAY, Open Source Integrators
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+
+<odoo>
+    <record id="crm_monitoring_associate_form_view" model="ir.ui.view">
+        <field name="name">crm.lead.form.monitoring</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+        <field name="arch" type="xml">
+            <!-- Add monitoring fields after the partner_id field -->
+            <field name="partner_id" position="after">
+                <field name="monitoring_included"/>
+                <field name="monitoring_sales_associate_id" 
+                       attrs="{'invisible': [('monitoring_included', '=', False)],
+                               'required': [('monitoring_included', '=', True)]}"/>
+            </field>
+        </field>
+    </record>
+    
+    <!-- Also add to leads form view -->
+    <record id="crm_monitoring_associate_form_view_leads" model="ir.ui.view">
+        <field name="name">crm.lead.form.monitoring.leads</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_form_view_leads"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="monitoring_included"/>
+                <field name="monitoring_sales_associate_id" 
+                       attrs="{'invisible': [('monitoring_included', '=', False)],
+                               'required': [('monitoring_included', '=', True)]}"/>
+            </field>
+        </field>
+    </record>
+</odoo>
