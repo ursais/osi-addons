@@ -1,0 +1,69 @@
+<odoo>
+
+    <record id="action_update_bom" model="ir.actions.server">
+        <field name="name">Update BoM</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="mrp_batch.model_mrp_production_batch" />
+        <field name="binding_model_id" ref="mrp_batch.model_mrp_production_batch" />
+        <field name="state">code</field>
+        <field name="code">
+for rec in records:
+    if rec.is_outdated_bom and rec.state in ("draft", "confirm"):
+        rec.action_update_bom()
+        </field>
+    </record>
+
+    <record id="action_run_computes" model="ir.actions.server">
+        <field name="name">Manually Trigger Computes</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="mrp_batch.model_mrp_production_batch" />
+        <field name="binding_model_id" ref="mrp_batch.model_mrp_production_batch" />
+        <field name="state">code</field>
+        <field name="code">
+for rec in records:
+    rec._compute_mrp_production_cancel()
+    rec._compute_mrp_production_done()
+    rec._compute_lock()
+    rec._compute_is_planned()
+    rec._compute_is_delayed()
+    rec._compute_reservation_state()
+    rec._compute_components_availability()
+    rec._compute_components_availability_details()
+        </field>
+    </record>
+
+    <record id="action_set_batch_schedule" model="ir.actions.server">
+        <field name="name">Set Schedule Day</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="mrp_batch.model_mrp_production_batch" />
+        <field name="binding_model_id" ref="mrp_batch.model_mrp_production_batch" />
+        <field name="state">code</field>
+        <field name="code">
+for batch in records:
+    if not batch.date_start or not batch.workcenter_tag_id:
+        continue  # Skip if essential fields are missing
+
+    # Convert date_start to a date-only format
+    schedule_date = batch.date_start.date()
+
+    # Find an existing schedule for this date and workcenter tag
+    schedule = env["mrp.production.batch.schedule"].search([
+        ("date", "=", schedule_date),
+        ("workcenter_tag_id", "=", batch.workcenter_tag_id.id),
+        ("company_id", "=", batch.company_id.id),
+    ], limit=1)
+
+    # If no schedule exists, create one
+    if not schedule:
+        schedule = env["mrp.production.batch.schedule"].create({
+            "date": schedule_date,
+            "workcenter_tag_id": batch.workcenter_tag_id.id,
+            "company_id": batch.company_id.id or env.company,
+        })
+
+    # # Assign the schedule to the batch
+    batch.write({"mrp_batch_schedule_id": schedule.id})
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,63 @@
+<odoo>
+
+    <template id="mrp_batch_report">
+        <t t-foreach="docs" t-as="mrp_batch_data">
+            <t t-call="web.external_layout">
+                <main>
+                    <table class="table table-sm">
+                        <tr>
+                            <td colspan="2"><h6>Batch# <span t-esc="mrp_batch_data.name" /></h6></td>
+                            <td colspan="2">
+                                <h6>Customer: <t t-foreach="mrp_batch_data.partner_ids" t-as="partner"><span t-esc="partner.name" />,</t></h6>
+                            </td>
+                            <td colspan="2"><h6>Scheduled Date: <span t-esc="mrp_batch_data.get_format_date(mrp_batch_data.date_start)" /></h6></td>
+                        </tr> 
+                        <tr>
+                            <td colspan="2"><h6>Responsible:<span t-esc="mrp_batch_data.responsible_id.name" /></h6></td>
+                            <td colspan="2">
+                                <h6>Tags: <t t-foreach="mrp_batch_data.tag_ids" t-as="tag"><span t-esc="tag.name" />,</t></h6>
+                            </td>
+                            <td colspan="2"><h6>Act.Date:</h6></td>
+                        </tr>
+                        <tr>
+                            <td colspan="6"><h2><b><span t-field="mrp_batch_data.state" /></b></h2></td>
+                        </tr>
+                    </table>
+                    <table class="table table-sm">
+                        <tr>
+                            <th>Manufacturing Orders</th>
+                            <th>Product</th>
+                            <th>BOM</th>
+                            <th>Quantity</th>
+                            <th>Scheduled Date</th>
+                            <th>Done Date</th>
+                        </tr>
+                        <t t-foreach="mrp_batch_data.production_ids" t-as="mo">
+                            <tr>
+                                <td>
+                                    <span t-field="mo.name" />
+                                </td>
+                                <td>
+                                    <span t-field="mo.product_id" />
+                                </td>
+                                <td>
+                                    <span t-field="mo.bom_id" />
+                                </td>
+                                <td>
+                                    <span t-esc="mo.product_qty" />
+                                </td>
+                                <td>
+                                    <span t-esc="mrp_batch_data.get_format_date(mo.date_start)" />
+                                </td>
+                                <td>
+                                    <span t-esc="mrp_batch_data.get_format_date(mo.date_finished)" />
+                                </td>
+                            </tr>
+                        </t>
+                    </table>
+                </main>
+            </t>
+        </t>
+    </template>
+
+</odoo>
