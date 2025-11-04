@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit CRM Lead Form View to Add Job Costing Fields -->
+    <record id="view_crm_lead_form_jcs" model="ir.ui.view">
+        <field name="name">crm.lead.form.jcs</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Add Job Costing tab/page after the description page -->
+            <xpath expr="//page[@name='description']" position="after">
+                <page string="Job Costing" name="job_costing">
+                    <group>
+                        <group string="Job Costing Information">
+                            <field name="jcs_requires_job_costing"/>
+                            <field name="jcs_job_type" attrs="{'required': [('jcs_requires_job_costing', '=', True)], 'invisible': [('jcs_requires_job_costing', '=', False)]}"/>
+                            <field name="jcs_start_date" attrs="{'invisible': [('jcs_requires_job_costing', '=', False)]}"/>
+                            <field name="jcs_end_date" attrs="{'invisible': [('jcs_requires_job_costing', '=', False)]}"/>
+                            <field name="jcs_duration_days" readonly="1" attrs="{'invisible': [('jcs_requires_job_costing', '=', False)]}"/>
+                        </group>
+                        <group string="Budget &amp; Cost" attrs="{'invisible': [('jcs_requires_job_costing', '=', False)]}">
+                            <field name="jcs_budget_amount"/>
+                            <field name="jcs_estimated_cost"/>
+                        </group>
+                    </group>
+                    <group attrs="{'invisible': [('jcs_requires_job_costing', '=', False)]}">
+                        <group>
+                            <field name="jcs_notes" placeholder="Additional notes for job costing purposes..."/>
+                        </group>
+                    </group>
+                    <footer attrs="{'invisible': [('jcs_requires_job_costing', '=', False)]}">
+                        <button name="action_new_job_costing" 
+                                string="Create Job Costing" 
+                                type="object" 
+                                class="btn-primary"/>
+                    </footer>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit CRM Lead Tree View to Add Job Costing Fields -->
+    <record id="view_crm_lead_tree_jcs" model="ir.ui.view">
+        <field name="name">crm.lead.tree.jcs</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_tree"/>
+        <field name="arch" type="xml">
+            <!-- Add Job Costing fields to tree view (optional) -->
+            <xpath expr="//field[@name='expected_revenue']" position="after">
+                <field name="jcs_budget_amount" optional="hide"/>
+                <field name="jcs_requires_job_costing" widget="boolean_toggle" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit CRM Lead Search View -->
+    <record id="view_crm_lead_search_jcs" model="ir.ui.view">
+        <field name="name">crm.lead.search.jcs</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_search"/>
+        <field name="arch" type="xml">
+            <!-- Add filters for Job Costing -->
+            <xpath expr="//filter[@name='my_activities']" position="after">
+                <filter string="Requires Job Costing" name="requires_jcs" domain="[('jcs_requires_job_costing', '=', True)]"/>
+            </xpath>
+            <!-- Add group by options -->
+            <xpath expr="//group[@expand='0']" position="inside">
+                <filter string="Job Type" name="group_job_type" context="{'group_by': 'jcs_job_type'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
