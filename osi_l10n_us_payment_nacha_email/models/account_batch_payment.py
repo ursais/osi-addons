@@ -35,6 +35,7 @@ class AccountBatchPayment(models.Model):
         """
         Sends remittance emails to AP contacts per partner for this batch.
         Validates presence of AP contact and email.
+        Ensures emails are only sent once by setting the flag immediately after check.
         """
         template = self.env.ref(
             "osi_l10n_us_payment_nacha_email.email_template_detailed_payment_receipt"
@@ -45,6 +46,12 @@ class AccountBatchPayment(models.Model):
                 continue
             if batch.remittance_email_sent:
                 continue
+            
+            # Set flag immediately after check to prevent race conditions
+            # This ensures that even if _generate_export_file is called multiple times,
+            # only the first call will proceed to send emails
+            batch.write({"remittance_email_sent": True})
+            
             # Group payments by partner
             partner_groups = {}
             for payment in batch.payment_ids:
@@ -102,7 +109,6 @@ class AccountBatchPayment(models.Model):
                         "attachment_ids": [Command.set(payment_attachment.ids)],
                     },
                 )
-            batch.write({"remittance_email_sent": True})
 
     def _generate_export_file(self):
         data = super()._generate_export_file()
