@@ -1,0 +1,65 @@
+<odoo>
+
+    <record id="ol_helpdesk_repair_batch_view_repair_order_form" model="ir.ui.view">
+		<field name="name">helpdesk.ticket.repair.order.form</field>
+        <field name="model">repair.order</field>
+        <field name="inherit_id" ref="repair.view_repair_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_button_box')]" position="before">
+                <field name="show_repair_history_alert" invisible="1" />
+                <div class="alert alert-info" invisible="not show_repair_history_alert">
+                    <strong>Other Repairs Found:</strong>
+                    <field name="history_repair_html" widget="html" readonly="1"/>
+                </div>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_view_pickings"
+                        type="object"
+                        icon="fa-exchange"
+                        string="Internal Transfers"
+                        class="oe_stat_button"
+                        invisible="picking_count == 0"
+                    >
+                    <field name="picking_count" widget="statinfo"/>
+                </button>
+                <button name="%(stock.action_stock_scrap)d"
+                        type="action"
+                        context="{'search_default_repair_id': active_id}"
+                        string="Scrap Orders"
+                        class="oe_stat_button"
+                        icon="fa-trash"
+                        invisible="scrap_count == 0"
+                    >
+                    <field name="scrap_count" widget="statinfo" string="Scrap Orders" />
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='move_ids']" position="before">
+                <field name="show_create_removal_button" invisible="1" />
+                <button
+                    name="action_create_removal_lines"
+                    type="object"
+                    string="Load Removed Components"
+                    class="oe_highlight"
+                    invisible="not show_create_removal_button"
+                />
+            </xpath>
+            <xpath expr="//field[@name='company_id']" position="after">
+                <field name="ticket_id" />
+                <field name="repair_batch_id" />
+            </xpath>
+            <xpath expr="//field[@name='picked']" position="after">
+                <field name="reason_code_id" optional="show" domain="[(\'company_id\', \'=\', parent.company_id)]"/>
+                <field name="note" optional="show"/>
+            </xpath>
+            <xpath expr="//field[@name='internal_notes']" position="replace">
+                <group name="internal_notes_grp" string="Repair Notes">
+                    <field name="internal_notes" colspan="2" nolabel="1" widget="html" readonly="state in 'done'"  placeholder="Repair Notes"/>
+                </group>
+                <group name="external_notes_grp" string="Customer Notes">
+                    <field name="external_notes" colspan="2" nolabel="1" widget="html" readonly="state in 'done'" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

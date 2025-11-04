@@ -1,0 +1,102 @@
+<odoo noupdate="1">
+
+    <!-- Helpdesk Engineering Team Stages -->
+    <record id="helpdesk_stage_eng_new" model="helpdesk.stage">
+        <field name="name">New - Info Gather</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team_engineering'))]"/>
+        <field name="sequence">31</field>
+    </record>
+    <record id="helpdesk_stage_eng_resolved" model="helpdesk.stage">
+        <field name="name">Resolved</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team_engineering'))]"/>
+        <field name="sequence">32</field>
+        <field name="fold">True</field>
+    </record>
+    <record id="helpdesk_stage_eng_cancelled" model="helpdesk.stage">
+        <field name="name">Cancelled</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team_engineering'))]"/>
+        <field name="sequence">33</field>
+        <field name="fold">True</field>
+    </record>
+
+    <!-- Helpdesk Engineering Team Stages -->
+    <record id="helpdesk_stage_ts_new" model="helpdesk.stage">
+        <field name="name">New - Info Gather</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team_tech_support'))]"/>
+        <field name="sequence">51</field>
+    </record>
+    <record id="helpdesk_stage_ts_resolved" model="helpdesk.stage">
+        <field name="name">Resolved</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team_tech_support'))]"/>
+        <field name="sequence">52</field>
+        <field name="fold">True</field>
+    </record>
+    <record id="helpdesk_stage_ts_cancelled" model="helpdesk.stage">
+        <field name="name">Cancelled</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team_tech_support'))]"/>
+        <field name="sequence">53</field>
+        <field name="fold">True</field>
+    </record>
+
+    <!-- Helpdesk RMA Team Stages -->
+    <record id="helpdesk_stage_rma_new" model="helpdesk.stage">
+        <field name="name">New - Info Gather</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team_customer_rma')), (4, ref('helpdesk_team_customer_rma_eu'))]"/>
+        <field name="template_id" ref="email_template_rma_create"/>
+        <field name="sequence">11</field>
+    </record>
+
+    <record id="helpdesk_stage_rma_requested" model="helpdesk.stage">
+        <field name="name">RMA Requested</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team_customer_rma')), (4, ref('helpdesk_team_customer_rma_eu'))]"/>
+        <field name="sequence">12</field>
+    </record>
+
+    <record id="helpdesk_stage_rma_accepted" model="helpdesk.stage">
+        <field name="name">RMA Accepted</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team_customer_rma')), (4, ref('helpdesk_team_customer_rma_eu'))]"/>
+        <field name="sequence">13</field>
+        <field name="template_id" ref="email_template_rma_accepted"/>
+    </record>
+
+    <record id="helpdesk_stage_rma_in_progress" model="helpdesk.stage">
+        <field name="name">RMA In Progress</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team_customer_rma')), (4, ref('helpdesk_team_customer_rma_eu'))]"/>
+        <field name="template_id" ref="email_template_rma_in_progress"/>
+        <field name="sequence">14</field>
+    </record>
+
+    <record id="helpdesk_stage_rma_shipped" model="helpdesk.stage">
+        <field name="name">RMA Shipped</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team_customer_rma')), (4, ref('helpdesk_team_customer_rma_eu'))]"/>
+        <field name="sequence">15</field>
+        <field name="template_id" ref="email_template_rma_complete"/>
+    </record>
+
+    <record id="helpdesk_stage_rma_resolved" model="helpdesk.stage">
+        <field name="name">Resolved</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team_customer_rma')), (4, ref('helpdesk_team_customer_rma_eu'))]"/>
+        <field name="sequence">16</field>
+        <field name="fold">True</field>
+    </record>
+
+    <record id="helpdesk_stage_rma_cancelled" model="helpdesk.stage">
+        <field name="name">Cancelled</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team_customer_rma')), (4, ref('helpdesk_team_customer_rma_eu'))]"/>
+        <field name="sequence">17</field>
+        <field name="fold">True</field>
+    </record>
+
+    <record id="helpdesk_stage_rma_wait_int" model="helpdesk.stage">
+        <field name="name">Waiting on Internal</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team_customer_rma')), (4, ref('helpdesk_team_customer_rma_eu'))]"/>
+        <field name="sequence">18</field>
+    </record>
+
+    <record id="helpdesk_stage_rma_wait_cust" model="helpdesk.stage">
+        <field name="name">Waiting on Customer</field>
+        <field name="team_ids" eval="[(4, ref('helpdesk_team_customer_rma')), (4, ref('helpdesk_team_customer_rma_eu'))]"/>
+        <field name="sequence">19</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,42 @@
+<odoo>
+
+    <record id="ol_stock_scrap_tree_reason_code" model="ir.ui.view">
+        <field name="name">stock.scrap.tree.view</field>
+        <field name="model">stock.scrap</field>
+        <field name="inherit_id" ref="scrap_reason_code.stock_scrap_tree_reason_code" />
+        <field name="priority" eval="3"/>
+        <field name="arch" type="xml">
+            <field name="reason_code_id" position="after">
+                <field name="note" optional="hide" />
+            </field>
+        </field>
+    </record>
+
+    <record id="ol_stock_scrap_form_reason_code" model="ir.ui.view">
+        <field name="name">stock.scrap.form.view</field>
+        <field name="model">stock.scrap</field>
+        <field name="inherit_id" ref="scrap_reason_code.stock_scrap_form_reason_code" />
+        <field name="priority" eval="3"/>
+        <field name="arch" type="xml">
+            <field name="reason_code_id" position="after">
+                <field name="note" />
+            </field>
+            <field name="reason_code_id" position="attributes">
+                <attribute name="domain">[('id', 'in', allowed_reason_code_ids),('company_id', '=', company_id)]</attribute>
+            </field>
+        </field>
+    </record>
+
+    <record id="ol_stock_scrap_form2_reason_code" model="ir.ui.view">
+        <field name="name">stock.scrap.form2.view</field>
+        <field name="model">stock.scrap</field>
+        <field name="inherit_id" ref="scrap_reason_code.stock_scrap_form2_reason_code" />
+        <field name="priority" eval="3"/>
+        <field name="arch" type="xml">
+            <field name="reason_code_id" position="after">
+                <field name="note" />
+            </field>
+        </field>
+    </record>
+
+</odoo>
