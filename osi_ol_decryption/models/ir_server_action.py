@@ -357,57 +357,92 @@ class IrActionsServer(models.Model):
                 )
                 continue
 
-            # REMOVE LIMIT FROM PROD RUN
-            query = "SELECT id, {}  FROM {} ORDER BY id".format(
-                ", ".join(columns), table
+            # Optimized: Use batch processing instead of one-by-one updates
+            batch_size = 10000
+            offset = 0
+            
+            # Get total record count for progress tracking
+            self.env.cr.execute("SELECT COUNT(*) FROM {}".format(table))
+            total_records = self.env.cr.fetchone()[0]
+            
+            _logger.info(
+                "\n\nProcessing table %s with %s records in batches of %s"
+                % (table, total_records, batch_size)
             )
-
-            self.env.cr.execute(query)
-            table_data = self.env.cr.fetchall()
-            # runningLog += "\n\nUpdating %s records in Table: %s for Columns: %s" % (
-            #     len(table_data),
-            #     table,
-            #     str(columns),
-            # )
-            for col_data in table_data:
-                id = col_data[0]
-
-                set_data = []
-                for col, col_data in zip(columns, col_data[1:]):
-                    if col_data and isinstance(col_data, (int, float)):
-                        set_data.append((col, col_data / 5))
-
-                if not set_data:
-                    # runningLog += (
-                    #     "\n Skipped Record with id %s as no field has data to be updated: %s "
-                    #     % (id, col_data)
-                    # )
-                    continue
-
-                set_data_str = ",".join(
-                    ["%s = %s" % (col, col_data) for col, col_data in set_data]
+            
+            records_processed = 0
+            while offset < total_records:
+                query = "SELECT id, {} FROM {} ORDER BY id LIMIT {} OFFSET {}".format(
+                    ", ".join(['"%s"' % c for c in columns]), table, batch_size, offset
                 )
-                try:
-                    query = """ UPDATE %s SET %s where id = %s ;""" % (
-                        table,
-                        set_data_str,
-                        id,
-                    )
-                    self.env.cr.execute(query)
-                    self.env.cr.commit()
-                except Exception as e:
-                    runningLog += "\n \n ERROR: %s \n WHEN RUNNING QUERY: %s" % (
-                        e,
-                        query,
-                    )
-                    _logger.info(runningLog)
+                
+                self.env.cr.execute(query)
+                batch_data = self.env.cr.fetchall()
+                
+                if not batch_data:
                     break
+                
+                # Prepare batch update queries using proper parameterization
+                update_queries = []
+                update_params = []
+                
+                for row_data in batch_data:
+                    record_id = row_data[0]
+                    set_parts = []
+                    values = []
+                    
+                    for col, col_value in zip(columns, row_data[1:]):
+                        if col_value is not None and isinstance(col_value, (int, float)):
+                            set_parts.append('"%s" = %%s' % col)
+                            values.append(col_value / 5)
+                    
+                    if set_parts:
+                        update_query = 'UPDATE {} SET {} WHERE id = %%s'.format(
+                            table, ', '.join(set_parts)
+                        )
+                        values.append(record_id)
+                        update_queries.append(update_query)
+                        update_params.append(tuple(values))
+                
+                # Execute batch updates
+                if update_queries and update_params:
+                    try:
+                        for update_query, params in zip(update_queries, update_params):
+                            self.env.cr.execute(update_query, params)
+                        
+                        records_processed += len(update_params)
+                        
+                        # Commit every batch
+                        self.env.cr.commit()
+                        
+                        if records_processed % 50000 == 0:
+                            _logger.info(
+                                "Processed %s/%s records from table %s"
+                                % (records_processed, total_records, table)
+                            )
+                    except Exception as e:
+                        runningLog += "\n\nERROR in table %s: %s\nFailed at offset %s" % (
+                            table, str(e), offset
+                        )
+                        _logger.error(runningLog)
+                        self.env.cr.rollback()
+                        # Continue with next batch instead of breaking
+                
+                offset += batch_size
+            
+            # Mark table as decrypted after all records are processed
+            try:
                 self.env.cr.execute(
-                    "update ir_model set is_decimal_encryption = 'f' where model = %s;",
+                    "UPDATE ir_model SET is_decimal_encryption = 'f' WHERE model = %s",
                     (table.replace("_", "."),),
                 )
                 self.env.cr.commit()
-        self.env.cr.commit()
+                _logger.info(
+                    "Completed decrypting table %s. Processed %s records."
+                    % (table, records_processed)
+                )
+            except Exception as e:
+                _logger.error("Error marking table %s as decrypted: %s" % (table, str(e)))
 
         _logger.info(runningLog)
 
