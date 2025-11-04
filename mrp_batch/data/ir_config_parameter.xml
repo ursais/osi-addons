@@ -1,0 +1,19 @@
+<odoo noupdate="1">
+
+    <record id="default_produce_delay" model="ir.config_parameter">
+        <field name="key">mrp_batch.default_produce_delay</field>
+        <field name="value">4</field>
+    </record>
+
+    <record id="default_days_to_prepare" model="ir.config_parameter">
+        <field name="key">mrp_batch.default_days_to_prepare_mo</field>
+        <field name="value">1</field>
+    </record>
+
+    <record id="default_batch_mode" model="ir.config_parameter">
+        <field name="key">mrp_batch.batch_mode</field>
+        <field name="value">single</field>
+    </record>
+
+
+</odoo>

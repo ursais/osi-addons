@@ -1,0 +1,68 @@
+<odoo>
+
+    <record id="res_config_settings_view_form_inherit_mrp_batch" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="mrp.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='mrp']" position="inside">
+                <block title="Manufacturing Batch General Settings" id="mrp_batch_Settings">
+                    <setting id="default_produce_delay" string="Default Manufacturing Lead Time">
+                        <div class="content-group">
+                            <div class="mt16" >
+                                <field name="produce_delay" class="oe_inline"/> days
+                            </div>
+                        </div>
+                    </setting>
+                    <setting id="default_days_to_prepare_mo" string="Default Days to Prepare">
+                        <div class="content-group">
+                            <div class="mt16" >
+                                <field name="days_to_prepare_mo" class="oe_inline"/> days
+                            </div>
+                        </div>
+                    </setting>
+                    <setting id="mo_batch_mode" string="Batch Creation Mode">
+                        <div class="content-group">
+                            <div class="mt16" >
+                                <field name="mo_batch_mode" class="oe_inline"/>
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+                <block title="Manufacturing Batch Queuing" id="mrp_batch_queuing">
+                    <setting id="enable_delay_action_assign" string="Enable Queuing Action Assign">
+                        <field name="enable_delay_action_assign" class="oe_inline"/>
+                    </setting>
+                    <setting id="enable_delay_action_confirm" string="Enable Queuing Action Confirm">
+                        <field name="enable_delay_action_confirm" class="oe_inline"/>
+                    </setting>
+                    <setting id="enable_delay_button_plan" string="Enable Queuing Button Plan">
+                        <field name="enable_delay_button_plan" class="oe_inline"/>
+                    </setting>
+                    <setting id="enable_delay_button_unplan" string="Enable Queuing Button Unplan">
+                        <field name="enable_delay_button_unplan" class="oe_inline"/>
+                     </setting>
+                    <setting id="enable_delay_action_unreserve" string="Enable Queuing Action Unreserve">
+                        <field name="enable_delay_action_unreserve" class="oe_inline"/>
+                    </setting>
+                    <setting id="enable_delay_action_done" string="Enable Queuing Action Done">
+                        <field name="enable_delay_action_done" class="oe_inline"/>
+                    </setting>
+                    <setting id="enable_delay_action_cancel" string="Enable Queuing Action Cancel">
+                        <field name="enable_delay_action_cancel" class="oe_inline"/>
+                    </setting>
+                    <setting id="enable_delay_component_availability" string="Enable Queuing Component Availability">
+                        <field name="enable_delay_component_availability" class="oe_inline"/>
+                    </setting>
+                    <setting id="enable_delay_component_availability_details" string="Enable Queuing Component Availability Details">
+                        <field name="enable_delay_component_availability_details" class="oe_inline"/>
+                    </setting>
+                    <setting id="enable_delay_so_action_confirm" string="Enable Queuing on Sale Order Confirmation">
+                        <field name="enable_delay_so_action_confirm" class="oe_inline"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

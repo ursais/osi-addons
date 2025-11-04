@@ -1,0 +1,24 @@
+<odoo>
+
+    <record id="mrp_production_batch_wizard_form_view" model="ir.ui.view">
+        <field name="name">mrp.production.batch.wizard.form.view</field>
+        <field name="model">mrp.production.batch.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="batch_id" string="Add to Existing Batch (Optional)" domain="[('state', 'not in', ('done', 'cancel'))]" />
+                        <field name="responsible_id" invisible="batch_id" required="not batch_id" />
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" invisible="batch_id" />
+                        <field name="date_start" invisible="batch_id" />
+                    </group>
+                </sheet>
+                <footer class="oe_edit_only">
+                    <button name="action_confirm" type="object" string="confirm" class="oe_highlight" />
+                    <button string="Cancel" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>
