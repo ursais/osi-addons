@@ -1,0 +1,30 @@
+<odoo>
+
+    <record id="view_helpdesk_ticket_import_sale_form" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.import.sale.form</field>
+        <field name="model">helpdesk.ticket.import.sale</field>
+        <field name="arch" type="xml">
+            <form string="Import Sale Order">
+                <group>
+                    <field name="ticket_id" invisible="1" />
+                    <field name="partner_id" />
+                    <field name="sale_order_id" domain="[('partner_id', '=', partner_id)]" />
+                </group>
+                <separator string="Sale Order Lines" />
+                <field name="line_ids">
+                    <tree create="0">
+                        <field name="sale_order_id" />
+                        <field name="product_id" />
+                        <field name="qty" />
+                        <field name="lot_ids" domain="[('product_id', '=', product_id)]" widget="many2many_tags" />
+                    </tree>
+                </field>
+                <footer>
+                    <button string="Cancel" special="cancel" />
+                    <button name="action_confirm" string="Add" type="object" class="btn-primary" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

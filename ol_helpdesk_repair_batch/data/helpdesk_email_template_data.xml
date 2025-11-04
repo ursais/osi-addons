@@ -1,0 +1,186 @@
+<odoo noupdate="1">
+
+    <!-- ==================================== -->
+    <!-- RMA ACCEPTED EMAIL TEMPLATES -->
+    <!-- ==================================== -->
+    <record id="email_template_rma_accepted" model="mail.template">
+        <field name="name">OnLogic RMA Accepted</field>
+        <field name="model_id" ref="helpdesk.model_helpdesk_ticket" />
+        <field name="email_from">{{ object.company_id.support_email or user.email_formatted }}</field>
+        <field name="partner_to">{{ object.partner_id.id }}</field>
+        <field name="subject">Your RMA Has Been Accepted {{ object.name }}</field>
+        <field name="auto_delete" eval="False" />
+        <field name="body_html" type="html">
+            <t>
+                <!-- Variables -->
+                <t t-set="ticket" t-value="object" />
+                <t t-set="partner" t-value="object.partner_id" />
+                <t t-set="partner_shipping_id" t-value="object.partner_id or object.sale_order_id.partner_shipping_id" />
+
+                <!-- Body -->
+                <t t-call="ol_templates.ol_email_text_content">
+                    <div style="font-weight: 500; font-size: 20px;">
+                    We are ready to receive your return.
+                    </div>
+                    <div style="font-size:16px; line-height:28px; margin-top:30px">
+                        Hello <t t-esc="partner.name" />,
+                    </div>
+                    <p style="font-size: 16px; line-height: 28px; margin-top: 30px;">
+                    <tag>Your Return Merchandise Authorization (RMA) number is</tag>
+                    <t t-esc="ticket.name" />.
+                    <tag>Please return your system within 10 business days and be sure to verify your return shipping address
+                    below. If the address is incorrect, please respond to this email immediately. We typically process RMAs
+                    within 5 business days of arrival at our facility.
+                    </tag>
+                    <br/>
+                    <br/>
+                    <span style="font-weight: 500;">
+                        <tag>Here is how you send us your RMA for Repair</tag>:
+                    </span>
+                    <br/>
+                    <tag>Package your return securely in a box. For component returns, you must use ESD (Electro-Static Discharge)
+                    -safe packaging -- failure to use ESD packaging will void your warranty. Remove any mounting hardware and
+                    connectors. Please ensure that the item(s) do not move around inside the box.
+                    </tag>
+                    <br/>
+                    <br/>
+                    <tag>Write your RMA number visibly on the shipping label and ship the approved product to the address below.
+                        We recommend using a shipping method with tracking, packing the items as securely as possible, and insuring
+                        the items for their original cost, in case of any damage during shipping.
+                    </tag>
+                    <br/>
+                    <br/>
+                    <span style="font-weight: 500;">
+                        <tag>Here is how you send us your RMA for Refund</tag>:
+                    </span>
+                    <br/>
+                    <tag>Package the unit in the original packaging. Please ensure the item is free of any wear-and-tear, and all
+                    accessories are included. Once the item(s) have been returned, we will evaluate and process the refund back to
+                    the original form of payment. A standard restocking fee may be assessed.
+                    </tag>
+                    <br/>
+                    <br/>
+                    <!--
+                    Show this text if the address of the RMA's original partner is outside of the US
+                    and the RMA is not for the BV company
+                    -->
+                    <span style="font-weight: 500;">
+                        <tag>Ship to</tag>:
+                    </span>
+                    <br/>
+                    <tag>
+                        <t t-esc="ticket.company_id.external_display_name" />
+                    </tag>
+                    <br/>
+                    <tag>Attention</tag>:
+                    <t t-esc="ticket.name" />
+                    <br/>
+                    <tag>
+                        <t t-esc="ticket.company_id.street" />
+                    </tag>
+                    <br/>
+                    <t t-if="ticket.company_id.short_name != 'us'">
+                        <tag><t t-esc="ticket.company_id.zip" />,
+                        <t t-esc="ticket.company_id.city" />
+                        </tag>
+                    </t>
+                    <t t-if="ticket.company_id.short_name == 'us'">
+                        <tag><t t-esc="ticket.company_id.city" />,
+                        <t t-esc="ticket.company_id.state_id.code" />
+                        <t t-esc="ticket.company_id.zip" />
+                        </tag>
+                    </t>
+                    <br/>
+                    <t t-esc="ticket.company_id.country_id.name" />
+                    <br/>
+                    <br/>
+                    <span style="font-weight: 500;">
+                        <tag>Verify your Return Shipping Address</tag>:
+                    </span>
+                    <br/>
+                    <tag>
+                        <t t-esc="partner_shipping_id.name" />
+                    </tag>
+                    <br/>
+                    <t t-if="partner_shipping_id.commercial_partner_id">
+                        <tag>
+                        <t t-esc="partner_shipping_id.commercial_partner_id.name" />
+                        </tag>
+                        <br/>
+                    </t>
+                    <tag>
+                        <t t-esc="partner_shipping_id.street" />
+                    </tag>
+                    <br/>
+                    <t t-if="partner_shipping_id.street2">
+                        <tag>
+                        <t t-esc="partner_shipping_id.street2" />
+                        </tag>
+                        <br/>
+                    </t>
+                    <tag><t t-esc="partner_shipping_id.city" />,
+                        <t t-esc="partner_shipping_id.state_id.code" />
+                        <t t-esc="partner_shipping_id.zip" />
+                    </tag>
+                    <br/>
+                    <t t-esc="partner_shipping_id.country_id.name" />
+                    <br/>
+                    <br/>
+                    <tag>Please check our</tag>
+                    <a t-attf-href="{{ticket.company_id.terms_and_conditions_url}}" target="_blank">Terms &amp; Conditions</a>
+                    <tag>for more details on the qualifications for returned product.</tag>
+                    </p>
+                </t>
+                <t t-call="ol_templates.ol_email_text_content">
+                    <p style="font-size: 16px; line-height: 28px;">
+                        <t t-call="ol_templates.ol_contact_info">
+                            <t t-set="support_email" t-value="True" />
+                            <t t-set="company" t-value="ticket.company_id" />
+                        </t>
+                    </p>
+                </t>
+            </t>
+        </field>
+    </record>
+
+    <!-- ==================================== -->
+    <!-- RMA PRODUCT RECEIVED EMAIL TEMPLATES -->
+    <!-- ==================================== -->
+    <record id="email_template_rma_received" model="mail.template">
+        <field name="name">OnLogic RMA Product Received</field>
+        <field name="model_id" ref="helpdesk.model_helpdesk_ticket" />
+        <field name="subject">We have received your RMA product</field>
+        <field name="email_from">{{ object.company_id.support_email or user.email_formatted }}</field>
+        <field name="partner_to">{{ object.partner_id.id }}</field>
+        <field name="auto_delete" eval="False"/>
+        <field name="body_html" type="html">
+            <div>
+                Hello <t t-out="object.partner_id.name or 'customer'">Brandon Freeman</t>,<br/>
+                We have received your RMA product and will start processing it shortly.<br/>
+                Thank you,<br/>
+                RMA Support Team<br/>
+            </div>
+        </field>
+    </record>
+
+    <!-- =================================== -->
+    <!-- RMA PRODUCT SHIPPED EMAIL TEMPLATES -->
+    <!-- =================================== -->
+    <record id="email_template_rma_shipped" model="mail.template">
+        <field name="name">OnLogic RMA Shipped</field>
+        <field name="model_id" ref="helpdesk.model_helpdesk_ticket" />
+        <field name="subject">Your RMA product has been shipped</field>
+        <field name="email_from">{{ object.company_id.support_email or user.email_formatted }}</field>
+        <field name="partner_to">{{ object.partner_id.id }}</field>
+        <field name="auto_delete" eval="False"/>
+        <field name="body_html" type="html">
+            <div>
+                Hello <t t-out="object.partner_id.name or 'customer'">Brandon Freeman</t>,<br/>
+                Your RMA product has been shipped. You will receive tracking details soon.<br/>
+                Thank you,<br/>
+                RMA Support Team<br/>
+            </div>
+        </field>
+    </record>
+
+</odoo>

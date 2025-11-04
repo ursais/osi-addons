@@ -1,0 +1,52 @@
+<odoo>
+
+    <record id="view_repair_credit_note_wizard_form" model="ir.ui.view">
+        <field name="name">repair.credit.note.wizard.form</field>
+        <field name="model">repair.credit.note.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Create Credit Note">
+                <header>
+                    <button
+                        name="action_add_from_sale_orders"
+                        type="object"
+                        string="Add From Sale Orders"
+                        class="btn-primary"
+                    />
+                    <button
+                        name="action_add_from_repairs"
+                        type="object"
+                        string="Add Removed Components"
+                        class="btn-secondary"
+                    />
+                </header>
+                <sheet>
+                    <group>
+                        <field name="ticket_id" invisible="1" />
+                        <field name="partner_id" />
+                        <field name="original_sale_order_ids" widget="many2many_tags" domain="[('partner_id', '=', partner_id)]" />
+                        <field name="original_repair_order_ids" widget="many2many_tags" domain="[('ticket_id', '=', ticket_id)]" />
+                        <field name="restock_fee" widget="percentage" />
+                    </group>
+                    <group>
+                        <field name="line_ids">
+                            <tree editable="bottom">
+                                <field name="product_id" />
+                                <field name="name" />
+                                <field name="quantity" />
+                                <field name="price_unit" />
+                                <field name="tax_ids" widget="many2many_tags" />
+                                <field name="account_id" />
+                                <field name="discount" />
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Cancel" special="cancel" />
+                    <button name="action_confirm" string="Create Credit Note" type="object" class="btn-primary" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

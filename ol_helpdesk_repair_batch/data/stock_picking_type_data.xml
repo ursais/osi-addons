@@ -1,0 +1,10 @@
+<odoo>
+    <!-- data/repair_picking_type.xml -->
+    <record id="stock_picking_type_rma_repair_incoming_us" model="stock.picking.type">
+        <field name="name">RMA Repair Incoming</field>
+        <field name="code">incoming</field>
+        <field name="warehouse_id" ref="stock.warehouse0"/>
+        <field name="sequence_code">REPAIRIN</field>
+    </record>
+
+</odoo>

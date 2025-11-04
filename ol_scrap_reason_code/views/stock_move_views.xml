@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit stock move form to add domain filter for reason_code_id -->
+    <record id="ol_stock_reason_code_form" model="ir.ui.view">
+        <field name="name">stock.reason.code.form</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="scrap_reason_code.stock_reason_code_form"/>
+        <field name="arch" type="xml">
+            <field name="reason_code_id" position="attributes">
+                <attribute name="domain">[('company_id', '=', company_id)]</attribute>
+            </field>
+        </field>
+    </record>
+</odoo>

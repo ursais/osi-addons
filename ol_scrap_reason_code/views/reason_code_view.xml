@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit scrap reason code form to add company_id field -->
+    <record id="ol_view_scrap_reason_code_form" model="ir.ui.view">
+        <field name="name">scrap.reason.code.form</field>
+        <field name="model">scrap.reason.code</field>
+        <field name="inherit_id" ref="scrap_reason_code.view_scrap_reason_code_form"/>
+        <field name="arch" type="xml">
+            <field name="location_id" position="after">
+                <field name="company_id" groups="base.group_multi_company"/>
+            </field>
+        </field>
+    </record>
+    
+    <!-- Inherit scrap reason code tree to add company_id field -->
+    <record id="ol_view_scrap_reason_code_list" model="ir.ui.view">
+        <field name="name">scrap.reason.code.list</field>
+        <field name="model">scrap.reason.code</field>
+        <field name="inherit_id" ref="scrap_reason_code.view_scrap_reason_code_list"/>
+        <field name="arch" type="xml">
+            <field name="location_id" position="after">
+                <field name="company_id" groups="base.group_multi_company"/>
+            </field>
+        </field>
+    </record>
+</odoo>
