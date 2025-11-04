@@ -1,0 +1,94 @@
+<odoo>
+
+    <template id="invoice_email_template">
+        <t t-call="ol_templates.ol_email">
+            <!-- Variables -->
+            <t t-set="title" t-value="'Invoice for Order ' + sale_order.name if sale_order else ''"/>
+            <t t-set="preheader_text" t-value="'Invoice for Order ' + sale_order.name if sale_order else '' + ' attached'"/>
+            <t t-set="product_lines" t-value="sale_order.order_line.filtered(lambda l: not l.is_delivery)"/>
+            <t t-set="shipping_line" t-value="sale_order.order_line.filtered(lambda l: l.is_delivery)"/>
+            <t t-set="include_newsletter_disclaimer" t-value="False"/>
+            <t t-set="product_subtotal_amount" t-value="sum(product_lines.mapped('price_subtotal'))"/>
+            <t t-set="shipping_subtotal_amount" t-value="sum(shipping_line.mapped('price_subtotal'))"/>
+
+            <!-- Body -->
+            <t t-call="ol_templates.ol_email_text_content">
+                <div style="font-weight: 500; font-size: 20px;">
+                    <tag>Please find your invoice attached</tag>
+                </div>
+                <div style="font-size:16px; line-height:28px; margin-top:30px"><t t-esc="sale_order.partner_id.name"/>,
+                </div>
+                <p style="font-size: 16px; line-height: 28px; margin-top: 30px;">
+                    <tag>Thank you again for your order, please find the invoice attached.</tag>
+                    <br/>
+                    <br/>
+                    <t t-call="ol_templates.here_are_your_order_details">
+                       <t t-set="order" t-value="sale_order"/>
+                    </t>
+                </p>
+            </t>
+
+            <t t-call="ol_templates.ol_billing_shipping_info">
+                <t t-set="billing_address" t-value="sale_order.partner_invoice_id"/>
+                <t t-set="shipping_address" t-value="sale_order.partner_shipping_id"/>
+            </t>
+            <t t-call="ol_templates.ol_email_spacer"/>
+            <!-- ADD Payment Information -->
+            <t t-call="ol_templates.ol_payment_info">
+                <t t-if="account_move.sale_payment_method_id">
+                    <t t-set="payment_method" t-value="account_move.sale_payment_method_id"/>
+                </t>
+                <t t-if="account_move.invoice_payment_term_id">
+                   <t t-set="payment_term" t-value="account_move.invoice_payment_term_id"/>
+                </t>
+            </t>
+
+            <t t-call="ol_templates.ol_email_spacer"/>
+            <t t-call="ol_templates.ol_delivery_info">
+                <t t-set="delivery_method" t-value="sale_order.carrier_id"/>
+                <t t-set="days_in_transit" t-value="False"/>
+            </t>
+
+            <t t-call="ol_templates.ol_email_spacer"/>
+            <t t-call="ol_templates.ol_ordered_products">
+                <t t-set="order_lines" t-value="sale_order.order_line"/>
+            </t>
+
+            <t t-call="ol_templates.ol_order_total">
+                <t t-set="sale_order" t-value="sale_order"/>
+            </t>
+
+            <t t-call="ol_templates.ol_email_spacer"/>
+            <t t-call="ol_templates.ol_email_text_content">
+                <p style="font-size: 16px; line-height: 28px;">
+                    <t t-call="ol_templates.ol_contact_info">
+                       <t t-set="company" t-value="sale_order.company_id"/>
+                    </t>
+                </p>
+            </t>
+        </t>
+    </template>
+
+    <template id="invoice_email_template_master">
+        <t t-set="account_move" t-value="object.with_context({'lang':object.partner_id.lang})"/>
+        <t t-set="sale_order" t-value="object.invoice_line_ids.mapped('sale_line_ids.order_id') and object.invoice_line_ids.mapped('sale_line_ids.order_id')[0] or False"/>
+        <t t-call="ol_account.invoice_email_template" t-lang="object.partner_id.lang"/>
+    </template>
+
+    <record id="customer_invoice_email_template" model="mail.template">
+        <field name="name">OnLogic Customer Invoice Email</field>
+        <field name="model_id" search="[('model', '=', 'account.move')]"/>
+        <field name="auto_delete" eval="False"/>
+        <field name="email_from"> ${(object.user_id.email and '%s &lt;%s&gt;' % (object.user_id.name, object.user_id.email) or '')|safe}</field>
+        <field name="email_to">${object.partner_id.email|safe}</field>
+        <field name="subject">Your Invoice ${object.invoice_line_ids.mapped('sale_line_ids.order_id') and object.invoice_line_ids.mapped('sale_line_ids.order_id')[0].name or object.name or ''}</field>
+        <field name="report_template_ids" eval="[(4, ref('ol_account.action_generic_invoice_report'))]"/>
+        <field name="lang">${object.partner_id.lang}</field>
+        <field name="body_html" type="html">
+            <t t-set="invoice" t-value="object.with_context({'lang': object.partner_id.lang or object.env.lang})"/>
+            <t t-set="sale_order" t-value="object.invoice_line_ids.mapped('sale_line_ids.order_id') and object.invoice_line_ids.mapped('sale_line_ids.order_id')[0] or False"/>
+            <t t-call="ol_account.invoice_email_template_master" t-lang="invoice.partner_id.lang or object.env.lang"/>
+        </field>
+    </record>
+
+</odoo>
