@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- This data file triggers the fix via a post_init_hook -->
+        <!-- The actual fix is performed in the Python model -->
+    </data>
+</odoo>
