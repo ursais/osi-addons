@@ -348,7 +348,7 @@ class ProductConfigSession(models.Model):
         "product_tmpl_id.attribute_line_ids",
         "product_tmpl_id.attribute_line_ids.value_ids",
         "product_tmpl_id.attribute_line_ids.product_template_value_ids",
-        "product_tmpl_id.attribute_line_ids." "product_template_value_ids.price_extra",
+        "product_tmpl_id.attribute_line_ids.product_template_value_ids.price_extra",
     )
     def _compute_cfg_price(self):
         for session in self:
@@ -442,7 +442,7 @@ class ProductConfigSession(models.Model):
         "product_tmpl_id.attribute_line_ids",
         "product_tmpl_id.attribute_line_ids.value_ids",
         "product_tmpl_id.attribute_line_ids.product_template_value_ids",
-        "product_tmpl_id.attribute_line_ids.product_template_value_ids" ".weight_extra",
+        "product_tmpl_id.attribute_line_ids.product_template_value_ids.weight_extra",
     )
     def _compute_cfg_weight(self):
         for cfg_session in self:
