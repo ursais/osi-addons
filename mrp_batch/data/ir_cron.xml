@@ -1,0 +1,98 @@
+<odoo noupdate="1">
+
+    <record id="cron_update_mrp_batch_computes_us_11am" model="ir.cron">
+        <field name='name'>MRP Batch (US): Update Component Availability</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="nextcall" eval="(DateTime.now() + relativedelta(hour=15, minute=0, second=0)).strftime('%Y-%m-%d %H:%M:%S')" />
+        <field name="active">True</field>
+        <field name="doall" eval="False" />
+        <field name="model_id" ref="mrp_batch.model_mrp_production_batch" />
+        <field name="state">code</field>
+        <field name="active">False</field>
+        <field name="code">
+batches = env['mrp.production.batch'].search([('company_id', '=', 1), ('state', 'in', ('confirm', 'hold'))])
+for batch in batches:
+    batch._compute_reservation_state()
+    batch._compute_components_availability()
+    batch._compute_components_availability_details()
+        </field>
+    </record>
+
+    <record id="cron_update_mrp_batch_computes_us_6pm" model="ir.cron">
+        <field name='name'>MRP Batch (US): Update Component Availability</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="nextcall" eval="(DateTime.now() + relativedelta(hour=22, minute=0, second=0)).strftime('%Y-%m-%d %H:%M:%S')" />
+        <field name="active">True</field>
+        <field name="doall" eval="False" />
+        <field name="model_id" ref="mrp_batch.model_mrp_production_batch" />
+        <field name="state">code</field>
+        <field name="active">False</field>
+        <field name="code">
+batches = env['mrp.production.batch'].search([('company_id', '=', 1), ('state', 'in', ('confirm', 'hold'))])
+for batch in batches:
+    batch._compute_reservation_state()
+    batch._compute_components_availability()
+    batch._compute_components_availability_details()
+        </field>
+    </record>
+
+    <record id="cron_update_mrp_batch_computes_eu_11am" model="ir.cron">
+        <field name='name'>MRP Batch (EU): Update Component Availability</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="nextcall" eval="(DateTime.now() + relativedelta(hour=9, minute=0, second=0)).strftime('%Y-%m-%d %H:%M:%S')" />
+        <field name="active">True</field>
+        <field name="doall" eval="False" />
+        <field name="model_id" ref="mrp_batch.model_mrp_production_batch" />
+        <field name="state">code</field>
+        <field name="active">False</field>
+        <field name="code">
+batches = env['mrp.production.batch'].search([('company_id', '=', 2), ('state', 'in', ('confirm', 'hold'))])
+for batch in batches:
+    batch._compute_reservation_state()
+    batch._compute_components_availability()
+    batch._compute_components_availability_details()
+        </field>
+    </record>
+
+    <record id="cron_update_mrp_batch_computes_eu_6pm" model="ir.cron">
+        <field name='name'>MRP Batch (EU): Update Component Availability</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="nextcall" eval="(DateTime.now() + relativedelta(hour=16, minute=0, second=0)).strftime('%Y-%m-%d %H:%M:%S')" />
+        <field name="active">True</field>
+        <field name="doall" eval="False" />
+        <field name="model_id" ref="mrp_batch.model_mrp_production_batch" />
+        <field name="state">code</field>
+        <field name="active">False</field>
+        <field name="code">
+batches = env['mrp.production.batch'].search([('company_id', '=', 2), ('state', 'in', ('confirm', 'hold'))])
+for batch in batches:
+    batch._compute_reservation_state()
+    batch._compute_components_availability()
+    batch._compute_components_availability_details()
+        </field>
+    </record>
+
+    <record id="cron_update_mrp_batch_computes_other" model="ir.cron">
+        <field name='name'>MRP Batch (Other): Update Component Availability</field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>days</field>
+        <field name="numbercall">-1</field>
+        <field name="active">True</field>
+        <field name="doall" eval="False" />
+        <field name="model_id" ref="mrp_batch.model_mrp_production_batch" />
+        <field name="state">code</field>
+        <field name="active">False</field>
+        <field name="code">
+batches = env['mrp.production.batch'].search([('company_id', 'not in', (1, 2)), ('state', 'in', ('confirm', 'hold'))])
+for batch in batches:
+    batch._compute_reservation_state()
+    batch._compute_components_availability()
+    batch._compute_components_availability_details()
+        </field>
+    </record>
+
+</odoo>
