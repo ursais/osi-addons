@@ -68,7 +68,7 @@ class StockMove(models.Model):
                     "that are linked to a sale order."
                 ))
         
-        return super(StockMove, self).unlink()
+        return super().unlink()
     
 
     # END #########

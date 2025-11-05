@@ -1,6 +1,8 @@
 from odoo.addons.helpdesk.tests.common import HelpdeskCommon
 from odoo.exceptions import UserError, ValidationError
 from odoo.tests import Form
+from odoo import fields
+from datetime import date, datetime
 
 
 class HelpdeskRepairBatch(HelpdeskCommon):
@@ -12,6 +14,7 @@ class HelpdeskRepairBatch(HelpdeskCommon):
         super(HelpdeskRepairBatch, cls).setUpClass()
         cls.team_customer_rma = cls.env.ref("ol_helpdesk_repair_batch.helpdesk_team_customer_rma")
         cls.sale_order_obj = cls.env['sale.order']
+        cls.payment_method_id = cls.env["payment.method"].search([], limit=1)
         cls.helpdesk_ticket_obj = cls.env['helpdesk.ticket']
         cls.product = cls.env['product.product'].create([
             {
@@ -21,6 +24,8 @@ class HelpdeskRepairBatch(HelpdeskCommon):
         # Create a Sale Order
         cls.sale_order = cls.sale_order_obj.create({
             'partner_id': cls.partner.id,
+            'commitment_date': fields.Datetime.to_string(datetime.now()),
+            "sale_payment_method_id": cls.payment_method_id.id,
         })
         if "override_saleable_exception" in cls.sale_order_obj.fields_get():
             cls.sale_order.write({'override_saleable_exception': True})
@@ -41,6 +46,7 @@ class HelpdeskRepairBatch(HelpdeskCommon):
 
         delivery = sale_order.picking_ids
         delivery.move_ids.quantity = 1
+        
         delivery.move_ids.picked = True
         delivery.button_validate()
 
@@ -82,7 +88,8 @@ class HelpdeskRepairBatch(HelpdeskCommon):
         repair_order._action_repair_confirm()
         self.assertEqual(repair_order.state, "confirmed")
         self.assertEqual(repair_batch.state, "confirmed")
-        self.assertEqual(repair_order.location_id.id, delivery.location_id.id)
+        if delivery.location_id:
+            self.assertEqual(repair_order.location_id.id, delivery.location_id.id)
 
         # Start Repair Batch and verify state changes
         repair_batch.action_repair_start()

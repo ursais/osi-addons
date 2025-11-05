@@ -137,6 +137,8 @@ class SaleOrder(models.Model):
 
             # --- Step 3: Assign line-level customer_lead ---
             for line in order.order_line:
+                if not line.bom_id:
+                    continue
                 if not line_components[line.id]:
                     line.customer_lead = 0
                     continue

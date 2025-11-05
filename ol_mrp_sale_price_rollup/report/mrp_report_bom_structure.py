@@ -49,6 +49,9 @@ class ReportBomStructure(models.AbstractModel):
 
         company = bom.company_id or self.env.company
         current_quantity = line_qty
+
+        if not bom_line:
+            return bom_report_line
         if bom_line:
             current_quantity = (
                 bom_line.product_uom_id._compute_quantity(line_qty, bom.product_uom_id)

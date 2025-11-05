@@ -1,2 +1,1 @@
-#from . import test_stock_move
-#from . import test_stock_picking
+from . import test_ol_stock

@@ -21,6 +21,7 @@
         "sale_order_type",
         "mrp_repair_component_history",
         "scrap_reason_code",
+        "ol_sale_archive_check"
     ],
     # always loaded
     "data": [
