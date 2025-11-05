@@ -1,0 +1,147 @@
+<odoo>
+
+    <record id="mrp_production_batch_schedule_tree_view" model="ir.ui.view">
+		<field name="name">mrp.production.batch.schedule.tree.view</field>
+        <field name="model">mrp.production.batch.schedule</field>
+        <field name="arch" type="xml">
+            <tree multi_edit="1">
+                <field name="date" optional="show" />
+                <field name="workcenter_tag_id" optional="show" />
+                <field name="company_id" optional="show" />
+                <field name="mrp_batch_ids" optional="show" />
+            </tree>
+        </field>
+    </record>
+
+	<record id="mrp_production_batch_schedule_form_view" model="ir.ui.view">
+		<field name="name">mrp.production.batch.schedule.form.view</field>
+        <field name="model">mrp.production.batch.schedule</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1 class="d-flex">
+                              <field name="date" nolabel="1" readonly="1" />
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="workcenter_tag_id" />
+                        <field name="company_id" />
+                    </group>
+                    <notebook>
+                        <page name="mrp_batch_ids" string="Manufacturing Batch Orders">
+                            <field name="mrp_batch_ids" options="{'no_create': True, 'no_create_edit': True}">
+                                <tree string="Manufacturing Batch Orders" delete="0" create="0">
+                                    <field name="sequence" widget="handle" />
+                                    <field name="currency_id" column_invisible="1" />
+                                    <field name="name" optional="show" />
+                                    <field name="workcenter_tag_id" optional="show" />
+                                    <field name="partner_ids" widget="many2many_tags" optional="show" />
+                                    <field name="product_tmpl_ids" widget="many2many_tags" optional="hide" />
+                                    <field name="sale_order_ids" widget="many2many_tags" optional="show" />
+                                    <field name="product_ids" widget="many2many_tags" optional="show" />
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show" />
+                                    <field name="sale_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show" />
+                                    <field name="date_start" widget="datetime" options="{'show_time': false}" optional="show" />
+                                    <field name="earliest_start" widget="datetime" options="{'show_time': false}" optional="hide" />
+                                    <field name="date_deadline" widget="datetime" options="{'show_time': false}" optional="show" />
+                                    <field name="components_availability_state" column_invisible="True" options='{"lazy": true}'/>
+                                    <field name="components_availability" options="{'lazy': true}" invisible="state in ['done', 'cancel']" optional="show" decoration-success="reservation_state == 'assigned' or components_availability_state == 'available'" decoration-warning="reservation_state != 'assigned' and components_availability_state in ('expected', 'available')" decoration-danger="reservation_state != 'assigned' and components_availability_state in ('late', 'unavailable')"/>
+                                    <field name="reservation_state" optional="hide" decoration-danger="reservation_state == 'confirmed'" decoration-success="reservation_state == 'assigned'"/>
+                                    <field name="total_revenue" widget="monetary" optional="hide" sum="Total" />
+                                    <field name="total_duration_expected" widget="float_time" optional="hide" sum="Total" />
+                                    <field name="total_build_duration_expected" widget="float_time" optional="hide" sum="Total" />
+                                    <field name="total_test_duration_expected" widget="float_time" optional="hide" sum="Total" />
+                                    <field name="total_other_duration_expected" widget="float_time" optional="hide" sum="Total" />
+                                    <field name="total_duration" widget="float_time" optional="hide" sum="Total" />
+                                    <field name="total_build_duration" widget="float_time" optional="hide" sum="Total" />
+                                    <field name="total_test_duration" widget="float_time" optional="hide" sum="Total" />
+                                    <field name="total_other_duration" widget="float_time" optional="hide" sum="Total" />
+
+                                    <field name="remaining_duration" widget="float_time" optional="hide" sum="Total" />
+                                    <field name="remaining_build_duration" widget="float_time" optional="show" sum="Total" />
+                                    <field name="remaining_test_duration" widget="float_time" optional="hide" sum="Total" />
+                                    <field name="remaining_other_duration" widget="float_time" optional="hide" sum="Total" />
+
+                                    <field name="avg_duration_expected" widget="float_time" optional="hide" sum="Total" />
+                                    <field name="avg_build_duration_expected" widget="float_time" optional="show" sum="Total" />
+                                    <field name="avg_test_duration_expected" widget="float_time" optional="hide" sum="Total" />
+                                    <field name="avg_other_duration_expected" widget="float_time" optional="hide" sum="Total" />
+                                    <field name="avg_duration" widget="float_time" optional="hide" sum="Total" />
+                                    <field name="avg_build_duration" widget="float_time" optional="hide" sum="Total" />
+                                    <field name="avg_test_duration" widget="float_time" optional="hide" sum="Total" />
+                                    <field name="avg_other_duration" widget="float_time" optional="hide" sum="Total" />
+
+                                    <field name="qty_producing" optional="hide" sum="Total" />
+                                    <field name="qty_produced" optional="hide" sum="Total" />
+                                    <field name="qty_remaining" optional="show" sum="Total" />
+                                    <field name="percent_complete" widget="percentage" optional="hide" />
+                                    <field name="responsible_id" optional="hide" />
+                                    <field name='is_outdated_bom' optional="hide" />
+                                    <field name="exception_ids" widget="many2many_tags" optional="hide" />
+                                    <field name="exceptions_summary" optional="show" />
+                                    <field name="notes" optional="show" />
+                                    <field name="state" decoration-success="state == 'done'" decoration-warning="state == 'progress'" decoration-info="state == 'confirm'" decoration-danger="state == 'hold'" decoration-muted="state in ('cancel', 'draft')" optional="show" widget="badge" class="text-dark" />
+                                    <field name="is_delayed" optional="hide" />
+                                    <field name="is_planned" widget="boolean_toggle" readonly="1" optional="hide" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+            	</sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mrp_production_batch_schedule_search_view" model="ir.ui.view">
+        <field name="name">mrp.production.batch.schedule.search.view</field>
+        <field name="model">mrp.production.batch.schedule</field>
+        <field name="arch" type="xml">
+            <search>
+                <!-- Searchable Fields -->
+                <field name="date" />
+                <field name="workcenter_tag_id" />
+                <field name="mrp_batch_ids" />
+
+                <!-- Date Filters -->
+                <filter name="date_today" string="Today" domain="[['date', '=', context_today()]]" />
+                <filter name="this_week_filter" string="This Week" domain="[
+                    ('date', '>=', (datetime.datetime.combine(context_today() + relativedelta(weeks=-1, days=1, weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
+                    ('date', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(days=1, weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                <filter name="next_week_filter" string="Next Week" domain="[
+                    ('date', '>=', (datetime.datetime.combine(context_today() + relativedelta(weeks=1, weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S')),
+                    ('date', '&lt;', (datetime.datetime.combine(context_today() + relativedelta(weeks=2, weekday=0), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))]"/>
+                <separator/>
+                <filter name="past_due" string="Past Due" domain="[['date', '&lt;', context_today()]]" />
+                <filter name="upcoming" string="Upcoming" domain="[['date', '&gt;', context_today()]]" />
+
+                <!-- Group By Options -->
+                <group expand="0" string="Group By">
+                    <filter name="workcenter_tag_id" string="Workcenter Tag" context="{'group_by': 'workcenter_tag_id'}" />
+                    <filter name="company_id" string="Company" context="{'group_by': 'company_id'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+     <record id="action_mrp_production_batch_schedule" model="ir.actions.act_window">
+        <field name="name">MRP Batch Schedules</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mrp.production.batch.schedule</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="mrp_production_batch_schedule_search_view" />
+        <field name="context">{}</field>
+        <field name="domain">[]</field>
+    </record>
+
+
+    <menuitem
+        id="menu_mrp_production_batch_schedule_manufacturing"
+        name="Manufacturing Batch Schedule"
+        parent="mrp.menu_mrp_manufacturing"
+        action="mrp_batch.action_mrp_production_batch_schedule"
+        sequence="0"
+    />
+
+</odoo>

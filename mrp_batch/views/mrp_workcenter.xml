@@ -1,0 +1,33 @@
+<odoo>
+
+    <record id="mrp_batch_mmrp_workcenter_view" model="ir.ui.view">
+        <field name="name">mrp.workcenter.bom.inherit.mrp.batch</field>
+        <field name="model">mrp.workcenter</field>
+        <field name="inherit_id" ref="mrp.mrp_workcenter_view" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="type" />
+            </field>
+        </field>
+    </record>
+
+    <record id="action_mrp_workcenter_tag" model="ir.actions.act_window">
+        <field name="name">Work Center Tags</field>
+        <field name="res_model">mrp.workcenter.tag</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_create">
+                Create and manage work center tags here.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_mrp_workcenter_tag"
+        name="Work Center Tags"
+        parent="mrp.menu_mrp_configuration"
+        action="action_mrp_workcenter_tag"
+        sequence="91"
+    />
+
+</odoo>

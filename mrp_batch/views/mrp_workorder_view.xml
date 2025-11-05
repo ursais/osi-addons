@@ -1,0 +1,136 @@
+<odoo>
+
+    <record id="mrp_workorder_tree_view_inherit_mrp_batch" model="ir.ui.view">
+        <field name="name">mrp.workorder.tree.view.inherit.mrp.batch</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_editable_view" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="mrp_batch_id" />
+            </field>
+            <field name="duration" position="after">
+                <field name="operation_type" />
+            </field>
+        </field>
+    </record>
+
+    <record id="mrp_workorder_form_view_inherit_mrp_batch" model="ir.ui.view">
+        <field name="name">mrp.workorder.form.view.inherit.mrp.batch</field>
+        <field name="model">mrp.workorder</field>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_form_view_inherit" />
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="mrp_batch_id" />
+            </field>
+        </field>
+    </record>
+
+    <!-- START Gantt Planning View -->
+    <record id="workcenter_line_gantt_batch" model="ir.ui.view">
+        <field name="name">mrp.production.work.order.gantt.production</field>
+        <field name="model">mrp.workorder</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <gantt
+                class="o_mrp_workorder_gantt"
+                date_stop="date_finished"
+                date_start="date_start"
+                string="Operations"
+                default_group_by="mrp_batch_id"
+                create="0"
+                delete="0"
+                progress="progress"
+                plan="0"
+                decoration-danger="json_popover and 'text-danger' in json_popover"
+                decoration-success="state == 'done'"
+                decoration-warning="state == 'cancel' or (json_popover and 'text-warning' in json_popover)"
+                color="mrp_batch_id"
+                display_unavailability="0"
+                progress_bar="mrp_batch_id"
+                total_row="True"
+                js_class="mrp_workorder_gantt"
+                precision="{'day': 'hour:full', 'week': 'day:full', 'month': 'day:full', 'year': 'day:full'}"
+                sample="1"
+                form_view_id="%(mrp_production_batch_form_view)d">
+
+                <field name="date_start"/>
+                <field name="state"/>
+                <field name="workcenter_id"/>
+                <field name="json_popover"/>
+
+                <templates>
+                    <div t-name="gantt-popover" class="container-fluid">
+                        <div class="row g-0">
+                            <div class="col">
+                                <ul class="ps-1 mb-0 list-unstyled">
+                                    <li><strong>Start Date: </strong> <t t-esc="date_start.toFormat('F')"/></li>
+                                    <li><strong>Stop Date: </strong> <t t-esc="date_finished.toFormat('F')"/></li>
+                                    <li><strong>Workcenter: </strong> <t t-esc="workcenter_id[1]"/></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </templates>
+            </gantt>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_mrp_workorder_batch_specific">
+        <field name="name">Work Orders</field>
+        <field name="res_model">mrp.workorder</field>
+        <field name="view_mode">tree,form,gantt,calendar,pivot,graph</field>
+        <field name="domain">[('mrp_batch_id', '=', active_id)]</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_workorder">
+            No work orders to do!
+          </p><p>
+            Work orders are operations to do as part of a manufacturing order.
+            Operations are defined in the bill of materials or added in the manufacturing order directly.
+          </p><p>
+            Use the table work center control panel to register operations in the shop floor directly.
+            The tablet provides worksheets for your workers and allow them to scrap products, track time,
+            launch a maintenance request, perform quality tests, etc.
+          </p>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_mrp_workorder_batch">
+        <field name="name">Work Orders Planning</field>
+        <field name="res_model">mrp.workorder</field>
+        <field name="domain">[('production_state','not in',('done','cancel'))]</field>
+        <field name="view_mode">gantt,tree,form,calendar,pivot,graph</field>
+        <field name="search_view_id" ref="mrp.view_mrp_production_workorder_form_view_filter"/>
+        <field name="view_id" ref="workcenter_line_gantt_batch"/>
+        <field name="context">{'search_default_production': True, 'search_default_ready': True, 'search_default_waiting': True, 'search_default_progress': True, 'search_default_pending': True}</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_workorder">
+            No work orders to do!
+          </p><p>
+            Work orders are operations to do as part of a manufacturing order.
+            Operations are defined in the bill of materials or added in the manufacturing order directly.
+          </p><p>
+            Use the table work center control panel to register operations in the shop floor directly.
+            The tablet provides worksheets for your workers and allow them to scrap products, track time,
+            launch a maintenance request, perform quality tests, etc.
+          </p>
+        </field>
+    </record>
+
+    <record id="action_mrp_workorder_dependencies_batch" model="ir.actions.server">
+        <field name="name">Work Orders Planning</field>
+        <field name="model_id" ref="model_mrp_workorder"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = model.action_mrp_workorder_dependencies('batch')
+        </field>
+    </record>
+
+    <menuitem id="menu_mrp_workorder_batch"
+        name="Planning by Batch"
+        sequence="3"
+        action="action_mrp_workorder_dependencies_batch"
+        parent="mrp_workorder.mrp_workorder_menu_planning"/>
+
+    <!-- END Gantt Planning View -->
+
+</odoo>
