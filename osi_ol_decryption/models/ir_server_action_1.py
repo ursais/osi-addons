@@ -13,7 +13,7 @@ from odoo.tools import convert_csv_import, file_open
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
-    from odoo import api, SUPERUSER_ID
+    
 
     def migrate_helpdesk_rma_to_ticket(self):
         _logger.info("===============migrate_helpdesk_rma_to_ticket====================")
@@ -126,10 +126,11 @@ class IrActionsServer(models.Model):
             inspection = inspection_obj.search([('name', '=', check[1])])
             self._cr.execute("select sale_id from temp_sale_workflow_hold where check_id = %s;"% (check[0],))
             sale_ids = set([row[0] for row in self._cr.fetchall()])
-            for sale in sale_ids:
-                self._cr.execute(
-                "INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id) VALUES (%s, %s) ON CONFLICT DO NOTHING",
-                (sale, inspection.id))
+            if inspection:
+                for sale in sale_ids:
+                    self._cr.execute(
+                    "INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id) VALUES (%s, %s) ON CONFLICT DO NOTHING",
+                    (sale, inspection.id))
             
 
     def tranfer_stock(self):
@@ -828,10 +829,12 @@ class IrActionsServer(models.Model):
         bill_journal = self.env.ref('account.2_purchase', raise_if_not_found=False)
         if not bill_journal:
             bill_journal = journal_obj.search([('name', '=', 'Vendor Bills'), ('company_id', '=', 2)])
+        if bill_journal:
+            self._cr.execute("update account_journal set active = 'f' where id = %s;", (bill_journal.id,)) #Vendor Bills
 
         self._cr.execute("update account_journal set active = 'f' where id = 162;") #Purchase Journal USD
         self._cr.execute("update account_journal set active = 'f' where id = 158;") #Purchase Refund Journal USD
-        self._cr.execute("update account_journal set active = 'f' where id = %s;", (bill_journal.id,)) #Vendor Bills
+        
         self._cr.execute("update account_journal set name = json_build_object('en_US', 'Purchase Refund Journal') where id = 215;") # Purchase Refund Journal USD
         self._cr.execute("update account_journal set name = json_build_object('en_US', 'Purchase Journal') where id = 214;") # Purchase Journal EUR
 
@@ -955,7 +958,7 @@ class IrActionsServer(models.Model):
                 # new_code = format_decimal(new_code) 
                 if not old_code:
                     continue
-                print ("\n old_code:-", old_code, "old_name:-", old_name, "old_type:-", old_type, "new_code:-", new_code, "new_name:-", new_name, "new_type:-", new_type)
+                #print ("\n old_code:-", old_code, "old_name:-", old_name, "old_type:-", old_type, "new_code:-", new_code, "new_name:-", new_name, "new_type:-", new_type)
                 # Search account within company
                 account = self.env['account.account'].search([
                     ('code', '=', old_code),
@@ -2321,6 +2324,7 @@ class IrActionsServer(models.Model):
             "stock_no_negative",
             "web_company_color",
             "account_move_name_sequence",
+            "ol_mrp_plm_component_replace",
         ]
 
         # modules_ids = self.env["ir.module.module"].search(
