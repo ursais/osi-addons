@@ -84,9 +84,6 @@ class SaleOrder(models.Model):
                 ):
                     continue
 
-                if mo.product_qty <= 1:
-                    continue
-
                 # ensure there is a procurement group for the original MO
                 if not mo.procurement_group_id:
                     mo.procurement_group_id = group_obj.sudo().create({"name": mo.name})
