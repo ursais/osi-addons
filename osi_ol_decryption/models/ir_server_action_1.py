@@ -13,7 +13,37 @@ from odoo.tools import convert_csv_import, file_open
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
-    
+    def configure_account_COA(self):
+        self = self.sudo()
+        companies = self.env["res.company"].sudo().search([])
+        for company in companies:
+            self = self.with_company(company)
+            if company.id in [2, 10]:
+                print ("\n company", company)
+                # company.sudo().write({"chart_template": "nl"})
+                self.env['account.chart.template'].with_company(company)._load(
+                    'nl',   
+                    company,
+                    install_demo=False,
+                )
+                
+            if company.id == 6:
+                print ("\n company", company)
+                # company.sudo().write({"chart_template": "TW"})
+                self.env['account.chart.template'].with_company(company)._load(
+                    'TW',
+                    company,
+                    install_demo=False,
+                )
+                
+            if company.id == 9:
+                print ("\n company", company)
+                # company.sudo().write({"chart_template": "de_skr04"})
+                self.env['account.chart.template'].with_company(company)._load(
+                    'de_skr04',
+                    company,
+                    install_demo=False,
+                )
 
     def migrate_helpdesk_rma_to_ticket(self):
         _logger.info("===============migrate_helpdesk_rma_to_ticket====================")
@@ -264,6 +294,8 @@ class IrActionsServer(models.Model):
         cr.commit()
 
     def update_cost_center_distribution(self):
+        self = self.sudo()
+        aml_obj = self.env['account.move.line']
         _logger.info("===============update_cost_center_distribution====================")
         """Migrate existing journal items to cost center analytic accounts"""
         cost_center = { 1: "11000",2: "12000",3: "13000",5: "14000",6: "21000",8: "21002",9: "22000",
@@ -287,9 +319,13 @@ class IrActionsServer(models.Model):
             if analytic_account_id:
                 self._cr.execute("""
                                     UPDATE account_move_line
-                                    SET analytic_distribution = jsonb_build_object(%s::text, 100.0)
+                                    SET analytic_distribution = jsonb_build_object(%s::text, 100)
                                     WHERE cost_center_id = %s
                             """, (analytic_account_id.id, cost_center_id))
+                self._cr.execute("""select id from account_move_line where cost_center_id  =%s """, (cost_center_id,)
+                move_line = set([row[0] for row in self._cr.fetchall()])
+                if move_line:
+                    aml_obj.browse(move_line).with_delay._create_analytic_lines()
 
 
 
