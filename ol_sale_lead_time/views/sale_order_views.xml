@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extend Sale Order Form View -->
+    <record id="view_order_form_esd" model="ir.ui.view">
+        <field name="name">sale.order.form.esd</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Add ESD fields to header -->
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="rush_order"/>
+                <field name="estimated_ship_date" readonly="1"/>
+                <field name="last_esd_calculation" readonly="1"/>
+                <field name="esd_calculation_status" readonly="1"/>
+            </xpath>
+            <!-- Add Calculate ESD button -->
+            <xpath expr="//header" position="inside">
+                <button name="action_calculate_esd" string="Calculate ESD" type="object" class="btn-primary" invisible="state in ['done', 'cancel']"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extend Sale Order Line Tree View -->
+    <record id="view_order_line_tree_esd" model="ir.ui.view">
+        <field name="name">sale.order.line.tree.esd</field>
+        <field name="model">sale.order.line</field>
+        <field name="inherit_id" ref="sale.view_order_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_uom']" position="after">
+                <field name="customer_lead" optional="hide"/>
+                <field name="available_date" optional="hide"/>
+                <field name="bottleneck_component_id" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extend Sale Order Line Form View (for detailed view) -->
+    <record id="view_order_line_form_esd" model="ir.ui.view">
+        <field name="name">sale.order.line.form.esd</field>
+        <field name="model">sale.order.line</field>
+        <field name="inherit_id" ref="sale.view_order_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='price_unit']" position="after">
+                <group>
+                    <group string="ESD Information">
+                        <field name="customer_lead"/>
+                        <field name="available_date" readonly="1"/>
+                        <field name="bottleneck_component_id" readonly="1"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

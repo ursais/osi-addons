@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_res_config_settings_esd" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.esd</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="OnLogic ESD Configuration" string="OnLogic ESD Configuration" data-key="ol_sale_lead_time">
+                    <h2>OnLogic ESD Configuration</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="esd_no_po_lead_time"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="esd_no_po_lead_time"/>
+                                <div class="text-muted">
+                                    Lead time used when component has no vendor pricelist
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="esd_default_mfg_lead_time"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="esd_default_mfg_lead_time"/>
+                                <div class="text-muted">
+                                    Additional days for standard manufacturing orders
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="esd_rush_order_lead_time"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="esd_rush_order_lead_time"/>
+                                <div class="text-muted">
+                                    Additional days for rush manufacturing orders
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="esd_mfg_security_lead_time"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="esd_mfg_security_lead_time"/>
+                                <div class="text-muted">
+                                    Buffer time added to all manufacturing orders
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="esd_max_bom_depth"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="esd_max_bom_depth"/>
+                                <div class="text-muted">
+                                    Maximum nested BoM levels to prevent infinite loops
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="esd_calculation_timeout"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="esd_calculation_timeout"/>
+                                <div class="text-muted">
+                                    Maximum time allowed for ESD calculation (seconds)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
