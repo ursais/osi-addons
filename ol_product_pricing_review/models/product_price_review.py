@@ -525,24 +525,7 @@ class ProductPriceReview(models.Model):
         for vals in vals_list:
             seq = self.env["ir.sequence"].next_by_code("product.price.review") or "New"
             vals["name"] = seq
-        results = super().create(vals_list)
-        bomline_obj = self.env["mrp.bom.line"]
-        for res in results:
-            bomline = bomline_obj.search([("product_id", "=", res.product_id.id)])
-            kit_boms = bomline.mapped("bom_id").filtered(lambda l: l.type == "phantom")
-            product_variants = kit_boms.mapped("product_tmpl_id.product_variant_id")
-            for product in product_variants:
-                price_review = self.search(
-                    [
-                        ("company_id", "=", self.env.company.id),
-                        ("product_id", "=", product.id),
-                        ("state", "in", ["new", "in_progress"]),
-                    ]
-                )
-                if not price_review:
-                    new_price_review = self.create({"product_id": product.id})
-                    new_price_review.onchange_product_id()
-        return results
+        return super().create(vals_list)
 
     def assign_to_me(self):
         """Assign the current user to the record and update state if 'new'."""
