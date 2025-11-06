@@ -322,10 +322,10 @@ class IrActionsServer(models.Model):
                                     SET analytic_distribution = jsonb_build_object(%s::text, 100)
                                     WHERE cost_center_id = %s
                             """, (analytic_account_id.id, cost_center_id))
-                self._cr.execute("""select id from account_move_line where cost_center_id  =%s """, (cost_center_id,)
+                self._cr.execute("""select id from account_move_line where cost_center_id  =%s """, (cost_center_id,))
                 move_line = set([row[0] for row in self._cr.fetchall()])
                 if move_line:
-                    aml_obj.browse(move_line).with_delay._create_analytic_lines()
+                    aml_obj.browse(move_line).with_delay()._create_analytic_lines()
 
 
 
