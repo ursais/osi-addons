@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit invoice email template to fix subject line -->
+    <!-- 
+        This fixes the subject to show sale order name if exists, otherwise invoice name.
+        The Python code adds sale_order to the template context, so we can reference it directly.
+        The original template had incorrect syntax mixing ${...} with {{...}}.
+        The correct Jinja2 syntax is {{...}} only.
+    -->
+    <record id="account.email_template_edi_invoice" model="mail.template">
+        <field name="subject">Your Invoice {{ (sale_order and sale_order.name) or object.name or '' }}</field>
+    </record>
+</odoo>
