@@ -1,0 +1,7 @@
+<odoo>
+
+    <record model="utm.source" id="utm_source_ecommerce">
+        <field name="name">Ecommerce</field>
+    </record>
+
+</odoo>

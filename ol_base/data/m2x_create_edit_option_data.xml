@@ -1,0 +1,12 @@
+<odoo noupdate="1">
+
+    <!-- Enable Create/Edit on ECO/product_id -->
+    <record id="mrp_eco_product_tmpl_id" model="m2x.create.edit.option">
+        <field name="model_id" ref="mrp_plm.model_mrp_eco"/>
+        <field name="field_id" ref="mrp_plm.field_mrp_eco__product_tmpl_id"/>
+        <field name="option_create">set_false</field>
+        <field name="option_create_edit">set_true</field>
+        <field name="option_create_edit_wizard">1</field>
+    </record>
+
+</odoo>

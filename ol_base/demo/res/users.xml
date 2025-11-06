@@ -1,0 +1,112 @@
+<odoo>
+
+    <!-- Update system users created in ol_base/data -->
+    <record id="ol_base.us_company_user" model="res.users">
+        <field name="password">pw</field>
+    </record>
+    <record id="ol_base.eu_company_user" model="res.users">
+        <field name="password">pw</field>
+    </record>
+
+    <!-- Create TW Admin user -->
+    <record id="tw_company_user" model="res.users">
+        <field name="name">Admin TW</field>
+        <field name="login">tw</field>
+        <field name="email">tw.test@onlogic.com</field>
+    </record>
+
+    <!-- Normal Users -->
+    <record id="eu_user" model="res.users">
+        <field name="name">EU User</field>
+        <field name="login">eu_user</field>
+        <field name="password">pw</field>
+        <field name="email">eu@onlogic.com</field>
+        <field name="tz">Europe/Amsterdam</field>
+        <field name="active" eval="True" />
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="company_ids" eval="[(4, ref('ol_base.onlogic_eu'))]" />
+    </record>
+    <record id="us_user" model="res.users">
+        <field name="name">US User</field>
+        <field name="login">us_user</field>
+        <field name="password">pw</field>
+        <field name="email">us@onlogic.com</field>
+        <field name="tz">US/Eastern</field>
+        <field name="active" eval="True" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="company_ids" eval="[(4, ref('base.main_company'))]" />
+    </record>
+    <record id="tw_user" model="res.users">
+        <field name="name">TW User</field>
+        <field name="login">tw_user</field>
+        <field name="password">pw</field>
+        <field name="email">tw@onlogic.com</field>
+        <field name="tz">US/Eastern</field>
+        <field name="active" eval="True" />
+    </record>
+
+    <record id="dev_user" model="res.users">
+        <field name="name">Developer</field>
+        <field name="login">dev</field>
+        <field name="password">pw</field>
+        <field name="email">dev@onlogic.com</field>
+        <field name="tz">US/Eastern</field>
+        <field name="active" eval="True" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="company_ids" eval="[(4, ref('base.main_company'), 0), (4, ref('ol_base.onlogic_eu'), 0)]" />
+    </record>
+
+    <!-- Add dev user to appropriate groups -->
+    <!-- Base Settings -->
+    <record id="base.group_system" model="res.groups">
+        <field name="users" eval="[(4, ref('ol_base.dev_user'), 0)]" />
+    </record>
+
+    <record id="stock.group_production_lot" model="res.groups">
+        <field name="users" eval="[(4, ref('ol_base.dev_user'), 0)]" />
+    </record>
+    <record id="stock.group_stock_multi_locations" model="res.groups">
+        <field name="users" eval="[(4, ref('ol_base.dev_user'), 0)]" />
+    </record>
+    <!-- Base multi-company -->
+    <record id="base.group_multi_company" model="res.groups">
+        <field name="users" eval="[(4, ref('ol_base.dev_user'), 0)]" />
+    </record>
+
+    <!-- Sales people -->
+    <record id="sales_user_us" model="res.users">
+        <field name="name">Salesperson US</field>
+        <field name="login">us_sale</field>
+        <field name="password">pw</field>
+        <field name="email">sales_us@onlogic.com</field>
+        <field name="phone">202-555-0165</field>
+        <field name="tz">US/Eastern</field>
+        <field name="active" eval="True" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="company_ids" eval="[(4, ref('base.main_company'))]" />
+    </record>
+    <record id="sales_user_eu" model="res.users">
+        <field name="name">Salesperson EU</field>
+        <field name="login">eu_sale</field>
+        <field name="password">pw</field>
+        <field name="email">sales_eu@onlogic.com</field>
+        <field name="phone">+31515555000</field>
+        <field name="tz">Europe/Amsterdam</field>
+        <field name="active" eval="True" />
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="company_ids" eval="[(4, ref('ol_base.onlogic_eu'))]" />
+    </record>
+
+    <record id="sales_director_us" model="res.users">
+        <field name="name">Sales Director</field>
+        <field name="login">vp_sale</field>
+        <field name="password">pw</field>
+        <field name="email">vp_sale@onlogic.com</field>
+        <field name="phone">555-123-1234</field>
+        <field name="tz">US/Eastern</field>
+        <field name="active" eval="True" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="company_ids" eval="[(4, ref('base.main_company'))]" />
+    </record>
+
+</odoo>

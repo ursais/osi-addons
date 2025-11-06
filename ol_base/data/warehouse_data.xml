@@ -1,0 +1,9 @@
+<odoo>
+
+    <record id="stock.warehouse0" model="stock.warehouse">
+        <field name="name">OnLogic US Warehouse</field>
+        <!-- When manufacturing here: pick, then build -->
+        <field name="manufacture_steps">pbm</field>
+    </record>
+
+</odoo>

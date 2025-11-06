@@ -1,0 +1,45 @@
+<odoo>
+
+    <!--  Add currency rates to the default currencies-->
+
+    <!--  USD per EUR for EU company -->
+
+    <record id="currency_rate_eur_to_usd_at_install" model="res.currency.rate">
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="currency_id" ref="base.USD" />
+        <field name="name" eval="DateTime.today()" />
+        <field name="rate">2.00000</field>
+    </record>
+
+
+    <record id="currency_rate_eur_to_usd_2019_09_27" model="res.currency.rate">
+        <field name="currency_id" ref="base.USD"/>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="rate">1.093500</field>
+        <field name="name">2019-09-27</field>
+    </record>
+
+    <record id="currency_rate_eur_to_usd_2019_09_25" model="res.currency.rate">
+        <field name="currency_id" ref="base.USD"/>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="rate">1.098200</field>
+        <field name="name">2019-09-25</field>
+    </record>
+
+    <record id="currency_rate_eur_to_usd_2019_05_03" model="res.currency.rate">
+        <field name="currency_id" ref="base.USD"/>
+        <field name="company_id" ref="ol_base.onlogic_eu" />
+        <field name="rate">1.115500</field>
+        <field name="name">2019-05-03</field>
+    </record>
+
+    <!-- EUR per USD for US Company -->
+
+    <record id="currency_rate_usd_to_eur_at_install" model="res.currency.rate">
+        <field name="company_id" ref="base.main_company" />
+        <field name="currency_id" ref="base.EUR" />
+        <field name="name" eval="DateTime.today()" />
+        <field name="rate">0.50000</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,19 @@
+<odoo>
+
+    <!-- Add our core fields to company -->
+    <record model="ir.ui.view" id="ol_base_company_form">
+        <field name="name">ol_base.res_company_form</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form" />
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="external_display_name" />
+            </field>
+            <field name="website" position="after">
+                <field name="short_name" />
+                <field name="company_user_id" />
+            </field>
+        </field>
+    </record>
+
+</odoo>

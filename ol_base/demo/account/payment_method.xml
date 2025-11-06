@@ -1,0 +1,9 @@
+<odoo>
+
+    <record id="inbound_check_payment_method" model="account.payment.method">
+        <field name="code">check_printing</field>
+        <field name="name">Check</field>
+        <field name="payment_type">inbound</field>
+    </record>
+
+</odoo>

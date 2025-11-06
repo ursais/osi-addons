@@ -1,0 +1,33 @@
+<odoo>
+
+    <!-- Add XMLID to production locations -->
+    <function model="ir.model.data" name="_update_xmlids">
+        <value model="base"
+               eval="[{
+                     'xml_id': 'ol_base.production_location_us',
+                     'noupdate': True,
+                     'record': obj().env['stock.location'].search([('company_id', '=', ref('base.main_company')),
+                     ('usage', '=', 'production')])
+                     },{
+                     'xml_id': 'ol_base.production_location_eu',
+                     'noupdate': True,
+                     'record': obj().env['stock.location'].search([('company_id', '=', ref('ol_base.onlogic_eu')),
+                     ('usage', '=', 'production')])
+                     },{
+                     'xml_id': 'ol_base.scrap_location_us',
+                     'noupdate': True,
+                     'record': obj().env['stock.location'].search([('company_id', '=', ref('base.main_company')),
+                     ('usage', '=', 'inventory'),
+                     ('scrap_location', '=', 'True'),
+                     ('location_id', '=', ref('stock.stock_location_locations_virtual'))])
+                     },{
+                     'xml_id': 'ol_base.scrap_location_eu',
+                     'noupdate': True,
+                     'record': obj().env['stock.location'].search([('company_id', '=', ref('ol_base.onlogic_eu')),
+                     ('usage', '=', 'inventory'),
+                     ('scrap_location', '=', 'True'),
+                     ('location_id', '=', ref('stock.stock_location_locations_virtual'))])
+                     }]" />
+       </function>
+
+</odoo>

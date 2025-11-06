@@ -1,0 +1,20 @@
+<odoo>
+
+    <!-- Rename from 'X days' to 'Net X' -->
+    <record id="account.account_payment_term_immediate" model="account.payment.term">
+        <field name="name">Net 0</field>
+    </record>
+    <record id="account.account_payment_term_15days" model="account.payment.term">
+        <field name="name">Net 15</field>
+    </record>
+    <record id="account.account_payment_term_21days" model="account.payment.term">
+        <field name="name">Net 21</field>
+    </record>
+    <record id="account.account_payment_term_30days" model="account.payment.term">
+        <field name="name">Net 30</field>
+    </record>
+    <record id="account.account_payment_term_45days" model="account.payment.term">
+        <field name="name">Net 45</field>
+    </record>
+
+</odoo>

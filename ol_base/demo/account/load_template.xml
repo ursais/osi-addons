@@ -1,0 +1,8 @@
+<odoo>
+
+    <!-- Switch currency back to EUR (template is in USD) -->
+    <record id="ol_base.onlogic_eu" model="res.company">
+        <field name="currency_id" ref="base.EUR"/>
+    </record>
+
+</odoo>
