@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Add server action to fix payment methods for existing payment transactions -->
+        <record id="action_fix_payment_transaction_methods" model="ir.actions.server">
+            <field name="name">Fix Payment Methods from Sale Orders</field>
+            <field name="model_id" ref="payment.model_payment_transaction"/>
+            <field name="binding_model_id" ref="payment.model_payment_transaction"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+if records:
+    records._set_payment_method_from_sale_order()
+            </field>
+        </record>
+    </data>
+</odoo>
