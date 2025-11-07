@@ -764,6 +764,31 @@ class IrActionsServer(models.Model):
             
             if payment:
                 cr.execute("update account_move set sale_payment_method_id = %s where id = %s", (payment.id, move[0] ))
+        
+        
+        self._cr.execute("select id,sale_order_payment_method_id from payment_transaction where sale_order_payment_method_id is not null")
+        transactions_data = self._cr.fetchall()
+        for transaction in transactions_data:
+            payment = False
+            name = ''
+            cr.execute("select id,sub_method_id,method_id from sale_order_payment_method where id = %s", (transaction[1],))
+            data = cr.dictfetchone()
+            
+            if data.get('sub_method_id') != None:
+                name = payment_methods.get(data.get('sub_method_id'))
+            else:
+                name = payment_methods.get(data.get('method_id'))
+            # if name == 'Custom':
+            #     payment = new_payment_data.filtered(lambda l: l.name == 'Custom')
+            if name == 'Net Terms':
+                payment = new_payment_data.filtered(lambda l: l.name == 'Payment Terms')
+            elif name in ('Credit Card Prepayment', 'Credit Card'):
+                payment = new_payment_data.filtered(lambda l: l.name == 'Card')
+            else:
+                payment = new_payment_data.filtered(lambda l: l.name == name)
+            if payment:
+                cr.execute("update payment_transaction set payment_method_id = %s where id = %s", (payment.id, transaction[0] ))
+            
     
 
     def mig_scrap_reasons(self):
