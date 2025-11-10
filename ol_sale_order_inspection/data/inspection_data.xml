@@ -11,5 +11,260 @@
 	<record id="inspection_finance_manual_exception" model="sale.order.inspection">
 		<field name="name">Finance Manual Exception</field>
 	</record>
-
+	
+    <record id="inspection_paypal_order_edit" model="sale.order.inspection">
+        <field name="name">PayPal Order Edit</field>
+    </record>
+    
+    <record id="inspection_finance_order_edit" model="sale.order.inspection">
+        <field name="name">Finance Order Edit</field>
+    </record>
+    
+    <record id="inspection_bank_transfer_difference_due" model="sale.order.inspection">
+        <field name="name">Bank Transfer Difference Due</field>
+    </record>
+    
+    <record id="inspection_order_cancelled_refund_due" model="sale.order.inspection">
+        <field name="name">Order Cancelled - Refund Due</field>
+    </record>
+    
+    <record id="inspection_captured_payment_increased" model="sale.order.inspection">
+        <field name="name">Captured Payment Increased</field>
+    </record>
+    
+    <record id="inspection_failed_credit_capture" model="sale.order.inspection">
+        <field name="name">Failed Credit Capture</field>
+    </record>
+    
+    <record id="inspection_failed_credit_capture_charge_has_expired" model="sale.order.inspection">
+        <field name="name">Failed Credit Capture, charge has expired</field>
+    </record>
+    
+    <record id="inspection_charge_prematurely_refunded" model="sale.order.inspection">
+        <field name="name">Charge Prematurely Refunded</field>
+    </record>
+    
+    <record id="inspection_customer_refund_due" model="sale.order.inspection">
+        <field name="name">Customer Refund Due</field>
+    </record>
+    
+    <record id="inspection_payment_pending" model="sale.order.inspection">
+        <field name="name">Payment Pending</field>
+    </record>
+    
+    <record id="inspection_eu_order_review" model="sale.order.inspection">
+        <field name="name">EU Order Review</field>
+    </record>
+    
+    <record id="inspection_order_has_notes" model="sale.order.inspection">
+        <field name="name">Order Has Notes</field>
+    </record>
+    
+    <record id="inspection_force_order_review" model="sale.order.inspection">
+        <field name="name">Force Order Review</field>
+    </record>
+    
+    <record id="inspection_synced_error_hold_not_backorderable_product" model="sale.order.inspection">
+        <field name="name">Synced Error Hold (Not backorderable product)</field>
+    </record>
+    
+    <record id="inspection_synced_error_hold_not_saleable_product" model="sale.order.inspection">
+        <field name="name">Synced Error Hold (Not saleable product)</field>
+    </record>
+    
+    <record id="inspection_hold_for_order_billing_and_shipping_addresses_mismatch" model="sale.order.inspection">
+        <field name="name">Hold for Order Billing and Shipping Addresses Mismatch</field>
+    </record>
+    
+    <record id="inspection_failed_payment_revalidation" model="sale.order.inspection">
+        <field name="name">Failed Payment Revalidation</field>
+    </record>
+    
+    <record id="inspection_net_terms_2x_over_limit" model="sale.order.inspection">
+        <field name="name">Net Terms - 2x Over Limit</field>
+    </record>
+    
+    <record id="inspection_net_terms_over_limit" model="sale.order.inspection">
+        <field name="name">Net Terms - Over Limit</field>
+    </record>
+    
+    <record id="inspection_net_terms_warning" model="sale.order.inspection">
+        <field name="name">Net Terms - Warning</field>
+    </record>
+    
+    <record id="inspection_net_terms_late_payment" model="sale.order.inspection">
+        <field name="name">Net Terms - Late Payment</field>
+    </record>
+    
+    <record id="inspection_stripe_source_order_edit" model="sale.order.inspection">
+        <field name="name">Stripe Source Order Edit</field>
+    </record>
+    
+    <record id="inspection_bom_in_magento_has_changed" model="sale.order.inspection">
+        <field name="name">BOM in Magento Has Changed</field>
+    </record>
+    
+    <record id="inspection_order_import_error_invalid_shipping_information" model="sale.order.inspection">
+        <field name="name">Order Import Error: Invalid Shipping Information</field>
+    </record>
+    
+    <record id="inspection_sale_order_import_error" model="sale.order.inspection">
+        <field name="name">Sale Order Import Error</field>
+    </record>
+    
+    <record id="inspection_order_import_error_tax_mismatch" model="sale.order.inspection">
+        <field name="name">Order Import Error: Tax Mismatch</field>
+    </record>
+    
+    <record id="inspection_migration_tech_hold" model="sale.order.inspection">
+        <field name="name">Migration Tech Hold</field>
+    </record>
+    
+    <record id="inspection_migration_production_hold" model="sale.order.inspection">
+        <field name="name">Migration Production Hold</field>
+    </record>
+    
+    <record id="inspection_migration_finance_hold" model="sale.order.inspection">
+        <field name="name">Migration Finance Hold</field>
+    </record>
+    
+    <record id="inspection_migration_order_review_hold" model="sale.order.inspection">
+        <field name="name">Migration Order Review Hold</field>
+    </record>
+    
+    <record id="inspection_migration_future_shipment_exception" model="sale.order.inspection">
+        <field name="name">Migration Future Shipment Exception</field>
+    </record>
+    
+    <record id="inspection_migration_shipment_waiting_payment_exception" model="sale.order.inspection">
+        <field name="name">Migration Shipment Waiting Payment Exception</field>
+    </record>
+    
+    <record id="inspection_migration_finance_exception" model="sale.order.inspection">
+        <field name="name">Migration Finance Exception</field>
+    </record>
+    
+    <record id="inspection_order_import_error_generic_error" model="sale.order.inspection">
+        <field name="name">Order Import Error: Generic Error</field>
+    </record>
+    
+    <record id="inspection_wait_for_custom_image_capturing_for_ozzy" model="sale.order.inspection">
+        <field name="name">Wait for Custom Image Capturing (for Ozzy)</field>
+    </record>
+    
+    <record id="inspection_mk150_ssp_250sub" model="sale.order.inspection">
+        <field name="name">MK150 + SSP-250SUB</field>
+    </record>
+    
+    <record id="inspection_em7455_and_di_1000" model="sale.order.inspection">
+        <field name="name">EM7455 and DI-1000-[…]</field>
+    </record>
+    
+    <record id="inspection_do_not_deliver" model="sale.order.inspection">
+        <field name="name">Do not Deliver</field>
+    </record>
+    
+    <record id="inspection_documentation_incomplete" model="sale.order.inspection">
+        <field name="name">Documentation incomplete</field>
+    </record>
+    
+    <record id="inspection_it_system_error" model="sale.order.inspection">
+        <field name="name">IT System Error</field>
+    </record>
+    
+    <record id="inspection_sale_order_generated_by_repair_order" model="sale.order.inspection">
+        <field name="name">Sale Order Generated by Repair Order</field>
+    </record>
+    
+    <record id="inspection_imb_195_p_dc_155a915t2b_rpw" model="sale.order.inspection">
+        <field name="name">IMB-195-P +  DC-155A915T2B-RPW</field>
+    </record>
+    
+    <record id="inspection_new_product" model="sale.order.inspection">
+        <field name="name">New Product</field>
+    </record>
+    
+    <record id="inspection_covid_19_do_not_build" model="sale.order.inspection">
+        <field name="name">COVID-19 Do Not Build</field>
+    </record>
+    
+    <record id="inspection_k700_chassis" model="sale.order.inspection">
+        <field name="name">K700 Chassis</field>
+    </record>
+    
+    <record id="inspection_click_to_buy_payment_check" model="sale.order.inspection">
+        <field name="name">Click To Buy Payment Check</field>
+    </record>
+    
+    <record id="inspection_order_import_error_invalid_order_line" model="sale.order.inspection">
+        <field name="name">Order Import Error: Invalid Order Line</field>
+    </record>
+    
+    <record id="inspection_payment_mismatch" model="sale.order.inspection">
+        <field name="name">Payment Mismatch</field>
+    </record>
+    
+    <record id="inspection_order_import_error_amount_total_mismatch" model="sale.order.inspection">
+        <field name="name">Order Import Error: Amount Total Mismatch</field>
+    </record>
+    
+    <record id="inspection_payment_failed" model="sale.order.inspection">
+        <field name="name">Payment Failed</field>
+    </record>
+    
+    <record id="inspection_shipping_method_error" model="sale.order.inspection">
+        <field name="name">Shipping Method Error</field>
+    </record>
+    
+    <record id="inspection_invalid_billing_address_error" model="sale.order.inspection">
+        <field name="name">Invalid Billing Address Error</field>
+    </record>
+    
+    <record id="inspection_invalid_shipping_address_error" model="sale.order.inspection">
+        <field name="name">Invalid Shipping Address Error</field>
+    </record>
+    
+    <record id="inspection_customer_error" model="sale.order.inspection">
+        <field name="name">Customer Error</field>
+    </record>
+    
+    <record id="inspection_order_line_error" model="sale.order.inspection">
+        <field name="name">Order Line Error</field>
+    </record>
+    
+    <record id="inspection_unspecified_ecommerce_order_processing_error" model="sale.order.inspection">
+        <field name="name">Unspecified Ecommerce Order Processing Error</field>
+    </record>
+    
+    <record id="inspection_bank_transfer_check" model="sale.order.inspection">
+        <field name="name">Bank Transfer Check</field>
+    </record>
+    
+    <record id="inspection_manual_payment_check" model="sale.order.inspection">
+        <field name="name">Manual Payment Check</field>
+    </record>
+    
+    <record id="inspection_stop_unapproved_custom_systems" model="sale.order.inspection">
+        <field name="name">STOP - Unapproved Custom Systems</field>
+    </record>
+    
+    <record id="inspection_tech_exception_on_product" model="sale.order.inspection">
+        <field name="name">Tech Exception on Product</field>
+    </record>
+    
+    <record id="inspection_tech_exception_in_bill_of_materials" model="sale.order.inspection">
+        <field name="name">Tech Exception in Bill of Materials</field>
+    </record>
+    
+    <record id="inspection_product_bill_of_materials_missing_automation_tasks" model="sale.order.inspection">
+        <field name="name">Product Bill of Materials missing automation tasks</field>
+    </record>
+    
+    <record id="inspection_high_fraud_score" model="sale.order.inspection">
+        <field name="name">High Fraud Score</field>
+    </record>
+    
+    <record id="inspection_pre_order_product_management" model="sale.order.inspection">
+        <field name="name">Pre-Order (Product Management)</field>
+    </record>
 </odoo>
