@@ -1,3 +1,4 @@
+import logging
 import base64
 from io import BytesIO
 
@@ -9,6 +10,8 @@ from odoo.tools import DEFAULT_SERVER_DATE_FORMAT as DF
 
 from ..report.inventory_valuation import InventoryValuationCategory
 from . import xls_format
+
+_logger = logging.getLogger(__name__)
 
 
 class InventoryValuationDateReport(models.TransientModel, InventoryValuationCategory):
@@ -248,7 +251,21 @@ class InventoryValuationDateReport(models.TransientModel, InventoryValuationCate
             sheet.row(0).height = 256 * 3
             sheet.write_merge(0, 0, 0, 11, Header_Text, M_header_tstyle)
 
-            total_lines = self._get_valuation_data(datas, company)
+            try:
+                total_lines = self._get_valuation_data(datas, company)
+            except Exception as e:
+                _logger.error(
+                    "Error generating valuation data for XLS export: %s",
+                    str(e),
+                    exc_info=True
+                )
+                raise UserError(
+                    _(
+                        "Failed to generate inventory valuation data for export. "
+                        "Please check the report parameters and try again. Error: %s"
+                    ) % str(e)
+                ) from e
+            
             warehouses = self.xls_get_warehouses(
                 [y.id for y in self.warehouse_ids], company
             )
@@ -348,19 +365,31 @@ class InventoryValuationDateReport(models.TransientModel, InventoryValuationCate
             sheet.write(row, 0, "Grand Total", other_tstyle_grandc)
             sheet.write(row, 8, "%.2f" % total_value, other_tstyle_grandr)
 
-        stream = BytesIO()
-        workbook.save(stream)
+        try:
+            stream = BytesIO()
+            workbook.save(stream)
 
-        export_obj = self.env["inventory.valuation.success.box"]
-        res_id = export_obj.create(
-            {
-                "file": base64.encodebytes(stream.getvalue()),
-                "fname": "Inventory Valuation by Location and Date Report.xls",
+            export_obj = self.env["inventory.valuation.success.box"]
+            res_id = export_obj.create(
+                {
+                    "file": base64.encodebytes(stream.getvalue()),
+                    "fname": "Inventory Valuation by Location and Date Report.xls",
+                }
+            )
+            return {
+                "type": "ir.actions.act_url",
+                "url": "/web/binary/download_document?model=inventory.valuation.success.box&field=file&record_id=%s&filename=Inventory Valuation by Location and Date Report.xls"
+                % (res_id.id),
+                "target": "new",
             }
-        )
-        return {
-            "type": "ir.actions.act_url",
-            "url": "/web/binary/download_document?model=inventory.valuation.success.box&field=file&record_id=%s&filename=Inventory Valuation by Location and Date Report.xls"
-            % (res_id.id),
-            "target": "new",
-        }
+        except Exception as e:
+            _logger.error(
+                "Error creating XLS export file: %s",
+                str(e),
+                exc_info=True
+            )
+            raise UserError(
+                _(
+                    "Failed to create Excel export file. Please try again or contact your system administrator. Error: %s"
+                ) % str(e)
+            ) from e
