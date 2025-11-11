@@ -1377,20 +1377,6 @@ class IrActionsServer(models.Model):
             unused_boms.write({"active": False})
             cr.commit()
 
-    def drop_temp_tables(self):
-        cr = self.env.cr
-        _logger.info("\n\n============Droping Tables Start")
-        cr.execute("drop table temp_ir_property_v13_vp;")
-        cr.execute("drop table temp_product_temp_v13_vp;")
-        cr.execute("drop table temp_product_template_res_company_rel_v13_VP;")
-        cr.execute("drop table temp_product_template_attribute_value_V13_VP;")
-        cr.execute("drop table temp_ir_property_inbound_shipping_method;")
-        cr.execute("drop table temp_ir_property;")
-        cr.execute("drop table temp_res_users;")
-        cr.execute("drop table temp_product_attribute_value_v13;")
-        
-        _logger.info("\n\n============Tables Droped")
-
     def update_workcenter_mo(self):
         #TASK Ref: https://osi.mavenlink.com/workspaces/44078089/#tracker/928787261
         MrpBom = self.env["mrp.bom"]
@@ -1424,3 +1410,114 @@ class IrActionsServer(models.Model):
         if workcenter_lines:
             RoutingWorkcenter.create(workcenter_lines)
             _logger.info("\n\n============RoutingWorkcenter Done")
+
+
+    def update_stock_inventory(self):
+        # Task Ref: https://pm.opensourceintegrators.com/web#id=67417&menu_id=218&cids=1&action=1093&model=helpdesk.ticket&view_type=form
+        #Queries
+        # 1. create table temp_stock_inventory_vp13 as select * from stock_inventory;
+        # 2. create table temp_product_product_stock_inventory_rel_vp13 as select * from product_product_stock_inventory_rel;
+        # 3. create table temp_stock_inventory_stock_location_rel_vp13 as select * from temp_stock_inventory_stock_location_rel_vp13;
+        # 4. create table temp_stock_move_vp13 as SELECT * FROM stock_move WHERE inventory_id IS NOT NULL;
+        cr = self.env.cr
+
+        # Fetch all rows from the temporary table
+        cr.execute("""
+            SELECT *
+            FROM temp_stock_inventory_vp13
+        """)
+        records = cr.fetchall()
+        columns = [desc[0] for desc in cr.description]
+        # Convert query result into list of dictionaries
+        result = [dict(zip(columns, row)) for row in records]
+
+        
+        counter = 0
+        for rec in result:
+            current_id = rec.get("id",False)  # or whatever your variable is for stock_inventory_id
+            state_value = rec.get('state')
+            product_selection = "all"
+            name = rec.get('name') or ''
+            if state_value == 'confirm':
+                state_value = 'in_progress'
+
+            cr.execute("""
+                SELECT *
+                FROM temp_product_product_stock_inventory_rel_vp13
+                WHERE stock_inventory_id = %s
+            """, (current_id,)) 
+            records = cr.fetchall()
+            columns = [desc[0] for desc in cr.description]
+            # Convert query result into list of dictionaries
+            result = [dict(zip(columns, row)) for row in records]
+            if result and len(result) > 1:
+                product_selection = "manual"
+            if result and len(result) == 1:
+                product_selection = "one"
+
+            # Build INSERT SQL
+            cr.execute("""
+                INSERT INTO stock_inventory (
+                    id, name, date, state, company_id, create_uid, write_uid, write_date, create_date,product_selection
+                )
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s,%s)
+            """, (
+                rec.get('id'),
+                name,
+                rec.get('date'),
+                state_value,
+                rec.get('company_id'),
+                rec.get('create_uid'),
+                rec.get('write_uid'),
+                rec.get('write_date'),
+                rec.get('create_date'),
+                product_selection,
+            ))
+
+            cr.execute("""
+                INSERT INTO product_product_stock_inventory_rel (stock_inventory_id, product_product_id)
+                SELECT stock_inventory_id, product_product_id
+                FROM temp_product_product_stock_inventory_rel_vp13
+                WHERE stock_inventory_id = %s
+            """, (current_id,))
+
+            cr.execute("""
+                INSERT INTO stock_inventory_stock_location_rel (stock_inventory_id, stock_location_id)
+                SELECT stock_inventory_id, stock_location_id
+                FROM temp_stock_inventory_stock_location_rel_vp13
+                WHERE stock_inventory_id = %s
+            """, (current_id,))
+            cr.commit()
+            cr.execute("""
+                SELECT *
+                FROM temp_stock_move_vp13
+                WHERE inventory_id = %s
+            """, (current_id,)) 
+            move_records = cr.fetchall()
+            columns = [desc[0] for desc in cr.description]
+            # Convert query result into list of dictionaries
+            move_result = [dict(zip(columns, row)) for row in move_records]
+            for move in move_result:
+                lines = self.env['stock.move.line'].search([('move_id','=',move.get("id"))])
+                if lines:
+                    lines.sudo().write({"inventory_adjustment_id":current_id})
+        _logger.info("\n\n=update_stock_inventory Done")
+
+
+    def drop_temp_tables(self):
+        cr = self.env.cr
+        _logger.info("\n\n============Droping Tables Start")
+        cr.execute("drop table temp_ir_property_v13_vp;")
+        cr.execute("drop table temp_product_temp_v13_vp;")
+        cr.execute("drop table temp_product_template_res_company_rel_v13_VP;")
+        cr.execute("drop table temp_product_template_attribute_value_V13_VP;")
+        cr.execute("drop table temp_ir_property_inbound_shipping_method;")
+        cr.execute("drop table temp_ir_property;")
+        cr.execute("drop table temp_res_users;")
+        cr.execute("drop table temp_product_attribute_value_v13;")
+        cr.execute("drop table temp_stock_inventory_vp13;")
+        cr.execute("drop table temp_product_product_stock_inventory_rel_vp13;")
+        cr.execute("drop table temp_stock_inventory_stock_location_rel_vp13;")
+        cr.execute("drop table temp_stock_move_vp13;")
+        
+        _logger.info("\n\n============Tables Droped")
