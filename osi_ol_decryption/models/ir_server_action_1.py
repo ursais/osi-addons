@@ -207,7 +207,7 @@ class IrActionsServer(models.Model):
             picking.with_company(stock.company_id).button_validate()
             # self._cr.commit()
 
-    def compute_bypass_data(self, batch_size=10000):
+    def compute_bypass_data(self, batch_size=20000):
         self = self.sudo()
 
         def process_in_chunks(model_name, compute_methods):
@@ -230,7 +230,6 @@ class IrActionsServer(models.Model):
 
                     # If it's a queued job method, delay it. Otherwise run directly.
                     # if getattr(method, "_job_name", None):
-                    print ("\n method_namemethod_name",method_name)
                     getattr(recs.with_delay(), method_name)()
                     # else:
                     #     method()
@@ -251,7 +250,7 @@ class IrActionsServer(models.Model):
             '_compute_credit_hold',
         ])
 
-        # Sale Orders
+        # # Sale Orders
         process_in_chunks('sale.order', [
             '_compute_current_estimate_ship_date',
             '_compute_uigd_value',
@@ -261,7 +260,7 @@ class IrActionsServer(models.Model):
             '_compute_uninvoiced_balance'
         ])
 
-        # Sale Order Lines
+        # # Sale Order Lines
         process_in_chunks('sale.order.line', [
             '_compute_bo_qty',
             '_compute_margin',
@@ -272,25 +271,26 @@ class IrActionsServer(models.Model):
             '_compute_last_bill_date',
         ])
 
-        # Pickings
+        # # Pickings
         process_in_chunks('stock.picking', [
             '_compute_total_sales_price',
             '_compute_main_error',
             '_compute_credit_hold',
         ])
 
-        # MRP Productions
+        # # MRP Productions
         process_in_chunks('mrp.production', [
             '_compute_credit_hold',
         ])
 
         # Account Moves
+        batch_size = 100000
         process_in_chunks('account.move', [
             '_compute_intrastat_country_id',
             '_compute_sale_type_id',
             '_compute_po_line_price_difference',
         ])
-
+        
         # Account Move Lines
         process_in_chunks('account.move.line', [
             '_compute_intrastat_transaction_id',
@@ -298,6 +298,7 @@ class IrActionsServer(models.Model):
         ])
 
         # BOMs
+        batch_size = 10000
         process_in_chunks('mrp.bom', [
             '_compute_existing_scaffolding_bom',
         ])            
