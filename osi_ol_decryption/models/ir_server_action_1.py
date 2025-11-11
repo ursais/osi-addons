@@ -1,5 +1,6 @@
 from odoo import api, models, SUPERUSER_ID, fields
 import logging
+from itertools import islice
 
 _logger = logging.getLogger(__name__)
 import psycopg2
@@ -206,68 +207,100 @@ class IrActionsServer(models.Model):
             picking.with_company(stock.company_id).button_validate()
             # self._cr.commit()
 
-    def compute_bypass_data(self):
+    def compute_bypass_data(self, batch_size=10000):
         self = self.sudo()
-        Partner_obj = self.env['res.partner']
-        Partner_record = Partner_obj.search([])
-        for partner in Partner_record:
-            partner.with_delay()._compute_customer_deposit_balance()
-            partner.with_delay()._compute_open_bo_balance()
-            partner.with_delay()._compute_open_so_balance()
-            partner.with_delay()._compute_outstanding_receivable()
-            partner.with_delay()._compute_check_hot_ar()
-            partner.with_delay()._compute_remaining_credit()
-            partner.with_delay()._compute_net_terms_allowed()
-            partner.with_delay()._compute_credit_hold()
-        order_obj = self.env['sale.order']
-        order_rec = order_obj.search([])
-        for order in order_rec:
-            order.with_delay()._compute_current_estimate_ship_date()
-            order.with_delay()._compute_uigd_value()
-            order.with_delay()._compute_bo_value()
-            order.with_delay()._compute_last_date_delivered()
-            order.with_delay()._compute_last_bill_date()
-            order.with_delay()._compute_uninvoiced_balance()
-            order.with_delay().remaining_credit_exceed()
-            
-        order_line_obj = self.env['sale.order.line']
-        line_rec = order_line_obj.search([])
-        for line in line_rec:
-            line.with_delay()._compute_bo_qty()
-            line.with_delay()._compute_margin()
-            line.with_delay()._compute_purchase_price()
-            line.with_delay()._compute_uigd_qty()
-            line.with_delay()._compute_bo_value()
-            line.with_delay()._compute_last_date_delivered()
-            line.with_delay()._compute_last_bill_date()
-        picking_obj = self.env['stock.picking']
-        picking_rec = picking_obj.search([])
-        for picking in picking_rec:
-            picking.with_delay()._compute_total_sales_price()
-            picking.with_delay()._compute_main_error()
-            picking.with_delay()._compute_credit_hold()
-        mrp_obj = self.env['mrp.production']
-        mrp_rec = mrp_obj.search([])
-        for mrp in mrp_rec:
-            mrp.with_delay._compute_credit_hold()
-        account_move_obj = self.env['account.move']
-        move_rec = account_move_obj.search([])
-        for move in move_rec:
-            move.with_delay()._compute_intrastat_country_id()
-            move.with_delay()._compute_sale_type_id()
-            move.with_delay()._compute_po_line_price_difference()
-        
-        account_move_line_obj = self.env['account.move.line']
-        move_line_rec = account_move_line_obj.search([])
-        for move_line in move_line_rec:
-            move_line.with_delay()._compute_intrastat_transaction_id()
-            move_line.with_delay()._compute_po_line_price_difference()
-        
-        mrp_bom_obj = self.env['mrp.bom']
-        bom_rec = mrp_bom_obj.search([])
-        for bom in bom_rec:
-            bom.with_delay()._compute_existing_scaffolding_bom()
-            
+
+        def process_in_chunks(model_name, compute_methods):
+            model = self.env[model_name]
+            offset = 0
+
+            while True:
+                # Fetch only IDs, not full recordsets (faster)
+                record_ids = model.search([], offset=offset, limit=batch_size).ids
+                if not record_ids:
+                    break
+
+                recs = model.browse(record_ids).sudo()
+
+                for method_name in compute_methods:
+                    # Try to get method dynamically
+                    method = getattr(recs, method_name, None)
+                    if not method:
+                        continue
+
+                    # If it's a queued job method, delay it. Otherwise run directly.
+                    # if getattr(method, "_job_name", None):
+                    print ("\n method_namemethod_name",method_name)
+                    getattr(recs.with_delay(), method_name)()
+                    # else:
+                    #     method()
+
+                # Commit after each batch to free resources
+                self._cr.commit()
+                offset += batch_size
+
+        # Partner
+        process_in_chunks('res.partner', [
+            '_compute_customer_deposit_balance',
+            '_compute_open_bo_balance',
+            '_compute_open_so_balance',
+            '_compute_outstanding_receivable',
+            '_compute_check_hot_ar',
+            '_compute_remaining_credit',
+            '_compute_net_terms_allowed',
+            '_compute_credit_hold',
+        ])
+
+        # Sale Orders
+        process_in_chunks('sale.order', [
+            '_compute_current_estimate_ship_date',
+            '_compute_uigd_value',
+            '_compute_bo_value',
+            '_compute_last_date_delivered',
+            '_compute_last_bill_date',
+            '_compute_uninvoiced_balance'
+        ])
+
+        # Sale Order Lines
+        process_in_chunks('sale.order.line', [
+            '_compute_bo_qty',
+            '_compute_margin',
+            '_compute_purchase_price',
+            '_compute_uigd_qty',
+            '_compute_bo_value',
+            '_compute_last_date_delivered',
+            '_compute_last_bill_date',
+        ])
+
+        # Pickings
+        process_in_chunks('stock.picking', [
+            '_compute_total_sales_price',
+            '_compute_main_error',
+            '_compute_credit_hold',
+        ])
+
+        # MRP Productions
+        process_in_chunks('mrp.production', [
+            '_compute_credit_hold',
+        ])
+
+        # Account Moves
+        process_in_chunks('account.move', [
+            '_compute_intrastat_country_id',
+            '_compute_sale_type_id',
+            '_compute_po_line_price_difference',
+        ])
+
+        # Account Move Lines
+        process_in_chunks('account.move.line', [
+            '_compute_intrastat_transaction_id',
+            '_compute_po_line_price_difference',
+        ])
+
+        # BOMs
+        process_in_chunks('mrp.bom', [
+            '_compute_existing_scaffolding_bom',
+        ])            
         
     def split_mo(self):
         self = self.sudo()
