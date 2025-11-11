@@ -13,37 +13,6 @@ from odoo.tools import convert_csv_import, file_open
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
-    def configure_account_COA(self):
-        self = self.sudo()
-        companies = self.env["res.company"].sudo().search([])
-        for company in companies:
-            self = self.with_company(company)
-            if company.id in [2, 10]:
-                print ("\n company", company)
-                # company.sudo().write({"chart_template": "nl"})
-                self.env['account.chart.template'].with_company(company)._load(
-                    'nl',   
-                    company,
-                    install_demo=False,
-                )
-                
-            if company.id == 6:
-                print ("\n company", company)
-                # company.sudo().write({"chart_template": "TW"})
-                self.env['account.chart.template'].with_company(company)._load(
-                    'TW',
-                    company,
-                    install_demo=False,
-                )
-                
-            if company.id == 9:
-                print ("\n company", company)
-                # company.sudo().write({"chart_template": "de_skr04"})
-                self.env['account.chart.template'].with_company(company)._load(
-                    'de_skr04',
-                    company,
-                    install_demo=False,
-                )
 
     def migrate_helpdesk_rma_to_ticket(self):
         _logger.info("===============migrate_helpdesk_rma_to_ticket====================")
@@ -237,7 +206,69 @@ class IrActionsServer(models.Model):
             picking.with_company(stock.company_id).button_validate()
             # self._cr.commit()
 
-
+    def compute_bypass_data(self):
+        self = self.sudo()
+        Partner_obj = self.env['res.partner']
+        Partner_record = Partner_obj.search([])
+        for partner in Partner_record:
+            partner.with_delay()._compute_customer_deposit_balance()
+            partner.with_delay()._compute_open_bo_balance()
+            partner.with_delay()._compute_open_so_balance()
+            partner.with_delay()._compute_outstanding_receivable()
+            partner.with_delay()._compute_check_hot_ar()
+            partner.with_delay()._compute_remaining_credit()
+            partner.with_delay()._compute_net_terms_allowed()
+            partner.with_delay()._compute_credit_hold()
+        order_obj = self.env['sale.order']
+        order_rec = order_obj.search([])
+        for order in order_rec:
+            order.with_delay()._compute_current_estimate_ship_date()
+            order.with_delay()._compute_uigd_value()
+            order.with_delay()._compute_bo_value()
+            order.with_delay()._compute_last_date_delivered()
+            order.with_delay()._compute_last_bill_date()
+            order.with_delay()._compute_uninvoiced_balance()
+            order.with_delay().remaining_credit_exceed()
+            
+        order_line_obj = self.env['sale.order.line']
+        line_rec = order_line_obj.search([])
+        for line in line_rec:
+            line.with_delay()._compute_bo_qty()
+            line.with_delay()._compute_margin()
+            line.with_delay()._compute_purchase_price()
+            line.with_delay()._compute_uigd_qty()
+            line.with_delay()._compute_bo_value()
+            line.with_delay()._compute_last_date_delivered()
+            line.with_delay()._compute_last_bill_date()
+        picking_obj = self.env['stock.picking']
+        picking_rec = picking_obj.search([])
+        for picking in picking_rec:
+            picking.with_delay()._compute_total_sales_price()
+            picking.with_delay()._compute_main_error()
+            picking.with_delay()._compute_credit_hold()
+        mrp_obj = self.env['mrp.production']
+        mrp_rec = mrp_obj.search([])
+        for mrp in mrp_rec:
+            mrp.with_delay._compute_credit_hold()
+        account_move_obj = self.env['account.move']
+        move_rec = account_move_obj.search([])
+        for move in move_rec:
+            move.with_delay()._compute_intrastat_country_id()
+            move.with_delay()._compute_sale_type_id()
+            move.with_delay()._compute_po_line_price_difference()
+        
+        account_move_line_obj = self.env['account.move.line']
+        move_line_rec = account_move_line_obj.search([])
+        for move_line in move_line_rec:
+            move_line.with_delay()._compute_intrastat_transaction_id()
+            move_line.with_delay()._compute_po_line_price_difference()
+        
+        mrp_bom_obj = self.env['mrp.bom']
+        bom_rec = mrp_bom_obj.search([])
+        for bom in bom_rec:
+            bom.with_delay()._compute_existing_scaffolding_bom()
+            
+        
     def split_mo(self):
         self = self.sudo()
         mo_ids = self.env['mrp.production'].search(["&", ("state", "=", "confirmed"), ("product_qty", ">", 1)], order='product_qty')
