@@ -1,0 +1,40 @@
+<odoo>
+    <record id="view_sign_template_form_inherit_lims" model="ir.ui.view">
+        <field name="name">sign.template.form.inherit.lims</field>
+        <field name="model">sign.template</field>
+        <field name="inherit_id" ref="sign.sign_template_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='documents_tag_ids']" position="after">
+                <field name="is_default_lims_template" />
+            </xpath>
+        </field>
+    </record>
+    <!-- Smart button for Sign Requests -->
+    <record id="view_lims_order_form_inherit_sign" model="ir.ui.view">
+        <field name="name">lims.order.form.inherit.sign</field>
+        <field name="model">lims.order</field>
+        <field name="inherit_id" ref="lims.lims_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button
+                    name="action_send_for_signature"
+                    type="object"
+                    string="Send for Signature"
+                    class="btn-primary"
+                />
+                <button
+                    name="action_view_sign_requests"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-pencil-square-o"
+                >
+                    <field
+                        name="sign_request_count"
+                        widget="statinfo"
+                        string="Sign Requests"
+                    />
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>
