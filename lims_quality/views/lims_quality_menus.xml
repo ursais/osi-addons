@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <menuitem
+        id="menu_lims_quality_master_data"
+        name="Master Data"
+        parent="quality_control.menu_quality_control"
+        action="quality_control.quality_check_action_main"
+        sequence="50"
+    />
+
+    <menuitem
+        id="menu_lims_quality_operations"
+        name="Operations"
+        parent="quality_control.menu_quality_control"
+        action="quality_control.quality_check_action_main"
+        sequence="50"
+    />
+</odoo>
