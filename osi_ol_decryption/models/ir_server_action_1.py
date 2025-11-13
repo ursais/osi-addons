@@ -138,12 +138,14 @@ class IrActionsServer(models.Model):
                     support_data = self._cr.dictfetchall()
 
                     for support in support_data:
+                        _logger.info("===============support %s============" % (support))
                         picking_ids = []
                         state = (
                             "draft"
                             if support.get("state") == "open"
                             else support.get("state")
                         )
+                         
                         repair = {
                             "partner_id": support.get("partner_id"),
                             "product_id": support.get("product_id"),
@@ -161,6 +163,11 @@ class IrActionsServer(models.Model):
                             "user_id": support.get("create_uid"),
                             "procurement_group_id": support.get("procurement_group_id"),
                         }
+                        self._cr.execute("select company_id from res_partner where id = %s", (support.get("partner_id"),))
+                        pt_compnay =  self._cr.fetchone()
+                        if pt_compnay != None and pt_compnay != support.get("company_id"):
+                            self._cr.execute("update res_partner set company_id = null where id = %s", (support.get("partner_id"),))
+
                         repair_id = repair_obj.with_company(
                             support.get("company_id")
                         ).create(repair)
