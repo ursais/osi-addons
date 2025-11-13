@@ -8,7 +8,7 @@
     "category": "Quality",
     "author": "Open Source Integrators, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/connector-lims",
-    "depends": ["lims", "quality"],
+    "depends": ["lims", "quality_control"],
     "data": [
         "views/lims_order_test_view.xml",
         "views/lims_quality_menus.xml",
