@@ -16,17 +16,23 @@ class IrActionsServer(models.Model):
 
 
     def migrate_helpdesk_rma_to_ticket(self):
-        _logger.info("===============migrate_helpdesk_rma_to_ticket====================")
+        _logger.info(
+            "===============migrate_helpdesk_rma_to_ticket===================="
+        )
         self = self.sudo()
-        Ticket = self.env['helpdesk.ticket']
-        partner_obj = self.env['res.partner']
-        repair_obj = self.env['repair.order']
-        picking_obj = self.env['stock.picking']
+        Ticket = self.env["helpdesk.ticket"]
+        partner_obj = self.env["res.partner"]
+        repair_obj = self.env["repair.order"]
+        picking_obj = self.env["stock.picking"]
         ticket_type_ids = self.env["helpdesk.ticket.type"].search([])
-        team_id = self.env.ref('ol_helpdesk_repair_batch.helpdesk_team_customer_rma')
-        tema_eu_id = self.env.ref('ol_helpdesk_repair_batch.helpdesk_team_customer_rma_eu')
+        team_id = self.env.ref("ol_helpdesk_repair_batch.helpdesk_team_customer_rma")
+        tema_eu_id = self.env.ref(
+            "ol_helpdesk_repair_batch.helpdesk_team_customer_rma_eu"
+        )
         self._cr.execute(
-            "select id,name,assigned_to,state,type,warranty_expiration,rush,sale_order_id,partner_id,summary,company_id,flags,shipping_method,shipping_account from helpdesk_rma"
+            """select id,name,assigned_to,state,type,warranty_expiration,
+            rush,sale_order_id,partner_id,summary,company_id,
+            flags,shipping_method,shipping_account from helpdesk_rma"""
         )
         rma_data_ids = self._cr.dictfetchall()
         counter = 1
@@ -34,21 +40,33 @@ class IrActionsServer(models.Model):
         def get_stage(value):
             if not value:
                 return False
-            if value == 'new':
-                return self.env.ref('ol_helpdesk_repair_batch.helpdesk_stage_rma_requested').id
-            elif value == 'accepted':
-                return self.env.ref('ol_helpdesk_repair_batch.helpdesk_stage_rma_accepted').id
-            elif value == 'in_progress':
-                return self.env.ref('ol_helpdesk_repair_batch.helpdesk_stage_rma_in_progress').id
-            elif value == 'resolved':
-                return self.env.ref('ol_helpdesk_repair_batch.helpdesk_stage_rma_resolved').id
-            elif value == 'cancelled':
-                return self.env.ref('ol_helpdesk_repair_batch.helpdesk_stage_rma_cancelled').id
+            if value == "new":
+                return self.env.ref(
+                    "ol_helpdesk_repair_batch.helpdesk_stage_rma_requested"
+                ).id
+            elif value == "accepted":
+                return self.env.ref(
+                    "ol_helpdesk_repair_batch.helpdesk_stage_rma_accepted"
+                ).id
+            elif value == "in_progress":
+                return self.env.ref(
+                    "ol_helpdesk_repair_batch.helpdesk_stage_rma_in_progress"
+                ).id
+            elif value == "resolved":
+                return self.env.ref(
+                    "ol_helpdesk_repair_batch.helpdesk_stage_rma_resolved"
+                ).id
+            elif value == "cancelled":
+                return self.env.ref(
+                    "ol_helpdesk_repair_batch.helpdesk_stage_rma_cancelled"
+                ).id
             return False
 
         for rma in rma_data_ids:
-            print("\n rma.get('id')", rma.get('id'))
-            self._cr.execute("select id from temp_helpdesk_rma_line where rma_id = %s", (rma.get('id'),))
+            self._cr.execute(
+                "select id from temp_helpdesk_rma_line where rma_id = %s",
+                (rma.get("id"),),
+            )
             rma_line_ids = [ids[0] for ids in self._cr.fetchall() if ids[0] is not None]
             historical_repair_order_ids = []
             if rma_line_ids:
@@ -56,43 +74,49 @@ class IrActionsServer(models.Model):
                     "select historical_repair_order_id from temp_support_repair_order where rma_line_id in %s",
                     (tuple(rma_line_ids),),
                 )
-                historical_repair_order_ids = [ids[0] for ids in self._cr.fetchall() if ids[0] is not None]
-                # print ("\n historical_repair_order_idshistorical_repair_order_ids",historical_repair_order_ids)
-            partner_id = partner_obj.browse(rma.get('partner_id'))
-            type_name = rma.get('type', "") and rma.get('type', "").capitalize()
+                historical_repair_order_ids = [
+                    ids[0] for ids in self._cr.fetchall() if ids[0] is not None
+                ]
+            partner_id = partner_obj.browse(rma.get("partner_id"))
+            type_name = rma.get("type", "") and rma.get("type", "").capitalize()
             type = self.env["helpdesk.ticket.type"]
             if type_name != None:
-                type = ticket_type_ids.filtered(lambda a: a.name == type_name.capitalize())
+                type = ticket_type_ids.filtered(
+                    lambda a: a.name == type_name.capitalize()
+                )
 
             vals = {
-                "user_id": rma.get('assigned_to'),
-                "name": rma.get('name'),
+                "user_id": rma.get("assigned_to"),
+                "name": rma.get("name"),
                 "ticket_type_id": type.id,
-                "team_id": team_id.id if rma.get('company_id') == 1 else tema_eu_id.id,
-                "stage_id": get_stage(rma.get('state', False)),
-                "priority": "2" if rma.get('rush') else "0",  # '2' usually means urgent in Odoo
-                "original_sale_order_ids": [(6, 0, [rma.get('sale_order_id')])]
-                if rma.get('sale_order_id')
+                "team_id": team_id.id if rma.get("company_id") == 1 else tema_eu_id.id,
+                "stage_id": get_stage(rma.get("state", False)),
+                "priority": "2"
+                if rma.get("rush")
+                else "0",  # '2' usually means urgent in Odoo
+                "original_sale_order_ids": [(6, 0, [rma.get("sale_order_id")])]
+                if rma.get("sale_order_id")
                 else False,
                 # "repair_sale_order_ids": [(6, 0, v13_data[0].get('related_repair_replacement_sale_ids'))] if v13_data else [],
                 "partner_id": partner_id.id,
                 "partner_email": partner_id.email,
                 "partner_phone": partner_id.phone,
-                "description": rma.get('summary'),
+                "description": rma.get("summary"),
                 # "repair_ids": [(6, 0, historical_repair_order_ids)],
-                "company_id": rma.get('company_id'),
-                "flags": rma.get('flags', '') if rma.get('flags', '') != None else '',
-                "carrier_id": rma.get('shipping_method') if rma.get('shipping_method') else False,
-                "shipping_account": rma.get('shipping_account', '')
-                if rma.get('shipping_account', '') != None
-                else '',
+                "company_id": rma.get("company_id"),
+                "flags": rma.get("flags", "") if rma.get("flags", "") != None else "",
+                "carrier_id": rma.get("shipping_method")
+                if rma.get("shipping_method")
+                else False,
+                "shipping_account": rma.get("shipping_account", "")
+                if rma.get("shipping_account", "") != None
+                else "",
             }
 
             # Create Ticket
             counter += 1
             ticket_id = Ticket.with_context(tracking_disable=True).create(vals)
             if historical_repair_order_ids:
-                # print ("\n ticket_id", ticket_id)
                 self._cr.execute(
                     "update repair_order set ticket_id = %s where id in %s",
                     (ticket_id.id, tuple(historical_repair_order_ids)),
@@ -102,11 +126,10 @@ class IrActionsServer(models.Model):
                     if repair.lot_id:
                         self._cr.execute(
                             "update stock_lot set warranty_expiration_date = %s where id = %s",
-                            (rma.get('warranty_expiration'), repair.lot_id.id),
+                            (rma.get("warranty_expiration"), repair.lot_id.id),
                         )
                         # repair.lot_id.warranty_expiration_date = rma.get('warranty_expiration')
             else:
-                print("\n rma_line_ids", rma_line_ids)
                 if rma_line_ids:
                     self._cr.execute(
                         "select * from temp_support_repair_order where rma_line_id in %s",
@@ -115,74 +138,145 @@ class IrActionsServer(models.Model):
                     support_data = self._cr.dictfetchall()
 
                     for support in support_data:
-                        print("\n supportsupport", support)
                         picking_ids = []
-                        state = 'draft' if support.get('state') == 'open' else support.get('state')
+                        state = (
+                            "draft"
+                            if support.get("state") == "open"
+                            else support.get("state")
+                        )
                         repair = {
-                            'partner_id': support.get('partner_id'),
-                            'product_id': support.get('product_id'),
-                            'lot_id': support.get('lot_id'),
-                            'internal_notes': support.get('internal_notes'),
-                            'external_notes': support.get('external_notes'),
-                            'company_id': support.get('company_id'),
-                            'sale_order_line_id': support.get('sale_line_id'),
-                            'name': support.get('name'),
-                            'state': state,
-                            'ticket_id': ticket_id.id,
-                            'schedule_date': support.get('date_done') if support.get('date_done') != None else support.get('create_date'),
-                            "user_id": support.get('create_uid'),
-                            "procurement_group_id": support.get('procurement_group_id'),
+                            "partner_id": support.get("partner_id"),
+                            "product_id": support.get("product_id"),
+                            # 'lot_id': support.get('lot_id'),
+                            "internal_notes": support.get("internal_notes"),
+                            "external_notes": support.get("external_notes"),
+                            "company_id": support.get("company_id"),
+                            "sale_order_line_id": support.get("sale_line_id"),
+                            "name": support.get("name"),
+                            "state": state,
+                            "ticket_id": ticket_id.id,
+                            "schedule_date": support.get("date_done")
+                            if support.get("date_done") != None
+                            else support.get("create_date"),
+                            "user_id": support.get("create_uid"),
+                            "procurement_group_id": support.get("procurement_group_id"),
                         }
-                        repair_id = repair_obj.with_company(support.get('company_id')).create(repair)
-                        if support.get('procurement_group_id'):
+                        repair_id = repair_obj.with_company(
+                            support.get("company_id")
+                        ).create(repair)
+                        if support.get("lot_id"):
+                            repair_id.write(
+                                {
+                                    "lot_id": support.get("lot_id"),
+                                }
+                            )
+
+                        if support.get("procurement_group_id"):
                             self._cr.execute(
                                 "update stock_picking set repair_id = %s where group_id = %s",
-                                (repair_id.id, support.get('procurement_group_id')),
+                                (repair_id.id, support.get("procurement_group_id")),
                             )
                             self._cr.execute(
                                 "select id from stock_picking where group_id = %s",
-                                (support.get('procurement_group_id'),),
+                                (support.get("procurement_group_id"),),
                             )
-                            picking_ids = [ids[0] for ids in self._cr.fetchall() if ids[0] is not None]
+                            picking_ids = [
+                                ids[0]
+                                for ids in self._cr.fetchall()
+                                if ids[0] is not None
+                            ]
+                            move_ids = self.env["stock.move"]
                             if picking_ids:
-                                self._cr.execute(
-                                    "select * from support_repair_order_line where order_id = %s",
-                                    (support.get('id'),),
-                                )
-                                line_list = self._cr.dictfetchall()
                                 picking_ids = picking_obj.browse(picking_ids)
-                                move_ids = picking_ids.mapped('move_ids')
-                                print("\n line_list", line_list)
-                                print("\n move_ids", move_ids)
-                                for line in line_list:
-                                    if line.get('line_type') == 'add':
-                                        move = move_ids.filtered(
-                                            lambda l: l.product_id.id == line.get('product_id')
-                                            and l.location_dest_id.usage == 'inventory'
-                                        ).sorted(reverse=True)
-                                        if move:
-                                            self._cr.execute(
-                                                "update stock_move set repair_id = %s, repair_line_type='add' where id = %s",
-                                                (repair_id.id, move[0].id),
-                                            )
-                                            print("\n move", move)
+                                move_ids = picking_ids.mapped("move_ids")
+
+                            self._cr.execute(
+                                "select * from support_repair_order_line where order_id = %s",
+                                (support.get("id"),),
+                            )
+                            line_list = self._cr.dictfetchall()
+
+                            for line in line_list:
+                                move_id = False
+                                if line.get("line_type") == "add":
+                                    if line.get("final_move_id"):
+                                        move_id = line.get("final_move_id")
                                     else:
                                         move = move_ids.filtered(
-                                            lambda l: l.product_id.id == line.get('product_id')
-                                            and l.location_id.usage == 'inventory'
+                                            lambda l: l.product_id.id
+                                            == line.get("product_id")
+                                            and l.location_dest_id.usage == "inventory"
                                         ).sorted(reverse=True)
-                                        if move:
-                                            self._cr.execute(
-                                                "update stock_move set repair_id = %s, repair_line_type='remove' where id = %s",
-                                                (repair_id.id, move[0].id),
-                                            )
-
+                                        move_id = move and move[0].id
+                                    if move_id:
+                                        self._cr.execute(
+                                            "update stock_move set repair_id = %s, repair_line_type='add' where id = %s",
+                                            (repair_id.id, move_id),
+                                        )
+                                    else:
+                                        repair_id.write(
+                                            {
+                                                "move_ids": [
+                                                    (
+                                                        0,
+                                                        0,
+                                                        {
+                                                            "product_id": line.get(
+                                                                "product_id"
+                                                            ),
+                                                            "product_uom_qty": line.get(
+                                                                "product_qty"
+                                                            ),
+                                                            "repair_line_type": "add",
+                                                        },
+                                                    )
+                                                ],
+                                            }
+                                        )
+                                else:
+                                    if line.get("final_move_id"):
+                                        move_id = line.get("final_move_id")
+                                    else:
+                                        move = move_ids.filtered(
+                                            lambda l: l.product_id.id
+                                            == line.get("product_id")
+                                            and l.location_id.usage == "inventory"
+                                        ).sorted(reverse=True)
+                                        move_id = move and move[0].id
+                                        if not move_id:
+                                            move = move_ids.filtered(
+                                                lambda l: l.product_id.id
+                                                == line.get("product_id")
+                                            ).sorted(reverse=False)
+                                            move_id = move and move[0].id
+                                    if move_id:
+                                        self._cr.execute(
+                                            "update stock_move set repair_id = %s, repair_line_type='remove' where id = %s",
+                                            (repair_id.id, move_id),
+                                        )
+                                    else:
+                                        repair_id.write(
+                                            {
+                                                "move_ids": [
+                                                    (
+                                                        0,
+                                                        0,
+                                                        {
+                                                            "product_id": line.get(
+                                                                "product_id"
+                                                            ),
+                                                            "product_uom_qty": line.get(
+                                                                "product_qty"
+                                                            ),
+                                                            "repair_line_type": "remove",
+                                                        },
+                                                    )
+                                                ],
+                                            }
+                                        )
                 if (counter + 1) % 10000 == 0:  # We save every 100k records
-                    _logger.info("===============records %s============"% (counter))
-                    5/0
+                    _logger.info("===============migrate_helpdesk_rma_to_ticket %s============" % (counter))
                     self.env.cr.commit()
-                # 5/0
-
 
 
     def update_inspections(self):
