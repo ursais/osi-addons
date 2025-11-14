@@ -701,10 +701,7 @@ class IrActionsServer(models.Model):
 
                 #_logger.info("✅ Finished BOM creation for: %s", template_name)
                 counter += 1
-                template_id = ProductTemplate.browse(template_id)
-                template_id.with_context(by_pass=True)._compute_has_advanced_configuration()
-                self = self.with_context(bypass=True)
-                self._cr.commit()
+            self._cr.commit()
             offset += batch_size
             _logger.info("Batch committed. Offset now at: %s", offset)
 
