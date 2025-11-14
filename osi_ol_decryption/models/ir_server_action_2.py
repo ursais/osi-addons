@@ -611,7 +611,7 @@ class IrActionsServer(models.Model):
         self = self.sudo()
         _logger.info("\n\n== Generate Scaffolding BOM == Script 6 Start ==================")
 
-        batch_size = 100
+        batch_size = 1000
         cr = self.env.cr
 
         # Define models
@@ -658,9 +658,10 @@ class IrActionsServer(models.Model):
                     'product_qty': 1.0,
                     'type': 'normal',
                     'scaffolding_bom': True,
+                    'existing_scaffolding_bom': False,
                 })
                 new_bom_id = new_bom.id
-                # new_bom._compute_available_config_components()
+                new_bom._compute_available_config_components()
                 # Get attribute lines
                 attribute_lines = ProductTemplateAttributeLine.search([('product_tmpl_id', '=', template_id)])
                 for line in attribute_lines:
