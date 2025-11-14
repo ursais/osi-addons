@@ -1335,6 +1335,7 @@ class IrActionsServer(models.Model):
             return lines1 == lines2
         for product in products:
             phantom_boms = self.env["mrp.bom"]
+            master_bom = self.env["mrp.bom"]
             used_boms = self.env["mrp.bom"]
 
             # Collect phantom_bom_id across all companies
@@ -1343,14 +1344,14 @@ class IrActionsServer(models.Model):
                 if phantom_bom:
                     phantom_boms |= phantom_bom
                     used_boms |= phantom_bom
-        # Fetch all phantom BoMs for this product
-        all_boms = MrpBom.search([
-            ("product_tmpl_id", "=", product.id),
-            ("type", "=", "phantom"),
-        ])
+            # Fetch all phantom BoMs for this product
+            all_boms = MrpBom.search([
+                ("product_tmpl_id", "=", product.id),
+                ("type", "=", "phantom"),
+            ])
 
-        if phantom_boms:
-            master_bom = phantom_boms[0]
+            if phantom_boms:
+                master_bom = phantom_boms[0]
 
             # Deduplicate equivalent phantom BoMs
             for bom in phantom_boms:
@@ -1369,11 +1370,11 @@ class IrActionsServer(models.Model):
                         "phantom_bom_id": master_bom.id
                     })
 
-        # Archive unused phantom BoMs not referenced by any company
-        unused_boms = all_boms - used_boms
-        if unused_boms:
-            unused_boms.write({"active": False})
-            cr.commit()
+            # Archive unused phantom BoMs not referenced by any company
+            unused_boms = all_boms - used_boms
+            if unused_boms:
+                unused_boms.write({"active": False})
+                cr.commit()
 
     def update_workcenter_mo(self):
         #TASK Ref: https://osi.mavenlink.com/workspaces/44078089/#tracker/928787261
