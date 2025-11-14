@@ -112,6 +112,11 @@ class IrActionsServer(models.Model):
                 if rma.get("shipping_account", "") != None
                 else "",
             }
+            if partner_id and partner_id.company_id and rma.get("company_id") != None and rma.get("company_id") != partner_id.company_id.id:
+               self._cr.execute("update res_partner set company_id = null where id = %s", (partner_id.id,))
+               self._cr.commit()
+
+
 
             # Create Ticket
             counter += 1
@@ -165,7 +170,7 @@ class IrActionsServer(models.Model):
                         }
                         self._cr.execute("select company_id from res_partner where id = %s", (support.get("partner_id"),))
                         pt_compnay =  self._cr.fetchone()
-                        if pt_compnay != None and pt_compnay != support.get("company_id"):
+                        if pt_compnay and pt_compnay[0] != None and pt_compnay != support.get("company_id"):
                             self._cr.execute("update res_partner set company_id = null where id = %s", (support.get("partner_id"),))
 
                         repair_id = repair_obj.with_company(
