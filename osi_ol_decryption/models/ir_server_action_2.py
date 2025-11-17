@@ -623,7 +623,7 @@ class IrActionsServer(models.Model):
         MrpBomLineConfig = self.env['mrp.bom.line.configuration'].sudo()
         self._cr.execute("""
         INSERT INTO ir_config_parameter (key, value, create_uid, write_uid, create_date, write_date)
-        VALUES ('not_has_advanced_configuration', '1', 1, 1, NOW(), NOW())
+        VALUES ('bypass_migration_compute', '1', 1, 1, NOW(), NOW())
         ON CONFLICT (key)
         DO UPDATE SET value = EXCLUDED.value, write_date = NOW();
         """)
