@@ -406,6 +406,7 @@ class IrActionsServer(models.Model):
             # self._cr.commit()
 
     def compute_bypass_data(self, batch_size=20000):
+        _logger.info("===============compute_bypass_data====================")
         self = self.sudo()
 
         def process_in_chunks(model_name, compute_methods):

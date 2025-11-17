@@ -621,7 +621,12 @@ class IrActionsServer(models.Model):
         MrpBomLine = self.env['mrp.bom.line'].sudo()
         MrpBomLineConfigSet = self.env['mrp.bom.line.configuration.set'].sudo()
         MrpBomLineConfig = self.env['mrp.bom.line.configuration'].sudo()
-
+        self._cr.execute("""
+        INSERT INTO ir_config_parameter (key, value, create_uid, write_uid, create_date, write_date)
+        VALUES ('not_has_advanced_configuration', '1', 1, 1, NOW(), NOW())
+        ON CONFLICT (key)
+        DO UPDATE SET value = EXCLUDED.value, write_date = NOW();
+        """)
         # Preload all config sets into a dict for caching
         t0 = time.time()
         existing_config_sets = MrpBomLineConfigSet.search([])
