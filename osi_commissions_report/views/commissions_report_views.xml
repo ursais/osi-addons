@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Commissions Report Tree View -->
+    <record id="view_commissions_report_tree" model="ir.ui.view">
+        <field name="name">commissions.report.tree</field>
+        <field name="model">commissions.report</field>
+        <field name="arch" type="xml">
+            <tree string="Commissions Report" decoration-muted="state == 'cancel'" decoration-info="state == 'draft'">
+                <field name="name"/>
+                <field name="invoice_date"/>
+                <field name="partner_id"/>
+                <field name="referrer_id"/>
+                <field name="move_type"/>
+                <field name="state"/>
+                <field name="amount_total" sum="Total"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="invoice_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Commissions Report Form View -->
+    <record id="view_commissions_report_form" model="ir.ui.view">
+        <field name="name">commissions.report.form</field>
+        <field name="model">commissions.report</field>
+        <field name="arch" type="xml">
+            <form string="Commissions Report">
+                <header>
+                    <button name="action_open_invoice" string="Open Invoice" type="object" class="btn-primary" attrs="{'invisible': [('invoice_id', '=', False)]}"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="invoice_date"/>
+                            <field name="partner_id"/>
+                            <field name="referrer_id"/>
+                        </group>
+                        <group>
+                            <field name="move_type"/>
+                            <field name="state"/>
+                            <field name="amount_total"/>
+                            <field name="currency_id"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="invoice_id" invisible="1"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Commissions Report Search View -->
+    <record id="view_commissions_report_search" model="ir.ui.view">
+        <field name="name">commissions.report.search</field>
+        <field name="model">commissions.report</field>
+        <field name="arch" type="xml">
+            <search string="Commissions Report">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="referrer_id"/>
+                <field name="invoice_id"/>
+                <separator/>
+                <filter string="Customer Invoices" name="customer_invoices" domain="[('move_type', '=', 'out_invoice')]"/>
+                <filter string="Customer Credit Notes" name="customer_refunds" domain="[('move_type', '=', 'out_refund')]"/>
+                <filter string="Vendor Bills" name="vendor_bills" domain="[('move_type', '=', 'in_invoice')]"/>
+                <filter string="Vendor Credit Notes" name="vendor_refunds" domain="[('move_type', '=', 'in_refund')]"/>
+                <separator/>
+                <filter string="With Referrer" name="with_referrer" domain="[('referrer_id', '!=', False)]"/>
+                <filter string="Without Referrer" name="without_referrer" domain="[('referrer_id', '=', False)]"/>
+                <separator/>
+                <filter string="Posted" name="posted" domain="[('state', '=', 'posted')]"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Cancelled" name="cancelled" domain="[('state', '=', 'cancel')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Invoice Date" name="group_by_date" context="{'group_by': 'invoice_date'}"/>
+                    <filter string="Partner" name="group_by_partner" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Referrer" name="group_by_referrer" context="{'group_by': 'referrer_id'}"/>
+                    <filter string="Type" name="group_by_type" context="{'group_by': 'move_type'}"/>
+                    <filter string="Status" name="group_by_status" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Commissions Report Action -->
+    <record id="action_commissions_report" model="ir.actions.act_window">
+        <field name="name">Commissions Report</field>
+        <field name="res_model">commissions.report</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_commissions_report_search"/>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Commissions Report
+            </p>
+            <p>
+                This report shows all invoices with their referrer/commission information.
+                The report is automatically generated when accessed.
+            </p>
+        </field>
+    </record>
+
+    <!-- Server Action to Generate and View Report -->
+    <record id="action_server_commissions_report" model="ir.actions.server">
+        <field name="name">Commissions Report</field>
+        <field name="model_id" ref="model_commissions_report"/>
+        <field name="state">code</field>
+        <field name="code">
+# Generate the report
+report_model = env['commissions.report']
+report_model.generate_report()
+
+# Return action to view the report
+action = {
+    'name': 'Commissions Report',
+    'type': 'ir.actions.act_window',
+    'res_model': 'commissions.report',
+    'view_mode': 'tree,form',
+    'context': {'create': False},
+    'target': 'current',
+}
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_commissions_report"
+              name="Commissions Report"
+              action="action_server_commissions_report"
+              parent="account.menu_finance_reports"
+              sequence="100"/>
+</odoo>

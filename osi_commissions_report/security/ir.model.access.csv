@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_commissions_report_user,commissions.report.user,model_commissions_report,account.group_account_user,1,1,1,1
+access_commissions_report_readonly,commissions.report.readonly,model_commissions_report,account.group_account_readonly,1,0,0,0
