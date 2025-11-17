@@ -88,6 +88,7 @@ class IrActionsServer(models.Model):
             vals = {
                 "user_id": rma.get("assigned_to"),
                 "name": rma.get("name"),
+                "ticket_ref": rma.get("name"),
                 "ticket_type_id": type.id,
                 "team_id": team_id.id if rma.get("company_id") == 1 else tema_eu_id.id,
                 "stage_id": get_stage(rma.get("state", False)),
