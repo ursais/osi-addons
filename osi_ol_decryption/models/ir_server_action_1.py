@@ -505,8 +505,10 @@ class IrActionsServer(models.Model):
     def split_mo(self):
         self = self.sudo()
         mo_ids = self.env['mrp.production'].search(["&", ("state", "=", "confirmed"), ("product_qty", ">", 1)], order='product_qty')
+        self._cr.execute("update mrp_production set is_split_tranfer = 't' where id in %s", (tuple(mo_ids.ids),))
+        self._cr.commit()
         for mo in mo_ids:
-            mo.sale_order_id.with_delay().split_mo()
+            mo.sale_order_id.with_company(mo.company_id).with_delay().split_mo()
 
     def set_timezones(self):
         """Set Timezones on companies/partners/users"""
