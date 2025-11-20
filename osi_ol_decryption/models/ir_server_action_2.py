@@ -1166,7 +1166,10 @@ class IrActionsServer(models.Model):
             """, (field.id, companies_ids))
             cr.commit()
 
-        lines = AttributeLine.search([("active", "=", True), ("required", "=", True)])
+        lines = AttributeLine.search([("active", "=", True)])
+
+        # Removed ("required", "=", True)
+        # From OSI-Odoo Ticket Ref: 69135 
 
         vals_lists = []
         company_ids = companies.ids  # cache once
@@ -1189,19 +1192,27 @@ class IrActionsServer(models.Model):
                 continue
 
             tobe_update_value = value
-            if value.active:
+            # 1. If line is required and value is active → keep value
+            if line.required and value.active:
                 tobe_update_value = value
-            else:
+
+            # 2. If line is required but value is NOT active → fetch active value with same name
+            elif line.required and not value.active:
                 cr.execute("""
                     SELECT id
                     FROM product_attribute_value
                     WHERE name->>'en_US' = %s
-                      AND attribute_id = %s
-                      AND active = TRUE
+                    AND attribute_id = %s
+                    AND active = TRUE
                     LIMIT 1
                 """, (value.name, line.attribute_id.id))
+
                 row = cr.fetchone()
                 tobe_update_value = AttributeValue.browse(row[0]) if row else False
+
+            # 3. Ticket Ref: 69135 If NOT required + current value is literal "None" → replace with first line default value
+            elif not line.required and value.name == "None" and line.value_ids:
+                tobe_update_value = line.value_ids[0]
 
             #_logger.info("tobe_update_value: %s records", tobe_update_value)
             if not tobe_update_value:
