@@ -1518,7 +1518,79 @@ class IrActionsServer(models.Model):
                     lines.sudo().write({"inventory_adjustment_id":current_id})
         _logger.info("\n\n=update_stock_inventory Done")
 
+    def update_credit_limit_data(self):
+        """
+            1. create table temp_res_partner_vp as SELECT id,terms_partner_id FROM res_partner WHERE terms_partner_id IS NOT NULL;
+            2. pg_dump -d V13DBNAME -t temp_res_partner_vp > /home/odoo/temp_res_partner_vp.sql;
+            3. psql -d V17DBNAME -f /home/odoo/temp_res_partner_vp.sql
 
+            Task Ref: https://pm.opensourceintegrators.com/web#id=69054&cids=1&menu_id=218&action=1093&model=helpdesk.ticket&view_type=form
+        """
+        cr = self.env.cr
+        cr.execute("""DELETE FROM ir_property WHERE name = 'credit_limit' AND res_id LIKE 'res.partner,%';""")
+
+        # 1️⃣ UPDATE the partners
+        cr.execute("""
+            UPDATE res_partner AS rs
+            SET  partner_rollup_id = tres.terms_partner_id
+            FROM temp_res_partner_vp AS tres
+            WHERE tres.id = rs.id;
+        """)
+
+        # 2️⃣ FETCH updated ids
+        cr.execute("""
+            SELECT tres.id
+            FROM temp_res_partner_vp AS tres
+            JOIN res_partner AS rs ON rs.id = tres.id
+        """)
+        ids = [row[0] for row in cr.fetchall()]
+
+        # 3️⃣ PROCESS each partner
+        Partner = self.env["res.partner"].sudo()   # performance + avoids access errors
+        select_query = """SELECT value_float,res_id,company_id from temp_ir_property_v13_vp where name='credit_limit';"""
+        cr.execute(select_query)
+        v13datas = cr.fetchall()
+        field = self.env["ir.model.fields"].search(
+            [
+                ("model_id.model", "=", "res.partner"),
+                ("name", "=", "credit_limit"),
+            ]
+        )
+        credit_limit_property_vals = []
+        for data in v13datas:
+            partner = data[1].split(",")[1]
+            partner_id = Partner.browse(int(partner))
+            if field and partner_id.exists():
+                credit_limit_property_vals.append(
+                    {
+                        "name": "credit_limit",
+                        'type':'float',
+                        "company_id": int(data[2]),
+                        "fields_id": field.id,
+                        "res_id": data[1],
+                        "value_float": data[0],
+                    }
+                )
+
+        self.env["ir.property"].sudo().create(credit_limit_property_vals)
+        _logger.info("Credit limit property data created.")
+
+
+        for partner_id in ids:
+            partner = Partner.browse(partner_id)
+
+            if not partner.exists():
+                continue
+
+            partner._compute_outstanding_receivable()
+            partner._compute_credit_hold()
+            partner._compute_open_so_balance()
+            partner._compute_remaining_credit()
+            partner._compute_customer_deposit_balance()
+            partner._compute_open_bo_balance()
+
+            _logger.info("Updated partner ID: %s", partner_id)
+    
     def drop_temp_tables(self):
         cr = self.env.cr
         _logger.info("\n\n============Droping Tables Start")
