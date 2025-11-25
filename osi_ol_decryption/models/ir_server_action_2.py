@@ -1582,12 +1582,12 @@ class IrActionsServer(models.Model):
             if not partner.exists():
                 continue
 
-            partner._compute_outstanding_receivable()
-            partner._compute_credit_hold()
-            partner._compute_open_so_balance()
-            partner._compute_remaining_credit()
-            partner._compute_customer_deposit_balance()
-            partner._compute_open_bo_balance()
+            partner.with_delay()._compute_outstanding_receivable()
+            partner.with_delay()._compute_credit_hold()
+            partner.with_delay()._compute_open_so_balance()
+            partner.with_delay()._compute_remaining_credit()
+            partner.with_delay()._compute_customer_deposit_balance()
+            partner.with_delay()._compute_open_bo_balance()
 
             _logger.info("Updated partner ID: %s", partner_id)
     
