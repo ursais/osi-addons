@@ -2449,6 +2449,7 @@ class IrActionsServer(models.Model):
             "sale_product_approval_purchase",
             "sale_product_approval_mrp"
             "sale_product_approval_stock",
+            "ol_sale_substate",
             "ol_job_cost_estimate_customer",
             "ol_mrp_plm_cancel",
             "ol_mrp_plm_purchase",
@@ -2494,7 +2495,6 @@ class IrActionsServer(models.Model):
             "hr_attendance",
             "osi_downpayment_taxes",
             "stock_inventory",
-            "ol_sale_substate",
             "ol_account_reports",
             "ol_base",
             "ol_job_cost_estimator_tier_validation",
