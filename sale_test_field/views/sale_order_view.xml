@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright (C) 2024 Open Source Integrators
+    License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl).
+    
+    This view extends the sale order form to add the test_field.
+    The field is placed after the order name field for logical grouping.
+-->
+<odoo>
+    <record id="view_sale_order_test_field_inherit_form" model="ir.ui.view">
+        <field name="name">sale.order.test.field.inherit.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <!-- Add test_field after name field (order number) -->
+            <field name="name" position="after">
+                <field 
+                    name="test_field" 
+                    placeholder="Enter test value..."
+                    help="Test field for sale order customization"
+                />
+            </field>
+        </field>
+    </record>
+</odoo>
