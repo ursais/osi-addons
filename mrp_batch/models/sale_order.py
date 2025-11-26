@@ -1,4 +1,16 @@
 # Import Odoo libs
+# Constants for state values
+STATE_DONE = "done"
+STATE_CANCEL = "cancel"
+STATE_DRAFT = "draft"
+STATE_PROGRESS = "progress"
+STATE_TO_CLOSE = "to_close"
+
+# Constants for config parameter keys
+CONFIG_BATCH_MODE = CONFIG_BATCH_MODE
+BATCH_MODE_SINGLE = "single"
+
+
 from odoo import fields, models, _, api
 
 
@@ -17,13 +29,14 @@ class SaleOrder(models.Model):
     # METHODS #####
 
     def _compute_is_mrp_warning(self):
+        """Compute MRP warning flag based on production order states."""
         for so in self:
             is_mrp_warning = False
 
             # Check if there are any related manufacturing orders (mrp_production_ids)
             # and if any of those orders are planned or in specific states
             if so.mrp_production_ids and so.mrp_production_ids.filtered(
-                lambda l: l.is_planned or l.state in ("progress", "to_close", "done")
+                lambda l: l.is_planned or l.state in (STATE_PROGRESS, STATE_TO_CLOSE, STATE_DONE)
             ):
                 is_mrp_warning = True
 
@@ -62,15 +75,26 @@ class SaleOrder(models.Model):
           - If ir.config_parameter 'mrp_batch.batch_mode' == 'single' -> create one batch for the whole order
           - Otherwise -> do NOT create a batch per MO (no automatic per-MO batch creation)
         """
+        if not self:
+            return True
+        """
+        Split MOs linked to this sale order into single-qty MOs,
+        give each new MO its own procurement.group, then confirm each MO
+        so Odoo generates the component/internal transfers naturally.
+
+        Batch creation behavior:
+          - If ir.config_parameter 'mrp_batch.batch_mode' == 'single' -> create one batch for the whole order
+          - Otherwise -> do NOT create a batch per MO (no automatic per-MO batch creation)
+        """
         batch_obj = self.env["mrp.production.batch"]
         group_obj = self.env["procurement.group"]
         batch_mode = (
-            self.env["ir.config_parameter"].sudo().get_param("mrp_batch.batch_mode")
+            self.env["ir.config_parameter"].sudo().get_param(CONFIG_BATCH_MODE)
         )
 
         for order in self:
             existing_batch = None
-            if batch_mode == "single":
+            if batch_mode == BATCH_MODE_SINGLE:
                 # one batch for the whole order (created once)
                 existing_batch = batch_obj.sudo().create(
                     {"responsible_id": order.env.user.id}
@@ -93,6 +117,7 @@ class SaleOrder(models.Model):
                 delivery_move = mo.move_dest_ids
 
                 # native split: split off single-qty MOs
+                # Split MO into single-qty MOs
                 for i in range(int(mo.product_qty) - 1):
                     # _split_productions returns new production records; use sudo to avoid rights issues
                     result = remaining_mo.sudo()._split_productions(
@@ -132,7 +157,7 @@ class SaleOrder(models.Model):
 
                     # Confirm the MO if it's still draft so Odoo generates/updates moves & pickings.
                     # We toggle ignore_exception to mimic your previous safe-confirm pattern.
-                    if new_mo.state in ("draft",):
+                    if new_mo.state == STATE_DRAFT:
                         new_mo.sudo().write({"ignore_exception": True})
                         new_mo.sudo().action_confirm()
                         new_mo.sudo().write({"ignore_exception": False})
@@ -177,13 +202,13 @@ class SaleOrder(models.Model):
                 )
                 finished_product_moves.move_dest_ids = [(6, 0, [delivery_move.id])]
 
-            # optional commit so successive operations see persisted state (keeps DB in a stable state)
-            self.env.cr.commit()
+            # Removed manual commit - let Odoo handle transaction management
 
         return True
 
     # Methods for Batch Smart Button
     def _compute_mrp_production_batch_id_count(self):
+        """Compute count of unique batch IDs linked to MOs."""
         # Computes the count of unique batch IDs linked to the
         # MOs in `mrp_production_ids`.
         for record in self:
@@ -193,6 +218,7 @@ class SaleOrder(models.Model):
             record.mrp_batch_count = len(batch_id)
 
     def action_view_mrp_production_batch(self):
+        """Open view for manufacturing production batches."""
         # Ensures the method is called on a single record.
         self.ensure_one()
         # Defines the base action for viewing the manufacturing production batch.

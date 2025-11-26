@@ -1,4 +1,9 @@
 # Import Odoo libs
+# Constants for config parameter keys
+CONFIG_ENABLE_DELAY_SO_ACTION_CONFIRM = CONFIG_ENABLE_DELAY_SO_ACTION_CONFIRM
+CONFIG_AUTO_CONFIRM_MO = "auto_confirm_mo"
+
+
 from odoo import models, api
 
 
@@ -70,14 +75,14 @@ class StockRule(models.Model):
         enable_split = (
             self.env["ir.config_parameter"]
             .sudo()
-            .get_param("mrp_batch.enable_delay_so_action_confirm")
+            .get_param(CONFIG_ENABLE_DELAY_SO_ACTION_CONFIRM)
         )
 
         for procurement, rule in procurements:
             sale_line_id = procurement.values.get("sale_line_id")
             if sale_line_id:
                 sale_order = self.env["sale.order.line"].browse(sale_line_id).order_id
-                if enable_split == "True":
+                if enable_split and enable_split.lower() in ("true", "1", "yes"):
                     sale_order.with_delay().split_mo()
                 else:
                     sale_order.split_mo()
@@ -87,9 +92,9 @@ class StockRule(models.Model):
         # We need to stop auto confirming MO to stop triggering single tranfer for all split MO,
         # Instead we will manually confirming MOs
         auto_confirm_mo = (
-            self.env["ir.config_parameter"].sudo().get_param("auto_confirm_mo", "")
+            self.env["ir.config_parameter"].sudo().get_param(CONFIG_AUTO_CONFIRM_MO, "")
         )
-        if auto_confirm_mo == "True":
+        if auto_confirm_mo and auto_confirm_mo.lower() in ("true", "1", "yes"):
             return super()._should_auto_confirm_procurement_mo(p)
         else:
             return False

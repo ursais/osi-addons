@@ -1,6 +1,20 @@
 # Import Odoo libs
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+import logging
+
+_logger = logging.getLogger(__name__)
+
+# Constants for state values
+STATE_DONE = "done"
+STATE_CANCEL = "cancel"
+STATE_HOLD = "hold"
+STATE_DRAFT = "draft"
+
+# Constants for config parameter keys
+CONFIG_USE_BATCH_TRANSFER = "mrp_batch.use_batch_transfer"
+CONFIG_SEQUENCE_PICKING_BATCH = "picking.batch"
+CONFIG_SEQUENCE_STOCK_LOT_SERIAL = "stock.lot.serial"
 
 
 class MrpProduction(models.Model):
@@ -42,117 +56,6 @@ class MrpProduction(models.Model):
     )
 
     @api.depends(
-        "procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id"
-    )
-    def _compute_sale_order_count(self):
-        # Call super first
-        super()._compute_sale_order_count()
-        for mo in self:
-            # If super left it 0 but we have sale_order_id, count it
-            if mo.sale_order_count == 0 and mo.sale_order_id:
-                mo.sale_order_count = 1
-
-    def action_view_sale_orders(self):
-        self.ensure_one()
-        # Get the original action from super
-        super().action_view_sale_orders()
-
-        # Collect sale orders from procurement group chain
-        sale_order_ids = set(
-            self.procurement_group_id.mrp_production_ids.move_dest_ids.group_id.sale_id.ids
-        )
-
-        # Include sale_order_id on the MO if set
-        if self.sale_order_id:
-            sale_order_ids.add(self.sale_order_id.id)
-
-        sale_order_ids = list(sale_order_ids)
-
-        # Build the action
-        action = {
-            "res_model": "sale.order",
-            "type": "ir.actions.act_window",
-        }
-        if len(sale_order_ids) == 1:
-            action.update(
-                {
-                    "view_mode": "form",
-                    "res_id": sale_order_ids[0],
-                }
-            )
-        else:
-            action.update(
-                {
-                    "name": _("Sources Sale Orders of %s", self.name),
-                    "domain": [("id", "in", sale_order_ids)],
-                    "view_mode": "tree,form",
-                }
-            )
-        return action
-
-    def button_plan(self):
-        """
-        Override button_plan to generate a serial number if
-        the product is serialized
-        """
-        res = super().button_plan()
-
-        for order in self:
-            if order.product_id.tracking == "serial" and not order.lot_producing_id:
-                # Generate serial number for the finished product during plan
-                if order.product_id.tracking == "serial":
-                    lot = self.env["stock.lot"].create(
-                        {
-                            "name": self.env["ir.sequence"].next_by_code(
-                                "stock.lot.serial"
-                            )
-                            or "/",
-                            "product_id": order.product_id.id,
-                            "company_id": order.company_id.id,
-                        }
-                    )
-                    order.lot_producing_id = lot.id
-
-        return res
-
-    def action_remove_batch(self):
-        if self.filtered(lambda mo: not mo.mrp_batch_id):
-            raise UserError(
-                "No batch found to remove or batch has already been removed."
-            )
-        if self.mapped("mrp_batch_id").filtered(
-            lambda b: b.state in ("done", "cancel", "hold")
-        ):
-            raise UserError("Some Manufacturing Batches cannot be removed.")
-
-        for mo in self:
-            # Unlink pickings from batch picking
-            mo.picking_ids.write({"batch_id": False})
-            mo.mrp_batch_id = False
-
-    def action_open_wizard(self):
-        # Check if any record already has an assigned batch
-        if any(record.mrp_batch_id for record in self):
-            raise UserError(
-                "A batch has already been created for one or more selected records."
-            )
-
-        # Check for records in 'done' or 'cancel' state
-        if any(record.state in ["done", "cancel"] for record in self):
-            raise UserError(
-                "You cannot create a batch for records that are in 'Done' or 'Cancel' state."
-            )
-
-        # Return the action only after all checks are completed
-        return {
-            "name": "Create Batch",
-            "type": "ir.actions.act_window",
-            "res_model": "mrp.production.batch.wizard",
-            "view_mode": "form",
-            "target": "new",
-        }
-
-    @api.depends(
         "move_raw_ids.state",
         "move_raw_ids.quantity",
         "move_finished_ids.state",
@@ -160,26 +63,28 @@ class MrpProduction(models.Model):
         "product_qty",
         "qty_producing",
         "move_raw_ids.picked",
+        "mrp_batch_id.state",
     )
     def _compute_state(self):
-        # Call the original compute logic
-        res = super()._compute_state()
+        """
+        Override to trigger batch state recomputation via dependencies.
+        Using proper ORM dependencies instead of manual compute calls.
+        """
+        return super()._compute_state()
 
-        # Trigger batch state computation for related batches
-        for production in self:
-            if production.mrp_batch_id:
-                production.mrp_batch_id._compute_batch_state()
-
-        return res
+    def _get_batch_transfer_enabled(self):
+        """Helper method to check if batch transfer is enabled."""
+        param_value = (
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param(CONFIG_USE_BATCH_TRANSFER, "False")
+        )
+        # Convert string to boolean properly
+        return param_value.lower() in ("true", "1", "yes")
 
     def _link_pickings_to_batches(self):
         """Link all pickings for this MO to its mrp_batch_id batch picking."""
-        use_batch_transfer = (
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param("mrp_batch.use_batch_transfer")
-        )
-        if use_batch_transfer != "True":
+        if not self._get_batch_transfer_enabled():
             return  # skip Batch Pickings
 
         for mo in self:
@@ -187,56 +92,69 @@ class MrpProduction(models.Model):
                 continue
 
             pickings = mo.picking_ids.filtered(
-                lambda p: p.state not in ("done", "cancel")
+                lambda p: p.state not in (STATE_DONE, STATE_CANCEL)
             )
             if not pickings:
                 continue
 
-            # Find existing batch picking for this mrp_batch_id
-            batch = self.env["stock.picking.batch"].search(
-                [("mrp_batch_id", "=", mo.mrp_batch_id.id)], limit=1
-            )
-            if not batch:
-                seq_name = (
-                    self.env["ir.sequence"].next_by_code("picking.batch") or "NEW"
+            try:
+                # Find existing batch picking for this mrp_batch_id
+                batch = self.env["stock.picking.batch"].search(
+                    [("mrp_batch_id", "=", mo.mrp_batch_id.id)], limit=1
                 )
-                batch = self.env["stock.picking.batch"].create(
+                if not batch:
+                    seq_name = (
+                        self.env["ir.sequence"].next_by_code(
+                            CONFIG_SEQUENCE_PICKING_BATCH
+                        )
+                        or "NEW"
+                    )
+                    batch = self.env["stock.picking.batch"].create(
+                        {
+                            "name": f"{seq_name}/{mo.mrp_batch_id.name}",
+                            "user_id": self.env.user.id,
+                            "company_id": mo.company_id.id,
+                            "mrp_batch_id": mo.mrp_batch_id.id,
+                        }
+                    )
+
+                # Add this MO's pickings to the batch
+                batch.write({"picking_ids": [(4, pid) for pid in pickings.ids]})
+
+                # Link pickings back to the MO batch
+                pickings.write(
                     {
-                        "name": f"{seq_name}/{mo.mrp_batch_id.name}",
-                        "user_id": self.env.user.id,
-                        "company_id": mo.company_id.id,
+                        "batch_id": batch.id,
                         "mrp_batch_id": mo.mrp_batch_id.id,
                     }
                 )
 
-            # Add this MO’s pickings to the batch
-            batch.write({"picking_ids": [(4, pid) for pid in pickings.ids]})
-
-            # Link pickings back to the MO batch
-            pickings.write(
-                {
-                    "batch_id": batch.id,
-                    "mrp_batch_id": mo.mrp_batch_id.id,
-                }
-            )
-
-            # Confirm Batch Picking if in draft state
-            if batch.state == "draft":
-                batch.action_confirm()
+                # Confirm Batch Picking if in draft state
+                if batch.state == STATE_DRAFT:
+                    batch.action_confirm()
+            except Exception as e:
+                _logger.error(
+                    "Failed to link pickings to batch for MO %s: %s",
+                    mo.name,
+                    str(e),
+                )
+                # Continue with other MOs instead of failing completely
 
     @api.model
     def create(self, vals):
+        """Override create to link pickings to batches."""
         mo = super().create(vals)
         if mo.mrp_batch_id:
             mo._link_pickings_to_batches()
         return mo
 
     def write(self, vals):
+        """Override write to handle batch changes and relink pickings."""
         # Track previous batch for re-linking
         old_batches = {mo.id: mo.mrp_batch_id for mo in self}
         res = super().write(vals)
 
-        batches_to_recompute = set()
+        batches_to_update = set()
 
         for mo in self:
             old_batch = old_batches.get(mo.id)
@@ -252,17 +170,15 @@ class MrpProduction(models.Model):
                                 "mrp_batch_id": False,
                             }
                         )
-                batches_to_recompute.add(old_batch)
+                batches_to_update.add(old_batch)
 
             if new_batch:
                 # Relink pickings to the new batch
                 mo._link_pickings_to_batches()
-                batches_to_recompute.add(new_batch)
+                batches_to_update.add(new_batch)
 
-        # Recompute batch states
-        if batches_to_recompute:
-            for batch in batches_to_recompute:
-                batch._compute_batch_state()
+        # Batch state will be recomputed automatically via dependencies
+        # No need for manual compute calls
 
         return res
 
