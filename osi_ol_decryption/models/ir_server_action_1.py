@@ -2443,9 +2443,9 @@ class IrActionsServer(models.Model):
             "ol_crm_mrp_plm",
             "ol_crm_purchase_request",
             "ol_crm_sale_blanket_order",
+            "ol_exception",
             "ol_account",
             "sale",
-            "ol_exception",
             "sale_product_approval_purchase",
             "sale_product_approval_mrp"
             "sale_product_approval_stock",
