@@ -121,7 +121,7 @@ class IrActionsServer(models.Model):
 
             # Create Ticket
             counter += 1
-            ticket_id = Ticket.with_context(tracking_disable=True).create(vals)
+            ticket_id = Ticket.with_context(tracking_disable=True, is_migration=True).create(vals)
             if historical_repair_order_ids:
                 self._cr.execute(
                     "update repair_order set ticket_id = %s where id in %s",
@@ -2443,8 +2443,12 @@ class IrActionsServer(models.Model):
             "ol_crm_mrp_plm",
             "ol_crm_purchase_request",
             "ol_crm_sale_blanket_order",
+            "ol_account",
             "sale",
             "ol_exception",
+            "sale_product_approval_purchase",
+            "sale_product_approval_mrp"
+            "sale_product_approval_stock",
             "ol_job_cost_estimate_customer",
             "ol_mrp_plm_cancel",
             "ol_mrp_plm_purchase",
@@ -2459,7 +2463,6 @@ class IrActionsServer(models.Model):
             "ol_purchase_3way_match",
             "ol_purchase_request_estimate",
             "ol_rush_order",
-            "ol_account",
             "ol_stock_constrained_availability",
             "ol_sale",
             "ol_sale_blanket_order",
@@ -2477,8 +2480,6 @@ class IrActionsServer(models.Model):
             "purchase_order_line_menu",
             "web_m2x_options",
             "web_m2x_options_manager",
-            "sale_product_approval_purchase",
-            "sale_product_approval_mrp",
             "base_exception",
             "server_action_mass_edit",
             "purchase_deposit",
@@ -2558,7 +2559,6 @@ class IrActionsServer(models.Model):
             "product_configurator_mrp",
             "product_configurator_mrp_component",
             "sale_blanket_order_tier_validation",
-            "sale_product_approval_stock",
             "stock_request",
             "stock_request_mrp",
             "stock_request_picking_type",
