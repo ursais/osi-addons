@@ -1956,70 +1956,71 @@ class IrActionsServer(models.Model):
         with file_open(pathname, 'rb', env=self.env) as fp:
             convert_csv_import(self.env, 'osi_ol_decryption', pathname, fp.read(), {}, 'update', False)
 
-        cr = self.env.cr
-        v13dataquery = """  
-            SELECT res_id, id, name, value_text
-            FROM temp_ir_property_row_rack_case 
-            WHERE company_id = 1 
-            AND (name = 'loc_row' OR name = 'loc_rack' OR name = 'loc_case') 
-            GROUP BY res_id, id, name, value_text;
-        """
-        _logger.info("\n\n\n\nPutaway Rule Migration Server Action Start")
-        cr.execute(v13dataquery)
-        v13Datas = cr.fetchall()
-        migrationData = [{}]
-        result = {}
-        for data in v13Datas:
-            # product_id = int(data[0].split(',')[1])
-            product_id = data[0]
-            location = data[2]
-            if product_id not in result:
-                result[product_id] = []
-            # Append the location value to the list of locations for the current product_id
-            result[product_id].append(location)
-        final_output = []
+        # https://pm.opensourceintegrators.com/web#id=69772&cids=1&model=helpdesk.ticket&view_type=form
+        # cr = self.env.cr
+        # v13dataquery = """  
+        #     SELECT res_id, id, name, value_text
+        #     FROM temp_ir_property_row_rack_case 
+        #     WHERE company_id = 1 
+        #     AND (name = 'loc_row' OR name = 'loc_rack' OR name = 'loc_case') 
+        #     GROUP BY res_id, id, name, value_text;
+        # """
+        # _logger.info("\n\n\n\nPutaway Rule Migration Server Action Start")
+        # cr.execute(v13dataquery)
+        # v13Datas = cr.fetchall()
+        # migrationData = [{}]
+        # result = {}
+        # for data in v13Datas:
+        #     # product_id = int(data[0].split(',')[1])
+        #     product_id = data[0]
+        #     location = data[2]
+        #     if product_id not in result:
+        #         result[product_id] = []
+        #     # Append the location value to the list of locations for the current product_id
+        #     result[product_id].append(location)
+        # final_output = []
 
-        for res_id, locations in result.items():
-            # Sort locations so 'loc_row' comes first, followed by 'loc_rack' and 'loc_case'
-            sorted_locations = sorted(
-                locations, key=lambda x: ["loc_row", "loc_rack", "loc_case"].index(x)
-            )
+        # for res_id, locations in result.items():
+        #     # Sort locations so 'loc_row' comes first, followed by 'loc_rack' and 'loc_case'
+        #     sorted_locations = sorted(
+        #         locations, key=lambda x: ["loc_row", "loc_rack", "loc_case"].index(x)
+        #     )
 
-            # Join the locations with underscores
-            final_output.append({res_id: "-".join(sorted_locations)})
-            select_query = """SELECT name,value_text from temp_ir_property_row_rack_case WHERE company_id = 1 and res_id = %s and (name = 'loc_row' OR name = 'loc_rack' OR name = 'loc_case');"""
-            cr.execute(select_query, (res_id,))
-            datas = cr.fetchall()
-            location_str = ""
-            for data in datas:
-                if data[0] == "loc_row":
-                    location_str = data[1]
-                if data[0] == "loc_rack":
-                    location_str = location_str + "_" + data[1]
-                if data[0] == "loc_case":
-                    location_str = location_str + "_" + data[1]
+        #     # Join the locations with underscores
+        #     final_output.append({res_id: "-".join(sorted_locations)})
+        #     select_query = """SELECT name,value_text from temp_ir_property_row_rack_case WHERE company_id = 1 and res_id = %s and (name = 'loc_row' OR name = 'loc_rack' OR name = 'loc_case');"""
+        #     cr.execute(select_query, (res_id,))
+        #     datas = cr.fetchall()
+        #     location_str = ""
+        #     for data in datas:
+        #         if data[0] == "loc_row":
+        #             location_str = data[1]
+        #         if data[0] == "loc_rack":
+        #             location_str = location_str + "_" + data[1]
+        #         if data[0] == "loc_case":
+        #             location_str = location_str + "_" + data[1]
 
-            odoo_location = self.env["stock.location"].search(
-                [("complete_name", "ilike", location_str), ('company_id', '=', 1)]
-            )
-            if len(odoo_location) == 1:
-                product_tmpl_id = int(res_id.split(",")[1])
-                product_id = self.env["product.product"].search(
-                    [("product_tmpl_id", "=", product_tmpl_id)]
-                )
-                in_location = self.env.ref("stock.stock_location_stock")
-                putaway_rule = self.env["stock.putaway.rule"].create(
-                    {
-                        "location_in_id": in_location.id,
-                        "product_id": product_id.id,
-                        "category_id": product_id.categ_id.id,
-                        "location_out_id": odoo_location.id,
-                        "company_id": self.env.ref("base.main_company").id,
-                    }
-                )
-                # _logger.info("\n\n\n\nPutaway Rule Migration Server Action=>===%s==%s===%s==%s",product_id,location_str,odoo_location,odoo_location.name)
-                cr.commit()
-        cr.execute("drop table temp_ir_property_row_rack_case;")
+        #     odoo_location = self.env["stock.location"].search(
+        #         [("complete_name", "ilike", location_str), ('company_id', '=', 1)]
+        #     )
+        #     if len(odoo_location) == 1:
+        #         product_tmpl_id = int(res_id.split(",")[1])
+        #         product_id = self.env["product.product"].search(
+        #             [("product_tmpl_id", "=", product_tmpl_id)]
+        #         )
+        #         in_location = self.env.ref("stock.stock_location_stock")
+        #         putaway_rule = self.env["stock.putaway.rule"].create(
+        #             {
+        #                 "location_in_id": in_location.id,
+        #                 "product_id": product_id.id,
+        #                 "category_id": product_id.categ_id.id,
+        #                 "location_out_id": odoo_location.id,
+        #                 "company_id": self.env.ref("base.main_company").id,
+        #             }
+        #         )
+        #         # _logger.info("\n\n\n\nPutaway Rule Migration Server Action=>===%s==%s===%s==%s",product_id,location_str,odoo_location,odoo_location.name)
+        #         cr.commit()
+        # cr.execute("drop table temp_ir_property_row_rack_case;")
         _logger.info("\n\n\n\nPutaway Rule Migration Server Action Done")
     
     
@@ -2159,7 +2160,7 @@ class IrActionsServer(models.Model):
             "ls_auth_oauth",
             "ls_business_intelligence",
             "ls_delivery_shipping_views",
-            "ls_blind_dropship",
+            "ls_blind_osi_ol_decryption/models/ir_server_action_1.pyship",
             "ls_check_printing",
             "ls_crm_hud",
             "ls_crm_notes",

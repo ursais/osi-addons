@@ -1606,5 +1606,6 @@ class IrActionsServer(models.Model):
         cr.execute("drop table temp_product_product_stock_inventory_rel_vp13;")
         cr.execute("drop table temp_stock_inventory_stock_location_rel_vp13;")
         cr.execute("drop table temp_stock_move_vp13;")
+        cr.ececute("drop table temp_ir_property_row_rack_case;")
         
         _logger.info("\n\n============Tables Droped")
