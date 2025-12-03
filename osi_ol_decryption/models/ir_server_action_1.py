@@ -2652,7 +2652,7 @@ class IrActionsServer(models.Model):
             "web_company_color",
             "account_move_name_sequence",
             "ol_mrp_plm_component_replace",
-            "ol_migration_scripts",
+            "osi_migration_scripts",
         ]
 
         # modules_ids = self.env["ir.module.module"].search(
