@@ -2160,7 +2160,7 @@ class IrActionsServer(models.Model):
             "ls_auth_oauth",
             "ls_business_intelligence",
             "ls_delivery_shipping_views",
-            "ls_blind_osi_ol_decryption/models/ir_server_action_1.pyship",
+            "ls_blind_dropship",
             "ls_check_printing",
             "ls_crm_hud",
             "ls_crm_notes",
