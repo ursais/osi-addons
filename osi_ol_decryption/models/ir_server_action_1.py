@@ -20,7 +20,7 @@ class IrActionsServer(models.Model):
             "===============migrate_helpdesk_rma_to_ticket===================="
         )
         self = self.sudo()
-        self._cr.execute("update ir_sequence set active = 'f' where code = 'helpdesk.ticket'")
+        self._cr.execute("update ir_sequence set active = 'f' where code = 'helpdesk.ticket' and id not in (228,227)")
         self._cr.commit()
         Ticket = self.env["helpdesk.ticket"]
         partner_obj = self.env["res.partner"]
