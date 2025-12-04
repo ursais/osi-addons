@@ -1785,6 +1785,11 @@ class IrActionsServer(models.Model):
         #         product_17 = obj_product_17.browse(product.get("id"))
         #         product_17.write({"allow_backorder": False})
 
+        self._cr.execute("select id from product_tax_code where name ='NT';")
+        tax_code_id = self._cr.fetchone()
+        if tax_code_id:
+            obj_product_17.search([("name", "=", "Down payment")]).write({"tax_code_id": tax_code_id[0]})
+
         return True
 
     
