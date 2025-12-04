@@ -20,6 +20,8 @@ class IrActionsServer(models.Model):
             "===============migrate_helpdesk_rma_to_ticket===================="
         )
         self = self.sudo()
+        self._cr.execute("update ir_sequence set active = 'f' where code = 'helpdesk.ticket'")
+        self._cr.commit()
         Ticket = self.env["helpdesk.ticket"]
         partner_obj = self.env["res.partner"]
         repair_obj = self.env["repair.order"]
@@ -122,6 +124,8 @@ class IrActionsServer(models.Model):
             # Create Ticket
             counter += 1
             ticket_id = Ticket.with_context(tracking_disable=True, is_migration=True).create(vals)
+            if ticket_id.team_id.sequence_id:
+                ticket_id.ticket_ref = ticket_id.team_id.sequence_id.next_by_id()
             if historical_repair_order_ids:
                 self._cr.execute(
                     "update repair_order set ticket_id = %s where id in %s",
@@ -290,7 +294,8 @@ class IrActionsServer(models.Model):
                 if (counter + 1) % 10000 == 0:  # We save every 100k records
                     _logger.info("===============migrate_helpdesk_rma_to_ticket %s============" % (counter))
                     self.env.cr.commit()
-
+        self._cr.execute("update ir_sequence set active = 't' where code = 'helpdesk.ticket'")
+        self._cr.commit()
 
     def update_inspections(self):
         self = self.sudo()
