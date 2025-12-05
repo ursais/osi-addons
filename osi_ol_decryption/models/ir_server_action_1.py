@@ -2445,6 +2445,29 @@ class IrActionsServer(models.Model):
         # env['ir.module.module'].search([('name', 'in', module_uninstall_list),('state', '=', 'installed')]).button_immediate_uninstall()
 
     def install_new_module(self):
+        self._cr.execute(
+            """
+            UPDATE res_company
+                SET chart_template = CASE id
+                    WHEN 7  THEN 'generic_coa'
+                    WHEN 10 THEN 'nl'
+                    WHEN 2  THEN 'nl'
+                    WHEN 12 THEN 'my'
+                    WHEN 5  THEN 'generic_coa'
+                    WHEN 11 THEN 'generic_coa'
+                    WHEN 6  THEN 'tw'
+                    WHEN 3  THEN 'generic_coa'
+                    WHEN 8  THEN 'generic_coa'
+                    WHEN 4  THEN 'generic_coa'
+                    WHEN 9  THEN 'de_skr04'
+                    WHEN 1  THEN 'generic_coa'
+                    ELSE chart_template
+                END
+                WHERE id IN (1,2,3,4,5,6,7,8,9,10,11,12);
+
+            """
+        )
+
         modules = [
             "job_cost_estimate_customer",
             "queue_job",
@@ -2622,11 +2645,11 @@ class IrActionsServer(models.Model):
             "delivery_ups_rest",
             "delivery_usps_rest",
             "frepple",
-            # "l10n_de_reports",
-            # "l10n_eu_oss",
-            # "l10n_my_reports",
-            # "l10n_nl_intrastat",
-            # "l10n_tw_reports",
+            "l10n_de_reports",
+            "l10n_eu_oss",
+            "l10n_my_reports",
+            "l10n_nl_intrastat",
+            "l10n_tw_reports",
             "l10n_us_payment_nacha",
             "mrp_bom_comparison",
             "mrp_repair_component_history",
@@ -2674,5 +2697,7 @@ class IrActionsServer(models.Model):
                 [("name", "=", module), ("state", "!=", "installed")]
             ).button_immediate_install()
             # module.button_immediate_install()
+        
+        self._cr.execute("UPDATE res_company SET chart_template = '';")
 
 
