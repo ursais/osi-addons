@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inherit stock delivery slip report template -->
+        <template id="report_deliveryslip_inherit" inherit_id="stock.report_deliveryslip">
+            <!-- Replace table header to ensure consistent column headers -->
+            <!-- Target the first table header row that contains move-related data -->
+            <xpath expr="//table[contains(@class, 'table')]//thead/tr" position="replace">
+                <tr>
+                    <th>Coda Part No.</th>
+                    <th>Description</th>
+                    <th class="text-right">Ordered</th>
+                    <th class="text-right">Delivered</th>
+                </tr>
+            </xpath>
+            <!-- Replace table body to ensure consistent formatting with no decimals -->
+            <!-- Target the tbody that contains move lines -->
+            <xpath expr="//table[contains(@class, 'table')]//tbody" position="replace">
+                <tbody>
+                    <t t-foreach="docs" t-as="doc">
+                        <t t-foreach="doc.move_ids_without_package" t-as="move">
+                            <tr>
+                                <td>
+                                    <span t-esc="move.product_id.default_code or ''"/>
+                                </td>
+                                <td>
+                                    <span t-esc="move.product_id.display_name or ''"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="move._get_formatted_ordered_qty()"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-esc="move._get_formatted_delivered_qty()"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
+                </tbody>
+            </xpath>
+        </template>
+    </data>
+</odoo>
