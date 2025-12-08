@@ -2672,7 +2672,7 @@ class IrActionsServer(models.Model):
             # "ol_graphql_product",
             # "ol_graphql_sale",
             # "ol_graphql_user",
-            #"ol_l10n_nl_intrastat",
+            "ol_l10n_nl_intrastat",
             "ol_multicompany",
             "ol_product_create_wizard",
             "ol_product_system_stock",
