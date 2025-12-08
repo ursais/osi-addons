@@ -837,7 +837,7 @@ class IrActionsServer(models.Model):
         cr.execute("update product_template as pt set public_destination = (select tpt.public_destination from temp_product_temp_v13_vp as tpt where tpt.id=pt.id); ")
         
         _logger.info("\n\n==Script 8:Company IDS Many2Many Product Template Migration=")
-#        cr.execute("INSERT INTO product_template_company_display_rel (product_template_id, company_id) SELECT product_template_id, res_company_id FROM temp_product_template_res_company_rel_v13_VP;")
+        cr.execute("INSERT INTO product_template_company_display_rel (product_template_id, company_id) SELECT product_template_id, res_company_id FROM temp_product_template_res_company_rel_v13_VP;")
 
         AttributeValues = self.env["product.attribute.value"].search([("active","=",True),("product_id","!=",False)])
         AttributeValues._compute_company_ids()
