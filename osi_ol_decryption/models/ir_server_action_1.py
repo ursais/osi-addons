@@ -1,4 +1,4 @@
-from odoo import api, models, SUPERUSER_ID, fields
+from odoo import api, models, SUPERUSER_ID, fields, Command
 import logging
 from itertools import islice
 
@@ -13,6 +13,17 @@ from odoo.tools import convert_csv_import, file_open
 
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
+
+    def update_payment_provide(self):
+        self = self.sudo()
+        env = self.env
+        paypal = env['payment.method'].search([('code', '=', 'paypal')])
+        stripe = env['payment.method'].search([('code', '=', 'stripe')])
+
+        for p in paypal:
+            provider = p.provider_ids.filtered(lambda l: l.name in ('Stripe', 'Stripe CC (EU)'))            
+            p.provider_ids = [Command.unlink(p.id) for p in provider]
+            stripe.provider_ids = [Command.set(provider.ids)]
 
 
     def migrate_helpdesk_rma_to_ticket(self):
@@ -2699,5 +2710,4 @@ class IrActionsServer(models.Model):
             # module.button_immediate_install()
         
         self._cr.execute("UPDATE res_company SET chart_template = '';")
-
-
+    
