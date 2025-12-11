@@ -936,6 +936,20 @@ class IrActionsServer(models.Model):
         # count_false = update_visibility(cr, 'f', 'f')
 
         # _logger.info("\n\n\n\n===Task: 929566975 and 927975110 Done")
+
+
+        # Ticket Ref: 69813
+        putaway_location = self.env.ref("stock.stock_location_company",False)
+        if putaway_location:
+            putaway_location.sudo().write({"name":"Loading Dock"})
+            cr.commit()
+        input_location = self.env["stock.location"].sudo().search([
+            ("name", "=", "Input"),
+            ("usage", "=", "internal"),
+            ("company_id", "=", self.env.ref("ol_base.onlogic_eu", raise_if_not_found=False).id),
+        ])
+        if input_location:
+            input_location.sudo().write({"name":"Loading Dock"})
         cr.commit()
 
         _logger.info("\n\n\n\n=================DONE=======")
