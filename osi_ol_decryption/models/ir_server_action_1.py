@@ -34,6 +34,7 @@ class IrActionsServer(models.Model):
         self._cr.execute("update ir_sequence set active = 'f' where code = 'helpdesk.ticket' and id not in (228,227)")
         self._cr.execute("update helpdesk_team set sequence_id = 227 where id = 11;")
         self._cr.execute("update helpdesk_team set sequence_id = 228 where id = 13;")
+        self._cr.execute("update ir_model_data set noupdate = 't' where name in ('ol_helpdesk_repair_batch.helpdesk_team_customer_rma_eu', 'ol_helpdesk_repair_batch.helpdesk_team_customer_rma')")
         self._cr.commit()
         Ticket = self.env["helpdesk.ticket"]
         partner_obj = self.env["res.partner"]
