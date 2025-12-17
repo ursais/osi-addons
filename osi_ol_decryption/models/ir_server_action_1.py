@@ -1430,6 +1430,7 @@ class IrActionsServer(models.Model):
             "account_avatax_geolocalize",
             "account_avatax_sale",
             "account_avatax_stock"
+            # "account_invoice_extract"
         ]
         for module in module_uninstall_list:
             self.env["ir.module.module"].search(

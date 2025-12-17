@@ -950,6 +950,9 @@ class IrActionsServer(models.Model):
         ])
         if input_location:
             input_location.sudo().write({"name":"Loading Dock"})
+
+        # Ticket Ref: 70232
+        # cr.execute("update mrp_production set sale_order_line_id=origin_sale_line_id;")
         cr.commit()
 
         _logger.info("\n\n\n\n=================DONE=======")
