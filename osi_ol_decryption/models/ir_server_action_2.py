@@ -609,15 +609,33 @@ class IrActionsServer(models.Model):
     def script_6(self):
         import time
         self = self.sudo()
+        MrpBom = self.env["mrp.bom"].with_context(is_data_migration=True).sudo()
         _logger.info("\n\n== Generate Scaffolding BOM == Script 6 Start ==================")
 
         batch_size = 1000
         cr = self.env.cr
 
+        # Ticket Ref: 70233
+        domain = [
+            '|',
+                ('code', 'ilike', 'TA BOM'),
+                '|',
+                    ('product_id.active', '=', False),
+                    ('product_tmpl_id.active', '=', False),
+            ('active', '=', True),
+        ]
+
+        boms_to_archive = MrpBom.search(domain)
+        _logger.info(">>>>>>>>>>>>>>>boms_to_archive>>>>>>>>>>>>>>%s",len(boms_to_archive))
+        if boms_to_archive:
+            cr.execute(
+                "UPDATE mrp_bom SET active = FALSE WHERE id IN %s",
+                (tuple(set(boms_to_archive.ids)),)
+            )
+
         # Define models
         ProductTemplate = self.env['product.template'].sudo()
         ProductTemplateAttributeLine = self.env['product.template.attribute.line'].sudo()
-        MrpBom = self.env["mrp.bom"].with_context(is_data_migration=True).sudo()
         MrpBomLine = self.env['mrp.bom.line'].sudo()
         MrpBomLineConfigSet = self.env['mrp.bom.line.configuration.set'].sudo()
         MrpBomLineConfig = self.env['mrp.bom.line.configuration'].sudo()
