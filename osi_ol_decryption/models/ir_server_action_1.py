@@ -366,6 +366,14 @@ class IrActionsServer(models.Model):
         self._cr.execute("update mrp_bom_line set company_id = null where bom_id = 261469;")
         picking_type_us = self.env['stock.picking.type'].search([('name', '=', 'Internal Transfers'), ('company_id', '=', 1)], limit=1)
         picking_type_eu = self.env['stock.picking.type'].search([('name', '=', 'Internal Transfers'), ('company_id', '=', 2)], limit=1)
+        
+        repairs_us = self.env['stock.picking.type'].search([('name', '=', 'Repairs'), ('company_id', '=', 1)], limit=1)
+        repairs_eu = self.env['stock.picking.type'].search([('name', '=', 'Repairs'), ('company_id', '=', 2)], limit=1)
+        direct_materials = self.env['stock.location'].search([('name', '=', 'Direct Materials'), ('company_id', '=', 1)], limit=1)
+        consumed = self.env['stock.location'].search([('name', '=', 'Consumed'), ('company_id', '=', 2)], limit=1)
+        
+        repairs_eu.write({'default_location_dest_id': consumed.id})
+        repairs_us.write({'default_location_dest_id': direct_materials.id})
         for stock in stock_ids:
             res_id = "product.template," + str(stock.product_tmpl_id.id)
             
@@ -1414,7 +1422,7 @@ class IrActionsServer(models.Model):
                             continue
                         self.env['account.account'].with_company(company).create(diffs)
         
-        self.env['account.account'].with_user(1).search([])._compute_account_root()
+        self.env['account.account'].search([])._compute_account_root()
         
 
     def run_hot_ar(self):
