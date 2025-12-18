@@ -31,10 +31,13 @@ class IrActionsServer(models.Model):
             "===============migrate_helpdesk_rma_to_ticket===================="
         )
         self = self.sudo()
+        customer_us = self.env.ref("ol_helpdesk_repair_batch.helpdesk_team_customer_rma", raise_if_not_found=False)
+        customer_eu = self.env.ref("ol_helpdesk_repair_batch.helpdesk_team_customer_rma_eu", raise_if_not_found=False)
         self._cr.execute("update ir_sequence set active = 'f' where code = 'helpdesk.ticket' and id not in (228,227)")
-        self._cr.execute("update helpdesk_team set sequence_id = 227 where id = 11;")
-        self._cr.execute("update helpdesk_team set sequence_id = 228 where id = 13;")
+        self._cr.execute("update helpdesk_team set sequence_id = 227 where id = %s;", (customer_us.id,))
+        self._cr.execute("update helpdesk_team set sequence_id = 228 where id = %s;", (customer_eu.id,))
         self._cr.execute("update ir_model_data set noupdate = 't' where name in ('helpdesk_team_customer_rma_eu', 'helpdesk_team_customer_rma');")
+        self._cr.execute("update ir_sequence set code = 'helpdesk.ticket' where id in (227,228)")
         self._cr.commit()
         Ticket = self.env["helpdesk.ticket"]
         partner_obj = self.env["res.partner"]
