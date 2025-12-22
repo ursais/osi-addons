@@ -435,7 +435,7 @@ class IrActionsServer(models.Model):
             picking.with_company(stock.company_id).button_validate()
             # self._cr.commit()
 
-    def compute_bypass_data(self, batch_size=20000):
+    def compute_bypass_data(self, batch_size=5000):
         _logger.info("===============compute_bypass_data====================")
         self = self.sudo()
 
@@ -513,7 +513,7 @@ class IrActionsServer(models.Model):
         ])
 
         # Account Moves
-        batch_size = 100000
+        # batch_size = 10000
         process_in_chunks('account.move', [
             '_compute_intrastat_country_id',
             '_compute_sale_type_id',
@@ -527,7 +527,7 @@ class IrActionsServer(models.Model):
         ])
 
         # BOMs
-        batch_size = 10000
+        # batch_size = 10000
         process_in_chunks('mrp.bom', [
             '_compute_existing_scaffolding_bom',
         ])            
