@@ -346,25 +346,25 @@ class IrActionsServer(models.Model):
                                 insert_query = """INSERT INTO product_attribute_value_product_template_attribute_line_rel (product_template_attribute_line_id, product_attribute_value_id)  VALUES (%s, %s);"""
                                 cr.execute(insert_query, (line.id,active_value_id.id))
                             cr.commit()
-                    if line_values:
-                        value_with_none = line_values.filtered(lambda ptav: ptav.name == 'None')
-                        value_with_non_none = line_values.filtered(lambda ptav: ptav.name != 'None')
-                        if value_with_none:
-                            # Update default value using SQL
-                            cr.execute("""
-                                UPDATE product_template_attribute_line
-                                SET default_val = %s
-                                WHERE id = %s;
-                            """, (value_with_none[0].id, line.id))
-                            cr.commit()
+                    # if line_values:
+                    #     value_with_none = line_values.filtered(lambda ptav: ptav.name == 'None')
+                    #     value_with_non_none = line_values.filtered(lambda ptav: ptav.name != 'None')
+                    #     if value_with_none:
+                    #         # Update default value using SQL
+                    #         cr.execute("""
+                    #             UPDATE product_template_attribute_line
+                    #             SET default_val = %s
+                    #             WHERE id = %s;
+                    #         """, (value_with_none[0].id, line.id))
+                    #         cr.commit()
                         
-                        else:
-                            cr.execute("""
-                                UPDATE product_template_attribute_line
-                                SET default_val = %s
-                                WHERE id = %s;
-                            """, (value_with_non_none[0].id, line.id))
-                            cr.commit()
+                    #     else:
+                    #         cr.execute("""
+                    #             UPDATE product_template_attribute_line
+                    #             SET default_val = %s
+                    #             WHERE id = %s;
+                    #         """, (value_with_non_none[0].id, line.id))
+                    #         cr.commit()
                 counter += 1
             offset += batch_size
             self.env.cr.commit()  # Commit changes after processing each batch
@@ -392,13 +392,13 @@ class IrActionsServer(models.Model):
                 config_step_id.unlink()
                 cr.commit()
                 for attrbute_line_id in product_template.mapped("attribute_line_ids").filtered("active"):
-                    if (attrbute_line_id.value_ids and (not attrbute_line_id.default_val or not attrbute_line_id.default_val.active)):
-                        cr.execute("""
-                            UPDATE product_template_attribute_line
-                            SET default_val = %s
-                            WHERE id = %s;
-                        """, (attrbute_line_id.value_ids[0].id, attrbute_line_id.id))
-                        cr.commit()
+                    # if (attrbute_line_id.value_ids and (not attrbute_line_id.default_val or not attrbute_line_id.default_val.active)):
+                    #     cr.execute("""
+                    #         UPDATE product_template_attribute_line
+                    #         SET default_val = %s
+                    #         WHERE id = %s;
+                    #     """, (attrbute_line_id.value_ids[0].id, attrbute_line_id.id))
+                    #     cr.commit()
                     if attrbute_line_id.attribute_id.active:
                         values_ids = attrbute_line_id.value_ids.filtered(lambda l:l.active and l.attribute_id.id != attrbute_line_id.attribute_id.id)
                         product_template_value_ids = attrbute_line_id.product_template_value_ids.filtered("ptav_active")
@@ -515,13 +515,13 @@ class IrActionsServer(models.Model):
                     v13_data_select = "select id,attribute_id ,attribute_line_id,product_attribute_value_id,default_qty,maximum_qty  from temp_product_template_attribute_value_V13_VP where product_tmpl_id = %s and attribute_line_id = %s and ptav_active = 't' and default_qty >=1 and maximum_qty >1;" 
                     cr.execute(v13_data_select, (pro_template.id,attrbute_line_id.id),)
                     v13_datas = cr.fetchall()
-                    if attrbute_line_id.value_ids and (not attrbute_line_id.default_val or not attrbute_line_id.default_val.active):
-                        cr.execute("""
-                            UPDATE product_template_attribute_line
-                            SET default_val = %s
-                            WHERE id = %s;
-                        """, (attrbute_line_id.value_ids[0].id, attrbute_line_id.id))
-                        cr.commit()
+                    # if attrbute_line_id.value_ids and (not attrbute_line_id.default_val or not attrbute_line_id.default_val.active):
+                    #     cr.execute("""
+                    #         UPDATE product_template_attribute_line
+                    #         SET default_val = %s
+                    #         WHERE id = %s;
+                    #     """, (attrbute_line_id.value_ids[0].id, attrbute_line_id.id))
+                    #     cr.commit()
                     if v13_datas:
                         for v13_data in v13_datas:
                             v13_attribute_value_id = v13_data[3]
