@@ -373,11 +373,132 @@ class IrActionsServer(models.Model):
 
         _logger.info("\n\n==================Script 3 is Done==================")
 
+    # def script_4(self):
+    #     _logger.info("\n\n==Sync Attribute Values in Product Variants===Script 4 is start==================")
+    #     batch_size = 100  # Define batch size
+    #     #PRODUCT-TEMPLATE ID Which id Need to take care [5593,24607,5172,32379,24337,25216,26588,6518,4696,103791,102630,102736,101999]
+    #     ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True),("active","=",True)])
+    #     total_products = len(ProductTemplates)  # Total number of products to process
+    #     offset = 0
+    #     counter = 1
+    #     cr = self.env.cr
+    #     _logger.info("Total products to process: %s", total_products)
+    #     while offset < total_products:
+    #         batch_products = ProductTemplates[offset:offset + batch_size]  # Slice the records to get the current batch
+    #         _logger.info("Processing batch: Offset %s, Batch Size %s", offset, len(batch_products))
+    #         for product_template in batch_products:
+    #             _logger.info("\n\n\n\n======Script 4=========product_template##########%s==ID:::%s:::Counter::%s",product_template.name,product_template,counter)
+    #             config_step_id = product_template.config_step_line_ids.filtered(lambda l:l.config_step_id and not l.attribute_line_ids)
+    #             config_step_id.unlink()
+    #             cr.commit()
+    #             for attrbute_line_id in product_template.mapped("attribute_line_ids").filtered("active"):
+    #                 # if (attrbute_line_id.value_ids and (not attrbute_line_id.default_val or not attrbute_line_id.default_val.active)):
+    #                 #     cr.execute("""
+    #                 #         UPDATE product_template_attribute_line
+    #                 #         SET default_val = %s
+    #                 #         WHERE id = %s;
+    #                 #     """, (attrbute_line_id.value_ids[0].id, attrbute_line_id.id))
+    #                 #     cr.commit()
+    #                 if attrbute_line_id.attribute_id.active:
+    #                     values_ids = attrbute_line_id.value_ids.filtered(lambda l:l.active and l.attribute_id.id != attrbute_line_id.attribute_id.id)
+    #                     product_template_value_ids = attrbute_line_id.product_template_value_ids.filtered("ptav_active")
+    #                     for value in values_ids:
+    #                         active_value_id = self.env["product.attribute.value"].search([("name","=",value.name),("active","=",True),("attribute_id","=",value.attribute_id.id)])
+    #                         if not active_value_id.attribute_id.active and value.name not in attrbute_line_id.attribute_id.value_ids.mapped("name"):
+    #                             _logger.info("\n\n\n\n==============Values IDS:Name:%s:%s:%s:%s:active_value_id::%s",value.name,value,attrbute_line_id.attribute_id,value.attribute_id,active_value_id.attribute_id.active)
+    #                             update_query = """UPDATE product_attribute_value SET active = TRUE,attribute_id = %s WHERE id =%s;"""
+    #                             cr.execute(update_query,(attrbute_line_id.attribute_id.id,value.id))
+    #                             cr.commit()
+    #                     values_ids = attrbute_line_id.value_ids
+    #                     for ptav_line in product_template_value_ids:
+    #                         if ptav_line.attribute_id != attrbute_line_id.attribute_id:
+    #                             _logger.info("\n\n\n\n==============PTAV==Values IDS::%s::%s::%s",ptav_line.attribute_id,attrbute_line_id.attribute_id, attrbute_line_id.attribute_id.name)
+    #                             cr.execute("""
+    #                                     UPDATE product_template_attribute_value
+    #                                     SET attribute_id = %s
+    #                                     WHERE id = %s AND ptav_active = true;
+    #                                 """, (attrbute_line_id.attribute_id.id,ptav_line.id))
+    #                             cr.commit()
+    #                         inactive_value_active_ptav = ptav_line.attribute_line_id.product_template_value_ids.filtered(lambda l:l.name == ptav_line.product_attribute_value_id.name and not l.product_attribute_value_id.active and l.ptav_active and l.product_tmpl_id.id == ptav_line.product_tmpl_id.id)
+    #                         active_value_inactive_ptav = ptav_line.attribute_line_id.product_template_value_ids.filtered(lambda l:l.name == ptav_line.product_attribute_value_id.name and l.product_attribute_value_id.active and not l.ptav_active and l.product_tmpl_id.id == ptav_line.product_tmpl_id.id)
+    #                         if not inactive_value_active_ptav and not active_value_inactive_ptav and not ptav_line.product_attribute_value_id.active:
+    #                             active_value_id = attrbute_line_id.value_ids.filtered(lambda v:v.name == ptav_line.product_attribute_value_id.name )
+    #                             _logger.info("\n\n\n\n====BOTH Inactive==========PTAV==Values ID:%s==%s:%s::%s",ptav_line.product_attribute_value_id.name,attrbute_line_id.attribute_id.name,ptav_line.product_attribute_value_id,active_value_id)
+    #                             cr.execute("""
+    #                                     UPDATE product_template_attribute_value
+    #                                     SET product_attribute_value_id = %s
+    #                                     WHERE id = %s AND ptav_active = true;
+    #                                 """, (active_value_id.id,ptav_line.id))
+    #                             cr.commit()
+    #                         if inactive_value_active_ptav and active_value_inactive_ptav:
+    #                             _logger.info("\n\n\n\n>>inactive_value_active_ptav")
+    #                             inactive_value_active_ptav.ptav_active = False
+    #                             cr.commit()
+    #                         if not inactive_value_active_ptav and active_value_inactive_ptav:
+    #                             active_value_inactive_ptav.ptav_active = True
+    #                             cr.commit()
+    #                         if inactive_value_active_ptav and not active_value_inactive_ptav and ptav_line.product_attribute_value_id.active:
+    #                             active_value_id = attrbute_line_id.value_ids.filtered(lambda v:v.name == ptav_line.product_attribute_value_id.name )
+    #                             _logger.info("\n\n\n\n==============PTAV==Values ID:%s==%s:%s::%s",ptav_line.product_attribute_value_id.name,attrbute_line_id.attribute_id.name,ptav_line.product_attribute_value_id,active_value_id)
+    #                             inactive_value_active_ptav.ptav_active = False
+    #                             cr.commit()
+    #                         if not ptav_line.product_attribute_value_id.active:
+    #                             active_value_id = attrbute_line_id.value_ids.filtered(lambda v:v.name == ptav_line.product_attribute_value_id.name )
+    #                             _logger.info("\n\n\n\n==============PTAV==Values ID:%s==%s:%s::%s",ptav_line.product_attribute_value_id.name,attrbute_line_id.attribute_id.name,ptav_line.product_attribute_value_id,active_value_id)
+    #                             cr.execute("""
+    #                                     UPDATE product_template_attribute_value
+    #                                     SET product_attribute_value_id = %s
+    #                                     WHERE id = %s AND ptav_active = true;
+    #                                 """, (active_value_id.id,ptav_line.id))
+    #                             cr.commit()
+
+                                   
+    #                         if ptav_line.product_attribute_value_id.active and ptav_line.product_attribute_value_id.id not in attrbute_line_id.value_ids.ids:
+    #                             _logger.info("\n\n\n\n========2322======PTAV==Values ID%s==%s",ptav_line.product_attribute_value_id.name,attrbute_line_id.attribute_id.name)
+                            
+    #                         if ptav_line.attribute_line_id.is_qty_required:
+    #                             # _logger.info("\n\n\n\n======3333========PTAV==%s",ptav_line.product_attribute_value_id.name)
+    #                             for qty_val in ptav_line.attribute_value_qty_ids:
+    #                                 if qty_val.product_attribute_id.id != ptav_line.attribute_id.id:
+    #                                     _logger.info("\n\n\n\n======3333========PTAV==%s",ptav_line.product_attribute_value_id.name)
+    #                                     cr.execute("""
+    #                                         UPDATE attribute_value_qty
+    #                                         SET product_attribute_id = %s
+    #                                         WHERE id = %s;
+    #                                     """, (ptav_line.attribute_id.id,qty_val.id))
+    #                                     cr.commit()
+    #                                 if qty_val.product_attribute_value_id.id !=  ptav_line.product_attribute_value_id.id:
+    #                                     _logger.info("\n\n\n\n======3333========PTAV==%s",ptav_line.product_attribute_value_id.name)
+    #                                     cr.execute("""
+    #                                         UPDATE attribute_value_qty
+    #                                         SET product_attribute_value_id = %s
+    #                                         WHERE id = %s;
+    #                                     """, (ptav_line.product_attribute_value_id.id,qty_val.id))
+    #                                     cr.commit()
+    #                     not_common = list(set(values_ids.ids).symmetric_difference(set(product_template_value_ids.mapped("product_attribute_value_id").ids)))
+    #                     if not_common:
+    #                         line_id = attrbute_line_id.id
+    #                         value_ids = tuple(not_common)
+    #                         query = """
+    #                             DELETE FROM product_attribute_value_product_template_attribute_line_rel
+    #                             WHERE product_template_attribute_line_id = %s
+    #                             AND product_attribute_value_id = ANY(%s)
+    #                         """
+
+    #                         self.env.cr.execute(query, (line_id, list(value_ids)))
+    #                         self.env.cr.commit() 
+    #             counter += 1
+    #         offset += batch_size
+    #         self.env.cr.commit()  # Commit changes after processing each batch
+    #         _logger.info("Batch processed. Offset moved to %s", offset)
+    #     _logger.info("Processing completed!")
+    #     _logger.info("\n\n==================Script 4 is End==================")
+
     def script_4(self):
-        _logger.info("\n\n==Sync Attribute Values in Product Variants===Script 4 is start==================")
+        #This Script will help us to update Product Template Attribute Line and Values Based on V13 Temp Table.
         batch_size = 100  # Define batch size
-        #PRODUCT-TEMPLATE ID Which id Need to take care [5593,24607,5172,32379,24337,25216,26588,6518,4696,103791,102630,102736,101999]
         ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True),("active","=",True)])
+        _logger.info("\n\n==script_4_new is start==================")
         total_products = len(ProductTemplates)  # Total number of products to process
         offset = 0
         counter = 1
@@ -387,110 +508,78 @@ class IrActionsServer(models.Model):
             batch_products = ProductTemplates[offset:offset + batch_size]  # Slice the records to get the current batch
             _logger.info("Processing batch: Offset %s, Batch Size %s", offset, len(batch_products))
             for product_template in batch_products:
+                attribute_line_ids = product_template.mapped("attribute_line_ids").filtered("active")
                 _logger.info("\n\n\n\n======Script 4=========product_template##########%s==ID:::%s:::Counter::%s",product_template.name,product_template,counter)
                 config_step_id = product_template.config_step_line_ids.filtered(lambda l:l.config_step_id and not l.attribute_line_ids)
                 config_step_id.unlink()
                 cr.commit()
-                for attrbute_line_id in product_template.mapped("attribute_line_ids").filtered("active"):
-                    # if (attrbute_line_id.value_ids and (not attrbute_line_id.default_val or not attrbute_line_id.default_val.active)):
-                    #     cr.execute("""
-                    #         UPDATE product_template_attribute_line
-                    #         SET default_val = %s
-                    #         WHERE id = %s;
-                    #     """, (attrbute_line_id.value_ids[0].id, attrbute_line_id.id))
-                    #     cr.commit()
-                    if attrbute_line_id.attribute_id.active:
-                        values_ids = attrbute_line_id.value_ids.filtered(lambda l:l.active and l.attribute_id.id != attrbute_line_id.attribute_id.id)
-                        product_template_value_ids = attrbute_line_id.product_template_value_ids.filtered("ptav_active")
-                        for value in values_ids:
-                            active_value_id = self.env["product.attribute.value"].search([("name","=",value.name),("active","=",True),("attribute_id","=",value.attribute_id.id)])
-                            if not active_value_id.attribute_id.active and value.name not in attrbute_line_id.attribute_id.value_ids.mapped("name"):
-                                _logger.info("\n\n\n\n==============Values IDS:Name:%s:%s:%s:%s:active_value_id::%s",value.name,value,attrbute_line_id.attribute_id,value.attribute_id,active_value_id.attribute_id.active)
-                                update_query = """UPDATE product_attribute_value SET active = TRUE,attribute_id = %s WHERE id =%s;"""
-                                cr.execute(update_query,(attrbute_line_id.attribute_id.id,value.id))
-                                cr.commit()
-                        values_ids = attrbute_line_id.value_ids
-                        for ptav_line in product_template_value_ids:
-                            if ptav_line.attribute_id != attrbute_line_id.attribute_id:
-                                _logger.info("\n\n\n\n==============PTAV==Values IDS::%s::%s::%s",ptav_line.attribute_id,attrbute_line_id.attribute_id, attrbute_line_id.attribute_id.name)
-                                cr.execute("""
-                                        UPDATE product_template_attribute_value
-                                        SET attribute_id = %s
-                                        WHERE id = %s AND ptav_active = true;
-                                    """, (attrbute_line_id.attribute_id.id,ptav_line.id))
-                                cr.commit()
-                            inactive_value_active_ptav = ptav_line.attribute_line_id.product_template_value_ids.filtered(lambda l:l.name == ptav_line.product_attribute_value_id.name and not l.product_attribute_value_id.active and l.ptav_active and l.product_tmpl_id.id == ptav_line.product_tmpl_id.id)
-                            active_value_inactive_ptav = ptav_line.attribute_line_id.product_template_value_ids.filtered(lambda l:l.name == ptav_line.product_attribute_value_id.name and l.product_attribute_value_id.active and not l.ptav_active and l.product_tmpl_id.id == ptav_line.product_tmpl_id.id)
-                            if not inactive_value_active_ptav and not active_value_inactive_ptav and not ptav_line.product_attribute_value_id.active:
-                                active_value_id = attrbute_line_id.value_ids.filtered(lambda v:v.name == ptav_line.product_attribute_value_id.name )
-                                _logger.info("\n\n\n\n====BOTH Inactive==========PTAV==Values ID:%s==%s:%s::%s",ptav_line.product_attribute_value_id.name,attrbute_line_id.attribute_id.name,ptav_line.product_attribute_value_id,active_value_id)
-                                cr.execute("""
-                                        UPDATE product_template_attribute_value
-                                        SET product_attribute_value_id = %s
-                                        WHERE id = %s AND ptav_active = true;
-                                    """, (active_value_id.id,ptav_line.id))
-                                cr.commit()
-                            if inactive_value_active_ptav and active_value_inactive_ptav:
-                                _logger.info("\n\n\n\n>>inactive_value_active_ptav")
-                                inactive_value_active_ptav.ptav_active = False
-                                cr.commit()
-                            if not inactive_value_active_ptav and active_value_inactive_ptav:
-                                active_value_inactive_ptav.ptav_active = True
-                                cr.commit()
-                            if inactive_value_active_ptav and not active_value_inactive_ptav and ptav_line.product_attribute_value_id.active:
-                                active_value_id = attrbute_line_id.value_ids.filtered(lambda v:v.name == ptav_line.product_attribute_value_id.name )
-                                _logger.info("\n\n\n\n==============PTAV==Values ID:%s==%s:%s::%s",ptav_line.product_attribute_value_id.name,attrbute_line_id.attribute_id.name,ptav_line.product_attribute_value_id,active_value_id)
-                                inactive_value_active_ptav.ptav_active = False
-                                cr.commit()
-                            if not ptav_line.product_attribute_value_id.active:
-                                active_value_id = attrbute_line_id.value_ids.filtered(lambda v:v.name == ptav_line.product_attribute_value_id.name )
-                                _logger.info("\n\n\n\n==============PTAV==Values ID:%s==%s:%s::%s",ptav_line.product_attribute_value_id.name,attrbute_line_id.attribute_id.name,ptav_line.product_attribute_value_id,active_value_id)
-                                cr.execute("""
-                                        UPDATE product_template_attribute_value
-                                        SET product_attribute_value_id = %s
-                                        WHERE id = %s AND ptav_active = true;
-                                    """, (active_value_id.id,ptav_line.id))
-                                cr.commit()
+            for attribute_line in attribute_line_ids:
+                allowed_value_ids = set(attribute_line.value_ids.ids)
+                ptav_lines = attribute_line.product_template_value_ids
+                
+                for value_line in attribute_line.product_template_value_ids.filtered("ptav_active"):
+                    #Featching V13 Temp table Values
+                    pav = value_line.product_attribute_value_id
+                    cr.execute(
+                        "SELECT * FROM temp_product_template_attribute_value_V13 WHERE id = %s",
+                        (value_line.id,)
+                    )
+                    v13_datas = cr.fetchall()
 
-                                   
-                            if ptav_line.product_attribute_value_id.active and ptav_line.product_attribute_value_id.id not in attrbute_line_id.value_ids.ids:
-                                _logger.info("\n\n\n\n========2322======PTAV==Values ID%s==%s",ptav_line.product_attribute_value_id.name,attrbute_line_id.attribute_id.name)
-                            
-                            if ptav_line.attribute_line_id.is_qty_required:
-                                # _logger.info("\n\n\n\n======3333========PTAV==%s",ptav_line.product_attribute_value_id.name)
-                                for qty_val in ptav_line.attribute_value_qty_ids:
-                                    if qty_val.product_attribute_id.id != ptav_line.attribute_id.id:
-                                        _logger.info("\n\n\n\n======3333========PTAV==%s",ptav_line.product_attribute_value_id.name)
-                                        cr.execute("""
-                                            UPDATE attribute_value_qty
-                                            SET product_attribute_id = %s
-                                            WHERE id = %s;
-                                        """, (ptav_line.attribute_id.id,qty_val.id))
-                                        cr.commit()
-                                    if qty_val.product_attribute_value_id.id !=  ptav_line.product_attribute_value_id.id:
-                                        _logger.info("\n\n\n\n======3333========PTAV==%s",ptav_line.product_attribute_value_id.name)
-                                        cr.execute("""
-                                            UPDATE attribute_value_qty
-                                            SET product_attribute_value_id = %s
-                                            WHERE id = %s;
-                                        """, (ptav_line.product_attribute_value_id.id,qty_val.id))
-                                        cr.commit()
-                        not_common = list(set(values_ids.ids).symmetric_difference(set(product_template_value_ids.mapped("product_attribute_value_id").ids)))
-                        if not_common:
-                            line_id = attrbute_line_id.id
-                            value_ids = tuple(not_common)
-                            query = """
-                                DELETE FROM product_attribute_value_product_template_attribute_line_rel
-                                WHERE product_template_attribute_line_id = %s
-                                AND product_attribute_value_id = ANY(%s)
+                    if v13_datas:
+                        cr.execute(
                             """
+                            UPDATE product_template_attribute_value
+                            SET ptav_active = %s
+                            WHERE id = %s
+                            """,
+                            (v13_datas[0][1], value_line.id)
+                        )
+                        cr.commit()
+                    if not value_line.product_attribute_value_id.active:
+                        # Case 1: Line Active but product_attribute_value_id is not active
+                        active_value_line = ptav_lines.filtered(lambda l:l.product_attribute_value_id.active and not l.ptav_active)
+                        if not active_value_line:
+                            active_value =  self.env["product.attribute.value"].search([
+                                ("attribute_id", "=", attribute_line.attribute_id.id),
+                                ("name", "=", pav.name),
+                                ("active", "=", True),
+                            ], limit=1)
+                            cr.execute("""
+                                UPDATE product_template_attribute_value
+                                SET product_attribute_value_id = %s
+                                WHERE id = %s;
+                            """, (active_value.id, value_line.id))
+                            cr.commit()
+                        elif active_value_line:
+                            # Case 2: Line is not Active but product_attribute_value_id is active
+                            filtered_line = active_value_line.filtered(lambda l:l.product_attribute_value_id.name == value_line.product_attribute_value_id.name)
+                            cr.execute("""
+                                UPDATE product_template_attribute_value
+                                SET ptav_active = TRUE
+                                WHERE id = %s
+                            """, (filtered_line.id,))
 
-                            self.env.cr.execute(query, (line_id, list(value_ids)))
-                            self.env.cr.commit() 
-                counter += 1
+                            cr.execute("""
+                                UPDATE product_template_attribute_value
+                                SET ptav_active = FALSE
+                                WHERE id = %s
+                            """, (value_line.id,))
+                            cr.commit()
+                    not_common = list(set(attribute_line.value_ids.ids).symmetric_difference(set(ptav_lines.filtered("ptav_active").mapped("product_attribute_value_id").ids)))
+                    if not_common:
+                        _logger.info("not_common>>%s>>%s",attribute_line.attribute_id.name,not_common)
+                        line_id = attribute_line.id
+                        value_ids = tuple(not_common)
+                        query = """
+                            DELETE FROM product_attribute_value_product_template_attribute_line_rel
+                            WHERE product_template_attribute_line_id = %s
+                            AND product_attribute_value_id = ANY(%s)
+                        """
+                        self.env.cr.execute(query, (line_id, list(value_ids)))
+                        self.env.cr.commit() 
             offset += batch_size
             self.env.cr.commit()  # Commit changes after processing each batch
-            _logger.info("Batch processed. Offset moved to %s", offset)
         _logger.info("Processing completed!")
         _logger.info("\n\n==================Script 4 is End==================")
 
