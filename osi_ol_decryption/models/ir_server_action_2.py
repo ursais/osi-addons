@@ -1491,6 +1491,7 @@ class IrActionsServer(models.Model):
 
         lines = AttributeLine.search([("active", "=", True)])
         vals_lists = []
+        seen_keys = set()
         company_ids = companies.ids  # cache once
 
         for line in lines:
@@ -1507,6 +1508,8 @@ class IrActionsServer(models.Model):
                 value_id = row[1]
                 company_id = row[2]
                 value = AttributeValue.browse(value_id)
+                if not value.exists():
+                    continue
                 tobe_update_value = value
                 if not value.active:
                     cr.execute("""
@@ -1524,6 +1527,11 @@ class IrActionsServer(models.Model):
                 default_val = tobe_update_value
                 value_reference = f"{default_val._name},{default_val.id}"
                 res_id = f"{line._name},{line.id}"
+                unique_key = (res_id, value_reference, company_id)
+                if unique_key in seen_keys:
+                    continue
+                seen_keys.add(unique_key)
+
                 vals_lists.append({
                     "name": "default_val",
                     "company_id": company_id,
