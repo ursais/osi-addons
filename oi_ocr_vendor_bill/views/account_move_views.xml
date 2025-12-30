@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form view for viewing OCR text -->
+    <record id="view_account_move_ocr_text" model="ir.ui.view">
+        <field name="name">account.move.ocr.text.form</field>
+        <field name="model">account.move</field>
+        <field name="arch" type="xml">
+            <form string="OCR Extracted Text">
+                <group>
+                    <field name="ocr_text" widget="text" nolabel="1" readonly="1"/>
+                </group>
+                <footer>
+                    <button string="Close" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Inherit account.move form view to add OCR button and fields -->
+    <record id="view_move_form_inherit_ocr" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.ocr</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <!-- Add OCR button in header -->
+            <xpath expr="//header" position="inside">
+                <button
+                    name="action_process_ocr"
+                    string="Process OCR"
+                    type="object"
+                    class="btn-primary"
+                    invisible="move_type != 'in_invoice'"
+                    help="Extract text from vendor bill image using OCR"/>
+                <button
+                    name="action_view_ocr_text"
+                    string="View OCR Text"
+                    type="object"
+                    class="btn-secondary"
+                    invisible="not ocr_processed"
+                    help="View extracted OCR text"/>
+            </xpath>
+
+            <!-- Add OCR fields in a new page -->
+            <xpath expr="//notebook" position="inside">
+                <page string="OCR Information" invisible="move_type != 'in_invoice'">
+                    <group>
+                        <group string="OCR Status">
+                            <field name="ocr_processed"/>
+                            <field name="ocr_error" widget="text" invisible="not ocr_error"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="ocr_text" widget="text" nolabel="1" readonly="1" invisible="not ocr_processed"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
