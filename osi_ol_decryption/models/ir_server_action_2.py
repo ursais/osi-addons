@@ -184,6 +184,7 @@ class IrActionsServer(models.Model):
         _logger.info("\n\n===product_attribute_value_product_template_attribute_line_rel=%s",len(line_rel_ids))
         _logger.info("\n\n==================Script 2 is End==================")
 
+
     def script_3(self):
         _logger.info("\n\n==Update Product Templates with Unique Attributes and Values==Script 3 is start==================")
         batch_size = 100  # Define batch size
@@ -197,13 +198,14 @@ class IrActionsServer(models.Model):
             batch_products = ProductTemplates[offset:offset + batch_size]  # Slice the records to get the current batch
             _logger.info("Processing batch: Offset %s, Batch Size %s", offset, len(batch_products))
             for product_template in batch_products:
-                _logger.info("\n\n\n\n====Script 3===========product_template##########%s==ID:::%s:::Counter::%s",product_template.name,product_template,counter)
                 if product_template.attribute_line_ids:
                     update_query = """UPDATE product_template_attribute_line SET used_in_sale_description = true WHERE id IN %s;"""
                     cr.execute(update_query, (tuple(product_template.attribute_line_ids.ids),))
                     cr.commit()
                     
                 for line in product_template.attribute_line_ids:
+                    if not line.attribute_id.active:
+                        _logger.info("==Line==%s",line.attribute_id.name)
                     all_inactive = all(not ptav.ptav_active for ptav in line.product_template_value_ids)
                     line_values = line.value_ids
                     if all_inactive:
@@ -224,6 +226,7 @@ class IrActionsServer(models.Model):
                             grouped_values.setdefault(value.name, []).append(value)
                         else:
                             grouped_values.setdefault(value.name, []).append(value)
+                    # _logger.info("==grouped_values==%s",grouped_values)
                     # Process each group of values
                     
                     for name, duplicates in grouped_values.items():
@@ -250,7 +253,6 @@ class IrActionsServer(models.Model):
                                 SET ptav_active = 'f'
                                 WHERE id IN %s;
                             """, (tuple(for_remove_list),))
-            
                             cr.commit()
                             # Handle the update of the active value
                             active_value_id = for_update.product_attribute_value_id
@@ -264,22 +266,6 @@ class IrActionsServer(models.Model):
                                     update_query = """UPDATE product_attribute_value SET active = TRUE,attribute_id = %s WHERE id =%s;"""
                                     cr.execute(update_query,(for_update.attribute_id.id,old_product_attribute_value_id.id))
                                     cr.commit()
-            
-                                # cr.execute("""
-                                #     UPDATE product_template_attribute_value
-                                #     SET product_attribute_value_id = %s
-                                #     WHERE id = %s AND attribute_id = %s;
-                                # """, (active_value_id.id, for_update.id, for_update.attribute_id.id))
-                                # cr.commit()
-            
-                                # # Update the relationship table
-                                # cr.execute("""
-                                #     UPDATE product_attribute_value_product_template_attribute_line_rel
-                                #     SET product_attribute_value_id = %s
-                                #     WHERE product_template_attribute_line_id = %s AND product_attribute_value_id = %s;
-                                # """, (active_value_id.id, for_update.attribute_line_id.id, old_product_attribute_value_id.id))
-                                # cr.commit()
-                                
                             active_ptav = self.env["product.template.attribute.value"].search([("attribute_id","=",active_value_id.attribute_id.id),("product_attribute_value_id","=",active_value_id.id),("id","=",duplicates[0].id)])
                             active_ptav2 = self.env["product.template.attribute.value"].search([("attribute_id","=",old_product_attribute_value_id.attribute_id.id),("product_attribute_value_id","=",old_product_attribute_value_id.id),("id","=",duplicates[0].id),("ptav_active","=",True)])
                             if active_ptav and not active_ptav.ptav_active:
@@ -346,30 +332,200 @@ class IrActionsServer(models.Model):
                                 insert_query = """INSERT INTO product_attribute_value_product_template_attribute_line_rel (product_template_attribute_line_id, product_attribute_value_id)  VALUES (%s, %s);"""
                                 cr.execute(insert_query, (line.id,active_value_id.id))
                             cr.commit()
-                    # if line_values:
-                    #     value_with_none = line_values.filtered(lambda ptav: ptav.name == 'None')
-                    #     value_with_non_none = line_values.filtered(lambda ptav: ptav.name != 'None')
-                    #     if value_with_none:
-                    #         # Update default value using SQL
-                    #         cr.execute("""
-                    #             UPDATE product_template_attribute_line
-                    #             SET default_val = %s
-                    #             WHERE id = %s;
-                    #         """, (value_with_none[0].id, line.id))
-                    #         cr.commit()
-                        
-                    #     else:
-                    #         cr.execute("""
-                    #             UPDATE product_template_attribute_line
-                    #             SET default_val = %s
-                    #             WHERE id = %s;
-                    #         """, (value_with_non_none[0].id, line.id))
-                    #         cr.commit()
                 counter += 1
             offset += batch_size
             self.env.cr.commit()  # Commit changes after processing each batch
-            _logger.info("Batch processed. Offset moved to %s", offset)
+            _logger.info("Script:3 Batch processed. Offset moved to %s", offset)
         _logger.info("Processing completed!")
+
+        _logger.info("\n\n==================Script 3 is Done==================")
+
+    # def script_3(self):
+    #     _logger.info("\n\n==Update Product Templates with Unique Attributes and Values==Script 3 is start==================")
+    #     batch_size = 100  # Define batch size
+    #     ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True)])
+    #     total_products = len(ProductTemplates)  # Total number of products to process
+    #     offset = 0
+    #     counter = 1
+    #     cr = self.env.cr
+    #     _logger.info("Total products to process: %s", total_products)
+    #     while offset < total_products:
+    #         batch_products = ProductTemplates[offset:offset + batch_size]  # Slice the records to get the current batch
+    #         _logger.info("Processing batch: Offset %s, Batch Size %s", offset, len(batch_products))
+    #         for product_template in batch_products:
+    #             _logger.info("\n\n\n\n====Script 3===========product_template##########%s==ID:::%s:::Counter::%s",product_template.name,product_template,counter)
+    #             if product_template.attribute_line_ids:
+    #                 update_query = """UPDATE product_template_attribute_line SET used_in_sale_description = true WHERE id IN %s;"""
+    #                 cr.execute(update_query, (tuple(product_template.attribute_line_ids.ids),))
+    #                 cr.commit()
+                    
+    #             for line in product_template.attribute_line_ids:
+    #                 all_inactive = all(not ptav.ptav_active for ptav in line.product_template_value_ids)
+    #                 line_values = line.value_ids
+    #                 if all_inactive:
+    #                     name_list = []
+    #                     value_ids = line.product_template_value_ids
+    #                     for value in value_ids:
+    #                         if value.product_attribute_value_id.name not in name_list:
+    #                             name_list.append(value.product_attribute_value_id.name)
+    #                         else:
+    #                             value.write({"ptav_active":True})
+                        
+    #                 value_ids = line.product_template_value_ids.filtered(lambda v: v.ptav_active)
+    #                 grouped_values = {}
+    #                 # Group values based on their names
+    #                 name_list = []
+    #                 for value in value_ids:
+    #                     if len(value_ids) > 1:
+    #                         grouped_values.setdefault(value.name, []).append(value)
+    #                     else:
+    #                         grouped_values.setdefault(value.name, []).append(value)
+    #                 # Process each group of values
+                    
+    #                 for name, duplicates in grouped_values.items():
+    #                     if len(duplicates) > 1:
+                            
+    #                         # Sort duplicates and determine the one to keep
+    #                         duplicates_sorted = sorted(duplicates, key=lambda v: v.id)
+    #                         for_update = duplicates_sorted[0]
+    #                         for_remove = duplicates_sorted[1:]
+    #                         for_remove_list = [line.id for line in for_remove]
+                            
+                            
+    #                         if for_update.ptav_product_variant_ids:
+    #                             # Update product_variant_combination for the removed duplicates
+    #                             cr.execute("""
+    #                                 UPDATE product_variant_combination
+    #                                 SET product_template_attribute_value_id = %s
+    #                                 WHERE product_template_attribute_value_id IN %s;
+    #                             """, (for_update.id, tuple(for_remove_list)))
+    #                             cr.commit()
+                            
+    #                         cr.execute("""
+    #                             UPDATE product_template_attribute_value
+    #                             SET ptav_active = 'f'
+    #                             WHERE id IN %s;
+    #                         """, (tuple(for_remove_list),))
+            
+    #                         cr.commit()
+    #                         # Handle the update of the active value
+    #                         active_value_id = for_update.product_attribute_value_id
+    #                         old_product_attribute_value_id = active_value_id
+    #                         if not active_value_id.active:
+    #                             active_value_id = self.env["product.attribute.value"].search([
+    #                                 ("name", "=", name),
+    #                                 ("attribute_id", "=", for_update.attribute_id.id)
+    #                             ], limit=1)
+    #                             if not active_value_id:
+    #                                 update_query = """UPDATE product_attribute_value SET active = TRUE,attribute_id = %s WHERE id =%s;"""
+    #                                 cr.execute(update_query,(for_update.attribute_id.id,old_product_attribute_value_id.id))
+    #                                 cr.commit()
+            
+    #                             # cr.execute("""
+    #                             #     UPDATE product_template_attribute_value
+    #                             #     SET product_attribute_value_id = %s
+    #                             #     WHERE id = %s AND attribute_id = %s;
+    #                             # """, (active_value_id.id, for_update.id, for_update.attribute_id.id))
+    #                             # cr.commit()
+            
+    #                             # # Update the relationship table
+    #                             # cr.execute("""
+    #                             #     UPDATE product_attribute_value_product_template_attribute_line_rel
+    #                             #     SET product_attribute_value_id = %s
+    #                             #     WHERE product_template_attribute_line_id = %s AND product_attribute_value_id = %s;
+    #                             # """, (active_value_id.id, for_update.attribute_line_id.id, old_product_attribute_value_id.id))
+    #                             # cr.commit()
+                                
+    #                         active_ptav = self.env["product.template.attribute.value"].search([("attribute_id","=",active_value_id.attribute_id.id),("product_attribute_value_id","=",active_value_id.id),("id","=",duplicates[0].id)])
+    #                         active_ptav2 = self.env["product.template.attribute.value"].search([("attribute_id","=",old_product_attribute_value_id.attribute_id.id),("product_attribute_value_id","=",old_product_attribute_value_id.id),("id","=",duplicates[0].id),("ptav_active","=",True)])
+    #                         if active_ptav and not active_ptav.ptav_active:
+    #                             active_ptav.write({"ptav_active":True})
+    #                         elif active_ptav.ptav_active and active_ptav.product_attribute_value_id.id == active_value_id.id :
+    #                             pass
+    #                         elif active_ptav.ptav_active and active_ptav.product_attribute_value_id.id != active_value_id.id :
+    #                             # ,("ptav_active","=",True)
+    #                             cr.execute("""
+    #                                 UPDATE product_template_attribute_value
+    #                                 SET product_attribute_value_id = %s
+    #                                 WHERE id = %s AND attribute_id = %s AND ptav_active = true;
+    #                             """, (active_value_id.id, duplicates[0].id,active_value_id.attribute_id.id))
+    #                         elif active_ptav2:
+    #                             active_ptav.write({"ptav_active":False})
+                                
+    #                         delete_query = """DELETE FROM product_attribute_value_product_template_attribute_line_rel 
+    #                               WHERE product_template_attribute_line_id = %s AND (product_attribute_value_id = %s or product_attribute_value_id = %s);"""
+    #                         if active_value_id:
+                                
+    #                             cr.execute(delete_query, (line.id,active_value_id.id,old_product_attribute_value_id.id))
+    #                             cr.commit()  # Commit the transaction
+    #                             insert_query = """INSERT INTO product_attribute_value_product_template_attribute_line_rel (product_template_attribute_line_id, product_attribute_value_id)  VALUES (%s, %s);"""
+    #                             cr.execute(insert_query, (line.id,active_value_id.id))
+    #                         cr.commit()
+                                
+                            
+    #                     elif len(duplicates) == 1:
+    #                         # Only one duplicate, ensure it's active and update the relation
+    #                         old_product_attribute_value_id = duplicates[0].product_attribute_value_id
+    #                         active_value_id = old_product_attribute_value_id
+    #                         if not old_product_attribute_value_id.active:
+    #                             active_value_id = self.env["product.attribute.value"].search([
+    #                                 ("name", "=", name),
+    #                                 ("attribute_id", "=", duplicates[0].attribute_id.id)
+    #                             ], limit=1)
+                            
+    #                             if not active_value_id:
+    #                                 update_query = """UPDATE product_attribute_value SET active = TRUE,attribute_id = %s WHERE id =%s;"""
+    #                                 cr.execute(update_query,( duplicates[0].attribute_id.id,old_product_attribute_value_id.id))
+    #                                 cr.commit()
+                                
+    #                         active_ptav = self.env["product.template.attribute.value"].search([("attribute_id","=",active_value_id.attribute_id.id),("product_attribute_value_id","=",active_value_id.id),("id","=",duplicates[0].id)])
+    #                         active_ptav2 = self.env["product.template.attribute.value"].search([("attribute_id","=",old_product_attribute_value_id.attribute_id.id),("product_attribute_value_id","=",old_product_attribute_value_id.id),("id","=",duplicates[0].id),("ptav_active","=",True)])
+    #                         if active_ptav and not active_ptav.ptav_active:
+    #                             active_ptav.write({"ptav_active":True})
+    #                         elif active_ptav.ptav_active and active_ptav.product_attribute_value_id.id == active_value_id.id :
+    #                             pass
+    #                         elif active_ptav.ptav_active and active_ptav.product_attribute_value_id.id != active_value_id.id :
+    #                             # ,("ptav_active","=",True)
+    #                             cr.execute("""
+    #                                 UPDATE product_template_attribute_value
+    #                                 SET product_attribute_value_id = %s
+    #                                 WHERE id = %s AND attribute_id = %s AND ptav_active = true;
+    #                             """, (active_value_id.id, duplicates[0].id,active_value_id.attribute_id.id))
+    #                         elif active_ptav2:
+    #                             active_ptav.write({"ptav_active":False})
+                                
+    #                         delete_query = """DELETE FROM product_attribute_value_product_template_attribute_line_rel 
+    #                               WHERE product_template_attribute_line_id = %s AND (product_attribute_value_id = %s or product_attribute_value_id = %s);"""
+    #                         if active_value_id:
+    #                             cr.execute(delete_query, (line.id,active_value_id.id,old_product_attribute_value_id.id))
+    #                             cr.commit()  # Commit the transaction
+    #                             insert_query = """INSERT INTO product_attribute_value_product_template_attribute_line_rel (product_template_attribute_line_id, product_attribute_value_id)  VALUES (%s, %s);"""
+    #                             cr.execute(insert_query, (line.id,active_value_id.id))
+    #                         cr.commit()
+    #                 # if line_values:
+    #                 #     value_with_none = line_values.filtered(lambda ptav: ptav.name == 'None')
+    #                 #     value_with_non_none = line_values.filtered(lambda ptav: ptav.name != 'None')
+    #                 #     if value_with_none:
+    #                 #         # Update default value using SQL
+    #                 #         cr.execute("""
+    #                 #             UPDATE product_template_attribute_line
+    #                 #             SET default_val = %s
+    #                 #             WHERE id = %s;
+    #                 #         """, (value_with_none[0].id, line.id))
+    #                 #         cr.commit()
+                        
+    #                 #     else:
+    #                 #         cr.execute("""
+    #                 #             UPDATE product_template_attribute_line
+    #                 #             SET default_val = %s
+    #                 #             WHERE id = %s;
+    #                 #         """, (value_with_non_none[0].id, line.id))
+    #                 #         cr.commit()
+    #             counter += 1
+    #         offset += batch_size
+    #         self.env.cr.commit()  # Commit changes after processing each batch
+    #         _logger.info("Batch processed. Offset moved to %s", offset)
+    #     _logger.info("Processing completed!")
 
         _logger.info("\n\n==================Script 3 is Done==================")
 
@@ -494,6 +650,95 @@ class IrActionsServer(models.Model):
     #     _logger.info("Processing completed!")
     #     _logger.info("\n\n==================Script 4 is End==================")
 
+    # def script_4(self):
+    #     #This Script will help us to update Product Template Attribute Line and Values Based on V13 Temp Table.
+    #     batch_size = 100  # Define batch size
+    #     ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True),("active","=",True)])
+    #     _logger.info("\n\n==script_4_new is start==================")
+    #     total_products = len(ProductTemplates)  # Total number of products to process
+    #     offset = 0
+    #     counter = 1
+    #     cr = self.env.cr
+    #     _logger.info("Total products to process: %s", total_products)
+    #     while offset < total_products:
+    #         batch_products = ProductTemplates[offset:offset + batch_size]  # Slice the records to get the current batch
+    #         _logger.info("Processing batch: Offset %s, Batch Size %s", offset, len(batch_products))
+    #         for product_template in batch_products:
+    #             attribute_line_ids = product_template.mapped("attribute_line_ids").filtered("active")
+    #             _logger.info("\n\n\n\n======Script 4=========product_template##########%s==ID:::%s:::Counter::%s",product_template.name,product_template,counter)
+    #             config_step_id = product_template.config_step_line_ids.filtered(lambda l:l.config_step_id and not l.attribute_line_ids)
+    #             config_step_id.unlink()
+    #             cr.commit()
+    #         for attribute_line in attribute_line_ids:
+    #             allowed_value_ids = set(attribute_line.value_ids.ids)
+    #             ptav_lines = attribute_line.product_template_value_ids
+                
+    #             for value_line in attribute_line.product_template_value_ids.filtered("ptav_active"):
+    #                 #Featching V13 Temp table Values
+    #                 pav = value_line.product_attribute_value_id
+    #                 cr.execute(
+    #                     "SELECT * FROM temp_product_template_attribute_value_V13 WHERE id = %s",
+    #                     (value_line.id,)
+    #                 )
+    #                 v13_datas = cr.fetchall()
+
+    #                 if v13_datas:
+    #                     cr.execute(
+    #                         """
+    #                         UPDATE product_template_attribute_value
+    #                         SET ptav_active = %s
+    #                         WHERE id = %s
+    #                         """,
+    #                         (v13_datas[0][1], value_line.id)
+    #                     )
+    #                     cr.commit()
+    #                 if not value_line.product_attribute_value_id.active:
+    #                     # Case 1: Line Active but product_attribute_value_id is not active
+    #                     active_value_line = ptav_lines.filtered(lambda l:l.product_attribute_value_id.active and not l.ptav_active)
+    #                     if not active_value_line:
+    #                         active_value =  self.env["product.attribute.value"].search([
+    #                             ("attribute_id", "=", attribute_line.attribute_id.id),
+    #                             ("name", "=", pav.name),
+    #                             ("active", "=", True),
+    #                         ], limit=1)
+    #                         cr.execute("""
+    #                             UPDATE product_template_attribute_value
+    #                             SET product_attribute_value_id = %s
+    #                             WHERE id = %s;
+    #                         """, (active_value.id, value_line.id))
+    #                         cr.commit()
+    #                     elif active_value_line:
+    #                         # Case 2: Line is not Active but product_attribute_value_id is active
+    #                         filtered_line = active_value_line.filtered(lambda l:l.product_attribute_value_id.name == value_line.product_attribute_value_id.name)
+    #                         cr.execute("""
+    #                             UPDATE product_template_attribute_value
+    #                             SET ptav_active = TRUE
+    #                             WHERE id = %s
+    #                         """, (filtered_line.id,))
+
+    #                         cr.execute("""
+    #                             UPDATE product_template_attribute_value
+    #                             SET ptav_active = FALSE
+    #                             WHERE id = %s
+    #                         """, (value_line.id,))
+    #                         cr.commit()
+    #                 not_common = list(set(attribute_line.value_ids.ids).symmetric_difference(set(ptav_lines.filtered("ptav_active").mapped("product_attribute_value_id").ids)))
+    #                 if not_common:
+    #                     _logger.info("not_common>>%s>>%s",attribute_line.attribute_id.name,not_common)
+    #                     line_id = attribute_line.id
+    #                     value_ids = tuple(not_common)
+    #                     query = """
+    #                         DELETE FROM product_attribute_value_product_template_attribute_line_rel
+    #                         WHERE product_template_attribute_line_id = %s
+    #                         AND product_attribute_value_id = ANY(%s)
+    #                     """
+    #                     self.env.cr.execute(query, (line_id, list(value_ids)))
+    #                     self.env.cr.commit() 
+    #         offset += batch_size
+    #         self.env.cr.commit()  # Commit changes after processing each batch
+    #     _logger.info("Processing completed!")
+    #     _logger.info("\n\n==================Script 4 is End==================")
+
     def script_4(self):
         #This Script will help us to update Product Template Attribute Line and Values Based on V13 Temp Table.
         batch_size = 100  # Define batch size
@@ -509,81 +754,145 @@ class IrActionsServer(models.Model):
             _logger.info("Processing batch: Offset %s, Batch Size %s", offset, len(batch_products))
             for product_template in batch_products:
                 attribute_line_ids = product_template.mapped("attribute_line_ids").filtered("active")
-                _logger.info("\n\n\n\n======Script 4=========product_template##########%s==ID:::%s:::Counter::%s",product_template.name,product_template,counter)
                 config_step_id = product_template.config_step_line_ids.filtered(lambda l:l.config_step_id and not l.attribute_line_ids)
                 config_step_id.unlink()
                 cr.commit()
             for attribute_line in attribute_line_ids:
                 allowed_value_ids = set(attribute_line.value_ids.ids)
                 ptav_lines = attribute_line.product_template_value_ids
-                
                 for value_line in attribute_line.product_template_value_ids.filtered("ptav_active"):
-                    #Featching V13 Temp table Values
                     pav = value_line.product_attribute_value_id
-                    cr.execute(
-                        "SELECT * FROM temp_product_template_attribute_value_V13 WHERE id = %s",
-                        (value_line.id,)
-                    )
-                    v13_datas = cr.fetchall()
-
-                    if v13_datas:
-                        cr.execute(
-                            """
-                            UPDATE product_template_attribute_value
-                            SET ptav_active = %s
-                            WHERE id = %s
-                            """,
-                            (v13_datas[0][1], value_line.id)
-                        )
+                    if value_line.product_attribute_value_id.name == "None":
+                        value_line.write({"ptav_active":False})
                         cr.commit()
                     if not value_line.product_attribute_value_id.active:
-                        # Case 1: Line Active but product_attribute_value_id is not active
-                        active_value_line = ptav_lines.filtered(lambda l:l.product_attribute_value_id.active and not l.ptav_active)
-                        if not active_value_line:
-                            active_value =  self.env["product.attribute.value"].search([
-                                ("attribute_id", "=", attribute_line.attribute_id.id),
-                                ("name", "=", pav.name),
-                                ("active", "=", True),
-                            ], limit=1)
+                        
+                        all_values = attribute_line.product_template_value_ids.filtered(lambda l:l.product_attribute_value_id.name == value_line.name)
+                        active_value =  self.env["product.attribute.value"].search([
+                            ("attribute_id", "=", attribute_line.attribute_id.id),
+                            ("name", "=", pav.name),
+                            ("active", "=", True),
+                        ], limit=1)
+                        
+                        if len(all_values) == 1 and active_value:
                             cr.execute("""
                                 UPDATE product_template_attribute_value
                                 SET product_attribute_value_id = %s
                                 WHERE id = %s;
                             """, (active_value.id, value_line.id))
                             cr.commit()
-                        elif active_value_line:
-                            # Case 2: Line is not Active but product_attribute_value_id is active
-                            filtered_line = active_value_line.filtered(lambda l:l.product_attribute_value_id.name == value_line.product_attribute_value_id.name)
-                            cr.execute("""
-                                UPDATE product_template_attribute_value
-                                SET ptav_active = TRUE
-                                WHERE id = %s
-                            """, (filtered_line.id,))
-
-                            cr.execute("""
-                                UPDATE product_template_attribute_value
-                                SET ptav_active = FALSE
-                                WHERE id = %s
-                            """, (value_line.id,))
-                            cr.commit()
-                    not_common = list(set(attribute_line.value_ids.ids).symmetric_difference(set(ptav_lines.filtered("ptav_active").mapped("product_attribute_value_id").ids)))
-                    if not_common:
-                        _logger.info("not_common>>%s>>%s",attribute_line.attribute_id.name,not_common)
-                        line_id = attribute_line.id
-                        value_ids = tuple(not_common)
-                        query = """
-                            DELETE FROM product_attribute_value_product_template_attribute_line_rel
-                            WHERE product_template_attribute_line_id = %s
-                            AND product_attribute_value_id = ANY(%s)
-                        """
-                        self.env.cr.execute(query, (line_id, list(value_ids)))
-                        self.env.cr.commit() 
+                        if len(all_values) > 1 and active_value:
+                            filtered_line = all_values.filtered(lambda l:l.product_attribute_value_id.id == active_value.id)
+                            if filtered_line and filtered_line.ptav_active:
+                                pass
+                            if filtered_line and not filtered_line.ptav_active:
+                                cr.execute("""
+                                    UPDATE product_template_attribute_value
+                                    SET ptav_active = TRUE
+                                    WHERE id = %s
+                                """, (filtered_line.id,))
+                                cr.execute("""
+                                    UPDATE product_template_attribute_value
+                                    SET ptav_active = FALSE
+                                    WHERE id = %s
+                                """, (value_line.id,))
+                                cr.commit()
+                            if not filtered_line and active_value:
+                                cr.execute("""
+                                    UPDATE product_template_attribute_value
+                                    SET product_attribute_value_id = %s
+                                    WHERE id = %s;
+                                """, (active_value.id, value_line.id))
+                                cr.commit()
+                values_ids = attribute_line.value_ids.filtered(lambda l:l.active and l.attribute_id.id != attribute_line.attribute_id.id)
+                line_value_ids = attribute_line.value_ids.filtered("active")
+                value_line_ids = attribute_line.product_template_value_ids.filtered("ptav_active").mapped("product_attribute_value_id")
+                missing_ids = list(set(line_value_ids.ids) - set(value_line_ids.ids))
+                if missing_ids:
+                    query = """
+                        DELETE FROM product_attribute_value_product_template_attribute_line_rel
+                        WHERE product_template_attribute_line_id = %s
+                        AND product_attribute_value_id = ANY(%s)
+                    """
+                    self.env.cr.execute(query, (attribute_line.id, missing_ids,))
+                    self.env.cr.commit() 
+                counter += 1
             offset += batch_size
             self.env.cr.commit()  # Commit changes after processing each batch
-        _logger.info("Processing completed!")
+            _logger.info("Script 4: Batch processed. Offset moved to %s", offset)
+        _logger.info("Script 4: Processing completed!")
         _logger.info("\n\n==================Script 4 is End==================")
 
     def script_5(self):
+        _logger.info("\n\n==Update Quantity-Related Data in Attribute Lines and Product Variants==Script 5 is start==================")
+        cr = self.env.cr
+
+        # ProductTemplates = env["product.template"].search([("id","=",104183)])
+        batch_size = 10  # Define batch size
+        ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True)])
+        total_products = len(ProductTemplates)  # Total number of products to process
+        offset = 0
+        counter = 1
+        cr = self.env.cr
+        _logger.info("Total products to process: %s", total_products)
+        vals_list = []
+        AttributeValueQty = self.env["attribute.value.qty"]
+        while offset < total_products:
+            batch_products = ProductTemplates[offset:offset + batch_size]  # Slice the records to get the current batch
+            _logger.info("Processing batch: Offset %s, Batch Size %s", offset, len(batch_products))
+
+            for pro_template in batch_products:
+                _logger.info("\n\n\n\n====Script 5===========product_template##########%s==ID:::%s:::Counter::%s",pro_template.name,pro_template,counter)
+                for attrbute_line_id in pro_template.mapped("attribute_line_ids"):
+                    v13_data_select = "select id,attribute_id ,attribute_line_id,product_attribute_value_id,default_qty,maximum_qty  from temp_product_template_attribute_value_V13_VP where product_tmpl_id = %s and attribute_line_id = %s and ptav_active = 't' and default_qty >=1 and maximum_qty >1;" 
+                    cr.execute(v13_data_select, (pro_template.id,attrbute_line_id.id),)
+                    v13_datas = cr.fetchall()
+                    if v13_datas:
+                        for v13_data in v13_datas:
+                            if not attrbute_line_id.is_qty_required:
+                                update_query = "UPDATE product_template_attribute_line SET is_qty_required = 't' WHERE id = %s;"
+                                cr.execute(update_query, (attrbute_line_id.id,))  # Note the comma inside the tuple
+                                cr.commit()
+                    product_template_value_ids = attrbute_line_id.filtered('is_qty_required').mapped("product_template_value_ids").filtered("ptav_active")
+                    for template_value_line in product_template_value_ids:
+                        qty_range = set(range(template_value_line.default_qty,template_value_line.maximum_qty+1))
+                        existing_quantities = set(template_value_line.attribute_value_qty_ids.mapped('qty'))
+                        missing_quantities = qty_range - existing_quantities
+                        display_name = template_value_line.product_attribute_value_id.display_name
+                        _logger.info("\n\n\n\n======template_value_line==%s===%s==%s,",attrbute_line_id.attribute_id.name,template_value_line.name,missing_quantities)
+                        for qty in missing_quantities:
+                            vals_list.append({
+                                'name': f"{display_name} - Qty {qty}",
+                                'product_tmpl_id': template_value_line.product_tmpl_id.id,
+                                'product_attribute_id': template_value_line.attribute_id.id,
+                                'product_attribute_value_id': template_value_line.product_attribute_value_id.id,
+                                'qty': qty,
+                                'template_attri_value_id': template_value_line.id,
+                            })
+                            # template_value_line.attribute_value_qty_ids.create({
+                            #     'name': f"{template_value_line.mapped('product_attribute_value_id').display_name} - Qty {qty}",
+                            #     'product_tmpl_id': template_value_line.product_tmpl_id.id,
+                            #     'product_attribute_id': template_value_line.attribute_id.id,
+                            #     'product_attribute_value_id': template_value_line.product_attribute_value_id.id,
+                            #     'qty': qty,
+                            #     'template_attri_value_id': template_value_line.id,
+                            # })
+                            # cr.commit()
+                counter += 1
+            offset += batch_size
+            self.env.cr.commit()  # Commit changes after processing each batch
+            _logger.info("Script 5: Batch processed. Offset moved to %s", offset)
+        if vals_list:
+            AttributeValueQty.create(vals_list)
+            self.env.cr.commit()  # Commit changes after processing each batch
+            # commit only if really required (prefer outside the caller loop)
+            # cr.commit()
+        _logger.info("Processing completed!")
+        _logger.info("\n\n==================Script 5 is End==================")
+    
+
+
+    def script_5_1(self):
         _logger.info("\n\n==Update Quantity-Related Data in Attribute Lines and Product Variants==Script 5 is start==================")
         cr = self.env.cr
 
@@ -749,13 +1058,9 @@ class IrActionsServer(models.Model):
 
         offset = 0
         counter = 1
-#        print ("=============total_products===========", total_products)
         while offset < total_products:
             batch_templates = all_templates[offset:offset + batch_size]
-            _logger.info("Processing batch: Offset=%s, Size=%s", offset, len(batch_templates))
             for template_id, template_name in batch_templates:
-                _logger.info("==> Processing Product: %s (ID: %s) [#%s]", template_name, template_id, counter)
-
                 # Check for existing BOM
                 t_check = time.time()
                 cr.execute("SELECT id FROM mrp_bom WHERE scaffolding_bom = TRUE AND product_tmpl_id = %s", (template_id,))
@@ -834,7 +1139,6 @@ class IrActionsServer(models.Model):
         bom_line_ids = ScaffoldingBoMs.mapped("bom_line_ids")
         while offset < total_products:
             batch_products = bom_line_ids[offset:offset + batch_size]  # Slice the records to get the current batch
-            _logger.info("Processing batch: Offset %s, Batch Size %s", offset, len(batch_products))
             for line in batch_products:
                 attribute_value = line.bom_id.product_tmpl_id.mapped("attribute_line_ids.value_ids").filtered(lambda x:x.product_id.id == line.product_id.id)
                 if attribute_value:
@@ -846,8 +1150,7 @@ class IrActionsServer(models.Model):
                 counter += 1    
             offset += batch_size
             self.env.cr.commit()  # Commit changes after processing each batch
-            _logger.info("Batch processed. Offset moved to %s", offset)
-        _logger.info("Processing completed!")
+        _logger.info("Script 7: Processing completed!")
         _logger.info("\n\n==================Script 7 is End==================")
 
 
@@ -865,38 +1168,11 @@ class IrActionsServer(models.Model):
         # 2. pg_dump -d V13DBNAME -t temp_phantom_bom_id > /home/odoo/temp_phantom_bom_id.sql;
         # 3. psql -d V17DBNAME -f /home/odoo/temp_phantom_bom_id.sql   
         # Created by Vandan Pandeji
-
-
-        # _logger.info("\n\n==Script 8: Phantom BOM Migration=")
-        
-        # select_query = """SELECT res_id,value_reference,company_id from temp_ir_property_v13_vp where name = 'phantom_bom_id';
-        #  """
-        # cr.execute(select_query)
-        # phantom_bom_ids = cr.fetchall()
-        # product_to_exclude = []
-        # counter = 0
-        # for phantom_bom in phantom_bom_ids:
-        #     product_template_id = phantom_bom[0].split(',')[1]
-        #     mrp_bom_id = phantom_bom[1].split(',')[1]
-        #     company_id = phantom_bom[2]
-        #     counter+=1
-        #     if int(company_id) == 1:
-        #         phantom_bom_id = self.env["mrp.bom"].search([("id","=",int(mrp_bom_id)),("product_tmpl_id","=",int(product_template_id)),("type","=","phantom"),("company_id","=",int(company_id))])
-        #         extra_phantom_bom_ids = self.env["mrp.bom"].search([("id","!=",phantom_bom_id.id),("product_tmpl_id","=",int(product_template_id)),("type","=","phantom"),("company_id","=",int(company_id))])
-        #         product_to_exclude.append(int(product_template_id))
-        #         extra_phantom_bom_ids.write({"active":False})
-        #         cr.commit()
-        #     elif int(company_id) == 2 and int(product_template_id) not in product_to_exclude:
-        #         phantom_bom_id = self.env["mrp.bom"].search([("id","=",int(mrp_bom_id)),("product_tmpl_id","=",int(product_template_id)),("type","=","phantom"),("company_id","=",int(company_id))])
-        #         extra_phantom_bom_ids = self.env["mrp.bom"].search([("id","!=",phantom_bom_id.id),("product_tmpl_id","=",int(product_template_id)),("type","=","phantom"),("company_id","=",int(company_id))])
-        #         extra_phantom_bom_ids.write({"active":False})
-        #         cr.commit()
                 
-        _logger.info("\n\n==Script 8: Lifecycle_status  Migration Data=")
+        _logger.info("\n==Script 8: Lifecycle_status  Migration Data=")
         cr.execute("select res_id,value_text from temp_ir_property_v13_vp where name = 'lifecycle_status';")
         lifecycle_status = cr.fetchall()
         for lifecycle in lifecycle_status:
-            _logger.info("\n\n\n\n===============lifecycle%s",lifecycle)
             # lifecycle = dict(lifecycle)
             product_template_id = lifecycle[0].split(',')[1]
             code = lifecycle[1]
@@ -920,7 +1196,7 @@ class IrActionsServer(models.Model):
                     % (product_state_id.id, int(product_template_id))
                 )
 
-        _logger.info("\n\n==Script 8:Pim_category Migration Data=")
+        _logger.info("\n==Script 8:Pim_category Migration Data=")
         cr.execute("select id,pim_category from temp_product_temp_v13_vp;")
         pim_category = cr.fetchall()
         for pim in pim_category:
@@ -940,16 +1216,16 @@ class IrActionsServer(models.Model):
                     % (attribute_set_id.id, product_template_id)
                 )
 
-        _logger.info("\n\n==Script 8:Public_destination Migration=")
+        _logger.info("\n==Script 8:Public_destination Migration=")
         cr.execute("update product_template as pt set public_destination = (select tpt.public_destination from temp_product_temp_v13_vp as tpt where tpt.id=pt.id); ")
         
-        _logger.info("\n\n==Script 8:Company IDS Many2Many Product Template Migration=")
+        _logger.info("\n==Script 8:Company IDS Many2Many Product Template Migration=")
         cr.execute("INSERT INTO product_template_company_display_rel (product_template_id, company_id) SELECT product_template_id, res_company_id FROM temp_product_template_res_company_rel_v13_VP;")
 
         AttributeValues = self.env["product.attribute.value"].search([("active","=",True),("product_id","!=",False)])
         AttributeValues._compute_company_ids()
 
-        _logger.info("\n\n==Script 8:country_of_manufacture in Product Template Migration=")
+        _logger.info("\n==Script 8:country_of_manufacture in Product Template Migration=")
         select_query = """SELECT value_reference,res_id from temp_ir_property_v13_vp where name='country_of_manufacture';"""
         cr.execute(select_query)
         v13datas = cr.fetchall()
@@ -962,7 +1238,7 @@ class IrActionsServer(models.Model):
                 update_query = """UPDATE product_template set country_of_origin = %s where id = %s; """
                 cr.execute(update_query,(country_id.id,product_template_id.id))
 
-        _logger.info("\n\n==Script 7: Payment Ref in Contacts=")
+        _logger.info("\n==Script 8: Payment Ref in Contacts=")
         select_query = """SELECT value_reference,res_id,company_id from temp_ir_property_v13_vp where name='payment_preference';"""
         cr.execute(select_query)
         v13datas = cr.fetchall()
@@ -1015,32 +1291,7 @@ class IrActionsServer(models.Model):
         """)
         cr.commit()
         _logger.info(">>> product_template_attribute_value visible_to_user is done")
-        
 
-        # def update_visibility(cr, used_in_sale_description_value, visible_to_user_value):
-        #     query = """
-        #         SELECT id 
-        #         FROM product_template_attribute_line 
-        #         WHERE active = 't' AND used_in_sale_description = %s;
-        #     """
-        #     cr.execute(query, (used_in_sale_description_value,))
-        #     ptal_ids = [row[0] for row in cr.fetchall()]
-            
-        #     if ptal_ids:  # Only execute update if IDs were found
-        #         update_query = """
-        #             UPDATE product_template_attribute_value 
-        #             SET visible_to_user = %s 
-        #             WHERE attribute_line_id IN %s AND ptav_active = 't';
-        #         """
-        #         cr.execute(update_query, (visible_to_user_value, tuple(ptal_ids)))
-            
-        #     return len(ptal_ids)
-
-        # # Update 'visible_to_user' = 't' where 'used_in_sale_description' is true
-        # count_true = update_visibility(cr, 't', 't')
-
-        # # Update 'visible_to_user' = 'f' where 'used_in_sale_description' is false
-        # count_false = update_visibility(cr, 'f', 'f')
 
         # _logger.info("\n\n\n\n===Task: 929566975 and 927975110 Done")
 
@@ -1062,8 +1313,8 @@ class IrActionsServer(models.Model):
         # cr.execute("update mrp_production set sale_order_line_id=origin_sale_line_id;")
         cr.commit()
 
-        _logger.info("\n\n\n\n=================DONE=======")
-        _logger.info("\n\n==================Script 8 is Done==================")
+        _logger.info("\n=================DONE=======")
+        _logger.info("\n==================Script 8 is Done==================")
 
     def removing_none_values(self):
         # Made by Vandan Pandeji
@@ -1122,7 +1373,7 @@ class IrActionsServer(models.Model):
         variant_values = self.env["product.product"].search([]).product_template_variant_value_ids.filtered(
             lambda x: not x.ptav_active and x.attribute_line_id and x.name
         )
-
+        _logger.info("Updating Variant from Old Product Template attribute value to New PTAV")
         for variant_value in variant_values:
             attribute_line_id = variant_value.attribute_line_id.id
             name = variant_value.name
@@ -1144,16 +1395,6 @@ class IrActionsServer(models.Model):
 
             if ptav_data:
                 unique_ptav_id = ptav_data[0]
-
-                # Optional: Logging for debug
-                _logger.info(
-                    "Updating Variant [%s] for Template [%s], Attribute [%s] → PTAV ID: %s",
-                    variant_value.name,
-                    variant_value.attribute_line_id.product_tmpl_id.name,
-                    variant_value.attribute_id.name,
-                    unique_ptav_id,
-                )
-
                 # Update product_variant_combination with correct ptav
                 update_query = """
                     UPDATE product_variant_combination
@@ -1162,7 +1403,6 @@ class IrActionsServer(models.Model):
                 """
                 cr.execute(update_query, (unique_ptav_id, variant_value.id))
                 cr.commit()
-
     # def setting_default_val(self):
     #     #======================OLD CODE ===============
     #     # IRProperty = self.env["ir.property"]
@@ -1490,60 +1730,96 @@ class IrActionsServer(models.Model):
             cr.commit()
 
         lines = AttributeLine.search([("active", "=", True)])
+
         vals_lists = []
+        exception_records = []     # 🔹 store failed records
         seen_keys = set()
-        company_ids = companies.ids  # cache once
+        BATCH_SIZE = 1000
 
         for line in lines:
             cr.execute("""
-                SELECT line_id,product_attribute_value_id,company_id
+                SELECT DISTINCT ON (company_id)
+                    line_id,
+                    product_attribute_value_id,
+                    company_id
                 FROM temp_product_template_attribute_line_default_val_v13
-                WHERE line_id = %s;
+                WHERE line_id = %s ORDER BY company_id, product_attribute_value_id;
             """, (line.id,))
             rows = cr.fetchall()
             if not rows:
                 continue
             for row in rows:
-                line_id = row[0]
-                value_id = row[1]
-                company_id = row[2]
-                value = AttributeValue.browse(value_id)
-                if not value.exists():
-                    continue
-                tobe_update_value = value
-                if not value.active:
-                    cr.execute("""
-                        SELECT id
-                        FROM product_attribute_value
-                        WHERE name->>'en_US' = %s
-                        AND attribute_id = %s
-                        AND active = TRUE
-                        LIMIT 1
-                    """, (value.name, line.attribute_id.id))
-                    row = cr.fetchone()
-                    tobe_update_value = AttributeValue.browse(row[0]) if row else False
-                if tobe_update_value.name == "None" and line.value_ids:
-                    tobe_update_value = line.value_ids[0]
-                default_val = tobe_update_value
-                value_reference = f"{default_val._name},{default_val.id}"
-                res_id = f"{line._name},{line.id}"
-                unique_key = (res_id, value_reference, company_id)
-                if unique_key in seen_keys:
-                    continue
-                seen_keys.add(unique_key)
+                try:
+                    line_id = row[0]
+                    value_id = row[1]
+                    company_id = row[2]
 
-                vals_lists.append({
-                    "name": "default_val",
-                    "company_id": company_id,
-                    "fields_id": field.id,
-                    "res_id": res_id,
-                    "value_reference": value_reference,
-                })
+                    value = AttributeValue.browse(value_id)
+                    if not value.exists():
+                        continue
 
+                    tobe_update_value = value
+                    if not value.active:
+                        cr.execute("""
+                            SELECT id
+                            FROM product_attribute_value
+                            WHERE name->>'en_US' = %s
+                            AND attribute_id = %s
+                            AND active = TRUE
+                            LIMIT 1
+                        """, (value.name, line.attribute_id.id))
+                        r = cr.fetchone()
+                        tobe_update_value = AttributeValue.browse(r[0]) if r else False
+
+                    if tobe_update_value and tobe_update_value.name == "None" and line.value_ids:
+                        tobe_update_value = line.value_ids[0]
+
+                    if not tobe_update_value:
+                        continue
+
+                    default_val = tobe_update_value
+                    value_reference = f"{default_val._name},{default_val.id}"
+                    res_id = f"{line._name},{line.id}"
+                    unique_key = (res_id, value_reference, company_id)
+
+                    if unique_key in seen_keys:
+                        continue
+
+                    seen_keys.add(unique_key)
+
+                    vals_lists.append({
+                        "name": "default_val",
+                        "company_id": company_id,
+                        "fields_id": field.id,
+                        "res_id": res_id,
+                        "value_reference": value_reference,
+                    })
+
+                    # 🔹 Batch insert
+                    if len(vals_lists) >= BATCH_SIZE:
+                        IRProperty.sudo().create(vals_lists)
+                        cr.commit()
+                        _logger.info("Created batch of %s records", len(vals_lists))
+                        vals_lists.clear()
+
+                except Exception as e:
+                    cr.rollback()
+                    exception_records.append({
+                        "line_id": line.id,
+                        "product_tmpl_id": line.product_tmpl_id.id,
+                        "value_id": value_id,
+                        "company_id": company_id,
+                        "error": str(e),
+                    })
+
+        # 🔹 Final remaining batch
         if vals_lists:
             IRProperty.sudo().create(vals_lists)
-            _logger.info("Data Creation DONE:::: %s records", len(vals_lists))
             cr.commit()
+            _logger.info("Created final batch of %s records", len(vals_lists))
+
+        _logger.info("PROCESS DONE")
+        _logger.info("Total failed records: %s", exception_records)
     
     def update_ar_ap_followup_contacts(self):
         # task ref: https://osi.mavenlink.com/workspaces/44078089/#tracker/932728167
