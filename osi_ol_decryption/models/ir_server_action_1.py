@@ -14,6 +14,124 @@ from odoo.tools import convert_csv_import, file_open
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
 
+
+    def update_followup_status(self):
+        self = self.sudo()
+        self._cr.execute("delete from account_followup_followup_line where id in (6,7,8,9)")
+        self._cr.execute("delete from invoice_reminder_severity_level where email_template_id in (220,218,219);")
+        self._cr.execute("delete from mail_template where id in (220,218,219)")
+        self._cr.commit()
+        today = fields.date.today()
+        followup_lines_ids = self.env['account_followup.followup.line'].search([], order='delay asc')
+        for company in self.env["res.company"].search([]):
+            followup_lines = followup_lines_ids.filtered(lambda l: l.company_id.id == company.id).sorted(key=lambda l: l.delay)
+            partners = self.env['res.partner'].with_context(allowed_company_ids=company.ids).search([])
+            for partner in partners.filtered(lambda p:p.unreconciled_aml_ids and p.followup_status in ['in_need_of_action', 'with_overdue_invoices']):
+                
+                aml_lines = partner.unreconciled_aml_ids.filtered(lambda aml:
+                    aml.company_id == company
+                    and aml.account_id.account_type == 'asset_receivable'
+                    and aml.move_id.move_type in ('out_invoice', 'out_refund')
+                    and aml.move_id.state == 'posted'
+                    and aml.date_maturity
+                    and aml.date_maturity < today
+                )
+                if not aml_lines:
+                    continue
+                
+                # Compute overdue days per invoice
+                overdue_days = [
+                    (today - aml.date_maturity).days
+                    for aml in aml_lines
+                ]
+                max_overdue_days = max(overdue_days)
+                
+                followup_line = False
+                last = False
+                for line in followup_lines:
+                    if line.delay <= max_overdue_days:
+                        followup_line = (last and last) or followup_lines
+                    else:
+                        break
+                    last = line
+                
+                if not followup_line:
+                    continue
+                aml_lines.write({
+                    'followup_line_id': followup_line.id
+                })
+            
+    def create_archive_journal_automation(self):
+        """
+        Create an automated action to archive Account Journals
+        when name = 'Vendor Bills' OR code = 'LF' AND company_id in [2]
+        """
+        self = self.sudo()
+        env= self.env
+        # Models
+        IrModel = env['ir.model']
+        ServerAction = env['ir.actions.server']
+        Automation = env['base.automation']
+
+        # Get model id
+        journal_model = IrModel._get('account.journal')
+
+        # ---------- Server Action ----------
+        server_action = ServerAction.search([
+            ('name', '=', 'Archive Account Journal'),
+            ('model_id', '=', journal_model.id),
+            ('state', '=', 'code'),
+        ], limit=1)
+
+        if not server_action:
+            server_action = ServerAction.create({
+                'name': 'Archive Account Journal',
+                'model_id': journal_model.id,
+                'state': 'code',
+                'code': (
+                    "for journal in records:\n"
+                    "    journal.write({'active':False})\n\n"
+                    "automations = env['base.automation'].search([\n"
+                "    ('name', '=', 'Archive Vendor Bills / LF Journal'),\n"
+                "    ('active', '=', True)\n"
+                "])\n"
+                "automations.write({'active': False})"
+                ),
+                'usage': 'base_automation',
+            })
+
+        # ---------- Automated Action ----------
+        domain = [
+            "&",
+                "|",
+                    ("name", "=", "Vendor Bills"),
+                    ("code", "=", "LF"),
+                ("company_id", "in", [2]),
+        ]
+
+        automation = Automation.search([
+            ('name', '=', 'Archive Vendor Bills / LF Journal'),
+            ('model_id', '=', journal_model.id),
+        ], limit=1)
+
+        if not automation:
+            automation = Automation.create({
+                'name': 'Archive Vendor Bills / LF Journal',
+                'model_id': journal_model.id,
+                'trigger': 'on_create_or_write',
+                'filter_domain': domain,
+                'action_server_ids': [(4, server_action.id)],
+                'active': True,
+            })
+        else:
+            # Ensure server action is linked (idempotent)
+            if server_action.id not in automation.action_server_ids.ids:
+                automation.action_server_ids = [(4, server_action.id)]
+
+        # return automation
+
+
+
     def update_payment_provide(self):
         self = self.sudo()
         env = self.env
