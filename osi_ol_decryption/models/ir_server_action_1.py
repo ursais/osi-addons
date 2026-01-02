@@ -229,7 +229,7 @@ class IrActionsServer(models.Model):
                 "ticket_type_id": type.id,
                 "team_id": team_id.id if rma.get("company_id") == 1 else tema_eu_id.id,
                 "stage_id": get_stage(rma.get("state", False)),
-                "priority": "2"
+                "priority": "3"
                 if rma.get("rush")
                 else "0",  # '2' usually means urgent in Odoo
                 "original_sale_order_ids": [(6, 0, [rma.get("sale_order_id")])]
@@ -242,6 +242,7 @@ class IrActionsServer(models.Model):
                 "description": rma.get("summary"),
                 # "repair_ids": [(6, 0, historical_repair_order_ids)],
                 "company_id": rma.get("company_id"),
+                
                 "flags": rma.get("flags", "") if rma.get("flags", "") != None else "",
                 "carrier_id": rma.get("shipping_method")
                 if rma.get("shipping_method")
