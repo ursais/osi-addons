@@ -136,10 +136,10 @@ class IrActionsServer(models.Model):
         self = self.sudo()
         env = self.env
         paypal = env['payment.method'].search([('code', '=', 'paypal')])
-        stripe = env['payment.method'].search([('code', '=', 'stripe')])
+        stripe = env['payment.method'].search([('code', 'in', ['stripe', 'Stripe'])])
 
         for p in paypal:
-            provider = p.provider_ids.filtered(lambda l: l.name in ('Stripe', 'Stripe CC (EU)'))            
+            provider = p.provider_ids.filtered(lambda l: l.name in ('Stripe', 'Stripe CC (EU)') or l.code == 'stripe')
             p.provider_ids = [Command.unlink(p.id) for p in provider]
             stripe.provider_ids = [Command.set(provider.ids)]
 
