@@ -1542,7 +1542,33 @@ class IrActionsServer(models.Model):
                         self.env['account.account'].with_company(company).create(diffs)
         
         self.env['account.account'].search([])._compute_account_root()
-        
+    
+    def update_default_account(self):
+        self = self.sudo()
+        env = self.env
+        Account = env['account.account']
+        for company in env['res.company'].search([]):
+            transfer_account = Account.search([
+                ("code", "=ilike", "11010%"),
+                ('company_id', '=', company.id),
+            ], limit=1)
+
+            if not transfer_account:
+                # Skip safely if account does not exist
+                continue
+
+            company.write({
+                # Internal Bank Transfer Account
+                'transfer_account_id': transfer_account.id,
+
+                # Clear unwanted accounts
+                'account_journal_payment_debit_account_id': False,
+                'account_journal_payment_credit_account_id': False,
+                'account_journal_suspense_account_id': False,
+                'deferred_expense_account_id': False,
+                'deferred_revenue_account_id': False,
+            })
+
 
     def run_hot_ar(self):
         _logger.info("===============run_hot_ar====================")
