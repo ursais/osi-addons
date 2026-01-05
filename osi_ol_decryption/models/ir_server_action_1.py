@@ -1549,7 +1549,7 @@ class IrActionsServer(models.Model):
         Account = env['account.account']
         for company in env['res.company'].search([]):
             transfer_account = Account.search([
-                ("code", "=ilike", "11010%"),
+                ("code", "=ilike", "11060%"),
                 ('company_id', '=', company.id),
             ], limit=1)
 
