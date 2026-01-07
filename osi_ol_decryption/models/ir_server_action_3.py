@@ -8,7 +8,7 @@ class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
     
     @api.model
-    def _process_by_domain(self, model_name, domain, method_name, batch_size=1000):
+    def _process_by_domain(self, model_name, domain, method_name, priority=100, batch_size=1000):
         self = self.sudo()
         Model = self.env[model_name].sudo()
         last_id = 0
@@ -27,7 +27,7 @@ class IrActionsServer(models.Model):
             if not records:
                 break
 
-            getattr(records.with_delay(description=method_name, priority=100), method_name)()
+            getattr(records.with_delay(description=method_name, priority=priority), method_name)()
 
             last_id = records[-1].id
             self._cr.commit()
@@ -47,25 +47,29 @@ class IrActionsServer(models.Model):
         self._process_by_domain(
             'res.partner',
             [('credit_limit', '>', 0), ('rollup_partner_ids', '!=', False)],
-            '_compute_customer_deposit_balance'
+            '_compute_customer_deposit_balance',
+            20
         )
 
         self._process_by_domain(
             'res.partner',
             [('credit_limit', '>', 0), ('rollup_partner_ids', '!=', False)],
-            '_compute_open_so_balance'
+            '_compute_open_so_balance',
+            20
         )
 
         self._process_by_domain(
             'res.partner',
             [('credit_limit', '>', 0), ('rollup_partner_ids', '!=', False)],
-            '_compute_outstanding_receivable'
+            '_compute_outstanding_receivable',
+            20
         )
 
         self._process_by_domain(
             'res.partner',
             [('commercial_partner_id', '!=', False )],
-            '_compute_net_terms_allowed'
+            '_compute_net_terms_allowed',
+            35
         )
 
         # --------------------
@@ -87,6 +91,7 @@ class IrActionsServer(models.Model):
             'res.partner',
             [('id', 'in', partner_ids)],
             '_compute_check_hot_ar',
+            30
             
         )
 
@@ -97,25 +102,29 @@ class IrActionsServer(models.Model):
         self._process_by_domain(
             'sale.order.line',
             ['|', ('product_uom_qty', '>', 0), ('qty_delivered', '>', 0)],
-            '_compute_bo_qty'
+            '_compute_bo_qty',
+            40
         )
 
         self._process_by_domain(
             'sale.order.line',
             [('product_id', '!=', False)],
-            '_compute_purchase_price'
+            '_compute_purchase_price',
+            50
         )
 
         self._process_by_domain(
             'sale.order.line',
             ['|', ('qty_delivered', '>', 0), ('qty_invoiced', '>', 0)],
-            '_compute_uigd_qty'
+            '_compute_uigd_qty',
+            75
         )
 
         self._process_by_domain(
             'sale.order.line',
             ['|', ('bo_qty', '>', 0), ('price_unit', '>', 0)],
-            '_compute_bo_value'
+            '_compute_bo_value',
+            75
         )
 
         self._process_by_domain(
@@ -125,14 +134,16 @@ class IrActionsServer(models.Model):
                 ('move_ids.location_dest_id.usage', '!=', 'customer'),
                 ('move_ids.to_refund', '=', False),
             ],
-            '_compute_last_date_delivered'
+            '_compute_last_date_delivered',
+            75
         )
         self._process_by_domain(
             'sale.order.line',
             [
                 ('invoice_lines', '!=', False),
             ],
-            '_compute_last_bill_date'
+            '_compute_last_bill_date',
+            100
         )
 
         # --------------------
@@ -142,38 +153,45 @@ class IrActionsServer(models.Model):
         self._process_by_domain(
             'sale.order',
             [],
-            '_compute_current_estimate_ship_date'
+            '_compute_current_estimate_ship_date',
+            40
         )
 
         self._process_by_domain(
             'sale.order',
             [('order_line.uigd_value', '!=', 0)],
-            '_compute_uigd_value'
+            '_compute_uigd_value',
+            75
         )
 
         self._process_by_domain(
             'sale.order',
             [('order_line.bo_value', '!=', 0)],
-            '_compute_bo_value'
+            '_compute_bo_value',
+            75
         )
 
         self._process_by_domain(
             'sale.order',
             [('order_line.last_date_delivered', '!=', False)],
-            '_compute_last_date_delivered'
+            '_compute_last_date_delivered',
+            75
         )
 
         self._process_by_domain(
             'sale.order',
             [('order_line.last_bill_date', '!=', False)],
-            '_compute_last_bill_date'
+            '_compute_last_bill_date',
+            75
         )
 
         self._process_by_domain(
             'sale.order',
             ['|', ('state', '=', 'sale'),
                    ('sale_payment_method_id.include_in_credit_limit', '=', True)],
-            '_compute_uninvoiced_balance'
+            '_compute_uninvoiced_balance',
+            20
+
         )
 
         
@@ -181,19 +199,22 @@ class IrActionsServer(models.Model):
         self._process_by_domain(
             'stock.picking',
             [],
-            '_compute_total_sales_price'
+            '_compute_total_sales_price',
+            30
         )
         self._process_by_domain(
             'stock.picking',
             [],
-            '_compute_main_error'
+            '_compute_main_error',
+            15,
         )
         self._process_by_domain(
             'stock.picking',
             [
                 ('sale_id', '!=', False),
             ],
-            '_compute_credit_hold'
+            '_compute_credit_hold',
+            20
         )
         #mrp.production
         self._process_by_domain(
@@ -201,7 +222,8 @@ class IrActionsServer(models.Model):
             [
                 ('sale_order_id', '!=', False),
             ],
-            '_compute_credit_hold'
+            '_compute_credit_hold',
+            20,
         )
         #account.move
         self._process_by_domain(
@@ -211,12 +233,14 @@ class IrActionsServer(models.Model):
                 ('partner_id.country_id.intrastat', '=', True),
                 ('move_type', 'in', ('out_invoice', 'out_refund')),
             ],
-            '_compute_intrastat_country_id'
+            '_compute_intrastat_country_id',
+            100
         )
         self._process_by_domain(
             'account.move',
             [],
-            '_compute_sale_type_id'
+            '_compute_sale_type_id',
+            20
         )
         self._process_by_domain(
             'account.move',
@@ -224,7 +248,8 @@ class IrActionsServer(models.Model):
                 ('move_type', '=', 'in_invoice'),
                 ('payment_state', '!=', 'paid'),
             ],
-            '_compute_po_line_price_difference'
+            '_compute_po_line_price_difference',
+            25
         )
         
         #✅ ACCOUNT.MOVE.LINE
@@ -235,7 +260,8 @@ class IrActionsServer(models.Model):
                 ('product_id.detailed_type', 'in', ('product', 'consu')),
                 ('move_id.payment_state', '!=', 'paid'),
             ],
-            '_compute_po_line_price_difference'
+            '_compute_po_line_price_difference',
+            25
         )
 
 
