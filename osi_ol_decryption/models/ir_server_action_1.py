@@ -225,7 +225,7 @@ class IrActionsServer(models.Model):
             vals = {
                 "user_id": rma.get("assigned_to"),
                 "name": rma.get("name"),
-                "ticket_ref": rma.get("name"),
+                # "ticket_ref": rma.get("name"),
                 "ticket_type_id": type.id,
                 "team_id": team_id.id if rma.get("company_id") == 1 else tema_eu_id.id,
                 "stage_id": get_stage(rma.get("state", False)),
@@ -261,7 +261,7 @@ class IrActionsServer(models.Model):
             counter += 1
             ticket_id = Ticket.with_context(tracking_disable=True, is_migration=True).create(vals)
             if ticket_id.team_id.sequence_id:
-                ticket_id.ticket_ref = ticket_id.team_id.sequence_id.next_by_id()
+                ticket_id.ticket_ref = ticket_id.id
             if historical_repair_order_ids:
                 self._cr.execute(
                     "update repair_order set ticket_id = %s where id in %s",
@@ -1600,6 +1600,7 @@ class IrActionsServer(models.Model):
             "account_avatax_sale",
             "account_avatax_stock"
             "account_invoice_extract"
+            "account_add_gln"
         ]
         for module in module_uninstall_list:
             self.env["ir.module.module"].search(
