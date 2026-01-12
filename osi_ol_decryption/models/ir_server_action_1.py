@@ -1535,13 +1535,14 @@ class IrActionsServer(models.Model):
                             new_type = 'Non-current Liabilities'
                         keys_found = [key for key, value in selection.items() if value == new_type]
                         
-                        diffs = {'name': new_name, 'code': new_code, 'account_type': keys_found[0], 'company_id': company.id, 'tag_ids': [(6, 0, tag_ids)]}
+                        diffs = {'name': new_name, 'code': new_code, 'account_type': keys_found[0], 'company_id': company.id, 'tag_ids': [(6, 0, tag_ids)], 'reconcile': True if reconcil else False}
                         # print ("\n --------------create----------", diffs)
                         if (diffs.get('code') == '21440.09' and diffs.get('company_id') == 9) or (diffs.get('code') == '99999.1' and diffs.get('company_id') == 3) or (diffs.get('code') == '28' and diffs.get('company_id') == 1):
                             continue
                         self.env['account.account'].with_company(company).create(diffs)
         
-        self.env['account.account'].search([])._compute_account_root()
+        for company in env['res.company'].search([]):
+            self.env['account.account'].with_company(company).search([])._compute_account_root()
     
     def update_default_general_settings(self):
         self = self.sudo()
