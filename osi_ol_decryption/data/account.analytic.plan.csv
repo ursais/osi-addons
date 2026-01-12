@@ -1,2 +1,2 @@
 id,name,default_applicability
-account.analytic_plan_cost_center,Cost Center,optional
+__setup__.analytic_plan_cost_center,Cost Center,optional

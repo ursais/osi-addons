@@ -718,7 +718,8 @@ class IrActionsServer(models.Model):
                         19: "56000",23: "57000",27: "21001",28: "13001",29: "14001",30: "51001",31: "52001",32: "53001",
                         33: "23000",34: "58000",35: "56001",36: "54001"
                     }
-        self.clear_analytic_account_refs()
+        # self.clear_analytic_account_refs()
+        cr.execute("update account_analytic_account set active ='f'")
         pathname = "osi_ol_decryption/data/account.analytic.plan.csv"
         with file_open(pathname, 'rb', env=self.env) as fp:
             convert_csv_import(self.env, 'osi_ol_decryption', pathname, fp.read(), {}, 'update', False)
