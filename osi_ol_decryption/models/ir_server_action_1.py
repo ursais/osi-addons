@@ -155,7 +155,7 @@ class IrActionsServer(models.Model):
         self = self.sudo()
         customer_us = self.env.ref("ol_helpdesk_repair_batch.helpdesk_team_customer_rma", raise_if_not_found=False)
         customer_eu = self.env.ref("ol_helpdesk_repair_batch.helpdesk_team_customer_rma_eu", raise_if_not_found=False)
-        self._cr.execute("update ir_sequence set active = 'f' where code = 'helpdesk.ticket' and id not in (228,227)")
+        self._cr.execute("update ir_sequence set active = 'f' where code = 'helpdesk' and id not in (228,227)")
         self._cr.execute("update helpdesk_team set sequence_id = 227 where id = %s;", (customer_us.id,))
         self._cr.execute("update helpdesk_team set sequence_id = 228 where id = %s;", (customer_eu.id,))
         self._cr.execute("update ir_model_data set noupdate = 't' where name in ('helpdesk_team_customer_rma_eu', 'helpdesk_team_customer_rma');")
