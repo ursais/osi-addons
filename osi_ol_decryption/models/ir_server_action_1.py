@@ -141,7 +141,11 @@ class IrActionsServer(models.Model):
         for p in paypal:
             provider = p.provider_ids.filtered(lambda l: l.name in ('Stripe', 'Stripe CC (EU)') or l.code == 'stripe')
             p.provider_ids = [Command.unlink(p.id) for p in provider]
-            stripe.provider_ids = [Command.set(provider.ids)]
+            
+            providers = self.env['payment.provider'].search([('code', '=', 'stripe'),('name', 'ilike', 'Stripe')])
+            if providers:
+                stripe.provider_ids = [Command.set(providers.ids)]
+            
 
 
     def migrate_helpdesk_rma_to_ticket(self):
@@ -2657,6 +2661,7 @@ class IrActionsServer(models.Model):
         )
 
         modules = [
+            "account_asset",
             "job_cost_estimate_customer",
             "queue_job",
             "mrp_batch",
