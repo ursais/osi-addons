@@ -923,8 +923,8 @@ class IrActionsServer(models.Model):
             cr.commit()
 
         # Ticket Ref: 70232
-        cr.execute("update mrp_production set sale_order_line_id=origin_sale_line_id;")
-        cr.commit()
+        # cr.execute("update mrp_production set sale_order_line_id=origin_sale_line_id;")
+        # cr.commit()
 
         boms = self.env["mrp.bom"].search([("product_id","!=",False),("type","=","normal")])
         operation_vals = []

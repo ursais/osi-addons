@@ -557,111 +557,42 @@ class IrActionsServer(models.Model):
                 picking.move_line_ids.result_package_id = new_package_id.id
             picking.with_company(stock.company_id).button_validate()
             # self._cr.commit()
-
-    def compute_bypass_data(self, batch_size=5000):
-        _logger.info("===============compute_bypass_data====================")
-        self = self.sudo()
-
-        def process_in_chunks(model_name, compute_methods):
-            model = self.env[model_name]
-            offset = 0
-
-            while True:
-                # Fetch only IDs, not full recordsets (faster)
-                record_ids = model.search([], offset=offset, limit=batch_size).ids
-                if not record_ids:
-                    break
-
-                recs = model.browse(record_ids).sudo()
-
-                for method_name in compute_methods:
-                    # Try to get method dynamically
-                    method = getattr(recs, method_name, None)
-                    if not method:
-                        continue
-
-                    # If it's a queued job method, delay it. Otherwise run directly.
-                    # if getattr(method, "_job_name", None):
-                    getattr(recs.with_delay(), method_name)()
-                    # else:
-                    #     method()
-
-                # Commit after each batch to free resources
-                self._cr.commit()
-                offset += batch_size
-
-        # Partner
-        process_in_chunks('res.partner', [
-            '_compute_customer_deposit_balance',
-            '_compute_open_bo_balance',
-            '_compute_open_so_balance',
-            '_compute_outstanding_receivable',
-            '_compute_check_hot_ar',
-            '_compute_remaining_credit',
-            '_compute_net_terms_allowed',
-            '_compute_credit_hold',
-        ])
-
-        # # Sale Orders
-        process_in_chunks('sale.order', [
-            '_compute_current_estimate_ship_date',
-            '_compute_uigd_value',
-            '_compute_bo_value',
-            '_compute_last_date_delivered',
-            '_compute_last_bill_date',
-            '_compute_uninvoiced_balance'
-        ])
-
-        # # Sale Order Lines
-        process_in_chunks('sale.order.line', [
-            '_compute_bo_qty',
-            '_compute_margin',
-            '_compute_purchase_price',
-            '_compute_uigd_qty',
-            '_compute_bo_value',
-            '_compute_last_date_delivered',
-            '_compute_last_bill_date',
-        ])
-
-        # # Pickings
-        process_in_chunks('stock.picking', [
-            '_compute_total_sales_price',
-            '_compute_main_error',
-            '_compute_credit_hold',
-        ])
-
-        # # MRP Productions
-        process_in_chunks('mrp.production', [
-            '_compute_credit_hold',
-        ])
-
-        # Account Moves
-        # batch_size = 10000
-        process_in_chunks('account.move', [
-            '_compute_intrastat_country_id',
-            '_compute_sale_type_id',
-            '_compute_po_line_price_difference',
-        ])
-        
-        # Account Move Lines
-        process_in_chunks('account.move.line', [
-            '_compute_intrastat_transaction_id',
-            '_compute_po_line_price_difference',
-        ])
-
-        # BOMs
-        # batch_size = 10000
-        process_in_chunks('mrp.bom', [
-            '_compute_existing_scaffolding_bom',
-        ])            
         
     def split_mo(self):
+        _logger.info("===============split_mo====================")
         self = self.sudo()
         mo_ids = self.env['mrp.production'].search(["&", ("state", "=", "confirmed"), ("product_qty", ">", 1)], order='product_qty')
         self._cr.execute("update mrp_production set is_split_tranfer = 't' where id in %s", (tuple(mo_ids.ids),))
         self._cr.commit()
         for mo in mo_ids:
             mo.sale_order_id.with_company(mo.company_id).with_delay().split_mo()
+        
+        _logger.info("===============Production SO AND SOL data Update====================")
+        self._cr.execute("update mrp_production set sale_order_line_id=origin_sale_line_id where origin_sale_line_id is not null;")
+        self._cr.execute("update mrp_production set sale_order_id=order_id where order_id is not null;")
+        self._cr.commit()
+
+        for production in self.env['mrp.production'].search([("procurement_group_id.mrp_production_ids", "!=", False), '|', ('sale_order_line_id', '=', False), ('sale_order_id', '=', False)]):
+            
+            sale_order_lines = production.procurement_group_id.mrp_production_ids.mapped('sale_order_line_id')
+            sale_orders = production.procurement_group_id.mrp_production_ids.mapped('sale_order_id')
+
+            updates_sql = []
+            updates_params = []
+
+            if sale_order_lines:
+                updates_sql.append("sale_order_line_id = %s")
+                updates_params.append(sale_order_lines[0].id)
+            if sale_orders:
+                updates_sql.append("sale_order_id = %s")
+                updates_params.append(sale_orders[0].id)
+
+            if updates_sql:
+                updates_query = "update mrp_production set " + ", ".join(updates_sql) + " where id = %s"
+                updates_params.append(production.id)
+                self._cr.execute(updates_query, tuple(updates_params))
+            
+            
 
     def set_timezones(self):
         """Set Timezones on companies/partners/users"""
@@ -2539,6 +2470,7 @@ class IrActionsServer(models.Model):
             "ls_delivery_ups_rest",
             "avatax_fiscal_position_us",
             "ls_price_increase_review",
+            "account_add_gln"
         ]
 
         data_list = env["ir.model.data"].search(
