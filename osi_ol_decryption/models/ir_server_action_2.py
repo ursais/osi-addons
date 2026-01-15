@@ -454,7 +454,7 @@ class IrActionsServer(models.Model):
                                 cr.commit()
 
                                    
-                            if ptav_line.product_attribute_value_id.active and ptav_line.product_attribute_value_id.id not in attrbute_line_id.value_ids.ids:
+                            # if ptav_line.product_attribute_value_id.active and ptav_line.product_attribute_value_id.id not in attrbute_line_id.value_ids.ids:
                                 # _logger.info("\n\n\n\n========2322======PTAV==Values ID%s==%s",ptav_line.product_attribute_value_id.name,attrbute_line_id.attribute_id.name)
                             
                             if ptav_line.attribute_line_id.is_qty_required:

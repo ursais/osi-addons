@@ -159,7 +159,7 @@ class IrActionsServer(models.Model):
         self._cr.execute("update helpdesk_team set sequence_id = 227 where id = %s;", (customer_us.id,))
         self._cr.execute("update helpdesk_team set sequence_id = 228 where id = %s;", (customer_eu.id,))
         self._cr.execute("update ir_model_data set noupdate = 't' where name in ('helpdesk_team_customer_rma_eu', 'helpdesk_team_customer_rma');")
-        self._cr.execute("update ir_sequence set code = 'helpdesk.ticket' where id in (227,228)")
+        self._cr.execute("update ir_sequence set code = 'helpdesk' where id in (227,228)")
         self._cr.commit()
         Ticket = self.env["helpdesk.ticket"]
         partner_obj = self.env["res.partner"]
@@ -723,7 +723,8 @@ class IrActionsServer(models.Model):
                         33: "23000",34: "58000",35: "56001",36: "54001"
                     }
         # self.clear_analytic_account_refs()
-        cr.execute("update account_analytic_account set active ='f'")
+        self._cr.execute("update account_analytic_account set active ='f'")
+        self._cr.commit()
         pathname = "osi_ol_decryption/data/account.analytic.plan.csv"
         with file_open(pathname, 'rb', env=self.env) as fp:
             convert_csv_import(self.env, 'osi_ol_decryption', pathname, fp.read(), {}, 'update', False)
@@ -1426,7 +1427,7 @@ class IrActionsServer(models.Model):
                 new_code = str(row[14].value)      # Column O (index 14)
                 new_name = row[15].value      # Column P (index 15)
                 new_type = row[16].value      # Column Q (index 16)
-                reconcil = row[19].value       # Column T (index 19)
+                reconcile = row[19].value       # Column T (index 19)
                 tag_string = row[20].value    # Column U (index 20)
                 not_deprecated = row[24].value  #Column x (Index 24)
 
@@ -1492,7 +1493,8 @@ class IrActionsServer(models.Model):
                         vals = []
                         params = []
                         vals.append("reconcile = %s")
-                        params.append(reconcil)
+                        reconcile = True if reconcile else False
+                        params.append(reconcile)
                         if 'code' in diffs:
                             vals.append("code = %s")
                             params.append(diffs['code'])
@@ -1540,13 +1542,13 @@ class IrActionsServer(models.Model):
                             new_type = 'Non-current Liabilities'
                         keys_found = [key for key, value in selection.items() if value == new_type]
                         
-                        diffs = {'name': new_name, 'code': new_code, 'account_type': keys_found[0], 'company_id': company.id, 'tag_ids': [(6, 0, tag_ids)], 'reconcile': True if reconcil else False}
+                        diffs = {'name': new_name, 'code': new_code, 'account_type': keys_found[0], 'company_id': company.id, 'tag_ids': [(6, 0, tag_ids)], 'reconcile': True if reconcile else False}
                         # print ("\n --------------create----------", diffs)
                         if (diffs.get('code') == '21440.09' and diffs.get('company_id') == 9) or (diffs.get('code') == '99999.1' and diffs.get('company_id') == 3) or (diffs.get('code') == '28' and diffs.get('company_id') == 1):
                             continue
                         self.env['account.account'].with_company(company).create(diffs)
         
-        for company in env['res.company'].search([]):
+        for company in self.env['res.company'].search([]):
             self.env['account.account'].with_company(company).search([])._compute_account_root()
     
     def update_default_general_settings(self):
