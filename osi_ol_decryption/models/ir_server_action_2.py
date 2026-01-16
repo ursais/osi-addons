@@ -926,25 +926,55 @@ class IrActionsServer(models.Model):
         # cr.execute("update mrp_production set sale_order_line_id=origin_sale_line_id;")
         # cr.commit()
 
+        # Ticket Ref: Sequences on BoM Operations Out of Order (#71214) 
+        update_query = """UPDATE mrp_routing_workcenter SET sequence = %s where id in %s;"""
+        build_operations = self.env["mrp.routing.workcenter"].search([("workcenter_id","=",self.env.ref("mrp_batch.import_build",False).id),("sequence","!=",10)])
+        if build_operations:
+            cr.execute(update_query,(10,tuple(build_operations.ids),))
+            cr.commit()
+        test_operations = self.env["mrp.routing.workcenter"].search([("workcenter_id","=",self.env.ref("mrp_batch.import_test",False).id),("sequence","!=",20)])
+        if test_operations:
+            cr.execute(update_query,(20,tuple(test_operations.ids),))
+            cr.commit()
+        box_operations = self.env["mrp.routing.workcenter"].search([("workcenter_id","=",self.env.ref("mrp_batch.import_box",False).id),("sequence","!=",30)])
+        if box_operations:
+            cr.execute(update_query,(30,tuple(box_operations.ids),))
+            cr.commit()
+
+        # Ticket Ref: BoM Operation Cleanup (18) (#70233) Point 4  
         boms = self.env["mrp.bom"].search([("product_id","!=",False),("type","=","normal")])
         operation_vals = []
+        build_workcenter = self.env.ref("mrp_batch.import_build",False)
+        test_workcenter = self.env.ref("mrp_batch.import_test",False)
+        box_workcenter = self.env.ref("mrp_batch.import_build",False)
         for bom in boms:
             if not bom.operation_ids and bom.bom_line_ids:
                 scaff_bom = self.env["mrp.bom"].search([("scaffolding_bom","=",True),("product_tmpl_id","=",bom.product_tmpl_id.id)])
                 for oper in scaff_bom.operation_ids:
                     sequence = oper.sequence
-                    if oper.workcenter_id.id == self.env.ref("mrp_batch.import_build",False).id and oper.sequence != 1:
-                        sequence = 1
-                    elif oper.workcenter_id.id == self.env.ref("mrp_batch.import_test",False).id and oper.sequence != 2:
-                        sequence = 2
-                    elif oper.workcenter_id.id == self.env.ref("mrp_batch.import_box",False).id and oper.sequence != 3:
-                        sequence = 3
+                    if build_workcenter and oper.workcenter_id.id == build_workcenter.id and oper.sequence != 1:
+                        sequence = 10
+                    elif test_workcenter and oper.workcenter_id.id == test_workcenter.id and oper.sequence != 2:
+                        sequence = 20
+                    elif box_workcenter and oper.workcenter_id.id == box_workcenter.id and oper.sequence != 3:
+                        sequence = 30
                     operation_vals.append({
                         "name": oper.name,
                         "workcenter_id": oper.workcenter_id.id,
                         "sequence": sequence,
                         "bom_id": bom.id,
                     })
+                if not scaff_bom:
+                    for wc in [test_workcenter, build_workcenter, box_workcenter]:
+                        operation_vals.append({
+                            "workcenter_id": wc.id,
+                            "name": wc.name,
+                            "type": wc.type,
+                            "time_cycle_manual": 0.0,
+                            "bom_id": bom.id,
+                            "sequence": 20 if wc == test_workcenter else 10 if wc == build_workcenter else 30,
+                        })
+
         operations = env["mrp.routing.workcenter"].create(operation_vals)
         self.env.cr.commit()
         _logger.info("\n==BoMs Operations are created,%s",len(operations))
@@ -1637,7 +1667,7 @@ class IrActionsServer(models.Model):
                         "type": wc.type,
                         "time_cycle_manual": 0.0,
                         "bom_id": bom.id,
-                        "sequence": 10 if wc == test_workcenter else 20 if wc == build_workcenter else 30,
+                        "sequence": 20 if wc == test_workcenter else 10 if wc == build_workcenter else 30,
                     })
 
         if workcenter_lines:
