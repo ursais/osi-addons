@@ -686,6 +686,7 @@ class IrActionsServer(models.Model):
                     'type': 'normal',
                     'scaffolding_bom': True,
                     'existing_scaffolding_bom': False,
+                    'company_id': False,
                 })
                 new_bom_id = new_bom.id
                 new_bom._compute_available_config_components()
@@ -975,7 +976,7 @@ class IrActionsServer(models.Model):
                             "sequence": 20 if wc == test_workcenter else 10 if wc == build_workcenter else 30,
                         })
 
-        operations = env["mrp.routing.workcenter"].create(operation_vals)
+        operations = self.env["mrp.routing.workcenter"].create(operation_vals)
         self.env.cr.commit()
         _logger.info("\n==BoMs Operations are created,%s",len(operations))
 
