@@ -16,6 +16,9 @@ class IrActionsServer(models.Model):
 
 
     def update_followup_status(self):
+        _logger.info(
+            "===============update_followup_status===================="
+        )
         self = self.sudo()
         self._cr.execute("delete from account_followup_followup_line where id in (6,7,8,9)")
         self._cr.execute("delete from invoice_reminder_severity_level where email_template_id in (220,218,219);")
@@ -23,10 +26,10 @@ class IrActionsServer(models.Model):
         self._cr.commit()
         today = fields.date.today()
         followup_lines_ids = self.env['account_followup.followup.line'].search([], order='delay asc')
-        for company in self.env["res.company"].search([]):
+        for company in self.env["res.company"].search([('id', 'in', [1,2])]):
             followup_lines = followup_lines_ids.filtered(lambda l: l.company_id.id == company.id).sorted(key=lambda l: l.delay)
-            partners = self.env['res.partner'].with_context(allowed_company_ids=company.ids).search([])
-            for partner in partners.filtered(lambda p:p.unreconciled_aml_ids and p.followup_status in ['in_need_of_action', 'with_overdue_invoices']):
+            partners = self.env['res.partner'].with_context(allowed_company_ids=company.ids).search(['|',('parent_id', '=', False),('is_company','=', True), ('customer_rank', '>', 0)])
+            for partner in partners.filtered(lambda p: p.followup_status in ['in_need_of_action', 'with_overdue_invoices']):
                 
                 aml_lines = partner.unreconciled_aml_ids.filtered(lambda aml:
                     aml.company_id == company
@@ -133,6 +136,9 @@ class IrActionsServer(models.Model):
 
 
     def update_payment_provide(self):
+        _logger.info(
+            "===============update_payment_provide===================="
+        )
         self = self.sudo()
         env = self.env
         paypal = env['payment.method'].search([('code', '=', 'paypal')])
@@ -288,7 +294,7 @@ class IrActionsServer(models.Model):
                     support_data = self._cr.dictfetchall()
 
                     for support in support_data:
-                        _logger.info("===============support %s============" % (support))
+                        # _logger.info("===============support %s============" % (support))
                         picking_ids = []
                         state = (
                             "draft"
