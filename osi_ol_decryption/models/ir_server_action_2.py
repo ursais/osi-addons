@@ -1832,7 +1832,6 @@ class IrActionsServer(models.Model):
                 continue
 
             partner.with_delay()._compute_outstanding_receivable()
-            partner.with_delay()._compute_credit_hold()
             partner.with_delay()._compute_open_so_balance()
             partner.with_delay()._compute_remaining_credit()
             partner.with_delay()._compute_customer_deposit_balance()
