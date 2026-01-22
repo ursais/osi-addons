@@ -187,7 +187,7 @@ class IrActionsServer(models.Model):
 
     def script_3(self):
         _logger.info("\n\n==Update Product Templates with Unique Attributes and Values==Script 3 is start==================")
-        batch_size = 100  # Define batch size
+        batch_size = 300  # Increased batch size for better performance
         ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True)])
         total_products = len(ProductTemplates)  # Total number of products to process
         offset = 0
@@ -202,7 +202,6 @@ class IrActionsServer(models.Model):
                 if product_template.attribute_line_ids:
                     update_query = """UPDATE product_template_attribute_line SET used_in_sale_description = true WHERE id IN %s;"""
                     cr.execute(update_query, (tuple(product_template.attribute_line_ids.ids),))
-                    cr.commit()
                     
                 for line in product_template.attribute_line_ids:
                     all_inactive = all(not ptav.ptav_active for ptav in line.product_template_value_ids)
@@ -244,15 +243,12 @@ class IrActionsServer(models.Model):
                                     SET product_template_attribute_value_id = %s
                                     WHERE product_template_attribute_value_id IN %s;
                                 """, (for_update.id, tuple(for_remove_list)))
-                                cr.commit()
                             
                             cr.execute("""
                                 UPDATE product_template_attribute_value
                                 SET ptav_active = 'f'
                                 WHERE id IN %s;
                             """, (tuple(for_remove_list),))
-            
-                            cr.commit()
                             # Handle the update of the active value
                             active_value_id = for_update.product_attribute_value_id
                             old_product_attribute_value_id = active_value_id
@@ -264,7 +260,6 @@ class IrActionsServer(models.Model):
                                 if not active_value_id:
                                     update_query = """UPDATE product_attribute_value SET active = TRUE,attribute_id = %s WHERE id =%s;"""
                                     cr.execute(update_query,(for_update.attribute_id.id,old_product_attribute_value_id.id))
-                                    cr.commit()
             
                                 # cr.execute("""
                                 #     UPDATE product_template_attribute_value
@@ -300,12 +295,9 @@ class IrActionsServer(models.Model):
                             delete_query = """DELETE FROM product_attribute_value_product_template_attribute_line_rel 
                                   WHERE product_template_attribute_line_id = %s AND (product_attribute_value_id = %s or product_attribute_value_id = %s);"""
                             if active_value_id:
-                                
                                 cr.execute(delete_query, (line.id,active_value_id.id,old_product_attribute_value_id.id))
-                                cr.commit()  # Commit the transaction
                                 insert_query = """INSERT INTO product_attribute_value_product_template_attribute_line_rel (product_template_attribute_line_id, product_attribute_value_id)  VALUES (%s, %s);"""
                                 cr.execute(insert_query, (line.id,active_value_id.id))
-                            cr.commit()
                                 
                             
                         elif len(duplicates) == 1:
@@ -321,7 +313,6 @@ class IrActionsServer(models.Model):
                                 if not active_value_id:
                                     update_query = """UPDATE product_attribute_value SET active = TRUE,attribute_id = %s WHERE id =%s;"""
                                     cr.execute(update_query,( duplicates[0].attribute_id.id,old_product_attribute_value_id.id))
-                                    cr.commit()
                                 
                             active_ptav = self.env["product.template.attribute.value"].search([("attribute_id","=",active_value_id.attribute_id.id),("product_attribute_value_id","=",active_value_id.id),("id","=",duplicates[0].id)])
                             active_ptav2 = self.env["product.template.attribute.value"].search([("attribute_id","=",old_product_attribute_value_id.attribute_id.id),("product_attribute_value_id","=",old_product_attribute_value_id.id),("id","=",duplicates[0].id),("ptav_active","=",True)])
@@ -343,10 +334,8 @@ class IrActionsServer(models.Model):
                                   WHERE product_template_attribute_line_id = %s AND (product_attribute_value_id = %s or product_attribute_value_id = %s);"""
                             if active_value_id:
                                 cr.execute(delete_query, (line.id,active_value_id.id,old_product_attribute_value_id.id))
-                                cr.commit()  # Commit the transaction
                                 insert_query = """INSERT INTO product_attribute_value_product_template_attribute_line_rel (product_template_attribute_line_id, product_attribute_value_id)  VALUES (%s, %s);"""
                                 cr.execute(insert_query, (line.id,active_value_id.id))
-                            cr.commit()
                     # if line_values:
                     #     value_with_none = line_values.filtered(lambda ptav: ptav.name == 'None')
                     #     value_with_non_none = line_values.filtered(lambda ptav: ptav.name != 'None')
@@ -376,7 +365,7 @@ class IrActionsServer(models.Model):
     
     def script_4(self):
         _logger.info("\n\n==Sync Attribute Values in Product Variants===Script 4 is start==================")
-        batch_size = 100  # Define batch size
+        batch_size = 300  # Increased batch size for better performance
         #PRODUCT-TEMPLATE ID Which id Need to take care [5593,24607,5172,32379,24337,25216,26588,6518,4696,103791,102630,102736,101999]
         ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True),("active","=",True)])
         total_products = len(ProductTemplates)  # Total number of products to process
@@ -391,7 +380,6 @@ class IrActionsServer(models.Model):
                 # _logger.info("\n\n\n\n======Script 4=========product_template##########%s==ID:::%s:::Counter::%s",product_template.name,product_template,counter)
                 config_step_id = product_template.config_step_line_ids.filtered(lambda l:l.config_step_id and not l.attribute_line_ids)
                 config_step_id.unlink()
-                cr.commit()
                 for attrbute_line_id in product_template.mapped("attribute_line_ids").filtered("active"):
                     # if (attrbute_line_id.value_ids and (not attrbute_line_id.default_val or not attrbute_line_id.default_val.active)):
                     #     cr.execute("""
@@ -409,7 +397,6 @@ class IrActionsServer(models.Model):
                                 # _logger.info("\n\n\n\n==============Values IDS:Name:%s:%s:%s:%s:active_value_id::%s",value.name,value,attrbute_line_id.attribute_id,value.attribute_id,active_value_id.attribute_id.active)
                                 update_query = """UPDATE product_attribute_value SET active = TRUE,attribute_id = %s WHERE id =%s;"""
                                 cr.execute(update_query,(attrbute_line_id.attribute_id.id,value.id))
-                                cr.commit()
                         values_ids = attrbute_line_id.value_ids
                         for ptav_line in product_template_value_ids:
                             if ptav_line.attribute_id != attrbute_line_id.attribute_id:
@@ -419,7 +406,6 @@ class IrActionsServer(models.Model):
                                         SET attribute_id = %s
                                         WHERE id = %s AND ptav_active = true;
                                     """, (attrbute_line_id.attribute_id.id,ptav_line.id))
-                                cr.commit()
                             inactive_value_active_ptav = ptav_line.attribute_line_id.product_template_value_ids.filtered(lambda l:l.name == ptav_line.product_attribute_value_id.name and not l.product_attribute_value_id.active and l.ptav_active and l.product_tmpl_id.id == ptav_line.product_tmpl_id.id)
                             active_value_inactive_ptav = ptav_line.attribute_line_id.product_template_value_ids.filtered(lambda l:l.name == ptav_line.product_attribute_value_id.name and l.product_attribute_value_id.active and not l.ptav_active and l.product_tmpl_id.id == ptav_line.product_tmpl_id.id)
                             if not inactive_value_active_ptav and not active_value_inactive_ptav and not ptav_line.product_attribute_value_id.active:
@@ -430,19 +416,15 @@ class IrActionsServer(models.Model):
                                         SET product_attribute_value_id = %s
                                         WHERE id = %s AND ptav_active = true;
                                     """, (active_value_id.id,ptav_line.id))
-                                cr.commit()
                             if inactive_value_active_ptav and active_value_inactive_ptav:
                                 _logger.info("\n\n\n\n>>inactive_value_active_ptav")
                                 inactive_value_active_ptav.ptav_active = False
-                                cr.commit()
                             if not inactive_value_active_ptav and active_value_inactive_ptav:
                                 active_value_inactive_ptav.ptav_active = True
-                                cr.commit()
                             if inactive_value_active_ptav and not active_value_inactive_ptav and ptav_line.product_attribute_value_id.active:
                                 active_value_id = attrbute_line_id.value_ids.filtered(lambda v:v.name == ptav_line.product_attribute_value_id.name )
                                 # _logger.info("\n\n\n\n==============PTAV==Values ID:%s==%s:%s::%s",ptav_line.product_attribute_value_id.name,attrbute_line_id.attribute_id.name,ptav_line.product_attribute_value_id,active_value_id)
                                 inactive_value_active_ptav.ptav_active = False
-                                cr.commit()
                             if not ptav_line.product_attribute_value_id.active:
                                 active_value_id = attrbute_line_id.value_ids.filtered(lambda v:v.name == ptav_line.product_attribute_value_id.name )
                                 # _logger.info("\n\n\n\n==============PTAV==Values ID:%s==%s:%s::%s",ptav_line.product_attribute_value_id.name,attrbute_line_id.attribute_id.name,ptav_line.product_attribute_value_id,active_value_id)
@@ -451,7 +433,6 @@ class IrActionsServer(models.Model):
                                         SET product_attribute_value_id = %s
                                         WHERE id = %s AND ptav_active = true;
                                     """, (active_value_id.id,ptav_line.id))
-                                cr.commit()
 
                                    
                             # if ptav_line.product_attribute_value_id.active and ptav_line.product_attribute_value_id.id not in attrbute_line_id.value_ids.ids:
@@ -467,7 +448,6 @@ class IrActionsServer(models.Model):
                                             SET product_attribute_id = %s
                                             WHERE id = %s;
                                         """, (ptav_line.attribute_id.id,qty_val.id))
-                                        cr.commit()
                                     if qty_val.product_attribute_value_id.id !=  ptav_line.product_attribute_value_id.id:
                                         # _logger.info("\n\n\n\n======3333========PTAV==%s",ptav_line.product_attribute_value_id.name)
                                         cr.execute("""
@@ -475,7 +455,6 @@ class IrActionsServer(models.Model):
                                             SET product_attribute_value_id = %s
                                             WHERE id = %s;
                                         """, (ptav_line.product_attribute_value_id.id,qty_val.id))
-                                        cr.commit()
                         not_common = list(set(values_ids.ids).symmetric_difference(set(product_template_value_ids.mapped("product_attribute_value_id").ids)))
                         if not_common:
                             line_id = attrbute_line_id.id
@@ -486,8 +465,7 @@ class IrActionsServer(models.Model):
                                 AND product_attribute_value_id = ANY(%s)
                             """
 
-                            self.env.cr.execute(query, (line_id, list(value_ids)))
-                            self.env.cr.commit() 
+                            self.env.cr.execute(query, (line_id, list(value_ids))) 
                 counter += 1
             offset += batch_size
             self.env.cr.commit()  # Commit changes after processing each batch
@@ -531,7 +509,6 @@ class IrActionsServer(models.Model):
                             if not attrbute_line_id.is_qty_required:
                                 update_query = "UPDATE product_template_attribute_line SET is_qty_required = 't' WHERE id = %s;"
                                 cr.execute(update_query, (attrbute_line_id.id,))  # Note the comma inside the tuple
-                                cr.commit()
                             if v13_attribute_value_id in attrbute_line_id.mapped("value_ids").ids:
                                 qty_range = set(range(v17_product_template_value_id.default_qty,v17_product_template_value_id.maximum_qty+1))
                                 existing_quantities = set(v17_product_template_value_id.attribute_value_qty_ids.mapped('qty'))
@@ -546,13 +523,11 @@ class IrActionsServer(models.Model):
                                         'qty': qty,
                                         'template_attri_value_id': v17_product_template_value_id.id,
                                     })
-                                    cr.commit()
                     if attrbute_line_id.is_qty_required and 'None' in attrbute_line_id.mapped("value_ids.name"):
                         v17_product_template_none_value_id = attrbute_line_id.product_template_value_ids.filtered(lambda l :l.product_attribute_value_id.name == 'None' and l.ptav_active and not l.attribute_value_qty_ids)
                         update_query = "UPDATE product_template_attribute_value SET is_qty_required = 't' WHERE id = %s;"
                         if v17_product_template_none_value_id:
                             cr.execute(update_query, (v17_product_template_none_value_id.id,))  # Note the comma inside the tuple
-                            cr.commit()
                         qty_range = set(range(v17_product_template_none_value_id.default_qty,v17_product_template_none_value_id.maximum_qty+1))
                         existing_quantities = set(v17_product_template_none_value_id.attribute_value_qty_ids.mapped('qty'))
                         missing_quantities = qty_range - existing_quantities
@@ -565,7 +540,6 @@ class IrActionsServer(models.Model):
                                 'qty': qty,
                                 'template_attri_value_id': v17_product_template_none_value_id.id,
                             })
-                            cr.commit()
                         _logger.info("\n\n==##NONE### ==%s",v17_product_template_none_value_id)
                     product_template_value_ids = attrbute_line_id.filtered('is_qty_required').mapped("product_template_value_ids").filtered("ptav_active")
                     for template_value_line in product_template_value_ids:
@@ -582,7 +556,6 @@ class IrActionsServer(models.Model):
                                 'qty': qty,
                                 'template_attri_value_id': template_value_line.id,
                             })
-                            cr.commit()
                         
                     
                 product_template = pro_template
@@ -598,7 +571,6 @@ class IrActionsServer(models.Model):
                                     active_value_id = self.env["product.attribute.value"].search([("name","=",value_qty.attr_value_id.name),("attribute_id","=",line.attribute_id.id)])
                                     attribute_value_qty_data = self.env["attribute.value.qty"].search([('product_attribute_value_id','=',active_value_id.id),("product_tmpl_id","=",product_template.id),("qty","=",int(value_qty.qty))])
                                     value_qty.write({'attribute_value_qty_id':attribute_value_qty_data.id,"attr_value_id":active_value_id.id})
-                                    cr.commit()
                 counter += 1
             offset += batch_size
             self.env.cr.commit()  # Commit changes after processing each batch
@@ -1496,22 +1468,17 @@ class IrActionsServer(models.Model):
         # psql -d 17.0.0.13.0 -f /home/odoo/temp_res_partner_contact_type_v13.sql
 
         cr = self.env.cr
-        select_query = """
-            SELECT contact_id, ar, ap, followup 
-            FROM temp_res_partner_contact_type_v13;
+        
+        # Bulk UPDATE using UPDATE...FROM for much better performance
+        update_query = """
+            UPDATE res_partner rp
+            SET ar = t.ar, ap = t.ap, followup = t.followup
+            FROM temp_res_partner_contact_type_v13 t
+            WHERE rp.id = t.contact_id;
         """
-        cr.execute(select_query)
-        datas = cr.fetchall()
+        cr.execute(update_query)
 
-        for contact_id, ar, ap, followup in datas:
-            update_query = """
-                UPDATE res_partner 
-                SET ar = %s, ap = %s, followup = %s 
-                WHERE id = %s;
-            """
-            cr.execute(update_query, (ar, ap, followup, contact_id))
-
-        # Commit once after loop
+        # Commit once after bulk update
         _logger.info("update_ar_ap_followup_contacts Script Completed")
 
         self.env.cr.commit()

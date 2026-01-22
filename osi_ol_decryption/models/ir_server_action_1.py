@@ -450,36 +450,53 @@ class IrActionsServer(models.Model):
         finace_id = inspection_obj.search([('name', '=', 'Finance Manual Exception')])
         ship_id = inspection_obj.search([('name', '=', 'Do Not Ship')])
         build_id = inspection_obj.search([('name', '=', 'Do Not Build')])
-        self._cr.execute("select sale_id from temp_sale_workflow_hold where check_id in (55,69);")
-        sale_ids = set([row[0] for row in self._cr.fetchall()])
-        for sale in sale_ids:
-            self._cr.execute(
-            "INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id) VALUES (%s, %s) ON CONFLICT DO NOTHING",
-            (sale, finace_id.id))
         
-        self._cr.execute("select sale_id from temp_sale_workflow_hold where check_id = 63;")
-        sale_ids = set([row[0] for row in self._cr.fetchall()])
-        for sale in sale_ids:
-            self._cr.execute(
-            "INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id) VALUES (%s, %s) ON CONFLICT DO NOTHING",
-            (sale, build_id.id))
+        # Bulk insert for Finance Manual Exception (check_ids 55, 69) using INSERT...SELECT
+        self._cr.execute("""
+            INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id)
+            SELECT DISTINCT sale_id, %s
+            FROM temp_sale_workflow_hold
+            WHERE check_id IN (55, 69)
+            ON CONFLICT DO NOTHING
+        """, (finace_id.id,))
         
-        self._cr.execute("select sale_id from temp_sale_workflow_hold where check_id = 72;")
-        sale_ids = set([row[0] for row in self._cr.fetchall()])
-        for sale in sale_ids:
-            self._cr.execute(
-            "INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id) VALUES (%s, %s) ON CONFLICT DO NOTHING",
-            (sale, ship_id.id))
-        self._cr.execute("select id,name from temp_sale_workflow_check where id not in (55,69,63,72);")
-        for check in self._cr.fetchall():
-            inspection = inspection_obj.search([('name', '=', check[1])])
-            self._cr.execute("select sale_id from temp_sale_workflow_hold where check_id = %s;"% (check[0],))
-            sale_ids = set([row[0] for row in self._cr.fetchall()])
-            if inspection:
-                for sale in sale_ids:
-                    self._cr.execute(
-                    "INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id) VALUES (%s, %s) ON CONFLICT DO NOTHING",
-                    (sale, inspection.id))
+        # Bulk insert for Do Not Build (check_id 63)
+        self._cr.execute("""
+            INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id)
+            SELECT DISTINCT sale_id, %s
+            FROM temp_sale_workflow_hold
+            WHERE check_id = 63
+            ON CONFLICT DO NOTHING
+        """, (build_id.id,))
+        
+        # Bulk insert for Do Not Ship (check_id 72)
+        self._cr.execute("""
+            INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id)
+            SELECT DISTINCT sale_id, %s
+            FROM temp_sale_workflow_hold
+            WHERE check_id = 72
+            ON CONFLICT DO NOTHING
+        """, (ship_id.id,))
+        
+        # For remaining check_ids, pre-build a mapping of check names to inspection IDs
+        self._cr.execute("select id, name from temp_sale_workflow_check where id not in (55, 69, 63, 72);")
+        checks = self._cr.fetchall()
+        
+        # Pre-fetch all inspections and build a name -> id mapping
+        all_inspections = inspection_obj.search([])
+        inspection_by_name = {insp.name: insp.id for insp in all_inspections}
+        
+        for check_id, check_name in checks:
+            inspection_id = inspection_by_name.get(check_name)
+            if inspection_id:
+                # Bulk insert for this check using INSERT...SELECT
+                self._cr.execute("""
+                    INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id)
+                    SELECT DISTINCT sale_id, %s
+                    FROM temp_sale_workflow_hold
+                    WHERE check_id = %s
+                    ON CONFLICT DO NOTHING
+                """, (inspection_id, check_id))
             
 
     def tranfer_stock(self):
@@ -694,6 +711,7 @@ class IrActionsServer(models.Model):
         Partner = env['res.partner']
 
         contacts = Partner.search([('is_company', '=', False), ('active', '=', True)])
+        update_count = 0
         
         for contact in contacts:
             tax_id_to_set = False
@@ -712,7 +730,11 @@ class IrActionsServer(models.Model):
 
             if tax_id_to_set and contact.vat != tax_id_to_set:
                 self._cr.execute("update res_partner set vat = %s where id = %s", (tax_id_to_set,contact.id ))
-                self._cr.commit()
+                update_count += 1
+        
+        # Single commit after all updates
+        self._cr.commit()
+        _logger.info("recompute_tax_id_on_contacts: Updated %s contacts", update_count)
 
     
     def update_saleorder_substate(self):
@@ -1044,6 +1066,7 @@ class IrActionsServer(models.Model):
         self = self.sudo()
         payment_ids = []
         cr = self._cr
+        # Mapping from old payment method IDs to names
         payment_methods = {
             1: "Paypal",
             8: "Stripe",
@@ -1071,12 +1094,30 @@ class IrActionsServer(models.Model):
         self._cr.execute("update payment_method set active = 't' where id in %s", (tuple(payment_ids),))
         self._cr.commit()
         new_payment_data = self.env['payment.method'].search([])
+        
+        # Pre-build payment method lookup dictionary for O(1) access
+        # Maps display name -> payment.method record ID
+        payment_method_dict = {pm.name: pm.id for pm in new_payment_data}
+        
+        # Name translation mapping for special cases
+        name_translation = {
+            'Net Terms': 'Payment Terms',
+            'Credit Card': 'Card',
+            'Credit Card Prepayment': 'Card',
+        }
+        
+        # Helper function to get payment_method_id from old name
+        def get_payment_id(old_name):
+            if not old_name:
+                return None
+            # Translate special names
+            lookup_name = name_translation.get(old_name, old_name)
+            return payment_method_dict.get(lookup_name)
+        
         _logger.info("===============payment_method_update_saleORder====================")
         self._cr.execute("select id,payment_method_id from sale_order where payment_method_id is not null")
         sale_order_data = self._cr.fetchall()
         for sale in sale_order_data:
-            payment = False
-            name = ''
             cr.execute("select id,sub_method_id,method_id from sale_order_payment_method where id = %s", (sale[1],))
             data = cr.dictfetchone()
             
@@ -1085,24 +1126,14 @@ class IrActionsServer(models.Model):
             else:
                 name = payment_methods.get(data.get('method_id'))
             
-            # if name == 'Custom':
-            #     payment = new_payment_data.filtered(lambda l: l.name == 'Custom')
-            if name == 'Net Terms':
-                payment = new_payment_data.filtered(lambda l: l.name == 'Payment Terms')
-            elif name in ('Credit Card Prepayment', 'Credit Card'):
-                payment = new_payment_data.filtered(lambda l: l.name == 'Card')
-            else:
-                payment = new_payment_data.filtered(lambda l: l.name == name)
-            
-            if payment:
-                cr.execute("update sale_order set sale_payment_method_id = %s where id = %s", (payment.id, sale[0] ))
+            payment_id = get_payment_id(name)
+            if payment_id:
+                cr.execute("update sale_order set sale_payment_method_id = %s where id = %s", (payment_id, sale[0] ))
             
         _logger.info("===============payment_method_update_account_move====================")
         self._cr.execute("select id,payment_method_id from account_move where payment_method_id is not null")
         account_move_data = self._cr.fetchall()
         for move in account_move_data:
-            payment = False
-            name = ''
             cr.execute("select id,sub_method_id,method_id from sale_order_payment_method where id = %s", (move[1],))
             data = cr.dictfetchone()
             
@@ -1111,24 +1142,14 @@ class IrActionsServer(models.Model):
             else:
                 name = payment_methods.get(data.get('method_id'))
             
-            # if name == 'Custom':
-            #     payment = new_payment_data.filtered(lambda l: l.name == 'Custom')
-            if name == 'Net Terms':
-                payment = new_payment_data.filtered(lambda l: l.name == 'Payment Terms')
-            elif name in ('Credit Card Prepayment', 'Credit Card'):
-                payment = new_payment_data.filtered(lambda l: l.name == 'Card')
-            else:
-                payment = new_payment_data.filtered(lambda l: l.name == name)
-            
-            if payment:
-                cr.execute("update account_move set sale_payment_method_id = %s where id = %s", (payment.id, move[0] ))
+            payment_id = get_payment_id(name)
+            if payment_id:
+                cr.execute("update account_move set sale_payment_method_id = %s where id = %s", (payment_id, move[0] ))
         
         
         self._cr.execute("select id,sale_order_payment_method_id from payment_transaction where sale_order_payment_method_id is not null")
         transactions_data = self._cr.fetchall()
         for transaction in transactions_data:
-            payment = False
-            name = ''
             cr.execute("select id,sub_method_id,method_id from sale_order_payment_method where id = %s", (transaction[1],))
             data = cr.dictfetchone()
             
@@ -1136,16 +1157,10 @@ class IrActionsServer(models.Model):
                 name = payment_methods.get(data.get('sub_method_id'))
             else:
                 name = payment_methods.get(data.get('method_id'))
-            # if name == 'Custom':
-            #     payment = new_payment_data.filtered(lambda l: l.name == 'Custom')
-            if name == 'Net Terms':
-                payment = new_payment_data.filtered(lambda l: l.name == 'Payment Terms')
-            elif name in ('Credit Card Prepayment', 'Credit Card'):
-                payment = new_payment_data.filtered(lambda l: l.name == 'Card')
-            else:
-                payment = new_payment_data.filtered(lambda l: l.name == name)
-            if payment:
-                cr.execute("update payment_transaction set payment_method_id = %s where id = %s", (payment.id, transaction[0] ))
+            
+            payment_id = get_payment_id(name)
+            if payment_id:
+                cr.execute("update payment_transaction set payment_method_id = %s where id = %s", (payment_id, transaction[0] ))
             
     
 
@@ -1155,18 +1170,23 @@ class IrActionsServer(models.Model):
         self._cr.execute("select name from failure_reason group by name;")
         failure_reason_ids = self._cr.fetchall()
         compnay_ids = self.env['res.company'].search([('id', 'in', (1,2))])
+        
+        # Batch create: collect all records to create first
+        create_vals_list = []
         for company in compnay_ids:
+            location = 117 if company.id == 2 else 116  # EU/SRMA Staging vs WH/SRMA Staging
             for resaon in failure_reason_ids:
-                if company.id == 2:
-                    location = 117  # EU/SRMA Staging
-                else:
-                    location = 116  # WH/SRMA Staging
-                
-                scrap_reason = self.env['scrap.reason.code'].create({
+                create_vals_list.append({
                     'name': resaon[0],
                     'company_id': company.id,
                     'location_id': location
                 })
+        
+        # Single batch create call (much faster than individual creates)
+        if create_vals_list:
+            self.env['scrap.reason.code'].create(create_vals_list)
+        
+        # Now update stock_scrap records
         for company in compnay_ids:
             reason_ids = self.env['scrap.reason.code'].search([('company_id', '=', company.id)])
             for reason in reason_ids:
@@ -1742,16 +1762,15 @@ class IrActionsServer(models.Model):
     
     def update_po_contact_ids(self):
         _logger.info("===============update_po_contact_ids====================")
-        self._cr.execute(
-            "select id,contact_id from purchase_order where contact_id is not null;"
-        )
-        datas = self._cr.fetchall()
+        # Clear existing relationships
         self._cr.execute("delete from purchase_order_res_partner_rel;")
-        for data in datas:
-            self._cr.execute(
-                "insert into purchase_order_res_partner_rel (purchase_order_id,res_partner_id) VALUES (%s,%s)",
-                (data[0], data[1]),
-            )
+        # Bulk insert all relationships in a single query using INSERT...SELECT
+        self._cr.execute("""
+            INSERT INTO purchase_order_res_partner_rel (purchase_order_id, res_partner_id)
+            SELECT id, contact_id
+            FROM purchase_order
+            WHERE contact_id IS NOT NULL;
+        """)
 
     def update_supplier_invoice_number(self):
         _logger.info("===============update_supplier_invoice_number====================")
