@@ -671,19 +671,19 @@ class IrActionsServer(models.Model):
             convert_csv_import(self.env, 'osi_ol_decryption', pathname, fp.read(), {}, 'update', False)
         
         analytic_account_ids = self.env['account.analytic.account'].search([])
-        
-        for cost_center_id, name in cost_center.items():
-            analytic_account_id = analytic_account_ids.filtered(lambda a: a.name == name)
-            if analytic_account_id:
-                self._cr.execute("""
-                                    UPDATE account_move_line
-                                    SET analytic_distribution = jsonb_build_object(%s::text, 100)
-                                    WHERE cost_center_id = %s
-                            """, (analytic_account_id.id, cost_center_id))
-                self._cr.execute("""select id from account_move_line where cost_center_id  =%s """, (cost_center_id,))
-                move_line = set([row[0] for row in self._cr.fetchall()])
-                if move_line:
-                    aml_obj.browse(move_line).with_delay()._create_analytic_lines()
+        for company in self.env['res.company'].search([]):
+            for cost_center_id, name in cost_center.items():
+                analytic_account_id = analytic_account_ids.filtered(lambda a: a.name == name)
+                if analytic_account_id:
+                    self._cr.execute("""
+                                        UPDATE account_move_line
+                                        SET analytic_distribution = jsonb_build_object(%s::text, 100)
+                                        WHERE cost_center_id = %s
+                                """, (analytic_account_id.id, cost_center_id))
+                    self._cr.execute("""SELECT aml.id FROM account_move_line aml JOIN res_partner rp ON rp.id = aml.partner_id WHERE aml.cost_center_id = %s AND aml.company_id = %s AND rp.company_id = aml.company_id""", (cost_center_id, company.id))
+                    move_line = set([row[0] for row in self._cr.fetchall()])
+                    if move_line:
+                        aml_obj.browse(move_line).with_context(allowed_company_ids=company.id).with_delay(channel='root.account_queue')._create_analytic_lines()
 
 
 

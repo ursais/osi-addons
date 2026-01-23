@@ -52,28 +52,32 @@ class IrActionsServer(models.Model):
             'res.partner',
             [('credit_limit', '>', 0), ('rollup_partner_ids', '!=', False)],
             '_compute_customer_deposit_balance',
-            20
+            20,
+            "root.account_queue"
         )
 
         self._process_by_domain(
             'res.partner',
             [('credit_limit', '>', 0), ('rollup_partner_ids', '!=', False)],
             '_compute_open_so_balance',
-            20
+            20,
+            "root.account_queue"
         )
 
         self._process_by_domain(
             'res.partner',
             [('credit_limit', '>', 0), ('rollup_partner_ids', '!=', False)],
             '_compute_outstanding_receivable',
-            20
+            20,
+            "root.account_queue"
         )
 
         self._process_by_domain(
             'res.partner',
             [('commercial_partner_id', '!=', False )],
             '_compute_net_terms_allowed',
-            35
+            35,
+            "root.account_queue"
         )
 
         # --------------------
