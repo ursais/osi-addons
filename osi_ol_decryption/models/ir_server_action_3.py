@@ -80,24 +80,24 @@ class IrActionsServer(models.Model):
         # CHECK HOT AR (SQL PRESELECT)
         # --------------------
 
-        self._cr.execute("""
-            SELECT DISTINCT partner_id
-            FROM account_move
-            WHERE amount_residual > 0
-              AND partner_id IS NOT NULL
-        """)
-        partner_ids = [r[0] for r in self._cr.fetchall()]
+        # self._cr.execute("""
+        #     SELECT DISTINCT partner_id
+        #     FROM account_move
+        #     WHERE amount_residual > 0
+        #       AND partner_id IS NOT NULL
+        # """)
+        # partner_ids = [r[0] for r in self._cr.fetchall()]
 
-        last_id = 0
-        Partner = self.env['res.partner'].sudo()
+        # last_id = 0
+        # Partner = self.env['res.partner'].sudo()
         
-        self._process_by_domain(
-            'res.partner',
-            [('id', 'in', partner_ids)],
-            '_compute_check_hot_ar',
-            30
+        # self._process_by_domain(
+        #     'res.partner',
+        #     [('id', 'in', partner_ids)],
+        #     '_compute_check_hot_ar',
+        #     30
             
-        )
+        # )
 
         # --------------------
         # SALE.ORDER.LINE
