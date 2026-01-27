@@ -1597,7 +1597,7 @@ class IrActionsServer(models.Model):
             )
             popped_parts = re.findall(pattern, text)
             for part in popped_parts:
-                self._cr.execute("select pgp_sym_decrypt(%s,'SQRtYfq2g6');", (part,))
+                self._cr.execute("select pgp_sym_decrypt(%s,'SQRtYfq2g6', 'cipher-algo=aes256,compress-algo=0,s2k-count=2048');", (part,))
                 str = self._cr.fetchone()
                 text = text.replace(part, str[0])
             self._cr.execute(

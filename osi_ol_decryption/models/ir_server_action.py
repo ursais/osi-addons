@@ -8,7 +8,7 @@ import os
 
 class IrActionsServer(models.Model):
     _inherit = "ir.actions.server"
-
+    
     def decrypt_char_field(self, all_data=False):
         KEY = ""
         with open('/home/odoo/decryption.txt', 'r') as file:
@@ -157,7 +157,9 @@ class IrActionsServer(models.Model):
                 batch_size = 10000
             offset = 0
             if table == 'account_move_line':
-                offset = 7400000
+                self.env.cr.execute("select id from %s order by id desc limit 1" % (table))
+                offset = self.env.cr.fetchone()[0] + 10000
+                
             self.env.cr.execute("select count(*) from %s" % (table))
             records = self.env.cr.fetchall()
             _logger.info(
@@ -202,29 +204,38 @@ class IrActionsServer(models.Model):
                         col_data = col_data.lstrip("<p>").rstrip("</p>")
 
                         if col_data.startswith("\\xc30"):
-                            # Check for common elements being inserted and skip if thats the case.
-                            if (
-                                "<br>" in col_data.lower()
-                                or "<br/>" in col_data.lower()
-                                or "..." in col_data.lower()
-                                or "@" in col_data.lower()
-                            ):
-                                # runningLog += (
-                                #     "\n Skipped Record with id %s in column %s as encrypted data seems corrupted: %s "
-                                #     % (id, col, col_data)
-                                # )
-                                # _logger.info(
-                                #     "\n Skipped Record with id %s in  %s.%s as encrypted data seems corrupted: %s "
-                                #     % (id, table, col, col_data)
-                                # )
-                                continue
+                        #     # Check for common elements being inserted and skip if thats the case.
+                        #     if (
+                        #         "<br>" in col_data.lower()
+                        #         or "<br/>" in col_data.lower()
+                        #         or "..." in col_data.lower()
+                        #         or "@" in col_data.lower()
+                        #     ):
+                        #         # runningLog += (
+                        #         #     "\n Skipped Record with id %s in column %s as encrypted data seems corrupted: %s "
+                        #         #     % (id, col, col_data)
+                        #         # )
+                        #         # _logger.info(
+                        #         #     "\n Skipped Record with id %s in  %s.%s as encrypted data seems corrupted: %s "
+                        #         #     % (id, table, col, col_data)
+                        #         # )
+                        #         continue
                             set_data.append((col, col_data))
 
                     if not set_data:
                         continue
+                    # Original Code
+                    # set_data_str = ", ".join(
+                    #     [
+                    #         """"%s" = pgp_sym_decrypt('%s', '%s')"""
+                    #         % (col, col_data, KEY)
+                    #         for col, col_data in set_data
+                    #     ]
+                    # )
+                    # New Code
                     set_data_str = ", ".join(
                         [
-                            """"%s" = pgp_sym_decrypt('%s', '%s')"""
+                            """"%s" = pgp_sym_decrypt('%s', '%s', 'cipher-algo=aes256,compress-algo=0,s2k-count=2048')"""
                             % (col, col_data, KEY)
                             for col, col_data in set_data
                         ]
@@ -598,12 +609,12 @@ class IrActionsServer(models.Model):
                     continue
                 set_data_str = ", ".join(
                     [
-                        """"%s" = json_build_object('en_US',(concat('',pgp_sym_decrypt('%s', '%s'), '')))"""
+                        """"%s" = json_build_object('en_US',(concat('',pgp_sym_decrypt('%s', '%s', 'cipher-algo=aes256,compress-algo=0,s2k-count=2048'), '')))"""
                         % (col, col_data, KEY)
                         for col, col_data in set_data
                     ]
                 )
-
+                
                 query = """ UPDATE %s SET %s  where id = %s ;""" % (
                     table,
                     set_data_str,
