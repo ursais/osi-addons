@@ -367,14 +367,38 @@ class EncryptWizard(models.TransientModel):
                         if not set_data:
                             skipped_ids.append(id)
                             continue
+                        # set_data_str = ",".join(
+                        #     [
+                        #         """"%s" = pgp_sym_encrypt('%s', '%s')"""
+                        #         % (col, col_data.replace("'", "''"), self.key)
+                        #         for col, col_data in set_data
+                        #     ]
+                        # )
                         set_data_str = ",".join(
-                            [
-                                """"%s" = pgp_sym_encrypt('%s', '%s')"""
-                                % (col, col_data.replace("'", "''"), self.key)
-                                for col, col_data in set_data
-                            ]
-                        )
+                                [
+                                    """"%s" = pgp_sym_encrypt(
+                                            '%s',
+                                            '%s',
+                                            'cipher-algo=aes256,compress-algo=0,s2k-count=2048'
+                                        )"""
+                                    % (col, col_data.replace("'", "''"), self.key)
+                                    for col, col_data in set_data
+                                ]
+                            )
 
+                        #new Way to encrypt data
+                        # set_data_str = ",".join(
+                        #             [""""{col}" = encode(
+                        #                         encrypt(convert_to('{val}', 'UTF8'), '{key}', 'aes'),
+                        #                         'base64'
+                        #                     )""".format(
+                        #                     col=col,
+                        #                     val=col_data.replace("'", "''"),
+                        #                     key=self.key,
+                        #                 )
+                        #                 for col, col_data in set_data
+                        #             ]
+                        #         )
                         try:
                             query = """ UPDATE %s SET %s  where id = %s ;""" % (
                                 table,
