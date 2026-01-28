@@ -50,7 +50,10 @@ class IrActionsServer(models.Model):
 
         self._process_by_domain(
             'res.partner',
-            [('credit_limit', '>', 0), ('rollup_partner_ids', '!=', False)],
+            ['|', '|',
+                ('credit_limit', '>', 0),
+                ('partner_rollup_id', '!=', False),
+                ('invoice_ids.state', '=', 'posted')],
             '_compute_customer_deposit_balance',
             20,
             "root.account_queue"
@@ -58,7 +61,11 @@ class IrActionsServer(models.Model):
 
         self._process_by_domain(
             'res.partner',
-            [('credit_limit', '>', 0), ('rollup_partner_ids', '!=', False)],
+            ['|', '|', '|',
+                ('credit_limit', '>', 0),
+                ('partner_rollup_id', '!=', False),
+                ('child_ids', '!=', False),
+                ('sale_order_ids', '!=', False)],
             '_compute_open_so_balance',
             20,
             "root.account_queue"
@@ -66,7 +73,7 @@ class IrActionsServer(models.Model):
 
         self._process_by_domain(
             'res.partner',
-            [('credit_limit', '>', 0), ('rollup_partner_ids', '!=', False)],
+            ['|',('rollup_partner_ids', '!=', False),('total_due', '>', 0)],
             '_compute_outstanding_receivable',
             20,
             "root.account_queue"
@@ -74,34 +81,12 @@ class IrActionsServer(models.Model):
 
         self._process_by_domain(
             'res.partner',
-            [('commercial_partner_id', '!=', False )],
+            [('commercial_partner_id', '!=', False), 
+            ('commercial_partner_id.property_payment_term_id', '!=', False)],
             '_compute_net_terms_allowed',
             35,
             "root.account_queue"
         )
-
-        # --------------------
-        # CHECK HOT AR (SQL PRESELECT)
-        # --------------------
-
-        # self._cr.execute("""
-        #     SELECT DISTINCT partner_id
-        #     FROM account_move
-        #     WHERE amount_residual > 0
-        #       AND partner_id IS NOT NULL
-        # """)
-        # partner_ids = [r[0] for r in self._cr.fetchall()]
-
-        # last_id = 0
-        # Partner = self.env['res.partner'].sudo()
-        
-        # self._process_by_domain(
-        #     'res.partner',
-        #     [('id', 'in', partner_ids)],
-        #     '_compute_check_hot_ar',
-        #     30
-            
-        # )
 
         # --------------------
         # SALE.ORDER.LINE
@@ -166,7 +151,7 @@ class IrActionsServer(models.Model):
 
         self._process_by_domain(
             'sale.order',
-            [],
+            ['|',('substate_id.name', '!=', 'Complete'),('substate_id', '!=', False)],
             '_compute_current_estimate_ship_date',
             40,
             "root.sale_queue"
@@ -206,8 +191,9 @@ class IrActionsServer(models.Model):
 
         self._process_by_domain(
             'sale.order',
-            ['|', ('state', '=', 'sale'),
-                   ('sale_payment_method_id.include_in_credit_limit', '=', True)],
+            [('substate_id.name', '!=', 'Complete'),
+                '|', ('state', '=', 'sale'),
+                ('sale_payment_method_id.include_in_credit_limit', '=', True)],
             '_compute_uninvoiced_balance',
             20,
             "root.sale_queue"
@@ -217,14 +203,16 @@ class IrActionsServer(models.Model):
         # stock.picking
         self._process_by_domain(
             'stock.picking',
-            [],
+            [('picking_type_id.code', '=', 'outgoing'),
+            ('state', 'not in', ['cancel', 'done'])],
             '_compute_total_sales_price',
             30,
             "root.stock_queue"
         )
         self._process_by_domain(
             'stock.picking',
-            [],
+            [('picking_type_id.code', '=', 'outgoing'),
+            ('state', 'not in', ['cancel', 'done'])],
             '_compute_main_error',
             15,
             "root.stock_queue"
@@ -233,6 +221,8 @@ class IrActionsServer(models.Model):
             'stock.picking',
             [
                 ('sale_id', '!=', False),
+                ('picking_type_id.code', '=', 'outgoing'),
+                ('state', 'not in', ['cancel', 'done'])
             ],
             '_compute_credit_hold',
             20,
@@ -243,6 +233,7 @@ class IrActionsServer(models.Model):
             'mrp.production',
             [
                 ('sale_order_id', '!=', False),
+                ('state', 'not in', ['cancel', 'done'])
             ],
             '_compute_credit_hold',
             20,
