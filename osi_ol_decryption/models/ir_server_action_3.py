@@ -145,6 +145,17 @@ class IrActionsServer(models.Model):
             "root.sale_queue"
         )
 
+        self._process_by_domain(
+            'sale.order.line',
+            [
+                ('invoice_status', '=', 'invoiced')
+            ],
+            '_compute_invoice_status',
+            200,
+            "root.sale_queue",
+            500
+        )
+
         # --------------------
         # SALE.ORDER
         # --------------------
@@ -192,11 +203,13 @@ class IrActionsServer(models.Model):
         self._process_by_domain(
             'sale.order',
             [('substate_id.name', '!=', 'Complete'),
+             ('invoice_ids', '!=', False),
                 '|', ('state', '=', 'sale'),
                 ('sale_payment_method_id.include_in_credit_limit', '=', True)],
             '_compute_uninvoiced_balance',
             20,
-            "root.sale_queue"
+            "root.sale_queue",
+            250
         )
 
         

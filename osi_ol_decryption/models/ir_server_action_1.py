@@ -446,6 +446,8 @@ class IrActionsServer(models.Model):
     def update_inspections(self):
         self = self.sudo()
         _logger.info("===============update_inspections====================")
+        self._cr.execute("update sale_order set locked = 't' where state = 'sale' and locked = 'f';")
+        self._cr.commit()
         inspection_obj = self.env['sale.order.inspection']
         finace_id = inspection_obj.search([('name', '=', 'Finance Manual Exception')])
         ship_id = inspection_obj.search([('name', '=', 'Do Not Ship')])
