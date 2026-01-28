@@ -1767,6 +1767,61 @@ class IrActionsServer(models.Model):
                     lines.sudo().write({"inventory_adjustment_id":current_id})
         _logger.info("\n\n=update_stock_inventory Done")
 
+        # OSI Ticket: 67357
+        TABLE = "stock_inventory"
+        ID_COLUMN = "id"
+        # Find the sequence linked to the ID column
+        cr.execute("""
+        SELECT pg_get_serial_sequence(%s, %s)
+        """, (TABLE, ID_COLUMN))
+        row = cr.fetchone()
+        seq_name = row and row[0] or False
+
+        if seq_name:
+            # Get current max(id)
+            cr.execute(f"""
+            SELECT COALESCE(MAX({ID_COLUMN}), 0)
+            FROM {TABLE}
+            """)
+            max_id = cr.fetchone()[0]
+
+            # Reset sequence to max(id)
+            cr.execute("""
+            SELECT setval(%s, %s, true)
+            """, (seq_name, max_id))
+
+        _logger.info("\n\n=Sequence is Updated.")
+
+        # OSI Ticket: 67357
+        #Update the Parent path in Stock Location
+
+        # Backup parent locations
+        cr.execute("""
+            CREATE TEMP TABLE tmp_stock_location_parent AS
+            SELECT id, location_id
+            FROM stock_location;
+        """)
+        cr.commit()
+
+        # Clear parent location
+        cr.execute("""
+            UPDATE stock_location
+            SET location_id = NULL;
+        """)
+        cr.commit()
+
+        # Restore parent location
+        cr.execute("""
+            UPDATE stock_location sl
+            SET location_id = tmp.location_id
+            FROM tmp_stock_location_parent tmp
+            WHERE sl.id = tmp.id;
+        """)
+        cr.commit()
+
+        cr.execute("DROP table tmp_stock_location_parent;")
+        _logger.info("\n\n=Parent path is Updated.")
+
     def update_credit_limit_data(self):
         """
             1. create table temp_res_partner_vp as SELECT id,terms_partner_id FROM res_partner WHERE terms_partner_id IS NOT NULL;
