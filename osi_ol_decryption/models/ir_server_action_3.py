@@ -100,13 +100,13 @@ class IrActionsServer(models.Model):
             "root.sale_queue"
         )
 
-        self._process_by_domain(
-            'sale.order.line',
-            [('product_id', '!=', False)],
-            '_compute_purchase_price',
-            50,
-            "root.sale_queue"
-        )
+        # self._process_by_domain(
+        #     'sale.order.line',
+        #     [('product_id', '!=', False)],
+        #     '_compute_purchase_price',
+        #     50,
+        #     "root.sale_queue"
+        # )
 
         self._process_by_domain(
             'sale.order.line',
@@ -165,7 +165,8 @@ class IrActionsServer(models.Model):
             ['|',('substate_id.name', '!=', 'Complete'),('substate_id', '!=', False)],
             '_compute_current_estimate_ship_date',
             40,
-            "root.sale_queue"
+            "root.sale_queue",
+            500
         )
 
         self._process_by_domain(
@@ -209,7 +210,7 @@ class IrActionsServer(models.Model):
             '_compute_uninvoiced_balance',
             20,
             "root.sale_queue",
-            250
+            80
         )
 
         
@@ -239,7 +240,8 @@ class IrActionsServer(models.Model):
             ],
             '_compute_credit_hold',
             20,
-            "root.stock_queue"
+            "root.stock_queue",
+            500
         )
         #mrp.production
         self._process_by_domain(
@@ -250,7 +252,8 @@ class IrActionsServer(models.Model):
             ],
             '_compute_credit_hold',
             20,
-            "root.mrp_queue"
+            "root.mrp_queue",
+            500
         )
         #account.move
         self._process_by_domain(
