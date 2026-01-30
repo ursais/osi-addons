@@ -685,7 +685,7 @@ class IrActionsServer(models.Model):
                     self._cr.execute("""SELECT aml.id FROM account_move_line aml JOIN res_partner rp ON rp.id = aml.partner_id WHERE aml.cost_center_id = %s AND aml.company_id = %s AND rp.company_id = aml.company_id""", (cost_center_id, company.id))
                     move_line = set([row[0] for row in self._cr.fetchall()])
                     if move_line:
-                        aml_obj.browse(move_line).with_context(allowed_company_ids=company.id).with_delay(channel='root.account_queue')._create_analytic_lines()
+                        aml_obj.browse(move_line).with_context(allowed_company_ids=company.ids).with_delay(channel='root.account_queue')._create_analytic_lines()
 
 
 
