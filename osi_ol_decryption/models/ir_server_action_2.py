@@ -187,7 +187,7 @@ class IrActionsServer(models.Model):
 
     def script_3(self):
         _logger.info("\n\n==Update Product Templates with Unique Attributes and Values==Script 3 is start==================")
-        batch_size = 100  # Define batch size
+        batch_size = 500  # Define batch size
         ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True)])
         total_products = len(ProductTemplates)  # Total number of products to process
         offset = 0
@@ -376,7 +376,7 @@ class IrActionsServer(models.Model):
     
     def script_4(self):
         _logger.info("\n\n==Sync Attribute Values in Product Variants===Script 4 is start==================")
-        batch_size = 100  # Define batch size
+        batch_size = 500  # Define batch size
         #PRODUCT-TEMPLATE ID Which id Need to take care [5593,24607,5172,32379,24337,25216,26588,6518,4696,103791,102630,102736,101999]
         ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True),("active","=",True)])
         total_products = len(ProductTemplates)  # Total number of products to process
@@ -500,7 +500,7 @@ class IrActionsServer(models.Model):
         cr = self.env.cr
 
         # ProductTemplates = env["product.template"].search([("id","=",104183)])
-        batch_size = 10  # Define batch size
+        batch_size = 500  # Define batch size
         ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True)])
         total_products = len(ProductTemplates)  # Total number of products to process
         offset = 0
@@ -527,7 +527,7 @@ class IrActionsServer(models.Model):
                         for v13_data in v13_datas:
                             v13_attribute_value_id = v13_data[3]
                             v17_product_template_value_id = attrbute_line_id.product_template_value_ids.filtered(lambda l :l.product_attribute_value_id.id == v13_attribute_value_id and l.ptav_active)
-                            _logger.info("\n\n\n\n======v13_data:%s::%s:%s",attrbute_line_id.attribute_id.name,v17_product_template_value_id.name,v13_data)
+                            # _logger.info("\n\n\n\n======v13_data:%s::%s:%s",attrbute_line_id.attribute_id.name,v17_product_template_value_id.name,v13_data)
                             if not attrbute_line_id.is_qty_required:
                                 update_query = "UPDATE product_template_attribute_line SET is_qty_required = 't' WHERE id = %s;"
                                 cr.execute(update_query, (attrbute_line_id.id,))  # Note the comma inside the tuple
@@ -536,7 +536,7 @@ class IrActionsServer(models.Model):
                                 qty_range = set(range(v17_product_template_value_id.default_qty,v17_product_template_value_id.maximum_qty+1))
                                 existing_quantities = set(v17_product_template_value_id.attribute_value_qty_ids.mapped('qty'))
                                 missing_quantities = qty_range - existing_quantities
-                                _logger.info("\n\n\n\n======missing_quantities=========product_template##########%s==ID:::%s:::Counter::%s",v17_product_template_value_id.attribute_value_qty_ids,qty_range,missing_quantities)
+                                # _logger.info("\n\n\n\n======missing_quantities=========product_template##########%s==ID:::%s:::Counter::%s",v17_product_template_value_id.attribute_value_qty_ids,qty_range,missing_quantities)
                                 for qty in missing_quantities:
                                     v17_product_template_value_id.attribute_value_qty_ids.create({
                                         'name': f"{v17_product_template_value_id.mapped('product_attribute_value_id').display_name} - Qty {qty}",
@@ -572,7 +572,7 @@ class IrActionsServer(models.Model):
                         qty_range = set(range(template_value_line.default_qty,template_value_line.maximum_qty+1))
                         existing_quantities = set(template_value_line.attribute_value_qty_ids.mapped('qty'))
                         missing_quantities = qty_range - existing_quantities
-                        _logger.info("\n\n\n\n======template_value_line=====%s==%s,",template_value_line.name,missing_quantities)
+                        # _logger.info("\n\n\n\n======template_value_line=====%s==%s,",template_value_line.name,missing_quantities)
                         for qty in missing_quantities:
                             template_value_line.attribute_value_qty_ids.create({
                                 'name': f"{template_value_line.mapped('product_attribute_value_id').display_name} - Qty {qty}",
@@ -592,9 +592,9 @@ class IrActionsServer(models.Model):
                         attribute_id = qty_attributes_lines.filtered(lambda l:l.attribute_id.name)
                         for line in qty_attributes_lines:
                             if value_qty and value_qty.attribute_value_qty_id.product_attribute_value_id.id != value_qty.attr_value_id.id or not value_qty.attribute_value_qty_id.product_attribute_value_id:
-                                _logger.info("\n\n\n\n======444444=====%s===%s=%s:%s**%s",value_qty.product_id,value_qty.attr_value_id.attribute_id.name,line.attribute_id.name,value_qty.attr_value_id.name,value_qty.qty)
+                                # _logger.info("\n\n\n\n======444444=====%s===%s=%s:%s**%s",value_qty.product_id,value_qty.attr_value_id.attribute_id.name,line.attribute_id.name,value_qty.attr_value_id.name,value_qty.qty)
                                 if value_qty.attr_value_id.attribute_id.name == line.attribute_id.name:
-                                    _logger.info("\n\n===product_product==%s==%s===%s",product_product,product_product.product_attribute_value_qty_ids.mapped("attr_value_id.name"),product_product.product_attribute_value_qty_ids.mapped("qty"))
+                                    # _logger.info("\n\n===product_product==%s==%s===%s",product_product,product_product.product_attribute_value_qty_ids.mapped("attr_value_id.name"),product_product.product_attribute_value_qty_ids.mapped("qty"))
                                     active_value_id = self.env["product.attribute.value"].search([("name","=",value_qty.attr_value_id.name),("attribute_id","=",line.attribute_id.id)])
                                     attribute_value_qty_data = self.env["attribute.value.qty"].search([('product_attribute_value_id','=',active_value_id.id),("product_tmpl_id","=",product_template.id),("qty","=",int(value_qty.qty))])
                                     value_qty.write({'attribute_value_qty_id':attribute_value_qty_data.id,"attr_value_id":active_value_id.id})
@@ -742,7 +742,7 @@ class IrActionsServer(models.Model):
         _logger.info("\n\n==Adding classification_id in Scaffolding Bill of Martial Lines==Script 7 is start==================")
         ScaffoldingBoMs = self.env["mrp.bom"].search([("scaffolding_bom","=", True)])
         total_products = len(ScaffoldingBoMs)  # Total number of products to process
-        batch_size = 10  # Define batch size
+        batch_size = 500  # Define batch size
         offset = 0
         counter = 1
         _logger.info("Total products to process: %s", total_products)
@@ -1517,7 +1517,7 @@ class IrActionsServer(models.Model):
         self.env.cr.commit()
 
     def update_phantoms_bom_data(self):
-        batch_size = 10  # Define batch size
+        batch_size = 500  # Define batch size
         ProductTemplates = self.env['product.template'].search([("has_configurable_attributes","=",True)])
         # --- Setup ---
         MrpBom = self.env["mrp.bom"]
@@ -1886,11 +1886,11 @@ class IrActionsServer(models.Model):
             if not partner.exists():
                 continue
 
-            partner.with_delay()._compute_outstanding_receivable()
-            partner.with_delay()._compute_open_so_balance()
-            partner.with_delay()._compute_remaining_credit()
-            partner.with_delay()._compute_customer_deposit_balance()
-            partner.with_delay()._compute_open_bo_balance()
+            partner.with_delay(priority=20,channel="root.account_queue")._compute_outstanding_receivable()
+            partner.with_delay(priority=20,channel="root.account_queue")._compute_open_so_balance()
+            partner.with_delay(priority=20,channel="root.account_queue")._compute_remaining_credit()
+            partner.with_delay(priority=20,channel="root.account_queue")._compute_customer_deposit_balance()
+            partner.with_delay(priority=20,channel="root.account_queue")._compute_open_bo_balance()
 
             _logger.info("Updated partner ID: %s", partner_id)
     
