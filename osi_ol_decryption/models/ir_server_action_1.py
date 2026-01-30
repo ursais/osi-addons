@@ -152,18 +152,20 @@ class IrActionsServer(models.Model):
             if providers:
                 stripe.provider_ids = [Command.set(providers.ids)]
             
-
-
+    
     def migrate_helpdesk_rma_to_ticket(self):
+        from collections import defaultdict
         _logger.info(
-            "===============migrate_helpdesk_rma_to_ticket===================="
+            "===============migrate_helpdesk_rma_to_ticket (Optimized)===================="
         )
         self = self.sudo()
         customer_us = self.env.ref("ol_helpdesk_repair_batch.helpdesk_team_customer_rma", raise_if_not_found=False)
         customer_eu = self.env.ref("ol_helpdesk_repair_batch.helpdesk_team_customer_rma_eu", raise_if_not_found=False)
         self._cr.execute("update ir_sequence set active = 'f' where code = 'helpdesk' and id not in (228,227)")
-        self._cr.execute("update helpdesk_team set sequence_id = 227 where id = %s;", (customer_us.id,))
-        self._cr.execute("update helpdesk_team set sequence_id = 228 where id = %s;", (customer_eu.id,))
+        if customer_us:
+            self._cr.execute("update helpdesk_team set sequence_id = 227 where id = %s;", (customer_us.id,))
+        if customer_eu:
+            self._cr.execute("update helpdesk_team set sequence_id = 228 where id = %s;", (customer_eu.id,))
         self._cr.execute("update ir_model_data set noupdate = 't' where name in ('helpdesk_team_customer_rma_eu', 'helpdesk_team_customer_rma');")
         self._cr.execute("update ir_sequence set code = 'helpdesk' where id in (227,228)")
         self._cr.commit()
@@ -171,72 +173,121 @@ class IrActionsServer(models.Model):
         partner_obj = self.env["res.partner"]
         repair_obj = self.env["repair.order"]
         picking_obj = self.env["stock.picking"]
+        
+        # Pre-fetch maps
         ticket_type_ids = self.env["helpdesk.ticket.type"].search([])
+        ticket_type_map = {t.name: t.id for t in ticket_type_ids}
+        
         team_id = self.env.ref("ol_helpdesk_repair_batch.helpdesk_team_customer_rma")
         tema_eu_id = self.env.ref(
             "ol_helpdesk_repair_batch.helpdesk_team_customer_rma_eu"
         )
+        
+        # Stage Map
+        stage_refs = {
+            "new": "ol_helpdesk_repair_batch.helpdesk_stage_rma_requested",
+            "accepted": "ol_helpdesk_repair_batch.helpdesk_stage_rma_accepted",
+            "in_progress": "ol_helpdesk_repair_batch.helpdesk_stage_rma_in_progress",
+            "resolved": "ol_helpdesk_repair_batch.helpdesk_stage_rma_resolved",
+            "cancelled": "ol_helpdesk_repair_batch.helpdesk_stage_rma_cancelled",
+        }
+        stage_map = {}
+        for k, v in stage_refs.items():
+            ref = self.env.ref(v, raise_if_not_found=False)
+            if ref:
+                stage_map[k] = ref.id
+                
+        def get_stage(value):
+            if not value:
+                return False
+            return stage_map.get(value, False)
+
         self._cr.execute(
             """select id,name,assigned_to,state,type,warranty_expiration,
             rush,sale_order_id,partner_id,summary,company_id,
             flags,shipping_method,shipping_account from helpdesk_rma"""
         )
         rma_data_ids = self._cr.dictfetchall()
+        
+        # Bulk Fetching
+        rma_ids = [r['id'] for r in rma_data_ids]
+        
+        # 1. Partners
+        all_partner_ids = set(r.get('partner_id') for r in rma_data_ids if r.get('partner_id'))
+        partner_map = {}
+        if all_partner_ids:
+            partners = partner_obj.browse(all_partner_ids)
+            # Fetch fields to cache
+            partners.read(['email', 'phone', 'company_id'])
+            partner_map = {p.id: p for p in partners}
+            
+        # 2. RMA Lines
+        rma_lines_map = defaultdict(list)
+        all_rma_line_ids = []
+        if rma_ids:
+            self._cr.execute("select rma_id, id from temp_helpdesk_rma_line where rma_id in %s", (tuple(rma_ids),))
+            for rid, lid in self._cr.fetchall():
+                rma_lines_map[rid].append(lid)
+                all_rma_line_ids.append(lid)
+        
+        # 3. Support & Historical Data
+        historical_map = defaultdict(list) # line_id -> list of historical ids
+        support_data_map = defaultdict(list) # line_id -> list of support dicts
+        all_support_order_ids = set()
+        
+        if all_rma_line_ids:
+            self._cr.execute("select * from temp_support_repair_order where rma_line_id in %s", (tuple(all_rma_line_ids),))
+            all_support_data = self._cr.dictfetchall()
+            for row in all_support_data:
+                lid = row['rma_line_id']
+                support_data_map[lid].append(row)
+                if row.get('historical_repair_order_id'):
+                    historical_map[lid].append(row.get('historical_repair_order_id'))
+                all_support_order_ids.add(row['id'])
+
+        # 4. Support Lines
+        support_lines_map = defaultdict(list)
+        if all_support_order_ids:
+            self._cr.execute("select * from support_repair_order_line where order_id in %s", (tuple(all_support_order_ids),))
+            for row in self._cr.dictfetchall():
+                support_lines_map[row['order_id']].append(row)
+                
+        # 5. Stock Pickings
+        picking_map = defaultdict(list) # group_id -> list of picking ids
+        all_proc_groups = set(row['procurement_group_id'] for rows in support_data_map.values() for row in rows if row.get('procurement_group_id'))
+        if all_proc_groups:
+             self._cr.execute("select group_id, id from stock_picking where group_id in %s", (tuple(all_proc_groups),))
+             for gid, pid in self._cr.fetchall():
+                 picking_map[gid].append(pid)
+                 
+        # Pre-load moves
+        all_picking_ids = [pid for pids in picking_map.values() for pid in pids]
+        if all_picking_ids:
+            picking_obj.browse(all_picking_ids).mapped('move_ids')
+
         counter = 1
 
-        def get_stage(value):
-            if not value:
-                return False
-            if value == "new":
-                return self.env.ref(
-                    "ol_helpdesk_repair_batch.helpdesk_stage_rma_requested"
-                ).id
-            elif value == "accepted":
-                return self.env.ref(
-                    "ol_helpdesk_repair_batch.helpdesk_stage_rma_accepted"
-                ).id
-            elif value == "in_progress":
-                return self.env.ref(
-                    "ol_helpdesk_repair_batch.helpdesk_stage_rma_in_progress"
-                ).id
-            elif value == "resolved":
-                return self.env.ref(
-                    "ol_helpdesk_repair_batch.helpdesk_stage_rma_resolved"
-                ).id
-            elif value == "cancelled":
-                return self.env.ref(
-                    "ol_helpdesk_repair_batch.helpdesk_stage_rma_cancelled"
-                ).id
-            return False
-
         for rma in rma_data_ids:
-            self._cr.execute(
-                "select id from temp_helpdesk_rma_line where rma_id = %s",
-                (rma.get("id"),),
-            )
-            rma_line_ids = [ids[0] for ids in self._cr.fetchall() if ids[0] is not None]
+            # Prepare data
+            current_line_ids = rma_lines_map.get(rma.get("id"), [])
             historical_repair_order_ids = []
-            if rma_line_ids:
-                self._cr.execute(
-                    "select historical_repair_order_id from temp_support_repair_order where rma_line_id in %s",
-                    (tuple(rma_line_ids),),
-                )
-                historical_repair_order_ids = [
-                    ids[0] for ids in self._cr.fetchall() if ids[0] is not None
-                ]
-            partner_id = partner_obj.browse(rma.get("partner_id"))
+            support_data = [] # Combined support data for this RMA
+            
+            for lid in current_line_ids:
+                historical_repair_order_ids.extend(historical_map.get(lid, []))
+                support_data.extend(support_data_map.get(lid, []))
+            
+            partner_id = partner_map.get(rma.get("partner_id"))
             type_name = rma.get("type", "") and rma.get("type", "").capitalize()
-            type = self.env["helpdesk.ticket.type"]
-            if type_name != None:
-                type = ticket_type_ids.filtered(
-                    lambda a: a.name == type_name.capitalize()
-                )
+            type_obj_id = False
+            if type_name:
+                type_obj_id = ticket_type_map.get(type_name)
 
             vals = {
                 "user_id": rma.get("assigned_to"),
                 "name": rma.get("name"),
                 # "ticket_ref": rma.get("name"),
-                "ticket_type_id": type.id,
+                "ticket_type_id": type_obj_id,
                 "team_id": team_id.id if rma.get("company_id") == 1 else tema_eu_id.id,
                 "stage_id": get_stage(rma.get("state", False)),
                 "priority": "3"
@@ -246,9 +297,9 @@ class IrActionsServer(models.Model):
                 if rma.get("sale_order_id")
                 else False,
                 # "repair_sale_order_ids": [(6, 0, v13_data[0].get('related_repair_replacement_sale_ids'))] if v13_data else [],
-                "partner_id": partner_id.id,
-                "partner_email": partner_id.email,
-                "partner_phone": partner_id.phone,
+                "partner_id": partner_id.id if partner_id else False,
+                "partner_email": partner_id.email if partner_id else False,
+                "partner_phone": partner_id.phone if partner_id else False,
                 "description": rma.get("summary"),
                 # "repair_ids": [(6, 0, historical_repair_order_ids)],
                 "company_id": rma.get("company_id"),
@@ -263,12 +314,9 @@ class IrActionsServer(models.Model):
             }
             if partner_id and partner_id.company_id and rma.get("company_id") != None and rma.get("company_id") != partner_id.company_id.id:
                self._cr.execute("update res_partner set company_id = null where id = %s", (partner_id.id,))
-               self._cr.commit()
-
-
+               self._cr.commit() # Avoid frequent commits
 
             # Create Ticket
-            counter += 1
             ticket_id = Ticket.with_context(tracking_disable=True, is_migration=True).create(vals)
             if ticket_id.team_id.sequence_id:
                 ticket_id.ticket_ref = ticket_id.id
@@ -278,21 +326,16 @@ class IrActionsServer(models.Model):
                     (ticket_id.id, tuple(historical_repair_order_ids)),
                 )
                 if len(historical_repair_order_ids) == 1:
-                    repair = repair_obj.browse(historical_repair_order_ids)
-                    if repair.lot_id:
-                        self._cr.execute(
-                            "update stock_lot set warranty_expiration_date = %s where id = %s",
-                            (rma.get("warranty_expiration"), repair.lot_id.id),
-                        )
-                        # repair.lot_id.warranty_expiration_date = rma.get('warranty_expiration')
-            else:
-                if rma_line_ids:
-                    self._cr.execute(
-                        "select * from temp_support_repair_order where rma_line_id in %s",
-                        (tuple(rma_line_ids),),
-                    )
-                    support_data = self._cr.dictfetchall()
+                    # Optimized to avoid object browse if possible, but lot_id check requires it or SQL
+                    self._cr.execute("""
+                        UPDATE stock_lot 
+                        SET warranty_expiration_date = %s 
+                        FROM repair_order 
+                        WHERE repair_order.id = %s AND stock_lot.id = repair_order.lot_id
+                    """, (rma.get("warranty_expiration"), historical_repair_order_ids[0]))
 
+            else:
+                if support_data:
                     for support in support_data:
                         # _logger.info("===============support %s============" % (support))
                         picking_ids = []
@@ -319,10 +362,12 @@ class IrActionsServer(models.Model):
                             "user_id": support.get("create_uid"),
                             "procurement_group_id": support.get("procurement_group_id"),
                         }
-                        self._cr.execute("select company_id from res_partner where id = %s", (support.get("partner_id"),))
-                        pt_compnay =  self._cr.fetchone()
-                        if pt_compnay and pt_compnay[0] != None and pt_compnay != support.get("company_id"):
-                            self._cr.execute("update res_partner set company_id = null where id = %s", (support.get("partner_id"),))
+                        
+                        # Company Check
+                        s_partner_id = support.get("partner_id")
+                        s_company_id = support.get("company_id")
+                        if s_partner_id:
+                             self._cr.execute("update res_partner set company_id = null where id = %s and company_id != %s", (s_partner_id, s_company_id))
 
                         repair_id = repair_obj.with_company(
                             support.get("company_id")
@@ -339,25 +384,13 @@ class IrActionsServer(models.Model):
                                 "update stock_picking set repair_id = %s where group_id = %s",
                                 (repair_id.id, support.get("procurement_group_id")),
                             )
-                            self._cr.execute(
-                                "select id from stock_picking where group_id = %s",
-                                (support.get("procurement_group_id"),),
-                            )
-                            picking_ids = [
-                                ids[0]
-                                for ids in self._cr.fetchall()
-                                if ids[0] is not None
-                            ]
+                            # Fetch moves from preloaded
+                            p_ids = picking_map.get(support.get("procurement_group_id"), [])
                             move_ids = self.env["stock.move"]
-                            if picking_ids:
-                                picking_ids = picking_obj.browse(picking_ids)
-                                move_ids = picking_ids.mapped("move_ids")
+                            if p_ids:
+                                move_ids = picking_obj.browse(p_ids).mapped("move_ids")
 
-                            self._cr.execute(
-                                "select * from support_repair_order_line where order_id = %s",
-                                (support.get("id"),),
-                            )
-                            line_list = self._cr.dictfetchall()
+                            line_list = support_lines_map.get(support.get("id"), [])
 
                             for line in line_list:
                                 move_id = False
@@ -437,11 +470,15 @@ class IrActionsServer(models.Model):
                                                 ],
                                             }
                                         )
-                if (counter + 1) % 10000 == 0:  # We save every 100k records
-                    _logger.info("===============migrate_helpdesk_rma_to_ticket %s============" % (counter))
-                    self.env.cr.commit()
+            
+            counter += 1
+            if (counter + 1) % 10000 == 0:  # We save every 10k records (was 100k comment but 10k code)
+                _logger.info("===============migrate_helpdesk_rma_to_ticket %s============" % (counter))
+                self.env.cr.commit()
+                
         self._cr.execute("update ir_sequence set active = 't' where code = 'helpdesk.ticket'")
         self._cr.commit()
+
 
     def update_inspections(self):
         self = self.sudo()
