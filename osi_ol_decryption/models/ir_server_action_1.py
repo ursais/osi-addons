@@ -485,25 +485,27 @@ class IrActionsServer(models.Model):
         _logger.info("===============update_inspections====================")
         self._cr.execute("update sale_order set locked = 't' where state = 'sale' and locked = 'f';")
         self._cr.commit()
+        complete_id = self.env['base.substate'].with_context(active_test=False).search([('model', '=', 'sale.order'),('name', '=', 'Complete')], limit=1)
+        
         inspection_obj = self.env['sale.order.inspection']
         finace_id = inspection_obj.search([('name', '=', 'Finance Manual Exception')])
         ship_id = inspection_obj.search([('name', '=', 'Do Not Ship')])
         build_id = inspection_obj.search([('name', '=', 'Do Not Build')])
-        self._cr.execute("select sale_id from temp_sale_workflow_hold where check_id in (55,69);")
+        self._cr.execute("select sale_id from temp_sale_workflow_hold tswh join sale_order so on so.id = tswh.sale_id where tswh.check_id in (55,69) and tswh.resolve_user_id is null and (so.substate_id != %s or so.substate_id is null);", (complete_id.id,))
         sale_ids = set([row[0] for row in self._cr.fetchall()])
         for sale in sale_ids:
             self._cr.execute(
             "INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id) VALUES (%s, %s) ON CONFLICT DO NOTHING",
             (sale, finace_id.id))
         
-        self._cr.execute("select sale_id from temp_sale_workflow_hold where check_id = 63;")
+        self._cr.execute("select sale_id from temp_sale_workflow_hold tswh join sale_order so on so.id = tswh.sale_id where tswh.check_id = 63 and tswh.resolve_user_id is null and (so.substate_id != %s or so.substate_id is null);", (complete_id.id,))
         sale_ids = set([row[0] for row in self._cr.fetchall()])
         for sale in sale_ids:
             self._cr.execute(
             "INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id) VALUES (%s, %s) ON CONFLICT DO NOTHING",
             (sale, build_id.id))
         
-        self._cr.execute("select sale_id from temp_sale_workflow_hold where check_id = 72;")
+        self._cr.execute("select sale_id from temp_sale_workflow_hold tswh join sale_order so on so.id = tswh.sale_id where tswh.check_id = 72 and tswh.resolve_user_id is null and (so.substate_id != %s or so.substate_id is null);", (complete_id.id,))
         sale_ids = set([row[0] for row in self._cr.fetchall()])
         for sale in sale_ids:
             self._cr.execute(
@@ -512,7 +514,7 @@ class IrActionsServer(models.Model):
         self._cr.execute("select id,name from temp_sale_workflow_check where id not in (55,69,63,72);")
         for check in self._cr.fetchall():
             inspection = inspection_obj.search([('name', '=', check[1])])
-            self._cr.execute("select sale_id from temp_sale_workflow_hold where check_id = %s;"% (check[0],))
+            self._cr.execute("select sale_id from temp_sale_workflow_hold tswh join sale_order so on so.id = tswh.sale_id where tswh.check_id = %s and tswh.resolve_user_id is null and (so.substate_id != %s or so.substate_id is null);"% (check[0], complete_id.id))
             sale_ids = set([row[0] for row in self._cr.fetchall()])
             if inspection:
                 for sale in sale_ids:
