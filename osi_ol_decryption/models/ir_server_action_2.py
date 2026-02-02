@@ -998,6 +998,13 @@ class IrActionsServer(models.Model):
 
         if none_values_recs:
             placeholders = ', '.join(['%s'] * len(none_values_recs))
+            cr.execute(f"""
+                SELECT product_template_attribute_line_id FROM product_attribute_value_product_template_attribute_line_rel 
+                WHERE product_attribute_value_id IN ({placeholders});
+            """, tuple(none_values_recs))
+            none_values_data = cr.fetchall()
+            none_values_lines = [row[0] for row in none_values_data]
+            _logger.info("== Deleted from M2M table:: %s",none_values_lines)
 
             # Step 2: Delete from M2M relation table
             cr.execute(f"""
@@ -1013,6 +1020,16 @@ class IrActionsServer(models.Model):
                 WHERE default_val IN ({placeholders});
             """, tuple(none_values_recs))
             _logger.info("== Updated product_template_attribute_line")
+            cr.execute(
+            """
+                UPDATE product_template_attribute_line
+                SET required = FALSE,
+                    default_val = NULL
+                WHERE id = ANY(%s)
+            """, (list(none_values_lines),))
+
+            _logger.info("== Updated product_template_attribute_line")
+            cr.commit()
 
             # Step 4: Update product_template_attribute_value
             cr.execute(f"""
@@ -1021,6 +1038,7 @@ class IrActionsServer(models.Model):
                 WHERE product_attribute_value_id IN ({placeholders}) AND ptav_active = 't';
             """, tuple(none_values_recs))
             _logger.info("== Updated product_template_attribute_value")
+            cr.commit()
 
             # Step 5: Delete from product_variant_combination
             cr.execute(f"""
@@ -1402,6 +1420,7 @@ class IrActionsServer(models.Model):
         exception_records = []     # 🔹 store failed records
         seen_keys = set()
         BATCH_SIZE = 1000
+        line_id_to_update = []
 
         for line in lines:
             cr.execute("""
@@ -1415,6 +1434,7 @@ class IrActionsServer(models.Model):
             rows = cr.fetchall()
             if not rows:
                 continue
+
             for row in rows:
                 try:
                     line_id = row[0]
@@ -1424,6 +1444,13 @@ class IrActionsServer(models.Model):
                     value = AttributeValue.browse(value_id)
                     if not value.exists():
                         continue
+
+                    if value.name == "None" and not line.required:
+                        continue
+
+                    if not line.required and value.name != "None":
+                        line_id_to_update.append(line.id)
+
 
                     tobe_update_value = value
                     if not value.active:
@@ -1482,6 +1509,13 @@ class IrActionsServer(models.Model):
         # 🔹 Final remaining batch
         if vals_lists:
             IRProperty.sudo().create(vals_lists)
+            if line_id_to_update:
+                update_ptal_query = """
+                    UPDATE product_template_attribute_line
+                    SET required = TRUE
+                    WHERE id = ANY(%s);
+                """
+                cr.execute(update_ptal_query, (list(line_id_to_update),))
             cr.commit()
             _logger.info("Created final batch of %s records", len(vals_lists))
 
