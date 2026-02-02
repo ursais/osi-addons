@@ -384,14 +384,19 @@ class IrActionsServer(models.Model):
         counter = 1
         cr = self.env.cr
         _logger.info("Total products to process: %s", total_products)
+        # BULK Delete Non Setup config_step_line_ids
+        config_step_line_ids = ProductTemplates.mapped("config_step_line_ids").filtered(lambda l:l.config_step_id and not l.attribute_line_ids)
+        delete_query = """
+            DELETE FROM product_config_step_line
+            WHERE id IN %s
+        """
+        if config_step_line_ids:
+            cr.execute(delete_query, (tuple(config_step_line_ids.ids),))
+            _logger.info("Total %s config_step_lines are deleted",len(config_step_line_ids.ids))
         while offset < total_products:
             batch_products = ProductTemplates[offset:offset + batch_size]  # Slice the records to get the current batch
             _logger.info("Processing batch: Offset %s, Batch Size %s", offset, len(batch_products))
             for product_template in batch_products:
-                # _logger.info("\n\n\n\n======Script 4=========product_template##########%s==ID:::%s:::Counter::%s",product_template.name,product_template,counter)
-                config_step_id = product_template.config_step_line_ids.filtered(lambda l:l.config_step_id and not l.attribute_line_ids)
-                config_step_id.unlink()
-                cr.commit()
                 for attrbute_line_id in product_template.mapped("attribute_line_ids").filtered("active"):
                     # if (attrbute_line_id.value_ids and (not attrbute_line_id.default_val or not attrbute_line_id.default_val.active)):
                     #     cr.execute("""
