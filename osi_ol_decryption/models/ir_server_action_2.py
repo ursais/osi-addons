@@ -952,7 +952,7 @@ class IrActionsServer(models.Model):
         operation_vals = []
         build_workcenter = self.env.ref("mrp_batch.import_build",False)
         test_workcenter = self.env.ref("mrp_batch.import_test",False)
-        box_workcenter = self.env.ref("mrp_batch.import_build",False)
+        box_workcenter = self.env.ref("mrp_batch.import_box",False)
         for bom in boms:
             if not bom.operation_ids and bom.bom_line_ids:
                 scaff_bom = self.env["mrp.bom"].search([("scaffolding_bom","=",True),("product_tmpl_id","=",bom.product_tmpl_id.id)])
