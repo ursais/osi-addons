@@ -1,5 +1,7 @@
 from odoo import models
 import logging
+from collections import defaultdict
+import time
 
 _logger = logging.getLogger(__name__)
 
@@ -501,6 +503,186 @@ class IrActionsServer(models.Model):
         _logger.info("\n\n==================Script 4 is End==================")
 
     def script_5(self):
+        _logger.info(
+            "\n\n==Update Quantity-Related Data in Attribute Lines and Product Variants=="
+            "Script 5 (Optimized) START=================="
+        )
+
+        cr = self.env.cr
+        AttributeValueQty = self.env["attribute.value.qty"]
+
+        batch_size = 100
+        offset = 0
+
+        total_products = self.env['product.template'].search_count([
+            ("has_configurable_attributes", "=", True)
+        ])
+        _logger.info("Total products to process: %s", total_products)
+
+        while offset < total_products:
+
+            products = self.env['product.template'].search(
+                [("has_configurable_attributes", "=", True)],
+                limit=batch_size,
+                offset=offset
+            )
+
+            _logger.info(
+                "Processing batch: Offset=%s, Batch Size=%s",
+                offset, len(products)
+            )
+
+            if not products:
+                break
+
+            # ---------------------------------------------------------
+            # 1️⃣ Fetch ALL V13 data for this batch (ONE SQL QUERY)
+            # ---------------------------------------------------------
+            cr.execute("""
+                SELECT
+                    product_tmpl_id,
+                    attribute_line_id,
+                    product_attribute_value_id,
+                    default_qty,
+                    maximum_qty
+                FROM temp_product_template_attribute_value_V13_VP
+                WHERE ptav_active = 't'
+                AND default_qty >= 1
+                AND maximum_qty > 1
+                AND product_tmpl_id = ANY(%s)
+            """, (products.ids,))
+
+            v13_map = defaultdict(list)
+            for row in cr.fetchall():
+                v13_map[(row[0], row[1])].append(row)
+
+            batch_qty_vals = []
+            lines_to_update = set()
+            processed_ptav_ids = set()
+
+            # ---------------------------------------------------------
+            # 2️⃣ Process products
+            # ---------------------------------------------------------
+            for product in products:
+
+                for line in product.attribute_line_ids:
+
+                    # Cache value_ids once
+                    line_value_ids = set(line.value_ids.ids)
+
+                    # Pre-index PTAVs
+                    ptav_map = {
+                        ptav.product_attribute_value_id.id: ptav
+                        for ptav in line.product_template_value_ids
+                        if ptav.ptav_active
+                    }
+
+                    # -------------------------------
+                    # V13 driven quantities
+                    # -------------------------------
+                    for (
+                        _tmpl_id,
+                        _line_id,
+                        v13_value_id,
+                        default_qty,
+                        maximum_qty
+                    ) in v13_map.get((product.id, line.id), []):
+
+                        ptav = ptav_map.get(v13_value_id)
+                        if not ptav:
+                            continue
+
+                        if ptav.attribute_value_qty_ids:
+                            continue
+
+                        if not line.is_qty_required:
+                            lines_to_update.add(line.id)
+
+                        if v13_value_id not in line_value_ids:
+                            continue
+
+                        if ptav.id in processed_ptav_ids:
+                            continue
+
+                        qty_range = set(range(default_qty, maximum_qty + 1))
+                        existing_qty = set(ptav.attribute_value_qty_ids.mapped("qty"))
+
+                        for qty in qty_range - existing_qty:
+                            batch_qty_vals.append({
+                                "name": f"{ptav.product_attribute_value_id.display_name} - Qty {qty}",
+                                "product_tmpl_id": ptav.product_tmpl_id.id,
+                                "product_attribute_id": ptav.attribute_id.id,
+                                "product_attribute_value_id": ptav.product_attribute_value_id.id,
+                                "qty": qty,
+                                "template_attri_value_id": ptav.id,
+                            })
+
+                        processed_ptav_ids.add(ptav.id)
+
+                    # -------------------------------
+                    # Generic qty-required lines
+                    # -------------------------------
+                    if not line.is_qty_required:
+                        continue
+
+                    for ptav in line.product_template_value_ids.filtered("ptav_active"):
+
+                        if ptav.attribute_value_qty_ids:
+                            continue
+                        if ptav.name == "None":
+                            continue
+                        if ptav.id in processed_ptav_ids:
+                            continue
+                        if ptav.maximum_qty <= ptav.default_qty:
+                            continue
+
+                        qty_range = set(range(
+                            ptav.default_qty,
+                            ptav.maximum_qty + 1
+                        ))
+
+                        for qty in qty_range:
+                            if qty <= 0:
+                                continue
+
+                            batch_qty_vals.append({
+                                "name": f"{ptav.product_attribute_value_id.display_name} - Qty {qty}",
+                                "product_tmpl_id": ptav.product_tmpl_id.id,
+                                "product_attribute_id": ptav.attribute_id.id,
+                                "product_attribute_value_id": ptav.product_attribute_value_id.id,
+                                "qty": qty,
+                                "template_attri_value_id": ptav.id,
+                            })
+
+                        processed_ptav_ids.add(ptav.id)
+
+            # ---------------------------------------------------------
+            # 3️⃣ Bulk UPDATE attribute lines
+            # ---------------------------------------------------------
+            if lines_to_update:
+                cr.execute("""
+                    UPDATE product_template_attribute_line
+                    SET is_qty_required = 't'
+                    WHERE id = ANY(%s)
+                """, (list(lines_to_update),))
+
+            # ---------------------------------------------------------
+            # 4️⃣ Bulk CREATE qty records
+            # ---------------------------------------------------------
+            if batch_qty_vals:
+                AttributeValueQty.create(batch_qty_vals)
+
+            offset += batch_size
+            cr.commit()
+
+            _logger.info("Batch completed. Offset now at %s", offset)
+
+        _logger.info("Processing completed successfully.")
+        _logger.info(
+            "\n\n==================Script 5 (Optimized) END=================="
+        )
+    
+    def script_5_old(self):
         _logger.info("\n\n==Update Quantity-Related Data in Attribute Lines and Product Variants==Script 5 is start==================")
         cr = self.env.cr
 
@@ -611,8 +793,190 @@ class IrActionsServer(models.Model):
         _logger.info("Processing completed!")
         _logger.info("\n\n==================Script 5 is End==================")
 
-
     def script_6(self):
+        self = self.sudo()
+        cr = self.env.cr
+
+        MrpBom = self.env["mrp.bom"].with_context(is_data_migration=True).sudo()
+        MrpBomLine = self.env["mrp.bom.line"].sudo()
+        MrpBomLineConfigSet = self.env["mrp.bom.line.configuration.set"].sudo()
+        MrpBomLineConfig = self.env["mrp.bom.line.configuration"].sudo()
+        ProductTemplateAttributeLine = self.env['product.template.attribute.line'].sudo()
+
+        _logger.info("\n\n== Generate Scaffolding BOM == Script 6 (Optimized) START ==================")
+
+        batch_size = 1000
+
+        # ------------------------------------------------------------------
+        # 1️⃣ Archive invalid BOMs (unchanged logic)
+        # ------------------------------------------------------------------
+        domain = [
+            '|',
+                ('code', 'ilike', 'TA BOM'),
+                '|',
+                    ('product_id.active', '=', False),
+                    ('product_tmpl_id.active', '=', False),
+            ('active', '=', True),
+        ]
+
+        boms_to_archive = MrpBom.search(domain)
+        _logger.info("BOMs to archive (rule-based): %s", len(boms_to_archive))
+        if boms_to_archive:
+            cr.execute(
+                "UPDATE mrp_bom SET active = FALSE WHERE id = ANY(%s)",
+                (boms_to_archive.ids,)
+            )
+
+        empty_boms = MrpBom.search([]).filtered(lambda b: not b.bom_line_ids)
+        if empty_boms:
+            empty_boms.write({"active": False})
+
+        # ------------------------------------------------------------------
+        # 2️⃣ Set migration flag
+        # ------------------------------------------------------------------
+        cr.execute("""
+            INSERT INTO ir_config_parameter (key, value, create_uid, write_uid, create_date, write_date)
+            VALUES ('Bypass Migration Compute', '1', 1, 1, NOW(), NOW())
+            ON CONFLICT (key)
+            DO UPDATE SET value = EXCLUDED.value, write_date = NOW();
+        """)
+
+        # ------------------------------------------------------------------
+        # 3️⃣ Cache config sets
+        # ------------------------------------------------------------------
+        t0 = time.time()
+        config_set_map = {
+            rec.name: rec
+            for rec in MrpBomLineConfigSet.search([])
+        }
+        _logger.info("[Timing] Loaded config sets: %.3f sec", time.time() - t0)
+
+        # ------------------------------------------------------------------
+        # 4️⃣ Cache existing config relations
+        # ------------------------------------------------------------------
+        cr.execute("""
+            SELECT product_attribute_value_id
+            FROM mrp_bom_line_configuration_product_attribute_value_rel
+        """)
+        existing_value_links = set(row[0] for row in cr.fetchall())
+
+        # ------------------------------------------------------------------
+        # 5️⃣ Cache existing scaffolding BOM templates
+        # ------------------------------------------------------------------
+        cr.execute("""
+            SELECT product_tmpl_id
+            FROM mrp_bom
+            WHERE scaffolding_bom = TRUE
+        """)
+        existing_bom_templates = set(row[0] for row in cr.fetchall())
+
+        # ------------------------------------------------------------------
+        # 6️⃣ Fetch configurable product templates
+        # ------------------------------------------------------------------
+        cr.execute("""
+            SELECT id, name
+            FROM product_template
+            WHERE has_configurable_attributes = TRUE
+        """)
+        all_templates = cr.fetchall()
+        total_products = len(all_templates)
+
+        _logger.info("Total products to process: %s", total_products)
+
+        offset = 0
+
+        # ==================================================================
+        # 7️⃣ Main batch loop
+        # ==================================================================
+        while offset < total_products:
+            batch = all_templates[offset:offset + batch_size]
+            batch_template_ids = [tpl[0] for tpl in batch]
+
+            _logger.info(
+                "Processing batch: Offset=%s, Size=%s",
+                offset, len(batch)
+            )
+
+            # --------------------------------------------------------------
+            # Prefetch attribute lines for batch
+            # --------------------------------------------------------------
+            lines = ProductTemplateAttributeLine.search([
+                ('product_tmpl_id', 'in', batch_template_ids)
+            ])
+
+            lines_by_template = defaultdict(list)
+            for line in lines:
+                lines_by_template[line.product_tmpl_id.id].append(line)
+
+            # --------------------------------------------------------------
+            # Process templates
+            # --------------------------------------------------------------
+            for template_id, template_name in batch:
+
+                if template_id in existing_bom_templates:
+                    continue
+
+                # Create BOM
+                bom = MrpBom.create({
+                    'product_tmpl_id': template_id,
+                    'product_qty': 1.0,
+                    'type': 'normal',
+                    'scaffolding_bom': True,
+                    'existing_scaffolding_bom': False,
+                    'company_id': False,
+                })
+
+                bom._compute_available_config_components()
+                existing_bom_templates.add(template_id)
+
+                bom_line_vals = []
+
+                for line in lines_by_template.get(template_id, []):
+                    for value in line.value_ids:
+                        if not value.product_id:
+                            continue
+
+                        product = value.product_id
+                        display_name = product.display_name
+                        value_id = value.id
+
+                        # Get or create config set
+                        config_set = config_set_map.get(display_name)
+                        if not config_set:
+                            config_set = MrpBomLineConfigSet.create({
+                                "name": display_name
+                            })
+                            config_set_map[display_name] = config_set
+
+                        # Create missing config relation
+                        if value_id not in existing_value_links:
+                            MrpBomLineConfig.create({
+                                "config_set_id": config_set.id,
+                                "value_ids": [(6, 0, [value_id])]
+                            })
+                            existing_value_links.add(value_id)
+
+                        # Prepare BOM line
+                        bom_line_vals.append({
+                            'bom_id': bom.id,
+                            'product_id': product.id,
+                            'product_qty': 1.0,
+                            'config_set_id': config_set.id,
+                            'product_tmpl_id': product.product_tmpl_id.id,
+                        })
+
+                # Bulk create BOM lines
+                if bom_line_vals:
+                    MrpBomLine.create(bom_line_vals)
+
+            cr.commit()
+            offset += batch_size
+            _logger.info("Batch committed. Offset now at: %s", offset)
+
+        _logger.info("==> All products processed. Script 6 (Optimized) COMPLETED.")
+        _logger.info("================== Script 6 END ==================\n\n")
+
+    def script_6_old(self):
         import time
         self = self.sudo()
         MrpBom = self.env["mrp.bom"].with_context(is_data_migration=True).sudo()
