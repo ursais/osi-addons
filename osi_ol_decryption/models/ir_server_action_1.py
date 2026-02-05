@@ -522,88 +522,134 @@ class IrActionsServer(models.Model):
                     "INSERT INTO sale_order_sale_order_inspection_rel (sale_order_id, sale_order_inspection_id) VALUES (%s, %s) ON CONFLICT DO NOTHING",
                     (sale, inspection.id))
             
-
     def tranfer_stock(self):
-        _logger.info("===============tranfer_stock====================")
+        _logger.info("=============== transfer_stock ====================")
         self = self.sudo()
-        Picking = self.env['stock.picking']
-        Move = self.env['stock.move']
 
-        stock_ids = self.env['stock.quant'].search([
+        Picking = self.env['stock.picking']
+        Location = self.env['stock.location']
+
+        # 1. Pre-fetch static records
+        picking_types = {
+            1: self.env['stock.picking.type'].search([
+                ('name', '=', 'Internal Transfers'),
+                ('company_id', '=', 1)
+            ], limit=1).id,
+            2: self.env['stock.picking.type'].search([
+                ('name', '=', 'Internal Transfers'),
+                ('company_id', '=', 2)
+            ], limit=1).id,
+        }
+
+        repairs_us = self.env['stock.picking.type'].search([
+            ('name', '=', 'Repairs'),
+            ('company_id', '=', 1)
+        ], limit=1)
+
+        repairs_eu = self.env['stock.picking.type'].search([
+            ('name', '=', 'Repairs'),
+            ('company_id', '=', 2)
+        ], limit=1)
+
+        direct_materials = Location.search([
+            ('name', '=', 'Direct Materials'),
+            ('company_id', '=', 1)
+        ], limit=1)
+
+        consumed = Location.search([
+            ('name', '=', 'Consumed'),
+            ('company_id', '=', 2)
+        ], limit=1)
+
+        repairs_us.write({'default_location_dest_id': direct_materials.id})
+        repairs_eu.write({'default_location_dest_id': consumed.id})
+
+        # 2. Fetch quants in bulk
+        quants = self.env['stock.quant'].search([
             ('location_id', 'in', [12, 72]),
             ('quantity', '>', 0),
         ])
-        self._cr.execute("update mrp_bom_line set company_id = null where bom_id = 261469;")
-        picking_type_us = self.env['stock.picking.type'].search([('name', '=', 'Internal Transfers'), ('company_id', '=', 1)], limit=1)
-        picking_type_eu = self.env['stock.picking.type'].search([('name', '=', 'Internal Transfers'), ('company_id', '=', 2)], limit=1)
-        
-        repairs_us = self.env['stock.picking.type'].search([('name', '=', 'Repairs'), ('company_id', '=', 1)], limit=1)
-        repairs_eu = self.env['stock.picking.type'].search([('name', '=', 'Repairs'), ('company_id', '=', 2)], limit=1)
-        direct_materials = self.env['stock.location'].search([('name', '=', 'Direct Materials'), ('company_id', '=', 1)], limit=1)
-        consumed = self.env['stock.location'].search([('name', '=', 'Consumed'), ('company_id', '=', 2)], limit=1)
-        
-        repairs_eu.write({'default_location_dest_id': consumed.id})
-        repairs_us.write({'default_location_dest_id': direct_materials.id})
-        for stock in stock_ids:
-            res_id = "product.template," + str(stock.product_tmpl_id.id)
-            
-            # fetch loc_row, loc_rack, loc_case
-            self._cr.execute("""
-                SELECT name, value_text
-                FROM temp_ir_property_v13_vp
-                WHERE name IN ('loc_rack','loc_row','loc_case')
-                AND res_id = %s and company_id = %s
-            """, (res_id, stock.company_id.id))
-            
-            datas = {d["name"]: d["value_text"] for d in self._cr.dictfetchall()}
-            # print ("\n datas", datas)
 
-            loc_row = datas.get("loc_row", "")
-            loc_rack = datas.get("loc_rack", "")
-            loc_case = datas.get("loc_case", "")
-            
-            # build location string
-            location_name = loc_row + " " + loc_rack + " " + loc_case
+        if not quants:
+            return
+
+        # 3. Pre-fetch ir_property values in ONE query
+        tmpl_ids = quants.mapped('product_tmpl_id').ids
+        res_ids = [f'product.template,{tid}' for tid in tmpl_ids]
+
+        self._cr.execute("""
+            SELECT res_id, name, value_text, company_id
+            FROM temp_ir_property_v13_vp
+            WHERE name IN ('loc_rack', 'loc_row', 'loc_case')
+            AND res_id = ANY(%s)
+        """, (res_ids,))
+
+        props = {}
+        for row in self._cr.dictfetchall():
+            key = (row['res_id'], row['company_id'])
+            props.setdefault(key, {})[row['name']] = row['value_text'] or ''
+
+        # 4. Cache locations by (name, company)
+        location_cache = {}
+
+        for quant in quants:
+            res_id = f'product.template,{quant.product_tmpl_id.id}'
+            company_id = quant.company_id.id
+
+            data = props.get((res_id, company_id))
+            if not data:
+                continue
+
+            location_name = " ".join(filter(None, [
+                data.get('loc_row'),
+                data.get('loc_rack'),
+                data.get('loc_case'),
+            ]))
+
             if not location_name:
                 continue
-            
-            # find new location
-            new_location = self.env['stock.location'].search([('name', '=', location_name), ('company_id', '=', stock.company_id.id)], limit=1)
+
+            cache_key = (location_name, company_id)
+            if cache_key not in location_cache:
+                location_cache[cache_key] = Location.search([
+                    ('name', '=', location_name),
+                    ('company_id', '=', company_id)
+                ], limit=1)
+
+            new_location = location_cache[cache_key]
             if not new_location:
-                continue  # skip if no matching location
-            picking_type = False
-            if stock.company_id.id == 1:
-                picking_type = picking_type_us.id
-            else:
-                picking_type = picking_type_eu.id
-            # create internal transfer (picking)
-            picking = Picking.with_company(stock.company_id).create({
-                'picking_type_id': picking_type,
-                'location_id': stock.location_id.id,
+                continue
+
+            picking = Picking.with_company(company_id).create({
+                'picking_type_id': picking_types.get(company_id),
+                'location_id': quant.location_id.id,
                 'location_dest_id': new_location.id,
-                "company_id": stock.company_id.id,
+                'company_id': company_id,
                 'move_ids': [(0, 0, {
-                    'name': stock.product_id.display_name,
-                    'product_id': stock.product_id.id,
-                    'product_uom_qty': stock.quantity,
-                    'quantity': stock.quantity,
-                    'product_uom': stock.product_id.uom_id.id,
-                    'location_id': stock.location_id.id,
+                    'name': quant.product_id.display_name,
+                    'product_id': quant.product_id.id,
+                    'product_uom_qty': quant.quantity,
+                    'quantity': quant.quantity,
+                    'product_uom': quant.product_id.uom_id.id,
+                    'location_id': quant.location_id.id,
                     'location_dest_id': new_location.id,
-                    # "picked": True,
-                    "company_id": stock.company_id.id,
-                    "bom_line_id": False
+                    'company_id': company_id,
+                    'bom_line_id': False
                 })]
             })
             
-            picking.with_company(stock.company_id).action_assign()
-            picking.with_company(stock.company_id)._action_done()
-            if stock.package_id:
-                new_package_id = stock.package_id.copy({'name': stock.package_id.name})
-                picking.move_line_ids.package_id = stock.package_id.id
-                picking.move_line_ids.result_package_id = new_package_id.id
-            picking.with_company(stock.company_id).button_validate()
-            # self._cr.commit()
+            picking.with_company(quant.company_id).action_assign()
+            picking.with_company(quant.company_id)._action_done()
+
+            if quant.package_id:
+                new_package = quant.package_id.copy({'name': quant.package_id.name})
+                picking.move_line_ids.write({
+                    'package_id': quant.package_id.id,
+                    'result_package_id': new_package.id,
+                })
+
+            picking.with_company(quant.company_id).button_validate()
+            
         
     def split_mo(self):
         _logger.info("===============split_mo====================")
@@ -761,7 +807,7 @@ class IrActionsServer(models.Model):
         substate_ids = self.env['base.substate'].with_context(active_test=False).search([('model', '=', 'sale.order')])    
         complete = substate_ids.filtered(lambda l : l.name == 'Complete')
         self._cr.execute("update sale_order set substate_id = %s where detailed_state in ('done_partial', 'done')", (complete.id,))
-        review = substate_ids.filtered(lambda l : l.name == 'Legacy Order Review')
+        review = substate_ids.filtered(lambda l : l.name == 'Order Review')
         if review:
             self._cr.execute("update sale_order set substate_id = %s where detailed_state in ('review')", (review.id,))
         waiting = substate_ids.filtered(lambda l : l.name == 'Waiting')
