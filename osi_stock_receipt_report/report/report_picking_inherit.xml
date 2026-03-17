@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inherit and extend the picking operations report for incoming receipts -->
+    <template id="report_picking_receipt_customization"
+              inherit_id="stock.report_picking">
+
+        <!--
+            Replace the document title with "Ordre de réception" for incoming
+            pickings while keeping the standard title for other types.
+        -->
+        <xpath expr="//div[hasclass('float-start')]/h1[@t-field='o.name']" position="replace">
+            <h1>
+                <t t-if="o.picking_type_id.code == 'incoming'">
+                    Ordre de réception - <span t-field="o.name"/>
+                </t>
+                <t t-else="">
+                    <span t-field="o.name"/>
+                </t>
+            </h1>
+        </xpath>
+
+        <!--
+            For incoming receipts, add the supplier reference in the
+            informations section.
+        -->
+        <xpath expr="//div[@name='div_origin']" position="after">
+            <div t-if="o.picking_type_id.code == 'incoming' and o.partner_id"
+                 class="col" name="div_supplier_ref">
+                <strong>Supplier Reference</strong>
+                <div>
+                    <t t-set="po_records"
+                       t-value="o.move_ids.purchase_line_id.order_id"/>
+                    <span t-if="po_records"
+                          t-out="', '.join(set(r for r in po_records.mapped('partner_ref') if r))"/>
+                </div>
+            </div>
+        </xpath>
+
+        <!--
+            Replace the entire main table for incoming receipts.
+            The standard table is kept for outgoing and internal transfers.
+        -->
+        <xpath expr="//table[hasclass('table-borderless')][1]" position="replace">
+            <t t-if="o.picking_type_id.code == 'incoming' and o.move_line_ids and o.move_ids_without_package">
+                <t t-set="has_serial_number"
+                   t-value="any(ml.lot_id or ml.lot_name for ml in o.move_line_ids)"
+                   groups="stock.group_production_lot"/>
+                <t t-set="has_supplier_lot"
+                   t-value="any(ml.supplier_lot for ml in o.move_line_ids)"/>
+                <table class="table table-sm table-borderless mt16">
+                    <thead>
+                        <tr>
+                            <th name="th_product">
+                                <strong>Product</strong>
+                            </th>
+                            <th name="th_our_ref">
+                                <strong>Our Reference</strong>
+                            </th>
+                            <th name="th_supplier_designation">
+                                <strong>Supplier Designation</strong>
+                            </th>
+                            <th name="th_supplier_ref">
+                                <strong>Supplier Reference</strong>
+                            </th>
+                            <th name="th_ordered_qty" class="text-end">
+                                <strong>Ordered Qty</strong>
+                            </th>
+                            <th name="th_received_qty" class="text-end">
+                                <strong>Received Qty</strong>
+                            </th>
+                            <th name="th_our_lot" t-if="has_serial_number"
+                                class="text-center">
+                                <strong>Our Lot</strong>
+                            </th>
+                            <th name="th_supplier_lot" t-if="has_supplier_lot"
+                                class="text-center">
+                                <strong>Supplier Lot</strong>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="o.move_line_ids_without_package.sorted(
+                                lambda ml: (ml.location_id.complete_name,
+                                            ml.location_dest_id.complete_name))"
+                            t-as="ml">
+                            <!-- Product -->
+                            <td>
+                                <span t-field="ml.product_id.display_name"/>
+                                <br t-if="ml.product_id.description_picking"/>
+                                <span t-if="ml.product_id.description_picking"
+                                      t-field="ml.product_id.description_picking"/>
+                            </td>
+                            <!-- Our Reference (internal product code) -->
+                            <td>
+                                <span t-field="ml.product_id.default_code"/>
+                            </td>
+                            <!-- Supplier Designation (vendor product name) -->
+                            <td>
+                                <span t-out="ml._get_supplier_product_name()"/>
+                            </td>
+                            <!-- Supplier Reference (vendor product code) -->
+                            <td>
+                                <span t-out="ml._get_supplier_product_code()"/>
+                            </td>
+                            <!-- Ordered Qty (demand from the stock move) -->
+                            <td class="text-end">
+                                <span t-field="ml.move_id.product_uom_qty"/>
+                                <span t-field="ml.product_uom_id"
+                                      groups="uom.group_uom"/>
+                            </td>
+                            <!-- Received Qty (done quantity) -->
+                            <td class="text-end">
+                                <span t-field="ml.quantity"/>
+                                <span t-field="ml.product_uom_id"
+                                      groups="uom.group_uom"/>
+                            </td>
+                            <!-- Our Lot -->
+                            <td class="text-center" t-if="has_serial_number">
+                                <span t-if="ml.lot_id or ml.lot_name"
+                                      t-esc="ml.lot_id.name or ml.lot_name"/>
+                            </td>
+                            <!-- Supplier Lot -->
+                            <td class="text-center" t-if="has_supplier_lot">
+                                <span t-if="ml.supplier_lot"
+                                      t-field="ml.supplier_lot"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </t>
+            <!-- Standard table for non-incoming pickings (outgoing/internal) -->
+            <table class="table table-borderless mt16"
+                   t-if="o.picking_type_id.code != 'incoming' and o.move_line_ids and o.move_ids_without_package">
+                <t t-set="has_barcode"
+                   t-value="any(move_line.product_id and move_line.product_id.sudo().barcode or move_line.package_id for move_line in o.move_line_ids)"/>
+                <t t-set="has_serial_number"
+                   t-value="any(move_line.lot_id or move_line.lot_name for move_line in o.move_line_ids)"
+                   groups="stock.group_production_lot"/>
+                <thead>
+                    <tr>
+                        <th name="th_product">
+                            <div align="left"><strong>Product</strong></div>
+                        </th>
+                        <th class="text-end">
+                            <strong>Quantity</strong>
+                        </th>
+                        <th name="th_from"
+                            t-if="o.picking_type_id.code != 'incoming'"
+                            align="left"
+                            groups="stock.group_stock_multi_locations"
+                            class="text-start">
+                            <strong>From</strong>
+                        </th>
+                        <th name="th_to"
+                            t-if="o.picking_type_id.code != 'outgoing'"
+                            groups="stock.group_stock_multi_locations"
+                            class="text-start">
+                            <strong>To</strong>
+                        </th>
+                        <th name="th_serial_number" class="text-center"
+                            t-if="has_serial_number">
+                            <strong>Lot/Serial Number</strong>
+                        </th>
+                        <th name="th_barcode" class="text-center"
+                            t-if="has_barcode">
+                            <strong>Product Barcode</strong>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="o.move_line_ids_without_package.sorted(
+                            lambda ml: (ml.location_id.complete_name,
+                                        ml.location_dest_id.complete_name))"
+                        t-as="ml">
+                        <td>
+                            <span t-field="ml.product_id.display_name"/><br/>
+                            <span t-if="ml.product_id.description_picking"
+                                  t-field="ml.product_id.description_picking"/>
+                        </td>
+                        <td class="o_td_quantity text-end">
+                            <span t-field="ml.quantity" class="text-nowrap"/>
+                            <span t-field="ml.product_uom_id"
+                                  groups="uom.group_uom"/>
+                            <span t-if="ml.move_id.product_packaging_id">
+                                <span t-if="o.state != 'done'">
+                                    (<span t-field="ml.product_packaging_qty"
+                                           t-options='{"widget": "integer"}'/>
+                                     <span t-field="ml.move_id.product_packaging_id.name"/>)
+                                </span>
+                                <span t-if="o.state == 'done'">
+                                    (<span t-field="ml.product_packaging_qty"
+                                           t-options='{"widget": "integer"}'/>
+                                     <span t-field="ml.move_id.product_packaging_id.name"/>)
+                                </span>
+                            </span>
+                        </td>
+                        <td t-if="o.picking_type_id.code != 'incoming'"
+                            groups="stock.group_stock_multi_locations"
+                            class="text-end">
+                            <span t-esc="ml.location_id.display_name"/>
+                            <t t-if="ml.package_id">
+                                <span t-field="ml.package_id"/>
+                            </t>
+                        </td>
+                        <td t-if="o.picking_type_id.code != 'outgoing'"
+                            groups="stock.group_stock_multi_locations"
+                            class="text-end">
+                            <div>
+                                <span t-field="ml.location_dest_id"/>
+                                <t t-if="ml.result_package_id">
+                                    <span t-field="ml.result_package_id"/>
+                                </t>
+                            </div>
+                        </td>
+                        <td class=" text-center h6" t-if="has_serial_number">
+                            <span t-if="has_serial_number and (ml.lot_id or ml.lot_name)"
+                                  t-esc="ml.lot_id.name or ml.lot_name"
+                                  t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 400, 'height': 100, 'img_style': 'width:100%;height:35px;'}"/>
+                        </td>
+                        <td class="text-center" t-if="has_barcode">
+                            <t t-if="product_barcode != ml.product_id.barcode">
+                                <span t-if="ml.product_id and ml.product_id.barcode">
+                                    <div t-field="ml.product_id.barcode"
+                                         t-options="{'widget': 'barcode', 'symbology': 'auto', 'width': 400, 'height': 100, 'quiet': 0, 'img_style': 'height:35px;'}"/>
+                                </span>
+                                <t t-set="product_barcode"
+                                   t-value="ml.product_id.barcode"/>
+                            </t>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </xpath>
+
+    </template>
+
+</odoo>
