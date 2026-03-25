@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright (C) 2025 Open Source Integrators
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record id="payment_provider_form_authorize_fee" model="ir.ui.view">
+        <field name="name">payment.provider.form.authorize.fee</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='config']" position="inside">
+                <group
+                    string="Authorize.net Fee Tracking"
+                    invisible="code != 'authorize'"
+                >
+                    <group>
+                        <field name="authorize_fee_product_id" />
+                        <field name="authorize_fee_pct" />
+                        <field name="authorize_fee_fixed" />
+                    </group>
+                    <group />
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
