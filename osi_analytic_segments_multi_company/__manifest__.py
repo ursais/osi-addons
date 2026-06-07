@@ -13,5 +13,5 @@
     "depends": ["osi_analytic_segments", "account_bill_line_distribution"],
     "maintainers": ["Open Source Integrators"],
     "data": [],
-    "installable": True,
+    "installable": False,
 }
