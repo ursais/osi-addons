@@ -57,9 +57,14 @@ jobs:
         run: |
           if [ -f oca_dependencies.txt ]; then
             while IFS= read -r line || [ -n "$line" ]; do
-              [[ "$line" =~ ^#.*$ || -z "$line" ]] && continue
-              read -r repo url branch <<< "$line"
-              git clone --depth=1 ${branch:+-b "$branch"} "${url:-https://github.com/OCA/$repo}" "../$repo"
+              case "$line" in '#'*|'') continue ;; esac
+              set -- $line
+              repo="$1" url="${2:-https://github.com/OCA/$1}" branch="$3"
+              if [ -n "$branch" ]; then
+                git clone --depth=1 -b "$branch" "$url" "../$repo"
+              else
+                git clone --depth=1 "$url" "../$repo"
+              fi
             done < oca_dependencies.txt
           fi
       - name: Install addons and dependencies
