@@ -17,5 +17,5 @@
     "data": [
         "views/purchase_subscription.xml",
     ],
-    "installable": True,
+    "installable": False,
 }
