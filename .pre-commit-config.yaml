@@ -112,7 +112,9 @@ repos:
     rev: 3.1.8
     hooks:
       - id: setuptools-odoo-make-default
+        additional_dependencies: ["setuptools<81"]
       - id: setuptools-odoo-get-requirements
+        additional_dependencies: ["setuptools<81"]
         args:
           - --output
           - requirements.txt
