@@ -21,7 +21,7 @@ jobs:
                   result=0
                   # reject non-comment lines that contain a / (i.e. URLs, relative paths)
                   # but allow git+ URLs for dependencies not yet released on PyPI
-                  grep "^[^#].*/" ${reqfile} | grep -v "^git+" || result=$?
+                  grep "^[^#].*/" ${reqfile} | grep -v "git+" || result=$?
                   if [ $result -eq 0 ] ; then
                       echo "Unreleased dependencies found in ${reqfile}."
                       exit 1
