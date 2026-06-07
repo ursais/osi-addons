@@ -1,4 +1,4 @@
-  - Rodrigo Madrid <rmadrid@opensourceintegrators.com>
-  - Adriana Alpizar <aalpizar@opensourceintegrators.com>
-  - Maxime Chambreuil <mchambreuil@opensourceintegrators.com>
-  - Hardik Suthar <hsuthar@opensourceintegrators.com>
+- Rodrigo Madrid <rmadrid@opensourceintegrators.com>
+- Adriana Alpizar <aalpizar@opensourceintegrators.com>
+- Maxime Chambreuil <mchambreuil@opensourceintegrators.com>
+- Hardik Suthar <hsuthar@opensourceintegrators.com>

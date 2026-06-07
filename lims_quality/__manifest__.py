@@ -7,7 +7,7 @@
     "license": "AGPL-3",
     "category": "Quality",
     "author": "Open Source Integrators, Odoo Community Association (OCA)",
-    "website": "https://github.com/OCA/connector-lims",
+    "website": "https://github.com/ursais/osi-addons",
     "depends": ["lims", "quality_control"],
     "data": [
         "views/lims_order_test_view.xml",

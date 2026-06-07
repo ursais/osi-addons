@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!--
     Copyright (C) 2022 Open Source Integrators
     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-    
+
     This view extends the fleet vehicle form to add a button that shows
     the count of sale orders associated with the vehicle and allows
     users to quickly access those sale orders.
@@ -22,7 +22,8 @@
                     icon="fa-list-alt"
                     string="Sale Orders"
                     help="View sale orders associated with this vehicle"
-                    groups="sales_team.group_sale_salesman">
+                    groups="sales_team.group_sale_salesman"
+                >
                     <field
                         name="vehicle_sale_count"
                         widget="statinfo"
