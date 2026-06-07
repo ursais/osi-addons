@@ -1,4 +1,5 @@
-1. Go to **Quality → Quality Checks → Master Data** to view or create Quality Control Points.
+1. Go to **Quality → Quality Checks → Master Data** to view or create Quality Control
+   Points.
 2. Go to **Quality → Quality Checks → Operations** to manage Quality Checks.
 3. On a **LIMS Order Line**, you can now associate:
    - A **Quality Control Point**

@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <!-- 
+    <!--
         Helpdesk Ticket Form View Extension
-        
+
         This view inherits from the helpdesk ticket form view and adds a vehicle
         field to link fleet vehicles with helpdesk tickets.
-        
+
         Features:
         - Vehicle selection field for linking fleet vehicles to tickets
         - Positioned after the email_cc field for logical grouping
@@ -16,14 +16,14 @@
         <field name="model">helpdesk.ticket</field>
         <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form" />
         <field name="arch" type="xml">
-            <!-- 
+            <!--
                 Add vehicle field after the email_cc field
                 This allows users to associate a fleet vehicle with the ticket,
                 useful for tracking vehicle maintenance and issue requests
             -->
             <field name="email_cc" position="after">
-                <field 
-                    name="vehicle_id" 
+                <field
+                    name="vehicle_id"
                     placeholder="Select a vehicle..."
                     options="{'no_create': True}"
                     groups="fleet.fleet_group_user"
