@@ -1,2 +1,3 @@
 # generated from manifests external_dependencies
 voicent
+git+https://github.com/ursais/multi-company@14.0-mig-account_bill_line_distribution#subdirectory=setup/account_bill_line_distribution
