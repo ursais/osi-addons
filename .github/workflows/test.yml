@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Detect unreleased dependencies
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - run: |
           for reqfile in requirements.txt test-requirements.txt ; do
               if [ -f ${reqfile} ] ; then
@@ -50,9 +50,18 @@ jobs:
         ports:
           - 5432:5432
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - name: Checkout OCA dependencies
+        run: |
+          if [ -f oca_dependencies.txt ]; then
+            while IFS= read -r line || [ -n "$line" ]; do
+              [[ "$line" =~ ^#.*$ || -z "$line" ]] && continue
+              read -r repo url branch <<< "$line"
+              git clone --depth=1 ${branch:+-b "$branch"} "${url:-https://github.com/OCA/$repo}" "../$repo"
+            done < oca_dependencies.txt
+          fi
       - name: Install addons and dependencies
         run: oca_install_addons
       - name: Check licenses
@@ -63,7 +72,7 @@ jobs:
         run: oca_init_test_database
       - name: Run tests
         run: oca_run_tests
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v5
       - name: Update .pot files
         run: oca_export_and_push_pot https://x-access-token:${{ secrets.GIT_PUSH_TOKEN }}@github.com/${{ github.repository }}
         if: ${{ matrix.makepot == 'true' && github.event_name == 'push' && github.repository_owner == 'ursais' }}
