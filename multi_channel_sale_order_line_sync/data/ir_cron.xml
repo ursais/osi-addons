@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright (C) 2026 Open Source Integrators
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+    <!-- Opt-in safety net: reconcile recently-touched feeds in case a feed was
+         processed before this module's import hook ran. Disabled by default
+         because the import hook already covers the live webhook/import flow. -->
+    <record id="ir_cron_mc_sync_missing_lines" model="ir.cron">
+        <field name="name">Multi-Channel: Append Missing Lines to Confirmed Orders</field>
+        <field name="model_id" ref="odoo_multi_channel_sale.model_order_feed" />
+        <field name="state">code</field>
+        <field name="code">model._cron_mc_sync_missing_lines()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">hours</field>
+        <field name="active" eval="False" />
+    </record>
+</odoo>

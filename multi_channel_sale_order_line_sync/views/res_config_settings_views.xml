@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright (C) 2026 Open Source Integrators
+     License LGPL-3.0 or later (http://www.gnu.org/licenses/lgpl). -->
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.mc.line.sync</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app
+                    data-string="Multi-Channel Sync"
+                    string="Multi-Channel Sync"
+                    name="multi_channel_sale_order_line_sync"
+                >
+                    <block
+                        title="Order Line Synchronization"
+                        name="mc_line_sync_block"
+                    >
+                        <setting
+                            string="Append New Lines to Confirmed Orders"
+                            help="When a channel order is updated after confirmation (e.g. by post-purchase upsell apps), append any new line items to the existing confirmed Sales Order instead of skipping them."
+                        >
+                            <field name="mc_append_lines_to_confirmed" />
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>
