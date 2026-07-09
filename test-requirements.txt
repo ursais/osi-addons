@@ -1,0 +1,7 @@
+# OCA field-service dependencies for fieldservice_mobile tests
+odoo-addon-base-territory @ git+https://github.com/OCA/field-service.git@19.0#subdirectory=base_territory
+odoo-addon-fieldservice @ git+https://github.com/OCA/field-service.git@19.0#subdirectory=fieldservice
+odoo-addon-fieldservice-account @ git+https://github.com/OCA/field-service.git@19.0#subdirectory=fieldservice_account
+odoo-addon-fieldservice-sale @ git+https://github.com/OCA/field-service.git@19.0#subdirectory=fieldservice_sale
+odoo-addon-fieldservice-vehicle @ git+https://github.com/OCA/field-service.git@19.0#subdirectory=fieldservice_vehicle
+odoo-addon-fieldservice-stage-server-action @ git+https://github.com/OCA/field-service.git@refs/pull/1564/head#subdirectory=fieldservice_stage_server_action
