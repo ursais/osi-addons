@@ -1,5 +1,4 @@
 <odoo>
-
     <!-- FSM Features Form View -->
     <record id="fsm_mobile_feature_line_view" model="ir.ui.view">
         <field name="name">fsm.mobile.feature.line.view</field>
@@ -15,5 +14,4 @@
             </form>
         </field>
     </record>
-
 </odoo>

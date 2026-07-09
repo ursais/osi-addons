@@ -1,5 +1,4 @@
 <odoo noupdate="1">
-
     <!-- FSM Mobile Feature Mapping Record -->
     <record id="fsm_feature_default_mapping" model="fsm.mobile.feature.mapping">
         <field name="name">Default FSM Mobile Feature Mapping</field>
@@ -26,5 +25,4 @@
         ref("fieldservice_mobile.fsm_feature_stock_request")])]'
         />
     </record>
-
 </odoo>

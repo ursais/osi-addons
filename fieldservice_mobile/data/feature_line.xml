@@ -1,5 +1,4 @@
 <odoo noupdate="1">
-
     <!-- Feature Records -->
     <record id="fsm_feature_location" model="fsm.mobile.feature.line">
         <field name="name">Location</field>
@@ -105,5 +104,4 @@
             eval='[(6, 0, [ref("fieldservice.group_fsm_manager")])]'
         />
     </record>
-
 </odoo>

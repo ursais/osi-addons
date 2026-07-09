@@ -1,5 +1,4 @@
 <odoo noupdate="1">
-
     <record id="portal_partner_comp_rule" model="ir.rule">
         <field name="name">Portal Partner multi-company</field>
         <field name="model_id" ref="base.model_res_partner" />
@@ -12,5 +11,4 @@
         <field name="perm_write" eval="False" />
         <field name="perm_unlink" eval="False" />
     </record>
-
 </odoo>

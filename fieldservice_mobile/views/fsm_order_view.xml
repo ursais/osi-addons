@@ -1,5 +1,4 @@
 <odoo>
-
     <record id="view_fsm_order_view_form_inherit_mobile" model="ir.ui.view">
         <field name="name">view.fsm.order.inherit.mobile</field>
         <field name="model">fsm.order</field>
@@ -19,19 +18,18 @@
             >
                 <group string="Stages History">
                     <field name="fsm_stage_history_ids" nolabel="1" readonly="1">
-                        <tree editable="bottom">
+                        <list editable="bottom">
                             <field name="start_datetime" required="1" />
                             <field name="stage_id" required="1" />
                             <field name="duration" widget="float_time" />
                             <field name="total_duration" widget="float_time" />
-                        </tree>
+                        </list>
                     </field>
                 </group>
             </xpath>
             <field name="company_id" position="after">
-                <field name="payment_state" invisible="1"/>
+                <field name="payment_state" invisible="1" />
             </field>
         </field>
     </record>
-
 </odoo>
