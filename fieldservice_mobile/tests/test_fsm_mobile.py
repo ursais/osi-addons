@@ -131,6 +131,28 @@ class TestFieldserviceMobile(FSMCommon):
         self.test_order.flush_recordset()
         self.assertEqual(self.test_order.duration, history.total_duration)
 
+    def test_own_user_read_vehicle_and_stage_history(self):
+        own_group = self.env.ref("fieldservice.group_fsm_user_own")
+        own_user = self.env["res.users"].create(
+            {
+                "name": "FSM Own Documents User",
+                "login": "fsm_mobile_own_user",
+                "group_ids": [Command.set([own_group.id])],
+            }
+        )
+        vehicle = self.env["fsm.vehicle"].create({"name": "Own User Test Vehicle"})
+        history = self.StageHistory.create(
+            {
+                "order_id": self.test_order.id,
+                "start_datetime": datetime.now(),
+                "stage_id": self.order_stage.id,
+            }
+        )
+        vehicle.with_user(own_user).check_access("read")
+        history.with_user(own_user).check_access("read")
+        vehicle.with_user(own_user).read(["name"])
+        history.with_user(own_user).read(["order_id"])
+
     def test_duration_without_end_date(self):
         order = self.Order.create({"location_id": self.test_location.id})
         self.assertEqual(order.duration, 0.0)
