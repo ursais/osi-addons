@@ -7,8 +7,8 @@ from odoo import fields, models
 class FSMStage(models.Model):
     _inherit = "fsm.stage"
 
-    start_tracking = fields.Boolean("Start Tracking")
-    stop_tracking = fields.Boolean("Stop Tracking")
-    notify_customer = fields.Boolean("Notify Customer")
-    notify_dispatcher = fields.Boolean("Notify Dispatcher")
+    start_tracking = fields.Boolean()
+    stop_tracking = fields.Boolean()
+    notify_customer = fields.Boolean()
+    notify_dispatcher = fields.Boolean()
     distance_to_next_stop = fields.Boolean("Compare Distance to next stop")

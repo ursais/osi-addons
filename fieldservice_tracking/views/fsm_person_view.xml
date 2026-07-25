@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record id="fieldservice_fsm_person_form_inherit" model="ir.ui.view">
         <field name="name">fieldservice.fsm.person.form.inherit</field>
@@ -11,7 +12,6 @@
                             <field name="worker_allow_tracking" />
                             <field name="loc_time" />
                             <field name="rad_uom" />
-                            <!-- <field name="track_shape"/> -->
                         </group>
                         <group>
                             <field name="track_lat" />

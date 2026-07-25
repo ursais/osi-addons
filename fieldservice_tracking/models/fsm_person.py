@@ -7,10 +7,9 @@ from odoo import fields, models
 class FsmPerson(models.Model):
     _inherit = "fsm.person"
 
-    worker_allow_tracking = fields.Boolean("Worker Allow Tracking")
+    worker_allow_tracking = fields.Boolean()
     track_lat = fields.Float("Last known latitude", digits=(16, 5))
     track_long = fields.Float("Last known longitude", digits=(16, 5))
-    # track_shape = fields.Char('Last known location')
     loc_rad = fields.Float("Last known location accuracy radius", digits=(16, 5))
     loc_time = fields.Datetime("Last location ping")
     rad_uom = fields.Many2one("uom.uom", "Unit of measure")
@@ -30,5 +29,4 @@ class FsmPerson(models.Model):
             ("checkout", "Check-out"),
             ("break", "Break"),
         ],
-        string="Route Stage",
     )

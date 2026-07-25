@@ -5,12 +5,12 @@
     "name": "Field Service Tracking",
     "summary": "This module will add tracking functionality in Fieldservice.",
     "license": "AGPL-3",
-    "version": "14.0.1.0.0",
+    "version": "19.0.1.0.0",
     "category": "Field Service",
     "author": "Open Source Integrators",
     "website": "https://github.com/ursais/osi-addons",
     "depends": [
-        "fieldservice_substatus",
+        "fieldservice",
         "uom",
     ],
     "data": [
@@ -23,5 +23,6 @@
     "development_status": "Beta",
     "maintainers": [
         "wolfhall",
+        "max3903",
     ],
 }
