@@ -1,0 +1,237 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* fieldservice_tracking
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-07-25 05:49+0000\n"
+"PO-Revision-Date: 2026-07-25 05:55+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_tracking__accuracy
+msgid "Accuracy Radius"
+msgstr "Raggio di precisione"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields.selection,name:fieldservice_tracking.selection__fsm_person__route_stage__break
+msgid "Break"
+msgstr "Pausa"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields.selection,name:fieldservice_tracking.selection__fsm_person__route_stage__checkin
+msgid "Check-in"
+msgstr "Check-in"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields.selection,name:fieldservice_tracking.selection__fsm_person__route_stage__checkout
+msgid "Check-out"
+msgstr "Check-out"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_stage__distance_to_next_stop
+msgid "Compare Distance to next stop"
+msgstr "Confronta distanza alla prossima tappa"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_tracking__create_uid
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_tracking__create_date
+msgid "Created on"
+msgstr "Creato il"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_person__display_name
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_stage__display_name
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_tracking__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_person__fence_rad
+msgid "Distance to Destination"
+msgstr "Distanza alla destinazione"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields.selection,name:fieldservice_tracking.selection__fsm_person__route_stage__enroute
+msgid "Enroute"
+msgstr "In viaggio"
+
+#. module: fieldservice_tracking
+#: model:res.groups,name:fieldservice_tracking.group_fsm_tracking_dispatcher
+msgid "FSM Tracking Dispatcher"
+msgstr "Dispatcher tracciamento FSM"
+
+#. module: fieldservice_tracking
+#: model:ir.model,name:fieldservice_tracking.model_fsm_stage
+msgid "Field Service Stage"
+msgstr "Fase assistenza sul campo"
+
+#. module: fieldservice_tracking
+#: model_terms:ir.ui.view,arch_db:fieldservice_tracking.fieldservice_fsm_person_form_inherit
+msgid "Field Service Tracking"
+msgstr "Tracciamento assistenza sul campo"
+
+#. module: fieldservice_tracking
+#: model:ir.model,name:fieldservice_tracking.model_fsm_person
+msgid "Field Service Worker"
+msgstr "Operatore assistenza sul campo"
+
+#. module: fieldservice_tracking
+#: model:ir.model,name:fieldservice_tracking.model_fsm_tracking
+msgid "Fsm Tracking"
+msgstr "Tracciamento FSM"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_person__id
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_stage__id
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_tracking__id
+msgid "ID"
+msgstr "ID"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields.selection,name:fieldservice_tracking.selection__fsm_person__route_stage__jobstart
+msgid "Job Start"
+msgstr "Inizio intervento"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields.selection,name:fieldservice_tracking.selection__fsm_person__route_stage__jobstop
+msgid "Job Stop"
+msgstr "Fine intervento"
+
+#. module: fieldservice_tracking
+#: model_terms:ir.ui.view,arch_db:fieldservice_tracking.fieldservice_fsm_person_form_inherit
+msgid "Last Update"
+msgstr "Ultimo aggiornamento"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_tracking__write_uid
+msgid "Last Updated by"
+msgstr "Ultimo aggiornamento di"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_tracking__write_date
+msgid "Last Updated on"
+msgstr "Ultimo aggiornamento il"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_person__track_lat
+msgid "Last known latitude"
+msgstr "Ultima latitudine nota"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_person__loc_rad
+msgid "Last known location accuracy radius"
+msgstr "Raggio di precisione dell'ultima posizione nota"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_person__track_long
+msgid "Last known longitude"
+msgstr "Ultima longitudine nota"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_person__loc_time
+msgid "Last location ping"
+msgstr "Ultimo segnale di posizione"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_tracking__latitude
+msgid "Latitude"
+msgstr "Latitudine"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_tracking__longitude
+msgid "Longitude"
+msgstr "Longitudine"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_person__match_rad
+msgid "Max allowed distance"
+msgstr "Distanza massima consentita"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_stage__notify_customer
+msgid "Notify Customer"
+msgstr "Notifica cliente"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_stage__notify_dispatcher
+msgid "Notify Dispatcher"
+msgstr "Notifica dispatcher"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_tracking__order_id
+msgid "Order"
+msgstr "Ordine"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_tracking__substatus
+msgid "Order Substatus"
+msgstr "Sottostato dell'ordine"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields.selection,name:fieldservice_tracking.selection__fsm_person__route_stage__out
+msgid "Out"
+msgstr "Fuori"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_tracking__partner_id
+msgid "Partner"
+msgstr "Partner"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_person__route_stage
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_tracking__route_stage
+msgid "Route Stage"
+msgstr "Fase del percorso"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_stage__start_tracking
+msgid "Start Tracking"
+msgstr "Avvia tracciamento"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_stage__stop_tracking
+msgid "Stop Tracking"
+msgstr "Interrompi tracciamento"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_person__track_intv_coarse
+msgid "Time in seconds"
+msgstr "Tempo in secondi"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_tracking__last_loc_age
+msgid "Time in seconds from last known tracking"
+msgstr "Tempo in secondi dall'ultimo tracciamento noto"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_tracking__timestamp
+msgid "Timestamp"
+msgstr "Timestamp"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_person__rad_uom
+msgid "Unit of measure"
+msgstr "Unità di misura"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields,field_description:fieldservice_tracking.field_fsm_person__worker_allow_tracking
+msgid "Worker Allow Tracking"
+msgstr "Consenti tracciamento operatore"
+
+#. module: fieldservice_tracking
+#: model:ir.model.fields.selection,name:fieldservice_tracking.selection__fsm_person__route_stage__working
+msgid "Working"
+msgstr "In lavorazione"
