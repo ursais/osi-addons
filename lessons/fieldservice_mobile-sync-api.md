@@ -7,6 +7,6 @@
   - `/fsm/pull` (jsonrpc) — `write_date` delta scoped to technician `fsm.person`
 - Technician link: `fsm.person.partner_id == res.users.partner_id` (same as Flutter
   `getPersonId()`).
-- Business logic is on `fsm.order` (`fsm_order_mobile_sync.py`) so TransactionCase
-  can cover it without HttpCase.
+- Business logic is on `fsm.order` (`fsm_order_mobile_sync.py`) so TransactionCase can
+  cover it without HttpCase.
 - Odoo 19 route type is `jsonrpc` (not legacy `json`).
