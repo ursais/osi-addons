@@ -14,6 +14,7 @@ access_fsm_template_portal,access.fsm.template.portal,fieldservice.model_fsm_tem
 access_fsm_team_portal,access.fsm.team.portal,fieldservice.model_fsm_team,base.group_portal,1,0,0,0
 access_fsm_location_person_portal,access.fsm.location.person.portal,fieldservice.model_fsm_location_person,base.group_portal,1,0,0,0
 access_fsm_order_type_portal,access.fsm.order.type.portal,fieldservice.model_fsm_order_type,base.group_portal,1,0,0,0
+access_fsm_stage_history_fsm_user_own,fsm.stage.history.user.own,model_fsm_stage_history,fieldservice.group_fsm_user_own,1,0,0,0
 access_fsm_stage_history_fsm_user,fsm.stage.history.user,model_fsm_stage_history,fieldservice.group_fsm_user,1,1,1,0
 access_fsm_stage_history_fsm_manager,fsm.stage.history.manager,model_fsm_stage_history,fieldservice.group_fsm_manager,1,1,1,1
 access_fsm_stage_history_portal,fsm.stage.history.portal,model_fsm_stage_history,base.group_portal,1,1,1,0
@@ -22,6 +23,7 @@ access_stock_location_portal,access.stock.location.portal,stock.model_stock_loca
 access_stock_warehouse_portal,access.stock.warehouse.portal,stock.model_stock_warehouse,base.group_portal,1,0,0,0
 access_account_analytic_line_portal,access.account.analytic.line.portal,analytic.model_account_analytic_line,base.group_portal,1,0,0,0
 access_stock_picking_type_portal,access.stock.picking.type.portal,stock.model_stock_picking_type,base.group_portal,1,0,0,0
+access_fsm_vehicle_fsm_user_own,access.fsm.vehicle.user.own,fieldservice_vehicle.model_fsm_vehicle,fieldservice.group_fsm_user_own,1,0,0,0
 access_fsm_vehicle_portal,access.fsm.vehicle.portal,fieldservice_vehicle.model_fsm_vehicle,base.group_portal,1,0,0,0
 access_maintenance_equipment_portal,access.maintenance.equipment.portal,maintenance.model_maintenance_equipment,base.group_portal,1,0,0,0
 access_ir_attachment_portal,access.ir.attachment.portal,base.model_ir_attachment,base.group_portal,1,0,0,0
