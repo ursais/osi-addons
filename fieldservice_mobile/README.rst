@@ -177,16 +177,13 @@ Integrators.
 Maintainers
 -----------
 
-.. |maintainer-wolfhall| image:: https://github.com/wolfhall.png?size=40px
-    :target: https://github.com/wolfhall
-    :alt: wolfhall
 .. |maintainer-max3903| image:: https://github.com/max3903.png?size=40px
     :target: https://github.com/max3903
     :alt: max3903
 
-Current maintainers:
+Current maintainer:
 
-|maintainer-wolfhall| |maintainer-max3903| 
+|maintainer-max3903| 
 
 This module is part of the `ursais/osi-addons <https://github.com/ursais/osi-addons/tree/19.0/fieldservice_mobile>`_ project on GitHub.
 
