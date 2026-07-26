@@ -1,0 +1,47 @@
+name: Publish to PyPI
+
+on:
+  push:
+    branches:
+      - "19.0"
+  release:
+    types:
+      - published
+  workflow_dispatch:
+
+jobs:
+  publish:
+    name: Build and publish addons
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install build
+        run: python -m pip install --upgrade pip build
+      - name: Build addon distributions
+        env:
+          # Publish the exact manifest version (no .postN git suffix).
+          WHOOL_POST_VERSION_STRATEGY_OVERRIDE: none
+        run: |
+          mkdir -p dist
+          shopt -s nullglob
+          for pyproject in */pyproject.toml; do
+            addon_dir="$(dirname "$pyproject")"
+            echo "Building ${addon_dir}"
+            python -m build --outdir dist "${addon_dir}"
+          done
+          if [ -z "$(ls -A dist)" ]; then
+            echo "No addon distributions were built."
+            exit 1
+          fi
+          ls -l dist
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}
+          skip-existing: true
