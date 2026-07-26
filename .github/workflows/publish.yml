@@ -21,7 +21,7 @@ jobs:
     outputs:
       addons: ${{ steps.set-matrix.outputs.addons }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
           fetch-depth: 0
@@ -59,10 +59,10 @@ jobs:
       matrix:
         addon: ${{ fromJson(needs.discover.outputs.addons) }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
       - name: Install build
