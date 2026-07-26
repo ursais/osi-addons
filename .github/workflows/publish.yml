@@ -27,23 +27,24 @@ jobs:
           fetch-depth: 0
       - id: set-matrix
         name: Resolve addon list
+        shell: bash
         run: |
           set -euo pipefail
           chmod +x .github/scripts/changed_addons.sh
 
           if [ -n "${{ inputs.addon }}" ]; then
-            addons='["${{ inputs.addon }}"]'
+            addons="$(printf '%s\n' "${{ inputs.addon }}" | jq -R -s -c 'split("\n") | map(select(length > 0))')"
           elif [ "${{ github.event_name }}" = "push" ]; then
-            mapfile -t list < <(.github/scripts/changed_addons.sh "${{ github.event.before }}" "${{ github.sha }}")
-            if [ "${#list[@]}" -eq 0 ]; then
-              addons='[]'
-            else
-              addons="$(printf '%s\n' "${list[@]}" | jq -R -s -c 'split("\n") | map(select(length > 0))')"
-            fi
+            addons="$(
+              .github/scripts/changed_addons.sh "${{ github.event.before }}" "${{ github.sha }}" \
+                | jq -R -s -c 'split("\n") | map(select(length > 0))'
+            )"
           else
             # release or dispatch without addon: publish every packaged addon
-            mapfile -t list < <(.github/scripts/changed_addons.sh)
-            addons="$(printf '%s\n' "${list[@]}" | jq -R -s -c 'split("\n") | map(select(length > 0))')"
+            addons="$(
+              .github/scripts/changed_addons.sh \
+                | jq -R -s -c 'split("\n") | map(select(length > 0))'
+            )"
           fi
 
           echo "addons=${addons}" >> "${GITHUB_OUTPUT}"

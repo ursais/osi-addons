@@ -1,10 +1,10 @@
-#!/usr/bin/env bash
+#!/bin/sh
 # Ensure OCA-style readme/ fragments exist for each given addon.
 # Usage: ensure_readme_fragments.sh addon1 [addon2 ...]
-set -euo pipefail
+set -eu
 
 python_summary() {
-  local addon="$1"
+  addon="$1"
   python3 - <<PY
 import ast
 from pathlib import Path
@@ -17,15 +17,15 @@ PY
 }
 
 for addon in "$@"; do
-  [[ -d "${addon}" ]] || continue
+  [ -d "${addon}" ] || continue
   mkdir -p "${addon}/readme"
   summary="$(python_summary "${addon}")"
 
-  if [[ ! -f "${addon}/readme/DESCRIPTION.md" ]]; then
+  if [ ! -f "${addon}/readme/DESCRIPTION.md" ]; then
     printf '%s\n' "${summary}" >"${addon}/readme/DESCRIPTION.md"
     echo "Created ${addon}/readme/DESCRIPTION.md"
   fi
-  if [[ ! -f "${addon}/readme/USAGE.md" ]]; then
+  if [ ! -f "${addon}/readme/USAGE.md" ]; then
     cat >"${addon}/readme/USAGE.md" <<EOF
 To use this module, you need to:
 
@@ -34,14 +34,14 @@ To use this module, you need to:
 EOF
     echo "Created ${addon}/readme/USAGE.md"
   fi
-  if [[ ! -f "${addon}/readme/CONFIGURE.md" ]]; then
+  if [ ! -f "${addon}/readme/CONFIGURE.md" ]; then
     cat >"${addon}/readme/CONFIGURE.md" <<'EOF'
 No special configuration is required beyond installing the module and assigning
 the relevant security groups to users.
 EOF
     echo "Created ${addon}/readme/CONFIGURE.md"
   fi
-  if [[ ! -f "${addon}/readme/CONTRIBUTORS.md" ]]; then
+  if [ ! -f "${addon}/readme/CONTRIBUTORS.md" ]; then
     cat >"${addon}/readme/CONTRIBUTORS.md" <<'EOF'
 - [Open Source Integrators](https://www.opensourceintegrators.com)
 - [Gray Matter Logic](https://www.graymatterlogic.com):
@@ -49,7 +49,7 @@ EOF
 EOF
     echo "Created ${addon}/readme/CONTRIBUTORS.md"
   fi
-  if [[ ! -f "${addon}/readme/CREDITS.md" ]]; then
+  if [ ! -f "${addon}/readme/CREDITS.md" ]; then
     cat >"${addon}/readme/CREDITS.md" <<'EOF'
 The development of this module was originally supported by Open Source Integrators.
 EOF
