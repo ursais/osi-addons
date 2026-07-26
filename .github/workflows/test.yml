@@ -35,7 +35,7 @@ jobs:
     env:
       OCA_ENABLE_CHECKLOG_ODOO: "1"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           persist-credentials: false
           fetch-depth: 0
@@ -49,17 +49,19 @@ jobs:
         run: oca_init_test_database
       - name: Run tests
         run: oca_run_tests
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
       - name: Update README, .pot and translation files
         # secrets cannot be referenced in `if:` expressions; skip inside the step instead
         if: ${{ matrix.update_generated == 'true' && github.event_name == 'push' }}
+        # oca-ci containers default to sh; use bash for arrays / process subst safety
+        shell: bash
         env:
           LANGS: fr es pt de it
           GIT_PUSH_TOKEN: ${{ secrets.GIT_PUSH_TOKEN }}
         run: |
-          set -ex
+          set -euo pipefail
           if [ -z "${GIT_PUSH_TOKEN}" ]; then
             echo "GIT_PUSH_TOKEN secret is not set; skipping generated-file updates."
             exit 0
@@ -72,20 +74,22 @@ jobs:
           git config user.email "${OCA_GIT_USER_EMAIL:-osi-ci@opensourceintegrators.com}"
 
           chmod +x .github/scripts/changed_addons.sh .github/scripts/ensure_readme_fragments.sh
-          mapfile -t CHANGED_ADDONS < <(
-            .github/scripts/changed_addons.sh "${{ github.event.before }}" "${{ github.sha }}"
-          )
-          if [ "${#CHANGED_ADDONS[@]}" -eq 0 ]; then
+          CHANGED_FILE="$(mktemp)"
+          .github/scripts/changed_addons.sh "${{ github.event.before }}" "${{ github.sha }}" >"${CHANGED_FILE}"
+          if [ ! -s "${CHANGED_FILE}" ]; then
             echo "No packaged addons changed; skipping generated-file updates."
+            rm -f "${CHANGED_FILE}"
             exit 0
           fi
-          echo "Changed addons: ${CHANGED_ADDONS[*]}"
+          echo "Changed addons:"
+          cat "${CHANGED_FILE}"
 
           pip install click-odoo-contrib \
             "oca-maintainers-tools @ git+https://github.com/OCA/maintainer-tools.git@1faff6d90f8a0d189aad3f148c5fc72df3117193"
 
           # 0) Ensure OCA readme/ fragments exist for changed addons
-          .github/scripts/ensure_readme_fragments.sh "${CHANGED_ADDONS[@]}"
+          # shellcheck disable=SC2046
+          .github/scripts/ensure_readme_fragments.sh $(cat "${CHANGED_FILE}")
           if [ -n "$(git status --porcelain -- '*/readme/*')" ]; then
             git add -- '*/readme/*'
             git commit -m "[UPD] Ensure readme fragments for changed addons"
@@ -97,7 +101,8 @@ jobs:
             --msgmerge-if-new-pot --log-level=debug
           apt-get update -qq
           apt-get install -y -qq gettext
-          for addon in "${CHANGED_ADDONS[@]}"; do
+          while IFS= read -r addon; do
+            [ -n "${addon}" ] || continue
             pot="${addon}/i18n/${addon}.pot"
             [ -f "$pot" ] || continue
             for lang in ${LANGS}; do
@@ -108,33 +113,28 @@ jobs:
                 msgmerge --update --backup=none "$po" "$pot"
               fi
             done
-          done
+          done <"${CHANGED_FILE}"
           # Discard i18n noise from untouched addons
           for i18n_dir in */i18n; do
             addon="$(dirname "${i18n_dir}")"
-            keep=0
-            for changed in "${CHANGED_ADDONS[@]}"; do
-              if [ "${addon}" = "${changed}" ]; then
-                keep=1
-                break
-              fi
-            done
-            if [ "${keep}" -eq 0 ]; then
+            if ! grep -qxF "${addon}" "${CHANGED_FILE}"; then
               git checkout -- "${i18n_dir}" 2>/dev/null || true
             fi
           done
-          for addon in "${CHANGED_ADDONS[@]}"; do
+          while IFS= read -r addon; do
+            [ -n "${addon}" ] || continue
             git add -- "${addon}/i18n/" 2>/dev/null || true
-          done
+          done <"${CHANGED_FILE}"
           if [ -n "$(git status --porcelain -- '*/i18n/*')" ]; then
             git commit -m "[UPD] Update translations for changed addons"
           fi
 
           # 2) Regenerate README.rst only for changed addons
           readme_args=()
-          for addon in "${CHANGED_ADDONS[@]}"; do
+          while IFS= read -r addon; do
+            [ -n "${addon}" ] || continue
             readme_args+=(--addon-dir="${addon}")
-          done
+          done <"${CHANGED_FILE}"
           oca-gen-addon-readme \
             "${readme_args[@]}" \
             --branch=19.0 \
@@ -149,3 +149,4 @@ jobs:
 
           # 4) Push generated commits if remote did not move
           oca_git_push_if_remote_did_not_change "${PUSH_URL}"
+          rm -f "${CHANGED_FILE}"
