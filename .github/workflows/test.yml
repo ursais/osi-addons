@@ -52,15 +52,19 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
       - name: Update README, .pot and translation files
-        if: >-
-          ${{ matrix.update_generated == 'true'
-          && github.event_name == 'push'
-          && secrets.GIT_PUSH_TOKEN != '' }}
+        # secrets cannot be referenced in `if:` expressions; skip inside the step instead
+        if: ${{ matrix.update_generated == 'true' && github.event_name == 'push' }}
         env:
           LANGS: fr es pt de it
-          PUSH_URL: https://x-access-token:${{ secrets.GIT_PUSH_TOKEN }}@github.com/${{ github.repository }}
+          GIT_PUSH_TOKEN: ${{ secrets.GIT_PUSH_TOKEN }}
         run: |
           set -ex
+          if [ -z "${GIT_PUSH_TOKEN}" ]; then
+            echo "GIT_PUSH_TOKEN secret is not set; skipping generated-file updates."
+            exit 0
+          fi
+          PUSH_URL="https://x-access-token:${GIT_PUSH_TOKEN}@github.com/${{ github.repository }}"
+
           # https://github.com/actions/checkout/issues/766
           git config --global --add safe.directory "$PWD"
           git config user.name "${OCA_GIT_USER_NAME:-osi-ci}"
