@@ -1,4 +1,4 @@
-name: Test Odoo addons
+name: tests
 
 on:
   pull_request:
@@ -11,15 +11,18 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     container: ${{ matrix.container }}
+    name: ${{ matrix.name }}
     strategy:
       fail-fast: false
       matrix:
         include:
           - container: ghcr.io/oca/oca-ci/py3.10-odoo19.0:latest
-            makepot: "true"
+            name: test with Odoo
           - container: ghcr.io/oca/oca-ci/py3.10-ocb19.0:latest
+            name: test with OCB
+            update_generated: "true"
     services:
       postgres:
         image: postgres:13
@@ -29,6 +32,8 @@ jobs:
           POSTGRES_DB: odoo
         ports:
           - 5432:5432
+    env:
+      OCA_ENABLE_CHECKLOG_ODOO: "1"
     steps:
       - uses: actions/checkout@v4
         with:
@@ -44,6 +49,62 @@ jobs:
       - name: Run tests
         run: oca_run_tests
       - uses: codecov/codecov-action@v4
-      - name: Update .pot files
-        run: oca_export_and_push_pot https://x-access-token:${{ secrets.GIT_PUSH_TOKEN }}@github.com/${{ github.repository }}
-        if: ${{ matrix.makepot == 'true' && github.event_name == 'push' && secrets.GIT_PUSH_TOKEN != '' }}
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Update README, .pot and translation files
+        if: >-
+          ${{ matrix.update_generated == 'true'
+          && github.event_name == 'push'
+          && secrets.GIT_PUSH_TOKEN != '' }}
+        env:
+          LANGS: fr es pt de it
+          PUSH_URL: https://x-access-token:${{ secrets.GIT_PUSH_TOKEN }}@github.com/${{ github.repository }}
+        run: |
+          set -ex
+          # https://github.com/actions/checkout/issues/766
+          git config --global --add safe.directory "$PWD"
+          git config user.name "${OCA_GIT_USER_NAME:-osi-ci}"
+          git config user.email "${OCA_GIT_USER_EMAIL:-osi-ci@opensourceintegrators.com}"
+
+          pip install click-odoo-contrib \
+            "oca-maintainers-tools @ git+https://github.com/OCA/maintainer-tools.git@1faff6d90f8a0d189aad3f148c5fc72df3117193"
+
+          # 1) Export .pot and msgmerge existing .po files
+          click-odoo-makepot --addons-dir "${ADDONS_DIR:-.}" -d "${PGDATABASE}" \
+            --msgmerge-if-new-pot --commit --log-level=debug
+
+          # 2) Ensure fr, es, pt, de, it .po files exist for every addon .pot
+          apt-get update -qq
+          apt-get install -y -qq gettext
+          for pot in */i18n/*.pot; do
+            [ -f "$pot" ] || continue
+            addon_i18n="$(dirname "$pot")"
+            for lang in ${LANGS}; do
+              po="${addon_i18n}/${lang}.po"
+              if [ ! -f "$po" ]; then
+                msginit --no-translator --locale="${lang}" --input="$pot" --output-file="$po"
+              else
+                msgmerge --update --backup=none "$po" "$pot"
+              fi
+            done
+          done
+          if [ -n "$(git status --porcelain -- '*/i18n/*.po')" ]; then
+            git add -- '*/i18n/*.po'
+            git commit -m "[UPD] Ensure fr, es, pt, de, it translation files"
+          fi
+
+          # 3) Regenerate per-addon README.rst from readme/ fragments
+          oca-gen-addon-readme \
+            --addons-dir=. \
+            --branch=19.0 \
+            --org-name=ursais \
+            --repo-name=osi-addons \
+            --commit \
+            --keep-source-digest \
+            --convert-fragments-to-markdown
+
+          # 4) Update repository README.md addons table
+          oca-gen-addons-table --commit
+
+          # 5) Push generated commits if remote did not move
+          oca_git_push_if_remote_did_not_change "${PUSH_URL}"
