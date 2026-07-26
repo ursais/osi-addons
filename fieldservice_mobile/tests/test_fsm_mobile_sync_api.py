@@ -93,8 +93,9 @@ class TestFSMMobileSyncAPI(FSMCommon):
         self.assertTrue(result["ok"])
         self.assertEqual(len(result["results"]), 1)
         self.assigned_order.invalidate_recordset()
-        self.assertEqual(self.assigned_order.description, "After sync")
-        self.assertEqual(self.assigned_order.resolution, "Fixed")
+        # Html fields wrap plain text in <p>…</p>
+        self.assertEqual(self.assigned_order.description, "<p>After sync</p>")
+        self.assertEqual(self.assigned_order.resolution, "<p>Fixed</p>")
         self.assertEqual(self.assigned_order.person_id, self.worker_person)
         self.assertEqual(self.assigned_order.signed_by, "Customer")
         self.assertTrue(self.assigned_order.signed_on)
@@ -125,8 +126,8 @@ class TestFSMMobileSyncAPI(FSMCommon):
             ]
         )
         self.assertEqual(len(result["results"]), 2)
-        self.assertEqual(self.assigned_order.resolution, "One")
-        self.assertEqual(second.resolution, "Two")
+        self.assertEqual(self.assigned_order.resolution, "<p>One</p>")
+        self.assertEqual(second.resolution, "<p>Two</p>")
 
     def test_sync_rejects_unassigned_order(self):
         with self.assertRaises(AccessError):

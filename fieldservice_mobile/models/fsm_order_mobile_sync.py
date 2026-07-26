@@ -315,7 +315,10 @@ class FSMOrder(models.Model):
         }
         if mimetype:
             vals["mimetype"] = mimetype
-        attachment = self.env["ir.attachment"].create(vals)
+        # Portal workers lack ir.attachment create ACL; access was already
+        # validated by _fsm_mobile_ensure_assigned() (same pattern as
+        # create_fsm_attachment).
+        attachment = self.env["ir.attachment"].sudo().create(vals)
         return {
             "ok": True,
             "attachment_id": attachment.id,
