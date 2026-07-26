@@ -1,0 +1,430 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* fieldservice_mobile
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: it\n"
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields.selection,name:fieldservice_mobile.selection__fsm_mobile_feature_mapping__state__active
+#: model_terms:ir.ui.view,arch_db:fieldservice_mobile.fsm_mobile_feature_view
+msgid "Active"
+msgstr ""
+
+#. module: fieldservice_mobile
+#. odoo-python
+#: code:addons/fieldservice_mobile/models/fsm_mobile_feature_mapping.py:0
+msgid "Active record is already exits in FSM Mobile Feature Mapping!"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_order__duration
+msgid "Actual duration"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,help:fieldservice_mobile.field_fsm_order__duration
+msgid "Actual duration in hours"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_res_config_settings__fsm_allow_portal_view_move_qty
+#: model_terms:ir.ui.view,arch_db:fieldservice_mobile.res_config_settings_view_form_mobile
+msgid "Allow portal user to view stock move quantities"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_res_config_settings__fsm_allow_portal_update_move_qty
+#: model_terms:ir.ui.view,arch_db:fieldservice_mobile.res_config_settings_view_form_mobile
+msgid "Allow portal user update of stock move quantities"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model,name:fieldservice_mobile.model_ir_attachment
+msgid "Attachment"
+msgstr ""
+
+#. module: fieldservice_mobile
+#. odoo-python
+#: code:addons/fieldservice_mobile/models/fsm_order_mobile_sync.py:0
+msgid "Clock %(clock_id)s does not belong to order %(order)s."
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_mobile_feature_line__code
+msgid "Code"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_mobile_feature_mapping__company_id
+msgid "Company"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model,name:fieldservice_mobile.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_mobile_feature_line__create_uid
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_mobile_feature_mapping__create_uid
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_stage_history__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_mobile_feature_line__create_date
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_mobile_feature_mapping__create_date
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_stage_history__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_mobile_feature_line__display_name
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_mobile_feature_mapping__display_name
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_stage__display_name
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_stage_history__display_name
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_ir_attachment__display_name
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_res_users__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_stage__is_display_in_mobile
+msgid "Display in Mobile"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_stage__is_display_in_odoo
+msgid "Display in Odoo"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields.selection,name:fieldservice_mobile.selection__fsm_mobile_feature_mapping__state__draft
+msgid "Draft"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_stage_history__duration
+msgid "Duration"
+msgstr ""
+
+#. module: fieldservice_mobile
+#. odoo-python
+#: code:addons/fieldservice_mobile/models/fsm_order_mobile_sync.py:0
+msgid "Each clock entry must be a dictionary."
+msgstr ""
+
+#. module: fieldservice_mobile
+#. odoo-python
+#: code:addons/fieldservice_mobile/models/fsm_order_mobile_sync.py:0
+msgid "Each clock entry requires stage_id and start_datetime."
+msgstr ""
+
+#. module: fieldservice_mobile
+#. odoo-python
+#: code:addons/fieldservice_mobile/models/fsm_order_mobile_sync.py:0
+msgid "Each mutation must be a dictionary."
+msgstr ""
+
+#. module: fieldservice_mobile
+#. odoo-python
+#: code:addons/fieldservice_mobile/models/fsm_order_mobile_sync.py:0
+msgid "Each mutation requires order_id."
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model,name:fieldservice_mobile.model_fsm_mobile_feature_line
+msgid "FSM Mobile Feature Line"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model,name:fieldservice_mobile.model_fsm_mobile_feature_mapping
+msgid "FSM Mobile Feature Mapping"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.ui.menu,name:fieldservice_mobile.menu_fsm_features
+msgid "FSM Mobile Features"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_stage_history__order_id
+msgid "FSM Order"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:base.automation,name:fieldservice_mobile.fsm_order_break_stage_update
+msgid "FSM Order Break Stage Update"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.actions.server,name:fieldservice_mobile.action_fsm_order_break_stage_update
+msgid "FSM Order Break Stage Update Action"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:base.automation,name:fieldservice_mobile.fsm_order_completed_stage_update
+msgid "FSM Order Completed Stage Update"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.actions.server,name:fieldservice_mobile.action_fsm_order_completed_stage_update
+msgid "FSM Order Completed Stage Update Action"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:base.automation,name:fieldservice_mobile.fsm_order_resume_stage_update
+msgid "FSM Order Resume Stage Update"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.actions.server,name:fieldservice_mobile.action_fsm_order_resume_stage_update
+msgid "FSM Order Resume Stage Update Action"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:base.automation,name:fieldservice_mobile.fsm_order_started_stage_update
+msgid "FSM Order Started Stage Update"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.actions.server,name:fieldservice_mobile.action_fsm_order_started_stage_update
+msgid "FSM Order Started Stage Update Action"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model,name:fieldservice_mobile.model_fsm_stage_history
+msgid "FSM Stage History"
+msgstr ""
+
+#. module: fieldservice_mobile
+#. odoo-python
+#: code:addons/fieldservice_mobile/models/fsm_order_mobile_sync.py:0
+msgid "FSM order %(order_id)s was not found."
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_mobile_feature_line__feature_id
+msgid "Feature Mapping"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_mobile_feature_line__name
+#: model_terms:ir.ui.view,arch_db:fieldservice_mobile.fsm_mobile_feature_line_view
+msgid "Feature Name"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.actions.act_window,name:fieldservice_mobile.action_fsm_mobile_features
+msgid "Field Service Mobile Feature Mapping"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model,name:fieldservice_mobile.model_fsm_order
+msgid "Field Service Order"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model,name:fieldservice_mobile.model_fsm_stage
+msgid "Field Service Stage"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model_terms:ir.ui.view,arch_db:fieldservice_mobile.fsm_mobile_feature_view
+msgid "Group Access Rights"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_mobile_feature_line__group_ids
+msgid "Groups"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_mobile_feature_line__id
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_mobile_feature_mapping__id
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_order__id
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_stage__id
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_stage_history__id
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_ir_attachment__id
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_res_config_settings__id
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_res_users__id
+msgid "ID"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_mobile_feature_mapping__installed_module_ids
+msgid "Installed Modules"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_mobile_feature_line__write_uid
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_mobile_feature_mapping__write_uid
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_stage_history__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_mobile_feature_line__write_date
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_mobile_feature_mapping__write_date
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_stage_history__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_mobile_feature_mapping__name
+msgid "Mapping Name"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_mobile_feature_mapping__feature_line_ids
+msgid "Mobile Feature Lines"
+msgstr ""
+
+#. module: fieldservice_mobile
+#. odoo-python
+#: code:addons/fieldservice_mobile/models/fsm_order_mobile_sync.py:0
+msgid "No Field Service worker is linked to the current user."
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields.selection,name:fieldservice_mobile.selection__fsm_order__payment_state__not_paid
+msgid "Not Paid"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_order__display_name
+msgid "Order"
+msgstr ""
+
+#. module: fieldservice_mobile
+#. odoo-python
+#: code:addons/fieldservice_mobile/models/fsm_order_mobile_sync.py:0
+msgid "Order signed by %s"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields.selection,name:fieldservice_mobile.selection__fsm_order__payment_state__paid
+msgid "Paid"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_order__payment_state
+msgid "Payment State"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields.selection,name:fieldservice_mobile.selection__fsm_order__payment_state__pending
+msgid "Pending"
+msgstr ""
+
+#. module: fieldservice_mobile
+#. odoo-python
+#: code:addons/fieldservice_mobile/models/fsm_order_mobile_sync.py:0
+msgid "Photo content is empty."
+msgstr ""
+
+#. module: fieldservice_mobile
+#. odoo-python
+#: code:addons/fieldservice_mobile/models/fsm_order_mobile_sync.py:0
+msgid "Provide mutations or a single order_id payload."
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model_terms:ir.ui.view,arch_db:fieldservice_mobile.fsm_mobile_feature_view
+msgid "Set To Draft"
+msgstr ""
+
+#. module: fieldservice_mobile
+#. odoo-python
+#: code:addons/fieldservice_mobile/models/ir_attachment.py:0
+msgid "Sorry, you are not allowed to access this document."
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_stage_history__stage_id
+msgid "Stage"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_order__fsm_stage_history_ids
+msgid "Stage History"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model_terms:ir.ui.view,arch_db:fieldservice_mobile.view_fsm_order_view_form_inherit_mobile
+msgid "Stages History"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_stage_history__start_datetime
+msgid "Start Date&time"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_mobile_feature_mapping__state
+msgid "State"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model.fields,field_description:fieldservice_mobile.field_fsm_stage_history__total_duration
+msgid "Total Duration"
+msgstr ""
+
+#. module: fieldservice_mobile
+#: model:ir.model,name:fieldservice_mobile.model_res_users
+msgid "User"
+msgstr ""
+
+#. module: fieldservice_mobile
+#. odoo-python
+#: code:addons/fieldservice_mobile/models/fsm_order_mobile_sync.py:0
+msgid "You can only sync orders assigned to you (order %(order)s)."
+msgstr ""
+
+#. module: fieldservice_mobile
+#. odoo-python
+#: code:addons/fieldservice_mobile/models/fsm_mobile_feature_mapping.py:0
+msgid ""
+"You can't delete FSM Mobile Feature Mapping which is in an active state!"
+msgstr ""
+
+#. module: fieldservice_mobile
+#. odoo-python
+#: code:addons/fieldservice_mobile/models/fsm_order_mobile_sync.py:0
+msgid "clocks must be a list."
+msgstr ""
+
+#. module: fieldservice_mobile
+#. odoo-python
+#: code:addons/fieldservice_mobile/models/fsm_order_mobile_sync.py:0
+msgid "mutations must be a non-empty list."
+msgstr ""
+
+#. module: fieldservice_mobile
+#. odoo-python
+#: code:addons/fieldservice_mobile/models/fsm_order_mobile_sync.py:0
+msgid "order values must be a dictionary."
+msgstr ""
+
+#. module: fieldservice_mobile
+#. odoo-python
+#: code:addons/fieldservice_mobile/models/fsm_order_mobile_sync.py:0
+msgid "signature must be a dictionary."
+msgstr ""
+
+#. module: fieldservice_mobile
+#. odoo-python
+#: code:addons/fieldservice_mobile/models/fsm_order_mobile_sync.py:0
+msgid "signature requires signed_by and signature data."
+msgstr ""
