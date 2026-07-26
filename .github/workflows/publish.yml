@@ -8,10 +8,15 @@ on:
     types:
       - published
   workflow_dispatch:
+    inputs:
+      addon:
+        description: "Addon directory to publish (empty = all changed, or all on release)"
+        required: false
+        type: string
 
 jobs:
   discover:
-    name: Discover addon packages
+    name: Discover addons to publish
     runs-on: ubuntu-latest
     outputs:
       addons: ${{ steps.set-matrix.outputs.addons }}
@@ -19,17 +24,30 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          fetch-depth: 0
       - id: set-matrix
-        name: List addons with pyproject.toml
+        name: Resolve addon list
         run: |
-          addons="$(
-            find . -mindepth 2 -maxdepth 2 -name pyproject.toml -printf '%h\n' \
-              | sed 's|^\./||' \
-              | sort \
-              | jq -R -s -c 'split("\n") | map(select(length > 0))'
-          )"
+          set -euo pipefail
+          chmod +x .github/scripts/changed_addons.sh
+
+          if [ -n "${{ inputs.addon }}" ]; then
+            addons='["${{ inputs.addon }}"]'
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            mapfile -t list < <(.github/scripts/changed_addons.sh "${{ github.event.before }}" "${{ github.sha }}")
+            if [ "${#list[@]}" -eq 0 ]; then
+              addons='[]'
+            else
+              addons="$(printf '%s\n' "${list[@]}" | jq -R -s -c 'split("\n") | map(select(length > 0))')"
+            fi
+          else
+            # release or dispatch without addon: publish every packaged addon
+            mapfile -t list < <(.github/scripts/changed_addons.sh)
+            addons="$(printf '%s\n' "${list[@]}" | jq -R -s -c 'split("\n") | map(select(length > 0))')"
+          fi
+
           echo "addons=${addons}" >> "${GITHUB_OUTPUT}"
-          echo "Found addons: ${addons}"
+          echo "Addons to publish: ${addons}"
 
   publish:
     name: Publish ${{ matrix.addon }}
@@ -51,7 +69,6 @@ jobs:
         run: python -m pip install --upgrade pip build
       - name: Build ${{ matrix.addon }}
         env:
-          # Publish the exact manifest version (no .postN git suffix).
           WHOOL_POST_VERSION_STRATEGY_OVERRIDE: none
         run: |
           mkdir -p dist

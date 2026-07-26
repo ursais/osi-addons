@@ -38,6 +38,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+          fetch-depth: 0
       - name: Install addons and dependencies
         run: oca_install_addons
       - name: Check licenses
@@ -70,21 +71,37 @@ jobs:
           git config user.name "${OCA_GIT_USER_NAME:-osi-ci}"
           git config user.email "${OCA_GIT_USER_EMAIL:-osi-ci@opensourceintegrators.com}"
 
+          chmod +x .github/scripts/changed_addons.sh .github/scripts/ensure_readme_fragments.sh
+          mapfile -t CHANGED_ADDONS < <(
+            .github/scripts/changed_addons.sh "${{ github.event.before }}" "${{ github.sha }}"
+          )
+          if [ "${#CHANGED_ADDONS[@]}" -eq 0 ]; then
+            echo "No packaged addons changed; skipping generated-file updates."
+            exit 0
+          fi
+          echo "Changed addons: ${CHANGED_ADDONS[*]}"
+
           pip install click-odoo-contrib \
             "oca-maintainers-tools @ git+https://github.com/OCA/maintainer-tools.git@1faff6d90f8a0d189aad3f148c5fc72df3117193"
 
-          # 1) Export .pot and msgmerge existing .po files
-          click-odoo-makepot --addons-dir "${ADDONS_DIR:-.}" -d "${PGDATABASE}" \
-            --msgmerge-if-new-pot --commit --log-level=debug
+          # 0) Ensure OCA readme/ fragments exist for changed addons
+          .github/scripts/ensure_readme_fragments.sh "${CHANGED_ADDONS[@]}"
+          if [ -n "$(git status --porcelain -- '*/readme/*')" ]; then
+            git add -- '*/readme/*'
+            git commit -m "[UPD] Ensure readme fragments for changed addons"
+          fi
 
-          # 2) Ensure fr, es, pt, de, it .po files exist for every addon .pot
+          # 1) Export .pot for installed addons, then keep i18n changes only
+          #    for modules touched in this push.
+          click-odoo-makepot --addons-dir "${ADDONS_DIR:-.}" -d "${PGDATABASE}" \
+            --msgmerge-if-new-pot --log-level=debug
           apt-get update -qq
           apt-get install -y -qq gettext
-          for pot in */i18n/*.pot; do
+          for addon in "${CHANGED_ADDONS[@]}"; do
+            pot="${addon}/i18n/${addon}.pot"
             [ -f "$pot" ] || continue
-            addon_i18n="$(dirname "$pot")"
             for lang in ${LANGS}; do
-              po="${addon_i18n}/${lang}.po"
+              po="${addon}/i18n/${lang}.po"
               if [ ! -f "$po" ]; then
                 msginit --no-translator --locale="${lang}" --input="$pot" --output-file="$po"
               else
@@ -92,14 +109,34 @@ jobs:
               fi
             done
           done
-          if [ -n "$(git status --porcelain -- '*/i18n/*.po')" ]; then
-            git add -- '*/i18n/*.po'
-            git commit -m "[UPD] Ensure fr, es, pt, de, it translation files"
+          # Discard i18n noise from untouched addons
+          for i18n_dir in */i18n; do
+            addon="$(dirname "${i18n_dir}")"
+            keep=0
+            for changed in "${CHANGED_ADDONS[@]}"; do
+              if [ "${addon}" = "${changed}" ]; then
+                keep=1
+                break
+              fi
+            done
+            if [ "${keep}" -eq 0 ]; then
+              git checkout -- "${i18n_dir}" 2>/dev/null || true
+            fi
+          done
+          for addon in "${CHANGED_ADDONS[@]}"; do
+            git add -- "${addon}/i18n/" 2>/dev/null || true
+          done
+          if [ -n "$(git status --porcelain -- '*/i18n/*')" ]; then
+            git commit -m "[UPD] Update translations for changed addons"
           fi
 
-          # 3) Regenerate per-addon README.rst from readme/ fragments
+          # 2) Regenerate README.rst only for changed addons
+          readme_args=()
+          for addon in "${CHANGED_ADDONS[@]}"; do
+            readme_args+=(--addon-dir="${addon}")
+          done
           oca-gen-addon-readme \
-            --addons-dir=. \
+            "${readme_args[@]}" \
             --branch=19.0 \
             --org-name=ursais \
             --repo-name=osi-addons \
@@ -107,8 +144,8 @@ jobs:
             --keep-source-digest \
             --convert-fragments-to-markdown
 
-          # 4) Update repository README.md addons table
+          # 3) Update repository README.md addons table
           oca-gen-addons-table --commit
 
-          # 5) Push generated commits if remote did not move
+          # 4) Push generated commits if remote did not move
           oca_git_push_if_remote_did_not_change "${PUSH_URL}"
