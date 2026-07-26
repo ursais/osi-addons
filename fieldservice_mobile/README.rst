@@ -1,7 +1,3 @@
-.. image:: https://odoo-community.org/readme-banner-image
-   :target: https://odoo-community.org/get-involved?utm_source=readme
-   :alt: Odoo Community Association
-
 ======================
 Field Service - Mobile
 ======================
@@ -17,26 +13,31 @@ Field Service - Mobile
 .. |badge1| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
     :alt: Beta
-.. |badge2| image:: https://img.shields.io/badge/license-AGPL--3-blue.png
+.. |badge2| image:: https://img.shields.io/badge/licence-AGPL--3-blue.png
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
-.. |badge3| image:: https://img.shields.io/badge/github-OCA%2Ffield--service-lightgray.png?logo=github
-    :target: https://github.com/OCA/field-service/tree/19.0/fieldservice_mobile
-    :alt: OCA/field-service
-.. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/field-service-19-0/field-service-19-0-fieldservice_mobile
-    :alt: Translate me on Weblate
-.. |badge5| image:: https://img.shields.io/badge/runboat-Try%20me-875A7B.png
-    :target: https://runboat.odoo-community.org/builds?repo=OCA/field-service&target_branch=19.0
-    :alt: Try me on Runboat
+.. |badge3| image:: https://img.shields.io/badge/github-ursais%2Fosi--addons-lightgray.png?logo=github
+    :target: https://github.com/ursais/osi-addons/tree/19.0/fieldservice_mobile
+    :alt: ursais/osi-addons
 
-|badge1| |badge2| |badge3| |badge4| |badge5|
+|badge1| |badge2| |badge3|
 
 This module provides backend support for the Field Service mobile
 application. It manages mobile-specific stage visibility, stage duration
 tracking, portal configuration, dynamic feature mapping by security
 group, and payment link generation for field service orders linked to
 sales orders.
+
+It also exposes HTTP endpoints used by the offline-capable mobile
+client:
+
+- ``POST /fsm/sync`` — apply order updates, clock punches
+  (``fsm.stage.history``) and signature in a single atomic transaction
+- ``POST /fsm/photo`` — multipart upload that creates ``ir.attachment``
+  without base64 RPC
+- ``POST /fsm/pull`` — delta pull of orders assigned to the current
+  technician (``person_id`` / ``person_ids``), filtered by
+  ``write_date``
 
 **Table of contents**
 
@@ -80,13 +81,71 @@ Portal users can access allowed features and attachments according to
 the configured security rules and settings for stock move visibility and
 updates.
 
+Mobile sync API
+---------------
+
+Authenticated mobile sessions (portal or internal workers linked to an
+``fsm.person`` via ``partner_id``) can call:
+
+Batch sync — ``POST /fsm/sync`` (``type=jsonrpc``)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: json
+
+   {
+     "jsonrpc": "2.0",
+     "method": "call",
+     "params": {
+       "order_id": 12,
+       "order": {"stage_id": 5, "resolution": "Done"},
+       "clocks": [
+         {
+           "stage_id": 6,
+           "start_datetime": "2026-07-24 15:00:00",
+           "duration": 0.5,
+           "total_duration": 1.0
+         }
+       ],
+       "signature": {
+         "signed_by": "Jane Doe",
+         "signature": "<base64 png>"
+       }
+     }
+   }
+
+Use ``"mutations": [ {...}, {...} ]`` to push several orders in the same
+request / transaction.
+
+Photo upload — ``POST /fsm/photo`` (``multipart/form-data``)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Fields: ``order_id``, optional ``name``, and a file field named
+``ufile``, ``file``, ``photo`` or ``attachment``.
+
+Delta pull — ``POST /fsm/pull`` (``type=jsonrpc``)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code:: json
+
+   {
+     "params": {
+       "since": "2026-07-24 00:00:00",
+       "limit": 80,
+       "offset": 0
+     }
+   }
+
+Returns only orders where the current user's ``fsm.person`` is
+``person_id`` or in ``person_ids``, optionally filtered with
+``write_date > since``.
+
 Bug Tracker
 ===========
 
-Bugs are tracked on `GitHub Issues <https://github.com/OCA/field-service/issues>`_.
+Bugs are tracked on `GitHub Issues <https://github.com/ursais/osi-addons/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/field-service/issues/new?body=module:%20fieldservice_mobile%0Aversion:%2019.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/ursais/osi-addons/issues/new?body=module:%20fieldservice_mobile%0Aversion:%2019.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -118,16 +177,6 @@ Integrators.
 Maintainers
 -----------
 
-This module is maintained by the OCA.
-
-.. image:: https://odoo-community.org/logo.png
-   :alt: Odoo Community Association
-   :target: https://odoo-community.org
-
-OCA, or the Odoo Community Association, is a nonprofit organization whose
-mission is to support the collaborative development of Odoo features and
-promote its widespread use.
-
 .. |maintainer-wolfhall| image:: https://github.com/wolfhall.png?size=40px
     :target: https://github.com/wolfhall
     :alt: wolfhall
@@ -135,10 +184,10 @@ promote its widespread use.
     :target: https://github.com/max3903
     :alt: max3903
 
-Current `maintainers <https://odoo-community.org/page/maintainer-role>`__:
+Current maintainers:
 
 |maintainer-wolfhall| |maintainer-max3903| 
 
-This module is part of the `OCA/field-service <https://github.com/OCA/field-service/tree/19.0/fieldservice_mobile>`_ project on GitHub.
+This module is part of the `ursais/osi-addons <https://github.com/ursais/osi-addons/tree/19.0/fieldservice_mobile>`_ project on GitHub.
 
-You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.
+You are welcome to contribute.
