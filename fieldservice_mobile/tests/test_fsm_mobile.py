@@ -32,11 +32,24 @@ class TestFieldserviceMobile(FSMCommon):
             {
                 "name": "FSM Portal User",
                 "login": "fsm_mobile_portal_user",
-                "group_ids": [(6, 0, [cls.env.ref("base.group_portal").id])],
+                "group_ids": [
+                    (
+                        6,
+                        0,
+                        [cls.env.ref("fieldservice_mobile.group_fsm_mobile_portal").id],
+                    )
+                ],
             }
         )
+        cls.portal_group = cls.env.ref("fieldservice_mobile.group_fsm_mobile_portal")
         cls.manager_group = cls.env.ref("fieldservice.group_fsm_manager")
         cls.env.user.write({"group_ids": [(4, cls.manager_group.id)]})
+        cls.portal_person = cls.env["fsm.person"].create(
+            {
+                "name": "FSM Portal Worker",
+                "partner_id": cls.portal_user.partner_id.id,
+            }
+        )
         cls.feature_line = cls.FeatureLine.create(
             {
                 "name": "Test Feature",
@@ -63,6 +76,7 @@ class TestFieldserviceMobile(FSMCommon):
             {
                 "location_id": cls.test_location.id,
                 "stage_id": cls.order_stage.id,
+                "person_id": cls.portal_person.id,
             }
         )
         cls.payment_method = cls.env.ref("payment.payment_method_unknown")
@@ -248,19 +262,18 @@ class TestFieldserviceMobile(FSMCommon):
         values = self.Mapping.get_fsm_mobile_feature_mapping_values(self.portal_user.id)
         self.assertEqual(values, {})
 
-    def test_feature_mapping_values_as_portal_user(self):
+    def test_feature_mapping_values_for_portal_worker(self):
         self.Mapping.search([("state", "=", "active")]).set_to_draft()
-        portal_group = self.env.ref("base.group_portal")
         line = self.FeatureLine.create(
             {
-                "name": "Portal Session Feature",
-                "code": "PSF",
-                "group_ids": [(6, 0, [portal_group.id])],
+                "name": "Portal Worker Feature",
+                "code": "PWF",
+                "group_ids": [(6, 0, [self.portal_group.id])],
             }
         )
         self.Mapping.create(
             {
-                "name": "Portal Session Mapping",
+                "name": "Portal Worker Mapping",
                 "feature_line_ids": [(6, 0, [line.id])],
                 "installed_module_ids": [
                     (6, 0, [self.env.ref("base.module_fieldservice").id])
@@ -271,8 +284,24 @@ class TestFieldserviceMobile(FSMCommon):
         values = self.Mapping.with_user(
             self.portal_user
         ).get_fsm_mobile_feature_mapping_values(self.portal_user.id)
-        self.assertEqual(values["feature_mapping"][0]["code"], "PSF")
+        self.assertIn("feature_mapping", values)
+        self.assertEqual(values["feature_mapping"][0]["code"], "PWF")
         self.assertEqual(values["installed_modules"][0]["name"], "fieldservice")
+
+    def test_portal_worker_sees_only_own_orders(self):
+        other_person = self.env["fsm.person"].create({"name": "Other Portal Worker"})
+        foreign_order = self.Order.create(
+            {
+                "location_id": self.test_location.id,
+                "stage_id": self.order_stage.id,
+                "person_id": other_person.id,
+            }
+        )
+        Order = self.Order.with_user(self.portal_user)
+        self.assertIn(self.test_order, Order.search([]))
+        self.assertNotIn(foreign_order, Order.search([]))
+        with self.assertRaises(AccessError):
+            foreign_order.with_user(self.portal_user).read(["name"])
 
     def test_duration_with_end_date_without_history(self):
         order = self.Order.create(

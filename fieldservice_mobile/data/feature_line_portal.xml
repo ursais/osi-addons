@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--
+        Grant the portal mobile worker group on every default feature line.
+        Uses (4,) so upgrades add the group without wiping manager/other groups.
+    -->
+    <record id="fsm_feature_location" model="fsm.mobile.feature.line">
+        <field name="group_ids" eval="[(4, ref('group_fsm_mobile_portal'))]" />
+    </record>
+    <record id="fsm_feature_contact" model="fsm.mobile.feature.line">
+        <field name="group_ids" eval="[(4, ref('group_fsm_mobile_portal'))]" />
+    </record>
+    <record id="fsm_feature_notes" model="fsm.mobile.feature.line">
+        <field name="group_ids" eval="[(4, ref('group_fsm_mobile_portal'))]" />
+    </record>
+    <record id="fsm_feature_chatter" model="fsm.mobile.feature.line">
+        <field name="group_ids" eval="[(4, ref('group_fsm_mobile_portal'))]" />
+    </record>
+    <record id="fsm_feature_documents" model="fsm.mobile.feature.line">
+        <field name="group_ids" eval="[(4, ref('group_fsm_mobile_portal'))]" />
+    </record>
+    <record id="fsm_feature_picture" model="fsm.mobile.feature.line">
+        <field name="group_ids" eval="[(4, ref('group_fsm_mobile_portal'))]" />
+    </record>
+    <record id="fsm_feature_timesheet" model="fsm.mobile.feature.line">
+        <field name="group_ids" eval="[(4, ref('group_fsm_mobile_portal'))]" />
+    </record>
+    <record id="fsm_feature_signature" model="fsm.mobile.feature.line">
+        <field name="group_ids" eval="[(4, ref('group_fsm_mobile_portal'))]" />
+    </record>
+    <record id="fsm_feature_equipment" model="fsm.mobile.feature.line">
+        <field name="group_ids" eval="[(4, ref('group_fsm_mobile_portal'))]" />
+    </record>
+    <record id="fsm_feature_pickup_delivery" model="fsm.mobile.feature.line">
+        <field name="group_ids" eval="[(4, ref('group_fsm_mobile_portal'))]" />
+    </record>
+    <record id="fsm_feature_sale_order_line" model="fsm.mobile.feature.line">
+        <field name="group_ids" eval="[(4, ref('group_fsm_mobile_portal'))]" />
+    </record>
+    <record id="fsm_feature_durations" model="fsm.mobile.feature.line">
+        <field name="group_ids" eval="[(4, ref('group_fsm_mobile_portal'))]" />
+    </record>
+    <record id="fsm_feature_stock_request" model="fsm.mobile.feature.line">
+        <field name="group_ids" eval="[(4, ref('group_fsm_mobile_portal'))]" />
+    </record>
+</odoo>

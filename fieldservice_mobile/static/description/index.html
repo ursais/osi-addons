@@ -374,7 +374,9 @@ ul.auto-toc {
 application. It manages mobile-specific stage visibility, stage duration
 tracking, portal configuration, dynamic feature mapping by security
 group, and payment link generation for field service orders linked to
-sales orders.</p>
+sales orders. Portal technicians use the <strong>Field Service Mobile / Portal
+Worker</strong> group, which grants the ACLs required by the app while
+restricting access to orders assigned to that worker.</p>
 <p>It also exposes HTTP endpoints used by the offline-capable mobile
 client:</p>
 <ul class="simple">
@@ -429,6 +431,16 @@ Automated Actions</strong>.</p>
 <li>Select installed modules for the dynamic mobile menu.</li>
 <li>Activate a feature mapping record and assign security groups per
 feature line.</li>
+</ul>
+<p>To allow a portal technician to use the mobile app:</p>
+<ul class="simple">
+<li>Create (or open) the portal user and add the <strong>Field Service Mobile /
+Portal Worker</strong> group (implies Portal).</li>
+<li>Link that user partner to an <tt class="docutils literal">fsm.person</tt> worker.</li>
+<li>Assign orders to that worker (<tt class="docutils literal">person_id</tt> / <tt class="docutils literal">person_ids</tt>); record
+rules limit portal workers to their own orders.</li>
+<li>Default feature lines already include the portal worker group; adjust
+per-feature groups if you need a narrower mobile menu.</li>
 </ul>
 </div>
 <div class="section" id="usage">

@@ -26,7 +26,9 @@ This module provides backend support for the Field Service mobile
 application. It manages mobile-specific stage visibility, stage duration
 tracking, portal configuration, dynamic feature mapping by security
 group, and payment link generation for field service orders linked to
-sales orders.
+sales orders. Portal technicians use the **Field Service Mobile / Portal
+Worker** group, which grants the ACLs required by the app while
+restricting access to orders assigned to that worker.
 
 It also exposes HTTP endpoints used by the offline-capable mobile
 client:
@@ -66,6 +68,16 @@ To configure mobile features:
 - Select installed modules for the dynamic mobile menu.
 - Activate a feature mapping record and assign security groups per
   feature line.
+
+To allow a portal technician to use the mobile app:
+
+- Create (or open) the portal user and add the **Field Service Mobile /
+  Portal Worker** group (implies Portal).
+- Link that user partner to an ``fsm.person`` worker.
+- Assign orders to that worker (``person_id`` / ``person_ids``); record
+  rules limit portal workers to their own orders.
+- Default feature lines already include the portal worker group; adjust
+  per-feature groups if you need a narrower mobile menu.
 
 Usage
 =====

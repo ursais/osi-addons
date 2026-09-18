@@ -223,11 +223,21 @@ class FSMOrder(models.Model):
             order_id = mutation.get("order_id")
             if not order_id:
                 raise ValidationError(self.env._("Each mutation requires order_id."))
-            order = self.browse(int(order_id)).exists()
-            if not order:
+            order_id = int(order_id)
+            if not self.sudo().browse(order_id).exists():
                 raise UserError(
                     self.env._(
                         "FSM order %(order_id)s was not found.", order_id=order_id
+                    )
+                )
+            # Record rules may hide orders the technician is not assigned to.
+            order = self.browse(order_id).exists()
+            if not order:
+                raise AccessError(
+                    self.env._(
+                        "You can only sync orders assigned to you "
+                        "(order id %(order_id)s).",
+                        order_id=order_id,
                     )
                 )
             results.append(

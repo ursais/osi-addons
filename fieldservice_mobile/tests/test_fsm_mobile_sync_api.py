@@ -40,7 +40,13 @@ class TestFSMMobileSyncAPI(FSMCommon):
             {
                 "name": "FSM Mobile Worker",
                 "login": "fsm_mobile_worker_sync",
-                "group_ids": [(6, 0, [cls.env.ref("base.group_portal").id])],
+                "group_ids": [
+                    (
+                        6,
+                        0,
+                        [cls.env.ref("fieldservice_mobile.group_fsm_mobile_portal").id],
+                    )
+                ],
             }
         )
         cls.worker_person = cls.env["fsm.person"].create(
@@ -141,7 +147,17 @@ class TestFSMMobileSyncAPI(FSMCommon):
             {
                 "name": "No Person User",
                 "login": "fsm_mobile_no_person",
-                "group_ids": [(6, 0, [self.env.ref("base.group_portal").id])],
+                "group_ids": [
+                    (
+                        6,
+                        0,
+                        [
+                            self.env.ref(
+                                "fieldservice_mobile.group_fsm_mobile_portal"
+                            ).id
+                        ],
+                    )
+                ],
             }
         )
         with self.assertRaises(AccessError):

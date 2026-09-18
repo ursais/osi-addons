@@ -1,7 +1,9 @@
 This module provides backend support for the Field Service mobile application. It
 manages mobile-specific stage visibility, stage duration tracking, portal configuration,
 dynamic feature mapping by security group, and payment link generation for field service
-orders linked to sales orders.
+orders linked to sales orders. Portal technicians use the **Field Service Mobile /
+Portal Worker** group, which grants the ACLs required by the app while restricting
+access to orders assigned to that worker.
 
 It also exposes HTTP endpoints used by the offline-capable mobile client:
 
