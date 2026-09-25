@@ -1,0 +1,6 @@
+- [Open Source Integrators](https://www.opensourceintegrators.com):
+  - Antonio Yamuta <ayamuta@opensourceintegrators.com>
+  - Maxime Chambreuil <mchambreuil@opensourceintegrators.com>
+  - Melody Fetterly <mfetterly@opensourceintegrators.com>
+- [Gray Matter Logic](https://www.graymatterlogic.com):
+  - Hector del Reguero
