@@ -1,0 +1,4 @@
+- [Open Source Integrators](https://www.opensourceintegrators.com):
+  - Vimal Patel <vpatel@opensourceintegrators.com>
+- [Gray Matter Logic](https://www.graymatterlogic.com):
+  - Hector del Reguero

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="documents_folder_lot" model="documents.document" forcecreate="0">
+        <field name="access_internal">view</field>
+        <field name="access_via_link">none</field>
+        <field name="name">Lot/Tracking Numbers</field>
+        <field name="type">folder</field>
+        <field name="sequence">12</field>
+    </record>
+</odoo>
