@@ -248,6 +248,32 @@ class TestFieldserviceMobile(FSMCommon):
         values = self.Mapping.get_fsm_mobile_feature_mapping_values(self.portal_user.id)
         self.assertEqual(values, {})
 
+    def test_feature_mapping_values_as_portal_user(self):
+        self.Mapping.search([("state", "=", "active")]).set_to_draft()
+        portal_group = self.env.ref("base.group_portal")
+        line = self.FeatureLine.create(
+            {
+                "name": "Portal Session Feature",
+                "code": "PSF",
+                "group_ids": [(6, 0, [portal_group.id])],
+            }
+        )
+        self.Mapping.create(
+            {
+                "name": "Portal Session Mapping",
+                "feature_line_ids": [(6, 0, [line.id])],
+                "installed_module_ids": [
+                    (6, 0, [self.env.ref("base.module_fieldservice").id])
+                ],
+                "state": "active",
+            }
+        )
+        values = self.Mapping.with_user(
+            self.portal_user
+        ).get_fsm_mobile_feature_mapping_values(self.portal_user.id)
+        self.assertEqual(values["feature_mapping"][0]["code"], "PSF")
+        self.assertEqual(values["installed_modules"][0]["name"], "fieldservice")
+
     def test_duration_with_end_date_without_history(self):
         order = self.Order.create(
             {
