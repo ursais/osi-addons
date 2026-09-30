@@ -268,10 +268,9 @@ class TestFieldserviceMobile(FSMCommon):
                 "state": "active",
             }
         )
-        values = (
-            self.Mapping.with_user(self.portal_user)
-            .get_fsm_mobile_feature_mapping_values(self.portal_user.id)
-        )
+        values = self.Mapping.with_user(
+            self.portal_user
+        ).get_fsm_mobile_feature_mapping_values(self.portal_user.id)
         self.assertEqual(values["feature_mapping"][0]["code"], "PSF")
         self.assertEqual(values["installed_modules"][0]["name"], "fieldservice")
 
