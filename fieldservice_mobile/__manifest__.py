@@ -5,7 +5,7 @@
     "name": "Field Service - Mobile",
     "summary": "Field Service Mobile Backend Support.",
     "license": "AGPL-3",
-    "version": "19.0.1.1.0",
+    "version": "19.0.1.1.1",
     "category": "Field Service",
     "author": "Open Source Integrators",
     "website": "https://github.com/ursais/osi-addons",
