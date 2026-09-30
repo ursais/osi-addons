@@ -1,0 +1,71 @@
+name: Bump addon versions
+
+# After a PR is merged to 19.0, bump each changed addon's manifest version
+# the way ocabot does, then push. The follow-up push republishes to PyPI.
+# A GITHUB_TOKEN push would not start that workflow, so this uses GIT_PUSH_TOKEN.
+
+on:
+  pull_request_target:
+    types: [closed]
+    branches:
+      - "19.0"
+
+jobs:
+  bump:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: 19.0
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: Bump versions and push
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
+          GIT_PUSH_TOKEN: ${{ secrets.GIT_PUSH_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${GIT_PUSH_TOKEN}" ]; then
+            echo "GIT_PUSH_TOKEN secret is not set; cannot push the version bump."
+            exit 1
+          fi
+          git config --global --add safe.directory "$PWD"
+          git config user.name "${OCA_GIT_USER_NAME:-osi-ci}"
+          git config user.email "${OCA_GIT_USER_EMAIL:-osi-ci@opensourceintegrators.com}"
+
+          gh api --paginate \
+            "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" \
+            --jq '.[].body' > /tmp/pr-comments.txt
+
+          python3 .github/scripts/bump_addon_version.py --self-test
+
+          if ! git merge-base --is-ancestor "${MERGE_SHA}" HEAD; then
+            echo "Merge commit ${MERGE_SHA} is not on 19.0 yet."
+            exit 1
+          fi
+
+          python3 .github/scripts/bump_addon_version.py \
+            --title "${PR_TITLE}" \
+            --comments-file /tmp/pr-comments.txt \
+            --merge-sha "${MERGE_SHA}"
+
+          if [ -z "$(git log --oneline "origin/19.0..HEAD")" ]; then
+            echo "No version bump commit to push."
+            exit 0
+          fi
+
+          PUSH_URL="https://x-access-token:${GIT_PUSH_TOKEN}@github.com/${GITHUB_REPOSITORY}"
+          git fetch "${PUSH_URL}" "19.0:refs/remotes/origin/19.0"
+          if ! git merge-base --is-ancestor origin/19.0 HEAD; then
+            echo "19.0 moved while bumping; not pushing."
+            exit 1
+          fi
+          git push "${PUSH_URL}" HEAD:19.0
