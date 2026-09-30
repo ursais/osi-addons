@@ -60,7 +60,9 @@ class FSMMobileFeatureMapping(models.Model):
 
     @api.model
     def get_fsm_mobile_feature_mapping_values(self, user_id):
-        user = self.env["res.users"].browse(user_id)
+        # Portal workers cannot read res.groups. Compare groups as superuser
+        # and return only the intersection with this user's groups.
+        user = self.env["res.users"].sudo().browse(user_id)
         fsm_feature_mapping_rec = self.env["fsm.mobile.feature.mapping"].search(
             [("state", "=", "active")], limit=1
         )
@@ -69,12 +71,13 @@ class FSMMobileFeatureMapping(models.Model):
         installed_modules_list = []
         user_groups = user.group_ids
         for f_line_rec in fsm_feature_mapping_rec.feature_line_ids:
-            if f_line_rec.group_ids & user_groups:
+            matched_groups = f_line_rec.sudo().group_ids & user_groups
+            if matched_groups:
                 feature_mapping_list.append(
                     {
                         "id": f_line_rec.id,
                         "name": f_line_rec.name,
-                        "group_ids": (f_line_rec.group_ids & user_groups).ids,
+                        "group_ids": matched_groups.ids,
                         "code": f_line_rec.code,
                     }
                 )
