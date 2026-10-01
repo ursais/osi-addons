@@ -9,6 +9,7 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
+[documents_stock_production_lot](documents_stock_production_lot/) | 19.0.1.0.0 | [![bodedra](https://github.com/bodedra.png?size=30px)](https://github.com/bodedra) | Manage documents attached to lot/tracking numbers
 [fieldservice_mobile](fieldservice_mobile/) | 19.0.1.1.0 | [![max3903](https://github.com/max3903.png?size=30px)](https://github.com/max3903) | Field Service Mobile Backend Support.
 [fieldservice_tracking](fieldservice_tracking/) | 19.0.1.0.0 | [![max3903](https://github.com/max3903.png?size=30px)](https://github.com/max3903) | This module will add tracking functionality in Fieldservice.
 
