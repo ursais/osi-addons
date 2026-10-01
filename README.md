@@ -9,6 +9,7 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
+[documents_purchase](documents_purchase/) | 19.0.1.0.0 | [![max3903](https://github.com/max3903.png?size=30px)](https://github.com/max3903) | Documents for Purchase Orders
 [fieldservice_mobile](fieldservice_mobile/) | 19.0.1.1.0 | [![max3903](https://github.com/max3903.png?size=30px)](https://github.com/max3903) | Field Service Mobile Backend Support.
 [fieldservice_tracking](fieldservice_tracking/) | 19.0.1.0.0 | [![max3903](https://github.com/max3903.png?size=30px)](https://github.com/max3903) | This module will add tracking functionality in Fieldservice.
 
