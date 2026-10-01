@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="documents_mrp_folder" model="documents.document" forcecreate="0">
+        <field name="access_internal">view</field>
+        <field name="name">Manufacturing</field>
+        <field name="type">folder</field>
+    </record>
+</odoo>
