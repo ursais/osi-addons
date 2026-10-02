@@ -1,11 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo noupdate="1">
+    <!-- Restrict portal mobile workers to orders where they are assigned -->
+    <record id="fsm_order_mobile_portal_own_rule" model="ir.rule">
+        <field name="name">FSM Mobile Portal: own orders only</field>
+        <field name="model_id" ref="fieldservice.model_fsm_order" />
+        <field
+            name="domain_force"
+        >['|', ('person_id.partner_id', '=', user.partner_id.id), ('person_ids.partner_id', 'in', [user.partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('group_fsm_mobile_portal'))]" />
+    </record>
+
+    <record id="fsm_stage_history_mobile_portal_own_rule" model="ir.rule">
+        <field name="name">FSM Mobile Portal: own order stage history</field>
+        <field name="model_id" ref="model_fsm_stage_history" />
+        <field
+            name="domain_force"
+        >['|', ('order_id.person_id.partner_id', '=', user.partner_id.id), ('order_id.person_ids.partner_id', 'in', [user.partner_id.id])]</field>
+        <field name="groups" eval="[(4, ref('group_fsm_mobile_portal'))]" />
+    </record>
+
+    <record id="fsm_person_mobile_portal_own_rule" model="ir.rule">
+        <field name="name">FSM Mobile Portal: own worker profile</field>
+        <field name="model_id" ref="fieldservice.model_fsm_person" />
+        <field name="domain_force">[('partner_id', '=', user.partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('group_fsm_mobile_portal'))]" />
+    </record>
+
+    <!-- Multi-company partner visibility for portal (kept for compatibility) -->
     <record id="portal_partner_comp_rule" model="ir.rule">
         <field name="name">Portal Partner multi-company</field>
         <field name="model_id" ref="base.model_res_partner" />
         <field name="global" eval="True" />
         <field
             name="domain_force"
-        >['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        >['|', ('company_id', '=', False), ('company_id', 'child_of', [user.company_id.id])]</field>
         <field name="groups" eval="[(4, ref('base.group_portal'))]" />
         <field name="perm_create" eval="False" />
         <field name="perm_write" eval="False" />

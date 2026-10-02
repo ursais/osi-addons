@@ -26,7 +26,9 @@ This module provides backend support for the Field Service mobile
 application. It manages mobile-specific stage visibility, stage duration
 tracking, portal configuration, dynamic feature mapping by security
 group, and payment link generation for field service orders linked to
-sales orders.
+sales orders. Portal technicians use the **Field Service Mobile / Portal
+Worker** group, which grants the ACLs required by the app while
+restricting access to orders assigned to that worker.
 
 It also exposes HTTP endpoints used by the offline-capable mobile
 client:
@@ -67,6 +69,21 @@ To configure mobile features:
 - Activate a feature mapping record and assign security groups per
   feature line.
 
+To allow a portal technician to use the mobile app:
+
+- Create (or open) the portal user and add the **Field Service Mobile /
+  Portal Worker** group (implies Portal).
+- Link that user partner to an ``fsm.person`` worker.
+- Assign orders to that worker (``person_id`` / ``person_ids``); record
+  rules limit portal workers to their own orders.
+- Default feature lines already include the portal worker group; adjust
+  per-feature groups if you need a narrower mobile menu.
+
+**Upgrade note:** FSM mobile ACLs are no longer granted to every Portal
+user. After upgrading this module, assign **Portal Worker** to each
+technician who should keep using the app; otherwise they lose access to
+orders, attachments, and sync APIs.
+
 Usage
 =====
 
@@ -77,15 +94,16 @@ Usage
    access.
 5. Activate the desired feature mapping record.
 
-Portal users can access allowed features and attachments according to
-the configured security rules and settings for stock move visibility and
-updates.
+Portal technicians must be in the **Field Service Mobile / Portal
+Worker** group. They then see only orders assigned to their linked
+``fsm.person``, plus the features and attachments allowed by the active
+feature mapping and stock visibility settings.
 
 Mobile sync API
 ---------------
 
-Authenticated mobile sessions (portal or internal workers linked to an
-``fsm.person`` via ``partner_id``) can call:
+Authenticated mobile sessions (**Portal Worker** or internal workers
+linked to an ``fsm.person`` via ``partner_id``) can call:
 
 Batch sync — ``POST /fsm/sync`` (``type=jsonrpc``)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -119,8 +137,10 @@ request / transaction.
 Photo upload — ``POST /fsm/photo`` (``multipart/form-data``)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Fields: ``order_id``, optional ``name``, and a file field named
-``ufile``, ``file``, ``photo`` or ``attachment``.
+Fields: ``csrf_token`` (required), ``order_id``, optional ``name``, and
+a file field named ``ufile``, ``file``, ``photo`` or ``attachment``.
+Obtain ``csrf_token`` from the session (e.g.
+``/web/session/authenticate`` / ``/web/session/get_session_info``).
 
 Delta pull — ``POST /fsm/pull`` (``type=jsonrpc``)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

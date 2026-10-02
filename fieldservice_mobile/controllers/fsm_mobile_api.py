@@ -88,7 +88,7 @@ class FSMMobileAPI(http.Controller):
         type="http",
         auth="user",
         methods=["POST"],
-        csrf=False,
+        csrf=True,
         readonly=False,
     )
     def fsm_photo(self, order_id=None, name=None, **kwargs):
@@ -96,6 +96,7 @@ class FSMMobileAPI(http.Controller):
         Multipart photo upload that creates ``ir.attachment`` directly.
 
         Form fields:
+        - ``csrf_token`` (required): session CSRF token
         - ``order_id`` (required): fsm.order id
         - ``name`` (optional): file name
         - file field: ``ufile``, ``file``, ``photo`` or ``attachment``

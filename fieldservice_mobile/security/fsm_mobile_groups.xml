@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!--
+        Dedicated privilege so the portal worker role is not mixed with the
+        internal Field Service Management privilege levels.
+    -->
+    <record model="res.groups.privilege" id="privilege_fsm_mobile">
+        <field name="name">Field Service Mobile</field>
+        <field name="sequence">51</field>
+    </record>
+
+    <!-- Portal technicians for the Field Service mobile application -->
+    <record id="group_fsm_mobile_portal" model="res.groups">
+        <field name="name">Portal Worker</field>
+        <field name="privilege_id" ref="privilege_fsm_mobile" />
+        <field
+            name="comment"
+        >Portal users that can operate the Field Service mobile app on orders assigned to them.</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_portal'))]" />
+    </record>
+</odoo>

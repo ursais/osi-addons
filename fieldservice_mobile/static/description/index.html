@@ -374,7 +374,9 @@ ul.auto-toc {
 application. It manages mobile-specific stage visibility, stage duration
 tracking, portal configuration, dynamic feature mapping by security
 group, and payment link generation for field service orders linked to
-sales orders.</p>
+sales orders. Portal technicians use the <strong>Field Service Mobile / Portal
+Worker</strong> group, which grants the ACLs required by the app while
+restricting access to orders assigned to that worker.</p>
 <p>It also exposes HTTP endpoints used by the offline-capable mobile
 client:</p>
 <ul class="simple">
@@ -430,6 +432,20 @@ Automated Actions</strong>.</p>
 <li>Activate a feature mapping record and assign security groups per
 feature line.</li>
 </ul>
+<p>To allow a portal technician to use the mobile app:</p>
+<ul class="simple">
+<li>Create (or open) the portal user and add the <strong>Field Service Mobile /
+Portal Worker</strong> group (implies Portal).</li>
+<li>Link that user partner to an <tt class="docutils literal">fsm.person</tt> worker.</li>
+<li>Assign orders to that worker (<tt class="docutils literal">person_id</tt> / <tt class="docutils literal">person_ids</tt>); record
+rules limit portal workers to their own orders.</li>
+<li>Default feature lines already include the portal worker group; adjust
+per-feature groups if you need a narrower mobile menu.</li>
+</ul>
+<p><strong>Upgrade note:</strong> FSM mobile ACLs are no longer granted to every Portal
+user. After upgrading this module, assign <strong>Portal Worker</strong> to each
+technician who should keep using the app; otherwise they lose access to
+orders, attachments, and sync APIs.</p>
 </div>
 <div class="section" id="usage">
 <h1><a class="toc-backref" href="#toc-entry-2">Usage</a></h1>
@@ -441,13 +457,14 @@ feature line.</li>
 access.</li>
 <li>Activate the desired feature mapping record.</li>
 </ol>
-<p>Portal users can access allowed features and attachments according to
-the configured security rules and settings for stock move visibility and
-updates.</p>
+<p>Portal technicians must be in the <strong>Field Service Mobile / Portal
+Worker</strong> group. They then see only orders assigned to their linked
+<tt class="docutils literal">fsm.person</tt>, plus the features and attachments allowed by the active
+feature mapping and stock visibility settings.</p>
 <div class="section" id="mobile-sync-api">
 <h2><a class="toc-backref" href="#toc-entry-3">Mobile sync API</a></h2>
-<p>Authenticated mobile sessions (portal or internal workers linked to an
-<tt class="docutils literal">fsm.person</tt> via <tt class="docutils literal">partner_id</tt>) can call:</p>
+<p>Authenticated mobile sessions (<strong>Portal Worker</strong> or internal workers
+linked to an <tt class="docutils literal">fsm.person</tt> via <tt class="docutils literal">partner_id</tt>) can call:</p>
 <div class="section" id="batch-sync-post-fsm-sync-type-jsonrpc">
 <h3><a class="toc-backref" href="#toc-entry-4">Batch sync — <tt class="docutils literal">POST /fsm/sync</tt> (<tt class="docutils literal">type=jsonrpc</tt>)</a></h3>
 <pre class="code json literal-block">
@@ -477,8 +494,10 @@ request / transaction.</p>
 </div>
 <div class="section" id="photo-upload-post-fsm-photo-multipart-form-data">
 <h3><a class="toc-backref" href="#toc-entry-5">Photo upload — <tt class="docutils literal">POST /fsm/photo</tt> (<tt class="docutils literal"><span class="pre">multipart/form-data</span></tt>)</a></h3>
-<p>Fields: <tt class="docutils literal">order_id</tt>, optional <tt class="docutils literal">name</tt>, and a file field named
-<tt class="docutils literal">ufile</tt>, <tt class="docutils literal">file</tt>, <tt class="docutils literal">photo</tt> or <tt class="docutils literal">attachment</tt>.</p>
+<p>Fields: <tt class="docutils literal">csrf_token</tt> (required), <tt class="docutils literal">order_id</tt>, optional <tt class="docutils literal">name</tt>, and
+a file field named <tt class="docutils literal">ufile</tt>, <tt class="docutils literal">file</tt>, <tt class="docutils literal">photo</tt> or <tt class="docutils literal">attachment</tt>.
+Obtain <tt class="docutils literal">csrf_token</tt> from the session (e.g.
+<tt class="docutils literal">/web/session/authenticate</tt> / <tt class="docutils literal">/web/session/get_session_info</tt>).</p>
 </div>
 <div class="section" id="delta-pull-post-fsm-pull-type-jsonrpc">
 <h3><a class="toc-backref" href="#toc-entry-6">Delta pull — <tt class="docutils literal">POST /fsm/pull</tt> (<tt class="docutils literal">type=jsonrpc</tt>)</a></h3>

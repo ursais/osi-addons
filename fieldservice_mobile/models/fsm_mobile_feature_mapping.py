@@ -59,10 +59,14 @@ class FSMMobileFeatureMapping(models.Model):
             )
 
     @api.model
-    def get_fsm_mobile_feature_mapping_values(self, user_id):
-        # Portal workers cannot read res.groups. Compare groups as superuser
-        # and return only the intersection with this user's groups.
-        user = self.env["res.users"].sudo().browse(user_id)
+    def get_fsm_mobile_feature_mapping_values(self, user_id=None):
+        """Return feature mapping for the current session user.
+
+        ``user_id`` is accepted for API compatibility but ignored so callers
+        cannot probe another user's feature codes. Portal workers cannot read
+        ``res.groups``; group intersection uses a targeted ``sudo()``.
+        """
+        user = self.env.user
         fsm_feature_mapping_rec = self.env["fsm.mobile.feature.mapping"].search(
             [("state", "=", "active")], limit=1
         )

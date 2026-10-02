@@ -95,11 +95,27 @@ class FSMOrder(models.Model):
             return {}
         if not isinstance(order_vals, dict):
             raise ValidationError(self.env._("order values must be a dictionary."))
-        return {
+        vals = {
             key: value
             for key, value in order_vals.items()
             if key in self._FSM_MOBILE_SYNC_ORDER_FIELDS
         }
+        self._fsm_mobile_validate_stage_id(vals.get("stage_id"))
+        return vals
+
+    @api.model
+    def _fsm_mobile_validate_stage_id(self, stage_id):
+        """Reject stages that are not enabled for the mobile app."""
+        if not stage_id:
+            return
+        stage = self.env["fsm.stage"].browse(int(stage_id)).exists()
+        if not stage or not stage.is_display_in_mobile:
+            raise ValidationError(
+                self.env._(
+                    "Stage %(stage_id)s is not available in the mobile app.",
+                    stage_id=stage_id,
+                )
+            )
 
     def _fsm_mobile_apply_clocks(self, clocks):
         """Create or update fsm.stage.history lines (mobile clock punches)."""
@@ -127,6 +143,7 @@ class FSMOrder(models.Model):
                 raise ValidationError(
                     self.env._("Each clock entry requires stage_id and start_datetime.")
                 )
+            self._fsm_mobile_validate_stage_id(vals["stage_id"])
             clock_id = clock.get("id")
             if clock_id:
                 history = History.browse(int(clock_id)).exists()
@@ -223,11 +240,16 @@ class FSMOrder(models.Model):
             order_id = mutation.get("order_id")
             if not order_id:
                 raise ValidationError(self.env._("Each mutation requires order_id."))
-            order = self.browse(int(order_id)).exists()
+            order_id = int(order_id)
+            # Do not probe with sudo(): missing and inaccessible orders share
+            # one opaque error so clients cannot enumerate order ids.
+            order = self.browse(order_id).exists()
             if not order:
-                raise UserError(
+                raise AccessError(
                     self.env._(
-                        "FSM order %(order_id)s was not found.", order_id=order_id
+                        "You can only sync orders assigned to you "
+                        "(order id %(order_id)s).",
+                        order_id=order_id,
                     )
                 )
             results.append(
@@ -297,8 +319,12 @@ class FSMOrder(models.Model):
         """Create an ir.attachment for an order photo from raw binary bytes."""
         order = self.browse(int(order_id)).exists()
         if not order:
-            raise UserError(
-                self.env._("FSM order %(order_id)s was not found.", order_id=order_id)
+            raise AccessError(
+                self.env._(
+                    "You can only sync orders assigned to you "
+                    "(order id %(order_id)s).",
+                    order_id=order_id,
+                )
             )
         order._fsm_mobile_ensure_assigned()
         if not raw_bytes:
