@@ -259,8 +259,35 @@ class TestFieldserviceMobile(FSMCommon):
                 "state": "active",
             }
         )
-        values = self.Mapping.get_fsm_mobile_feature_mapping_values(self.portal_user.id)
+        values = self.Mapping.with_user(
+            self.portal_user
+        ).get_fsm_mobile_feature_mapping_values(self.portal_user.id)
         self.assertEqual(values, {})
+
+    def test_feature_mapping_values_ignores_other_user_id(self):
+        self.Mapping.search([("state", "=", "active")]).set_to_draft()
+        line = self.FeatureLine.create(
+            {
+                "name": "Portal Worker Feature",
+                "code": "PWF",
+                "group_ids": [(6, 0, [self.portal_group.id])],
+            }
+        )
+        self.Mapping.create(
+            {
+                "name": "Portal Worker Mapping",
+                "feature_line_ids": [(6, 0, [line.id])],
+                "installed_module_ids": [
+                    (6, 0, [self.env.ref("base.module_fieldservice").id])
+                ],
+                "state": "active",
+            }
+        )
+        # Passing another user's id must still resolve the session user only.
+        values = self.Mapping.with_user(
+            self.portal_user
+        ).get_fsm_mobile_feature_mapping_values(self.env.user.id)
+        self.assertEqual(values["feature_mapping"][0]["code"], "PWF")
 
     def test_feature_mapping_values_for_portal_worker(self):
         self.Mapping.search([("state", "=", "active")]).set_to_draft()

@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 from odoo import fields
 from odoo.addons.fieldservice.tests.test_fsm_common import FSMCommon
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessError, ValidationError
 
 TEST_IMAGE_BASE64 = (
     "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAACklEQVR4nGP4DwABAQEA"
@@ -171,10 +171,25 @@ class TestFSMMobileSyncAPI(FSMCommon):
             self.Order.fsm_mobile_sync_batch(order={"resolution": "x"})
 
     def test_sync_unknown_order(self):
-        with self.assertRaises(UserError):
+        with self.assertRaises(AccessError):
             self.Order.with_user(self.worker_user).fsm_mobile_sync_batch(
                 order_id=999999999,
                 order={"resolution": "x"},
+            )
+
+    def test_sync_rejects_non_mobile_stage(self):
+        hidden = self.env["fsm.stage"].create(
+            {
+                "name": "Hidden Desktop Stage",
+                "sequence": 99,
+                "stage_type": "order",
+                "is_display_in_mobile": False,
+            }
+        )
+        with self.assertRaises(ValidationError):
+            self.Order.with_user(self.worker_user).fsm_mobile_sync_batch(
+                order_id=self.assigned_order.id,
+                order={"stage_id": hidden.id},
             )
 
     def test_sync_invalid_clock(self):

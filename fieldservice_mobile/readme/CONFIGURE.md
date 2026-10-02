@@ -23,3 +23,7 @@ To allow a portal technician to use the mobile app:
   workers to their own orders.
 - Default feature lines already include the portal worker group; adjust per-feature
   groups if you need a narrower mobile menu.
+
+**Upgrade note:** FSM mobile ACLs are no longer granted to every Portal user. After
+upgrading this module, assign **Portal Worker** to each technician who should keep using
+the app; otherwise they lose access to orders, attachments, and sync APIs.
