@@ -55,6 +55,9 @@ jobs:
     needs: discover
     if: needs.discover.outputs.addons != '[]'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     strategy:
       fail-fast: false
       matrix:
@@ -78,6 +81,4 @@ jobs:
       - name: Publish ${{ matrix.addon }} to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
           skip-existing: true
