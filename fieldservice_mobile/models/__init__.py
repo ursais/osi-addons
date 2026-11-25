@@ -2,6 +2,8 @@
 
 from . import fsm_stage
 from . import fsm_order
+from . import fsm_location
+from . import fsm_person
 from . import fsm_order_mobile_sync
 from . import fsm_stage_history
 from . import res_config_settings
