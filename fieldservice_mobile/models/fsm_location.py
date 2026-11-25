@@ -24,9 +24,9 @@ class FSMLocation(models.Model):
             result.append(
                 {
                     "id": loc.id,
-                    "contact_id": [contact.id, contact.display_name]
-                    if contact
-                    else False,
+                    "contact_id": (
+                        [contact.id, contact.display_name] if contact else False
+                    ),
                     "owner_id": [owner.id, owner.display_name] if owner else False,
                 }
             )
@@ -53,15 +53,15 @@ class FSMLocation(models.Model):
                     "name": loc.display_name or "",
                     "contact_address": loc.contact_address or "",
                     "owner_id": [owner.id, owner.display_name] if owner else False,
-                    "contact_id": [contact.id, contact.display_name]
-                    if contact
-                    else False,
+                    "contact_id": (
+                        [contact.id, contact.display_name] if contact else False
+                    ),
                     "phone": loc.phone or "",
-                    "mobile": loc.mobile or "",
+                    "mobile": (loc.mobile if "mobile" in loc._fields else "") or "",
                     "ref": loc.ref or "",
-                    "territory_id": [territory.id, territory.display_name]
-                    if territory
-                    else False,
+                    "territory_id": (
+                        [territory.id, territory.display_name] if territory else False
+                    ),
                     "partner_latitude": loc.partner_latitude or 0.0,
                     "partner_longitude": loc.partner_longitude or 0.0,
                     "direction": loc.direction or "",

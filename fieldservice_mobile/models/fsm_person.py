@@ -16,7 +16,9 @@ class FSMPerson(models.Model):
         field writes can still fail under partner record rules; this method
         verifies ownership then writes with sudo.
         """
-        person = self.search([("partner_id", "=", self.env.user.partner_id.id)], limit=1)
+        person = self.search(
+            [("partner_id", "=", self.env.user.partner_id.id)], limit=1
+        )
         if not person:
             raise UserError(self.env._("No FSM worker is linked to this user."))
         if person.partner_id != self.env.user.partner_id:

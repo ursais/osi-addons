@@ -342,14 +342,14 @@ class TestFieldserviceMobile(FSMCommon):
         self.assertTrue(details[0]["contact_address"] or details[0]["name"])
 
     def test_portal_mobile_post_log_note(self):
-        note_id = (
-            self.test_order.with_user(self.portal_user).mobile_post_log_note(
-                "Portal worker note"
-            )
+        note_id = self.test_order.with_user(self.portal_user).mobile_post_log_note(
+            "Portal worker note"
         )
         self.assertTrue(note_id)
         notes = self.test_order.with_user(self.portal_user).get_mobile_log_notes()
-        self.assertTrue(any("Portal worker note" in (n.get("body") or "") for n in notes))
+        self.assertTrue(
+            any("Portal worker note" in (n.get("body") or "") for n in notes)
+        )
 
     def test_portal_get_mobile_stage_history(self):
         self.env["fsm.stage.history"].create(

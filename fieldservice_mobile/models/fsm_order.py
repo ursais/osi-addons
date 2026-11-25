@@ -164,4 +164,3 @@ class FSMOrder(models.Model):
                 }
             )
         return result
-
