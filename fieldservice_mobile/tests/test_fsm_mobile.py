@@ -315,6 +315,22 @@ class TestFieldserviceMobile(FSMCommon):
         self.assertEqual(values["feature_mapping"][0]["code"], "PWF")
         self.assertEqual(values["installed_modules"][0]["name"], "fieldservice")
 
+    def test_portal_get_mobile_contact_info(self):
+        contact = self.env["res.partner"].create(
+            {"name": "Site Contact", "email": "site@example.com"}
+        )
+        self.test_location.write({"contact_id": contact.id})
+        info = (
+            self.env["fsm.location"]
+            .with_user(self.portal_user)
+            .get_mobile_contact_info([self.test_location.id])
+        )
+        self.assertEqual(len(info), 1)
+        self.assertEqual(info[0]["id"], self.test_location.id)
+        self.assertEqual(info[0]["contact_id"][0], contact.id)
+        self.assertEqual(info[0]["contact_id"][1], "Site Contact")
+        self.assertEqual(info[0]["owner_id"][0], self.test_location.owner_id.id)
+
     def test_portal_worker_sees_only_own_orders(self):
         other_person = self.env["fsm.person"].create({"name": "Other Portal Worker"})
         foreign_order = self.Order.create(

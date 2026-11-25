@@ -18,10 +18,10 @@ access_fsm_stage_history_fsm_user_own,fsm.stage.history.user.own,model_fsm_stage
 access_fsm_stage_history_fsm_user,fsm.stage.history.user,model_fsm_stage_history,fieldservice.group_fsm_user,1,1,1,0
 access_fsm_stage_history_fsm_manager,fsm.stage.history.manager,model_fsm_stage_history,fieldservice.group_fsm_manager,1,1,1,1
 access_fsm_stage_history_fsm_mobile_portal,fsm.stage.history.fsm.mobile.portal,model_fsm_stage_history,fieldservice_mobile.group_fsm_mobile_portal,1,1,1,0
-access_stock_move_line_fsm_mobile_portal,stock.move.line.fsm.mobile.portal,stock.model_stock_move_line,fieldservice_mobile.group_fsm_mobile_portal,1,0,0,0
+access_stock_move_line_fsm_mobile_portal,stock.move.line.fsm.mobile.portal,stock.model_stock_move_line,fieldservice_mobile.group_fsm_mobile_portal,1,1,0,0
 access_stock_location_fsm_mobile_portal,access.stock.location.fsm.mobile.portal,stock.model_stock_location,fieldservice_mobile.group_fsm_mobile_portal,1,0,0,0
 access_stock_warehouse_fsm_mobile_portal,access.stock.warehouse.fsm.mobile.portal,stock.model_stock_warehouse,fieldservice_mobile.group_fsm_mobile_portal,1,0,0,0
-access_account_analytic_line_fsm_mobile_portal,access.account.analytic.line.fsm.mobile.portal,analytic.model_account_analytic_line,fieldservice_mobile.group_fsm_mobile_portal,1,0,0,0
+access_account_analytic_line_fsm_mobile_portal,access.account.analytic.line.fsm.mobile.portal,analytic.model_account_analytic_line,fieldservice_mobile.group_fsm_mobile_portal,1,1,1,0
 access_stock_picking_type_fsm_mobile_portal,access.stock.picking.type.fsm.mobile.portal,stock.model_stock_picking_type,fieldservice_mobile.group_fsm_mobile_portal,1,0,0,0
 access_fsm_vehicle_fsm_user_own,access.fsm.vehicle.user.own,fieldservice_vehicle.model_fsm_vehicle,fieldservice.group_fsm_user_own,1,0,0,0
 access_fsm_vehicle_fsm_mobile_portal,access.fsm.vehicle.fsm.mobile.portal,fieldservice_vehicle.model_fsm_vehicle,fieldservice_mobile.group_fsm_mobile_portal,1,0,0,0
