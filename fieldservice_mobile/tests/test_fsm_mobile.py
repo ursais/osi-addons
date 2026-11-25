@@ -4,7 +4,7 @@
 import base64
 from datetime import datetime, timedelta
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.addons.fieldservice.tests.test_fsm_common import FSMCommon
 from odoo.exceptions import AccessError, UserError
 from odoo.tests.common import users
@@ -330,6 +330,40 @@ class TestFieldserviceMobile(FSMCommon):
         self.assertEqual(info[0]["contact_id"][0], contact.id)
         self.assertEqual(info[0]["contact_id"][1], "Site Contact")
         self.assertEqual(info[0]["owner_id"][0], self.test_location.owner_id.id)
+
+    def test_portal_get_mobile_location_details(self):
+        details = (
+            self.env["fsm.location"]
+            .with_user(self.portal_user)
+            .get_mobile_location_details([self.test_location.id])
+        )
+        self.assertEqual(len(details), 1)
+        self.assertEqual(details[0]["id"], self.test_location.id)
+        self.assertTrue(details[0]["contact_address"] or details[0]["name"])
+
+    def test_portal_mobile_post_log_note(self):
+        note_id = (
+            self.test_order.with_user(self.portal_user).mobile_post_log_note(
+                "Portal worker note"
+            )
+        )
+        self.assertTrue(note_id)
+        notes = self.test_order.with_user(self.portal_user).get_mobile_log_notes()
+        self.assertTrue(any("Portal worker note" in (n.get("body") or "") for n in notes))
+
+    def test_portal_get_mobile_stage_history(self):
+        self.env["fsm.stage.history"].create(
+            {
+                "order_id": self.test_order.id,
+                "stage_id": self.order_stage.id,
+                "start_datetime": fields.Datetime.now(),
+                "duration": 0.5,
+                "total_duration": 0.5,
+            }
+        )
+        rows = self.test_order.with_user(self.portal_user).get_mobile_stage_history()
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["stage_id"][0], self.order_stage.id)
 
     def test_portal_worker_sees_only_own_orders(self):
         other_person = self.env["fsm.person"].create({"name": "Other Portal Worker"})

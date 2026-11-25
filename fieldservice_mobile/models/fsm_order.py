@@ -94,3 +94,74 @@ class FSMOrder(models.Model):
             )
         )
         return {"payment_status": True, "payment_link": payment_link_id.link}
+
+    def mobile_post_log_note(self, body):
+        """Post a chatter log note; portal-safe via sudo after write ACL check."""
+        self.ensure_one()
+        self.check_access("write")
+        if not body or not str(body).strip():
+            return False
+        message = self.sudo().message_post(
+            body=str(body).strip(),
+            message_type="comment",
+            subtype_xmlid="mail.mt_note",
+            author_id=self.env.user.partner_id.id,
+        )
+        return message.id
+
+    def get_mobile_stage_history(self):
+        """Return stage history rows with readable stage names for mobile."""
+        self.ensure_one()
+        self.check_access("read")
+        histories = (
+            self.env["fsm.stage.history"]
+            .sudo()
+            .search([("order_id", "=", self.id)], order="id asc")
+        )
+        result = []
+        for hist in histories:
+            stage = hist.stage_id
+            result.append(
+                {
+                    "id": hist.id,
+                    "start_datetime": hist.start_datetime,
+                    "stage_id": [stage.id, stage.display_name] if stage else False,
+                    "duration": hist.duration or 0.0,
+                    "total_duration": hist.total_duration or 0.0,
+                }
+            )
+        return result
+
+    def get_mobile_log_notes(self, offset=0, limit=10):
+        """Return log notes on this order; portal-safe message read."""
+        self.ensure_one()
+        self.check_access("read")
+        domain = [
+            ("model", "=", "fsm.order"),
+            ("res_id", "=", self.id),
+            ("body", "!=", False),
+            ("body", "!=", ""),
+            "|",
+            ("message_type", "=", "comment"),
+            "&",
+            ("message_type", "=", "notification"),
+            ("subtype_id.name", "=", "Note"),
+        ]
+        messages = (
+            self.env["mail.message"]
+            .sudo()
+            .search(domain, order="id desc", offset=offset, limit=limit)
+        )
+        result = []
+        for msg in messages:
+            author = msg.author_id
+            result.append(
+                {
+                    "id": msg.id,
+                    "author_id": [author.id, author.display_name] if author else False,
+                    "body": msg.body or "",
+                    "date": msg.date,
+                }
+            )
+        return result
+
